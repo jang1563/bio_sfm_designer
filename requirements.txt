@@ -1,0 +1,9 @@
+# bio_sfm_designer — runtime dependencies.
+# The calibrated trust engine. Install editable from the sibling repo for dev:
+#   pip install -e ../bio-sfm-trust-core
+bio-sfm-trust
+
+# Optional extras (not needed for the M0 stub dry-run):
+#   [safety]    constitutional-bioguard   # real DeBERTa biosafety screen (M2; pulls torch/transformers)
+#   [structure] gemmi                      # CA-lDDT truth for the protein substrate (M1)
+#   [yaml]      pyyaml                      # ObjectiveSpec.from_yaml

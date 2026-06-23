@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bio_sfm_designer"
+version = "0.1.0"
+description = "Calibrated, cost-aware, safety-screened DBTL designer: Claude orchestrates specialist SFMs behind an external trust gate."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "JangKeun Kim" }]
+keywords = ["protein-design", "dbtl", "ai-for-science", "trust-routing", "biosafety", "orchestration"]
+# bio-sfm-trust is the calibrated trust engine (install editable from the sibling
+# repo first: pip install -e ../bio-sfm-trust-core). Pure-stdlib otherwise.
+dependencies = ["bio-sfm-trust"]
+
+[project.optional-dependencies]
+safety = ["constitutional-bioguard"]   # real DeBERTa biosafety screen (M2; pulls torch/transformers)
+structure = ["gemmi"]                  # CA-lDDT truth for the protein substrate (M1)
+yaml = ["pyyaml"]                       # load ObjectiveSpec from YAML configs
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
