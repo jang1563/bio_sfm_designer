@@ -28,7 +28,8 @@ class CrossModelAurocTests(unittest.TestCase):
         # is largely separating easy(low-temp) from hard(high-temp) BATCHES, not per-design quality.
         pt = run()["per_temp"]
         self.assertEqual(pt["design_t03"]["boltz_success"], pt["design_t03"]["n"])  # all low-temp succeed
-        self.assertLessEqual(pt["design_t10"]["boltz_success"], 2)                  # almost all high-temp fail
+        # high-temp success is a small fraction of low-temp's (failures concentrate at high temp)
+        self.assertLess(pt["design_t10"]["boltz_success"], pt["design_t03"]["boltz_success"] // 2)
 
 
 if __name__ == "__main__":

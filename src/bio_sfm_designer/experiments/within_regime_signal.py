@@ -5,11 +5,12 @@ Since failures concentrate at high temp and pLDDT tracks temp, that number mostl
 from hard(high-temp) BATCHES, not designs within a regime. This re-measures at a SINGLE temperature
 (0.7, 160 designs) so difficulty is fixed and the AUROC reflects per-design discrimination only.
 
-RESULT (fixtures esmfold_t07_records.jsonl + boltz_t07_records.jsonl, 160 designs @ temp 0.7):
-  Boltz success 101/160 (a genuine mix, NOT saturated); ESMFold self-label 158/160 (near-degenerate);
-  labels agree 63%. AUROC(ESMFold pLDDT -> Boltz success) = 0.55, CI ~[0.45, 0.65] -- indistinguishable
-  from chance (0.5). Boltz success by pLDDT tertile is non-monotone (53% / 74% / 63%); mean pLDDT is 89.4
-  for Boltz-success vs 88.4 for Boltz-fail (a ~1-point gap).
+RESULT (fixtures esmfold_t07_records.jsonl + boltz_t07_records.jsonl, 160 designs @ temp 0.7; CLEAN
+re-fold after the Boltz work-dir caching bug was fixed 2026-06-24):
+  Boltz success 120/160 (a genuine mix, NOT saturated); ESMFold self-label 158/160 (near-degenerate);
+  labels agree 76%. AUROC(ESMFold pLDDT -> Boltz success) = 0.59, CI [0.48, 0.70] -- weak and NOT
+  significantly above chance (the CI spans 0.5). Boltz success by pLDDT tertile is non-monotone
+  (64% / 83% / 78%); mean pLDDT is 89.4 for Boltz-success vs 88.0 for Boltz-fail (a ~1-point gap).
 
 HONEST CONCLUSION: at fixed difficulty, ESMFold pLDDT does NOT predict an independent model's per-design
 success -- the strong pooled signal was a temperature/difficulty BATCH effect, not per-design quality. The
@@ -23,8 +24,8 @@ CAVEATS (why this reads "weak / chance-level", not "provably zero"): (1) restric
 moderate temp pLDDT is compressed (77-94), so the very-low-pLDDT designs that only appear at higher temp
 aren't sampled; the coarse signal lives at that extreme (confounded with temp). (2) Both refolders are
 single-sequence (ESMFold + Boltz msa:empty, the correct mode for homolog-free designs), so the
-disagreement is partly two noisy single-seq models. (3) n=160; the CI admits a very weak ~0.6 but rules
-out the >=0.8 the pooled number implied.
+disagreement is partly two noisy single-seq models. (3) n=160; the CI admits a weak ~0.6 but rules
+out the >=0.75 the pooled number implied.
 """
 
 from __future__ import annotations

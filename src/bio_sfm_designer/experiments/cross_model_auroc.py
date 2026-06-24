@@ -7,16 +7,18 @@ Boltz-2-refold fixture (Boltz self-consistency label; Boltz = diffusion+Pairform
 and reports AUROC(ESMFold pLDDT -> BOLTZ success) -- a genuine cross-model check -- beside the
 single-model number and the label agreement between the two refolders.
 
-Result on the committed 120-design fixtures (5L33 monomer designs, temps 0.3/0.6/1.0):
-  ESMFold success 108/120, Boltz success 75/120; labels agree 72%; single-model AUROC 0.947 vs
-  cross-model AUROC 0.967. The pLDDT signal DOES transfer to an independent oracle (so it is not a
+Result on the committed 120-design fixtures (5L33 monomer designs, temps 0.3/0.6/1.0; CLEAN re-fold
+after the Boltz work-dir caching bug was fixed 2026-06-24):
+  ESMFold success 108/120, Boltz success 77/120; labels agree 72%; single-model AUROC 0.947 vs
+  cross-model AUROC 0.943. The pLDDT signal DOES transfer to an independent oracle (so it is not a
   pure self-prediction artifact) -- but read the AUROC with three honest caveats (a self-review of
   this very result; see `run()`'s per-temp / within-temp / bootstrap fields):
-   1. TEMPERATURE CONFOUND: failures concentrate at sampling temp 1.0 (Boltz 1/40 success there,
-      mean scRMSD 10.3 A) and pLDDT tracks temperature, so most of the AUROC is separating easy
-      (low-temp) from hard (high-temp) BATCHES, not a fine-grained per-design signal. Within temp
-      1.0 the cross-model AUROC is degenerate (1 positive).
-   2. NOT SIGNIFICANTLY HIGHER: the (cross - single) 95% bootstrap CI contains 0 -- 0.967 vs 0.947
+   1. TEMPERATURE CONFOUND: failures concentrate at sampling temp 1.0 (Boltz 4/40 success there) and
+      pLDDT tracks temperature, so most of the AUROC is separating easy (low-temp) from hard
+      (high-temp) BATCHES, not a fine-grained per-design signal. Within temp 0.6 the cross-model
+      AUROC is only 0.723 (the honest per-design number; cf. the dedicated within-regime test in
+      within_regime_signal.py, AUROC 0.59 at a fixed temperature).
+   2. NOT SIGNIFICANTLY HIGHER: the (cross - single) 95% bootstrap CI contains 0 -- 0.943 vs 0.947
       are statistically indistinguishable at n=120. Do NOT claim cross-model "predicts better".
    3. BOLTZ-msa:empty CONFOUND: Boltz single-sequence is "not recommended" (reduced accuracy); its
       higher failure rate may be a weak single-seq refold (10 A at temp 1.0), not designs being bad

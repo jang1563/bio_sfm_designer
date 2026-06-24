@@ -18,17 +18,18 @@ standard protocol (refold with an INDEPENDENT predictor, e.g. AF2, or compare to
 structure). It measures "does ESMFold confidence predict ESMFold self-consistency" -- a weaker claim
 than de-novo design success, and on small n the CI is wide. Read the AUROC accordingly.
 M6a measured this with an INDEPENDENT Boltz-2 refold (experiments/cross_model_auroc.py): the signal
-TRANSFERS -- AUROC(ESMFold pLDDT -> BOLTZ success) ~0.95, labels agree 72% -- so it is not pure
+TRANSFERS -- AUROC(ESMFold pLDDT -> BOLTZ success) = 0.943, labels agree 72% -- so it is not pure
 self-prediction. But honestly (a self-review): it is NOT significantly above the single-model 0.947
 (the difference's 95% CI spans 0), and the AUROC is inflated by a TEMPERATURE confound (failures
-concentrate at sampling temp 1.0; within that stratum Boltz success is ~degenerate), plus Boltz ran
-msa:empty (a weak single-seq refolder, ~10 A at temp 1.0). So the caveat is ADDRESSED, not cleanly
-closed -- a tighter test needs within-stratum analysis + a validated refolder (Boltz+MSA or AF2).
+concentrate at sampling temp 1.0; Boltz 4/40 success there), plus Boltz ran msa:empty (a weak
+single-seq refolder). So the caveat is ADDRESSED, not cleanly closed -- a tighter test needs
+within-stratum analysis + a validated refolder (Boltz+MSA or AF2).
 M6b RAN that within-stratum test (experiments/within_regime_signal.py: 160 designs at a FIXED temp
-0.7, Boltz mix 101/160): AUROC(ESMFold pLDDT -> Boltz success) = 0.55, CI [0.45, 0.65] -- CHANCE,
-non-monotone by pLDDT tertile. So the pooled 0.967 was a TEMPERATURE batch effect; at fixed difficulty
-ESMFold pLDDT does NOT predict an independent model's per-design success. Honest read: monomer pLDDT-risk
-is a COARSE difficulty filter (rejects clearly-bad designs), NOT a fine per-design trust oracle.
+0.7, Boltz mix 120/160): AUROC(ESMFold pLDDT -> Boltz success) = 0.59, CI [0.48, 0.70] -- WEAK, not
+significantly above chance; non-monotone by pLDDT tertile. So the pooled 0.943 was a TEMPERATURE batch
+effect; at fixed difficulty ESMFold pLDDT barely predicts an independent model's per-design success.
+Honest read: monomer pLDDT-risk is a COARSE difficulty filter, NOT a fine per-design trust oracle.
+(Numbers are the CLEAN re-fold after a Boltz work-dir caching bug was fixed 2026-06-24.)
 RUNS ON CAYUGA (GPU; ESMFold). See run_predict_esmfold.sbatch.
 """
 

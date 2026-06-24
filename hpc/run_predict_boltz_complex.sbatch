@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=biosfm-boltzX
+#SBATCH --output=hpc_outputs/logs/biosfm-boltzX-%j.out
+#SBATCH --error=hpc_outputs/logs/biosfm-boltzX-%j.err
+#SBATCH --partition=scu-gpu
+#SBATCH --gres=gpu:a40:1
+#SBATCH --time=06:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=64G
+
+# Boltz-2 COMPLEX refold (M6c-lite): refold designed complexes (target + redesigned binder, msa: empty)
+# -> records.jsonl carrying ipTM (interface signal) + interface L-RMSD success (independent label), for the
+# within-regime complex de-risk. `boltz` env + PYTHONNOUSERSITE=1 + --no_kernels. Complexes are LARGER than
+# monomers (here ~454 aa) so folding is much slower -- budget accordingly; lower SAMPLING_STEPS to trade speed.
+set -euo pipefail
+module load anaconda3/2023.09-3 2>/dev/null || true
+export PYTHONNOUSERSITE=1
+
+PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
+ENV_PY="${ENV_PY:-$HOME/.conda/envs/boltz/bin/python}"
+CANDIDATES="${CANDIDATES:?Set CANDIDATES to a complex candidates.jsonl}"
+BACKBONE="${BACKBONE:?Set BACKBONE to the reference complex PDB}"
+TARGET_CHAIN="${TARGET_CHAIN:-A}"
+BINDER_CHAIN="${BINDER_CHAIN:-C}"
+THRESHOLD="${THRESHOLD:-4.0}"
+SAMPLING_STEPS="${SAMPLING_STEPS:-100}"
+OUT="${OUT:-$PROJECT_ROOT/hpc_outputs/predict/records_boltz_complex.jsonl}"
+
+mkdir -p "$(dirname "$OUT")" "$PROJECT_ROOT/hpc_outputs/logs"
+cd "$PROJECT_ROOT"
+"$ENV_PY" hpc/predict_boltz_complex.py --candidates "$CANDIDATES" --backbone "$BACKBONE" \
+  --target-chain "$TARGET_CHAIN" --binder-chain "$BINDER_CHAIN" \
+  --out "$OUT" --threshold "$THRESHOLD" --sampling-steps "$SAMPLING_STEPS"
+echo "boltz complex records -> $OUT"

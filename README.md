@@ -46,15 +46,17 @@ Past the stub milestone — the loop is closed on CPU and runs on a real, licens
 - The *distinctive* signal — disagreement with a cheap baseline — is **dead on de-novo protein design**
   (ProteinMPNN self-consistency ≈ 0.57, chance); it is validated only in the perturbation regime
   (cited, not claimed here).
-- Monomer pLDDT tracks fold *difficulty*: a pooled cross-temperature AUROC looks strong but is largely a
-  batch effect. Whether it carries per-design signal **at fixed difficulty** is under re-verification (below).
+- Monomer pLDDT tracks fold *difficulty*: a pooled cross-temperature cross-model AUROC looks strong (0.94)
+  but is largely a batch effect. At **fixed difficulty** the within-regime AUROC is only **0.59** (CI
+  [0.48, 0.70], not significantly above chance) — monomer pLDDT is a **coarse difficulty filter, not a fine
+  per-design trust oracle**.
 
-**In progress / under correction:**
-- A Boltz output-caching bug (a shared work dir silently reused stale predictions) was found 2026-06-24;
-  the cross-model and within-regime AUROCs are being recomputed on clean re-folds. Fixtures + claims will be
-  corrected — git history keeps the find→fix record.
-- Complex/binder interface de-risk (does ipTM discriminate at fixed difficulty?) — scripts built, paused
-  pending the clean monomer re-run.
+**In progress:**
+- A Boltz output-caching bug (a shared work dir silently reused stale predictions) was found **and fixed**
+  2026-06-24 (unique per-output work dir + wipe-on-start); M6a/M6b were re-folded clean and the numbers
+  above are post-fix. The find→fix is preserved in git history.
+- Complex/binder interface de-risk (does ipTM discriminate at fixed difficulty?) — scripts built; the next
+  experiment, since the trust gate's value on protein design now hinges on this regime.
 
 ## Install & run (stub loop — no GPU/weights/network)
 

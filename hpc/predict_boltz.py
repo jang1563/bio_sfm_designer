@@ -20,6 +20,7 @@ import glob
 import json
 import math
 import os
+import shutil
 import subprocess
 import sys
 
@@ -83,7 +84,11 @@ def main() -> None:
     with open(args.candidates) as fh:
         cands = [json.loads(line) for line in fh if line.strip()]
 
-    work = os.path.join(os.path.dirname(os.path.abspath(args.out)) or ".", "_boltz_work")
+    # work dir is UNIQUE per output AND wiped on start: Boltz SKIPS any prediction whose output already
+    # exists, so a shared/stale dir silently reuses a previous run's structures (a real contamination bug).
+    work = os.path.join(os.path.dirname(os.path.abspath(args.out)) or ".",
+                        "_boltz_work_" + os.path.splitext(os.path.basename(args.out))[0])
+    shutil.rmtree(work, ignore_errors=True)
     yamls = os.path.join(work, "yamls")
     outdir = os.path.join(work, "out")
     os.makedirs(yamls, exist_ok=True)
