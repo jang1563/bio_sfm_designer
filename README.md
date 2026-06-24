@@ -9,6 +9,10 @@ candidate, whether to
 
 and a **biosafety screen** runs before propose and before synth.
 
+**Built on [bio-sfm-trust-core](https://github.com/jang1563/bio-sfm-trust-core)** — the reusable,
+domain-agnostic trust engine (gate · calibration · conformal, pure stdlib). This repo is the biology
+*application*; that repo is the *engine*. The dependency is one-way: `designer → trust-core`.
+
 ## Why it isn't just another generative designer
 
 Proto/EvoDesign-class systems orchestrate many specialists but **trust their confidence
@@ -27,7 +31,32 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Install & run (M0 — no GPU/weights/network)
+## Status (2026-06-24)
+
+Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
+
+**Built & verified** (100 designer + 32 trust-core tests):
+- DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
+- Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
+  (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
+- **Conformal risk control** (RCPS / Hoeffding) so a `trust` carries a stated false-accept bound.
+- Tiered **biosafety screen** (lexicon → bioguard → DeBERTa), fail-closed, human-triage.
+
+**Honest findings** (this is measurement-first tooling — negatives are results):
+- The *distinctive* signal — disagreement with a cheap baseline — is **dead on de-novo protein design**
+  (ProteinMPNN self-consistency ≈ 0.57, chance); it is validated only in the perturbation regime
+  (cited, not claimed here).
+- Monomer pLDDT tracks fold *difficulty*: a pooled cross-temperature AUROC looks strong but is largely a
+  batch effect. Whether it carries per-design signal **at fixed difficulty** is under re-verification (below).
+
+**In progress / under correction:**
+- A Boltz output-caching bug (a shared work dir silently reused stale predictions) was found 2026-06-24;
+  the cross-model and within-regime AUROCs are being recomputed on clean re-folds. Fixtures + claims will be
+  corrected — git history keeps the find→fix record.
+- Complex/binder interface de-risk (does ipTM discriminate at fixed difficulty?) — scripts built, paused
+  pending the clean monomer re-run.
+
+## Install & run (stub loop — no GPU/weights/network)
 
 ```bash
 pip install -e ../bio-sfm-trust-core     # the trust engine (sibling repo)
@@ -44,8 +73,8 @@ objective being refused at the screen.
 | Path | Role |
 |---|---|
 | `loop/` | DBTL controller + planner + interpreter (Claude = orchestrator) |
-| `generate/` | Generator protocol + stub (real ProteinMPNN/RFdiffusion/ESM are later) |
-| `predict/` | Predictor protocol + stub (real Boltz-2/pLDDT is milestone M1) |
+| `generate/` | Generator protocol + stub + `Precomputed` adapter; real **ProteinMPNN** via `hpc/` |
+| `predict/` | Predictor protocol + stub + `Precomputed` adapter; real **ESMFold + Boltz-2** via `hpc/` |
 | `trust/` | the external calibrated gate + predictor→evidence adapter |
 | `safety/` | screening gate (built-in lexicon now; constitutional-bioguard via `[safety]`) |
 | `scoring/` | `net = benefit − λ·assays`, delegated to `bio_sfm_trust` |
