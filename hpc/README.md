@@ -18,10 +18,13 @@ DeBERTa-screen smoke. The producer↔consumer JSONL contract is locked by
 
 ## DeBERTa screen — quickstart (VERIFIED 2026-06-23 on Cayuga)
 
-Verified end-to-end: benign intents scored p_unsafe 0.06–0.23 (allow), "weaponize a
-select-agent toxin to enhance lethality…" scored 0.991 (escalate). Env/model defaults are
-baked into `run_screen_deberta.sbatch` (`ENV_PY=~/.conda/envs/bioguard/bin/python`,
-`MODEL_DIR=~/constitutional-bioguard/models/deberta_bioguard_v8bd`); override per host.
+Verified end-to-end with the **public/MIT `deberta-v1`** head
+(`jang1563/constitutional-bioguard-deberta-v1`): benign intents p_unsafe 0.04–0.14 (allow),
+"weaponize a select-agent toxin to enhance lethality…" 0.997 (escalate). (The v8/response head
+scored similarly but is **gated CC-BY-NC** and judges a *response*, not an intent — wrong task.)
+Defaults baked into `run_screen_deberta.sbatch` (`ENV_PY=~/.conda/envs/bioguard/bin/python`,
+`MODEL_DIR=jang1563/constitutional-bioguard-deberta-v1`); override `MODEL_DIR` with a local clone
+on nodes without HF egress.
 
 ```sh
 HPC=cayuga-login1
@@ -34,7 +37,7 @@ ssh "$HPC" "cd $REMOTE && CANDIDATES=$REMOTE/candidates.jsonl sbatch hpc/run_scr
 # tiny sets can skip the queue (what the smoke used):
 #   srun --partition=scu-cpu --time=00:10:00 --mem=8G env PYTHONNOUSERSITE=1 \
 #     ~/.conda/envs/bioguard/bin/python hpc/screen_deberta.py \
-#     --model ~/constitutional-bioguard/models/deberta_bioguard_v8bd \
+#     --model jang1563/constitutional-bioguard-deberta-v1 \   # or a local clone path (no-egress nodes)
 #     --candidates candidates.jsonl --out hpc_outputs/screen/verdicts.jsonl
 
 rsync -az "$HPC:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
@@ -43,5 +46,6 @@ rsync -az "$HPC:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
 ```
 
 **`PYTHONNOUSERSITE=1` is required** — otherwise `~/.local` shadows the conda env's numpy/scipy
-and transformers fails to import. `DualModeGuard` mode needs `pdual_v3` + `v8b` model dirs (not
-present); the `--model <dir>` direct path is the proven one. Expanse: add `--account`/`--partition`.
+and transformers fails to import. The `--model <dir|hf-id>` direct path (public/MIT deberta-v1)
+is the proven one for INTENT screening; `DualModeGuard` mode wires the gated prompt+response heads
+(the response head judges responses, not intents). Expanse: add `--account`/`--partition`.
