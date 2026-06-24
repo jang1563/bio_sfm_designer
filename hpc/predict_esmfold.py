@@ -17,10 +17,13 @@ CAVEAT -- single-model self-consistency: pLDDT and scRMSD both come from the SAM
 standard protocol (refold with an INDEPENDENT predictor, e.g. AF2, or compare to the experimental
 structure). It measures "does ESMFold confidence predict ESMFold self-consistency" -- a weaker claim
 than de-novo design success, and on small n the CI is wide. Read the AUROC accordingly.
-M6a MEASURED this with an INDEPENDENT Boltz-2 refold (hpc/predict_boltz.py, experiments/
-cross_model_auroc.py): on 120 designs the ESMFold/Boltz success labels agree 72% (genuinely
-different oracles), yet AUROC(ESMFold pLDDT -> BOLTZ success) = 0.967 >= the single-model 0.947 --
-the signal transfers to an independent model, so the caveat is closed (not a self-prediction artifact).
+M6a measured this with an INDEPENDENT Boltz-2 refold (experiments/cross_model_auroc.py): the signal
+TRANSFERS -- AUROC(ESMFold pLDDT -> BOLTZ success) ~0.95, labels agree 72% -- so it is not pure
+self-prediction. But honestly (a self-review): it is NOT significantly above the single-model 0.947
+(the difference's 95% CI spans 0), and the AUROC is inflated by a TEMPERATURE confound (failures
+concentrate at sampling temp 1.0; within that stratum Boltz success is ~degenerate), plus Boltz ran
+msa:empty (a weak single-seq refolder, ~10 A at temp 1.0). So the caveat is ADDRESSED, not cleanly
+closed -- a tighter test needs within-stratum analysis + a validated refolder (Boltz+MSA or AF2).
 RUNS ON CAYUGA (GPU; ESMFold). See run_predict_esmfold.sbatch.
 """
 
