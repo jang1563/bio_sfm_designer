@@ -54,6 +54,24 @@ class HeritabilityTests(unittest.TestCase):
             _MUT_K / len(parent) + 1e-9,
         )
 
+    def test_epistasis_zero_is_the_smooth_landscape(self):
+        # backward-compat: the default predictor (epistasis=0) is the M3a OneMax landscape.
+        from bio_sfm_designer.generate.base import stable_unit
+        seq = _denovo("zz")
+        smooth = sum(1 for pos, aa in enumerate(seq) if stable_unit(f"fit:{pos}:{aa}") > 0.5) / len(seq)
+        self.assertAlmostEqual(_seq_quality(seq, 0), round(smooth, 4), places=4)
+
+    def test_quality_heritable_under_epistasis(self):
+        # on a rugged (epistasis=K) landscape a mutated residue affects up to K+1 windows,
+        # so |Δquality| <= k*(K+1)/L — still heritable, just a larger constant.
+        seq = _denovo("p")
+        child = _mutate(seq, "c")
+        K = 3
+        self.assertLessEqual(
+            abs(_seq_quality(seq, K) - _seq_quality(child, K)),
+            _MUT_K * (K + 1) / len(seq) + 1e-9,
+        )
+
     def test_elite_parent_carried_forward_unchanged(self):
         # elitism: candidate 0 is the top parent (planner returns best-first), copied verbatim
         spec = _spec()

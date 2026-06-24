@@ -24,6 +24,9 @@ class ObjectiveSpec:
     candidates_per_round: int = 8
     assay_budget: int = 12
     seed: int = 0
+    acquisition: str = "greedy"     # parent-selection policy: greedy | ucb | thompson
+    acq_beta: float = 1.0           # exploration weight for ucb/thompson
+    diversity: bool = False         # farthest-point batch diversity over selected parents
     allowlist: List[str] = field(default_factory=list)
     meta: Dict[str, Any] = field(default_factory=dict)
 

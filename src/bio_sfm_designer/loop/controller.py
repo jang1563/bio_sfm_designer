@@ -59,7 +59,8 @@ class DBTLController:
         self.predictor = predictor or StubPredictor()
         self.gate = gate or TrustGate()
         self.screen = screen or SafetyScreen()
-        self.planner = planner or Planner()
+        # planner may be None -> built from the spec in run() (so acquisition/diversity are configurable)
+        self.planner = planner
         # provider (an LLM callable) makes the interpreter LLM-orchestrated; None -> deterministic.
         self.interpreter = interpreter or Interpreter(provider=provider)
 
@@ -76,6 +77,9 @@ class DBTLController:
             )
 
         self.gate.lam = spec.lam
+        planner = self.planner or Planner(
+            acquisition=spec.acquisition, beta=spec.acq_beta, diversity=spec.diversity, seed=spec.seed
+        )
         rows: List[Dict[str, Any]] = []
         all_decisions: List[Dict[str, Any]] = []
         history: List[Dict[str, Any]] = []
@@ -160,7 +164,7 @@ class DBTLController:
                         best = {"candidate_id": pc["candidate_id"], "realized_quality": pc["realized_quality"], "round": rnd}
 
             # 9. learn: seed next round, decide stop
-            parents = self.planner.select_parents(
+            parents = planner.select_parents(
                 routings, predictions, cand_by_id, k=max(1, spec.candidates_per_round // 2)
             )
             decision = self.interpreter.interpret(rnd, spec, history, assays_used)

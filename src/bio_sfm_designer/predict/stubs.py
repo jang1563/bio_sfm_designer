@@ -16,26 +16,37 @@ from ..types import Candidate, Prediction
 _CORRECT_QUALITY = 0.7   # quality >= this counts as a "correct" design
 
 
-def _seq_quality(seq: str) -> float:
+def _seq_quality(seq: str, epistasis: int = 0) -> float:
     """Hidden fitness landscape over a sequence, in [0, 1].
 
-    Each position has a hidden set of "good" residues; quality is the fraction of positions
-    holding a good one. A point mutation shifts quality by ~1/len(seq), so quality is
-    HERITABLE and the landscape is climbable by mutation+selection (OneMax-style): selecting
-    high-quality parents and mutating them (StubGenerator) raises quality across rounds —
-    this is what makes the closed loop actually improve. The gate never sees it: hidden
-    truth, surfaced only by a verify-assay / the scorer.
+    Quality is the fraction of positions whose local context is "good". With epistasis=0 each
+    position is independent (smooth, OneMax-like) — a single global optimum that greedy hill-
+    climbing solves optimally. With epistasis>0 a position's good/bad status depends on a window
+    of epistasis+1 residues (NK-style), creating LOCAL OPTIMA where pure exploitation can get
+    trapped and exploration (UCB / Thompson / diversity) pays off — as on real, rugged protein
+    fitness landscapes. Either way a point mutation shifts quality by ~(epistasis+1)/len, so
+    quality is HERITABLE and the landscape is climbable by mutation+selection. The gate never
+    sees it: hidden truth, surfaced only by a verify-assay / the scorer.
     """
     if not seq:
         return 0.0
-    good = sum(1 for pos, aa in enumerate(seq) if stable_unit(f"fit:{pos}:{aa}") > 0.5)
-    return round(good / len(seq), 4)
+    n = len(seq)
+    good = 0
+    for pos in range(n):
+        ctx = "".join(seq[(pos + j) % n] for j in range(epistasis + 1))  # window of epistasis+1 residues
+        if stable_unit(f"fit:{pos}:{ctx}") > 0.5:
+            good += 1
+    return round(good / n, 4)
 
 
 class StubPredictor:
+    def __init__(self, epistasis: int = 0) -> None:
+        # 0 -> smooth landscape (greedy-optimal); >0 -> rugged (exploration pays). See _seq_quality.
+        self.epistasis = epistasis
+
     def predict(self, candidate: Candidate, spec: ObjectiveSpec) -> Prediction:
         cid = candidate.id
-        quality = _seq_quality(candidate.representation)               # heritable, sequence-derived
+        quality = _seq_quality(candidate.representation, self.epistasis)  # heritable, sequence-derived
         regime = "complex" if stable_unit(cid + ":regime") < 0.4 else "monomer"
         has_baseline = stable_unit(cid + ":hb") > 0.20                  # ~80% have a baseline
 
