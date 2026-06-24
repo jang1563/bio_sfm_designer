@@ -16,17 +16,33 @@ from ..types import Candidate, Prediction
 _CORRECT_QUALITY = 0.7   # quality >= this counts as a "correct" design
 
 
+def _seq_quality(seq: str) -> float:
+    """Hidden fitness landscape over a sequence, in [0, 1].
+
+    Each position has a hidden set of "good" residues; quality is the fraction of positions
+    holding a good one. A point mutation shifts quality by ~1/len(seq), so quality is
+    HERITABLE and the landscape is climbable by mutation+selection (OneMax-style): selecting
+    high-quality parents and mutating them (StubGenerator) raises quality across rounds —
+    this is what makes the closed loop actually improve. The gate never sees it: hidden
+    truth, surfaced only by a verify-assay / the scorer.
+    """
+    if not seq:
+        return 0.0
+    good = sum(1 for pos, aa in enumerate(seq) if stable_unit(f"fit:{pos}:{aa}") > 0.5)
+    return round(good / len(seq), 4)
+
+
 class StubPredictor:
     def predict(self, candidate: Candidate, spec: ObjectiveSpec) -> Prediction:
         cid = candidate.id
-        raw_conf = round(0.40 + 0.59 * stable_unit(cid + ":conf"), 4)   # 0.40..0.99
+        quality = _seq_quality(candidate.representation)               # heritable, sequence-derived
         regime = "complex" if stable_unit(cid + ":regime") < 0.4 else "monomer"
         has_baseline = stable_unit(cid + ":hb") > 0.20                  # ~80% have a baseline
 
         if regime == "monomer":
-            quality = raw_conf                                         # calibrated
+            raw_conf = quality                                         # calibrated: confidence tracks quality
         else:
-            quality = round(stable_unit(cid + ":qual"), 4)            # overconfident / decoupled
+            raw_conf = round(0.40 + 0.59 * stable_unit(cid + ":conf"), 4)  # overconfident / decoupled
 
         sfm_correct = quality >= _CORRECT_QUALITY
         baseline_value = (

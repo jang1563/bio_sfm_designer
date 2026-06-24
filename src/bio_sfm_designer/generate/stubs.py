@@ -9,11 +9,40 @@ from ..types import Candidate
 from .base import stable_unit
 
 _AA = "ACDEFGHIKLMNPQRSTVWY"
+_SEQ_LEN = 24
+_MUT_K = 2   # residues point-mutated per child — the local-search step size
+
+
+def _denovo(cid: str, length: int = _SEQ_LEN) -> str:
+    """A fresh pseudo-sequence, deterministic from the id (round 0 / no parent)."""
+    return "".join(_AA[int(stable_unit(f"{cid}:{p}") * len(_AA)) % len(_AA)] for p in range(length))
+
+
+def _mutate(parent_seq: str, cid: str, k: int = _MUT_K) -> str:
+    """Point-mutate the parent at k positions, deterministically from the child id.
+
+    This is the channel that closes the loop: the child INHERITS the parent's sequence
+    (and thus most of its landscape quality) and explores a few residues around it, so
+    selecting good parents and mutating them climbs the StubPredictor's fitness landscape.
+    """
+    chars = list(parent_seq)
+    length = len(chars)
+    for m in range(k):
+        pos = int(stable_unit(f"{cid}:mpos:{m}") * length) % length
+        chars[pos] = _AA[int(stable_unit(f"{cid}:maa:{m}") * len(_AA)) % len(_AA)]
+    return "".join(chars)
 
 
 class StubGenerator:
-    """Emits reproducible pseudo-designs. Later rounds are seeded from `parents`,
-    so the loop visibly iterates, but no real generative model is invoked."""
+    """Emits reproducible pseudo-designs. Round 0 is de novo; later rounds MUTATE the
+    selected `parents`, so a child inherits its parent's sequence — the loop genuinely
+    iterates (heritable designs), though no real generative model is invoked.
+
+    Elitism: candidate 0 carries the top-ranked parent forward UNCHANGED (parents arrive
+    best-first from the planner), so the running champion's quality never regresses while
+    the rest of the batch explores around the selected parents. This is a (μ+λ) step; the
+    generator trusts the planner's ranking and never peeks at the hidden fitness.
+    """
 
     def propose(
         self,
@@ -26,8 +55,12 @@ class StubGenerator:
         for i in range(n):
             parent = parents[i % len(parents)] if parents else None
             cid = f"{spec.objective}-r{round}-c{i}-s{spec.seed}"
-            # 24-residue pseudo-sequence, deterministic from the id
-            seq = "".join(_AA[int(stable_unit(f"{cid}:{p}") * len(_AA)) % len(_AA)] for p in range(24))
+            if not parent or not parent.representation:
+                seq = _denovo(cid)
+            elif i == 0:
+                seq = parent.representation          # elitism: carry the best parent forward unchanged
+            else:
+                seq = _mutate(parent.representation, cid)
             out.append(
                 Candidate(
                     id=cid,
