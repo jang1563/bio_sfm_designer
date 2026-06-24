@@ -16,29 +16,29 @@ Heavy stages run here, not locally (see `../docs/HPC.md`). Pattern: stage the pr
 DeBERTa-screen smoke. The producer↔consumer JSONL contract is locked by
 `tests/test_hpc_screen_contract.py` (a fake DeBERTa proves the round-trip without the cluster).
 
-## DeBERTa screen — quickstart (VERIFIED 2026-06-23 on Cayuga)
+## DeBERTa screen — quickstart
 
-Verified end-to-end with the **public/MIT `deberta-v1`** head
-(`jang1563/constitutional-bioguard-deberta-v1`): benign intents p_unsafe 0.04–0.14 (allow),
-"weaponize a select-agent toxin to enhance lethality…" 0.997 (escalate). (The v8/response head
-scored similarly but is **gated CC-BY-NC** and judges a *response*, not an intent — wrong task.)
-Defaults baked into `run_screen_deberta.sbatch` (`ENV_PY=~/.conda/envs/bioguard/bin/python`,
-`MODEL_DIR=jang1563/constitutional-bioguard-deberta-v1`); override `MODEL_DIR` with a local clone
-on nodes without HF egress.
+**Bring your own trained head.** `microsoft/deberta-v3-base` (MIT, arxiv:2111.09543) is the BASE
+encoder — it has no classification head, so it cannot screen by itself (a raw load gives a random
+head). Set `MODEL_DIR` to a **trained** bio-harm head: a local dir, or an HF id you fine-tuned from
+deberta-v3-base. The repo pins no model; the model-free default is the built-in lexicon
+(`safety.SafetyScreen`). The pipeline was verified end-to-end 2026-06-23 on Cayuga using one
+trained head (the public/MIT `deberta-v1`): benign intents p_unsafe 0.04–0.14 (allow), "weaponize a
+select-agent toxin…" 0.997 (escalate).
 
 ```sh
 HPC=cayuga-login1
 REMOTE=/home/fs01/$USER/bio_sfm_designer        # or an /athena scratch path
+HEAD=/path/to/your/trained-head                 # local dir or HF id fine-tuned from deberta-v3-base
 
 python hpc/make_smoke_candidates.py --out candidates.jsonl     # local: the intents to screen
 rsync -az --exclude .venv --exclude hpc_outputs ./ "$HPC:$REMOTE/"
-ssh "$HPC" "cd $REMOTE && CANDIDATES=$REMOTE/candidates.jsonl sbatch hpc/run_screen_deberta.sbatch"
+ssh "$HPC" "cd $REMOTE && CANDIDATES=$REMOTE/candidates.jsonl MODEL_DIR=$HEAD sbatch hpc/run_screen_deberta.sbatch"
 
-# tiny sets can skip the queue (what the smoke used):
+# tiny sets can skip the queue:
 #   srun --partition=scu-cpu --time=00:10:00 --mem=8G env PYTHONNOUSERSITE=1 \
 #     ~/.conda/envs/bioguard/bin/python hpc/screen_deberta.py \
-#     --model jang1563/constitutional-bioguard-deberta-v1 \   # or a local clone path (no-egress nodes)
-#     --candidates candidates.jsonl --out hpc_outputs/screen/verdicts.jsonl
+#     --model "$HEAD" --candidates candidates.jsonl --out hpc_outputs/screen/verdicts.jsonl
 
 rsync -az "$HPC:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
 # local: DBTLController(screen=PrecomputedScreen("hpc_outputs/screen/verdicts.jsonl")) consumes it
@@ -46,6 +46,5 @@ rsync -az "$HPC:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
 ```
 
 **`PYTHONNOUSERSITE=1` is required** — otherwise `~/.local` shadows the conda env's numpy/scipy
-and transformers fails to import. The `--model <dir|hf-id>` direct path (public/MIT deberta-v1)
-is the proven one for INTENT screening; `DualModeGuard` mode wires the gated prompt+response heads
-(the response head judges responses, not intents). Expanse: add `--account`/`--partition`.
+and transformers fails to import. `--model` takes a local dir or HF id but it must be a TRAINED
+head (the deberta-v3-base encoder alone yields a random head). Expanse: add `--account`/`--partition`.

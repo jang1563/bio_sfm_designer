@@ -54,8 +54,10 @@ the calibrated trust gate, screens before synth, scores `net = benefit − λ·a
 ## Revised milestones (HPC-aware)
 
 - **M2-live (was "real backends locally") → Cayuga jobs:**
-  - **DeBERTa screen** = `hpc/run_screen_deberta.sbatch` → `screen_deberta.py` reads a
-    candidates JSONL, scores with the existing Cayuga bioguard env, writes `verdicts.jsonl`.
+  - **DeBERTa screen** = `hpc/run_screen_deberta.sbatch` → `screen_deberta.py` reads a candidates
+    JSONL, scores with a TRAINED bio-harm head supplied via `MODEL_DIR` (the repo pins no model;
+    `microsoft/deberta-v3-base` (MIT) is the base encoder these heads fine-tune from — it can't
+    screen on its own), writes `verdicts.jsonl`.
     Local: `safety.PrecomputedScreen` reads the synced verdicts (fail-closed on missing — a
     candidate with no verdict routes to human review, never silently advances); it's a drop-in
     `DBTLController(screen=...)`. The in-process `_load_deberta()` in `safety/screen.py` stays
