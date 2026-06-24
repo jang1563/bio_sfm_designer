@@ -71,6 +71,16 @@ class RoutingTests(unittest.TestCase):
         self.assertTrue(gate.prevalidate("complex", raw_risks, wrong))
         self.assertTrue(gate.any_calibrated())
 
+    def test_prevalidate_refuses_a_non_separable_regime(self):
+        # the offline validity gate must REFUSE when risk does NOT predict wrongness (AUROC<0.7 or
+        # calibrated-selective fails to beat trust-all). Otherwise an unvalidated regime would start
+        # trusting a useless signal -- exactly the failure the gate exists to prevent.
+        risks = [0.1, 0.9] * 8
+        wrong = [0, 1, 1, 0] * 4          # wrongness independent of risk
+        gate = TrustGate(lam=0.5)
+        self.assertFalse(gate.prevalidate("complex", risks, wrong))   # refused
+        self.assertFalse(gate._trust_eligible("complex"))             # so it still verifies/defers
+
     def test_calibration_refit_changes_risk(self):
         # feed verified observations that say low-raw-risk items are actually often wrong
         for i in range(12):

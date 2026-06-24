@@ -12,8 +12,12 @@ Per design it records:
                   (Without wet-lab data, self-consistency is the standard in-silico success label.)
   - truth.quality, scrmsd, proteinmpnn_score (a cheaper, fold-free signal) for offline analysis.
 
-This directly probes the project's top blind spot: does a confidence signal predict de-novo design
-success? (AUROC of pLDDT vs scRMSD<thr.) RUNS ON CAYUGA (GPU; ESMFold). See run_predict_esmfold.sbatch.
+CAVEAT -- single-model self-consistency: pLDDT and scRMSD both come from the SAME ESMFold pass, so
+"pLDDT predicts scRMSD<thr" is inflated by self-consistency of ONE model and is NOT comparable to the
+standard protocol (refold with an INDEPENDENT predictor, e.g. AF2, or compare to the experimental
+structure). It measures "does ESMFold confidence predict ESMFold self-consistency" -- a weaker claim
+than de-novo design success, and on small n the CI is wide. Read the AUROC accordingly.
+RUNS ON CAYUGA (GPU; ESMFold). See run_predict_esmfold.sbatch.
 """
 
 from __future__ import annotations
@@ -23,22 +27,40 @@ import json
 import sys
 
 
-def _ca_coords_from_pdb(path):
-    """CA coordinates [(x,y,z), ...] in residue order from a PDB (first model). Dedupes alternate
-    conformations: takes altLoc ' ' or 'A' only, one CA per (chain,resSeq,iCode). Without this,
-    altloc duplicates inflate the residue count and frame-shift the 1:1 backbone correspondence
-    (e.g. 5L33: 109 CA records but 106 residues), giving meaningless scRMSD. Pure-Python (no numpy)
-    so this fix is locally testable."""
-    coords, seen = [], set()
+# modified residues whose CA is written as HETATM but which ARE part of the chain (ProteinMPNN
+# and ESMFold treat them as standard residues, so the backbone CA list must include them).
+_MODIFIED_AA = {"MSE", "SEC", "PYL", "MLY", "CSO", "SEP", "TPO", "PTR", "HYP", "KCX", "LLP", "CME"}
+
+
+def _ca_coords_from_pdb(path, chain=None):
+    """CA coordinates [(x,y,z), ...] in residue order for ONE chain of a PDB (first model). Three
+    correspondence hazards are handled so scRMSD stays a true 1:1 comparison:
+      - altLoc: take ' '/'A' only, one CA per (chain,resSeq,iCode). Without this, altloc duplicates
+        inflate the count and frame-shift the alignment (e.g. 5L33: 109 CA records / 106 residues).
+      - modified residues: read CAs from HETATM too when the resName is a known modified AA (e.g.
+        MSE selenomethionine), which crystal structures use in place of MET; ProteinMPNN reads them
+        as standard residues, so dropping them would shorten the backbone and mismatch the design.
+      - chains: restrict to ONE chain (default: the first seen). ESMFold folds a single sequence, so
+        mixing chains would break the design<->backbone correspondence.
+    Pure-Python (no numpy) so this is locally testable."""
+    coords, seen, target_chain = [], set(), chain
     with open(path) as fh:
         for line in fh:
             if line.startswith("ENDMDL"):
                 break
-            if not line.startswith("ATOM") or line[12:16].strip() != "CA":
+            rec = line[:6].strip()
+            if rec not in ("ATOM", "HETATM") or line[12:16].strip() != "CA":
                 continue
+            if rec == "HETATM" and line[17:20].strip() not in _MODIFIED_AA:
+                continue                                # skip ligand/water CAs; keep modified AAs
             if line[16] not in (" ", "A"):              # skip alternate conformations B/C/...
                 continue
-            reskey = (line[21], line[22:27])            # chain + resSeq(+iCode)
+            ch = line[21]
+            if target_chain is None:
+                target_chain = ch                       # lock onto the first chain seen
+            if ch != target_chain:
+                continue
+            reskey = (ch, line[22:27])                  # chain + resSeq(+iCode)
             if reskey in seen:
                 continue
             seen.add(reskey)
@@ -65,6 +87,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="ESMFold refold + scRMSD -> structure records for the designer")
     ap.add_argument("--candidates", required=True, help="candidates.jsonl (ProteinMPNN designs)")
     ap.add_argument("--backbone", required=True, help="intended backbone PDB (the design target)")
+    ap.add_argument("--chain", default=None, help="backbone chain to align to (default: first chain seen)")
     ap.add_argument("--out", required=True, help="records.jsonl output")
     ap.add_argument("--threshold", type=float, default=2.0, help="scRMSD (A) below which a design 'succeeds'")
     ap.add_argument("--model", default="facebook/esmfold_v1")
@@ -74,7 +97,7 @@ def main() -> None:
     import torch
     from transformers import EsmForProteinFolding
 
-    target_ca = _ca_coords_from_pdb(args.backbone)
+    target_ca = _ca_coords_from_pdb(args.backbone, args.chain)
     with open(args.candidates) as fh:
         cands = [json.loads(line) for line in fh if line.strip()]
 
@@ -86,8 +109,9 @@ def main() -> None:
             seq = str(c["representation"])
             with torch.no_grad():
                 o = model.infer([seq])
-            pos = o["positions"]
-            pos = pos[-1, 0] if pos.dim() == 5 else (pos[0] if pos.dim() == 4 else pos)  # (L, atoms, 3)
+            pos = o["positions"]                              # ESMFold: (blocks, batch, L, atoms, 3)
+            pos = pos[-1, 0] if pos.dim() == 5 else (pos[0] if pos.dim() == 4 else pos)
+            assert pos.dim() == 3, f"unexpected ESMFold positions ndim={pos.dim()}"        # (L, atoms, 3)
             design_ca = pos[:, 1, :].detach().cpu().numpy()                                # CA = atom index 1
             plddt = o["plddt"]
             plddt_ca = plddt[0, :, 1] if plddt.dim() == 3 else plddt[0]                    # per-residue CA pLDDT
@@ -101,7 +125,9 @@ def main() -> None:
             L = min(len(design_ca), len(target_ca))
             scrmsd = _kabsch_rmsd(design_ca[:L], target_ca[:L]) if L >= 3 else float("nan")
             success = bool(aligned and np.isfinite(scrmsd) and scrmsd < args.threshold)
-            quality = round(max(0.0, 1.0 - scrmsd / 5.0), 4) if np.isfinite(scrmsd) else 0.0
+            # quality is gated on `aligned`: a frame-shifted (non-1:1) design must not report a
+            # plausible continuous quality from a truncated-prefix RMSD.
+            quality = round(max(0.0, 1.0 - scrmsd / 5.0), 4) if (aligned and np.isfinite(scrmsd)) else 0.0
 
             rec = {
                 "target_id": c["id"],

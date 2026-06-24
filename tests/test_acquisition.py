@@ -64,6 +64,21 @@ class AcquisitionTests(unittest.TestCase):
         self.assertEqual(len(first), 2)
         self.assertTrue(set(first) <= {"a", "b", "c"})
 
+    def test_thompson_actually_uses_risk(self):
+        # behavioral lock: a risk-AWARE Thompson must sometimes explore the lower-value/high-risk
+        # candidate. If it ignored sigma (collapsed to greedy), it would ALWAYS pick the higher-value
+        # one. A (val 0.80, risk 0) vs B (val 0.70, risk 0.9).
+        cands = {c.id: c for c in (_cand("A", "AAAA"), _cand("B", "CCCC"))}
+        preds = {"A": _pred("A", 0.80), "B": _pred("B", 0.70)}
+        risky = [_routing("A", calibrated_risk=0.0), _routing("B", calibrated_risk=0.9)]
+        flat = [_routing("A", calibrated_risk=0.0), _routing("B", calibrated_risk=0.0)]
+        picks_B_risky = sum(Planner("thompson", beta=1.0, seed=s).select_parents(risky, preds, cands, k=1)[0].id == "B"
+                            for s in range(40))
+        picks_B_flat = sum(Planner("thompson", beta=1.0, seed=s).select_parents(flat, preds, cands, k=1)[0].id == "B"
+                           for s in range(40))
+        self.assertGreater(picks_B_risky, 0, "risk-aware Thompson must sometimes explore the high-risk candidate")
+        self.assertGreater(picks_B_risky, picks_B_flat, "B's risk must drive its selection (vanishes when risk=0)")
+
     def test_diversity_spreads_the_batch(self):
         # greedy top-2 are near-duplicates (Hamming 1); diversity swaps in the far candidate.
         cands = {c.id: c for c in (_cand("hi1", "AAAAAAAA"), _cand("hi2", "AAAAAAAC"),

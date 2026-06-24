@@ -30,13 +30,15 @@ def _load():
     return mod
 
 
-# 3 residues; residue 2 has altloc A+B (two CA lines). A correct parser yields 3 CAs, not 4.
+# chain A: MET (ATOM), MSE (HETATM modified residue -> include), ALA with altLoc A+B (-> one CA).
+# chain B: GLY (-> excluded by default). HOH water (-> excluded). Correct parse of chain A = 3 CAs.
 _PDB = (
     "ATOM      1  CA  MET A   1      0.000   0.000   0.000  1.00 50.00           C\n"
-    "ATOM      2  CA AALA A   2      3.800   0.000   0.000  0.50 50.00           C\n"
-    "ATOM      3  CA BALA A   2      3.800   0.100   0.000  0.50 50.00           C\n"
-    "ATOM      4  CA  GLY A   3      7.600   0.000   0.000  1.00 50.00           C\n"
-    "HETATM    5  O   HOH A 101     1.000   1.000   1.000  1.00 50.00           O\n"
+    "HETATM    2  CA  MSE A   2      3.800   0.000   0.000  1.00 50.00          SE\n"
+    "ATOM      3  CA AALA A   3      7.600   0.000   0.000  0.50 50.00           C\n"
+    "ATOM      4  CA BALA A   3      7.600   0.100   0.000  0.50 50.00           C\n"
+    "ATOM      5  CA  GLY B   1      9.000   0.000   0.000  1.00 50.00           C\n"
+    "HETATM    6  O   HOH A 101     1.000   1.000   1.000  1.00 50.00           O\n"
 )
 
 
@@ -44,20 +46,26 @@ class PredictEsmfoldLogicTests(unittest.TestCase):
     def setUp(self):
         self.mod = _load()
 
-    def test_ca_parser_dedupes_altloc(self):
-        # pure-Python (no numpy): the altloc dedup is the 5L33 bug fix, locked locally
-        with tempfile.NamedTemporaryFile("w", suffix=".pdb", delete=False) as fh:
-            fh.write(_PDB)
-            p = fh.name
-        try:
-            ca = self.mod._ca_coords_from_pdb(p)
-        finally:
-            os.unlink(p)
-        self.assertEqual(len(ca), 3)                            # altloc B dropped, HETATM ignored
-        self.assertEqual(len(ca[0]), 3)
-        self.assertAlmostEqual(ca[1][0], 3.8)                   # kept altloc A of residue 2
+    def _write_pdb(self):
+        fh = tempfile.NamedTemporaryFile("w", suffix=".pdb", delete=False)
+        fh.write(_PDB)
+        fh.close()
+        self.addCleanup(os.unlink, fh.name)
+        return fh.name
 
-    @unittest.skipUnless(_HAS_NUMPY, "numpy not installed in this env (Kabsch verified on Cayuga)")
+    def test_ca_parser_altloc_modres_and_chain(self):
+        # pure-Python (no numpy): locks the 5L33-class correspondence fixes (altloc + MSE + chain)
+        p = self._write_pdb()
+        ca = self.mod._ca_coords_from_pdb(p)                    # default: first chain (A)
+        self.assertEqual(len(ca), 3)                            # MET + MSE(HETATM) + ALA(altloc A); B/HOH/altloc-B out
+        self.assertEqual(len(ca[0]), 3)
+        self.assertAlmostEqual(ca[1][0], 3.8)                   # MSE selenomethionine kept
+        self.assertAlmostEqual(ca[2][0], 7.6)                   # altloc A kept (B dropped)
+        cb = self.mod._ca_coords_from_pdb(p, "B")               # explicit chain selects the other chain only
+        self.assertEqual(len(cb), 1)
+        self.assertAlmostEqual(cb[0][0], 9.0)
+
+    @unittest.skipUnless(_HAS_NUMPY, "numpy not installed (full SVD invariance test runs on Cayuga)")
     def test_kabsch_rmsd_invariant_to_rigid_motion(self):
         import numpy as np
         P = [[0.0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]]
@@ -67,6 +75,13 @@ class PredictEsmfoldLogicTests(unittest.TestCase):
         R = np.array([[0.0, -1, 0], [1, 0, 0], [0, 0, 1]])
         Q = Pa @ R.T + np.array([10.0, -5, 3])
         self.assertAlmostEqual(self.mod._kabsch_rmsd(Pa, Q), 0.0, places=6)
+
+    @unittest.skipUnless(_HAS_NUMPY, "numpy not installed")
+    def test_kabsch_rmsd_known_value(self):
+        # closed-form check that the math (not just invariance) is right: two collinear points where
+        # the second is at x=1 vs x=2. Centered: ±0.5 vs ±1.0; optimal rotation is identity, so the
+        # residual is sqrt(((0.5)^2+(0.5)^2)/2) = 0.5 exactly.
+        self.assertAlmostEqual(self.mod._kabsch_rmsd([[0, 0, 0], [1, 0, 0]], [[0, 0, 0], [2, 0, 0]]), 0.5, places=6)
 
     def test_record_schema_feeds_structure_predictor(self):
         # a record shaped exactly like predict_esmfold.py emits must drive PrecomputedStructurePredictor

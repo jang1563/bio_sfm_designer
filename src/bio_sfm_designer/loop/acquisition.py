@@ -1,13 +1,17 @@
 """Acquisition functions for next-round parent selection (the 'Learn' step).
 
-Greedy top-k EXPLOITS predicted quality only. ML-guided-design practice (ALDE, EVOLVEpro) is
-blunt that top-k yields near-duplicate batches and that exploration — UCB and Thompson sampling
-— matters on rugged fitness landscapes. Each acquisition maps (mu, sigma, beta, rng) -> score:
+Greedy top-k EXPLOITS predicted quality only. ML-guided-design practice (ALDE, EVOLVEpro) notes
+that top-k yields near-duplicate batches and motivates exploration (UCB / Thompson) on rugged
+landscapes. These are provided as pluggable MECHANISM stubs: on the current synthetic landscape
+greedy+elitism is in fact competitive and UCB/Thompson do NOT reliably beat it -- partly because
+`sigma` here is ~(1 - quality) (see below), a crude exploration signal rather than a posterior
+variance over the property. Whether exploration pays is an empirical question for real fitness data
+(M4+). Each acquisition maps (mu, sigma, beta, rng) -> score:
 
     mu    = predicted quality (Prediction.value)
-    sigma = uncertainty proxy = the trust gate's CALIBRATED RISK, P(SFM wrong). A candidate the
-            gate is unsure about is an exploration target; this reuses the gate's own signal
-            rather than inventing a second uncertainty estimate.
+    sigma = uncertainty PROXY = the trust gate's CALIBRATED RISK, P(SFM wrong). This reuses the
+            gate's own signal instead of inventing a second estimate, but in the calibrated regime
+            it is ~(1 - quality), so it up-weights low-quality candidates -- a known limitation.
     beta  = exploration weight.
     rng   = a seeded RNG (Thompson only), so a campaign is reproducible.
 

@@ -22,9 +22,10 @@ def _seq_quality(seq: str, epistasis: int = 0) -> float:
     Quality is the fraction of positions whose local context is "good". With epistasis=0 each
     position is independent (smooth, OneMax-like) — a single global optimum that greedy hill-
     climbing solves optimally. With epistasis>0 a position's good/bad status depends on a window
-    of epistasis+1 residues (NK-style), creating LOCAL OPTIMA where pure exploitation can get
-    trapped and exploration (UCB / Thompson / diversity) pays off — as on real, rugged protein
-    fitness landscapes. Either way a point mutation shifts quality by ~(epistasis+1)/len, so
+    of epistasis+1 residues (NK-style), creating LOCAL OPTIMA (a rugged landscape). NOTE: ruggedness
+    alone does NOT make exploration win in this stub — empirically greedy+elitism still ties or beats
+    UCB/Thompson/diversity here (see loop/acquisition.py); treat the acquisition knobs as mechanism,
+    not a demonstrated improvement. Either way a point mutation shifts quality by ~(epistasis+1)/len, so
     quality is HERITABLE and the landscape is climbable by mutation+selection. The gate never
     sees it: hidden truth, surfaced only by a verify-assay / the scorer.
     """

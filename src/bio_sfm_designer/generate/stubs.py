@@ -39,9 +39,11 @@ class StubGenerator:
     iterates (heritable designs), though no real generative model is invoked.
 
     Elitism: candidate 0 carries the top-ranked parent forward UNCHANGED (parents arrive
-    best-first from the planner), so the running champion's quality never regresses while
-    the rest of the batch explores around the selected parents. This is a (μ+λ) step; the
-    generator trusts the planner's ranking and never peeks at the hidden fitness.
+    best-first from the planner). Under the default GREEDY acquisition this is the highest-quality
+    design, so the running champion never regresses (a (μ+λ) step); under exploratory acquisitions
+    parents[0] is the top-ACQUISITION design (not necessarily the highest quality), so the
+    no-regression guarantee is greedy-specific. Either way the generator trusts the planner's
+    ranking and never peeks at the hidden fitness.
     """
 
     def propose(
