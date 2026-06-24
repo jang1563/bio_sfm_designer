@@ -13,6 +13,7 @@ venv/
 results/
 *.jsonl
 !configs/*.yaml
+!tests/fixtures/*.jsonl
 
 # never commit credentials
 **/API_key/**
