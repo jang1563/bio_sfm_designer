@@ -70,5 +70,38 @@ class BeforeSynthScreenTests(unittest.TestCase):
         self.assertTrue(any("screen blocked" in r["rationale"] for r in result.rows))
 
 
+class TieredScreenTests(unittest.TestCase):
+    def _benign(self):
+        return ObjectiveSpec(target="thermostable GFP reporter", objective="stability")
+
+    def test_backend_falls_back_to_builtin_when_no_deps(self):
+        # neither torch nor constitutional-bioguard is installed in this env -> builtin_policy
+        self.assertEqual(SafetyScreen().backend, "builtin_policy")
+
+    def test_injected_classifier_escalates_a_flagged_objective(self):
+        screen = SafetyScreen(classifier=lambda text: (True, "stub classifier flag"))
+        v = screen.screen_target(self._benign())
+        self.assertFalse(v.allowed)
+        self.assertEqual(v.decision_class, "escalate")
+        self.assertEqual(v.source, "injected")
+
+    def test_injected_benign_classifier_allows(self):
+        v = SafetyScreen(classifier=lambda text: (False, "")).screen_target(self._benign())
+        self.assertTrue(v.allowed)
+
+    def test_classifier_error_does_not_crash(self):
+        def boom(text):
+            raise RuntimeError("model exploded")
+        v = SafetyScreen(classifier=boom).screen_target(self._benign())
+        self.assertTrue(v.allowed)  # classifier failure -> no flag -> built-in decision stands
+
+    def test_denylist_pre_filter_wins_over_classifier(self):
+        # a never-flagging classifier must not rescue an unconditional-hazard objective
+        screen = SafetyScreen(classifier=lambda text: (False, ""))
+        v = screen.screen_target(ObjectiveSpec(target="build a bioweapon", objective="x"))
+        self.assertFalse(v.allowed)
+        self.assertEqual(v.decision_class, "refuse")
+
+
 if __name__ == "__main__":
     unittest.main()
