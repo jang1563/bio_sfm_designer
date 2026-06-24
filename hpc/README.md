@@ -8,9 +8,13 @@ Heavy stages run here, not locally (see `../docs/HPC.md`). Pattern: stage the pr
 
 | Script | Stage | Status |
 |---|---|---|
-| `run_screen_deberta.sbatch` + `screen_deberta.py` | DeBERTa biosafety screen (intent-level) | ready — DeBERTa already on Cayuga |
-| `run_generate_*.sbatch` (RFdiffusion/ProteinMPNN/ESM) | generate | M3 (to add) |
-| `run_predict_boltz.sbatch` | Boltz-2 + pLDDT | reuse the audit's `run_phase2_boltz_predict.sbatch` pattern |
+| `run_screen_deberta.sbatch` + `screen_deberta.py` | DeBERTa biosafety screen (intent-level) | ready — DeBERTa already on Cayuga; consume with `safety.PrecomputedScreen` |
+| `run_generate.sbatch` + `generate_template.py` | generate (RFdiffusion/ProteinMPNN/ESM) | template — plug in the model; consume with `generate.PrecomputedGenerator` |
+| `run_predict_boltz.sbatch` | Boltz-2 + pLDDT | reuse the audit's `run_phase2_boltz_predict.sbatch`; consume with `predict.PrecomputedStructurePredictor` |
+
+`make_smoke_candidates.py` writes a tiny benign+hazardous `candidates.jsonl` to submit for a
+DeBERTa-screen smoke. The producer↔consumer JSONL contract is locked by
+`tests/test_hpc_screen_contract.py` (a fake DeBERTa proves the round-trip without the cluster).
 
 ## DeBERTa screen — quickstart
 
