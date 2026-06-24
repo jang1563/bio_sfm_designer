@@ -53,13 +53,15 @@ class CampaignResult:
 
 
 class DBTLController:
-    def __init__(self, generator=None, predictor=None, gate=None, screen=None, planner=None, interpreter=None):
+    def __init__(self, generator=None, predictor=None, gate=None, screen=None, planner=None,
+                 interpreter=None, provider=None):
         self.generator = generator or StubGenerator()
         self.predictor = predictor or StubPredictor()
         self.gate = gate or TrustGate()
         self.screen = screen or SafetyScreen()
         self.planner = planner or Planner()
-        self.interpreter = interpreter or Interpreter()
+        # provider (an LLM callable) makes the interpreter LLM-orchestrated; None -> deterministic.
+        self.interpreter = interpreter or Interpreter(provider=provider)
 
     def run(self, spec: ObjectiveSpec, out_dir: Optional[str] = None) -> CampaignResult:
         # 1. screen the objective before anything is generated
@@ -161,15 +163,18 @@ class DBTLController:
             parents = self.planner.select_parents(
                 routings, predictions, cand_by_id, k=max(1, spec.candidates_per_round // 2)
             )
-            stop, reason = self.interpreter.should_stop(rnd, spec, history, assays_used)
-            if stop:
-                history[-1]["stop_reason"] = reason
+            decision = self.interpreter.interpret(rnd, spec, history, assays_used)
+            if decision.get("hypothesis"):
+                history[-1]["llm_hypothesis"] = decision["hypothesis"]
+            if decision["stop"]:
+                history[-1]["stop_reason"] = decision["reason"]
                 break
 
         aggregate = summarize_actions(all_decisions, lam=spec.lam)
         per_round = [{"round": h["round"], **h["summary"],
                       "calibrator_fitted": h.get("calibrator_fitted", False),
-                      "stop_reason": h.get("stop_reason")} for h in history]
+                      "stop_reason": h.get("stop_reason"),
+                      "llm_hypothesis": h.get("llm_hypothesis")} for h in history]
 
         result = CampaignResult(
             status="allow",
