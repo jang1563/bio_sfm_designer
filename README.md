@@ -20,8 +20,10 @@ decision is **external and engineered**, not delegated to the orchestrator. See
 
 Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designer/trust/gate.py)):
 1. the gate is external — never "ask the LLM if it's confident";
-2. the competence signal is **disagreement with a cheap structural baseline**, not the
-   SFM's own confidence; where no baseline exists, the gate defaults to verify/defer;
+2. where a cheap structural baseline exists, the competence signal is **disagreement with it**
+   (not the SFM's own confidence); where none exists (e.g. protein structure), trust is
+   **restricted to calibration-validated regimes** (`trusted_regimes`) and others verify/defer
+   — complexes, whose pLDDT is uncalibrated, are never blindly trusted;
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
 ## Install & run (M0 — no GPU/weights/network)

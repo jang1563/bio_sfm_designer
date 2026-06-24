@@ -83,10 +83,13 @@ class DBTLController:
         rounds_run = 0
 
         for rnd in range(spec.rounds):
-            rounds_run = rnd + 1
             candidates = self.generator.propose(spec, rnd, spec.candidates_per_round, parents)
+            if not candidates:
+                break  # generator exhausted (e.g. a fixed target set) -> stop, no phantom round
+            rounds_run = rnd + 1
             cand_by_id = {c.id: c for c in candidates}
             predictions = {c.id: self.predictor.predict(c, spec) for c in candidates}
+            calibrated_this_round = self.gate._calibrator is not None  # calibrator state USED by this round
 
             routings = []
             for c in candidates:
@@ -140,17 +143,17 @@ class DBTLController:
                     "baseline_correct": bool((pred.truth or {}).get("baseline_correct", False)),
                 })
 
-            # refit the calibrator from verified data for the next round
-            gate_calibrated = self.gate.refit()
+            # refit the calibrator from verified data — takes effect on the NEXT round
+            self.gate.refit()
 
             # 8. score the round
             scored = score_round(routings, predictions, lam=spec.lam)
             scored["round"] = rnd
-            scored["calibrator_fitted"] = gate_calibrated
+            scored["calibrator_fitted"] = calibrated_this_round  # did THIS round's routing use a calibrator
             history.append(scored)
 
             for pc in scored["per_candidate"]:
-                if pc["correct"] == 1 and pc["realized_quality"] is not None:
+                if pc["correct"] == 1 and pc["action"] != "verify_assay" and pc["realized_quality"] is not None:
                     if best is None or pc["realized_quality"] > best["realized_quality"]:
                         best = {"candidate_id": pc["candidate_id"], "realized_quality": pc["realized_quality"], "round": rnd}
 

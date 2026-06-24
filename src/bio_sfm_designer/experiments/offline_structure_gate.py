@@ -27,33 +27,58 @@ def main() -> None:
     ap.add_argument("--correct-lddt", type=float, default=0.9)
     args = ap.parse_args()
 
-    records = read_jsonl(args.records)
-    raw = phase2_calibration_gate(records, lam=args.lam)
-    cal = calibrated_gate(records, lam=args.lam, correct_lddt=args.correct_lddt)
+    try:
+        records = read_jsonl(args.records)
+    except FileNotFoundError:
+        raise SystemExit(
+            f"records file not found: {args.records}\n"
+            "Pass --records PATH. The default fixture ships only in a source checkout "
+            "(tests/fixtures/phase2_targets_records.jsonl), not in an installed wheel."
+        )
 
+    mono = [r for r in records if r.get("regime") == "monomer"]
+    cplx = [r for r in records if r.get("regime") == "complex"]
+    raw = phase2_calibration_gate(records, lam=args.lam)
     rc = raw["regime_calibration"]
-    print("=" * 68)
+
+    def _cal(rs):
+        return calibrated_gate(rs, lam=args.lam, correct_lddt=args.correct_lddt) if rs else None
+
+    def _auroc(g):
+        return None if g is None else g["signal_validity"]["wrong_risk_auroc"]
+
+    cal_mono, cal_cplx, cal_all = _cal(mono), _cal(cplx), _cal(records)
+
+    print("=" * 72)
     print(f"OFFLINE STRUCTURE GATE  ({raw['scope']['n_targets']} targets: "
-          f"{raw['scope']['n_monomer']} monomer / {raw['scope']['n_complex']} complex)")
-    print("=" * 68)
+          f"{len(mono)} monomer / {len(cplx)} complex)")
+    print("=" * 72)
     print("calibration gap (Pearson pLDDT vs lDDT):")
     print(f"  monomer : {rc['monomer']['pearson_plddt_vs_quality']}")
     print(f"  complex : {rc['complex']['pearson_plddt_vs_quality']}")
-    print(f"  gap     : {rc['monomer_minus_complex']}  <- routing stakes; complex is NOT calibrated")
+    print(f"  gap     : {rc['monomer_minus_complex']}   <- complex pLDDT is NOT calibrated")
     print()
-    print(f"RAW binary gate (truth.correct):      {raw['decision']}")
-    print(f"  wrong-risk AUROC: {raw['signal_validity']['wrong_risk_auroc']} "
-          f"(Boltz-2 right ~95% -> trust-all ~= oracle; raw signal degenerate)")
-    print(f"LOO-isotonic gate (lDDT>={args.correct_lddt}):  {cal['decision']}")
-    print(f"  n_wrong: {cal['scope']['n_wrong']} | margin vs trust-all: {cal['margins']['vs_trust_all']} "
-          f"| real-minus-shuffled: {cal['margins']['real_minus_shuffled']}")
+    print(f"RAW binary gate (truth.correct):  {raw['decision']}")
+    print("  (Boltz-2 right ~95% -> trust-all ~= oracle; the raw binary signal is degenerate)")
     print()
-    print("interpretation: the binary gate degenerates to trust-all, but the calibrated "
-          "(lDDT-0.9) gate fires; calibration is sound for MONOMERS only. Do not claim "
-          "interface calibration (see docs/RELATED_WORK.md).")
+    print(f"LOO-isotonic gate (lDDT>={args.correct_lddt}), reported PER REGIME:")
+    print(f"  monomer-only : {cal_mono['decision']:<36}  wrong-risk AUROC={_auroc(cal_mono)}")
+    print(f"  complex-only : {cal_cplx['decision']:<36}  wrong-risk AUROC={_auroc(cal_cplx)}")
+    print(f"  pooled       : {cal_all['decision']:<36}  wrong-risk AUROC={_auroc(cal_all)}")
     print()
-    print(json.dumps({"raw_decision": raw["decision"], "calibrated_decision": cal["decision"],
-                      "calibration_gap": rc["monomer_minus_complex"]}, indent=2))
+    print("interpretation: the calibrated wrong-risk signal is STRONG for monomers and WEAK for")
+    print("complexes. The pooled 'interface_pilot' verdict only reaches its per-regime power floor")
+    print("because complexes are counted — it is NOT an interface-calibration claim. Trust is scoped")
+    print("to monomers; complexes verify/defer (see docs/RELATED_WORK.md blind spot #2).")
+    print()
+    print(json.dumps({
+        "raw_decision": raw["decision"],
+        "calibrated_decision_monomer": cal_mono["decision"],
+        "calibrated_decision_complex": cal_cplx["decision"],
+        "calibration_gap": rc["monomer_minus_complex"],
+        "auroc_monomer": _auroc(cal_mono),
+        "auroc_complex": _auroc(cal_cplx),
+    }, indent=2))
 
 
 if __name__ == "__main__":

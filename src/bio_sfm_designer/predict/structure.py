@@ -6,11 +6,12 @@ precomputed. The SAME DBTL controller can therefore run on real structure data b
 swapping in `StructureRecordGenerator` + `PrecomputedStructurePredictor`.
 
 Honest scoping (see docs/RELATED_WORK.md blind spot #2): pLDDT is well-calibrated for
-monomers (Pearson ~0.89 vs lDDT) but poorly for complexes/interfaces (~0.16). The gate
-routes on the calibrated risk; we do NOT claim interface calibration. There is no cheap
-numeric structural baseline per target here (template correctness is a hidden-truth field,
-not a model-visible prediction), so `baseline_value` is left None and the structure
-substrate exercises trust-vs-verify routing rather than the baseline-disagreement path.
+monomers (Pearson ~0.89 vs lDDT) but poorly for complexes/interfaces (~0.16). Only
+`monomer` is in the gate's `trusted_regimes`, so complexes are never trusted outright —
+they route to verify/defer. There is no model-visible numeric structural baseline per
+target (template correctness is a hidden-truth field), so `baseline_value` is None and
+`has_baseline` is False (the no-baseline -> verify/defer safety net is therefore live);
+the real ipTM is carried through for the complex interface-risk blend.
 """
 
 from __future__ import annotations
@@ -30,13 +31,15 @@ def load_structure_records(path: str) -> List[dict]:
 def _prediction_from_record(rec: dict) -> Prediction:
     plddt_unit = float(rec["mean_plddt"]) / 100.0
     truth = rec.get("truth", {})
+    iptm = rec.get("iptm")
     return Prediction(
         candidate_id=str(rec["target_id"]),
         value=round(plddt_unit, 6),          # visible proxy (pLDDT); realized lDDT stays hidden
         raw_conf=round(plddt_unit, 6),
         regime=rec.get("regime", "monomer"),
+        iptm=float(iptm) if iptm is not None else None,   # real interface confidence (complexes)
         baseline_value=None,                 # no model-visible numeric template baseline per target
-        has_baseline=True,                   # a template/homology baseline conceptually exists
+        has_baseline=False,                  # no numeric baseline -> no-baseline verify/defer net is live
         truth={
             "sfm_correct": bool(truth.get("correct", False)),
             "baseline_correct": bool(rec.get("template_baseline_correct", False)),

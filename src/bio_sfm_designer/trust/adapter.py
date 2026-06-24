@@ -25,7 +25,7 @@ def to_evidence(prediction: Prediction) -> Dict[str, Any]:
     return {
         "candidate_id": prediction.candidate_id,
         "regime": prediction.regime,
-        "calibrated_confidence": round(prediction.raw_conf, 6),  # scalar, never a raw latent
+        "raw_confidence": round(prediction.raw_conf, 6),  # raw scalar (uncalibrated), never a latent
         "raw_wrong_risk": round(raw_risk, 6),
         "has_cheap_baseline": prediction.has_baseline,
         "baseline_value": prediction.baseline_value,

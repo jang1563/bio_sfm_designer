@@ -62,16 +62,24 @@ class FullLoopTests(unittest.TestCase):
         self.assertLessEqual(result.assays_used, 3)
 
     def test_scoring_matches_trust_core(self):
-        # build one round of routings/predictions directly and confirm score_round agrees
+        # build one round directly and compare score_round to an INDEPENDENT hand computation
+        from bio_sfm_trust import action_outcome
         spec = _benign_spec()
         gen, pred_fn, gate = StubGenerator(), StubPredictor(), TrustGate(lam=spec.lam)
         cands = gen.propose(spec, 0, spec.candidates_per_round)
         preds = {c.id: pred_fn.predict(c, spec) for c in cands}
         routings = [gate.route(preds[c.id], lam=spec.lam) for c in cands]
         scored = score_round(routings, preds, lam=spec.lam)
-        n = scored["summary"]["n"]
-        self.assertEqual(n, len(cands))
-        self.assertIsInstance(scored["summary"]["net_reward_per_item"], float)
+        self.assertEqual(scored["summary"]["n"], len(cands))
+        # independent oracle: net = (sum correct - lam*sum assays) / n from the hidden truth
+        correct = assays = 0
+        for r in routings:
+            t = preds[r.candidate_id].truth
+            c, a = action_outcome(r.action, sfm_correct=t["sfm_correct"], baseline_correct=t["baseline_correct"])
+            correct += c
+            assays += a
+        expected = (correct - spec.lam * assays) / len(cands)
+        self.assertAlmostEqual(scored["summary"]["net_reward_per_item"], expected, places=6)
 
     def test_gate_never_receives_truth_in_evidence(self):
         result = DBTLController().run(_benign_spec())

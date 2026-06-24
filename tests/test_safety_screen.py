@@ -3,6 +3,7 @@ import unittest
 from bio_sfm_designer.config import ObjectiveSpec
 from bio_sfm_designer.safety import SafetyScreen, target_decision
 from bio_sfm_designer.loop.controller import DBTLController
+from bio_sfm_designer.types import ScreenVerdict
 
 
 class PolicyTests(unittest.TestCase):
@@ -44,6 +45,29 @@ class ControllerRefusalTests(unittest.TestCase):
         self.assertFalse(result.allowed)
         self.assertIn(result.status, ("refuse", "route_expert", "escalate", "clarify"))
         self.assertEqual(result.rounds_run, 0)
+
+
+class _BlockingScreen:
+    """Stub screen: the objective passes, but every candidate is blocked before synth."""
+    backend = "stub_blocking"
+
+    def screen_target(self, spec):
+        return ScreenVerdict(True, "allow", "stub", "objective ok")
+
+    def screen_candidate(self, candidate):
+        return ScreenVerdict(False, "refuse", "stub", "blocked design")
+
+
+class BeforeSynthScreenTests(unittest.TestCase):
+    def test_flagged_candidate_downgraded_to_defer(self):
+        spec = ObjectiveSpec(target="thermostable GFP reporter", objective="stability",
+                             rounds=1, candidates_per_round=8, assay_budget=8)
+        result = DBTLController(screen=_BlockingScreen()).run(spec)
+        self.assertTrue(result.allowed)                       # objective passed the screen
+        # every advancing candidate must be downgraded to defer by the pre-synth screen
+        self.assertTrue(all(r["action"] == "defer" for r in result.rows),
+                        [r["action"] for r in result.rows])
+        self.assertTrue(any("screen blocked" in r["rationale"] for r in result.rows))
 
 
 if __name__ == "__main__":

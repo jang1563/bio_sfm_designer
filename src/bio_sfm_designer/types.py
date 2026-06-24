@@ -34,9 +34,10 @@ class Prediction:
     candidate_id: str
     value: float                   # the predicted property (e.g. predicted stability / lDDT)
     raw_conf: float                # model-emitted confidence in [0,1] (e.g. pLDDT/100)
-    regime: str = "monomer"        # routing regime; "monomer" has a cheap structural baseline
-    baseline_value: Optional[float] = None   # cheap structural baseline's prediction
-    has_baseline: bool = True      # whether a cheap structural baseline exists for this regime
+    regime: str = "monomer"        # routing regime; "monomer" has validated calibration
+    iptm: Optional[float] = None   # interface confidence (complexes) — the real ipTM, not a pLDDT copy
+    baseline_value: Optional[float] = None   # model-visible cheap structural baseline prediction
+    has_baseline: bool = True      # whether a model-visible NUMERIC cheap baseline is present
     truth: Optional[Dict[str, Any]] = None    # HIDDEN: {sfm_correct, baseline_correct, quality}
 
     def to_record(self) -> Dict[str, Any]:
@@ -46,7 +47,8 @@ class Prediction:
             "mean_plddt": 100.0 * self.raw_conf,
         }
         if self.regime == "complex":
-            rec["iptm"] = self.raw_conf  # stub: reuse raw_conf as interface confidence
+            # real interface confidence when present; only genuine stubs fall back to raw_conf
+            rec["iptm"] = self.iptm if self.iptm is not None else self.raw_conf
         return rec
 
 

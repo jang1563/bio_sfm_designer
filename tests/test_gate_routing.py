@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import asdict
 
 from bio_sfm_designer.trust import TrustGate
 from bio_sfm_designer.types import Prediction
@@ -41,10 +42,24 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(r.action, "defer")
 
     def test_gate_never_sees_truth(self):
-        # routing must be identical whether the (hidden) truth says correct or wrong
+        # the FULL routing (risk scalars too, not just .action) must be invariant to hidden truth
         good = self.gate.route(_pred("e", 0.9, 0.95, baseline_value=0.92, sfm_correct=True))
         bad = self.gate.route(_pred("e", 0.9, 0.95, baseline_value=0.92, sfm_correct=False))
-        self.assertEqual(good.action, bad.action)
+        self.assertEqual(asdict(good), asdict(bad))
+
+    def test_gate_never_reads_truth_attribute(self):
+        # a proxy that raises if .truth is read proves route() never touches hidden truth
+        class _TruthPoison:
+            def __init__(self, p):
+                self._p = p
+
+            def __getattr__(self, name):
+                if name == "truth":
+                    raise AssertionError("TrustGate.route read hidden truth")
+                return getattr(self._p, name)
+
+        poisoned = _TruthPoison(_pred("p", 0.9, 0.95, baseline_value=0.92))
+        self.gate.route(poisoned)  # must not raise
 
     def test_calibration_refit_changes_risk(self):
         # feed verified observations that say low-raw-risk items are actually often wrong

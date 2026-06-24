@@ -36,13 +36,19 @@ class StructureFixtureTests(unittest.TestCase):
         self.assertLess(comp, 0.4)             # ~0.16
         self.assertGreater(rc["monomer_minus_complex"], 0.5)
 
-    def test_raw_gate_degenerates_but_calibrated_gate_fires(self):
+    def test_raw_gate_degenerates_and_calibration_is_monomer_scoped(self):
         raw = phase2_calibration_gate(self.records, lam=0.5)
-        cal = calibrated_gate(self.records, lam=0.5, correct_lddt=0.9)
         # binary truth.correct gate degenerates (Boltz-2 right ~95% -> trust-all ~= oracle)
         self.assertEqual(raw["decision"], "do_not_run_signal_not_calibrated")
-        # the LOO-isotonic gate at the stricter lDDT cutoff is eligible
-        self.assertEqual(cal["decision"], "eligible_for_phase2_interface_pilot")
+        mono = [r for r in self.records if r["regime"] == "monomer"]
+        cplx = [r for r in self.records if r["regime"] == "complex"]
+        cal_mono = calibrated_gate(mono, lam=0.5, correct_lddt=0.9)
+        cal_cplx = calibrated_gate(cplx, lam=0.5, correct_lddt=0.9)
+        # honest per-regime story: calibrated wrong-risk signal is strong for monomers, weak for complexes
+        self.assertGreater(
+            cal_mono["signal_validity"]["wrong_risk_auroc"],
+            cal_cplx["signal_validity"]["wrong_risk_auroc"],
+        )
 
 
 class StructurePredictorTests(unittest.TestCase):
@@ -56,16 +62,18 @@ class StructurePredictorTests(unittest.TestCase):
         # visible value must not equal the hidden lDDT (no leakage)
         self.assertNotEqual(p.value, p.truth["quality"])
 
-    def test_gate_routes_trust_or_verify_on_structure(self):
+    def test_complexes_never_trusted_monomers_can_be(self):
         gate = TrustGate(lam=0.5)
         pred = PrecomputedStructurePredictor(FIXTURE)
-        actions = set()
+        by_regime = {"monomer": set(), "complex": set()}
         for rec in load_structure_records(FIXTURE):
             p = pred.predict(Candidate(id=str(rec["target_id"]), representation=str(rec["target_id"])))
-            actions.add(gate.route(p, lam=0.5).action)
-        # no numeric baseline + has_baseline=True -> only trust/verify on this substrate
-        self.assertTrue(actions <= {"trust_sfm", "verify_assay"}, actions)
-        self.assertIn("trust_sfm", actions)
+            by_regime[rec["regime"]].add(gate.route(p, lam=0.5).action)
+        # complex is not a calibration-validated regime -> never trusted outright (regime guard)
+        self.assertNotIn("trust_sfm", by_regime["complex"], by_regime["complex"])
+        self.assertTrue(by_regime["complex"] <= {"verify_assay", "defer"}, by_regime["complex"])
+        # monomers (validated) can still be trusted
+        self.assertIn("trust_sfm", by_regime["monomer"])
 
 
 class StructureCampaignTests(unittest.TestCase):
@@ -86,8 +94,10 @@ class StructureCampaignTests(unittest.TestCase):
         self.assertTrue(result.allowed)
         self.assertEqual(result.rounds_run, 1)
         self.assertEqual(len(result.rows), 80)
-        seen = {row["action"] for row in result.rows}
-        self.assertTrue(seen <= {"trust_sfm", "verify_assay"}, seen)
+        # the regime guard: complexes are never trusted outright -> verify/defer only
+        complex_actions = {r["action"] for r in result.rows if r["evidence"]["regime"] == "complex"}
+        self.assertNotIn("trust_sfm", complex_actions, complex_actions)
+        self.assertTrue(complex_actions <= {"verify_assay", "defer"}, complex_actions)
 
 
 if __name__ == "__main__":

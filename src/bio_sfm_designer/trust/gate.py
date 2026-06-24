@@ -8,9 +8,11 @@ Three hard constraints (measured upstream; see docs/BACKGROUND.md) are encoded h
 
 1. The decision is engineered and external — we never ask the LLM whether it feels
    confident (its self-allocation is ≈ chance, and stronger models over-verify).
-2. The competence signal is DISAGREEMENT WITH A CHEAP STRUCTURAL BASELINE, not the
-   SFM's own confidence. Where no such baseline exists, the gate defaults to
-   verify/defer — it never blindly trusts.
+2. Where a cheap structural baseline exists (e.g. perturbation regimes), the competence
+   signal is DISAGREEMENT WITH THAT BASELINE rather than the SFM's own confidence. Where
+   none exists (e.g. protein structure), the verify/trust threshold uses the calibrated
+   confidence-risk and `trust_sfm` is RESTRICTED to calibration-validated regimes
+   (`trusted_regimes`); other regimes are verified/deferred, never blindly trusted.
 3. Confidence is consumed as a scalar risk (calibrated), never as a raw latent.
 
 Calibration is legitimate-data-only: it is fit from candidates whose truth was
@@ -36,10 +38,12 @@ class TrustGate:
         *,
         defer_threshold: float = 0.35,
         disagreement_tol: float = 0.15,
+        trusted_regimes: frozenset = frozenset({"monomer"}),
     ) -> None:
         self.lam = lam
         self.defer_threshold = defer_threshold
         self.disagreement_tol = disagreement_tol
+        self.trusted_regimes = trusted_regimes
         self._calibrator = None  # Callable[[float], float] once fit
         self._buffer: List[tuple] = []  # (raw_risk, wrong) from verified candidates
 
@@ -83,6 +87,13 @@ class TrustGate:
             action, why = "defer", "no structural baseline and risk non-trivial → abstain"
         else:
             action, why = "trust_sfm", f"calibrated risk {cal_risk:.2f} ≤ λ and agrees with baseline"
+
+        # Regime guard ("scoped to monomers"): only calibration-validated regimes may be
+        # trusted outright. Others (e.g. complexes, whose pLDDT is known-miscalibrated) are
+        # never blindly trusted — pay to verify (the assay budget may later downgrade to defer).
+        if action == "trust_sfm" and prediction.regime not in self.trusted_regimes:
+            action = "verify_assay"
+            why = f"regime '{prediction.regime}' not calibration-validated → verify instead of trust"
 
         return Routing(
             candidate_id=prediction.candidate_id,
