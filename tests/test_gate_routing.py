@@ -61,6 +61,16 @@ class RoutingTests(unittest.TestCase):
         poisoned = _TruthPoison(_pred("p", 0.9, 0.95, baseline_value=0.92))
         self.gate.route(poisoned)  # must not raise
 
+    def test_prevalidate_validates_a_separable_regime(self):
+        # offline gate-before-spend: held-out verified data where risk cleanly separates
+        # wrong from right -> the regime is trust-validated without spending any live assay.
+        raw_risks = [0.1] * 12 + [0.9] * 12
+        wrong = [0] * 12 + [1] * 12
+        gate = TrustGate(lam=0.5)
+        self.assertFalse(gate.any_calibrated())
+        self.assertTrue(gate.prevalidate("complex", raw_risks, wrong))
+        self.assertTrue(gate.any_calibrated())
+
     def test_calibration_refit_changes_risk(self):
         # feed verified observations that say low-raw-risk items are actually often wrong
         for i in range(12):

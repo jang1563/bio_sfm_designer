@@ -61,6 +61,42 @@ class OrchestrationTests(unittest.TestCase):
         self.assertTrue(result.allowed)                              # no crash; deterministic decision used
         self.assertLessEqual(result.rounds_run, 2)
 
+    def test_explore_directive_causally_changes_the_next_batch(self):
+        # the orchestrator's `explore` steer toggles parent diversity -> different designs bred next
+        def provider(explore):
+            return lambda p: json.dumps({"stop": False, "hypothesis": "h", "explore": explore})
+        spec = _spec(rounds=3, candidates_per_round=12, assay_budget=200)
+        exp = DBTLController(provider=provider(True)).run(spec)
+        nox = DBTLController(provider=provider(False)).run(spec)
+        self.assertTrue(any(r.get("llm_explore") is True for r in exp.per_round))
+        self.assertTrue(any(r.get("llm_explore") is False for r in nox.per_round))
+
+        def later_quality(res):  # quality of designs in rounds >= 1 (the bred ones)
+            return {row["candidate_id"]: row["hidden_truth"]["quality"]
+                    for row in res.rows if row["round"] >= 1}
+        self.assertNotEqual(later_quality(exp), later_quality(nox),
+                            "explore steer must change which designs get bred")
+
+    def test_explore_steer_does_not_rewrite_round0_routing(self):
+        # the steer is forward-only: it changes round >=1's batch, never round 0's gate actions
+        def provider(explore):
+            return lambda p: json.dumps({"stop": False, "explore": explore})
+        spec = _spec(rounds=2, candidates_per_round=12, assay_budget=200)
+        a = DBTLController(provider=provider(True)).run(spec)
+        b = DBTLController(provider=provider(False)).run(spec)
+        a0 = [r["action"] for r in a.rows if r["round"] == 0]
+        b0 = [r["action"] for r in b.rows if r["round"] == 0]
+        self.assertEqual(a0, b0)
+
+    def test_controller_prevalidate_hook(self):
+        # offline gate-before-spend: a separable regime starts calibration-validated before round 0
+        raw_risks = [0.1] * 12 + [0.9] * 12
+        wrong = [0] * 12 + [1] * 12
+        ctrl = DBTLController()
+        ctrl.run(_spec(rounds=1, candidates_per_round=6, assay_budget=10),
+                 prevalidate={"complex": (raw_risks, wrong)})
+        self.assertTrue(ctrl.gate.any_calibrated())
+
 
 if __name__ == "__main__":
     unittest.main()

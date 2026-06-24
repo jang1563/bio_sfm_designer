@@ -54,13 +54,16 @@ class Interpreter:
     def interpret(self, round: int, spec: ObjectiveSpec, history: List[Dict[str, Any]], assays_used: int) -> Dict[str, Any]:
         stop, reason = self.should_stop(round, spec, history, assays_used)
         hypothesis = None
+        explore = None  # the orchestrator's optional steer: diversify (True) vs exploit (False)
         if self.provider is not None and not stop:
             decision = self._ask_llm(round, spec, history)
             if decision:
                 hypothesis = decision.get("hypothesis")
+                if "explore" in decision:
+                    explore = bool(decision["explore"])
                 if decision.get("stop") is True:
                     stop, reason = True, f"llm: {decision.get('reason', 'orchestrator chose to stop')}"
-        return {"stop": stop, "reason": reason, "hypothesis": hypothesis}
+        return {"stop": stop, "reason": reason, "hypothesis": hypothesis, "explore": explore}
 
     def _ask_llm(self, round: int, spec: ObjectiveSpec, history: List[Dict[str, Any]]) -> Optional[dict]:
         summary = history[-1]["summary"] if history else {}
@@ -72,7 +75,9 @@ class Interpreter:
             f"Objective: {spec.objective} for target: {spec.target}\n"
             f"Round {round} (of max {spec.rounds}) results: {json.dumps(summary, sort_keys=True)}\n\n"
             'Reply with ONLY a JSON object: {"stop": <bool>, "reason": "<short>", '
-            '"hypothesis": "<one concrete next-round design direction>"}'
+            '"hypothesis": "<one concrete next-round design direction>", '
+            '"explore": <bool: true to DIVERSIFY the next batch (escape a plateau), '
+            'false to EXPLOIT the current best>}'
         )
         try:
             return _extract_json(self.provider(prompt))  # type: ignore[misc]

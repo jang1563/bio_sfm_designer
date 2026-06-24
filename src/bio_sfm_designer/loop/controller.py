@@ -64,7 +64,8 @@ class DBTLController:
         # provider (an LLM callable) makes the interpreter LLM-orchestrated; None -> deterministic.
         self.interpreter = interpreter or Interpreter(provider=provider)
 
-    def run(self, spec: ObjectiveSpec, out_dir: Optional[str] = None) -> CampaignResult:
+    def run(self, spec: ObjectiveSpec, out_dir: Optional[str] = None,
+            prevalidate: Optional[Dict[str, Any]] = None) -> CampaignResult:
         # 1. screen the objective before anything is generated
         verdict = self.screen.screen_target(spec)
         if not verdict.allowed:
@@ -80,6 +81,11 @@ class DBTLController:
         planner = self.planner or Planner(
             acquisition=spec.acquisition, beta=spec.acq_beta, diversity=spec.diversity, seed=spec.seed
         )
+        # offline gate-before-spend: pre-validate regimes from held-out verified data so the
+        # campaign can start trusting a regime instead of paying assays to earn it (M1.5/gate).
+        if prevalidate:
+            for regime, (raw_risks, wrong) in prevalidate.items():
+                self.gate.prevalidate(regime, list(raw_risks), list(wrong))
         rows: List[Dict[str, Any]] = []
         all_decisions: List[Dict[str, Any]] = []
         history: List[Dict[str, Any]] = []
@@ -163,22 +169,28 @@ class DBTLController:
                     if best is None or pc["realized_quality"] > best["realized_quality"]:
                         best = {"candidate_id": pc["candidate_id"], "realized_quality": pc["realized_quality"], "round": rnd}
 
-            # 9. learn: seed next round, decide stop
-            parents = planner.select_parents(
-                routings, predictions, cand_by_id, k=max(1, spec.candidates_per_round // 2)
-            )
+            # 9. learn: the orchestrator (interpreter) goes FIRST — it may stop early and may
+            #    steer exploration — THEN parents are selected under that steer. The steer changes
+            #    only WHICH designs are bred next; it never touches the trust-routing decision.
             decision = self.interpreter.interpret(rnd, spec, history, assays_used)
             if decision.get("hypothesis"):
                 history[-1]["llm_hypothesis"] = decision["hypothesis"]
+            if decision.get("explore") is not None:
+                planner.diversity = bool(decision["explore"])     # causal steer on the next batch
+                history[-1]["llm_explore"] = bool(decision["explore"])
             if decision["stop"]:
                 history[-1]["stop_reason"] = decision["reason"]
                 break
+            parents = planner.select_parents(
+                routings, predictions, cand_by_id, k=max(1, spec.candidates_per_round // 2)
+            )
 
         aggregate = summarize_actions(all_decisions, lam=spec.lam)
         per_round = [{"round": h["round"], **h["summary"],
                       "calibrator_fitted": h.get("calibrator_fitted", False),
                       "stop_reason": h.get("stop_reason"),
-                      "llm_hypothesis": h.get("llm_hypothesis")} for h in history]
+                      "llm_hypothesis": h.get("llm_hypothesis"),
+                      "llm_explore": h.get("llm_explore")} for h in history]
 
         result = CampaignResult(
             status="allow",
