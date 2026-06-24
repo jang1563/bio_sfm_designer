@@ -23,16 +23,28 @@ import sys
 
 
 def _classify_with_model_dir(model_dir, texts, threshold):
+    import math
+
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(model_dir)
     model = AutoModelForSequenceClassification.from_pretrained(model_dir).eval()
     out = []
+    n_nonfinite = 0
     with torch.no_grad():
         for t in texts:
             enc = tok(t, truncation=True, max_length=512, return_tensors="pt")
             p_unsafe = float(torch.softmax(model(**enc).logits, dim=-1)[0][-1])  # last class = unsafe
-            out.append((p_unsafe >= threshold, f"deberta p_unsafe={p_unsafe:.3f}", round(p_unsafe, 4)))
+            if not math.isfinite(p_unsafe):
+                n_nonfinite += 1
+                # fail-closed: NaN/inf -> flag for human review, valid JSON (no bare NaN)
+                out.append((True, "deberta returned non-finite score -> human review", None))
+            else:
+                out.append((p_unsafe >= threshold, f"deberta p_unsafe={p_unsafe:.3f}", round(p_unsafe, 4)))
+    if n_nonfinite:
+        print(f"WARNING: {n_nonfinite}/{len(texts)} predictions were non-finite — head is likely "
+              f"under-trained or mis-initialized; treating those as flagged for human review.",
+              file=__import__("sys").stderr)
     return out
 
 
