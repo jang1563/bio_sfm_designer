@@ -57,6 +57,19 @@ not the exact framework — so the continuous verification **price** + deferral 
    value + high dual-use risk) lives in the bad regime. Independently confirms the audit's
    monomer-0.89 / complex-0.16 gap. Implication: scope calibration claims to monomers; for
    interfaces consider ipTM/pDockQ (also unreliable) or conformal intervals; do not overclaim.
+
+   **Resolved in M1.5 (quantified on the 80-target fixture, λ=0.5).** "Verify everything in the
+   uncalibrated regime" is the *worst* deployable policy — on complexes it nets 0.500 at 1.0
+   assays/target, beaten by calibrated-selective (net 0.562 at 0.48 assays). The fix is NOT
+   blanket verify-all but **per-regime, calibration-validated trust**: route on the calibrated
+   wrong-risk and permit `trust_sfm` only where a regime clears an offline-gate check (AUROC≥0.7
+   AND calibrated-selective beats trust-all). The pLDDT-value miscalibration (Pearson 0.16) is
+   about *magnitude*; the *wrong-vs-right ranking* via ipTM-blend+isotonic is AUROC 0.82 — good
+   enough to route selectively. monomer is assumed-validated; complexes EARN trust via
+   `TrustGate.prevalidate` (offline) or online verified data, graduating from verify-all
+   (32 verify / 8 defer / 0 trust) to calibrated-selective (16 trust / 24 verify). Cold-start
+   caveat: a fresh de-novo (all-complex) campaign must verify up front to bootstrap the
+   per-regime calibrator, then selectivity amortizes — an explicit, measurable active-learning cost.
 3. **[ORANGE] Output screening beyond the lexicon.** ChemCrow's keyword filter was bypassed via
    IUPAC name — a direct analog of label-vs-identity mismatch. Motivates the coherence check;
    warns that M0's built-in lexicon is the evadable kind. Prioritize the M2 sequence-vs-claimed-

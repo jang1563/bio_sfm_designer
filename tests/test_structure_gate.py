@@ -2,7 +2,7 @@ import os
 import unittest
 from pathlib import Path
 
-from bio_sfm_trust import calibrated_gate, phase2_calibration_gate
+from bio_sfm_trust import calibrated_gate, confidence_to_risk, phase2_calibration_gate
 
 from bio_sfm_designer.config import ObjectiveSpec
 from bio_sfm_designer.loop.controller import DBTLController
@@ -98,6 +98,36 @@ class StructureCampaignTests(unittest.TestCase):
         complex_actions = {r["action"] for r in result.rows if r["evidence"]["regime"] == "complex"}
         self.assertNotIn("trust_sfm", complex_actions, complex_actions)
         self.assertTrue(complex_actions <= {"verify_assay", "defer"}, complex_actions)
+
+
+class RegimeCalibrationTests(unittest.TestCase):
+    """The M0/M1 trade-off conclusion: a regime graduates from verify-all to
+    calibrated-selective once its wrong-risk signal is validated (cheaper AND higher net)."""
+
+    def _complex_inputs(self):
+        cplx = [r for r in load_structure_records(FIXTURE) if r["regime"] == "complex"]
+        raw = [confidence_to_risk({"regime": "complex", "mean_plddt": r["mean_plddt"], "iptm": r.get("iptm")})
+               for r in cplx]
+        wrong = [1 if r["truth"]["quality"] < 0.9 else 0 for r in cplx]
+        cands = [Candidate(id=str(r["target_id"]), representation=str(r["target_id"])) for r in cplx]
+        return cands, raw, wrong
+
+    def test_complex_graduates_after_prevalidation(self):
+        pred = PrecomputedStructurePredictor(FIXTURE)
+        cands, raw, wrong = self._complex_inputs()
+
+        fresh = TrustGate(lam=0.5)
+        before = [fresh.route(pred.predict(c)).action for c in cands]
+        self.assertNotIn("trust_sfm", before, before)   # unvalidated -> bootstrap-verify, never trust
+
+        gate = TrustGate(lam=0.5)
+        self.assertTrue(gate.prevalidate("complex", raw, wrong))   # AUROC>=0.7 and beats trust-all
+        self.assertTrue(gate._trust_eligible("complex"))
+        after = [gate.route(pred.predict(c)).action for c in cands]
+
+        # calibrated-selective now trusts some complexes and verifies FEWER than bootstrap-verify-all
+        self.assertIn("trust_sfm", after)
+        self.assertLess(after.count("verify_assay"), before.count("verify_assay"))
 
 
 if __name__ == "__main__":

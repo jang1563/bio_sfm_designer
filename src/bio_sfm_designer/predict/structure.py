@@ -6,12 +6,15 @@ precomputed. The SAME DBTL controller can therefore run on real structure data b
 swapping in `StructureRecordGenerator` + `PrecomputedStructurePredictor`.
 
 Honest scoping (see docs/RELATED_WORK.md blind spot #2): pLDDT is well-calibrated for
-monomers (Pearson ~0.89 vs lDDT) but poorly for complexes/interfaces (~0.16). Only
-`monomer` is in the gate's `trusted_regimes`, so complexes are never trusted outright —
-they route to verify/defer. There is no model-visible numeric structural baseline per
-target (template correctness is a hidden-truth field), so `baseline_value` is None and
-`has_baseline` is False (the no-baseline -> verify/defer safety net is therefore live);
-the real ipTM is carried through for the complex interface-risk blend.
+monomers (Pearson ~0.89 vs lDDT) but poorly for complexes/interfaces (~0.16). monomer is
+assume-validated in the gate; complexes start UNvalidated, so they verify/defer (never
+trust the raw signal) until the complex regime is calibration-validated — either via the
+offline `TrustGate.prevalidate(...)` pass or by accumulating verified complexes online —
+at which point complexes route calibrated-selective (trust the low-risk, verify the rest).
+There is no model-visible numeric structural baseline per target (template correctness is
+a hidden-truth field), so `baseline_value` is None and `has_baseline` is False (the
+no-baseline -> verify/defer net is live); the real ipTM is carried through for the complex
+interface-risk blend.
 """
 
 from __future__ import annotations

@@ -89,7 +89,7 @@ class DBTLController:
             rounds_run = rnd + 1
             cand_by_id = {c.id: c for c in candidates}
             predictions = {c.id: self.predictor.predict(c, spec) for c in candidates}
-            calibrated_this_round = self.gate._calibrator is not None  # calibrator state USED by this round
+            calibrated_this_round = self.gate.any_calibrated()  # calibrator state USED by this round
 
             routings = []
             for c in candidates:
@@ -117,7 +117,7 @@ class DBTLController:
                 if routing.action == "verify_assay":
                     assays_used += 1
                     sfm_wrong = not bool((pred.truth or {}).get("sfm_correct", False))
-                    self.gate.observe_verified(routing.raw_risk, sfm_wrong)
+                    self.gate.observe_verified(routing.raw_risk, sfm_wrong, pred.regime)
 
                 routings.append(routing)
                 rows.append({
@@ -177,7 +177,7 @@ class DBTLController:
             target=spec.target,
             rounds_run=rounds_run,
             assays_used=assays_used,
-            gate_calibrated=self.gate._calibrator is not None,
+            gate_calibrated=self.gate.any_calibrated(),
             screen_backend=self.screen.backend,
             aggregate=aggregate,
             per_round=per_round,
