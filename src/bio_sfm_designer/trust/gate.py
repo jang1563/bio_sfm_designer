@@ -35,7 +35,8 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
-from bio_sfm_trust import auroc, confidence_to_risk, isotonic_calibrator, loo_calibrated_risks
+from bio_sfm_trust import (auroc, confidence_to_risk, isotonic_calibrator, loo_calibrated_risks,
+                           rcps_threshold)
 
 from ..types import Prediction, Routing
 
@@ -44,12 +45,13 @@ _VALIDITY_AUROC_MIN = 0.70
 
 
 class _RegimeState:
-    __slots__ = ("buffer", "calibrator", "validated")
+    __slots__ = ("buffer", "calibrator", "validated", "tau")
 
     def __init__(self) -> None:
         self.buffer: List[tuple] = []        # (raw_risk, wrong) from verified candidates
         self.calibrator = None               # Callable[[float], float] once fit
         self.validated = False               # cleared the offline-gate-style validity check
+        self.tau = None                      # conformal/RCPS trust threshold (None until certified)
 
 
 class TrustGate:
@@ -60,8 +62,15 @@ class TrustGate:
         defer_threshold: float = 0.35,
         disagreement_tol: float = 0.15,
         assume_validated: frozenset = frozenset({"monomer"}),
+        conformal_alpha: Optional[float] = None,
+        conformal_delta: float = 0.1,
     ) -> None:
         self.lam = lam
+        # If conformal_alpha is set, trust uses a per-regime RCPS threshold tau (so the trusted set's
+        # false-accept rate is <= alpha with prob >= 1-delta) instead of the lambda cost threshold,
+        # for any regime where a tau can be certified from calibration data; else it falls back to lambda.
+        self.conformal_alpha = conformal_alpha
+        self.conformal_delta = conformal_delta
         self.defer_threshold = defer_threshold
         self.disagreement_tol = disagreement_tol
         # Regimes trusted without online data. monomer pLDDT is offline-validated; every
@@ -110,6 +119,9 @@ class TrustGate:
         # honest check: leave-one-out calibrated-selective must beat just-trust-everything
         cal = loo_calibrated_risks(xs, ys)
         st.validated = self._policy_net(cal, ys, self.lam) > (len(ys) - npos) / len(ys)
+        if self.conformal_alpha is not None:
+            # certify a trust threshold from the LOO (honest) calibrated risks + revealed wrongness
+            st.tau = rcps_threshold(cal, ys, self.conformal_alpha, self.conformal_delta)
         return st.validated
 
     @staticmethod
@@ -155,14 +167,24 @@ class TrustGate:
             and abs(prediction.value - prediction.baseline_value) > self.disagreement_tol
         )
 
-        if cal_risk > lam:
-            action, why = "verify_assay", f"calibrated risk {cal_risk:.2f} > λ={lam:.2f}"
+        # trust/verify threshold: the per-regime conformal τ (false-accept ≤ α) when conformal mode
+        # is on AND this regime has a certified τ; otherwise the λ cost threshold.
+        trust_thr, thr_label = lam, f"λ={lam:.2f}"
+        if self.conformal_alpha is not None:
+            st = self._regimes.get(prediction.regime)
+            tau = st.tau if st is not None else None
+            if tau is not None:
+                trust_thr = tau
+                thr_label = f"RCPS τ={tau:.2f} (false-accept≤{self.conformal_alpha:.2f})"
+
+        if cal_risk > trust_thr:
+            action, why = "verify_assay", f"calibrated risk {cal_risk:.2f} > {thr_label}"
         elif disagree:
             action, why = "default_baseline", "SFM disagrees with the cheap structural baseline"
         elif not prediction.has_baseline and cal_risk >= self.defer_threshold:
             action, why = "defer", "no structural baseline and risk non-trivial → abstain"
         else:
-            action, why = "trust_sfm", f"calibrated risk {cal_risk:.2f} ≤ λ"
+            action, why = "trust_sfm", f"calibrated risk {cal_risk:.2f} ≤ {thr_label}"
 
         # Trust only calibration-validated regimes. An unvalidated regime never trusts the
         # raw signal -> verify to bootstrap its calibrator (budget may downgrade to defer).
