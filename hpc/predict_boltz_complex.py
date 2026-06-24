@@ -88,6 +88,13 @@ def main() -> None:
     ap.add_argument("--threshold", type=float, default=4.0, help="L-RMSD (A) below which the interface 'succeeds'")
     ap.add_argument("--boltz", default=os.path.expanduser("~/.conda/envs/boltz/bin/boltz"))
     ap.add_argument("--sampling-steps", type=int, default=100)
+    # interfaces need coevolution: msa:empty folds monomers fine but FAILS at complexes (verified:
+    # native barnase-barstar msa:empty -> 38 A, cplx_plddt 43). --use-msa-server gives the TARGET an MSA
+    # (the binder stays single-seq = the realistic designed-binder protocol, since designs have no homologs).
+    ap.add_argument("--use-msa-server", action="store_true",
+                    help="generate MSAs via the ColabFold server (needs compute-node internet)")
+    ap.add_argument("--binder-uses-msa", action="store_true",
+                    help="also MSA the binder (NATURAL binders / WT controls; default: binder single-seq)")
     args = ap.parse_args()
 
     ref_target = _ca_coords_from_pdb(args.backbone, args.target_chain)
@@ -107,17 +114,21 @@ def main() -> None:
     for i, c in enumerate(cands):
         name = f"c{i}"
         names.append((name, c))
+        target_msa = "" if args.use_msa_server else "      msa: empty\n"
+        binder_msa = "" if (args.use_msa_server and args.binder_uses_msa) else "      msa: empty\n"
         with open(os.path.join(yamls, name + ".yaml"), "w") as fh:
             fh.write(
                 "version: 1\nsequences:\n"
-                "  - protein:\n      id: A\n      sequence: %s\n      msa: empty\n"
-                "  - protein:\n      id: B\n      sequence: %s\n      msa: empty\n"
-                % (str(c["target_seq"]), str(c["representation"]))
+                "  - protein:\n      id: A\n      sequence: %s\n%s"
+                "  - protein:\n      id: B\n      sequence: %s\n%s"
+                % (str(c["target_seq"]), target_msa, str(c["representation"]), binder_msa)
             )
 
     cmd = [args.boltz, "predict", yamls, "--out_dir", outdir, "--no_kernels", "--output_format", "pdb",
            "--accelerator", "gpu", "--devices", "1", "--diffusion_samples", "1",
            "--sampling_steps", str(args.sampling_steps)]
+    if args.use_msa_server:
+        cmd += ["--use_msa_server"]
     subprocess.run(cmd, check=True)
 
     n_ok = 0

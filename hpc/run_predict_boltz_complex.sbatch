@@ -24,11 +24,16 @@ TARGET_CHAIN="${TARGET_CHAIN:-A}"
 BINDER_CHAIN="${BINDER_CHAIN:-C}"
 THRESHOLD="${THRESHOLD:-4.0}"
 SAMPLING_STEPS="${SAMPLING_STEPS:-100}"
+USE_MSA_SERVER="${USE_MSA_SERVER:-0}"     # 1 -> target gets a ColabFold-server MSA (interfaces need it)
+BINDER_USES_MSA="${BINDER_USES_MSA:-0}"   # 1 -> binder also MSA'd (natural/WT; default binder single-seq)
 OUT="${OUT:-$PROJECT_ROOT/hpc_outputs/predict/records_boltz_complex.jsonl}"
 
 mkdir -p "$(dirname "$OUT")" "$PROJECT_ROOT/hpc_outputs/logs"
 cd "$PROJECT_ROOT"
+EXTRA=""
+[ "$USE_MSA_SERVER" = "1" ] && EXTRA="$EXTRA --use-msa-server"
+[ "$BINDER_USES_MSA" = "1" ] && EXTRA="$EXTRA --binder-uses-msa"
 "$ENV_PY" hpc/predict_boltz_complex.py --candidates "$CANDIDATES" --backbone "$BACKBONE" \
   --target-chain "$TARGET_CHAIN" --binder-chain "$BINDER_CHAIN" \
-  --out "$OUT" --threshold "$THRESHOLD" --sampling-steps "$SAMPLING_STEPS"
+  --out "$OUT" --threshold "$THRESHOLD" --sampling-steps "$SAMPLING_STEPS" $EXTRA
 echo "boltz complex records -> $OUT"
