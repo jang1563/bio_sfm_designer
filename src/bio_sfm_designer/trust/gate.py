@@ -118,10 +118,14 @@ class TrustGate:
             return False
         # honest check: leave-one-out calibrated-selective must beat just-trust-everything
         cal = loo_calibrated_risks(xs, ys)
-        st.validated = self._policy_net(cal, ys, self.lam) > (len(ys) - npos) / len(ys)
         if self.conformal_alpha is not None:
-            # certify a trust threshold from the LOO (honest) calibrated risks + revealed wrongness
+            # conformal mode changes the objective from lambda-net ("selective beats trust-all") to
+            # "false-accept rate <= alpha": a regime is trust-eligible iff a tau can be certified
+            # (from the honest LOO calibrated risks + revealed wrongness).
             st.tau = rcps_threshold(cal, ys, self.conformal_alpha, self.conformal_delta)
+            st.validated = st.tau is not None
+        else:
+            st.validated = self._policy_net(cal, ys, self.lam) > (len(ys) - npos) / len(ys)
         return st.validated
 
     @staticmethod
@@ -172,10 +176,17 @@ class TrustGate:
         trust_thr, thr_label = lam, f"λ={lam:.2f}"
         if self.conformal_alpha is not None:
             st = self._regimes.get(prediction.regime)
-            tau = st.tau if st is not None else None
-            if tau is not None:
-                trust_thr = tau
-                thr_label = f"RCPS τ={tau:.2f} (false-accept≤{self.conformal_alpha:.2f})"
+            if st is not None and st.calibrator is not None:
+                # conformal was attempted on this (calibrated) regime: trust only up to the certified
+                # τ, or trust NOTHING if no τ could be certified — don't silently fall back to the
+                # unguaranteed λ once a conformal guarantee was requested for this regime.
+                if st.tau is not None:
+                    trust_thr = st.tau
+                    thr_label = f"RCPS τ={st.tau:.2f} (false-accept≤{self.conformal_alpha:.2f})"
+                else:
+                    trust_thr = -1.0
+                    thr_label = f"no RCPS τ at α={self.conformal_alpha:.2f} → trust nothing"
+            # else: regime never calibrated (e.g. assume-validated monomer) -> keep the λ threshold
 
         if cal_risk > trust_thr:
             action, why = "verify_assay", f"calibrated risk {cal_risk:.2f} > {thr_label}"
