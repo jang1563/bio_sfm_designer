@@ -16,26 +16,32 @@ Heavy stages run here, not locally (see `../docs/HPC.md`). Pattern: stage the pr
 DeBERTa-screen smoke. The producer↔consumer JSONL contract is locked by
 `tests/test_hpc_screen_contract.py` (a fake DeBERTa proves the round-trip without the cluster).
 
-## DeBERTa screen — quickstart
+## DeBERTa screen — quickstart (VERIFIED 2026-06-23 on Cayuga)
+
+Verified end-to-end: benign intents scored p_unsafe 0.06–0.23 (allow), "weaponize a
+select-agent toxin to enhance lethality…" scored 0.991 (escalate). Env/model defaults are
+baked into `run_screen_deberta.sbatch` (`ENV_PY=~/.conda/envs/bioguard/bin/python`,
+`MODEL_DIR=~/constitutional-bioguard/models/deberta_bioguard_v8bd`); override per host.
 
 ```sh
-# local: write candidate intents to screen, one {"id":..., "text":...} per line
-#   e.g. round-0 objectives/candidates -> candidates.jsonl
+HPC=cayuga-login1
+REMOTE=/home/fs01/$USER/bio_sfm_designer        # or an /athena scratch path
 
-REMOTE=/scratch/$USER/bio_sfm_designer
-rsync -az --exclude .venv ./ "$HPC_LOGIN:$REMOTE/"
+python hpc/make_smoke_candidates.py --out candidates.jsonl     # local: the intents to screen
+rsync -az --exclude .venv --exclude hpc_outputs ./ "$HPC:$REMOTE/"
+ssh "$HPC" "cd $REMOTE && CANDIDATES=$REMOTE/candidates.jsonl sbatch hpc/run_screen_deberta.sbatch"
 
-ssh "$HPC_LOGIN" "cd $REMOTE && \
-  BIOGUARD_DIR=/scratch/$USER/constitutional_bioguard \
-  CONDA_ENV=bioguard \
-  CANDIDATES=$REMOTE/candidates.jsonl \
-  sbatch hpc/run_screen_deberta.sbatch"
+# tiny sets can skip the queue (what the smoke used):
+#   srun --partition=scu-cpu --time=00:10:00 --mem=8G env PYTHONNOUSERSITE=1 \
+#     ~/.conda/envs/bioguard/bin/python hpc/screen_deberta.py \
+#     --model ~/constitutional-bioguard/models/deberta_bioguard_v8bd \
+#     --candidates candidates.jsonl --out hpc_outputs/screen/verdicts.jsonl
 
-# after it finishes:
-rsync -az "$HPC_LOGIN:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
+rsync -az "$HPC:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
 # local: DBTLController(screen=PrecomputedScreen("hpc_outputs/screen/verdicts.jsonl")) consumes it
 #        (fail-closed: a candidate with no verdict -> human review, never silently advanced)
 ```
 
-Fill in `BIOGUARD_DIR` / `CONDA_ENV` / the model path to match your existing Cayuga bioguard
-install (the env where you already installed DeBERTa). Expanse: add `--account`/`--partition`.
+**`PYTHONNOUSERSITE=1` is required** — otherwise `~/.local` shadows the conda env's numpy/scipy
+and transformers fails to import. `DualModeGuard` mode needs `pdual_v3` + `v8b` model dirs (not
+present); the `--model <dir>` direct path is the proven one. Expanse: add `--account`/`--partition`.

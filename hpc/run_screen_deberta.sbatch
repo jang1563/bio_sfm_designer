@@ -2,32 +2,26 @@
 #SBATCH --job-name=biosfm-screen
 #SBATCH --output=hpc_outputs/logs/biosfm-screen-%j.out
 #SBATCH --error=hpc_outputs/logs/biosfm-screen-%j.err
+#SBATCH --partition=scu-cpu
 #SBATCH --time=00:30:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-## DeBERTa is small — CPU is fine. For a GPU node, uncomment:
-## SBATCH --gres=gpu:1
 
-# DeBERTa biosafety screen on Cayuga (intent-level). Reuses the existing constitutional-bioguard
-# install where DeBERTa is already set up. Writes verdicts JSONL; sync back and let the local
-# SafetyScreen consume it offline. Expanse: submit with --account/--partition.
+# DeBERTa biosafety screen on Cayuga (intent-level). PROVEN incantation (2026-06-23 smoke):
+# the bioguard conda env's python + PYTHONNOUSERSITE=1 (so ~/.local doesn't shadow the env's
+# numpy/scipy) + the local v8bd model dir. Writes verdicts.jsonl; sync back and consume with
+# safety.PrecomputedScreen. Expanse: submit with --account/--partition.
 set -euo pipefail
 
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
-# The constitutional_bioguard checkout on Cayuga (where DeBERTa + weights already live):
-BIOGUARD_DIR="${BIOGUARD_DIR:?Set BIOGUARD_DIR to the constitutional_bioguard checkout on Cayuga}"
-CONDA_ENV="${CONDA_ENV:-bioguard}"                 # existing Cayuga env with torch + transformers
+ENV_PY="${ENV_PY:-/home/fs01/jak4013/.conda/envs/bioguard/bin/python}"
+MODEL_DIR="${MODEL_DIR:-/home/fs01/jak4013/constitutional-bioguard/models/deberta_bioguard_v8bd}"
 CANDIDATES="${CANDIDATES:?Set CANDIDATES to the input JSONL: one {\"id\":..., \"text\":...} per line}"
 VERDICTS_OUT="${VERDICTS_OUT:-$PROJECT_ROOT/hpc_outputs/screen/verdicts.jsonl}"
 
 mkdir -p "$(dirname "$VERDICTS_OUT")" "$PROJECT_ROOT/hpc_outputs/logs"
-
-if command -v conda >/dev/null 2>&1; then
-  source "$(conda info --base)/etc/profile.d/conda.sh"
-  conda activate "$CONDA_ENV"
-fi
-
 cd "$PROJECT_ROOT"
-PYTHONPATH="$BIOGUARD_DIR:${PYTHONPATH:-}" python hpc/screen_deberta.py \
-  --candidates "$CANDIDATES" --out "$VERDICTS_OUT"
+
+env PYTHONNOUSERSITE=1 "$ENV_PY" hpc/screen_deberta.py \
+  --model "$MODEL_DIR" --candidates "$CANDIDATES" --out "$VERDICTS_OUT"
 echo "wrote $VERDICTS_OUT"
