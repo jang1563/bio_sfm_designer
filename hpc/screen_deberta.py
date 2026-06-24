@@ -60,7 +60,8 @@ def main() -> None:
     ap.add_argument("--threshold", type=float, default=0.5)
     args = ap.parse_args()
 
-    rows = [json.loads(line) for line in open(args.candidates) if line.strip()]
+    with open(args.candidates) as fh:
+        rows = [json.loads(line) for line in fh if line.strip()]
     texts = [str(r.get("text", "")) for r in rows]
     results = (_classify_with_model_dir(args.model, texts, args.threshold)
                if args.model else _classify_with_dualmode(texts))

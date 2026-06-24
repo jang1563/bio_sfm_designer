@@ -33,6 +33,24 @@ reads Boltz-2 records produced on Cayuga. Generators and the DeBERTa screen get 
 (async)**, not a tight interactive loop — each Build/Test round is a submitted batch; the Claude
 orchestrator runs between rounds. That matches how real DBTL campaigns (and the audit) work.
 
+## Run one round from synced artifacts
+
+Once a round's JSONL is synced back, one command wires all three consume-side adapters and
+runs the local half of the round:
+
+```sh
+python -m bio_sfm_designer.experiments.run_batch_round \
+  --candidates hpc_outputs/generate/candidates.jsonl \
+  --records    hpc_outputs/predict/records.jsonl \
+  --verdicts   hpc_outputs/screen/verdicts.jsonl \
+  --target "..." --objective thermostability --out results/round_0
+```
+
+It builds `PrecomputedGenerator + PrecomputedStructurePredictor + PrecomputedScreen`, routes via
+the calibrated trust gate, screens before synth, scores `net = benefit − λ·assays`, and writes
+`campaign.jsonl` + `summary.json`. Omit `--verdicts` to fall back to the built-in screen; add
+`--provider anthropic` for the live LLM orchestrator. One invocation = one async HPC round.
+
 ## Revised milestones (HPC-aware)
 
 - **M2-live (was "real backends locally") → Cayuga jobs:**
