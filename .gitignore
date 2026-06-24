@@ -11,6 +11,7 @@ venv/
 .ruff_cache/
 .DS_Store
 results/
+hpc_outputs/
 *.jsonl
 !configs/*.yaml
 !tests/fixtures/*.jsonl
