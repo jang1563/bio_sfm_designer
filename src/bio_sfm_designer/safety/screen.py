@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from typing import Callable, Optional, Tuple
 
+from bio_sfm_trust.io_utils import read_jsonl
+
 from ..config import ObjectiveSpec
 from ..types import Candidate, ScreenVerdict
 from .policy import target_decision
@@ -113,3 +115,51 @@ class SafetyScreen:
     def screen_candidate(self, candidate: Candidate) -> ScreenVerdict:
         ctx = str(candidate.meta.get("target", ""))
         return self.screen_design(candidate.representation, context=ctx)
+
+
+class PrecomputedScreen:
+    """Local consume-side of the Cayuga DeBERTa screen (docs/HPC.md).
+
+    Loads `verdicts.jsonl` ({id, flag, reason, score}) produced by hpc/screen_deberta.py and
+    applies them per candidate id. Drop-in for SafetyScreen (same screen_target/design/candidate
+    interface) — pass as DBTLController(screen=PrecomputedScreen(path)).
+
+    FAIL-CLOSED: a candidate with no precomputed verdict is routed to human review — it should
+    have been screened on Cayuga, so a missing verdict is a pipeline gap, NOT a clearance. The
+    built-in target-level allowlist/denylist still runs locally as a hard pre-filter.
+    """
+
+    backend = "precomputed_deberta"
+
+    def __init__(self, verdicts_path: str) -> None:
+        self._verdicts = {}
+        for rec in read_jsonl(verdicts_path):
+            if rec.get("id") is not None:
+                self._verdicts[str(rec["id"])] = rec
+
+    def screen_target(self, spec: ObjectiveSpec) -> ScreenVerdict:
+        decision, allowed, reason = target_decision(spec.target, spec.objective, spec.allowlist)
+        if not allowed:
+            return ScreenVerdict(False, decision, "builtin_policy", reason)
+        v = self._verdicts.get("objective")  # optional: objective screened on Cayuga under id "objective"
+        if v and v.get("flag"):
+            return ScreenVerdict(False, "escalate", self.backend, str(v.get("reason", "deberta flag")))
+        return ScreenVerdict(True, "allow", "builtin_policy", reason)
+
+    def screen_design(self, text: str, *, context: str = "") -> ScreenVerdict:
+        decision, allowed, reason = target_decision(context, text)
+        if not allowed:
+            return ScreenVerdict(False, decision, "builtin_policy", reason)
+        return ScreenVerdict(True, "allow", "builtin_policy", "no hazard signal (text policy)")
+
+    def screen_candidate(self, candidate: Candidate) -> ScreenVerdict:
+        base = self.screen_design(candidate.representation, context=str(candidate.meta.get("target", "")))
+        if not base.allowed:  # built-in denylist/allowlist pre-filter
+            return base
+        v = self._verdicts.get(candidate.id)
+        if v is None:
+            return ScreenVerdict(False, "route_expert", self.backend,
+                                 f"no precomputed DeBERTa verdict for {candidate.id} -> human review")
+        if v.get("flag"):
+            return ScreenVerdict(False, "escalate", self.backend, str(v.get("reason", "deberta flag")))
+        return ScreenVerdict(True, "allow", self.backend, "deberta: not flagged")

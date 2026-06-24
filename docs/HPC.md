@@ -38,8 +38,10 @@ orchestrator runs between rounds. That matches how real DBTL campaigns (and the 
 - **M2-live (was "real backends locally") → Cayuga jobs:**
   - **DeBERTa screen** = `hpc/run_screen_deberta.sbatch` → `screen_deberta.py` reads a
     candidates JSONL, scores with the existing Cayuga bioguard env, writes `verdicts.jsonl`.
-    Local: a `PrecomputedScreen` backend (to build) reads the synced verdicts — the in-process
-    `_load_deberta()` in `safety/screen.py` stays only as a login-node convenience.
+    Local: `safety.PrecomputedScreen` reads the synced verdicts (fail-closed on missing — a
+    candidate with no verdict routes to human review, never silently advances); it's a drop-in
+    `DBTLController(screen=...)`. The in-process `_load_deberta()` in `safety/screen.py` stays
+    only as a login-node convenience.
   - **Claude orchestrator / label-integrity** = live API from local or login node (no GPU).
 - **M3 generators → Cayuga jobs:** RFdiffusion/ProteinMPNN/ESM behind the `Generator` protocol,
   each an sbatch writing a candidate JSONL; local `PrecomputedGenerator` consumes it.

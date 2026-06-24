@@ -29,7 +29,8 @@ ssh "$HPC_LOGIN" "cd $REMOTE && \
 
 # after it finishes:
 rsync -az "$HPC_LOGIN:$REMOTE/hpc_outputs/screen/verdicts.jsonl" ./hpc_outputs/screen/
-# local SafetyScreen then consumes verdicts.jsonl (PrecomputedScreen backend — to wire)
+# local: DBTLController(screen=PrecomputedScreen("hpc_outputs/screen/verdicts.jsonl")) consumes it
+#        (fail-closed: a candidate with no verdict -> human review, never silently advanced)
 ```
 
 Fill in `BIOGUARD_DIR` / `CONDA_ENV` / the model path to match your existing Cayuga bioguard
