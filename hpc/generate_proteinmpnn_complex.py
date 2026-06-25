@@ -98,10 +98,14 @@ def main() -> None:
                    check=True, cwd=args.mpnn_dir)
 
     parsed_row = json.loads(open(parsed).read().splitlines()[0])
-    target_seq = parsed_row[f"seq_chain_{args.target_chain}"]
-    if set(target_seq) - _STD_AA:
-        print(f"WARNING: target chain {args.target_chain} has non-standard residues "
-              f"{set(target_seq) - _STD_AA} -- Boltz may reject it", file=sys.stderr)
+    raw_target = parsed_row[f"seq_chain_{args.target_chain}"]
+    # ProteinMPNN marks unmodeled/missing backbone positions as 'X'; drop them to get the continuous
+    # MODELED sequence, which is what Boltz folds and what the CA reference uses (the validated WT path
+    # builds the same CA-based sequence). Without this a single disordered loop voids every design.
+    target_seq = "".join(c for c in raw_target if c in _STD_AA)
+    if len(target_seq) != len(raw_target):
+        print(f"NOTE: target chain {args.target_chain}: dropped {len(raw_target) - len(target_seq)} "
+              f"unmodeled residue(s) -> {len(target_seq)} aa", file=sys.stderr)
 
     fasta = os.path.join(work, "seqs", f"{name}.fa")
     records = list(_parse_fasta(fasta))
@@ -109,13 +113,11 @@ def main() -> None:
     n = 0
     with open(args.out, "w") as out:
         for i, (header, seq) in enumerate(designs):
-            if set(seq) - _STD_AA:
-                print(f"  skip design {i}: non-standard residues {set(seq) - _STD_AA}", file=sys.stderr)
-                continue
+            clean = "".join(c for c in seq if c in _STD_AA)   # drop unmodeled positions (same gap as native)
             meta = {"objective": args.objective, "backbone": pdb_id, "generator": "proteinmpnn",
                     "target_chain": args.target_chain, "design_chain": args.design_chain,
                     **_meta_from_header(header)}
-            row = {"id": f"{args.objective}-mpnnX-{pdb_id}-{i}", "representation": seq,
+            row = {"id": f"{args.objective}-mpnnX-{pdb_id}-{i}", "representation": clean,
                    "target_seq": target_seq, "regime": "complex", "parent_id": None, "meta": meta}
             out.write(json.dumps(row, sort_keys=True) + "\n")
             n += 1
