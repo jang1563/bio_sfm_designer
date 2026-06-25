@@ -1,7 +1,7 @@
-"""M6c-lite (corrected): locks the honest complex-regime finding on the barstar fixture. CONFIDENCE
-discriminates designed-complex success at fixed difficulty (confound-free stratified AUROC), in contrast
-to the monomer regime (chance) -- BUT it is FOLD confidence (complex pLDDT), not INTERFACE confidence
-(ipTM, which is weak), and the label conflates fold with dock (failures are mostly binder mis-folds).
+"""M6c-lite (review-complete): the complex-regime interface signal on the barstar fixture. pAE_interaction
+(the metric binder-design actually uses) discriminates designed-interface success at fixed difficulty AND
+even among WELL-FOLDED binders (foldability controlled), where ipTM is chance -- so it is a genuine
+interface-quality signal, in contrast to the monomer regime (chance). Locks the corrected finding.
 """
 
 import unittest
@@ -11,25 +11,25 @@ from bio_sfm_designer.experiments.within_regime_signal import run as monomer_run
 
 
 class ComplexInterfaceSignalTests(unittest.TestCase):
-    def test_fold_confidence_discriminates_at_fixed_difficulty(self):
+    def test_pae_interaction_discriminates_at_fixed_difficulty(self):
         r = complex_run()
         self.assertGreaterEqual(r["n"], 60)
-        self.assertGreater(r["success"], 8)                       # genuine mix, not degenerate
+        self.assertGreater(r["success"], 8)                          # genuine dock mix
         self.assertLess(r["success"], r["n"])
-        plddt = r["stratified"]["mean_plddt"]
-        self.assertGreater(plddt["auroc"], 0.75)                  # complex fold confidence discriminates
-        self.assertGreater(plddt["ci"][0], 0.5)                   # confound-free CI excludes chance
-        # most failures are binder mis-folds -> the label conflates fold quality with interface quality
-        self.assertGreater(r["mean_plddt_success"], r["mean_plddt_fail"] + 3)
+        pae = r["stratified"]["pae_interaction"]
+        self.assertGreater(pae["auroc"], 0.8)                        # the real interface signal
+        self.assertGreater(pae["ci"][0], 0.5)                        # confound-free CI excludes chance
 
-    def test_iptm_is_weaker_than_fold_confidence(self):
-        # the corrected finding: it is FOLD confidence (pLDDT), NOT interface confidence (ipTM)
-        s = complex_run()["stratified"]
-        self.assertGreater(s["mean_plddt"]["auroc"], s["iptm"]["auroc"])
+    def test_pae_beats_iptm_even_among_well_folded(self):
+        # foldability control: pAE_interaction still separates docking among well-folded binders; ipTM doesn't
+        r = complex_run()
+        self.assertGreater(r["well_folded"]["auroc_pae"], 0.75)
+        self.assertLess(r["well_folded"]["auroc_iptm"], 0.6)         # ipTM ~ chance once foldability is held
+        self.assertGreater(r["stratified"]["pae_interaction"]["auroc"], r["stratified"]["iptm"]["auroc"])
 
     def test_complex_signal_beats_monomer_chance(self):
-        # the strategic point: confidence discriminates in the COMPLEX regime but not the monomer regime
-        self.assertGreater(complex_run()["stratified"]["mean_plddt"]["auroc"], monomer_run()["auroc_cross"])
+        # the strategic point: an interface signal exists in the COMPLEX regime but not the monomer regime
+        self.assertGreater(complex_run()["stratified"]["pae_interaction"]["auroc"], monomer_run()["auroc_cross"])
 
 
 if __name__ == "__main__":

@@ -78,6 +78,18 @@ def _lrmsd(fold_target, fold_binder, ref_target, ref_binder):
     return float(np.sqrt(((fb - rb) ** 2).sum() / len(rb)))
 
 
+def _interface_pae(npz_path, n_target):
+    """Mean predicted aligned error across the target<->binder interface (the binder-design metric;
+    LOWER = more confident). PAE matrix is ordered [target residues, binder residues]. This is the
+    interface signal that actually discriminates docking quality (ipTM alone does not -- M6c-lite)."""
+    import numpy as np
+    m = np.load(npz_path)
+    m = m[m.files[0]]
+    if m.ndim != 2 or m.shape[0] <= n_target:
+        return None
+    return float((m[:n_target, n_target:].mean() + m[n_target:, :n_target].mean()) / 2.0)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Boltz-2 complex refold + interface L-RMSD -> structure records")
     ap.add_argument("--candidates", required=True, help="complex candidates.jsonl (representation=binder, target_seq=target)")
@@ -146,6 +158,8 @@ def main() -> None:
             plddt = float(conf.get("complex_plddt", 0.0))
             ptm = float(conf.get("ptm", 0.0))
             iptm = float(conf.get("iptm", 0.0))
+            paes = glob.glob(os.path.join(outdir, "boltz_results_*", "predictions", name, "pae_" + name + "_model_0.npz"))
+            pae_interaction = _interface_pae(paes[0], len(fold_target)) if paes else None
             aligned = (len(fold_target) == len(ref_target) and len(fold_binder) == len(ref_binder))
             if not aligned:
                 print(f"  WARNING {c['id']}: CA counts target {len(fold_target)}/{len(ref_target)} "
@@ -157,8 +171,10 @@ def main() -> None:
                 "target_id": c["id"],
                 "mean_plddt": round(100.0 * plddt, 3),          # complex pLDDT
                 "regime": "complex",
-                "iptm": round(iptm, 4),                          # INTERFACE confidence -- the signal under test
+                "iptm": round(iptm, 4),                          # global interface pTM (weak discriminator here)
                 "ptm": round(ptm, 4),
+                "pae_interaction": round(pae_interaction, 4) if pae_interaction is not None else None,  # the real interface signal
+
                 "truth": {"correct": success, "quality": quality},  # INDEPENDENT interface-success label
                 "lrmsd": round(lrmsd, 4) if math.isfinite(lrmsd) else None,
                 "lrmsd_threshold": args.threshold,
