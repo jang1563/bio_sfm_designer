@@ -1,5 +1,8 @@
 # bio_sfm_designer
 
+> **Continuing this project (new session / Codex)? Start with [HANDOFF.md](HANDOFF.md)** — goal, full
+> progress, honest findings, key decisions, and concrete next steps, self-contained.
+
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
 protein/genome/single-cell); an **external calibrated trust gate** decides, per
