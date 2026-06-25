@@ -36,6 +36,8 @@ class Prediction:
     raw_conf: float                # model-emitted confidence in [0,1] (e.g. pLDDT/100)
     regime: str = "monomer"        # routing regime; "monomer" has validated calibration
     iptm: Optional[float] = None   # interface confidence (complexes) — the real ipTM, not a pLDDT copy
+    pae_interaction: Optional[float] = None  # interface predicted-aligned-error (A, lower=better) — the
+                                             # VALIDATED complex signal (M6c-lite); ipTM is weak here
     baseline_value: Optional[float] = None   # model-visible cheap structural baseline prediction
     has_baseline: bool = True      # whether a model-visible NUMERIC cheap baseline is present
     truth: Optional[Dict[str, Any]] = None    # HIDDEN: {sfm_correct, baseline_correct, quality}
@@ -49,6 +51,8 @@ class Prediction:
         if self.regime == "complex":
             # real interface confidence when present; only genuine stubs fall back to raw_conf
             rec["iptm"] = self.iptm if self.iptm is not None else self.raw_conf
+            if self.pae_interaction is not None:   # preferred complex signal when available
+                rec["pae_interaction"] = self.pae_interaction
         return rec
 
 
