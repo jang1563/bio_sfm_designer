@@ -58,12 +58,14 @@ Past the stub milestone — the loop is closed on CPU and runs on a real, licens
 - Complex/binder de-risk **(done — positive)**: barnase–barstar (1BRS), **target MSA + binder single-seq**
   (MSA-free folding fails at interfaces — native complex `msa:empty` → 38 Å, with MSA → 1.0 Å). The interface
   metric **pAE_interaction discriminates** designed-interface success at fixed difficulty (confound-free
-  within-temp AUROC **0.91**) **and even among well-folded binders (0.88, where ipTM is chance 0.47** and
+  within-temp AUROC **0.93**, n=192) **and even among well-folded binders (0.88, where ipTM is weak ~0.59** and
   foldability is controlled) — so it's a genuine *interface-quality* signal, **unlike monomer pLDDT (chance
   ~0.59)**. (Review caught two wrong metrics first — ipTM, then pLDDT/foldability — before landing on
-  pAE_interaction, the metric binder-design actually uses.) → the complex regime has the informative,
-  miscalibrated signal the gate is built for. Caveats: single-model (Boltz-only), n=72, one target → justifies
-  a proper M6c, not a proof.
+  pAE_interaction, the metric binder-design actually uses.) **Routing the gate on calibrated pAE (n=192): RCPS
+  certifies α=0.3** — trusts 25/64 held-out at **12% false-accept vs 60% trust-all** (most-confident quartile →
+  ~8%). So the complex regime carries the informative, miscalibrated signal the gate is built for, *with a
+  distribution-free guarantee*. Caveats: single-model (Boltz-only), one target; tighter α (≤0.2) + more targets
+  are the next scale steps.
 
 ## Install & run (stub loop — no GPU/weights/network)
 

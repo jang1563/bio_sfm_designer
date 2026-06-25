@@ -11,9 +11,14 @@ the protein regime where the signal is informative (unlike monomer, where it was
 Routing signal: confidence_to_risk now prefers pae_interaction for complexes (not the weak ipTM), and the
 gate re-calibrates it per regime (isotonic) before certifying tau.
 
+RESULT (192 barstar redesigns, target-MSA): signal AUROC(-pAE -> interface success) ~0.94; RCPS CERTIFIES
+alpha=0.3 -- the gate trusts 25/64 held-out at 12% false-accept (bound <= 30%) vs trust-all 60%. Scaling the
+set 72 -> 192 moved this from "refuse to certify" to "certify alpha=0.3"; tighter alpha (0.1/0.2) still
+refuses (the Hoeffding n<->alpha tradeoff -> more designs).
+
 CAVEATS: single-model (pae_interaction AND the L-RMSD label both come from the one Boltz fold -- the M4b
-self-consistency caveat, not closed for complexes); n=72, ONE target (barnase-barstar); small n -> the RCPS
-Hoeffding bound certifies only a loose alpha (or REFUSES rather than over-promise). Indication, not proof.
+self-consistency caveat, not closed for complexes); ONE target (barnase-barstar). An indication on one
+target with a loose certified alpha, not a multi-target proof.
 """
 
 from __future__ import annotations
@@ -52,8 +57,8 @@ def _wrong(rec, threshold):
     return 0 if rec["lrmsd"] < threshold else 1
 
 
-def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.2, delta: float = 0.1,
-        threshold: float = 4.0, n_cal: int = 48, seed: int = 0) -> Dict[str, Any]:
+def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.3, delta: float = 0.1,
+        threshold: float = 4.0, n_cal: int = 128, seed: int = 0) -> Dict[str, Any]:
     rows = [r for r in (json.loads(line) for line in open(records_path) if line.strip())
             if r.get("pae_interaction") is not None]
     idx = list(range(len(rows)))
@@ -106,10 +111,10 @@ def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.2, delta: float =
 def main(argv=None) -> Dict[str, Any]:
     ap = argparse.ArgumentParser(description="conformal trust gate on the complex/binder regime (pAE signal)")
     ap.add_argument("--records", default=_DEFAULT_FIXTURE)
-    ap.add_argument("--alpha", type=float, default=0.2)
+    ap.add_argument("--alpha", type=float, default=0.3)
     ap.add_argument("--delta", type=float, default=0.1)
     ap.add_argument("--threshold", type=float, default=4.0)
-    ap.add_argument("--ncal", type=int, default=48)
+    ap.add_argument("--ncal", type=int, default=128)
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args(argv)
     rep = run(args.records, args.alpha, args.delta, args.threshold, args.ncal, args.seed)
@@ -133,7 +138,7 @@ def main(argv=None) -> Dict[str, Any]:
         far_s = f"{far:.3f}" if far is not None else "n/a (trusted 0)"
         print(f"  CONFORMAL: certified tau={rep['tau']:.3f}; held-out trusts {c['trusted']}/{rep['n_test']}, "
               f"false-accept {far_s} (target <= {rep['alpha']})")
-    print("  honest: single-model (pAE + label both from one Boltz fold); n=72, ONE target.")
+    print("  honest: single-model (pAE + label both from one Boltz fold); ONE target (barnase-barstar).")
     return rep
 
 

@@ -7,23 +7,23 @@ chain A) and refolded by Boltz-2 with the TARGET MSA'd + the binder single-seq (
 protocol; MSA-free folding FAILS at interfaces -- native barnase-barstar msa:empty -> 38 A, with MSA -> 1.0 A).
 Interface success = ligand-RMSD (binder CA displacement after superposing on the target) < threshold.
 
-RESULT (fixture barstar_interface_records.jsonl, 72 designs @ temps 0.3/0.5/0.7; success = L-RMSD < 4 A).
+RESULT (fixture barstar_interface_records.jsonl, 192 designs @ temps 0.3/0.5/0.7; success = L-RMSD < 4 A).
 Reported as confound-FREE within-temp STRATIFIED AUROC (only compares success vs fail at the SAME temp):
-  -pAE_interaction -> success = 0.91   <- the metric binder-design actually uses; the REAL interface signal
-  complex pLDDT    -> success = 0.88   (fold confidence -- but that is FOLDABILITY, see below)
-  pTM              -> success = 0.87
-  ipTM             -> success = 0.68   <- WEAK
-The decisive control -- among WELL-FOLDED binders only (complex pLDDT >= 85, foldability held ~constant):
-  AUROC(-pAE_interaction -> docking) = 0.88, but AUROC(ipTM -> docking) = 0.47 (CHANCE). So pAE_interaction
+  -pAE_interaction -> success = 0.93   <- the metric binder-design actually uses; the REAL interface signal
+  complex pLDDT    -> success = 0.92   (fold confidence -- but that is FOLDABILITY, see below)
+  pTM              -> success = 0.91
+  ipTM             -> success = 0.76   <- weakest
+The decisive control -- among WELL-FOLDED binders only (complex pLDDT >= 85, n=122, foldability held ~const):
+  AUROC(-pAE_interaction -> docking) = 0.88, but AUROC(ipTM -> docking) = 0.59 (weak). So pAE_interaction
   is a genuine INTERFACE-QUALITY signal (separates good vs bad docking even among well-folded binders),
-  whereas ipTM only ever co-varied with "did the binder fold".
+  whereas ipTM mostly co-varies with "did the binder fold".
 
 HONEST verdict: UNLIKE monomer pLDDT (within-regime 0.59, chance), the complex/binder regime HAS an
 informative, optimistically-miscalibrated interface-confidence signal -- pAE_interaction -- that survives
 BOTH the temperature confound and the foldability control. That is exactly the regime where calibration +
 selective deferral earn their keep -> a proper M6c is justified, routing on pAE_interaction (NOT ipTM, which
 is the wrong/weak metric here). CAVEATS: single-model (pAE_interaction AND the L-RMSD label both come from
-the one Boltz fold -- the M4b self-consistency caveat, not closed for complexes); n=72; ONE target
+the one Boltz fold -- the M4b self-consistency caveat, not closed for complexes); n=192; ONE target
 (barnase-barstar). A promising INDICATION that justifies a proper M6c, not a proof.
 """
 
