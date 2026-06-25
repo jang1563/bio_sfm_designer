@@ -55,12 +55,13 @@ Past the stub milestone — the loop is closed on CPU and runs on a real, licens
 - A Boltz output-caching bug (a shared work dir silently reused stale predictions) was found **and fixed**
   2026-06-24 (unique per-output work dir + wipe-on-start); M6a/M6b were re-folded clean and the numbers
   above are post-fix. The find→fix is preserved in git history.
-- Complex/binder de-risk **(done — positive)**: barnase–barstar (1BRS), **target MSA + binder single-seq**
-  (MSA-free folding fails at interfaces — native complex `msa:empty` → 38 Å, with MSA → 1.0 Å). Interface
-  **ipTM discriminates** designed-interface success at fixed difficulty (within-temp AUROC 0.64–0.76; pooled
-  **0.73, CI [0.61, 0.84]**, excludes chance) — **unlike monomer pLDDT (chance ~0.59)**. ipTM is
-  informative-but-miscalibrated → the regime where calibration earns its keep. Modest (~0.73), n=72, one
-  target → justifies a proper M6c, not a proof.
+- Complex/binder de-risk **(done — positive, self-corrected)**: barnase–barstar (1BRS), **target MSA + binder
+  single-seq** (MSA-free folding fails at interfaces — native complex `msa:empty` → 38 Å, with MSA → 1.0 Å).
+  **Confidence discriminates** designed-complex success at fixed difficulty (confound-free within-temp AUROC:
+  **complex pLDDT 0.88 [0.77, 0.96]**, pTM 0.87, ipTM only 0.68) — **unlike monomer pLDDT (chance ~0.59)**, so
+  the complex regime has a real confidence signal the gate can use. Honest corrections from review: it is
+  **fold confidence (pLDDT), not interface ipTM** (weak); and the L-RMSD label conflates fold with dock (most
+  failures are binder mis-folds). Single-model (Boltz-only), n=72, one target → justifies a proper M6c, not a proof.
 
 ## Install & run (stub loop — no GPU/weights/network)
 
