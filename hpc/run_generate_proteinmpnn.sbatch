@@ -15,8 +15,8 @@
 set -euo pipefail
 
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
-ENV_PY="${ENV_PY:-/home/fs01/jak4013/.conda/envs/bioguard/bin/python}"
-MPNN_DIR="${MPNN_DIR:-/home/fs01/jak4013/ProteinMPNN}"
+ENV_PY="${ENV_PY:-$HOME/.conda/envs/bioguard/bin/python}"
+MPNN_DIR="${MPNN_DIR:-$HOME/ProteinMPNN}"
 PDB="${PDB:?Set PDB to a backbone PDB to design on (e.g. $MPNN_DIR/inputs/PDB_monomers/pdbs/5L33.pdb)}"
 CHAINS="${CHAINS:-A}"
 NUM_SEQ="${NUM_SEQ:-16}"

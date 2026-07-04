@@ -16,7 +16,7 @@
 set -euo pipefail
 
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
-ENV_PY="${ENV_PY:-/home/fs01/jak4013/.conda/envs/bioguard/bin/python}"
+ENV_PY="${ENV_PY:-$HOME/.conda/envs/bioguard/bin/python}"
 BASE="${BASE:-microsoft/deberta-v3-base}"
 TRAIN="${TRAIN:-}"
 EVAL="${EVAL:-}"

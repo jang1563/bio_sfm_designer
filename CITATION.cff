@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use bio_sfm_designer, please cite this repository."
+title: "bio_sfm_designer: Calibrated trust routing for scientific foundation model design loops"
+authors:
+  - family-names: "Kim"
+    given-names: "Jihoon"
+license: "MIT"
+version: "0.1.0"
+repository-code: "https://github.com/jang1563/bio_sfm_designer"
+keywords:
+  - "AI for science"
+  - "protein design"
+  - "trust calibration"
+  - "DBTL"
+  - "biosafety"

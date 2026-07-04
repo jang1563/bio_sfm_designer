@@ -16,7 +16,7 @@
 set -euo pipefail
 
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
-ENV_PY="${ENV_PY:-/home/fs01/jak4013/.conda/envs/bioguard/bin/python}"
+ENV_PY="${ENV_PY:-$HOME/.conda/envs/bioguard/bin/python}"
 CANDIDATES="${CANDIDATES:?Set CANDIDATES to a designs candidates.jsonl (from generate_proteinmpnn.py)}"
 BACKBONE="${BACKBONE:?Set BACKBONE to the intended backbone PDB the designs were made for}"
 THRESHOLD="${THRESHOLD:-2.0}"

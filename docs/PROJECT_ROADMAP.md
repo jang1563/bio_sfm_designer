@@ -1,0 +1,466 @@
+# Project Roadmap
+
+This is the operating plan for developing `bio_sfm_designer` as a research engine.
+It is intentionally not a publication plan. External writing can come later; the
+current goal is to make the system stronger, more reproducible, and harder to fool.
+
+## North Star
+
+Build a calibrated, cost-aware, safety-screened DBTL designer where specialist
+scientific foundation models propose and evaluate candidates, but an external
+trust gate decides when a model output is safe to trust, when to verify, when to
+fall back to a baseline, and when to defer.
+
+The project succeeds when a new protein-design regime can be added with:
+
+- explicit allowed-target and safety checks before generation and before synth;
+- reproducible heavy-model runs through the HPC JSONL bridge;
+- visible prediction evidence, hidden truth labels, and leakage-checked routing;
+- a calibrated or conformal risk rule with a stated false-accept target;
+- honest stop/go artifacts that can say "refuse", "continue scale", or "certified";
+- target-wise and predictor-wise provenance, not pooled-only claims.
+
+## Current Anchor
+
+M6c is the live frontier. The complex/binder regime has the first positive
+trust-gate result:
+
+- target: barnase-barstar, 1BRS target chain A / binder chain D, with the known RCSB chain-D D64-D65
+  numbering gap reviewed and recorded as a narrow manifest exception;
+- protocol: target MSA plus binder single sequence;
+- signal: `pAE_interaction`, not ipTM and not complex pLDDT;
+- fixture: 192 redesign records in `tests/fixtures/barstar_interface_records.jsonl`;
+- schema: the fixture is scale-current and passes strict QC with `complex_target_id`,
+  `predictor_id`, `signal_source`, and `label_source`;
+- gate: RCPS certifies `alpha=0.3` on the held-out split;
+- frontier: `alpha<=0.2` is certified only for scoped t0.3 protocol branches so far, not for the full
+  0.3/0.5/0.7 mixed-temperature distribution.
+
+2026-06-29 protocol-branch update: after Cayuga round3, the canonical full mixed-temperature
+0.3/0.5/0.7 evidence set remains `continue_scale` for `alpha=0.2` at 852 records, but a scoped
+t0.3-only production protocol is now `stop_certified` for `alpha=0.2` at 220 records. Keep these
+as separate claims: `results/m6c_project_status.json` is the full-mix status, while
+`results/m6c_project_status_t030_protocol.json` and `results/m6c_protocol_branch_summary.{json,md}`
+are the t0.3 branch certificate. Resume from `results/m6d_followup_next_science_actions.{json,md}`
+for the current W1/W2/W3/W4 action priority.
+
+2026-06-29 W4 update: `results/m6c_w4_round/summary.json` and
+`results/m6c_w4_round/campaign.jsonl` now give a project-status-accepted
+`closed_loop_round_complete`. It is a fail-closed campaign: the smoke DeBERTa screen produced non-finite
+candidate scores, all 50 candidate verdicts escalated to human review, and the DBTL round routed every
+candidate to `defer` with zero assay spend. Use
+`results/m6c_w4_fail_closed_campaign_status.{json,md}` as the compact claim boundary.
+
+2026-06-30 W3 smoke update: `results/m6c_w3_chai1_smoke_receipt.{json,md}` recorded that the Cayuga Chai-1
+environment works, a Python API wrapper now saves pAE/PDE/pLDDT, and one 3PC8 Chai secondary record passed
+strict complex-record QC. The one matched Boltz-vs-Chai pair disagrees on the L-RMSD success label, so this
+was not W3 completion; it was a scale-up signal. The later M6d goal-mode update below supersedes the
+temporary instruction to scale matched Chai records.
+
+2026-06-30 M6d goal-mode update: the Chai scale-up fork has been resolved as a negative robustness result
+under the selected no-MSA Chai adjudication protocol. The Chai records pass QC/contract, but matched
+Boltz-vs-Chai label agreement is 0.600 against the required 0.800, so W3 independent-predictor robustness
+is not supported. That negative interpretation is gated on strict comparison integrity: the only
+cross-predictor failure kind is `label_agreement_below_min`, with no target-identity, provenance,
+label-threshold, overlap, or numeric-copy blockers. W2 also has a completed known-pool screen with zero
+non-anchor admissions. The active W2
+branch is now fresh target discovery: `results/m6d_w2_fresh_discovery_pool.{json,md}` screened 10 public
+RCSB seeds, selected 6 structural chain-pair candidates from 3 unique source PDBs, and emitted
+`configs/m6d_w2_fresh_discovery_complex_targets.json` plus
+`results/m6d_w2_fresh_discovery_target_msas.sh`. The six target-MSA jobs completed on Cayuga
+(`3056468`-`3056473`), the `.a3m`/report files were synced back, and the full fresh manifest now passes
+strict `--require-files`. To avoid source-redundancy drift, the branch tested a 3-target unique-source
+pilot in `configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json`, with targets `1FQJ_EB`,
+`1AK4_BC`, and `1A2K_CB`. The Cayuga pilot completed
+(`3056479`/`3056480`, `3056481`/`3056482`, `3056483`/`3056484` for ProteinMPNN/Boltz) and synced back
+300 records. `results/m6d_w2_fresh_discovery_unique_source_pilot_panel_report.json` is
+`multi_target_evaluable_not_certified` at alpha=0.2: all three targets are not certified, `trusted=0`, and
+no `tau` exists. `results/m6d_w2_fresh_discovery_unique_source_pilot_diagnostic.{json,md}` classifies all
+three as `target_protocol_mismatch_low_success` with zero accepts under the transferred t0.3 low-pAE
+cutoff. The regenerated W2 candidate-pool screen now covers 12 known targets and still admits zero pilot
+candidates. `results/m6d_w2_next_branch_design.{json,md}` now selects
+`protocol_redesign_plus_success_enriched_discovery_v1` and emits
+`configs/m6d_w2_next_branch_candidate_rules.json`; the rule config keeps
+`spend_gate.cayuga_submission_allowed=false` until at least three non-anchor candidates pass the local
+rule set and strict manifest preflight. Applying the rules to the 15-candidate local inventory admits zero
+targets and marks `1A2K_DA`, `1A2K_EB`, and `1AK4_AD` as source-redundancy audit-only. This is a completed
+negative pilot, not a missing-compute state or a W2 generalization certificate. A separate
+`results/m6d_w2_source_redundancy_audit_plan.{json,md}` now exists for those audit-only targets, but it is
+not Cayuga submission authority and not W2 generalization evidence; the default W2 path is expanded target
+discovery beyond excluded sources.
+
+Expanded source-diverse discovery has now moved that path through manifest preflight:
+`results/m6d_w2_expanded_discovery_pool.{json,md}` screened 49 seed PDBs, scanned 248 chain pairs, admitted
+17 structural candidates, and selected 10 candidates from 10 unique source PDBs. The first target-MSA
+batch produced three ready targets and seven ColabFold MSA-server failures; the low-concurrency retry
+completed the remaining targets. After sync-back, `results/m6d_w2_next_branch_candidate_pool.{json,md}`
+covers 25 local inventory candidates with 10 admitted, 0 target-MSA-precompute-blocked, and three
+source-redundancy audit-only leftovers. `results/m6d_w2_next_branch_manifest_design.{json,md}` freezes
+the 10 admitted targets into `configs/m6d_w2_expanded_next_branch_targets.json`, and
+`results/m6d_w2_expanded_next_branch_manifest.json` passes strict `--require-files` with 10/10 ready
+targets and no failures. The expanded panel has now been submitted on Cayuga with job-id receipt capture:
+ProteinMPNN/Boltz jobs are `3056559`-`3056578`, and receipt/summary are
+`results/m6d_w2_expanded_next_branch_submit_receipt.jsonl` and
+`results/m6d_w2_expanded_next_branch_submit_receipt_summary.json`, with status in
+`results/m6d_w2_expanded_next_branch_submission_status.json`. Original Boltz job `3056576` for
+`1QFW_BA` failed on a target-MSA/candidate sequence mismatch caused by a terminal atom-only residue; repair
+job `3056582` completed and the repaired record is synced back. The expanded next-branch panel report is
+`multi_target_evaluable_not_certified` at alpha=0.2 with 10 targets and 1000 records. This is completed
+negative W2 evidence, not a generalization certificate, because all 10 target-wise certificates are
+`not_certified`.
+
+The known open limits are also part of the anchor:
+
+- one completed-evidence target only;
+- W2 now has the original 300-record panel (`1BRS_AD`, `2SIC_EI`, `1CGI_EI`), the completed
+  400-record replacement panel (`1BRS_AD`, `3PC8_AB`, `1S1Q_CD`, `1SYX_AB`), and the completed
+  500-record follow-up panel (`1BRS_AD`, `3PC8_AB`, `1MEL_MB`, `1GCQ_CB`, `2IDO_CD`), plus the completed
+  300-record fresh-discovery unique-source pilot (`1FQJ_EB`, `1AK4_BC`, `1A2K_CB`), all
+  `multi_target_evaluable_not_certified` at alpha=0.2; the 12-target known pool admits zero candidates for
+  another current-protocol pilot; the latest 3PC8 mini-scale certifies
+  `3PC8_AB` as a target-specific alpha=0.2 result, not a W2 generalization result;
+- one production-scale complex predictor/label source only;
+- W3 has completed no-MSA Chai scale-up records that pass QC/contract, but the cross-predictor audit fails
+  the predeclared label-agreement requirement, so independent-predictor robustness remains unsupported;
+- W4 closed-loop plumbing is complete only as a fail-closed/all-defer screen result, not as productive
+  build/no-build routing;
+- no RFdiffusion de-novo backbone generation yet;
+- no live provider run until credential hygiene is clean;
+- monomer pLDDT is not a fine per-design trust signal at fixed difficulty.
+
+## Operating Principles
+
+1. Measurement first. Negative results, refusals, and corrected claims are real
+   progress.
+2. The gate, not the orchestrator, owns trust. Claude may plan and interpret,
+   but it does not decide whether a model is confident enough.
+3. Expensive compute must be replayable from explicit inputs. Every model batch
+   should reduce to input files, an sbatch command, JSONL outputs, and local
+   posthoc checks.
+4. Generalization requires per-target evidence. Pooled results are diagnostics,
+   not proof.
+5. The single-model caveat stays open until signal and label behavior survive
+   an independent complex predictor.
+6. Safety screening is a human-triage aid, not autonomous clearance.
+
+## Workstreams
+
+| Workstream | Purpose | Entry | Exit |
+|---|---|---|---|
+| W1: M6c scale-up | Tighten barnase-barstar from `alpha=0.3` toward `alpha<=0.2`. | Current fixture plus Cayuga records; cached target FASTA/MSA paths plus reports; Cayuga Boltz env. | Either a scoped protocol branch such as t0.3-only says `stop_certified` for target alpha after QC passes, or the canonical full-mix status remains `continue_scale`; bootstrap `complex_scale_projection.json` remains planning-only (`certifies_target_alpha=false`). |
+| W2: Multi-target panel | Test whether the interface trust signal survives beyond barnase-barstar. | At least three clean heterodimer manifests with target FASTA/MSA reports and output paths. | `complex_panel_report.py` passes with per-target, single-predictor records and certificates under one matching L-RMSD threshold; pooled-only, mixed-predictor, or mixed-threshold evidence is insufficient. |
+| W3: Independent predictor | Close or quantify the Boltz-only caveat. | A filled `configs/template_second_predictor_contract.json` copy plus matched records from a second complex predictor with stable `complex_target_id` + `target_id` keys and explicit signal/label sources. | `complex_predictor_contract.py --require-files --run-record-qc` passes with disjoint primary/secondary record paths, positive `min_overlap`, valid `min_label_agreement`, and strict disjoint record-file checking, then `complex_cross_predictor.py` passes labeled-overlap, same-threshold label agreement, target-identity, distinct-provenance, non-copied numeric-output, and per-JSONL predictor-membership checks; `complex_project_status.py` refuses older/non-strict cross reports without that audit. |
+| W4: Closed-loop DBTL | Feed the complex evidence back into route/verify/learn decisions. | Synchronized candidates, records, verdicts, prior verified prevalidation records, and calibrated/conformal gate settings. | One async batch round runs through `run_batch_round.py --strict-complex-records --prevalidate-records ... --conformal-alpha ...` or a complex-specific successor, records complex-regime `tau`, proves prevalidation/current-batch predictor-source-label contract compatibility, and writes `preflight.json`, campaign artifacts, and route/verify/net summaries that project status accepts as calibrated W4 evidence. |
+| W5: De-novo binders | Move beyond fixed-backbone ProteinMPNN interface redesign. | RFdiffusion or equivalent generator selected with license and HPC constraints checked. | Candidate JSONL uses the same bridge and can be evaluated by the complex posthoc/gate stack. |
+| W6: Live orchestration | Let Claude plan/interprete between verified batch rounds. | P0 key rotation complete; provider seam configured; safety and label-integrity checks on. | Live provider run is reproducible, logged, and never bypasses the external trust/safety gates. |
+
+## Milestone Ladder
+
+| Milestone | Definition of done | Primary artifacts |
+|---|---|---|
+| M6c+ | Barnase-barstar scale-up certifies a tighter alpha target or gives a quantified next-n refusal. | `complex_posthoc_bundle.py`, `complex_alpha_decision.json`, merged records JSONL. |
+| M6d | At least three heterodimer targets are prepared, run, and evaluated target-wise. | target manifest, prepared PDBs, target FASTAs/MSAs/reports, `complex_panel_report.json`. |
+| M6e | Independent predictor comparison is available for matched complex candidates. | second-predictor records JSONL, `complex_cross_predictor` output. |
+| M6f | Complex records are consumed by a DBTL campaign loop rather than only posthoc scripts. | campaign JSONL, summary JSON, route/verify/net comparison, W4 claim-boundary status artifact. |
+| M7 | Live orchestrator participates in a gated batch campaign without owning trust decisions. | provider logs, safety verdicts, campaign artifacts, gate certificate. |
+| M8 | New generator regime is added without changing the trust-gate contract. | RFdiffusion or equivalent candidate JSONL plus existing posthoc/gate outputs. |
+
+## Stop/Go After Each Batch
+
+Run these checks before spending the next GPU batch:
+
+- QC: do all records pass schema, pAE, L-RMSD, target-id, provenance, duplicate, and interface checks?
+- Strict QC: for any scale, panel, or second-predictor claim, do
+  `complex_records_qc.py`, `complex_alpha_decision.py`, or `complex_posthoc_bundle.py` pass with
+  `--require-complex-target-id --require-provenance --require-chain-ids`?
+- Label threshold: do row-level `lrmsd_threshold` values match the posthoc/report `--threshold` before
+  any tool recomputes `truth.correct`?
+- Inputs: do target FASTA/MSA/report files exist, including declared/default `<target_fasta>.report.json`
+  with `pdb`, `pdb_sha256`, `chain`, `out`, `out_sha256`, integer `length`, and `sequence`, plus
+  declared/default `<target_msa>.report.json` with `ok=true`, `fasta`, `out`, integer
+  `sequence_length`, `fasta_sha256`, and `out_sha256`, and does each MSA query match its explicit
+  target FASTA?
+- Risk: is the target alpha certified by RCPS, refused, or underpowered?
+- Utility: does selective trust beat trust-all and verify-all on false accepts and assay cost?
+- Provenance: can every row be tied to a target, predictor, signal source, label source, and input batch?
+- Identity: do complex candidates and records preserve `complex_target_id`, with candidate ids unique within
+  any DBTL round so controller dictionaries, screen verdicts, and prediction records cannot shadow each other?
+- Generality: is the evidence target-wise, or only pooled?
+- Panel provenance: is the panel a single predictor/signal/label source, with cross-predictor mixtures kept
+  for `complex_cross_predictor.py`?
+- Independence: are signal and label still from one predictor?
+- Cross-predictor integrity: do matched predictor records have enough labeled overlap, same-threshold label
+  agreement, and distinct `signal_source`/`label_source` provenance?
+- Cross-predictor triage: did `complex_cross_predictor.py --emit-matches` write a matched-overlap JSONL
+  so disagreements can be inspected target by target?
+- Closed-loop preflight: before W4, does `run_batch_round.py` write an `ok=true` `preflight.json` proving
+  candidate ids are covered by prediction records and provided screen verdicts, with strict complex-record
+  QC enabled for complex/binder evidence, candidate-side `complex_target_id` present, and candidate-record
+  target identity agreement checked? If calibrated routing is requested, are the prevalidation records
+  prior evidence with no overlap against the current batch, is `--conformal-alpha` blocked unless
+  those prior records are supplied, and does `batch_contract` show matching `predictor_id`,
+  `signal_source`, `label_source`, and `lrmsd_threshold` by routed regime?
+
+Use `complex_project_status.py` to summarize W1/W2/W3/W4 from JSON artifacts after each analysis pass.
+It accepts post-Cayuga completion reports as intermediate evidence, so synced scale records can move W1
+to `scale_records_ready_for_posthoc`; an unavailable/sentinel scale plan can move W1 to
+`scale_waiting_on_input_prep`; target manifests missing only target-MSA/report artifacts can move W2 to
+`panel_waiting_on_input_prep`; `complex_input_prep_completion.py` reports can refine W1/W2 to
+`scale_input_prep_completion_blocked`, `scale_input_prep_ready_for_manifest`,
+`panel_input_prep_completion_blocked`, or `panel_input_prep_ready_for_manifest`; and synced panel records
+can move W2 to `panel_records_ready_for_report` before final posthoc/panel artifacts exist.
+When W1 and W2 input-prep completion reports are both supplied, `--emit-pending-input-prep-paths` writes
+a de-duplicated project-level copy list while the JSON status keeps the workstream and target provenance.
+`--emit-sync-back-plan` turns that copy list into an explicit `rsync` pull script from
+`CAYUGA_BIO_SFM_ROOT`. With W1/W2 readiness reports supplied, `--emit-post-sync-plan` also writes the
+ordered local replay after sync-back: input-prep completion, readiness refresh, then project-status refresh.
+For the combined W1/W2/W3/W4 external-artifact checklist, `--emit-external-remote-check-plan` writes a
+lightweight `ssh test -s` preflight before the external sync-back script, so unfinished Cayuga jobs are
+distinguished from local sync problems. The preflight writes a JSON report of per-path remote
+present/missing status plus missing-by-workstream/category/target summaries, keeping failed bridge runs
+auditable across Codex sessions. Status consumes that
+report only when its path-count and SHA match the current pending checklist; only a fresh `ok=true` report
+can advance the recommended bridge to external sync-back, and only when its `path_manifest` provenance
+matches the current pending-path manifest, its status/counters/per-path records prove every current path is
+present, and any required target-MSA precompute receipt is satisfied. Fresh
+reports with missing remote artifacts keep the remote-check bridge recommended and add
+fresh-report-derived `remote_missing_followups` for the upstream W1-W4 repair action. The remote-check
+bridge also tries to sync the target-MSA precompute receipt back from Cayuga and records that handoff in
+`target_msa_precompute_receipt_sync`, including local SHA-256 and byte size when the pull succeeds; if a
+fresh all-present report lacks that receipt-sync evidence, status keeps the remote-check bridge recommended
+before any target-MSA re-submit, while an attempted-but-unsynced receipt is surfaced as
+`target_msa_receipt_sync_failed` for Cayuga receipt repair. A digest-free `synced=true` receipt report is
+also stale repair-required evidence. The remote-check script checks the pending external path-list
+fingerprint before receipt sync, so stale scripts fail before local side effects.
+When a remote-check plan is emitted, the external sync bridge independently enforces the same proof before
+`rsync`: the matching report must prove the current pending manifest is all-present, and any required
+target-MSA receipt must already be satisfied in local status with the same receipt SHA that was validated
+during status generation.
+Before that report exists, `pending_external_summary` exposes the same pending checklist grouped by
+workstream, category, target, artifact, and field, while `pending_external_followups` maps the checklist
+to pre-remote W1-W4 repair actions.
+When supplied with the raw W1/W2 manifests, status can also emit
+`results/m6c_project_target_msa_precompute.sh`, a deduplicated target-MSA precompute bridge that renders
+shared targets once before remote-check only when duplicated target ids share the same FASTA/MSA/report
+material. Conflicting duplicate target ids fail closed as a local plan conflict before submit or receipt
+initialization.
+Named optional artifact paths that have not been generated yet are surfaced as explicit missing statuses
+instead of crashing the roadmap audit, so the same status command can be run before, during, and after
+Cayuga sync.
+If a current W2 target manifest is not ready, that upstream input-prep or manifest blocker supersedes stale
+panel-completion artifacts so status points to the earliest actionable fix.
+It also accepts the second-predictor contract report as W3 intermediate evidence, so W3 can report
+`second_predictor_contract_ready` or `second_predictor_contract_blocked` before a final cross-predictor
+report exists. Blocked W3 status keeps `commands_available=false` and does not re-expose runnable
+downstream commands from the blocked contract report.
+For W4, it reads `run_batch_round.py` `preflight.json`, `summary.json`, and `campaign.jsonl`; W4 is complete
+only when strict complex-record preflight passed, gate prevalidation has a compatible `batch_contract`, the
+routed count matches the preflight candidate count, and the campaign JSONL is present, readable, and has the
+same row count as the summary routed-candidate count, with non-empty unique `candidate_id` values that match
+preflight candidate ids when recorded, known DBTL routing actions, and an action mix that matches any summary
+aggregate action rates.
+W1/W2 status is target-alpha scoped: alpha decisions, scale completions, panel completions, and panel
+reports with a different `target_alpha` are mismatch states, not completed evidence for the requested alpha.
+
+Allowed decisions:
+
+- `stop_certified`: freeze that target/alpha condition and move to panel or predictor validation.
+- `continue_scale`: run the next planned batch size from `complex_alpha_plan.py`.
+- `run_scale_batch`: use `complex_alpha_decision.py`/`complex_posthoc_bundle.py` `next_batch`
+  output to set per-temperature ProteinMPNN `NUM_SEQ`.
+- `emit_scale_plan`: run `complex_next_batch_plan.py` so temp-specific candidate/record paths
+  and generate-to-predict dependencies are explicit before submitting; use `--require-files`
+  for real Cayuga submission so selected-target FASTA/MSA/report/prep preflight runs first and is
+  replayed by the emitted shell plan before any `sbatch`. The planner refuses `run_scale_batch`
+  decisions that were not produced with strict QC unless explicitly run with `--no-strict-qc` for
+  legacy debugging; saved runnable scale plans also require `--require-files` unless
+  `--allow-unchecked-files` is explicitly used for diagnostics.
+- `complete_scale_batch`: after Cayuga jobs finish and records are synced back, run
+  `complex_scale_completion.py --plan <next_batch_plan.json>` before posthoc so missing, empty, or
+  target-mismatched JSONL outputs are caught as sync/completion failures instead of analysis surprises.
+  Use `--new-records-only` for W1 synced-output checks when previous records are already trusted locally;
+  the emitted shell plan preserves replay flags and target-id checking choices.
+- `complete_input_prep`: after the target-MSA/input-prep plan runs on Cayuga and files are synced back,
+  run `complex_input_prep_completion.py --report <target_manifest_report.json>` before rerunning
+  `complex_target_manifest.py --require-files` or `complex_readiness.py --require-files`. This catches
+  missing or empty source/prepared PDB, FASTA/MSA, and report files as sync failures before semantic
+  manifest validation checks sequence and report hashes. Use its `pending_artifacts`, `blocked_targets`,
+  and `artifacts_by_target` fields as the machine-readable sync checklist, or add `--emit-pending-paths`
+  to write a one-path-per-line copy list for simple sync scripts.
+- `preflight_readiness`: run `complex_readiness.py` to aggregate scale-plan, panel-manifest,
+  second-predictor contract, and W4 closed-loop batch checks into one JSON/shell artifact before Cayuga
+  or local DBTL spend; use
+  `--emit-scale-plan` during W1 so the exact next-batch JSON used for submission is saved for
+  `complex_scale_completion.py --plan`. If readiness is not scale-ready, that path is overwritten with an
+  `ok=false`, `action=unavailable` sentinel so stale plans cannot be replayed. If readiness is scale-ready
+  and would write a runnable saved plan, it requires `--require-files` unless `--allow-unchecked-files`
+  is explicitly used for diagnostics; unchecked saved plans are marked `diagnostic_only` and completion
+  reports surface that warning. Pass `--input-prep-completion` when that artifact exists so readiness carries target-wise sync-back
+  blockers into its embedded roadmap status. When summarizing W1 and W2 together, pass separate
+  `--scale-input-prep-completion` and `--panel-input-prep-completion` reports to
+  `complex_project_status.py` so scale and panel sync blockers do not overwrite each other. Inspect
+  `ordered_steps` so
+  source PDB fetch/prep, target-MSA precompute, scale/panel submission, posthoc refresh,
+  second-predictor follow-up, cross-predictor reporting, strict W4 batch routing, and status refresh stay
+  in the intended order. For W4, pass synced `--batch-candidates`, `--batch-records`, optional
+  `--batch-verdicts`, and `--batch-target`; readiness runs strict complex batch preflight and emits the
+  `run_batch_round.py --strict-complex-records` command only when that preflight passes. Missing or empty
+  batch/prevalidation JSONLs remain machine-readable in `preflight.json`, and
+  calibrated W4 preflight also blocks predictor/source/threshold drift between prior prevalidation evidence
+  and current batch records. `run_batch_round.py --emit-sync-back-plan` can turn missing artifacts into an
+  `rsync` pull/retry script. When W4 is
+  planned through readiness, pass `--batch-sync-back-plan` so that script path remains in the readiness
+  JSON and shell plan. When refreshing the top-level dashboard, pass the same
+  `--batch-sync-back-plan` to `complex_project_status.py` so status JSON/text and post-sync replay preserve
+  the W4 sync/rerun pointer.
+  For W3, pass `--predictor-sync-back-plan` to `complex_project_status.py` so missing second-predictor
+  record blockers preserve their sync/rerun pointer in the same dashboard. Post-sync reruns W3 from the
+  contract report's `self_command`, which regenerates the contract report, command plan, and sync-back
+  plan; the direct W3 sync script keeps its own refresh command from rewriting the running script.
+  W3/W4 direct sync scripts validate their own `<script>.manifest.json` sidecars before rsync so
+  workstream-level replay fails closed if its pending-path manifest drifts, both direct scripts verify
+  each pulled JSONL is non-empty before refreshing or rerunning the workstream, and neither direct script
+  regenerates its own running shell file.
+  Use `--emit-pending-external-paths` to keep one combined W1/W2/W3/W4 missing-artifact checklist for
+  sync/replay audits, and `--emit-external-sync-back-plan` to turn that checklist into a one-command
+  external pull bridge that delegates local W1-W4 reruns to the post-sync plan. Pending-path sidecar
+  manifests carry path-count and SHA-256 fingerprints, and generated input-prep/external sync scripts
+  check the current checklist before rsync.
+  Generated sync steps also verify that each local pulled file is non-empty immediately after `rsync`.
+  Bridge scripts derive the repo root from their own path, and post-sync replay bootstraps
+  `BIO_SFM_PYTHON`, `PYTHONNOUSERSITE=1`, and local `PYTHONPATH` for fresh-shell reruns.
+  Generated bridge/status artifacts are written by atomic replace, so replay can refresh bridge files
+  without truncating a currently running parent shell script.
+  The input-prep and external bridges failure-collect per-path `rsync` and post-sync steps so one missing
+  remote artifact does not prevent later pulls or final status replay; stale checklist fingerprints still
+  fail closed before any rsync.
+  The post-sync plan failure-collects local replay steps so a partial sync still reaches later checks and
+  final status refresh, then exits nonzero if any replay step failed. Treat
+  `recommended_next_script` as the current first executable bridge; use `generated_scripts[*].manifest`
+  plus `sync_manifest_audit` for a compact script freshness audit. With pending W1/W2 target MSAs, the first
+  bridge is the deduplicated target-MSA precompute plan; after that, run the remote existence check, refresh
+  project status with `results/m6c_project_remote_check.json`, and run the external sync-back bridge only
+  after refreshed status recommends it. A complete `target_msa_precompute_receipt` marks the
+  submit step satisfied only when it has exactly one accepted row per planned target, no unexpected target
+  rows, a non-empty, whitespace-free `sbatch --parsable` job id for each `submitted` row, and FASTA/MSA/report paths plus manifest path/hash/workstream provenance matching the current raw manifests,
+  then moves resumed sessions to
+  remote-check; the remote-check bridge can pull that receipt back from Cayuga. The
+  generated target-MSA bridge checks raw manifest hashes and `sbatch` before initializing that receipt, so
+  stale rendered commands or accidental local execution fail before clobbering resume evidence, and it refuses to record a `submitted` row if
+  `sbatch --parsable` returns an empty, whitespace-only, or whitespace-containing job id; a non-empty incomplete/invalid receipt blocks blind
+  resubmission unless `TARGET_MSA_PRECOMPUTE_OVERWRITE_RECEIPT=1` is set after duplicate-job review;
+  each rendered section self-validates its expected receipt subset, exact FASTA/MSA/report paths, and
+  manifest/workstream provenance before exiting, and the project-level bridge runs a strict aggregate
+  target-set/provenance receipt check before remote-check; conflicting duplicate target ids also block the
+  recommended bridge before submit or receipt initialization. A failed audit blocks the recommended script before
+  external replay. Use `resume_bridge_preflight` to distinguish a fresh bridge that is only `waiting_on_env`
+  or `waiting_on_cayuga_session` from a structurally `blocked` bridge; it also records a non-executing
+  `bash -n` syntax audit, with generated-script syntax failures surfaced as `bash_syntax_error`.
+  For runnable/external-waiting bridges, preflight and the first ladder step carry the downstream
+  remote-check/status-refresh continuation when required.
+  `generated_script_syntax_audit` extends that check across every generated bridge, including later ladder
+  steps that are not recommended yet; failures feed `goal_progress_audit.local_blockers`.
+  Use `resume_execution_ladder` to follow the generated bridge sequence without rereading shell scripts; it
+  marks remote-check, the non-shell `project_status_refresh` pseudo-step, external sync, and post-sync replay
+  as satisfied, waiting, or blocked by a predecessor, and the status-refresh step names the exact
+  `--external-remote-check-report` argument when the report path is known.
+  `goal_progress_audit` is the goal-mode completion guard: it summarizes W1-W4 requirements, the first
+  action, local/external blockers, and `can_mark_goal_complete`, so continuation does not confuse a fresh
+  bridge blocker with project completion. It requires each workstream's canonical terminal status, not just
+  a raw `complete=true`, plus a parseable non-empty evidence artifact whose content supports that terminal
+  claim, W4 preflight/summary/campaign supporting artifacts when closed-loop completion is claimed, and a
+  clear local/external blocker audit before the overall goal can complete. Top-level `goal_progress`, `remaining`, `remaining_requirements`,
+  `can_mark_goal_complete`, and `goal_completion_note` mirror that compact resume state.
+  Use top-level `operator_next_action`, `operator_next_command`, and `operator_next_role` as the resume
+  instruction; `operator_next_action` also carries the downstream remote-check/status-refresh continuation
+  when the ladder requires it. Top-level `next_action` is still the scientific workstream-level next action.
+  For W1 with `--scale-target-id`, the target-MSA precompute section is selected-target scoped.
+  If repairable missing/empty source/prep/FASTA/MSA/report files are the only W1/W2 issue, readiness reports
+  `waiting_on_input_prep`; run the emitted `target_msa_precompute` section, then rerun readiness with
+  `--require-files`. Missing source PDBs without `rcsb_id` or missing prepared PDBs with no source path
+  stay `blocked`. If readiness reports `blocked`, use the terminal/shell-plan blocker lines and the
+  structured `details.failures` entries rather than only the summary count to fix the hard failure.
+  Prefer the project-level `results/m6c_project_target_msa_precompute.sh` when both W1 and W2 are waiting
+  on target MSAs; it de-duplicates shared targets before the remote-check bridge only when their
+  FASTA/MSA/report material matches.
+  Readiness artifacts include a canonical `self_command` / `# rerun_readiness_after_prep` command; use it
+  after input prep completes so stale arguments and stale scale-plan sentinels are replaced without carrying
+  unrelated default W4 batch options.
+- `emit_panel_plan`: run `complex_target_manifest.py --require-files --emit-plan` so each ready
+  target gets explicit batch settings, the emitted shell plan replays manifest preflight before
+  `sbatch`, and each Boltz job depends on its matching ProteinMPNN job.
+  Use repeated `--target-id` arguments for W1 or staged-panel subset preflight without editing the manifest.
+- `complete_panel_batch`: after panel jobs finish and records are synced back, run
+  `complex_panel_completion.py --manifest <targets.json>` before `complex_panel_report.py` so missing,
+  malformed, or target-id-mismatched per-target records are caught before panel claims. Use repeated
+  `--target-id` arguments plus a matching `--min-targets` value for staged-panel completion checks; the
+  emitted shell plan preserves the replay arguments.
+- `change_axis`: switch from more records to more targets or a second predictor.
+- `revise_metric`: if pAE stops discriminating after QC, inspect confounding before scaling.
+- `abandon_regime`: if within-regime signal collapses and RCPS keeps refusing, preserve it as a negative result.
+
+## Immediate Codex Cadence
+
+1. Stabilize the current branch: keep the pAE plumbing, cached target FASTA/MSA report paths,
+   strict complex-record provenance, panel checks, and cross-predictor bridge covered by tests.
+2. Use `docs/M6C_RUNBOOK.md` on Cayuga to write the barnase target FASTA report, precompute the
+   barnase target MSA once, generate the next barnase-barstar batch, and refold with `TARGET_MSA`.
+3. Run `complex_posthoc_bundle.py --require-complex-target-id --require-provenance --require-chain-ids`
+   on old plus new records and follow the emitted alpha decision and `next_batch` settings instead of
+   deciding by inspection.
+4. Use `complex_next_batch_plan.py` or `complex_readiness.py` to render the actual Cayuga commands so each
+   temperature writes distinct JSONL outputs and each Boltz job depends on its
+   corresponding ProteinMPNN job. Confirm the generated ProteinMPNN commands carry `COMPLEX_ID`,
+   `SEED`, and `OBJECTIVE` from the manifest. Treat a strict-QC refusal here as a signal to rerun the posthoc
+   bundle, not as a reason to hand-edit commands.
+5. Run `complex_readiness.py --require-files --emit-plan ... --emit-scale-plan ...` before W1 submission,
+   follow its `ordered_steps`/plan sections in order. After scale jobs finish and records are synced,
+   run `complex_scale_completion.py --plan <next_batch_plan.json>` before the posthoc bundle, then
+   `complex_project_status.py` after posthoc/panel/cross-predictor/W4 artifacts are written so the
+   roadmap status, W3/W4 sync pointers, combined external-artifact checklist, recommended next script,
+   and next action stay explicit.
+6. Treat the current W2 panels as completed negative evidence, not missing runs. The latest durable
+   anchor is `docs/M6D_GOAL_MODE_ANCHOR.md`: `3PC8_AB` is target-specific alpha=0.2 evidence, while W2
+   generalization remains negative. The expanded next-branch panel is now complete and synced back:
+   `results/m6d_w2_expanded_next_branch_panel_report.json` is
+   `multi_target_evaluable_not_certified` at alpha=0.2 with 10 targets and 1000 records. The 3-target RCSB
+   representative follow-up is also complete and evaluable-not-certified. Resume W2 by continuing
+   `w2_target_family_redesign_v2`: use `results/m6d_w2_target_family_redesign_v2_design.{json,md}`,
+   `configs/m6d_w2_target_family_redesign_v2_candidate_rules.json`, and
+   `results/m6d_w2_target_family_redesign_v2_candidate_pool.{json,md}`. The v2 no-spend replay admits
+   0/25 local inventory targets and keeps the remaining source-redundant targets audit-only, so W2 now needs
+   sequence-diversity-aware discovery beyond excluded v2 sources plus a predeclared signal/calibration
+   strategy before target-MSA/Cayuga work.
+7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract
+   with 30 matched records, but `results/m6c_cross_predictor.json` reports Boltz-Chai label agreement
+   of 0.600 against the required 0.800. Therefore independent-predictor robustness is not supported
+   under the current no-MSA Chai protocol.
+8. For W3 specifically, resume from the decision fork in `docs/M6D_GOAL_MODE_ANCHOR.md`: add a third
+   predictor/protocol, rerun Chai with stronger MSA/template support, or formalize the Boltz-Chai
+   disagreement as a negative robustness result. Do not spend more API/GPU on W3 until that protocol
+   choice is explicit.
+9. Keep W4 in fail-closed mode until the screen head is replaced or trained. The current W4 artifact proves
+   strict closed-loop plumbing and conservative safety behavior, but all candidate verdicts were non-finite
+   DeBERTa outputs and therefore deferred; do not use it as a productive route-to-build policy.
+
+## File Map
+
+- Context: `HANDOFF.md`
+- Architecture: `docs/ARCHITECTURE.md`
+- HPC bridge: `docs/HPC.md`, `hpc/README.md`
+- M6c execution: `docs/M6C_RUNBOOK.md`
+- Target panel template: `configs/template_complex_targets.json`
+- W2 candidate panel: `configs/m6d_candidate_complex_targets.json`, `docs/M6D_CANDIDATE_PANEL.md`
+- Posthoc bundle: `src/bio_sfm_designer/experiments/complex_posthoc_bundle.py`
+- Alpha frontier: `src/bio_sfm_designer/experiments/complex_alpha_plan.py`,
+  `src/bio_sfm_designer/experiments/complex_alpha_decision.py`
+- Next scale batch: `src/bio_sfm_designer/experiments/complex_next_batch_plan.py`
+- Scale completion: `src/bio_sfm_designer/experiments/complex_scale_completion.py`
+- Project status: `src/bio_sfm_designer/experiments/complex_project_status.py`
+- Readiness preflight: `src/bio_sfm_designer/experiments/complex_readiness.py`
+- Panel validation: `src/bio_sfm_designer/experiments/complex_target_manifest.py`,
+  `src/bio_sfm_designer/experiments/complex_panel_completion.py`,
+  `src/bio_sfm_designer/experiments/complex_panel_report.py`
+- Predictor validation: `configs/template_second_predictor_contract.json`,
+  `src/bio_sfm_designer/experiments/complex_predictor_contract.py`,
+  `src/bio_sfm_designer/experiments/complex_cross_predictor.py`

@@ -1,0 +1,358 @@
+"""Audit local/Cayuga mirror consistency for the active M6d goal state.
+
+This is a no-submit check. It reads selected files from the local checkout and
+the Cayuga mirror, then compares exact hashes for stable source/handoff inputs
+and semantic fields for generated artifacts that embed machine-specific paths.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import shlex
+import subprocess
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+
+_EXACT_SHA_PATHS = [
+    "README.md",
+    "HANDOFF.md",
+    "docs/CODEX_GOAL_MODE.md",
+    "docs/M6D_GOAL_MODE_ANCHOR.md",
+    "results/m6d_goal_mode_current_anchor.json",
+    "results/m6c_cross_predictor.json",
+    "results/m6c_cross_predictor_matches.jsonl",
+    "results/m6d_w2_w3_decision_protocol.json",
+    "results/m6d_w3_adjudication_set.jsonl",
+    "results/m6d_w3_adjudication_set.json",
+    "results/m6d_w2_explicit_approval_runbook.md",
+]
+
+
+_JSON_FIELD_SPECS: Dict[str, List[str]] = {
+    "results/m6c_project_status_w2_followup.json": [
+        "status",
+        "goal_progress",
+        "remaining",
+        "complete",
+        "can_mark_goal_complete",
+        "sync_manifest_audit.ok",
+        "sync_manifest_audit.n_checks",
+        "workstreams.W1_M6c_scale_up.status",
+        "workstreams.W1_M6c_scale_up.complete",
+        "workstreams.W2_multi_target_panel.status",
+        "workstreams.W2_multi_target_panel.complete",
+        "workstreams.W2_multi_target_panel.approval_packet_ready",
+        "workstreams.W2_multi_target_panel.approval_parity_ok",
+        "workstreams.W2_multi_target_panel.wrapper_guard_audit_ok",
+        "workstreams.W2_multi_target_panel.can_submit_proteinmpnn_boltz_panel",
+        "workstreams.W3_independent_predictor.status",
+        "workstreams.W3_independent_predictor.complete",
+        "workstreams.W3_independent_predictor.positive_claim_supported",
+        "workstreams.W4_closed_loop_DBTL.status",
+        "workstreams.W4_closed_loop_DBTL.complete",
+    ],
+    "results/m6d_goal_completion_audit.json": [
+        "status",
+        "audit_ok",
+        "complete",
+        "can_mark_goal_complete",
+        "remaining_requirements",
+        "v9_receipt.exists",
+        "workstream_status.W1_M6c_scale_up.status",
+        "workstream_status.W1_M6c_scale_up.complete",
+        "workstream_status.W2_multi_target_panel.status",
+        "workstream_status.W2_multi_target_panel.complete",
+        "workstream_status.W3_independent_predictor.status",
+        "workstream_status.W3_independent_predictor.complete",
+        "workstream_status.W3_independent_predictor.positive_claim_supported",
+        "workstream_status.W4_closed_loop_DBTL.status",
+        "workstream_status.W4_closed_loop_DBTL.complete",
+        "w2_gate.approval_packet_ready",
+        "w2_gate.approval_parity_ok",
+        "w2_gate.wrapper_guard_ok",
+        "w2_gate.panel_submission_blocked",
+        "w2_gate.target_msa_ready_if_explicitly_approved",
+        "w3_gate.audit_ok",
+        "w3_gate.positive_claim_supported",
+        "w3_gate.adjudication_rows",
+        "w3_gate.adjudication_sha256",
+    ],
+    "results/m6d_w2_target_family_redesign_v9_approval_packet.json": [
+        "status",
+        "approval_packet_ready",
+        "can_submit_target_msa_if_user_explicitly_approves",
+        "can_submit_proteinmpnn_boltz_panel",
+        "target_count",
+        "pending_path_count",
+        "target_msa_approval_env_var",
+        "target_msa_approval_env_value",
+        "wrapper_guard_audit_ok",
+        "wrapper_guard_static_ok",
+        "wrapper_guard_no_env_run_ok",
+        "wrapper_guard_script_sha256",
+    ],
+    "results/m6d_w2_target_family_redesign_v9_approval_parity.json": [
+        "status",
+        "parity_ok",
+        "approval_packet_ready",
+        "panel_submission_blocked",
+        "target_count",
+        "pending_path_count",
+    ],
+    "results/m6d_w2_explicit_approval_runbook.json": [
+        "status",
+        "audit_ok",
+        "can_mark_goal_complete",
+        "target_count",
+        "pending_path_count",
+        "target_msa_approval_env_var",
+        "target_msa_approval_env_value",
+        "submit_command_if_approved",
+        "postsubmit_sync_back_command",
+        "claim_boundary.target_msa_input_prep",
+        "claim_boundary.proteinmpnn_boltz_panel_submission",
+        "claim_boundary.w2_multi_target_generalization",
+        "runbook_steps",
+    ],
+    "results/m6d_w2_target_family_redesign_v9_wrapper_guard_audit.json": [
+        "status",
+        "audit_ok",
+        "target_msa_approval_env_var",
+        "target_msa_approval_env_value",
+        "static_audit.ok",
+        "static_audit.wrapper_sha256",
+        "no_env_run.ok",
+        "no_env_run.returncode",
+        "no_env_run.receipt_exists_before",
+        "no_env_run.receipt_exists_after",
+        "no_env_run.refusal_message_seen",
+    ],
+    "results/m6d_w3_adjudication_audit.json": [
+        "status",
+        "audit_ok",
+        "positive_claim_supported",
+        "claim_boundary",
+        "current_protocol_verdict",
+        "selected_protocol",
+        "label_agreement",
+        "min_label_agreement",
+        "matched_overlap",
+        "adjudication_set_artifact_audit.ok",
+        "adjudication_set_artifact_audit.n_rows",
+        "adjudication_set_artifact_audit.actual_sha256",
+    ],
+}
+
+
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _write_json(path: str, obj: Dict[str, Any]) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as fh:
+        json.dump(obj, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+
+
+def _write_text(path: str, text: str) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as fh:
+        fh.write(text)
+
+
+def _field(obj: Any, dotted: str) -> Any:
+    cur = obj
+    for part in dotted.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return None
+        cur = cur[part]
+    return cur
+
+
+def _read_local(root: str, rel_path: str) -> bytes:
+    with open(os.path.join(root, rel_path), "rb") as fh:
+        return fh.read()
+
+
+def _read_remote(remote_root: str, rel_path: str, *, remote_host: Optional[str]) -> bytes:
+    path = os.path.join(remote_root, rel_path)
+    if not remote_host:
+        return _read_local(remote_root, rel_path)
+    cmd = ["ssh", remote_host, f"cat {shlex.quote(path)}"]
+    proc = subprocess.run(cmd, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.decode("utf-8", errors="replace").strip())
+    return proc.stdout
+
+
+def _read_pair(local_root: str,
+               remote_root: str,
+               rel_path: str,
+               *,
+               remote_host: Optional[str]) -> Tuple[Optional[bytes], Optional[bytes], List[Dict[str, Any]]]:
+    failures: List[Dict[str, Any]] = []
+    local: Optional[bytes] = None
+    remote: Optional[bytes] = None
+    try:
+        local = _read_local(local_root, rel_path)
+    except Exception as exc:
+        failures.append({"kind": "local_file_read_failed", "path": rel_path, "error": str(exc)})
+    try:
+        remote = _read_remote(remote_root, rel_path, remote_host=remote_host)
+    except Exception as exc:
+        failures.append({"kind": "remote_file_read_failed", "path": rel_path, "error": str(exc)})
+    return local, remote, failures
+
+
+def build_audit(*,
+                local_root: str,
+                remote_root: str,
+                remote_host: Optional[str],
+                exact_sha_paths: Iterable[str] = _EXACT_SHA_PATHS,
+                json_field_specs: Dict[str, List[str]] = _JSON_FIELD_SPECS) -> Dict[str, Any]:
+    failures: List[Dict[str, Any]] = []
+    exact_checks: List[Dict[str, Any]] = []
+    semantic_checks: List[Dict[str, Any]] = []
+
+    for rel_path in exact_sha_paths:
+        local, remote, read_failures = _read_pair(local_root, remote_root, rel_path, remote_host=remote_host)
+        failures.extend(read_failures)
+        row: Dict[str, Any] = {"path": rel_path, "ok": False}
+        if local is not None:
+            row["local_sha256"] = _sha256(local)
+            row["local_bytes"] = len(local)
+        if remote is not None:
+            row["remote_sha256"] = _sha256(remote)
+            row["remote_bytes"] = len(remote)
+        if local is not None and remote is not None:
+            row["ok"] = row["local_sha256"] == row["remote_sha256"]
+            if not row["ok"]:
+                failures.append({
+                    "kind": "exact_sha_mismatch",
+                    "path": rel_path,
+                    "local_sha256": row["local_sha256"],
+                    "remote_sha256": row["remote_sha256"],
+                })
+        exact_checks.append(row)
+
+    for rel_path, fields in json_field_specs.items():
+        local, remote, read_failures = _read_pair(local_root, remote_root, rel_path, remote_host=remote_host)
+        failures.extend(read_failures)
+        row: Dict[str, Any] = {"path": rel_path, "ok": False, "fields": []}
+        if local is None or remote is None:
+            semantic_checks.append(row)
+            continue
+        try:
+            local_obj = json.loads(local.decode("utf-8"))
+            remote_obj = json.loads(remote.decode("utf-8"))
+        except Exception as exc:
+            failures.append({"kind": "json_parse_failed", "path": rel_path, "error": str(exc)})
+            semantic_checks.append(row)
+            continue
+        field_failures = []
+        for dotted in fields:
+            local_value = _field(local_obj, dotted)
+            remote_value = _field(remote_obj, dotted)
+            field_ok = local_value == remote_value
+            row["fields"].append({
+                "field": dotted,
+                "ok": field_ok,
+                "local": local_value,
+                "remote": remote_value,
+            })
+            if not field_ok:
+                field_failures.append({
+                    "kind": "semantic_field_mismatch",
+                    "path": rel_path,
+                    "field": dotted,
+                    "local": local_value,
+                    "remote": remote_value,
+                })
+        row["ok"] = not field_failures
+        failures.extend(field_failures)
+        semantic_checks.append(row)
+
+    audit_ok = not failures
+    return {
+        "artifact": "m6d_local_cayuga_mirror_audit",
+        "status": "local_cayuga_mirror_agree" if audit_ok else "local_cayuga_mirror_drift",
+        "audit_ok": audit_ok,
+        "can_mark_goal_complete": False,
+        "claim_boundary": "no-submit mirror consistency audit; does not run target-MSA, GPU, API, or panel jobs",
+        "local_root": os.path.abspath(local_root),
+        "remote_host": remote_host or "",
+        "remote_root": remote_root,
+        "exact_checks": exact_checks,
+        "semantic_checks": semantic_checks,
+        "n_exact_checks": len(exact_checks),
+        "n_semantic_checks": len(semantic_checks),
+        "n_failures": len(failures),
+        "failures": failures,
+        "next_action": (
+            "mirror is aligned; W2 remains blocked only on explicit target-MSA approval and replay"
+            if audit_ok else
+            "sync or regenerate mismatched local/Cayuga artifacts before continuing goal-mode execution"
+        ),
+    }
+
+
+def render_markdown(rep: Dict[str, Any]) -> str:
+    lines = [
+        "# M6d Local/Cayuga Mirror Audit",
+        "",
+        f"Status: `{rep.get('status')}`.",
+        f"Audit ok: `{rep.get('audit_ok')}`.",
+        "",
+        "This is a no-submit mirror audit. It does not run target-MSA, GPU, API, or panel jobs.",
+        "",
+        "| check type | count |",
+        "|---|---:|",
+        f"| exact SHA checks | {rep.get('n_exact_checks')} |",
+        f"| semantic JSON checks | {rep.get('n_semantic_checks')} |",
+        f"| failures | {rep.get('n_failures')} |",
+        "",
+    ]
+    failures = rep.get("failures") or []
+    if failures:
+        lines.extend(["## Failures", ""])
+        for failure in failures:
+            lines.append(f"- {failure.get('kind')} `{failure.get('path')}`: {failure.get('field', failure.get('error', ''))}")
+        lines.append("")
+    lines.extend([f"Next action: {rep.get('next_action')}", ""])
+    return "\n".join(lines)
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--local-root", default=".")
+    ap.add_argument("--remote-host", default=os.environ.get("CAYUGA_BIO_SFM_HOST", ""))
+    ap.add_argument("--remote-root", default=os.environ.get("CAYUGA_BIO_SFM_ROOT", ""))
+    ap.add_argument("--out-json", default="results/m6d_local_cayuga_mirror_audit.json")
+    ap.add_argument("--out-md", default="results/m6d_local_cayuga_mirror_audit.md")
+    args = ap.parse_args(argv)
+
+    rep = build_audit(
+        local_root=args.local_root,
+        remote_root=args.remote_root,
+        remote_host=args.remote_host,
+    )
+    _write_json(args.out_json, rep)
+    _write_text(args.out_md, render_markdown(rep))
+    print(
+        "status={status} audit_ok={ok} exact={exact} semantic={semantic} failures={failures}".format(
+            status=rep["status"],
+            ok=rep["audit_ok"],
+            exact=rep["n_exact_checks"],
+            semantic=rep["n_semantic_checks"],
+            failures=rep["n_failures"],
+        )
+    )
+    return 0 if rep["audit_ok"] else 2
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
