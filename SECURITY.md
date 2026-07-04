@@ -2,8 +2,8 @@
 
 ## Reporting
 
-Please report suspected security issues privately through GitHub Security Advisories
-when this repository is public. Do not open a public issue for credentials, unsafe
+Please report suspected security issues privately through GitHub Security Advisories.
+Do not open a public issue for credentials, unsafe
 biological capability concerns, or reproducibility gaps that could expose private
 infrastructure.
 

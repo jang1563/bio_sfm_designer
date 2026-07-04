@@ -245,14 +245,16 @@ the measurement project the engine was extracted from — referenced, not requir
 # fresh venv (NOTE: /tmp is ephemeral — recreate when gone; needs modern pip for PEP 660 editable installs)
 python3 -m venv /tmp/bio_sfm_venv && /tmp/bio_sfm_venv/bin/pip install -U pip
 /tmp/bio_sfm_venv/bin/pip install -e ".[dev]" numpy
-/tmp/bio_sfm_venv/bin/python -m unittest discover -s tests            # 433 designer tests, all green
-/tmp/bio_sfm_venv/bin/python -m unittest discover -s ../bio-sfm-trust-core/tests   # 32 trust-core tests
+/tmp/bio_sfm_venv/bin/python -m pytest -q                             # public clone smoke: 118 passed, 4 skipped
 ```
 
-For local engine development, override the pinned public dependency with the sibling checkout:
+For local engine development, override the pinned public dependency with the sibling checkout,
+then run both suites:
 
 ```bash
 /tmp/bio_sfm_venv/bin/pip install -e ../bio-sfm-trust-core -e ".[dev]"
+/tmp/bio_sfm_venv/bin/python -m pytest -q
+/tmp/bio_sfm_venv/bin/python -m unittest discover -s ../bio-sfm-trust-core/tests
 ```
 
 The honest results live in committed experiments + fixtures (no GPU needed to re-run the analyses):
