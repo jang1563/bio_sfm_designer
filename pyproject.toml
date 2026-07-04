@@ -12,9 +12,9 @@ license = { text = "MIT" }
 authors = [{ name = "JangKeun Kim" }]
 keywords = ["protein-design", "dbtl", "ai-for-science", "trust-routing", "biosafety", "orchestration"]
 # bio-sfm-trust is the calibrated trust engine. It is not on PyPI yet, so public
-# installs pin the public GitHub engine commit used for this release.
+# installs pin the public GitHub engine release tag used here.
 dependencies = [
-  "bio-sfm-trust @ git+https://github.com/jang1563/bio-sfm-trust-core.git@e4babdf4e035f6bfaadcf6e1e699e284ea6faf0a"
+  "bio-sfm-trust @ git+https://github.com/jang1563/bio-sfm-trust-core.git@v0.1.0"
 ]
 
 [project.optional-dependencies]

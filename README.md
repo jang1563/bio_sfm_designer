@@ -42,7 +42,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Public clone verified** (`118 passed, 4 skipped`; the pinned public `bio-sfm-trust-core`
+**Public clone verified** (`118 passed, 4 skipped`; the pinned public `bio-sfm-trust-core` release tag
 engine installs from GitHub):
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
@@ -508,7 +508,7 @@ engine installs from GitHub):
 ## Install & run (stub loop — no GPU/weights/network)
 
 ```bash
-pip install -e ".[dev]"                  # pulls the pinned public bio-sfm-trust-core engine
+pip install -e ".[dev]"                  # pulls the pinned public bio-sfm-trust-core release tag
 python -m pytest -q
 python -m bio_sfm_designer.experiments.dry_run_stub_designer --out results/dry_run
 ```
