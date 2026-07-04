@@ -15,8 +15,9 @@ try:  # the calibrated trust engine (sibling package) — fail loudly with a fix
     import bio_sfm_trust as _bio_sfm_trust  # noqa: F401
 except ImportError as _exc:  # pragma: no cover
     raise ImportError(
-        "bio_sfm_designer requires 'bio-sfm-trust' (the trust engine). Install it first:\n"
-        "    pip install -e ../bio-sfm-trust-core"
+        "bio_sfm_designer requires 'bio-sfm-trust' (the trust engine). Install the project with:\n"
+        "    pip install -e .\n"
+        "or install the engine directly from https://github.com/jang1563/bio-sfm-trust-core"
     ) from _exc
 
 from .types import Candidate, Prediction, Routing, ScreenVerdict

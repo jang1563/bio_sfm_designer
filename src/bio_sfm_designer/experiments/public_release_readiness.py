@@ -313,6 +313,41 @@ def _claim_boundary_findings(root: str) -> Dict[str, Any]:
     return {"checks": checks, "findings": findings}
 
 
+def _dependency_findings(root: str) -> Dict[str, Any]:
+    path = os.path.join(root, "pyproject.toml")
+    text, reason = _read_text(path, max_bytes=500_000) if os.path.exists(path) else (None, "missing")
+    checks = []
+    findings = []
+    if text is None:
+        checks.append({"id": "pyproject_dependency_readable", "present": False, "reason": reason})
+        return {"checks": checks, "findings": findings}
+
+    has_trust_dep = "bio-sfm-trust" in text
+    has_public_git_dep = (
+        "bio-sfm-trust @ git+https://github.com/jang1563/bio-sfm-trust-core.git" in text
+    )
+    bare_dep = bool(re.search(r"dependencies\s*=\s*\[[^\]]*[\"']bio-sfm-trust[\"']", text, re.S))
+    checks.append({
+        "id": "bio_sfm_trust_dependency_public_installable",
+        "present": (not has_trust_dep) or has_public_git_dep,
+        "has_trust_dep": has_trust_dep,
+        "has_public_git_dep": has_public_git_dep,
+        "bare_dep": bare_dep,
+    })
+    if has_trust_dep and not has_public_git_dep:
+        findings.append({
+            "severity": "blocker",
+            "category": "dependency_access",
+            "kind": "bio_sfm_trust_dependency_not_public_installable",
+            "path": "pyproject.toml",
+            "message": (
+                "bio-sfm-trust is not published on PyPI; public installs need a "
+                "GitHub direct dependency or a documented preinstall step."
+            ),
+        })
+    return {"checks": checks, "findings": findings}
+
+
 def _git_status(root: str) -> Optional[Dict[str, Any]]:
     try:
         proc = subprocess.run(
@@ -382,12 +417,14 @@ def build_audit(
     presence = _file_presence(root)
     scan = _scan_files(root, include_results=include_results, max_bytes=max_bytes)
     claim_boundaries = _claim_boundary_findings(root)
+    dependencies = _dependency_findings(root)
 
     findings = []
     findings.extend(_visibility_findings(repo_visibility))
     findings.extend(presence["findings"])
     findings.extend(scan["findings"])
     findings.extend(claim_boundaries["findings"])
+    findings.extend(dependencies["findings"])
 
     git = None
     if check_git_status:
@@ -435,6 +472,7 @@ def build_audit(
             "recommended": presence["recommended"],
         },
         "claim_boundaries": claim_boundaries["checks"],
+        "dependency_checks": dependencies["checks"],
         "findings": findings,
         "skipped_files": scan["skipped_files"][:100],
         "git_status": git,

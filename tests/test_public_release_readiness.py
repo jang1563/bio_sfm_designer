@@ -31,7 +31,14 @@ Independent-predictor robustness is not supported.
 def _write_public_skeleton(root):
     _write(os.path.join(root, "README.md"), _minimal_claim_text())
     _write(os.path.join(root, "LICENSE"), "MIT\n")
-    _write(os.path.join(root, "pyproject.toml"), "[project]\nname = 'demo'\n")
+    _write(os.path.join(root, "pyproject.toml"), "\n".join([
+        "[project]",
+        "name = 'demo'",
+        "dependencies = [",
+        "  'bio-sfm-trust @ git+https://github.com/jang1563/bio-sfm-trust-core.git@abc123'",
+        "]",
+        "",
+    ]))
     _write(os.path.join(root, "SECURITY.md"), "# Security\n")
     _write(os.path.join(root, "CITATION.cff"), "cff-version: 1.2.0\n")
     _write(os.path.join(root, "CONTRIBUTING.md"), "# Contributing\n")
@@ -101,6 +108,22 @@ class PublicReleaseReadinessTests(unittest.TestCase):
             self.assertIn("local_absolute_path", kinds)
             self.assertIn("cayuga_login_host", kinds)
             self.assertIn("exposed_key_incident_note", kinds)
+
+    def test_bare_trust_dependency_blocks_public_installability(self):
+        with tempfile.TemporaryDirectory() as d:
+            _write_public_skeleton(d)
+            _write(os.path.join(d, "pyproject.toml"), "\n".join([
+                "[project]",
+                "name = 'demo'",
+                "dependencies = ['bio-sfm-trust']",
+                "",
+            ]))
+
+            rep = build_audit(d, repo_visibility="public")
+
+            self.assertFalse(rep["audit_ok"])
+            kinds = {finding["kind"] for finding in rep["findings"]}
+            self.assertIn("bio_sfm_trust_dependency_not_public_installable", kinds)
 
     def test_cli_writes_json_and_markdown(self):
         with tempfile.TemporaryDirectory() as d:

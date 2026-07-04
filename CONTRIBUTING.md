@@ -6,12 +6,18 @@ claim boundaries as carefully as the code paths.
 
 ## Development
 
-Use Python 3.9 or newer. For local tests, install the sibling trust engine first
-when available:
+Use Python 3.9 or newer. The public install pulls the pinned public
+`bio-sfm-trust-core` engine from GitHub:
 
 ```sh
-pip install -e ../bio-sfm-trust-core
 pip install -e ".[dev]"
+```
+
+When developing both repos locally, you can still override the pinned dependency
+with an editable sibling checkout:
+
+```sh
+pip install -e ../bio-sfm-trust-core -e ".[dev]"
 ```
 
 Then run focused tests for the files you touched. Public-release hygiene can be

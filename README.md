@@ -507,8 +507,7 @@ Past the stub milestone — the loop is closed on CPU and runs on a real, licens
 ## Install & run (stub loop — no GPU/weights/network)
 
 ```bash
-pip install -e ../bio-sfm-trust-core     # the trust engine (sibling repo)
-pip install -e .
+pip install -e ".[dev]"                  # pulls the pinned public bio-sfm-trust-core engine
 python -m unittest discover -s tests -v
 python -m bio_sfm_designer.experiments.dry_run_stub_designer --out results/dry_run
 ```

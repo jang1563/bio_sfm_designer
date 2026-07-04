@@ -588,6 +588,7 @@ Known good full verification commands:
 /tmp/bio_sfm_venv/bin/python -m unittest discover -s tests
 /tmp/bio_sfm_venv/bin/python -m unittest discover -s ../bio-sfm-trust-core/tests
 /tmp/bio_sfm_venv/bin/python -m compileall -q src hpc tests
+PYTHONPATH=src /tmp/bio_sfm_venv/bin/python -m bio_sfm_designer.experiments.public_release_readiness --repo-visibility public --check-git-status
 git diff --check
 ```
 

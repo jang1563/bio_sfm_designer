@@ -11,9 +11,11 @@ requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "JangKeun Kim" }]
 keywords = ["protein-design", "dbtl", "ai-for-science", "trust-routing", "biosafety", "orchestration"]
-# bio-sfm-trust is the calibrated trust engine (install editable from the sibling
-# repo first: pip install -e ../bio-sfm-trust-core). Pure-stdlib otherwise.
-dependencies = ["bio-sfm-trust"]
+# bio-sfm-trust is the calibrated trust engine. It is not on PyPI yet, so public
+# installs pin the public GitHub engine commit used for this release.
+dependencies = [
+  "bio-sfm-trust @ git+https://github.com/jang1563/bio-sfm-trust-core.git@e4babdf4e035f6bfaadcf6e1e699e284ea6faf0a"
+]
 
 [project.optional-dependencies]
 safety = ["constitutional-bioguard"]   # real DeBERTa biosafety screen (M2; pulls torch/transformers)

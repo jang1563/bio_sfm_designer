@@ -231,7 +231,7 @@ from assumed into measured — and harden it with conformal (distribution-free) 
 
 ## 2. Repos, setup, how to run
 
-Two local git repos (both pushed to **private** GitHub under `jang1563`):
+Two local git repos (both pushed to **public** GitHub under `jang1563`):
 
 | repo | path | GitHub | role |
 |---|---|---|---|
@@ -244,9 +244,15 @@ the measurement project the engine was extracted from — referenced, not requir
 ```bash
 # fresh venv (NOTE: /tmp is ephemeral — recreate when gone; needs modern pip for PEP 660 editable installs)
 python3 -m venv /tmp/bio_sfm_venv && /tmp/bio_sfm_venv/bin/pip install -U pip
-/tmp/bio_sfm_venv/bin/pip install -e ../bio-sfm-trust-core -e . numpy
+/tmp/bio_sfm_venv/bin/pip install -e ".[dev]" numpy
 /tmp/bio_sfm_venv/bin/python -m unittest discover -s tests            # 433 designer tests, all green
 /tmp/bio_sfm_venv/bin/python -m unittest discover -s ../bio-sfm-trust-core/tests   # 32 trust-core tests
+```
+
+For local engine development, override the pinned public dependency with the sibling checkout:
+
+```bash
+/tmp/bio_sfm_venv/bin/pip install -e ../bio-sfm-trust-core -e ".[dev]"
 ```
 
 The honest results live in committed experiments + fixtures (no GPU needed to re-run the analyses):
