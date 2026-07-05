@@ -1,0 +1,733 @@
+"""Audit M6d goal completion boundaries without submitting work.
+
+This helper is intentionally conservative: a passing audit can still report
+``can_mark_goal_complete=false``. Its purpose is to prove that the current
+goal-mode state is honest: W1, W3, and W4 are preserved as completed evidence,
+while W2 remains the only open requirement until the approved target-MSA,
+sync-back, and strict replay path actually finishes.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from typing import Any, Dict, List, Optional
+
+
+_W1_STATUS = "certified"
+_W2_STATUS = "target_msa_gate_ready_awaiting_explicit_approval"
+_W2_PANEL_APPROVAL_PROJECT_STATUS = "panel_approval_packet_ready_awaiting_explicit_approval"
+_W2_OPEN_STATUSES = {_W2_STATUS, _W2_PANEL_APPROVAL_PROJECT_STATUS}
+_W3_STATUS = "negative_robustness_result_adjudicated"
+_W4_STATUS = "closed_loop_round_complete"
+_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V9_TARGET_MSA"
+_APPROVAL_TOKEN = "approve-v9-target-msa-precompute"
+_EXECUTION_BLOCKED_STATUS = "blocked_before_submission_ssh_banner_exchange_timeout"
+_EXECUTION_SUBMITTED_STATUS = "target_msa_jobs_submitted_waiting_on_completion"
+_EXECUTION_SYNCED_STATUS = "target_msa_outputs_synced_strict_require_files_passed"
+_PANEL_APPROVAL_READY_STATUS = "panel_approval_packet_ready"
+_PANEL_DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
+
+
+def _load_json(path: str) -> Dict[str, Any]:
+    with open(path) as fh:
+        obj = json.load(fh)
+    if not isinstance(obj, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    obj["_path"] = os.path.abspath(path)
+    return obj
+
+
+def _write_json(path: str, obj: Dict[str, Any]) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as fh:
+        json.dump(obj, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+
+
+def _write_text(path: str, text: str) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as fh:
+        fh.write(text)
+
+
+def _add_failure(failures: List[Dict[str, Any]], kind: str, message: str,
+                 *, expected: Any = None, observed: Any = None) -> None:
+    row: Dict[str, Any] = {"kind": kind, "message": message}
+    if expected is not None:
+        row["expected"] = expected
+    if observed is not None:
+        row["observed"] = observed
+    failures.append(row)
+
+
+def _workstream(project_status: Dict[str, Any], key: str) -> Dict[str, Any]:
+    streams = project_status.get("workstreams")
+    if isinstance(streams, dict) and isinstance(streams.get(key), dict):
+        return streams[key]
+    return {}
+
+
+def _receipt_state(path: Optional[str]) -> Dict[str, Any]:
+    if not isinstance(path, str) or not path.strip():
+        return {"path": path, "exists": None}
+    return {"path": path, "exists": os.path.exists(path)}
+
+
+def _execution_state(execution_attempt: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(execution_attempt, dict):
+        return {
+            "path": None,
+            "status": "not_provided",
+            "approved_but_blocked_before_submission": False,
+            "target_msa_jobs_submitted_waiting_on_completion": False,
+            "target_msa_outputs_synced_strict_require_files_passed": False,
+        }
+    jobs_submitted = execution_attempt.get("jobs_submitted")
+    sync_back = execution_attempt.get("sync_back") if isinstance(execution_attempt.get("sync_back"), dict) else {}
+    state = {
+        "path": execution_attempt.get("_path"),
+        "status": execution_attempt.get("status"),
+        "approval_scope": execution_attempt.get("approval_scope"),
+        "last_checked_at": execution_attempt.get("last_checked_at"),
+        "submitted_at": execution_attempt.get("submitted_at"),
+        "submission_started": execution_attempt.get("submission_started"),
+        "jobs_submitted": jobs_submitted,
+        "job_ids": execution_attempt.get("job_ids"),
+        "receipt_created_or_updated": execution_attempt.get("receipt_created_or_updated"),
+        "receipt_summary": execution_attempt.get("receipt_summary"),
+        "queue_status": execution_attempt.get("queue_status"),
+        "sync_back": sync_back,
+        "next_action": execution_attempt.get("next_action"),
+        "approved_but_blocked_before_submission": (
+            execution_attempt.get("status") == _EXECUTION_BLOCKED_STATUS
+            and execution_attempt.get("submission_started") is False
+            and execution_attempt.get("jobs_submitted") == 0
+            and execution_attempt.get("receipt_created_or_updated") is False
+        ),
+        "target_msa_jobs_submitted_waiting_on_completion": (
+            execution_attempt.get("status") == _EXECUTION_SUBMITTED_STATUS
+            and execution_attempt.get("submission_started") is True
+            and jobs_submitted == 14
+            and execution_attempt.get("receipt_created_or_updated") is True
+        ),
+        "target_msa_outputs_synced_strict_require_files_passed": (
+            execution_attempt.get("status") == _EXECUTION_SYNCED_STATUS
+            and execution_attempt.get("submission_started") is True
+            and execution_attempt.get("receipt_created_or_updated") is True
+            and sync_back.get("completed") is True
+            and sync_back.get("strict_require_files_ok") is True
+            and sync_back.get("ready_targets") == 14
+            and sync_back.get("post_sync_pending_path_count") == 0
+        ),
+    }
+    return state
+
+
+def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(panel_approval_packet, dict):
+        return {
+            "path": None,
+            "status": "not_provided",
+            "approval_packet_ready": False,
+            "can_submit_panel_if_user_explicitly_approves": False,
+            "can_claim_w2_generalization": None,
+        }
+    checks = panel_approval_packet.get("checks") if isinstance(panel_approval_packet.get("checks"), dict) else {}
+    return {
+        "path": panel_approval_packet.get("_path"),
+        "status": panel_approval_packet.get("status"),
+        "approval_packet_ready": panel_approval_packet.get("approval_packet_ready"),
+        "can_submit_panel_if_user_explicitly_approves": panel_approval_packet.get(
+            "can_submit_panel_if_user_explicitly_approves"
+        ),
+        "can_claim_w2_generalization": panel_approval_packet.get("can_claim_w2_generalization"),
+        "panel_approval_env_var": panel_approval_packet.get("panel_approval_env_var"),
+        "panel_approval_env_value": panel_approval_packet.get("panel_approval_env_value"),
+        "submit_command_if_approved": panel_approval_packet.get("submit_command_if_approved"),
+        "sync_back_command_after_jobs_finish": panel_approval_packet.get("sync_back_command_after_jobs_finish"),
+        "checks": checks,
+        "target_msa_strict_ready": checks.get("target_msa_strict_ready"),
+        "panel_dry_run_no_sbatch": checks.get("panel_dry_run_no_sbatch"),
+        "panel_guard_no_env_refuses": checks.get("panel_guard_no_env_refuses"),
+        "submit_receipt_absent": checks.get("submit_receipt_absent"),
+        "submit_summary_absent": checks.get("submit_summary_absent"),
+    }
+
+
+def _panel_decision_state(panel_decision_protocol: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(panel_decision_protocol, dict):
+        return {
+            "path": None,
+            "status": "not_provided",
+            "audit_ok": False,
+            "no_submit": None,
+            "can_claim_w2_generalization_now": None,
+            "current_result_status": None,
+            "current_result_w2_supported": None,
+        }
+    current = (
+        panel_decision_protocol.get("current_panel_result")
+        if isinstance(panel_decision_protocol.get("current_panel_result"), dict)
+        else {}
+    )
+    contract = (
+        panel_decision_protocol.get("panel_contract")
+        if isinstance(panel_decision_protocol.get("panel_contract"), dict)
+        else {}
+    )
+    return {
+        "path": panel_decision_protocol.get("_path"),
+        "status": panel_decision_protocol.get("status"),
+        "audit_ok": panel_decision_protocol.get("audit_ok"),
+        "no_submit": panel_decision_protocol.get("no_submit"),
+        "can_claim_w2_generalization_now": panel_decision_protocol.get("can_claim_w2_generalization_now"),
+        "current_result_status": current.get("status"),
+        "current_result_w2_supported": current.get("w2_generalization_supported"),
+        "target_alpha": contract.get("target_alpha"),
+        "n_manifest_targets": contract.get("n_manifest_targets"),
+        "min_records_per_target": contract.get("min_records_per_target"),
+        "next_action": panel_decision_protocol.get("next_action"),
+    }
+
+
+def build_audit(project_status: Dict[str, Any],
+                approval_packet: Dict[str, Any],
+                approval_parity: Dict[str, Any],
+                wrapper_guard: Dict[str, Any],
+                w3_adjudication_audit: Dict[str, Any],
+                execution_attempt: Optional[Dict[str, Any]] = None,
+                panel_approval_packet: Optional[Dict[str, Any]] = None,
+                panel_decision_protocol: Optional[Dict[str, Any]] = None,
+                *,
+                v9_receipt: str) -> Dict[str, Any]:
+    failures: List[Dict[str, Any]] = []
+    w1 = _workstream(project_status, "W1_M6c_scale_up")
+    w2 = _workstream(project_status, "W2_multi_target_panel")
+    w3 = _workstream(project_status, "W3_independent_predictor")
+    w4 = _workstream(project_status, "W4_closed_loop_DBTL")
+
+    if w1.get("status") != _W1_STATUS or w1.get("complete") is not True:
+        _add_failure(
+            failures,
+            "w1_not_preserved_certified",
+            "W1 must remain preserved as target-specific certified evidence",
+            expected={"status": _W1_STATUS, "complete": True},
+            observed={"status": w1.get("status"), "complete": w1.get("complete")},
+        )
+    if w2.get("status") not in _W2_OPEN_STATUSES or w2.get("complete") is not False:
+        _add_failure(
+            failures,
+            "w2_not_open_at_target_msa_gate",
+            "W2 must remain open at an explicit target-MSA or panel approval boundary",
+            expected={"status": sorted(_W2_OPEN_STATUSES), "complete": False},
+            observed={"status": w2.get("status"), "complete": w2.get("complete")},
+        )
+    if w3.get("status") != _W3_STATUS or w3.get("complete") is not True:
+        _add_failure(
+            failures,
+            "w3_not_preserved_negative_robustness",
+            "W3 must remain preserved as an adjudicated negative robustness result",
+            expected={"status": _W3_STATUS, "complete": True},
+            observed={"status": w3.get("status"), "complete": w3.get("complete")},
+        )
+    if w3.get("positive_claim_supported") is not False:
+        _add_failure(
+            failures,
+            "w3_positive_claim_leak",
+            "W3 negative robustness status must not support a positive independent-predictor claim",
+            expected=False,
+            observed=w3.get("positive_claim_supported"),
+        )
+    if w4.get("status") != _W4_STATUS or w4.get("complete") is not True:
+        _add_failure(
+            failures,
+            "w4_not_preserved_closed_loop",
+            "W4 must remain preserved as completed closed-loop plumbing evidence",
+            expected={"status": _W4_STATUS, "complete": True},
+            observed={"status": w4.get("status"), "complete": w4.get("complete")},
+        )
+
+    if project_status.get("complete") is True or project_status.get("can_mark_goal_complete") is True:
+        _add_failure(
+            failures,
+            "premature_goal_completion_claim",
+            "The full goal cannot be marked complete while W2 remains open",
+            expected={"complete": False, "can_mark_goal_complete": False},
+            observed={
+                "complete": project_status.get("complete"),
+                "can_mark_goal_complete": project_status.get("can_mark_goal_complete"),
+            },
+        )
+    if project_status.get("remaining") != 1:
+        _add_failure(
+            failures,
+            "remaining_requirement_count_mismatch",
+            "Current audited state should have exactly one remaining requirement: W2",
+            expected=1,
+            observed=project_status.get("remaining"),
+        )
+
+    if approval_packet.get("approval_packet_ready") is not True:
+        _add_failure(failures, "w2_approval_packet_not_ready",
+                     "W2 approval packet must be ready before target-MSA approval is requested")
+    if approval_packet.get("can_submit_target_msa_if_user_explicitly_approves") is not True:
+        _add_failure(failures, "w2_target_msa_not_approval_ready",
+                     "W2 target-MSA path must be ready only under explicit approval")
+    if approval_packet.get("can_submit_proteinmpnn_boltz_panel") is not False:
+        _add_failure(failures, "w2_panel_submission_not_blocked",
+                     "W2 panel submission must remain blocked before target-MSA sync-back and strict replay")
+    if approval_packet.get("target_msa_approval_env_var") != _APPROVAL_ENV_VAR:
+        _add_failure(failures, "w2_approval_env_var_mismatch",
+                     "approval packet uses the wrong approval env var",
+                     expected=_APPROVAL_ENV_VAR, observed=approval_packet.get("target_msa_approval_env_var"))
+    if approval_packet.get("target_msa_approval_env_value") != _APPROVAL_TOKEN:
+        _add_failure(failures, "w2_approval_token_mismatch",
+                     "approval packet uses the wrong approval token",
+                     expected=_APPROVAL_TOKEN, observed=approval_packet.get("target_msa_approval_env_value"))
+
+    if approval_parity.get("parity_ok") is not True:
+        _add_failure(failures, "w2_approval_parity_not_ok",
+                     "local/Cayuga approval packet parity must pass")
+    if approval_parity.get("panel_submission_blocked") is not True:
+        _add_failure(failures, "w2_parity_panel_not_blocked",
+                     "local/Cayuga parity must agree that panel submission is blocked")
+
+    if wrapper_guard.get("audit_ok") is not True:
+        _add_failure(failures, "w2_wrapper_guard_not_ok",
+                     "W2 wrapper guard audit must pass")
+    static_audit = wrapper_guard.get("static_audit") if isinstance(wrapper_guard.get("static_audit"), dict) else {}
+    if static_audit.get("ok") is not True:
+        _add_failure(failures, "w2_wrapper_static_guard_not_ok",
+                     "W2 wrapper static guard must pass")
+    no_env = wrapper_guard.get("no_env_run") if isinstance(wrapper_guard.get("no_env_run"), dict) else {}
+    if no_env.get("ok") is not True or no_env.get("receipt_exists_after") is not False:
+        _add_failure(
+            failures,
+            "w2_wrapper_no_env_guard_not_ok",
+            "W2 wrapper must refuse without approval and leave the receipt absent",
+            observed=no_env,
+        )
+    receipt = _receipt_state(v9_receipt)
+    execution = _execution_state(execution_attempt)
+    panel_approval = _panel_approval_state(panel_approval_packet)
+    panel_decision = _panel_decision_state(panel_decision_protocol)
+    receipt_allowed = execution.get("target_msa_jobs_submitted_waiting_on_completion") is True
+    receipt_allowed = receipt_allowed or execution.get("target_msa_outputs_synced_strict_require_files_passed") is True
+    if receipt.get("exists") is not False and not receipt_allowed:
+        _add_failure(
+            failures,
+            "w2_v9_receipt_unexpected_before_successful_execution",
+            "The v9 target-MSA receipt must remain absent until target-MSA execution reaches receipt update",
+            expected=False,
+            observed=receipt.get("exists"),
+        )
+    if execution_attempt is not None:
+        known_execution_state = (
+            execution.get("approved_but_blocked_before_submission") is True
+            or execution.get("target_msa_jobs_submitted_waiting_on_completion") is True
+            or execution.get("target_msa_outputs_synced_strict_require_files_passed") is True
+        )
+        if not known_execution_state:
+            _add_failure(
+                failures,
+                "w2_execution_attempt_state_unrecognized",
+                "W2 execution attempt must be recorded as either pre-submission SSH-blocked or submitted-waiting",
+                expected=[
+                    {
+                        "status": _EXECUTION_BLOCKED_STATUS,
+                        "submission_started": False,
+                        "jobs_submitted": 0,
+                        "receipt_created_or_updated": False,
+                    },
+                    {
+                        "status": _EXECUTION_SUBMITTED_STATUS,
+                        "submission_started": True,
+                        "jobs_submitted": 14,
+                        "receipt_created_or_updated": True,
+                    },
+                    {
+                        "status": _EXECUTION_SYNCED_STATUS,
+                        "submission_started": True,
+                        "receipt_created_or_updated": True,
+                        "sync_back.completed": True,
+                        "sync_back.strict_require_files_ok": True,
+                        "sync_back.ready_targets": 14,
+                        "sync_back.post_sync_pending_path_count": 0,
+                    },
+                ],
+                observed={
+                    "status": execution.get("status"),
+                    "submission_started": execution.get("submission_started"),
+                    "jobs_submitted": execution.get("jobs_submitted"),
+                    "receipt_created_or_updated": execution.get("receipt_created_or_updated"),
+                },
+            )
+        boundary = execution_attempt.get("claim_boundary") if isinstance(execution_attempt.get("claim_boundary"), dict) else {}
+        if "blocked" not in str(boundary.get("proteinmpnn_boltz_panel_submission") or ""):
+            _add_failure(
+                failures,
+                "w2_execution_attempt_panel_boundary_drift",
+                "execution attempt must keep ProteinMPNN/Boltz panel submission blocked",
+                expected="blocked",
+                observed=boundary.get("proteinmpnn_boltz_panel_submission"),
+            )
+        if boundary.get("w2_multi_target_generalization") != "not_supported":
+            _add_failure(
+                failures,
+                "w2_execution_attempt_generalization_claim_drift",
+                "execution attempt must not support W2 multi-target generalization",
+                expected="not_supported",
+                observed=boundary.get("w2_multi_target_generalization"),
+            )
+
+    if panel_approval_packet is not None:
+        if panel_approval.get("status") != _PANEL_APPROVAL_READY_STATUS or panel_approval.get("approval_packet_ready") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_approval_packet_not_ready",
+                "W2 panel approval packet must be ready before panel submission can be considered",
+                expected={"status": _PANEL_APPROVAL_READY_STATUS, "approval_packet_ready": True},
+                observed={
+                    "status": panel_approval.get("status"),
+                    "approval_packet_ready": panel_approval.get("approval_packet_ready"),
+                },
+            )
+        if panel_approval.get("can_submit_panel_if_user_explicitly_approves") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_not_explicit_approval_ready",
+                "W2 panel may only be ready under explicit approval",
+                expected=True,
+                observed=panel_approval.get("can_submit_panel_if_user_explicitly_approves"),
+            )
+        if panel_approval.get("can_claim_w2_generalization") is not False:
+            _add_failure(
+                failures,
+                "w2_panel_approval_claim_leak",
+                "W2 panel approval packet must not support a generalization claim",
+                expected=False,
+                observed=panel_approval.get("can_claim_w2_generalization"),
+            )
+        for key in (
+            "target_msa_strict_ready",
+            "panel_dry_run_no_sbatch",
+            "panel_guard_no_env_refuses",
+            "submit_receipt_absent",
+            "submit_summary_absent",
+        ):
+            if panel_approval.get(key) is not True:
+                _add_failure(
+                    failures,
+                    "w2_panel_approval_check_failed",
+                    "W2 panel approval packet must preserve all no-submit guard checks",
+                    expected={key: True},
+                    observed={key: panel_approval.get(key)},
+                )
+
+    if panel_decision_protocol is not None:
+        if panel_decision.get("status") != _PANEL_DECISION_READY_STATUS or panel_decision.get("audit_ok") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_decision_protocol_not_ready",
+                "W2 post-panel decision protocol must be ready before panel interpretation",
+                expected={"status": _PANEL_DECISION_READY_STATUS, "audit_ok": True},
+                observed={"status": panel_decision.get("status"), "audit_ok": panel_decision.get("audit_ok")},
+            )
+        if panel_decision.get("no_submit") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_decision_protocol_submit_drift",
+                "W2 post-panel decision protocol must remain no-submit",
+                expected=True,
+                observed=panel_decision.get("no_submit"),
+            )
+        if panel_decision.get("can_claim_w2_generalization_now") is not False:
+            _add_failure(
+                failures,
+                "w2_panel_decision_protocol_claim_leak",
+                "W2 post-panel decision protocol must not support a current W2 claim",
+                expected=False,
+                observed=panel_decision.get("can_claim_w2_generalization_now"),
+            )
+        if panel_decision.get("current_result_w2_supported") is not False:
+            _add_failure(
+                failures,
+                "w2_panel_decision_current_result_claim_leak",
+                "current panel result state must not support W2 generalization before panel records/report exist",
+                expected=False,
+                observed=panel_decision.get("current_result_w2_supported"),
+            )
+        if panel_decision.get("target_alpha") != 0.2 or panel_decision.get("n_manifest_targets") != 14:
+            _add_failure(
+                failures,
+                "w2_panel_decision_contract_drift",
+                "W2 post-panel decision protocol must stay scoped to alpha=0.2 and 14 manifest targets",
+                expected={"target_alpha": 0.2, "n_manifest_targets": 14},
+                observed={
+                    "target_alpha": panel_decision.get("target_alpha"),
+                    "n_manifest_targets": panel_decision.get("n_manifest_targets"),
+                },
+            )
+
+    if w3_adjudication_audit.get("audit_ok") is not True:
+        _add_failure(failures, "w3_standalone_adjudication_audit_not_ok",
+                     "standalone W3 adjudication audit must pass")
+    if w3_adjudication_audit.get("positive_claim_supported") is not False:
+        _add_failure(failures, "w3_standalone_positive_claim_leak",
+                     "standalone W3 audit must not support a positive claim")
+    artifact_audit = (
+        w3_adjudication_audit.get("adjudication_set_artifact_audit")
+        if isinstance(w3_adjudication_audit.get("adjudication_set_artifact_audit"), dict)
+        else {}
+    )
+    if artifact_audit.get("ok") is not True or artifact_audit.get("n_rows") != 18:
+        _add_failure(
+            failures,
+            "w3_standalone_adjudication_set_audit_not_ok",
+            "standalone W3 audit must verify the 18-row adjudication set",
+            observed=artifact_audit,
+        )
+
+    audit_ok = not failures
+    w2_boundary = "not complete; target-MSA approval/sync/replay still required"
+    next_action = "await explicit target-MSA approval; after approval run target-MSA prep, sync back, and replay strict gates"
+    if execution.get("approved_but_blocked_before_submission"):
+        w2_boundary = (
+            "not complete; approved target-MSA prep is blocked before submission by SSH/login access; "
+            "sync-back and strict replay still required"
+        )
+        next_action = (
+            "restore working SSH/VPN/login-node access, rerun the approved W2 v9 full-14 target-MSA wrapper only, "
+            "sync back outputs, and replay strict require-files; do not submit ProteinMPNN/Boltz panel jobs"
+        )
+    if execution.get("target_msa_jobs_submitted_waiting_on_completion"):
+        w2_boundary = (
+            "not complete; approved target-MSA prep jobs are submitted and waiting on completion; "
+            "sync-back and strict replay still required"
+        )
+        next_action = (
+            "wait for the submitted W2 v9 target-MSA jobs to finish, then sync back outputs and replay strict "
+            "require-files; do not submit ProteinMPNN/Boltz panel jobs"
+        )
+    if execution.get("target_msa_outputs_synced_strict_require_files_passed"):
+        w2_boundary = (
+            "not complete; target-MSA outputs are synced and strict require-files passed for 14 targets; "
+            "W2 still needs panel execution and target-wise certification"
+        )
+        next_action = (
+            "prepare or run the next W2 v9 ProteinMPNN/Boltz panel step under the existing panel boundary; "
+            "do not claim W2 generalization until target-wise panel certification passes"
+        )
+        if panel_approval.get("approval_packet_ready") is True:
+            w2_boundary = (
+                "not complete; target-MSA outputs are synced, strict require-files passed for 14 targets, "
+                "and the W2 v9 panel approval packet is ready; W2 still needs explicit panel submission, "
+                "sync-back, completion, and target-wise certification"
+            )
+            next_action = (
+                "wait for explicit user approval before running the guarded W2 v9 panel submit command; "
+                "do not claim W2 generalization until records sync back and target-wise panel certification passes"
+            )
+            if panel_decision.get("status") == _PANEL_DECISION_READY_STATUS:
+                w2_boundary = (
+                    "not complete; target-MSA outputs are synced, strict require-files passed for 14 targets, "
+                    "the W2 v9 panel approval packet is ready, and the post-panel decision protocol is "
+                    "predeclared; W2 still needs explicit panel submission, sync-back, completion, and "
+                    "target-wise certification"
+                )
+                next_action = (
+                    "wait for explicit user approval before running the guarded W2 v9 panel submit command; "
+                    "then apply the predeclared post-panel decision protocol after sync-back and completion"
+                )
+    return {
+        "artifact": "m6d_goal_completion_audit",
+        "audit_ok": audit_ok,
+        "status": "goal_active_w2_remaining" if audit_ok else "goal_completion_audit_blocked",
+        "can_mark_goal_complete": False,
+        "complete": False,
+        "claim_boundary": {
+            "w1": "target-specific certified evidence preserved",
+            "w2": w2_boundary,
+            "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
+            "w4": "closed-loop plumbing evidence preserved",
+        },
+        "remaining_requirements": ["W2_multi_target_panel"],
+        "next_action": (
+            next_action
+            if audit_ok else
+            "repair audit failures before continuing goal-mode execution"
+        ),
+        "project_status": project_status.get("_path"),
+        "approval_packet": approval_packet.get("_path"),
+        "approval_parity": approval_parity.get("_path"),
+        "wrapper_guard": wrapper_guard.get("_path"),
+        "w3_adjudication_audit": w3_adjudication_audit.get("_path"),
+        "panel_approval_packet": panel_approval.get("path"),
+        "v9_receipt": receipt,
+        "w2_execution_attempt": execution,
+        "w2_panel_approval": panel_approval,
+        "w2_panel_decision_protocol": panel_decision,
+        "workstream_status": {
+            "W1_M6c_scale_up": {"status": w1.get("status"), "complete": w1.get("complete")},
+            "W2_multi_target_panel": {"status": w2.get("status"), "complete": w2.get("complete")},
+            "W3_independent_predictor": {
+                "status": w3.get("status"),
+                "complete": w3.get("complete"),
+                "positive_claim_supported": w3.get("positive_claim_supported"),
+            },
+            "W4_closed_loop_DBTL": {"status": w4.get("status"), "complete": w4.get("complete")},
+        },
+        "w2_gate": {
+            "approval_packet_ready": approval_packet.get("approval_packet_ready"),
+            "approval_parity_ok": approval_parity.get("parity_ok"),
+            "wrapper_guard_ok": wrapper_guard.get("audit_ok"),
+            "panel_submission_blocked": approval_packet.get("can_submit_proteinmpnn_boltz_panel") is False,
+            "target_msa_ready_if_explicitly_approved": approval_packet.get(
+                "can_submit_target_msa_if_user_explicitly_approves"
+            ),
+            "target_msa_execution_status": execution.get("status"),
+            "target_msa_jobs_submitted_waiting_on_completion": execution.get(
+                "target_msa_jobs_submitted_waiting_on_completion"
+            ),
+            "target_msa_outputs_synced_strict_require_files_passed": execution.get(
+                "target_msa_outputs_synced_strict_require_files_passed"
+            ),
+            "target_msa_approved_but_blocked_before_submission": execution.get(
+                "approved_but_blocked_before_submission"
+            ),
+            "panel_approval_packet_ready": panel_approval.get("approval_packet_ready"),
+            "panel_can_submit_if_explicitly_approved": panel_approval.get(
+                "can_submit_panel_if_user_explicitly_approves"
+            ),
+            "panel_can_claim_w2_generalization": panel_approval.get("can_claim_w2_generalization"),
+            "panel_guard_no_env_refuses": panel_approval.get("panel_guard_no_env_refuses"),
+            "panel_decision_protocol_ready": panel_decision.get("status") == _PANEL_DECISION_READY_STATUS,
+            "panel_decision_no_submit": panel_decision.get("no_submit"),
+            "panel_decision_can_claim_w2_now": panel_decision.get("can_claim_w2_generalization_now"),
+            "panel_decision_current_result_status": panel_decision.get("current_result_status"),
+        },
+        "w3_gate": {
+            "audit_ok": w3_adjudication_audit.get("audit_ok"),
+            "status": w3_adjudication_audit.get("status"),
+            "positive_claim_supported": w3_adjudication_audit.get("positive_claim_supported"),
+            "adjudication_rows": artifact_audit.get("n_rows"),
+            "adjudication_sha256": artifact_audit.get("actual_sha256"),
+        },
+        "failures": failures,
+    }
+
+
+def render_markdown(rep: Dict[str, Any]) -> str:
+    lines = [
+        "# M6d Goal Completion Audit",
+        "",
+        f"Status: `{rep.get('status')}`.",
+        f"Audit ok: `{rep.get('audit_ok')}`.",
+        f"Can mark goal complete: `{rep.get('can_mark_goal_complete')}`.",
+        "",
+        "This is a no-submit completion-boundary audit. A passing audit preserves the current active goal state; it does not mark the goal complete.",
+        "",
+        "## Workstreams",
+        "",
+        "| workstream | status | complete |",
+        "|---|---|---:|",
+    ]
+    for key, row in (rep.get("workstream_status") or {}).items():
+        lines.append(f"| {key} | {row.get('status')} | {row.get('complete')} |")
+    lines.extend([
+        "",
+        "## Remaining Requirement",
+        "",
+    ])
+    lines.extend(f"- {item}" for item in rep.get("remaining_requirements", []))
+    lines.extend([
+        "",
+        "## Gate Evidence",
+        "",
+        f"- W2 approval packet ready: `{rep.get('w2_gate', {}).get('approval_packet_ready')}`",
+        f"- W2 approval parity ok: `{rep.get('w2_gate', {}).get('approval_parity_ok')}`",
+        f"- W2 wrapper guard ok: `{rep.get('w2_gate', {}).get('wrapper_guard_ok')}`",
+        f"- W2 panel submission blocked: `{rep.get('w2_gate', {}).get('panel_submission_blocked')}`",
+        f"- W2 target-MSA execution status: `{rep.get('w2_gate', {}).get('target_msa_execution_status')}`",
+        f"- W2 target-MSA jobs submitted waiting on completion: `{rep.get('w2_gate', {}).get('target_msa_jobs_submitted_waiting_on_completion')}`",
+        f"- W2 target-MSA outputs synced and strict require-files passed: `{rep.get('w2_gate', {}).get('target_msa_outputs_synced_strict_require_files_passed')}`",
+        f"- W2 target-MSA approved but blocked before submission: `{rep.get('w2_gate', {}).get('target_msa_approved_but_blocked_before_submission')}`",
+        f"- W2 panel approval packet ready: `{rep.get('w2_gate', {}).get('panel_approval_packet_ready')}`",
+        f"- W2 panel can submit if explicitly approved: `{rep.get('w2_gate', {}).get('panel_can_submit_if_explicitly_approved')}`",
+        f"- W2 panel can claim generalization: `{rep.get('w2_gate', {}).get('panel_can_claim_w2_generalization')}`",
+        f"- W2 panel no-env guard refuses: `{rep.get('w2_gate', {}).get('panel_guard_no_env_refuses')}`",
+        f"- W2 panel decision protocol ready: `{rep.get('w2_gate', {}).get('panel_decision_protocol_ready')}`",
+        f"- W2 panel decision protocol no-submit: `{rep.get('w2_gate', {}).get('panel_decision_no_submit')}`",
+        f"- W2 panel decision can claim now: `{rep.get('w2_gate', {}).get('panel_decision_can_claim_w2_now')}`",
+        f"- W2 panel decision current result: `{rep.get('w2_gate', {}).get('panel_decision_current_result_status')}`",
+        f"- W3 standalone audit ok: `{rep.get('w3_gate', {}).get('audit_ok')}`",
+        f"- W3 positive claim supported: `{rep.get('w3_gate', {}).get('positive_claim_supported')}`",
+        "",
+    ])
+    failures = rep.get("failures") or []
+    if failures:
+        lines.extend(["## Failures", ""])
+        for failure in failures:
+            lines.append(f"- {failure.get('kind')}: {failure.get('message')}")
+        lines.append("")
+    lines.extend([
+        f"Next action: {rep.get('next_action')}",
+        "",
+    ])
+    return "\n".join(lines)
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--project-status", default="results/m6c_project_status_w2_followup.json")
+    ap.add_argument("--approval-packet", default="results/m6d_w2_target_family_redesign_v9_approval_packet.json")
+    ap.add_argument("--approval-parity", default="results/m6d_w2_target_family_redesign_v9_approval_parity.json")
+    ap.add_argument("--wrapper-guard", default="results/m6d_w2_target_family_redesign_v9_wrapper_guard_audit.json")
+    ap.add_argument("--w3-adjudication-audit", default="results/m6d_w3_adjudication_audit.json")
+    ap.add_argument("--execution-attempt", default="results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.json")
+    ap.add_argument("--panel-approval-packet", default="results/m6d_w2_target_family_redesign_v9_panel_approval_packet.json")
+    ap.add_argument("--panel-decision-protocol", default="results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.json")
+    ap.add_argument("--v9-receipt", default="results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl")
+    ap.add_argument("--out-json", default="results/m6d_goal_completion_audit.json")
+    ap.add_argument("--out-md", default="results/m6d_goal_completion_audit.md")
+    args = ap.parse_args(argv)
+    execution_attempt = _load_json(args.execution_attempt) if args.execution_attempt and os.path.exists(args.execution_attempt) else None
+    panel_approval_packet = (
+        _load_json(args.panel_approval_packet)
+        if args.panel_approval_packet and os.path.exists(args.panel_approval_packet)
+        else None
+    )
+    panel_decision_protocol = (
+        _load_json(args.panel_decision_protocol)
+        if args.panel_decision_protocol and os.path.exists(args.panel_decision_protocol)
+        else None
+    )
+
+    rep = build_audit(
+        _load_json(args.project_status),
+        _load_json(args.approval_packet),
+        _load_json(args.approval_parity),
+        _load_json(args.wrapper_guard),
+        _load_json(args.w3_adjudication_audit),
+        execution_attempt,
+        panel_approval_packet,
+        panel_decision_protocol,
+        v9_receipt=args.v9_receipt,
+    )
+    _write_json(args.out_json, rep)
+    _write_text(args.out_md, render_markdown(rep))
+    print(
+        "status={status} audit_ok={ok} can_mark_goal_complete={complete} remaining={remaining}".format(
+            status=rep["status"],
+            ok=rep["audit_ok"],
+            complete=rep["can_mark_goal_complete"],
+            remaining=",".join(rep["remaining_requirements"]),
+        )
+    )
+    return 0 if rep["audit_ok"] else 2
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())

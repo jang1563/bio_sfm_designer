@@ -1,0 +1,10 @@
+{
+  "_note": "M6d W2 expanded next-branch manifest generated from admitted local candidate-pool targets. This freezes a target set for strict preflight; it is not a W2 certificate and not a Cayuga submission authorization.",
+  "defaults": {
+    "num_seq": 100,
+    "objective": "binder",
+    "seed": 37,
+    "temp": 0.3
+  },
+  "targets": []
+}

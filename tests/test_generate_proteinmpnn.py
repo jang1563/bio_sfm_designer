@@ -64,6 +64,8 @@ class GenerateContractTests(unittest.TestCase):
             with open(os.path.join(seqs, f"{pdb_id}.fa"), "w") as fh:
                 fh.write(_FAKE_FASTA)
 
+        original_run = mod.subprocess.run
+        self.addCleanup(setattr, mod.subprocess, "run", original_run)
         mod.subprocess.run = fake_run
 
         with tempfile.TemporaryDirectory() as d:

@@ -1,0 +1,211 @@
+{
+  "_note": "M6d W2 expanded next-branch manifest generated from admitted local candidate-pool targets. This freezes a target set for strict preflight; it is not a W2 certificate and not a Cayuga submission authorization.",
+  "defaults": {
+    "num_seq": 100,
+    "objective": "binder",
+    "seed": 37,
+    "temp": 0.3
+  },
+  "targets": [
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "D",
+      "id": "1BVK_ED",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1BVK_ED",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1BVK_ED/prepared_1BVK_ED.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1BVK_ED/prepared_1BVK_ED.pdb",
+      "rcsb_id": "1BVK",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1BVK_ED/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1BVK.pdb",
+      "target_chain": "E",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1BVK_ED/1BVK_ED_E.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1BVK_ED/1BVK_ED_E.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1BVK_ED/1BVK_ED_E.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1BVK_ED/1BVK_ED_E.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "I",
+      "id": "1CHO_GI",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1CHO_GI",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1CHO_GI/prepared_1CHO_GI.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1CHO_GI/prepared_1CHO_GI.pdb",
+      "rcsb_id": "1CHO",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1CHO_GI/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1CHO.pdb",
+      "target_chain": "G",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1CHO_GI/1CHO_GI_G.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1CHO_GI/1CHO_GI_G.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1CHO_GI/1CHO_GI_G.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1CHO_GI/1CHO_GI_G.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "A",
+      "id": "1EER_BA",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1EER_BA",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1EER_BA/prepared_1EER_BA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1EER_BA/prepared_1EER_BA.pdb",
+      "rcsb_id": "1EER",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1EER_BA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1EER.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1EER_BA/1EER_BA_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1EER_BA/1EER_BA_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1EER_BA/1EER_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1EER_BA/1EER_BA_B.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "A",
+      "id": "1HE1_CA",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1HE1_CA",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1HE1_CA/prepared_1HE1_CA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1HE1_CA/prepared_1HE1_CA.pdb",
+      "rcsb_id": "1HE1",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1HE1_CA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1HE1.pdb",
+      "target_chain": "C",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1HE1_CA/1HE1_CA_C.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1HE1_CA/1HE1_CA_C.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1HE1_CA/1HE1_CA_C.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1HE1_CA/1HE1_CA_C.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "B",
+      "id": "1KAC_AB",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1KAC_AB",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KAC_AB/prepared_1KAC_AB.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KAC_AB/prepared_1KAC_AB.pdb",
+      "rcsb_id": "1KAC",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1KAC_AB/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1KAC.pdb",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KAC_AB/1KAC_AB_A.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KAC_AB/1KAC_AB_A.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KAC_AB/1KAC_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KAC_AB/1KAC_AB_A.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "A",
+      "id": "1KLU_BA",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1KLU_BA",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KLU_BA/prepared_1KLU_BA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KLU_BA/prepared_1KLU_BA.pdb",
+      "rcsb_id": "1KLU",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1KLU_BA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1KLU.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KLU_BA/1KLU_BA_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KLU_BA/1KLU_BA_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KLU_BA/1KLU_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1KLU_BA/1KLU_BA_B.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "E",
+      "id": "1MLC_BE",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1MLC_BE",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1MLC_BE/prepared_1MLC_BE.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1MLC_BE/prepared_1MLC_BE.pdb",
+      "rcsb_id": "1MLC",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1MLC_BE/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1MLC.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1MLC_BE/1MLC_BE_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1MLC_BE/1MLC_BE_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1MLC_BE/1MLC_BE_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1MLC_BE/1MLC_BE_B.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "L",
+      "id": "1NMB_HL",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1NMB_HL",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1NMB_HL/prepared_1NMB_HL.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1NMB_HL/prepared_1NMB_HL.pdb",
+      "rcsb_id": "1NMB",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1NMB_HL/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1NMB.pdb",
+      "target_chain": "H",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1NMB_HL/1NMB_HL_H.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1NMB_HL/1NMB_HL_H.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1NMB_HL/1NMB_HL_H.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1NMB_HL/1NMB_HL_H.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "A",
+      "id": "1QFW_BA",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1QFW_BA",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1QFW_BA/prepared_1QFW_BA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/1QFW_BA/prepared_1QFW_BA.pdb",
+      "rcsb_id": "1QFW",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1QFW_BA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_1QFW.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/1QFW_BA/1QFW_BA_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1QFW_BA/1QFW_BA_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/1QFW_BA/1QFW_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/1QFW_BA/1QFW_BA_B.a3m.report.json"
+    },
+    {
+      "_next_branch_admission": {
+        "candidate_pool": "results/m6d_w2_next_branch_candidate_pool.json",
+        "source_manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "verdict": "admitted_for_next_branch_candidate_pool"
+      },
+      "binder_chain": "A",
+      "id": "2MTA_CA",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/2MTA_CA",
+      "prep_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/2MTA_CA/prepared_2MTA_CA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_expanded_discovery_targets/2MTA_CA/prepared_2MTA_CA.pdb",
+      "rcsb_id": "2MTA",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/2MTA_CA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_expanded_discovery_sources/source_2MTA.pdb",
+      "target_chain": "C",
+      "target_fasta": "hpc_outputs/m6d_w2_expanded_discovery_targets/2MTA_CA/2MTA_CA_C.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/2MTA_CA/2MTA_CA_C.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_expanded_discovery_targets/2MTA_CA/2MTA_CA_C.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_expanded_discovery_targets/2MTA_CA/2MTA_CA_C.a3m.report.json"
+    }
+  ]
+}

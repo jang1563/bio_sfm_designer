@@ -1,0 +1,52 @@
+{
+  "_note": "Copy this file, replace paths/ids with real heterodimer targets, run python -m bio_sfm_designer.experiments.complex_target_manifest --manifest <file> --emit-msa-plan results/m6c_target_msas.sh before target .a3m files exist, validate with --require-files --min-targets 3 --emit-plan results/m6c_targets.sh, use repeated --target-id for W1/staged subsets, then after records sync run complex_panel_completion before complex_panel_report",
+  "defaults": {
+    "num_seq": 100,
+    "temp": 0.3,
+    "seed": 37,
+    "objective": "binder"
+  },
+  "targets": [
+    {
+      "id": "1BRS_AD",
+      "rcsb_id": "1BRS",
+      "source_pdb": "hpc_outputs/targets/source_1BRS.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1BRS_AD.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1BRS_AD.report.json",
+      "allow_numbering_gaps": true,
+      "target_chain": "A",
+      "binder_chain": "D",
+      "target_fasta": "hpc_outputs/targets/1BRS_A.fasta",
+      "target_msa": "hpc_outputs/targets/1BRS_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/1BRS_A.a3m.report.json",
+      "records": "hpc_outputs/m6c_targets/1BRS_AD/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6c_targets/1BRS_AD"
+    },
+    {
+      "id": "TARGET2_AB",
+      "source_pdb": "hpc_outputs/targets/source_TARGET2.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_TARGET2_AB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_TARGET2_AB.report.json",
+      "target_chain": "A",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/TARGET2_A.fasta",
+      "target_msa": "hpc_outputs/targets/TARGET2_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/TARGET2_A.a3m.report.json",
+      "records": "hpc_outputs/m6c_targets/TARGET2_AB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6c_targets/TARGET2_AB"
+    },
+    {
+      "id": "TARGET3_AB",
+      "source_pdb": "hpc_outputs/targets/source_TARGET3.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_TARGET3_AB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_TARGET3_AB.report.json",
+      "target_chain": "A",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/TARGET3_A.fasta",
+      "target_msa": "hpc_outputs/targets/TARGET3_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/TARGET3_A.a3m.report.json",
+      "records": "hpc_outputs/m6c_targets/TARGET3_AB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6c_targets/TARGET3_AB"
+    }
+  ]
+}

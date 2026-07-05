@@ -1,0 +1,117 @@
+{
+  "anchors_not_for_immediate_scale": [
+    "1BRS_AD",
+    "1BVK_ED",
+    "1NMB_HL"
+  ],
+  "artifact": "m6d_w2_target_family_redesign_candidate_rules",
+  "branch_id": "w2_target_family_redesign_v1",
+  "can_mark_goal_complete": false,
+  "candidate_requirements": {
+    "min_ca_interface_contacts": 20,
+    "min_non_anchor_candidates_for_revised_manifest": 3,
+    "reject_current_protocol_zero_low_pae_accept_targets": true,
+    "require_prep_report": true,
+    "require_prepared_pdb": true,
+    "require_source_pdb_deduplication": true,
+    "require_target_fasta": true,
+    "require_target_fasta_report": true,
+    "require_target_msa": true,
+    "require_target_msa_report": true
+  },
+  "claim_boundary": {
+    "cayuga_submission": "blocked_until_revised_manifest_and_strict_preflight",
+    "pooled_diagnostic": "not_sufficient_for_w2_certificate",
+    "target_wise_gate": "all current expanded-panel targets are not_certified",
+    "w2_multi_target_generalization": "not_supported"
+  },
+  "date": "2026-06-30",
+  "drop_or_redesign_targets": [
+    "1CHO_GI",
+    "1EER_BA",
+    "1HE1_CA",
+    "1KAC_AB",
+    "1MLC_BE",
+    "2MTA_CA"
+  ],
+  "excluded_source_ids_under_current_protocol": [
+    "1A2K",
+    "1AK4",
+    "1BRS",
+    "1BVK",
+    "1CGI",
+    "1CHO",
+    "1EER",
+    "1FQJ",
+    "1GCQ",
+    "1HE1",
+    "1KAC",
+    "1KLU",
+    "1MEL",
+    "1MLC",
+    "1NMB",
+    "1QFW",
+    "1S1Q",
+    "1SYX",
+    "2IDO",
+    "2MTA",
+    "2SIC",
+    "3PC8"
+  ],
+  "excluded_targets_under_current_protocol": [
+    "1A2K_CB",
+    "1AK4_BC",
+    "1CGI_EI",
+    "1CHO_GI",
+    "1EER_BA",
+    "1FQJ_EB",
+    "1GCQ_CB",
+    "1HE1_CA",
+    "1KAC_AB",
+    "1KLU_BA",
+    "1MEL_MB",
+    "1MLC_BE",
+    "1QFW_BA",
+    "1S1Q_CD",
+    "1SYX_AB",
+    "2IDO_CD",
+    "2MTA_CA",
+    "2SIC_EI"
+  ],
+  "panel_contract": {
+    "complex_target_id": "required",
+    "label_source": "single_value_required",
+    "lrmsd_threshold": "single_value_required",
+    "predictor_id": "single_value_required",
+    "signal_source": "single_value_required",
+    "target_alpha": 0.2
+  },
+  "pilot_evidence_requirements": {
+    "disallow_pooled_only_claim": true,
+    "failure_status_to_preserve": "multi_target_evaluable_not_certified",
+    "min_records_per_target": 20,
+    "require_target_wise_readout": true,
+    "required_panel_report_status_before_claim": "multi_target_certified"
+  },
+  "positive_controls_not_generalization_targets": [
+    "3PC8_AB"
+  ],
+  "protocol_id": "w2_target_family_redesign_v1",
+  "ready_for_cayuga_submission": false,
+  "selected_design": "w2_target_family_redesign_v1",
+  "signal_strategy_hold_targets": [
+    "1KLU_BA",
+    "1QFW_BA"
+  ],
+  "source_design": "results/m6d_w2_target_family_redesign_v1_design.json",
+  "spend_gate": {
+    "cayuga_submission_allowed": false,
+    "unlock_conditions": [
+      "at least three non-anchor candidates pass this target-family rule set",
+      "a revised target manifest is generated from admitted candidates",
+      "strict complex_target_manifest --require-files passes",
+      "completion and panel-report replay commands are emitted before submission",
+      "the goal anchor links the revised manifest and preflight report before any sbatch"
+    ]
+  }
+}

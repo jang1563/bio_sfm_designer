@@ -12,6 +12,8 @@ local runs only the orchestration, gate, scoring, and tests.** The bridge is pre
 |---|---|---|
 | DBTL controller, trust gate, scoring, safety **policy/lexicon**, tests, dry-run | **Local** (or login node) | pure-Python, no GPU |
 | Claude **orchestrator** (interpreter) + **label-integrity** check | **Local or Cayuga login node** | API calls — network, not GPU (key in `~/.api_keys`, per the audit RUNBOOK) |
+| **Target prep**: heterodimer strip/validation + target FASTA | **Local or Cayuga login node** | pure-Python guard before heavy model jobs |
+| **Target MSA precompute**: one fixed `.a3m` per target | **Cayuga GPU once per target** | Boltz MSA-server query is expensive and should be reused via `TARGET_MSA` |
 | **Generate**: RFdiffusion / ProteinMPNN / ESM | **Cayuga/Expanse (GPU)** | model inference |
 | **Predict**: Boltz-2 + pLDDT/ipTM, CA-lDDT truth | **Cayuga/Expanse (GPU)** | model inference (M1 already does this) |
 | **Safety DeBERTa** screen (constitutional-bioguard) | **Cayuga** | DeBERTa **already installed there** (`scripts/cayuga_v*_*.slurm`); torch/weights present |
@@ -43,13 +45,27 @@ python -m bio_sfm_designer.experiments.run_batch_round \
   --candidates hpc_outputs/generate/candidates.jsonl \
   --records    hpc_outputs/predict/records.jsonl \
   --verdicts   hpc_outputs/screen/verdicts.jsonl \
+  --prevalidate-records tests/fixtures/barstar_interface_records.jsonl \
+  --conformal-alpha 0.3 \
   --target "..." --objective thermostability --out results/round_0
 ```
 
 It builds `PrecomputedGenerator + PrecomputedStructurePredictor + PrecomputedScreen`, routes via
 the calibrated trust gate, screens before synth, scores `net = benefit − λ·assays`, and writes
-`campaign.jsonl` + `summary.json`. Omit `--verdicts` to fall back to the built-in screen; add
-`--provider anthropic` for the live LLM orchestrator. One invocation = one async HPC round.
+`preflight.json`, `campaign.jsonl`, and `summary.json`. The preflight blocks the round before
+routing if candidate ids are not covered by prediction records, if a provided screen verdict file is
+missing candidate verdicts, or if duplicate ids would be shadowed by the consume-side adapters.
+For complex/binder W4 runs, add `--strict-complex-records` so the records pass strict
+`complex_records_qc.py` provenance, chain-id, pAE, L-RMSD, and interface-alignment checks before they
+enter the DBTL loop; strict mode also requires candidate metadata to carry `complex_target_id`, checks
+candidate-record target identity agreement, and uses the `COMPLEX_ID` filled by
+`run_generate_proteinmpnn_complex.sbatch`. Omit `--verdicts` to fall back to the built-in screen; add
+`--prevalidate-records` plus `--conformal-alpha` to install a prior calibrated/RCPS gate before routing;
+the preflight blocks prevalidation records that overlap the current batch and records the certified complex
+`tau` that project status requires for W4 completion. It also blocks calibrated routing if the prior records
+and current batch disagree on `predictor_id`, `signal_source`, `label_source`, or `lrmsd_threshold` within
+the routed regime. Add `--provider anthropic`
+for the live LLM orchestrator. One invocation = one async HPC round.
 
 ## Revised milestones (HPC-aware)
 
@@ -75,4 +91,5 @@ the calibrated trust gate, screens before synth, scores `net = benefit − λ·a
   pass `--account YOUR_ACCOUNT --partition YOUR_PARTITION` at submit time.
 - API keys: `source ~/.api_keys` (the audit convention), never in code; rotate the exposed key first.
 
-See `hpc/README.md` for the per-stage scripts. Local code stays agnostic to where the JSONL came from.
+See `hpc/README.md` for the per-stage scripts and `docs/M6C_RUNBOOK.md` for the current
+complex/binder scale-up path. Local code stays agnostic to where the JSONL came from.

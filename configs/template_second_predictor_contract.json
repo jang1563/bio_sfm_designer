@@ -1,0 +1,32 @@
+{
+  "_note": "Copy this file for a real second complex predictor, preserve matched complex_target_id + target_id keys, then validate with python -m bio_sfm_designer.experiments.complex_predictor_contract --contract <file> --require-files --run-record-qc --out results/m6c_second_predictor_contract.json --emit-plan results/m6c_second_predictor_commands.sh --emit-sync-back-plan results/m6c_second_predictor_sync_back.sh",
+  "primary_records": [
+    "tests/fixtures/barstar_interface_records.jsonl"
+  ],
+  "secondary_records": [
+    "hpc_outputs/m6c_second_predictor/chai1_complex_records.jsonl"
+  ],
+  "secondary_predictor": {
+    "predictor_id": "chai1_complex",
+    "signal_source": "chai1_pae_interaction",
+    "label_source": "chai1_lrmsd_to_reference",
+    "forbid_predictor_ids": [
+      "boltz2_complex"
+    ]
+  },
+  "qc": {
+    "require_complex_target_id": true,
+    "require_provenance": true,
+    "require_chain_ids": true
+  },
+  "cross_predictor": {
+    "min_overlap": 20,
+    "min_label_agreement": 0.8,
+    "copy_tolerance": 1e-6,
+    "copy_fraction_threshold": 0.95,
+    "label_threshold_tolerance": 1e-9,
+    "require_disjoint_record_files": true,
+    "out": "results/m6c_cross_predictor.json",
+    "emit_matches": "results/m6c_cross_predictor_matches.jsonl"
+  }
+}

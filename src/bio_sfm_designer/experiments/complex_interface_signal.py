@@ -63,8 +63,13 @@ def _stratified_auroc(groups, key, sign, threshold):
     return num / den if den else None
 
 
-def run(path: str = _BARSTAR, threshold: float = 4.0, plddt_cut: float = 85.0, n_boot: int = 2000, seed: int = 0) -> dict:
-    recs = [r for r in _load(path).values() if "pae_interaction" in r]
+def load_records(path: str) -> list[dict]:
+    return [r for r in _load(path).values() if "pae_interaction" in r]
+
+
+def run_rows(rows: list[dict], threshold: float = 4.0, plddt_cut: float = 85.0,
+             n_boot: int = 2000, seed: int = 0) -> dict:
+    recs = [r for r in rows if "pae_interaction" in r]
     by_t = collections.defaultdict(list)
     for r in recs:
         by_t[_temp(r["target_id"])].append(r)
@@ -107,6 +112,12 @@ def run(path: str = _BARSTAR, threshold: float = 4.0, plddt_cut: float = 85.0, n
     }
 
 
+def run(path: str = _BARSTAR, threshold: float = 4.0, plddt_cut: float = 85.0,
+        n_boot: int = 2000, seed: int = 0) -> dict:
+    return run_rows(load_records(path), threshold=threshold, plddt_cut=plddt_cut,
+                    n_boot=n_boot, seed=seed)
+
+
 def main(argv=None) -> dict:
     ap = argparse.ArgumentParser(description="complex-regime: does INTERFACE confidence discriminate success?")
     ap.add_argument("--records", default=_BARSTAR)
@@ -125,7 +136,7 @@ def main(argv=None) -> dict:
     print("  => pAE_interaction discriminates interface quality EVEN among well-folded binders (where ipTM is")
     print("     chance) -> a genuine interface signal, UNLIKE monomer pLDDT (within-regime ~0.59, chance).")
     print(f"  (fold conflated with dock: mean complex pLDDT success {r['mean_plddt_success']} vs fail {r['mean_plddt_fail']}.")
-    print("   CAVEATS: single-model -- pAE + label both from one Boltz fold; n=72; ONE target. Indication, not proof.)")
+    print(f"   CAVEATS: single-model -- pAE + label both from one Boltz fold; n={r['n']}; ONE target. Indication, not proof.)")
     return r
 
 

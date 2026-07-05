@@ -1,0 +1,32 @@
+{
+  "_note": "Smoke-specific W3 Chai-1 contract. This uses the matched 3PC8 Boltz primary records for the single Chai smoke candidate. It is not a W3-completion contract because min_overlap remains 20 and only one Chai record exists.",
+  "primary_records": [
+    "hpc_outputs/m6d_followup_3PC8_AB_scale_t030/records_boltz_complex_t030.jsonl"
+  ],
+  "secondary_records": [
+    "hpc_outputs/m6c_second_predictor/chai1_complex_records.jsonl"
+  ],
+  "secondary_predictor": {
+    "predictor_id": "chai1_complex",
+    "signal_source": "chai1_pae_interaction",
+    "label_source": "chai1_lrmsd_to_reference",
+    "forbid_predictor_ids": [
+      "boltz2_complex"
+    ]
+  },
+  "qc": {
+    "require_complex_target_id": true,
+    "require_provenance": true,
+    "require_chain_ids": true
+  },
+  "cross_predictor": {
+    "min_overlap": 20,
+    "min_label_agreement": 0.8,
+    "copy_tolerance": 1e-6,
+    "copy_fraction_threshold": 0.95,
+    "label_threshold_tolerance": 1e-9,
+    "require_disjoint_record_files": true,
+    "out": "results/m6c_cross_predictor.json",
+    "emit_matches": "results/m6c_cross_predictor_matches.jsonl"
+  }
+}

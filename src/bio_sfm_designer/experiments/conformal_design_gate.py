@@ -54,7 +54,8 @@ def _wrong(rec):
 
 def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.2, delta: float = 0.1,
         n_cal: int = 80, seed: int = 0) -> Dict[str, Any]:
-    rows = [json.loads(line) for line in open(records_path) if line.strip()]
+    with open(records_path) as fh:
+        rows = [json.loads(line) for line in fh if line.strip()]
     idx = list(range(len(rows)))
     random.Random(seed).shuffle(idx)
     cal = [rows[i] for i in idx[:n_cal]]

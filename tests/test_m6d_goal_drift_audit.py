@@ -1,0 +1,425 @@
+"""Tests for the M6d goal drift audit."""
+
+import json
+import os
+import tempfile
+import unittest
+
+from bio_sfm_designer.experiments.m6d_goal_drift_audit import (
+    build_audit,
+    main,
+    render_markdown,
+)
+
+
+def _write_json(path, obj):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as fh:
+        json.dump(obj, fh)
+        fh.write("\n")
+
+
+def _write_text(path, text):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as fh:
+        fh.write(text)
+
+
+def _goal_text():
+    return """
+This is not a publication plan. It develops the project as a research engine.
+Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
+redesign W2 multi-target generalization after the current evaluable-not-certified panel,
+resolve W3 Boltz-Chai predictor disagreement through a chosen robustness protocol,
+preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence,
+and keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
+"""
+
+
+def _anchor_text():
+    return """
+Current Evidence Boundary
+- W1: certified as target-specific complex evidence.
+- W2: not certified as multi-target generalization.
+- W3: independent-predictor robustness is not supported under the current Boltz-vs-Chai readout.
+- W4: closed-loop plumbing is complete.
+Do not pool target evidence into a generalization claim.
+"""
+
+
+def _project_status():
+    return {
+        "_path": "/tmp/status.json",
+        "status": "m6_complex_in_progress",
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "remaining": 1,
+        "workstreams": {
+            "W1_M6c_scale_up": {"status": "certified", "complete": True},
+            "W2_multi_target_panel": {
+                "status": "target_msa_gate_ready_awaiting_explicit_approval",
+                "complete": False,
+            },
+            "W3_independent_predictor": {
+                "status": "negative_robustness_result_adjudicated",
+                "complete": True,
+                "positive_claim_supported": False,
+            },
+            "W4_closed_loop_DBTL": {"status": "closed_loop_round_complete", "complete": True},
+        },
+    }
+
+
+def _completion_audit():
+    return {
+        "_path": "/tmp/completion.json",
+        "audit_ok": True,
+        "status": "goal_active_w2_remaining",
+        "can_mark_goal_complete": False,
+    }
+
+
+def _runbook():
+    return {
+        "_path": "/tmp/runbook.json",
+        "audit_ok": True,
+        "status": "explicit_approval_runbook_ready",
+        "target_count": 14,
+        "pending_path_count": 28,
+        "claim_boundary": {
+            "target_msa_input_prep": "allowed only after explicit approval",
+            "proteinmpnn_boltz_panel_submission": "blocked until target-MSA sync-back and strict replay pass",
+            "w2_multi_target_generalization": "not_supported",
+        },
+    }
+
+
+def _w3_audit():
+    return {
+        "_path": "/tmp/w3.json",
+        "audit_ok": True,
+        "positive_claim_supported": False,
+    }
+
+
+def _execution_attempt():
+    return {
+        "_path": "/tmp/execution.json",
+        "status": "target_msa_outputs_synced_strict_require_files_passed",
+        "approval_scope": "W2 v9 full 14-target target-MSA input prep only",
+        "last_checked_at": "2026-07-05T09:08:12+09:00",
+        "submitted_at": "2026-07-05T08:57:40+09:00",
+        "submission_started": True,
+        "jobs_submitted": 17,
+        "job_ids": [str(job_id) for job_id in range(3059563, 3059580)],
+        "receipt_created_or_updated": True,
+        "receipt_summary": {
+            "n_records": 14,
+            "n_targets": 14,
+            "status_counts": {"submitted": 3, "validated_existing": 11},
+        },
+        "queue_status": {
+            "completed": 14,
+            "failed_initial": 3,
+            "retried": 3,
+        },
+        "sync_back": {
+            "completed": True,
+            "input_prep_artifacts": "98/98",
+            "ready_targets": 14,
+            "post_sync_pending_path_count": 0,
+            "strict_require_files_ok": True,
+        },
+        "claim_boundary": {
+            "target_msa_input_prep": "target-MSA outputs synced and strict require-files passed for the full 14-target W2 v9 batch",
+            "proteinmpnn_boltz_panel_submission": "blocked",
+            "w2_multi_target_generalization": "not_supported",
+        },
+        "next_action": "prepare the next W2 v9 panel step without making a W2 claim",
+    }
+
+
+def _panel_approval_packet():
+    return {
+        "_path": "/tmp/panel_approval.json",
+        "status": "panel_approval_packet_ready",
+        "approval_packet_ready": True,
+        "can_submit_panel_if_user_explicitly_approves": True,
+        "can_claim_w2_generalization": False,
+        "checks": {
+            "target_msa_strict_ready": True,
+            "panel_dry_run_no_sbatch": True,
+            "panel_guard_no_env_refuses": True,
+            "submit_receipt_absent": True,
+            "submit_summary_absent": True,
+        },
+    }
+
+
+def _panel_decision_protocol():
+    return {
+        "_path": "/tmp/panel_decision.json",
+        "status": "post_panel_decision_protocol_ready",
+        "audit_ok": True,
+        "no_submit": True,
+        "can_claim_w2_generalization_now": False,
+        "panel_contract": {
+            "target_alpha": 0.2,
+            "n_manifest_targets": 14,
+            "min_records_per_target": 20,
+        },
+        "current_panel_result": {
+            "status": "not_available_not_submitted",
+            "w2_generalization_supported": False,
+            "claim": "no W2 claim; panel records/report are not available",
+        },
+    }
+
+
+def _blocked_execution_attempt():
+    execution = _execution_attempt()
+    execution.update({
+        "status": "blocked_before_submission_ssh_banner_exchange_timeout",
+        "last_checked_at": "2026-07-05T08:55:01+09:00",
+        "submitted_at": None,
+        "submission_started": False,
+        "jobs_submitted": 0,
+        "job_ids": [],
+        "receipt_created_or_updated": False,
+        "receipt_summary": None,
+        "queue_status": None,
+        "sync_back": None,
+        "next_action": "restore SSH access and rerun the approved target-MSA wrapper only",
+    })
+    execution["claim_boundary"] = {
+        "target_msa_input_prep": "approved for full 14-target W2 v9 batch but not yet submitted because SSH login failed before command execution",
+        "proteinmpnn_boltz_panel_submission": "blocked",
+        "w2_multi_target_generalization": "not_supported",
+    }
+    return execution
+
+
+class M6DGoalDriftAuditTests(unittest.TestCase):
+    def test_current_goal_state_has_no_major_direction_drift(self):
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["status"], "no_major_direction_drift_w2_blocked")
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["direction"], "aligned")
+        self.assertEqual(rep["drift_assessment"]["execution"], "target_msa_outputs_synced_strict_require_files_passed")
+        self.assertIn("w2_branch_explosion", {risk["id"] for risk in rep["active_risks"]})
+        self.assertIn("panel_step_boundary", {risk["id"] for risk in rep["active_risks"]})
+        self.assertIn("M6d Goal Drift Audit", render_markdown(rep))
+
+    def test_panel_approval_packet_ready_has_no_major_direction_drift(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["execution"], "panel_approval_packet_ready_not_submitted")
+        self.assertEqual(rep["current_state"]["W2_panel_approval"]["can_claim_w2_generalization"], False)
+        risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
+        self.assertEqual(risks["panel_approval_packet_boundary"], "managed")
+
+    def test_panel_decision_protocol_ready_has_no_major_direction_drift(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+            _panel_decision_protocol(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["execution"], "panel_decision_protocol_ready_not_submitted")
+        self.assertFalse(rep["current_state"]["W2_panel_decision_protocol"]["can_claim_w2_generalization_now"])
+        risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
+        self.assertEqual(risks["panel_decision_protocol_boundary"], "managed")
+        self.assertIn("W2_panel_decision_protocol", render_markdown(rep))
+
+    def test_pre_submission_blocked_state_has_no_major_direction_drift(self):
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _blocked_execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["drift_assessment"]["execution"], "target_msa_approved_but_blocked_before_submission_by_ssh_login")
+
+    def test_blocks_goal_text_drift_toward_publication(self):
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            "publication packaging plan only",
+            "",
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertTrue(rep["major_direction_drift"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("research_engine_not_publication", kinds)
+        self.assertIn("w2_redesign_objective", kinds)
+
+    def test_blocks_w2_premature_completion(self):
+        status = _project_status()
+        status["complete"] = True
+        status["can_mark_goal_complete"] = True
+        status["remaining"] = 0
+        status["workstreams"]["W2_multi_target_panel"]["status"] = "multi_target_certified"
+        status["workstreams"]["W2_multi_target_panel"]["complete"] = True
+
+        rep = build_audit(
+            status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_gate_boundary_drift", kinds)
+        self.assertIn("premature_goal_completion_drift", kinds)
+
+    def test_blocks_panel_submission_boundary_drift(self):
+        runbook = _runbook()
+        runbook["claim_boundary"]["proteinmpnn_boltz_panel_submission"] = "ready"
+
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            runbook,
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("panel_submission_boundary_drift", kinds)
+
+    def test_blocks_w3_positive_claim_drift(self):
+        status = _project_status()
+        status["workstreams"]["W3_independent_predictor"]["positive_claim_supported"] = True
+        w3_audit = _w3_audit()
+        w3_audit["positive_claim_supported"] = True
+
+        rep = build_audit(
+            status,
+            _completion_audit(),
+            _runbook(),
+            w3_audit,
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w3_positive_claim_drift", kinds)
+        self.assertIn("w3_standalone_positive_claim_drift", kinds)
+
+    def test_blocks_execution_attempt_claim_drift(self):
+        execution = _execution_attempt()
+        execution["sync_back"]["ready_targets"] = 13
+        execution["claim_boundary"]["w2_multi_target_generalization"] = "supported"
+
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            execution,
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("target_msa_execution_state_drift", kinds)
+        self.assertIn("target_msa_execution_generalization_boundary_drift", kinds)
+
+    def test_cli_writes_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths = {
+                "status": os.path.join(d, "status.json"),
+                "completion": os.path.join(d, "completion.json"),
+                "runbook": os.path.join(d, "runbook.json"),
+                "w3": os.path.join(d, "w3.json"),
+                "execution": os.path.join(d, "execution.json"),
+                "goal": os.path.join(d, "goal.md"),
+                "anchor": os.path.join(d, "anchor.md"),
+                "out": os.path.join(d, "drift.json"),
+                "md": os.path.join(d, "drift.md"),
+            }
+            _write_json(paths["status"], _project_status())
+            _write_json(paths["completion"], _completion_audit())
+            _write_json(paths["runbook"], _runbook())
+            _write_json(paths["w3"], _w3_audit())
+            _write_json(paths["execution"], _execution_attempt())
+            _write_text(paths["goal"], _goal_text())
+            _write_text(paths["anchor"], _anchor_text())
+
+            rc = main([
+                "--project-status", paths["status"],
+                "--completion-audit", paths["completion"],
+                "--runbook", paths["runbook"],
+                "--w3-adjudication-audit", paths["w3"],
+                "--execution-attempt", paths["execution"],
+                "--goal-mode-doc", paths["goal"],
+                "--anchor-doc", paths["anchor"],
+                "--out-json", paths["out"],
+                "--out-md", paths["md"],
+            ])
+
+            self.assertEqual(rc, 0)
+            with open(paths["out"]) as fh:
+                rep = json.load(fh)
+            self.assertTrue(rep["audit_ok"])
+            self.assertTrue(os.path.exists(paths["md"]))
+
+
+if __name__ == "__main__":
+    unittest.main()

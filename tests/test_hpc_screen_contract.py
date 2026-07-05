@@ -7,6 +7,8 @@ hpc/screen_deberta.py and safety.PrecomputedScreen, this test fails."""
 import importlib.util
 import json
 import os
+import re
+import subprocess
 import sys
 import unittest
 
@@ -40,6 +42,21 @@ class _FakeGuard:
 
 
 class ScreenContractTests(unittest.TestCase):
+    def test_sbatch_candidates_guard_does_not_corrupt_set_value(self):
+        script = os.path.join(_HPC_DIR, "run_screen_deberta.sbatch")
+        with open(script) as fh:
+            text = fh.read()
+        match = re.search(r'^CANDIDATES="([^"]+)"$', text, flags=re.MULTILINE)
+        self.assertIsNotNone(match)
+        assignment = match.group(0)
+        proc = subprocess.run(
+            ["bash", "-euo", "pipefail", "-c", f"CANDIDATES=example.jsonl\n{assignment}\nprintf '%s' \"$CANDIDATES\""],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.stdout, "example.jsonl")
+
     def test_producer_output_feeds_consumer(self):
         mod = _load_screen_module()
         mod._load_guard = lambda: _FakeGuard()  # swap the Cayuga DeBERTa loader

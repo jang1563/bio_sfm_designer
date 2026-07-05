@@ -1,0 +1,68 @@
+{
+  "_note": "W2 redesign panel after the first 1BRS_AD/1CGI_EI/2SIC_EI panel was evaluable but not certified. Keep 1BRS_AD as the positive-control anchor; replace low-success 1CGI_EI and 2SIC_EI with preflight-screened heterodimers closer to the 1BRS size/contact regime. Target MSAs for new targets must be precomputed on Cayuga before panel submission.",
+  "defaults": {
+    "num_seq": 100,
+    "temp": 0.3,
+    "seed": 37,
+    "objective": "binder"
+  },
+  "targets": [
+    {
+      "id": "1BRS_AD",
+      "rcsb_id": "1BRS",
+      "source_pdb": "hpc_outputs/targets/source_1BRS.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1BRS_AD.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1BRS_AD.report.json",
+      "allow_numbering_gaps": true,
+      "target_chain": "A",
+      "binder_chain": "D",
+      "target_fasta": "hpc_outputs/targets/1BRS_A.fasta",
+      "target_msa": "hpc_outputs/targets/1BRS_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/1BRS_A.a3m.report.json",
+      "records": "hpc_outputs/m6d_redesign_targets/1BRS_AD/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_redesign_targets/1BRS_AD"
+    },
+    {
+      "id": "3PC8_AB",
+      "rcsb_id": "3PC8",
+      "source_pdb": "hpc_outputs/targets/source_3PC8.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_3PC8_AB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_3PC8_AB.report.json",
+      "target_chain": "A",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/3PC8_A.fasta",
+      "target_msa": "hpc_outputs/targets/3PC8_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/3PC8_A.a3m.report.json",
+      "records": "hpc_outputs/m6d_redesign_targets/3PC8_AB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_redesign_targets/3PC8_AB"
+    },
+    {
+      "id": "1S1Q_CD",
+      "rcsb_id": "1S1Q",
+      "source_pdb": "hpc_outputs/targets/source_1S1Q.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1S1Q_CD.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1S1Q_CD.report.json",
+      "target_chain": "C",
+      "binder_chain": "D",
+      "target_fasta": "hpc_outputs/targets/1S1Q_C.fasta",
+      "target_msa": "hpc_outputs/targets/1S1Q_C.a3m",
+      "target_msa_report": "hpc_outputs/targets/1S1Q_C.a3m.report.json",
+      "records": "hpc_outputs/m6d_redesign_targets/1S1Q_CD/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_redesign_targets/1S1Q_CD"
+    },
+    {
+      "id": "1SYX_AB",
+      "rcsb_id": "1SYX",
+      "source_pdb": "hpc_outputs/targets/source_1SYX.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1SYX_AB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1SYX_AB.report.json",
+      "target_chain": "A",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/1SYX_A.fasta",
+      "target_msa": "hpc_outputs/targets/1SYX_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/1SYX_A.a3m.report.json",
+      "records": "hpc_outputs/m6d_redesign_targets/1SYX_AB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_redesign_targets/1SYX_AB"
+    }
+  ]
+}

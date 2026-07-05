@@ -1,16 +1,18 @@
 """Cayuga-side Boltz-2 COMPLEX refold runner (M6c-lite, binder/interface de-risk).
 
-Refolds each designed COMPLEX (fixed target chain + redesigned binder chain) with Boltz-2 in
-single-sequence mode (`msa: empty`) and scores the INTERFACE two ways:
-  - SIGNAL  : ipTM (interface pTM) -- Boltz's interface confidence, what the complex-regime gate
-              would route on (the question: does it discriminate good interfaces at fixed difficulty?).
+Refolds each designed COMPLEX (fixed target chain + redesigned binder chain) with Boltz-2. Interfaces
+need a target MSA; the validated protocol is target-MSA + binder single-seq for designed binders.
+It scores the INTERFACE two ways:
+  - SIGNAL  : pAE_interaction -- mean target<->binder PAE, the validated complex signal for routing.
+              ipTM is still recorded as a secondary diagnostic, but it is weak after foldability control.
   - LABEL   : ligand-RMSD (L-RMSD) -- superpose the refold onto the TARGET chain (Kabsch), then measure
               the BINDER chain CA-RMSD to the reference complex. Success = the binder docks in the right
               place (L-RMSD < threshold). This is an INDEPENDENT interface-success label (Boltz refold
               vs the intended backbone), the complex analog of monomer scRMSD.
 
-Writes records.jsonl (PrecomputedStructurePredictor schema; regime "complex", iptm carried) for the
-within-regime cross-model analysis. All designs fold in ONE model load (Boltz predicts a dir of YAMLs).
+Writes records.jsonl (PrecomputedStructurePredictor schema; regime "complex", pAE_interaction + ipTM
+carried) for the within-regime complex analysis. All designs fold in ONE model load (Boltz predicts a
+dir of YAMLs).
 
 RUNS ON CAYUGA (GPU). `boltz` conda env + PYTHONNOUSERSITE=1 + `--no_kernels`. See run_predict_boltz_complex.sbatch.
 """
@@ -27,6 +29,32 @@ import subprocess
 import sys
 
 _MODIFIED_AA = {"MSE", "SEC", "PYL", "MLY", "CSO", "SEP", "TPO", "PTR", "HYP", "KCX", "LLP", "CME"}
+
+
+def _read_first_fasta_sequence(path):
+    seq = []
+    in_record = False
+    with open(path) as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                if in_record:
+                    break
+                in_record = True
+                continue
+            if in_record:
+                seq.append(line)
+    if not seq:
+        return None
+    # A3M lower-case insertions and alignment gaps are not part of the query sequence Boltz should match.
+    return "".join(c for c in "".join(seq) if c.isupper() and c != "-")
+
+
+def _count_nul_bytes(path):
+    with open(path, "rb") as fh:
+        return fh.read().count(b"\x00")
 
 
 def _ca_coords_from_pdb(path, chain=None):
@@ -90,12 +118,25 @@ def _interface_pae(npz_path, n_target):
     return float((m[:n_target, n_target:].mean() + m[n_target:, :n_target].mean()) / 2.0)
 
 
+def _complex_id(args, cand):
+    if args.complex_id:
+        return args.complex_id
+    meta = cand.get("meta") if isinstance(cand.get("meta"), dict) else {}
+    for key in ("complex_target_id", "target_id", "backbone"):
+        value = meta.get(key)
+        if value:
+            return str(value)
+    return os.path.splitext(os.path.basename(args.backbone))[0]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Boltz-2 complex refold + interface L-RMSD -> structure records")
     ap.add_argument("--candidates", required=True, help="complex candidates.jsonl (representation=binder, target_seq=target)")
     ap.add_argument("--backbone", required=True, help="reference complex PDB")
     ap.add_argument("--target-chain", default="A", help="reference chain for the (fixed) target")
     ap.add_argument("--binder-chain", default="C", help="reference chain for the (designed) binder")
+    ap.add_argument("--complex-id", default=None,
+                    help="heterodimer target id to carry into each output record")
     ap.add_argument("--out", required=True)
     ap.add_argument("--threshold", type=float, default=4.0, help="L-RMSD (A) below which the interface 'succeeds'")
     ap.add_argument("--boltz", default=os.path.expanduser("~/.conda/envs/boltz/bin/boltz"))
@@ -103,16 +144,35 @@ def main() -> None:
     # interfaces need coevolution: msa:empty folds monomers fine but FAILS at complexes (verified:
     # native barnase-barstar msa:empty -> 38 A, cplx_plddt 43). --use-msa-server gives the TARGET an MSA
     # (the binder stays single-seq = the realistic designed-binder protocol, since designs have no homologs).
+    ap.add_argument("--target-msa", default=None,
+                    help="precomputed target MSA (.a3m); avoids repeated identical MSA-server queries")
     ap.add_argument("--use-msa-server", action="store_true",
                     help="generate MSAs via the ColabFold server (needs compute-node internet)")
     ap.add_argument("--binder-uses-msa", action="store_true",
                     help="also MSA the binder (NATURAL binders / WT controls; default: binder single-seq)")
     args = ap.parse_args()
+    if args.target_msa and args.use_msa_server:
+        ap.error("--target-msa and --use-msa-server are mutually exclusive")
+    if args.target_msa and not os.path.exists(args.target_msa):
+        ap.error(f"--target-msa file not found: {args.target_msa}")
+    if args.target_msa:
+        n_nul = _count_nul_bytes(args.target_msa)
+        if n_nul:
+            ap.error(f"--target-msa contains {n_nul} NUL byte(s); rerun/sanitize target-MSA precompute")
 
     ref_target = _ca_coords_from_pdb(args.backbone, args.target_chain)
     ref_binder = _ca_coords_from_pdb(args.backbone, args.binder_chain)
     with open(args.candidates) as fh:
         cands = [json.loads(line) for line in fh if line.strip()]
+    if args.target_msa:
+        msa_seq = _read_first_fasta_sequence(args.target_msa)
+        if not msa_seq:
+            ap.error(f"--target-msa has no FASTA/A3M query sequence: {args.target_msa}")
+        bad = [c.get("id", f"candidate_{i}") for i, c in enumerate(cands)
+               if str(c.get("target_seq", "")) != msa_seq]
+        if bad:
+            ap.error(f"--target-msa query sequence does not match target_seq for {len(bad)} "
+                     f"candidate(s); first mismatch={bad[0]}")
 
     # UNIQUE per output AND wiped on start -- Boltz skips predictions whose output already exists, so a
     # shared/stale work dir silently reuses a previous run's structures (a real contamination bug).
@@ -126,7 +186,10 @@ def main() -> None:
     for i, c in enumerate(cands):
         name = f"c{i}"
         names.append((name, c))
-        target_msa = "" if args.use_msa_server else "      msa: empty\n"
+        if args.target_msa:
+            target_msa = f"      msa: {json.dumps(os.path.abspath(args.target_msa))}\n"
+        else:
+            target_msa = "" if args.use_msa_server else "      msa: empty\n"
         binder_msa = "" if (args.use_msa_server and args.binder_uses_msa) else "      msa: empty\n"
         with open(os.path.join(yamls, name + ".yaml"), "w") as fh:
             fh.write(
@@ -169,8 +232,12 @@ def main() -> None:
             quality = round(max(0.0, 1.0 - lrmsd / 10.0), 4) if (aligned and math.isfinite(lrmsd)) else 0.0
             rec = {
                 "target_id": c["id"],
+                "complex_target_id": _complex_id(args, c),
                 "mean_plddt": round(100.0 * plddt, 3),          # complex pLDDT
                 "regime": "complex",
+                "predictor_id": "boltz2_complex",
+                "signal_source": "boltz2_pae_interaction",
+                "label_source": "boltz2_lrmsd_to_reference",
                 "iptm": round(iptm, 4),                          # global interface pTM (weak discriminator here)
                 "ptm": round(ptm, 4),
                 "pae_interaction": round(pae_interaction, 4) if pae_interaction is not None else None,  # the real interface signal
@@ -179,13 +246,18 @@ def main() -> None:
                 "lrmsd": round(lrmsd, 4) if math.isfinite(lrmsd) else None,
                 "lrmsd_threshold": args.threshold,
                 "interface_aligned": aligned,
+                "target_chain": args.target_chain,
+                "binder_chain": args.binder_chain,
                 "refolder": "boltz2_complex",
             }
             out.write(json.dumps(rec, sort_keys=True) + "\n")
             n_ok += 1
-            print(f"  {c['id']}: iptm={iptm:.3f} cplx_plddt={100*plddt:.1f} L-RMSD={lrmsd:.2f} success={success}",
-                  file=sys.stderr)
+            pae_msg = "n/a" if pae_interaction is None else f"{pae_interaction:.2f}"
+            print(f"  {c['id']}: pAE_interaction={pae_msg} iptm={iptm:.3f} "
+                  f"cplx_plddt={100*plddt:.1f} L-RMSD={lrmsd:.2f} success={success}", file=sys.stderr)
     print(f"wrote {n_ok} Boltz complex records to {args.out}", file=sys.stderr)
+    if cands and n_ok == 0:
+        raise RuntimeError("Boltz complex prediction produced zero records; inspect Boltz logs and MSA inputs")
 
 
 if __name__ == "__main__":

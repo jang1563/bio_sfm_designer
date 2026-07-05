@@ -1,0 +1,15 @@
+{
+  "_note": "Fresh W2 target-discovery seed list. These are not admitted W2 evidence. m6d_w2_fresh_discovery_pool.py fetches/screen-prepares them locally before any target-MSA or GPU work.",
+  "seeds": [
+    {"rcsb_id": "1A2K"},
+    {"rcsb_id": "1AK4"},
+    {"rcsb_id": "1AVX"},
+    {"rcsb_id": "1DFJ"},
+    {"rcsb_id": "1EAW"},
+    {"rcsb_id": "1FQJ"},
+    {"rcsb_id": "1PPE"},
+    {"rcsb_id": "2JEL"},
+    {"rcsb_id": "2PCC"},
+    {"rcsb_id": "3HFM"}
+  ]
+}

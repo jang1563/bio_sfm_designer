@@ -10,7 +10,7 @@ assign_fixed_chains.py --chain_list "<binder>" (designs the binder, fixes the ta
 protein_mpnn_run.py. The output FASTA holds ONLY the designed (binder) chain.
 
 Output rows: {"id", "representation"(=designed BINDER seq), "target_seq"(=fixed TARGET seq),
-"regime"="complex", "parent_id", "meta"(objective/backbone/chains/score/...)}.
+"regime"="complex", "parent_id", "meta"(objective/backbone/complex_target_id/chains/score/...)}.
 
 RUNS ON CAYUGA (ProteinMPNN checkout + torch). The parse/assign/run steps are CPU (login-ok).
 """
@@ -25,6 +25,20 @@ import subprocess
 import sys
 
 _STD_AA = set("ACDEFGHIKLMNPQRSTVWY")
+_AA3_TO_1 = {
+    "ALA": "A", "ARG": "R", "ASN": "N", "ASP": "D", "CYS": "C",
+    "GLN": "Q", "GLU": "E", "GLY": "G", "HIS": "H", "ILE": "I",
+    "LEU": "L", "LYS": "K", "MET": "M", "PHE": "F", "PRO": "P",
+    "SER": "S", "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
+    "MSE": "M", "SEC": "C", "PYL": "K", "MLY": "K", "CSO": "C",
+    "SEP": "S", "TPO": "T", "PTR": "Y", "HYP": "P", "KCX": "K",
+    "LLP": "K", "CME": "C",
+}
+
+
+def _safe_token(text):
+    token = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(text)).strip("._")
+    return token or "run"
 
 
 def _parse_fasta(path):
@@ -59,6 +73,28 @@ def _strip_chains(src_pdb, chains, dst_pdb):
                 out.write(ln)
 
 
+def _target_ca_sequence(pdb, chain):
+    residues, seen = [], set()
+    with open(pdb) as fh:
+        for ln in fh:
+            if not ln.startswith("ATOM"):
+                continue
+            if ln[21] != chain or ln[12:16].strip() != "CA" or ln[16] not in (" ", "A"):
+                continue
+            uid = (ln[21], ln[22:26].strip(), ln[26].strip())
+            if uid in seen:
+                continue
+            seen.add(uid)
+            resname = ln[17:20].strip()
+            aa = _AA3_TO_1.get(resname)
+            if aa is None:
+                raise ValueError(f"unsupported target residue {resname!r} at {chain}{uid[1]}{uid[2]}")
+            residues.append(aa)
+    if not residues:
+        raise ValueError(f"target chain {chain!r} has no modeled CA residues in {pdb}")
+    return "".join(residues)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="ProteinMPNN complex (binder) design -> candidates.jsonl")
     ap.add_argument("--mpnn-dir", default=os.path.expanduser("~/ProteinMPNN"))
@@ -69,13 +105,18 @@ def main() -> None:
     ap.add_argument("--temp", default="0.2", help="ProteinMPNN sampling temperature")
     ap.add_argument("--seed", type=int, default=37)
     ap.add_argument("--objective", default="binder")
+    ap.add_argument("--complex-id", default=None,
+                    help="heterodimer target id to carry through candidate metadata")
+    ap.add_argument("--id-prefix", default=None,
+                    help="optional candidate-id prefix; use temp/batch-specific values for scale batches")
     ap.add_argument("--out", required=True)
     ap.add_argument("--python", default=sys.executable, help="python that imports torch+numpy")
     args = ap.parse_args()
 
     pdb_id = os.path.splitext(os.path.basename(args.pdb))[0]
     outdir = os.path.dirname(os.path.abspath(args.out)) or "."
-    work = os.path.join(outdir, f"_mpnnX_{pdb_id}")
+    out_stem = os.path.splitext(os.path.basename(args.out))[0]
+    work = os.path.join(outdir, f"_mpnnX_{pdb_id}_{_safe_token(out_stem)}")
     pdbs = os.path.join(work, "pdbs")
     os.makedirs(pdbs, exist_ok=True)
 
@@ -97,27 +138,36 @@ def main() -> None:
                     "--sampling_temp", args.temp, "--seed", str(args.seed), "--batch_size", "1"],
                    check=True, cwd=args.mpnn_dir)
 
-    parsed_row = json.loads(open(parsed).read().splitlines()[0])
+    with open(parsed) as fh:
+        parsed_row = json.loads(fh.read().splitlines()[0])
     raw_target = parsed_row[f"seq_chain_{args.target_chain}"]
-    # ProteinMPNN marks unmodeled/missing backbone positions as 'X'; drop them to get the continuous
-    # MODELED sequence, which is what Boltz folds and what the CA reference uses (the validated WT path
-    # builds the same CA-based sequence). Without this a single disordered loop voids every design.
-    target_seq = "".join(c for c in raw_target if c in _STD_AA)
-    if len(target_seq) != len(raw_target):
-        print(f"NOTE: target chain {args.target_chain}: dropped {len(raw_target) - len(target_seq)} "
-              f"unmodeled residue(s) -> {len(target_seq)} aa", file=sys.stderr)
+    parsed_target = "".join(c for c in raw_target if c in _STD_AA)
+    # ProteinMPNN's parser can include terminal atom-only residues that have no CA backbone (observed in
+    # 1QFW_BA). The Boltz label aligns against CA coordinates, so the folded target sequence must be the
+    # CA-modeled sequence, matching hpc/extract_chain_fasta.py and the target-MSA query.
+    target_seq = _target_ca_sequence(stripped, args.target_chain)
+    if target_seq != parsed_target:
+        print(f"NOTE: target chain {args.target_chain}: using CA-modeled target sequence "
+              f"({len(target_seq)} aa) instead of ProteinMPNN parsed sequence ({len(parsed_target)} aa)",
+              file=sys.stderr)
 
     fasta = os.path.join(work, "seqs", f"{name}.fa")
     records = list(_parse_fasta(fasta))
     designs = records[1:]  # records[0] is the native binder sequence
     n = 0
+    id_token = args.complex_id or pdb_id
     with open(args.out, "w") as out:
         for i, (header, seq) in enumerate(designs):
             clean = "".join(c for c in seq if c in _STD_AA)   # drop unmodeled positions (same gap as native)
             meta = {"objective": args.objective, "backbone": pdb_id, "generator": "proteinmpnn",
                     "target_chain": args.target_chain, "design_chain": args.design_chain,
                     **_meta_from_header(header)}
-            row = {"id": f"{args.objective}-mpnnX-{pdb_id}-{i}", "representation": clean,
+            if args.complex_id:
+                meta["complex_target_id"] = args.complex_id
+            if args.id_prefix:
+                meta["id_prefix"] = args.id_prefix
+            row_id = f"{args.id_prefix}-{i}" if args.id_prefix else f"{args.objective}-mpnnX-{id_token}-{i}"
+            row = {"id": row_id, "representation": clean,
                    "target_seq": target_seq, "regime": "complex", "parent_id": None, "meta": meta}
             out.write(json.dumps(row, sort_keys=True) + "\n")
             n += 1

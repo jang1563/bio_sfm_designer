@@ -5,6 +5,8 @@ Date: 2026-06-30
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
 
+Latest local harness refresh: 2026-07-05.
+
 ## Active Objective
 
 Continue the M6d science-result program in Cayuga-first goal mode:
@@ -32,6 +34,36 @@ from Chai records alone.
 - Science-action anchor: `results/m6d_followup_next_science_actions.{json,md}`
 - Machine-readable goal anchor: `results/m6d_goal_mode_current_anchor.json`
 - Current W2/W3 decision protocol: `results/m6d_w2_w3_decision_protocol.{json,md}`
+- Current W3 next-protocol contract: `results/m6d_w3_next_protocol.{json,md}`
+- Current W3 challenge manifest: `results/m6d_w3_challenge_manifest.{json,md}`
+- Current W3 third-predictor execution contract: `results/m6d_w3_third_predictor_contract.{json,md}`
+- Current W3 predictor/protocol selection card: `results/m6d_w3_predictor_selection_card.{json,md}`
+- Current W3 runtime-probe plan: `results/m6d_w3_runtime_probe_plan.{json,md}`
+- Current W3 runtime-probe report: `results/m6d_w3_runtime_probe_report.{json,md}`
+- Current W3 local-static runtime-probe snapshot:
+  `results/m6d_w3_runtime_probe_report_local_static.{json,md}`
+- Current W3 Cayuga runtime-probe packet: `results/m6d_w3_cayuga_runtime_probe_packet.{json,md}`
+  and `results/m6d_w3_cayuga_runtime_probe_no_submit.sh`
+- Current W3 Cayuga observed runtime checks:
+  `results/m6d_w3_cayuga_runtime_probe_observed_checks.json`
+- Current W3 Cayuga runtime repair discovery:
+  `results/m6d_w3_cayuga_runtime_repair_discovery.json`
+- Current W3 runtime repair plan:
+  `results/m6d_w3_runtime_repair_plan.{json,md}`
+- Current W3 runtime provision packet:
+  `results/m6d_w3_runtime_provision_packet.{json,md}` and
+  `results/m6d_w3_runtime_provision_colabfold_guarded.sh`
+- Current local harness status: `results/m6d_goal_mode_local_harness_status.{json,md}`
+- Current W2 v9 target-MSA execution attempt:
+  `results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.{json,md}`
+- Current W2 v9 panel preflight:
+  `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}`
+- Current W2 v9 panel wrapper guard:
+  `results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.{json,md}`
+- Current W2 v9 panel approval packet:
+  `results/m6d_w2_target_family_redesign_v9_panel_approval_packet.{json,md}`
+- Current W2 v9 post-panel decision protocol:
+  `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}`
 - Current W2 revised branch: `results/m6d_w2_revised_branch.{json,md}`
 - Current W2 candidate-pool screen: `results/m6d_w2_candidate_pool_screen.{json,md}`
 - Current W2 next-branch design: `results/m6d_w2_next_branch_design.{json,md}`
@@ -641,8 +673,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     it is not W2 evidence and it does not remove the explicit-approval requirement.
 49. Project status now consumes the v9 gate audit:
     `results/m6c_project_status_w2_followup.json` reports W2 as
-    `target_msa_gate_ready_awaiting_explicit_approval`, with the older evaluable-not-certified panel report
-    retained as superseded evidence. This keeps the machine resume point aligned with the v9 branch.
+    `panel_approval_packet_ready_awaiting_explicit_approval`, with the older evaluable-not-certified panel
+    report and target-MSA gate audit retained as superseded/staged evidence. This keeps the machine resume
+    point aligned with the v9 branch without treating panel approval readiness as W2 evidence.
 50. V9 target-MSA approval packet is ready but does not submit:
     `results/m6d_w2_target_family_redesign_v9_approval_packet.{json,md}` reports
     `approval_packet_ready=true`, 14 targets, and 28 pending target-MSA/MSA-report paths. It verifies that
@@ -668,13 +701,69 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `results/m6c_project_w2_followup_post_sync.manifest.json` records the union of current input-prep and
     external pending paths, and `results/m6c_project_w2_followup_post_sync.sh` checks that manifest before
     local replay. The refreshed W2 project status reports `script_manifests=4/4` and
-    `sync_manifest_audit=ok checks=4` while W2 remains `target_msa_gate_ready_awaiting_explicit_approval`.
+    `sync_manifest_audit=ok checks=4` while W2 remains incomplete behind explicit panel approval and
+    target-wise certification.
 54. V9 target-MSA wrapper is now fail-closed on accidental real execution:
     the wrapper guard audit confirms that running
     `results/m6d_w2_target_family_redesign_v9_target_msa_with_receipt.sh` without
     `BIO_SFM_APPROVE_V9_TARGET_MSA=approve-v9-target-msa-precompute` exits before creating or truncating
     `results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl`. Dry-run remains available
     without the approval env and still does not touch the receipt.
+55. Local goal-mode harness is stabilized:
+    `results/m6d_goal_mode_local_harness_status.{json,md}` records
+    `active_local_harness_stabilized`; focused contamination tests pass, and the full local WIP suite is
+    `676 passed` with `/tmp/bio_sfm_science_venv/bin/python -m pytest -q`. The current repair closes the
+    local generated-bridge `python` fallback issue, shared `subprocess.run` monkeypatch leakage, and
+    second-predictor missing-file fixture-state leakage, stale project-status/audit wording around
+    the new W2 panel approval packet, W3 runtime-probe provenance after the target Cayuga
+    no-submit probe, W3 runtime repair-plan consumption, and W3 guarded runtime provision-packet
+    consumption. The current W3 addition records the probe as runtime-blocked and emits a guarded runtime
+    validation packet, not execution inputs.
+56. The approved W2 v9 full-14 target-MSA input-prep attempt has synced and passed strict replay:
+    `results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.{json,md}` reports
+    `target_msa_outputs_synced_strict_require_files_passed`, latest checked `2026-07-05T09:08:12+09:00`.
+    The first pass submitted jobs `3059563`-`3059576`; 11 completed and 3 hit the known ColabFold/MMseqs
+    truncated tar/gzip response. The same audited target-MSA wrapper retried only those 3 targets as
+    `3059577`-`3059579`, all completed. Sync-back passed with `98/98` input-prep artifacts, strict
+    manifest `14/14` targets ready, and post-sync pending paths `0`. This is target-MSA input-prep
+    provenance only, not W2 evidence and not a panel submission. The next W2 boundary is the v9
+    ProteinMPNN/Boltz panel step plus target-wise certification before any generalization claim.
+57. V9 ProteinMPNN/Boltz panel preflight now passes locally, but the panel has not been submitted:
+    `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}` records
+    `panel_preflight_dry_run_passed_not_submitted`. The strict submit-ready report
+    `results/m6d_w2_target_family_redesign_v9_submit_ready.json` has `ok=true`, `14/14` ready targets,
+    `min_contacts=20`, and no failures. The raw submit plan is
+    `results/m6d_w2_target_family_redesign_v9_submit_plan.sh`; the receipt-preserving entrypoint is
+    `results/m6d_w2_target_family_redesign_v9_submit_with_receipt.sh`; follow-up replay artifacts are
+    `results/m6d_w2_target_family_redesign_v9_completion.sh` and
+    `results/m6d_w2_target_family_redesign_v9_sync_back.sh`. Dry-run made no `sbatch` calls and left the
+    v9 submit receipt/summary absent. This is still local preflight only, not W2 evidence and not a
+    generalization claim.
+58. V9 panel submission is now guarded by an explicit approval env and an approval packet, still with no
+    panel submission:
+    `results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.{json,md}` reports
+    `panel_wrapper_guard_ok`; non-dry wrapper execution without
+    `BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit` exits with code 2 before creating
+    `results/m6d_w2_target_family_redesign_v9_submit_receipt.jsonl`. The no-submit packet
+    `results/m6d_w2_target_family_redesign_v9_panel_approval_packet.{json,md}` reports
+    `panel_approval_packet_ready`, `can_submit_panel_if_user_explicitly_approves=true`, and
+    `can_claim_w2_generalization=false`. This packet fixes the guarded Cayuga submit command and
+    post-job sync-back command, but it is not approval, not a submitted panel, and not W2 evidence. The
+    main project status now consumes this packet through `--w2-panel-approval-packet` and reports W2 as
+    `panel_approval_packet_ready_awaiting_explicit_approval` with `complete=false`.
+59. Goal completion/drift audits now consume the panel approval packet:
+    `results/m6d_goal_completion_audit.{json,md}` keeps `can_mark_goal_complete=false` and records W2 as
+    the sole remaining requirement. `results/m6d_goal_drift_audit.{json,md}` reports
+    `no_major_direction_drift_w2_blocked`, `major_direction_drift=false`, and execution
+    `panel_decision_protocol_ready_not_submitted`. The next action remains explicit user approval before
+    guarded W2 v9 panel submission, followed by sync-back, completion, and target-wise certification.
+60. V9 post-panel decision protocol is predeclared without submitting:
+    `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}` reports
+    `post_panel_decision_protocol_ready`, `no_submit=true`, and
+    `can_claim_w2_generalization_now=false`. It fixes the alpha=0.2, 14-target interpretation rules for
+    future synced panel records: completion/record-contract failures produce no claim; every target must
+    certify target-wise for W2 generalization; partial certificates are target-specific only; pooled
+    diagnostic success cannot override target-wise failure.
 
 ## W3 Decision Path
 
@@ -702,14 +791,16 @@ The project status artifact consumes this decision through `--w3-decision-protoc
 goal-mode requirement.
 `results/m6d_goal_completion_audit.{json,md}` independently audits that boundary: it passes with
 `audit_ok=true`, keeps `can_mark_goal_complete=false`, and names `W2_multi_target_panel` as the sole
-remaining requirement.
+remaining requirement. Its current W2 execution evidence is the approved full-14 target-MSA path synced
+back locally with strict `--require-files` passing for 14 targets; W2 remains incomplete until panel
+execution and target-wise certification.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 11 exact SHA
 checks and 7 semantic JSON checks currently agree, so the resume artifacts are mirrored before any future
 approved W2 target-MSA step.
 `results/m6d_goal_drift_audit.{json,md}` independently audits goal-boundary drift without submitting work:
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
-direction aligned, claim boundaries preserved, and W2 branch complexity explicitly controlled by the
-target-MSA approval runbook.
+direction aligned, claim boundaries preserved, and execution recorded as
+`panel_decision_protocol_ready_not_submitted`.
 Runtime clarification checked on Cayuga: W2 production runs through the `boltz` env with Boltz-2 2.2.1;
 the completed W3 comparator uses the separate `chai1` env with `chai_lab`/`chai-lab` 0.6.1. These are
 separate predictor/protocol records and must not be pooled without the adjudication rule below.
@@ -724,11 +815,89 @@ reporting W3 as `negative_robustness_result_adjudicated`.
 `results/m6d_w3_adjudication_audit.{json,md}` now makes the same boundary independently reproducible:
 it checks the decision protocol against the cross-predictor report, confirms label agreement 0.600 < 0.800,
 verifies 18 materialized adjudication rows, and records `positive_claim_supported=false`.
+`results/m6d_w3_next_protocol.{json,md}` now predeclares the next W3 science contract without spending
+compute: status `w3_next_protocol_ready_no_spend`, `no_submit=true`, `no_api_spend=true`,
+`no_gpu_spend=true`, and `can_claim_independent_predictor_robustness_now=false`. The primary next route is
+`third_independent_predictor_or_protocol`; the secondary route is `stronger_chai_msa_template_protocol`,
+which is treated as a protocol-variant branch rather than an independent-model closure. The challenge-panel
+contract is 12 discordant Boltz/Chai rows plus 6 concordant-success controls, with 10/12 discordant
+alignment and 5/6 control consistency needed before a full W3 matched-panel run is justified. That
+challenge panel still is not a population-level robustness estimate and does not close the W3 caveat.
+The main project status now consumes this contract through `--w3-next-protocol`, cross-checks it against
+the adjudication JSONL path/sha/counts, and records `w3_next_protocol_ready=True`, `no_submit=True`,
+`no_api_spend=True`, `no_gpu_spend=True`, and `can_claim_w3_now=False`.
+`results/m6d_w3_challenge_manifest.{json,md}` now materializes the exact 18 selected adjudication rows as
+a no-submit challenge-panel manifest. It confirms 12 discordant rows plus 6 concordant-success controls,
+the pinned adjudication JSONL SHA-256, and full source-record coverage in both
+`hpc_outputs/m6d_followup_3PC8_AB_scale_t030/records_boltz_complex_t030.jsonl` and
+`hpc_outputs/m6c_second_predictor/chai1_complex_records.jsonl`. It records `execution_ready=false`
+because the third predictor/protocol implementation, future execution inputs, and approved command wrapper
+are still absent.
+The main project status now also consumes this manifest through `--w3-challenge-manifest` and records
+`w3_challenge_manifest_ready=True`, `execution_ready=False`, `no_submit=True`, and
+`can_claim_w3_now=False`.
+`results/m6d_w3_third_predictor_contract.{json,md}` now turns the challenge manifest into a no-submit
+third-predictor execution contract. It pins the same 18 target IDs, requires future predictor/protocol
+selection metadata, predeclares the result JSONL schema and strict QC checks, and names the future
+artifacts required before execution. It emits no command wrapper or approval token, keeps
+`execution_ready=false`, and does not support a positive robustness claim. The main project status now
+consumes it through `--w3-third-predictor-contract` and records `w3_third_predictor_contract_ready=True`,
+`execution_ready=False`, `wrapper_emitted=False`, and `can_claim_w3_now=False`.
+`results/m6d_w3_predictor_selection_card.{json,md}` now selects
+`af2_multimer_colabfold_v1` as the future W3 third predictor/protocol. The selection is deliberately
+not execution-ready: prior Cayuga feasibility did not show `colabfold_batch`/AlphaFold installed in the
+checked envs, so the next local artifact must probe or install the runtime and generate execution inputs
+behind an approval gate. The card rejects the existing ESMFold path for this W3 complex adjudication
+because it is single-chain/self-consistency oriented, keeps stronger Chai MSA/template as a secondary
+protocol variant only, and defers AF3 until access/runtime/licensing are checked. Project status consumes
+the card through `--w3-predictor-selection-card` and records `w3_predictor_selection_card_ready=True`,
+`selected=af2_multimer_colabfold_v1`, `runtime_ready=False`, `execution_ready=False`, and
+`can_claim_w3_now=False`.
+`results/m6d_w3_runtime_probe_plan.{json,md}` now pins the no-submit runtime-probe contract for this
+selected protocol. It records candidate ColabFold/localcolabfold runtime locations, Cayuga GPU-stack
+checks, MSA-policy resolution, and dry-run enumeration requirements without executing any probe, emitting
+an input manifest, emitting a command wrapper, or emitting an approval token. Project status consumes it
+through `--w3-runtime-probe-plan` and records `w3_runtime_probe_plan_ready=True`,
+`probe_executed=False`, `runtime_ready=False`, `execution_ready=False`, and `can_claim_w3_now=False`.
+`results/m6d_w3_runtime_probe_report_local_static.{json,md}` preserves the first no-submit local-static
+probe snapshot. It performs only local candidate discovery and dry-run enumeration of the 18-row
+challenge panel. It does not SSH to Cayuga, submit jobs, query external MSA/API services, run ColabFold
+prediction, emit execution inputs, or emit a command wrapper.
+`results/m6d_w3_cayuga_runtime_probe_packet.{json,md}` now writes a syntax-checked no-submit probe script,
+`results/m6d_w3_cayuga_runtime_probe_no_submit.sh`, for the target Cayuga probe surface. The packet
+does not run prediction, submit scheduler jobs, query services, emit execution inputs, or emit a command
+wrapper. The target Cayuga no-submit probe has now been executed once and recorded in
+`results/m6d_w3_cayuga_runtime_probe_observed_checks.json` plus
+`results/m6d_w3_runtime_probe_report.{json,md}`. Project status consumes that current report through
+`--w3-runtime-probe-report` and records `w3_runtime_probe_report_ready=True`,
+`surface=cayuga_gpu_no_submit`, `probe_executed=True`, `cayuga_probe=True`, `runtime_ready=False`,
+`execution_ready=False`, and `can_claim_w3_now=False`. The failing checks are `env_discovery`,
+`cli_help`, and `gpu_stack`; `msa_policy` and `dry_run_enumeration` pass.
+`results/m6d_w3_cayuga_runtime_repair_discovery.json` records a read-only discovery on the configured
+Cayuga login host: `colabfold_batch`/`localcolabfold_search` are absent, no `colabfold` conda env exists,
+JAX/JAXLIB are absent from the checked `boltz`/`chai1` envs, and no module command is present.
+`results/m6d_w3_runtime_repair_plan.{json,md}` consumes that discovery plus the Cayuga runtime-probe
+report and records `w3_runtime_repair_plan_ready_no_submit`: provision a W3-specific ColabFold/JAX CUDA
+runtime, then rerun the existing no-submit Cayuga runtime probe before generating execution inputs.
+Project status consumes it through `--w3-runtime-repair-plan` and records
+`w3_runtime_repair_plan_ready=True`, `failed_checks=cli_help,env_discovery,gpu_stack`,
+`runtime_ready=False`, `execution_ready=False`, and `can_claim_w3_now=False`.
+`results/m6d_w3_runtime_provision_packet.{json,md}` plus
+`results/m6d_w3_runtime_provision_colabfold_guarded.sh` now define the next guarded runtime-validation
+boundary. The packet is `w3_runtime_provision_packet_ready_no_submit`, requires
+`BIO_SFM_APPROVE_W3_RUNTIME_PROVISION=approve-w3-runtime-provision`, accepts only an existing
+`W3_COLABFOLD_BIN` or `W3_COLABFOLD_SIF`, and emits no download/install/scheduler/prediction path. The
+no-env script check exits before receipt creation. Project status consumes it through
+`--w3-runtime-provision-packet` and records `w3_runtime_provision_packet_ready=True`,
+`runtime_ready=False`, `execution_ready=False`, and `can_claim_w3_now=False`.
 
-1. Add a third independent predictor/protocol and require a predeclared agreement rule.
-2. Rerun Chai under a stronger MSA/template protocol and treat no-MSA Chai as a protocol variant,
+1. Stage or point to an existing Cayuga ColabFold runtime, then run only the guarded runtime validation script after explicit approval.
+2. Rerun the no-submit runtime probe for `af2_multimer_colabfold_v1` only after runtime validation succeeds; do not submit jobs or query external services.
+3. Generate an execution-input manifest for the pinned 18-row challenge panel only after the Cayuga probe report sets `runtime_ready=true`.
+4. Generate an approval-gated wrapper only after the runtime/input manifest is audited.
+5. Rerun Chai under a stronger MSA/template protocol and treat no-MSA Chai as a protocol variant,
    not a final predictor verdict.
-3. Keep the Boltz-Chai disagreement as a negative robustness result if no adjudication route is chosen.
+6. Keep the Boltz-Chai disagreement as a negative robustness result if no adjudication route is chosen.
 
 ## Run Contract
 

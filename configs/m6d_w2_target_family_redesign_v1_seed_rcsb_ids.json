@@ -1,0 +1,155 @@
+{
+  "_note": "W2 target-family redesign v1 seed list filtered from expanded discovery seeds after excluding failed, held, anchor, and positive-control sources. Local structural intake only; not a Cayuga submit plan.",
+  "selection_boundary": {
+    "excluded_current_protocol_sources": [
+      "1A2K",
+      "1AK4",
+      "1BRS",
+      "1BVK",
+      "1CGI",
+      "1CHO",
+      "1EER",
+      "1FQJ",
+      "1GCQ",
+      "1HE1",
+      "1KAC",
+      "1KLU",
+      "1MEL",
+      "1MLC",
+      "1NMB",
+      "1QFW",
+      "1S1Q",
+      "1SYX",
+      "2IDO",
+      "2MTA",
+      "2SIC",
+      "3PC8"
+    ],
+    "positive_controls_not_generalization_targets": [
+      "3PC8"
+    ],
+    "source_diverse_selection_required": true,
+    "cayuga_submission_allowed": false,
+    "w2_generalization_claim_supported": false,
+    "branch_id": "w2_target_family_redesign_v1"
+  },
+  "seeds": [
+    {
+      "rcsb_id": "1ACB"
+    },
+    {
+      "rcsb_id": "1AHW"
+    },
+    {
+      "rcsb_id": "1B6C"
+    },
+    {
+      "rcsb_id": "1BJ1"
+    },
+    {
+      "rcsb_id": "1BVN"
+    },
+    {
+      "rcsb_id": "1D6R"
+    },
+    {
+      "rcsb_id": "1DFJ"
+    },
+    {
+      "rcsb_id": "1E6E"
+    },
+    {
+      "rcsb_id": "1EAW"
+    },
+    {
+      "rcsb_id": "1EWY"
+    },
+    {
+      "rcsb_id": "1EZU"
+    },
+    {
+      "rcsb_id": "1F34"
+    },
+    {
+      "rcsb_id": "1FC2"
+    },
+    {
+      "rcsb_id": "1FIN"
+    },
+    {
+      "rcsb_id": "1FLE"
+    },
+    {
+      "rcsb_id": "1GLA"
+    },
+    {
+      "rcsb_id": "1GRN"
+    },
+    {
+      "rcsb_id": "1I2M"
+    },
+    {
+      "rcsb_id": "1I4D"
+    },
+    {
+      "rcsb_id": "1JPS"
+    },
+    {
+      "rcsb_id": "1KTZ"
+    },
+    {
+      "rcsb_id": "1KXQ"
+    },
+    {
+      "rcsb_id": "1M10"
+    },
+    {
+      "rcsb_id": "1MAH"
+    },
+    {
+      "rcsb_id": "1NCA"
+    },
+    {
+      "rcsb_id": "1OPH"
+    },
+    {
+      "rcsb_id": "1PPE"
+    },
+    {
+      "rcsb_id": "1R0R"
+    },
+    {
+      "rcsb_id": "1UDI"
+    },
+    {
+      "rcsb_id": "1US7"
+    },
+    {
+      "rcsb_id": "1WEJ"
+    },
+    {
+      "rcsb_id": "2BTF"
+    },
+    {
+      "rcsb_id": "2JEL"
+    },
+    {
+      "rcsb_id": "2PCC"
+    },
+    {
+      "rcsb_id": "2SNI"
+    },
+    {
+      "rcsb_id": "2VIS"
+    },
+    {
+      "rcsb_id": "3HFM"
+    },
+    {
+      "rcsb_id": "3SGQ"
+    },
+    {
+      "rcsb_id": "4CPA"
+    }
+  ]
+}

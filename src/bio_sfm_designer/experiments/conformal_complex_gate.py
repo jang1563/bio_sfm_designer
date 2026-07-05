@@ -12,9 +12,9 @@ Routing signal: confidence_to_risk now prefers pae_interaction for complexes (no
 gate re-calibrates it per regime (isotonic) before certifying tau.
 
 RESULT (192 barstar redesigns, target-MSA): signal AUROC(-pAE -> interface success) ~0.94; RCPS CERTIFIES
-alpha=0.3 -- the gate trusts 25/64 held-out at 12% false-accept (bound <= 30%) vs trust-all 60%. Scaling the
-set 72 -> 192 moved this from "refuse to certify" to "certify alpha=0.3"; tighter alpha (0.1/0.2) still
-refuses (the Hoeffding n<->alpha tradeoff -> more designs).
+alpha=0.3 -- the gate trusts 25/64 held-out at 12% false-accept (bound <= 30%) vs 52% held-out trust-all
+(60% full-set base-rate). Scaling the set 72 -> 192 moved this from "refuse to certify" to "certify
+alpha=0.3"; tighter alpha (0.1/0.2) still refuses (the Hoeffding n<->alpha tradeoff -> more designs).
 
 CAVEATS: single-model (pae_interaction AND the L-RMSD label both come from the one Boltz fold -- the M4b
 self-consistency caveat, not closed for complexes); ONE target (barnase-barstar). An indication on one
@@ -34,6 +34,7 @@ from bio_sfm_trust import confidence_to_risk
 
 from ..trust import TrustGate
 from ..types import Prediction
+from .complex_label_threshold import require_label_threshold
 
 _REGIME = "complex"   # not assume-validated -> the gate must earn trust + certify tau
 _DEFAULT_FIXTURE = os.path.join(os.path.dirname(__file__), "..", "..", "..",
@@ -57,10 +58,27 @@ def _wrong(rec, threshold):
     return 0 if rec["lrmsd"] < threshold else 1
 
 
-def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.3, delta: float = 0.1,
-        threshold: float = 4.0, n_cal: int = 128, seed: int = 0) -> Dict[str, Any]:
-    rows = [r for r in (json.loads(line) for line in open(records_path) if line.strip())
-            if r.get("pae_interaction") is not None]
+def load_records(records_path: str) -> list[dict]:
+    rows = []
+    with open(records_path) as fh:
+        for line_no, line in enumerate(fh, 1):
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            if rec.get("pae_interaction") is None:
+                raise ValueError(f"missing pae_interaction in {records_path}:{line_no}")
+            rows.append(rec)
+    return rows
+
+
+def run_rows(rows: list[dict], alpha: float = 0.3, delta: float = 0.1,
+             threshold: float = 4.0, n_cal: int = 128, seed: int = 0) -> Dict[str, Any]:
+    missing = [r.get("target_id") for r in rows if r.get("pae_interaction") is None]
+    if missing:
+        raise ValueError(f"missing pae_interaction for {len(missing)} complex record(s): {missing[:3]}")
+    threshold_audit = require_label_threshold(rows, threshold=threshold)
+    if n_cal >= len(rows):
+        raise ValueError(f"n_cal={n_cal} leaves no held-out test records (n={len(rows)})")
     idx = list(range(len(rows)))
     random.Random(seed).shuffle(idx)
     cal = [rows[i] for i in idx[:n_cal]]
@@ -95,6 +113,7 @@ def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.3, delta: float =
         selective.append({"frac": frac, "trusted": k, "false_accept_rate": round(fa / k, 3)})
     return {
         "n_cal": len(cal), "n_test": len(test), "alpha": alpha, "delta": delta, "threshold": threshold,
+        "label_threshold_audit": threshold_audit,
         # signal quality on the full set: -pAE_interaction vs interface success (higher score = lower pae)
         "auroc_pae": _auroc([-r["pae_interaction"] for r in rows], [r["lrmsd"] < threshold for r in rows]),
         "base_rate_fail": round(sum(_wrong(r, threshold) for r in rows) / len(rows), 3),
@@ -106,6 +125,12 @@ def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.3, delta: float =
                       "false_accept_rate": test_wrong / len(test) if test else None},
         "selective": selective,
     }
+
+
+def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.3, delta: float = 0.1,
+        threshold: float = 4.0, n_cal: int = 128, seed: int = 0) -> Dict[str, Any]:
+    return run_rows(load_records(records_path), alpha=alpha, delta=delta,
+                    threshold=threshold, n_cal=n_cal, seed=seed)
 
 
 def main(argv=None) -> Dict[str, Any]:
@@ -136,8 +161,10 @@ def main(argv=None) -> Dict[str, Any]:
     else:
         far = c["false_accept_rate"]
         far_s = f"{far:.3f}" if far is not None else "n/a (trusted 0)"
+        ta = rep["trust_all"]["false_accept_rate"]
+        ta_s = f"{ta:.3f}" if ta is not None else "n/a"
         print(f"  CONFORMAL: certified tau={rep['tau']:.3f}; held-out trusts {c['trusted']}/{rep['n_test']}, "
-              f"false-accept {far_s} (target <= {rep['alpha']})")
+              f"false-accept {far_s} (target <= {rep['alpha']}) vs held-out trust-all {ta_s}")
     print("  honest: single-model (pAE + label both from one Boltz fold); ONE target (barnase-barstar).")
     return rep
 

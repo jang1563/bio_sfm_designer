@@ -1,0 +1,88 @@
+{
+  "artifact": "m6d_w2_calibratable_discovery_protocol_config",
+  "candidate_pool_readout": {
+    "minimum_required_for_manifest": 3,
+    "n_admitted_for_next_branch": 0,
+    "n_candidates": 25,
+    "n_source_redundancy_audit_only": 3,
+    "ready_for_cayuga_submission": false,
+    "ready_for_revised_manifest": false,
+    "source_redundancy_audit_targets": [
+      "1A2K_DA",
+      "1A2K_EB",
+      "1AK4_AD"
+    ]
+  },
+  "cayuga_unlock_conditions": [
+    "candidate screen admits at least three non-anchor source-diverse targets",
+    "revised manifest is written and linked from the goal anchor",
+    "strict complex_target_manifest --require-files passes",
+    "receipt-preserving ProteinMPNN/Boltz submit wrapper is generated",
+    "completion and panel-report replay commands are generated before submission"
+  ],
+  "claim_boundary": {
+    "candidate_pool": "local_no_spend_inventory_screen_only",
+    "cayuga_submission": "blocked_until_new_manifest_and_strict_preflight",
+    "trustgate_policy": "do_not_relax_one_class_or_replace_actual_tau_with_alpha_plan",
+    "w2_multi_target_generalization": "not_supported"
+  },
+  "date": "2026-06-30",
+  "protocol_id": "w2_target_family_redesign_v7_calibratable_discovery",
+  "ready_for_cayuga_submission": false,
+  "selected_policies": {
+    "label_degeneracy": {
+      "policy": "fail_closed_positive_controls_only",
+      "requirements_to_reopen": [
+        "mixed success/failure evidence under the same target and threshold",
+        "or predeclared decoy/spike-in negatives that preserve the target identity",
+        "actual TrustGate tau must exist; alpha-plan estimates cannot substitute"
+      ],
+      "targets": [
+        "1BFV_HL",
+        "1BQH_KI"
+      ]
+    },
+    "low_pae_and_cutoff": {
+      "policy": "no_fixed_cutoff_transfer_target_specific_or_family_rcps_only",
+      "requirements_to_reopen": [
+        "predeclare target-specific or family-calibrated RCPS before records are generated",
+        "target-wise alpha<=0.2 certificate for every claimed target",
+        "split-seed sensitivity reported before any broad W2 claim",
+        "pooled-only tau remains diagnostic only"
+      ],
+      "targets": [
+        "1B2U_CF",
+        "1B3S_CF",
+        "1B86_DC",
+        "1BCP_KL",
+        "1BGS_BF"
+      ]
+    },
+    "panel_claim": {
+      "minimum_targets": 3,
+      "policy": "multi_target_claim_requires_per_target_certificates",
+      "requirements": [
+        "at least three non-anchor source-diverse targets",
+        "each target certifies target-wise at alpha<=0.2 under the predeclared algorithm",
+        "no pooled-only certificate and no target-specific control promoted to W2"
+      ]
+    },
+    "protocol_mismatch": {
+      "policy": "replace_targets_or_declare_new_generation_protocol",
+      "requirements_to_reopen": [
+        "new target source outside excluded sources",
+        "or new generation/evaluation protocol id before reusing a failed target",
+        "strict manifest, input-prep, completion, and panel-report replay before sbatch"
+      ],
+      "targets": [
+        "1BE3_EJ",
+        "1BGY_EJ",
+        "1BHH_AB",
+        "1BMQ_AB",
+        "1BQL_LY",
+        "1BQQ_TM"
+      ]
+    }
+  },
+  "source_resolution": "results/m6d_w2_target_family_redesign_v6_gate_strategy_resolution.json"
+}

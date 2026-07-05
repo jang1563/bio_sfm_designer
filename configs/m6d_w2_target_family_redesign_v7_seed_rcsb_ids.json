@@ -1,0 +1,731 @@
+{
+  "_note": "W2 target-family redesign source-seed expansion from RCSB Search API. This is local/no-spend source intake only and does not authorize target-MSA precompute or Cayuga ProteinMPNN/Boltz submission.",
+  "seeds": [
+    {
+      "rcsb_id": "1ACB"
+    },
+    {
+      "rcsb_id": "1AHW"
+    },
+    {
+      "rcsb_id": "1AVX"
+    },
+    {
+      "rcsb_id": "1B6C"
+    },
+    {
+      "rcsb_id": "1BJ1"
+    },
+    {
+      "rcsb_id": "1BS6"
+    },
+    {
+      "rcsb_id": "1BS8"
+    },
+    {
+      "rcsb_id": "1BT6"
+    },
+    {
+      "rcsb_id": "1BTH"
+    },
+    {
+      "rcsb_id": "1BUH"
+    },
+    {
+      "rcsb_id": "1BUI"
+    },
+    {
+      "rcsb_id": "1BUN"
+    },
+    {
+      "rcsb_id": "1BUV"
+    },
+    {
+      "rcsb_id": "1BUW"
+    },
+    {
+      "rcsb_id": "1BVL"
+    },
+    {
+      "rcsb_id": "1BVN"
+    },
+    {
+      "rcsb_id": "1BVY"
+    },
+    {
+      "rcsb_id": "1BW8"
+    },
+    {
+      "rcsb_id": "1BW9"
+    },
+    {
+      "rcsb_id": "1BWU"
+    },
+    {
+      "rcsb_id": "1BWV"
+    },
+    {
+      "rcsb_id": "1BX2"
+    },
+    {
+      "rcsb_id": "1BX9"
+    },
+    {
+      "rcsb_id": "1BXG"
+    },
+    {
+      "rcsb_id": "1BXI"
+    },
+    {
+      "rcsb_id": "1BXN"
+    },
+    {
+      "rcsb_id": "1BXR"
+    },
+    {
+      "rcsb_id": "1BXX"
+    },
+    {
+      "rcsb_id": "1BY5"
+    },
+    {
+      "rcsb_id": "1BZ0"
+    },
+    {
+      "rcsb_id": "1BZ1"
+    },
+    {
+      "rcsb_id": "1BZ7"
+    },
+    {
+      "rcsb_id": "1BZ9"
+    },
+    {
+      "rcsb_id": "1BZH"
+    },
+    {
+      "rcsb_id": "1BZQ"
+    },
+    {
+      "rcsb_id": "1BZX"
+    },
+    {
+      "rcsb_id": "1BZZ"
+    },
+    {
+      "rcsb_id": "1C08"
+    },
+    {
+      "rcsb_id": "1C0F"
+    },
+    {
+      "rcsb_id": "1C0G"
+    },
+    {
+      "rcsb_id": "1C0T"
+    },
+    {
+      "rcsb_id": "1C0U"
+    },
+    {
+      "rcsb_id": "1C12"
+    },
+    {
+      "rcsb_id": "1C1B"
+    },
+    {
+      "rcsb_id": "1C1C"
+    },
+    {
+      "rcsb_id": "1C1D"
+    },
+    {
+      "rcsb_id": "1C1E"
+    },
+    {
+      "rcsb_id": "1C1U"
+    },
+    {
+      "rcsb_id": "1C1V"
+    },
+    {
+      "rcsb_id": "1C1W"
+    },
+    {
+      "rcsb_id": "1C1X"
+    },
+    {
+      "rcsb_id": "1C1Y"
+    },
+    {
+      "rcsb_id": "1C29"
+    },
+    {
+      "rcsb_id": "1C30"
+    },
+    {
+      "rcsb_id": "1C3A"
+    },
+    {
+      "rcsb_id": "1C3O"
+    },
+    {
+      "rcsb_id": "1C40"
+    },
+    {
+      "rcsb_id": "1C4U"
+    },
+    {
+      "rcsb_id": "1C4V"
+    },
+    {
+      "rcsb_id": "1C4Y"
+    },
+    {
+      "rcsb_id": "1C4Z"
+    },
+    {
+      "rcsb_id": "1C5B"
+    },
+    {
+      "rcsb_id": "1C5C"
+    },
+    {
+      "rcsb_id": "1C5D"
+    },
+    {
+      "rcsb_id": "1C5F"
+    },
+    {
+      "rcsb_id": "1C5L"
+    },
+    {
+      "rcsb_id": "1C5M"
+    },
+    {
+      "rcsb_id": "1C5N"
+    },
+    {
+      "rcsb_id": "1C5O"
+    },
+    {
+      "rcsb_id": "1C5W"
+    },
+    {
+      "rcsb_id": "1C5X"
+    },
+    {
+      "rcsb_id": "1C5Y"
+    },
+    {
+      "rcsb_id": "1C5Z"
+    },
+    {
+      "rcsb_id": "1C6V"
+    },
+    {
+      "rcsb_id": "1C7B"
+    },
+    {
+      "rcsb_id": "1C7C"
+    },
+    {
+      "rcsb_id": "1C7D"
+    },
+    {
+      "rcsb_id": "1C8M"
+    },
+    {
+      "rcsb_id": "1C8O"
+    },
+    {
+      "rcsb_id": "1C8V"
+    }
+  ],
+  "selection_boundary": {
+    "already_screened_seed_sources": [
+      "10AY",
+      "10BT",
+      "10FZ",
+      "10JU",
+      "10LG",
+      "10MA",
+      "10MB",
+      "10MC",
+      "10MD",
+      "10MF",
+      "10MG",
+      "10MI",
+      "10ML",
+      "10OP",
+      "10OR",
+      "10PX",
+      "10QM",
+      "10SB",
+      "10TC",
+      "10TM",
+      "10VB",
+      "10VC",
+      "10XZ",
+      "10YA",
+      "10YB",
+      "10YC",
+      "10YD",
+      "10YE",
+      "10YF",
+      "10YH",
+      "10YI",
+      "10ZB",
+      "10ZO",
+      "11BQ",
+      "11CQ",
+      "11DG",
+      "11FV",
+      "11HA",
+      "11HK",
+      "11HW",
+      "11JF",
+      "11KR",
+      "11LT",
+      "11MG",
+      "11MH",
+      "11MR",
+      "11NA",
+      "11NB",
+      "11NC",
+      "11ND",
+      "11NE",
+      "11NF",
+      "11OV",
+      "11RN",
+      "11SZ",
+      "11YO",
+      "11ZV",
+      "11ZW",
+      "12E8",
+      "12FC",
+      "12FD",
+      "12FE",
+      "12NP",
+      "12PY",
+      "12QA",
+      "12QB",
+      "12QC",
+      "12QD",
+      "12RH",
+      "12RM",
+      "12ZJ",
+      "13FJ",
+      "13FL",
+      "13HR",
+      "148L",
+      "15C8",
+      "1A00",
+      "1A01",
+      "1A02",
+      "1A07",
+      "1A08",
+      "1A09",
+      "1A0O",
+      "1A0Q",
+      "1A0R",
+      "1A0U",
+      "1A0Z",
+      "1A14",
+      "1A1A",
+      "1A1B",
+      "1A1C",
+      "1A1E",
+      "1A1M",
+      "1A1N",
+      "1A1O",
+      "1A1R",
+      "1A22",
+      "1A2C",
+      "1A2X",
+      "1A2Y",
+      "1A30",
+      "1A3B",
+      "1A3E",
+      "1A3I",
+      "1A3J",
+      "1A3L",
+      "1A3N",
+      "1A3O",
+      "1A3R",
+      "1A46",
+      "1A4F",
+      "1A4J",
+      "1A4K",
+      "1A4W",
+      "1A4Y",
+      "1A50",
+      "1A5A",
+      "1A5B",
+      "1A5F",
+      "1A5G",
+      "1A5H",
+      "1A5K",
+      "1A5L",
+      "1A5M",
+      "1A5N",
+      "1A5O",
+      "1A5S",
+      "1A61",
+      "1A6A",
+      "1A6D",
+      "1A6T",
+      "1A6U",
+      "1A6V",
+      "1A6W",
+      "1A6Z",
+      "1A75",
+      "1A7C",
+      "1A7N",
+      "1A7O",
+      "1A7P",
+      "1A7Q",
+      "1A7R",
+      "1A81",
+      "1A9E",
+      "1A9N",
+      "1A9W",
+      "1A9X",
+      "1AA1",
+      "1AB9",
+      "1ABI",
+      "1ABJ",
+      "1ABO",
+      "1ABR",
+      "1ABW",
+      "1ABY",
+      "1ACM",
+      "1ACY",
+      "1AD0",
+      "1AD8",
+      "1AD9",
+      "1AE6",
+      "1AE8",
+      "1AFE",
+      "1AFQ",
+      "1AGB",
+      "1AGC",
+      "1AGD",
+      "1AGE",
+      "1AGF",
+      "1AGR",
+      "1AHJ",
+      "1AHT",
+      "1AI1",
+      "1AI4",
+      "1AI5",
+      "1AI6",
+      "1AI7",
+      "1AI8",
+      "1AIF",
+      "1AIG",
+      "1AIJ",
+      "1AIK",
+      "1AIP",
+      "1AIS",
+      "1AIX",
+      "1AJ7",
+      "1AJ9",
+      "1AJN",
+      "1AJP",
+      "1AJQ",
+      "1AJS",
+      "1AKH",
+      "1AKJ",
+      "1AKS",
+      "1AL2",
+      "1ALL",
+      "1ALX",
+      "1ALZ",
+      "1AM4",
+      "1AN1",
+      "1AO7",
+      "1AOI",
+      "1AOK",
+      "1AON",
+      "1AP2",
+      "1APH",
+      "1APM",
+      "1APT",
+      "1APU",
+      "1APV",
+      "1APW",
+      "1APY",
+      "1APZ",
+      "1AQ7",
+      "1AQC",
+      "1AQD",
+      "1AQK",
+      "1AR1",
+      "1AR6",
+      "1AR7",
+      "1AR8",
+      "1AR9",
+      "1ARO",
+      "1AS4",
+      "1ASJ",
+      "1AT1",
+      "1ATI",
+      "1ATN",
+      "1ATP",
+      "1AUI",
+      "1AUS",
+      "1AUT",
+      "1AVA",
+      "1AVF",
+      "1AVG",
+      "1AVO",
+      "1AVP",
+      "1AVW",
+      "1AVZ",
+      "1AW8",
+      "1AWC",
+      "1AWF",
+      "1AWH",
+      "1AWI",
+      "1AWQ",
+      "1AWR",
+      "1AWS",
+      "1AWT",
+      "1AWU",
+      "1AWV",
+      "1AXC",
+      "1AXD",
+      "1AXI",
+      "1AXS",
+      "1AXT",
+      "1AY1",
+      "1AY6",
+      "1AY7",
+      "1AYA",
+      "1AYB",
+      "1AYC",
+      "1AYM",
+      "1AYN",
+      "1AYY",
+      "1AZS",
+      "1AZZ",
+      "1B05",
+      "1B07",
+      "1B0G",
+      "1B0H",
+      "1B0N",
+      "1B0R",
+      "1B17",
+      "1B18",
+      "1B19",
+      "1B1H",
+      "1B27",
+      "1B2A",
+      "1B2B",
+      "1B2C",
+      "1B2D",
+      "1B2E",
+      "1B2F",
+      "1B2G",
+      "1B2H",
+      "1B2S",
+      "1B2U",
+      "1B2W",
+      "1B32",
+      "1B33",
+      "1B34",
+      "1B35",
+      "1B3F",
+      "1B3G",
+      "1B3H",
+      "1B3L",
+      "1B3S",
+      "1B40",
+      "1B41",
+      "1B46",
+      "1B4H",
+      "1B4J",
+      "1B4U",
+      "1B4Z",
+      "1B51",
+      "1B52",
+      "1B58",
+      "1B5F",
+      "1B5G",
+      "1B5H",
+      "1B5I",
+      "1B5J",
+      "1B6H",
+      "1B6J",
+      "1B70",
+      "1B72",
+      "1B7H",
+      "1B7T",
+      "1B7X",
+      "1B7Y",
+      "1B86",
+      "1B8D",
+      "1B8H",
+      "1B8I",
+      "1B8M",
+      "1B9E",
+      "1B9J",
+      "1B9X",
+      "1B9Y",
+      "1BA8",
+      "1BAB",
+      "1BAF",
+      "1BB0",
+      "1BB1",
+      "1BBB",
+      "1BBD",
+      "1BBR",
+      "1BBT",
+      "1BBZ",
+      "1BC5",
+      "1BCK",
+      "1BCP",
+      "1BCR",
+      "1BCS",
+      "1BCU",
+      "1BD2",
+      "1BDJ",
+      "1BE3",
+      "1BE9",
+      "1BEN",
+      "1BEU",
+      "1BEV",
+      "1BFO",
+      "1BFV",
+      "1BGS",
+      "1BGX",
+      "1BGY",
+      "1BH8",
+      "1BH9",
+      "1BHF",
+      "1BHH",
+      "1BHX",
+      "1BI4",
+      "1BI8",
+      "1BII",
+      "1BIJ",
+      "1BIQ",
+      "1BJ3",
+      "1BJO",
+      "1BJR",
+      "1BK6",
+      "1BKC",
+      "1BKD",
+      "1BKS",
+      "1BLL",
+      "1BLN",
+      "1BLX",
+      "1BM2",
+      "1BM3",
+      "1BMB",
+      "1BMF",
+      "1BML",
+      "1BMM",
+      "1BMN",
+      "1BMQ",
+      "1BMV",
+      "1BND",
+      "1BOG",
+      "1BOU",
+      "1BP3",
+      "1BPH",
+      "1BPL",
+      "1BQH",
+      "1BQL",
+      "1BQP",
+      "1BQQ",
+      "1BR8",
+      "1BRB",
+      "1BRC",
+      "1BRL"
+    ],
+    "branch_id": "w2_target_family_redesign_v7_calibratable_discovery",
+    "cayuga_submission_allowed": false,
+    "excluded_current_protocol_sources": [
+      "10XZ",
+      "10YB",
+      "12NP",
+      "1A0O",
+      "1A0U",
+      "1A0Z",
+      "1A14",
+      "1A1R",
+      "1A2K",
+      "1A2Y",
+      "1A3N",
+      "1A3O",
+      "1A4F",
+      "1A6A",
+      "1A6U",
+      "1A6V",
+      "1A6W",
+      "1A7N",
+      "1A7P",
+      "1A7Q",
+      "1A7R",
+      "1A9N",
+      "1A9W",
+      "1AB9",
+      "1AFQ",
+      "1AJ9",
+      "1AK4",
+      "1AOI",
+      "1AP2",
+      "1APY",
+      "1AQD",
+      "1AR1",
+      "1AVO",
+      "1AY7",
+      "1AYY",
+      "1AZZ",
+      "1B27",
+      "1B2S",
+      "1B2U",
+      "1B3S",
+      "1B86",
+      "1BCP",
+      "1BE3",
+      "1BFV",
+      "1BGS",
+      "1BGY",
+      "1BHH",
+      "1BMQ",
+      "1BQH",
+      "1BQL",
+      "1BQQ",
+      "1BRS",
+      "1BVK",
+      "1CGI",
+      "1CHO",
+      "1EER",
+      "1FQJ",
+      "1GCQ",
+      "1HE1",
+      "1KAC",
+      "1KLU",
+      "1MEL",
+      "1MLC",
+      "1NMB",
+      "1QFW",
+      "1S1Q",
+      "1SYX",
+      "2IDO",
+      "2MTA",
+      "2SIC",
+      "3PC8"
+    ],
+    "max_largest_cluster_fraction": 0.25,
+    "min_sequence_clusters": 8,
+    "rcsb_search_docs": "https://search.rcsb.org/",
+    "rcsb_search_endpoint": "https://search.rcsb.org/rcsbsearch/v2/query",
+    "sequence_diversity_audit_required_before_msa": true,
+    "source_diverse_selection_required": true,
+    "w2_generalization_claim_supported": false
+  }
+}

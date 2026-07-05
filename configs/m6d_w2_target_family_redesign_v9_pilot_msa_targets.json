@@ -1,0 +1,56 @@
+{
+  "_note": "No-submit pilot subset for W2 v9 target-MSA planning. This is not a ProteinMPNN/Boltz submit plan and does not replace the full v9 approval packet.",
+  "defaults": {
+    "num_seq": 100,
+    "objective": "binder",
+    "seed": 37,
+    "temp": 0.3
+  },
+  "targets": [
+    {
+      "binder_chain": "V",
+      "id": "1DGR_WV",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v9_records/1DGR_WV",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGR_WV/prepared_1DGR_WV.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGR_WV/prepared_1DGR_WV.pdb",
+      "rcsb_id": "1DGR",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v9_records/1DGR_WV/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v9_sources/source_1DGR.pdb",
+      "target_chain": "W",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGR_WV/1DGR_WV_W.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGR_WV/1DGR_WV_W.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGR_WV/1DGR_WV_W.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGR_WV/1DGR_WV_W.a3m.report.json"
+    },
+    {
+      "binder_chain": "X",
+      "id": "1DGW_YX",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v9_records/1DGW_YX",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGW_YX/prepared_1DGW_YX.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGW_YX/prepared_1DGW_YX.pdb",
+      "rcsb_id": "1DGW",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v9_records/1DGW_YX/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v9_sources/source_1DGW.pdb",
+      "target_chain": "Y",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGW_YX/1DGW_YX_Y.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGW_YX/1DGW_YX_Y.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGW_YX/1DGW_YX_Y.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DGW_YX/1DGW_YX_Y.a3m.report.json"
+    },
+    {
+      "binder_chain": "A",
+      "id": "1DKE_BA",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v9_records/1DKE_BA",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DKE_BA/prepared_1DKE_BA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DKE_BA/prepared_1DKE_BA.pdb",
+      "rcsb_id": "1DKE",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v9_records/1DKE_BA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v9_sources/source_1DKE.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DKE_BA/1DKE_BA_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DKE_BA/1DKE_BA_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DKE_BA/1DKE_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v9_targets/1DKE_BA/1DKE_BA_B.a3m.report.json"
+    }
+  ]
+}

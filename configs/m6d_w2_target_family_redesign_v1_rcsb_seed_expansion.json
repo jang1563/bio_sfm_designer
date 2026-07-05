@@ -1,0 +1,328 @@
+{
+  "_note": "W2 target-family redesign source-seed expansion from RCSB Search API. This is local/no-spend source intake only and does not authorize target-MSA precompute or Cayuga ProteinMPNN/Boltz submission.",
+  "seeds": [
+    {
+      "rcsb_id": "10AY"
+    },
+    {
+      "rcsb_id": "10BT"
+    },
+    {
+      "rcsb_id": "10FZ"
+    },
+    {
+      "rcsb_id": "10JU"
+    },
+    {
+      "rcsb_id": "10LG"
+    },
+    {
+      "rcsb_id": "10MA"
+    },
+    {
+      "rcsb_id": "10MB"
+    },
+    {
+      "rcsb_id": "10MC"
+    },
+    {
+      "rcsb_id": "10MD"
+    },
+    {
+      "rcsb_id": "10MF"
+    },
+    {
+      "rcsb_id": "10MG"
+    },
+    {
+      "rcsb_id": "10MI"
+    },
+    {
+      "rcsb_id": "10ML"
+    },
+    {
+      "rcsb_id": "10OP"
+    },
+    {
+      "rcsb_id": "10OR"
+    },
+    {
+      "rcsb_id": "10PX"
+    },
+    {
+      "rcsb_id": "10QM"
+    },
+    {
+      "rcsb_id": "10SB"
+    },
+    {
+      "rcsb_id": "10TC"
+    },
+    {
+      "rcsb_id": "10TM"
+    },
+    {
+      "rcsb_id": "10VB"
+    },
+    {
+      "rcsb_id": "10VC"
+    },
+    {
+      "rcsb_id": "10XZ"
+    },
+    {
+      "rcsb_id": "10YA"
+    },
+    {
+      "rcsb_id": "10YB"
+    },
+    {
+      "rcsb_id": "10YC"
+    },
+    {
+      "rcsb_id": "10YD"
+    },
+    {
+      "rcsb_id": "10YE"
+    },
+    {
+      "rcsb_id": "10YF"
+    },
+    {
+      "rcsb_id": "10YH"
+    },
+    {
+      "rcsb_id": "10YI"
+    },
+    {
+      "rcsb_id": "10ZB"
+    },
+    {
+      "rcsb_id": "10ZO"
+    },
+    {
+      "rcsb_id": "11BQ"
+    },
+    {
+      "rcsb_id": "11CQ"
+    },
+    {
+      "rcsb_id": "11DG"
+    },
+    {
+      "rcsb_id": "11FV"
+    },
+    {
+      "rcsb_id": "11HA"
+    },
+    {
+      "rcsb_id": "11HK"
+    },
+    {
+      "rcsb_id": "11HW"
+    },
+    {
+      "rcsb_id": "11JF"
+    },
+    {
+      "rcsb_id": "11KR"
+    },
+    {
+      "rcsb_id": "11LT"
+    },
+    {
+      "rcsb_id": "11MG"
+    },
+    {
+      "rcsb_id": "11MH"
+    },
+    {
+      "rcsb_id": "11MR"
+    },
+    {
+      "rcsb_id": "11NA"
+    },
+    {
+      "rcsb_id": "11NB"
+    },
+    {
+      "rcsb_id": "11NC"
+    },
+    {
+      "rcsb_id": "11ND"
+    },
+    {
+      "rcsb_id": "11NE"
+    },
+    {
+      "rcsb_id": "11NF"
+    },
+    {
+      "rcsb_id": "11OV"
+    },
+    {
+      "rcsb_id": "11RN"
+    },
+    {
+      "rcsb_id": "11SZ"
+    },
+    {
+      "rcsb_id": "11YO"
+    },
+    {
+      "rcsb_id": "11ZV"
+    },
+    {
+      "rcsb_id": "11ZW"
+    },
+    {
+      "rcsb_id": "12E8"
+    },
+    {
+      "rcsb_id": "12FC"
+    },
+    {
+      "rcsb_id": "12FD"
+    },
+    {
+      "rcsb_id": "12FE"
+    },
+    {
+      "rcsb_id": "12NP"
+    },
+    {
+      "rcsb_id": "12PY"
+    },
+    {
+      "rcsb_id": "12QA"
+    },
+    {
+      "rcsb_id": "12QB"
+    },
+    {
+      "rcsb_id": "12QC"
+    },
+    {
+      "rcsb_id": "12QD"
+    },
+    {
+      "rcsb_id": "12RH"
+    },
+    {
+      "rcsb_id": "12RM"
+    },
+    {
+      "rcsb_id": "12ZJ"
+    },
+    {
+      "rcsb_id": "13FJ"
+    },
+    {
+      "rcsb_id": "13FL"
+    },
+    {
+      "rcsb_id": "13HR"
+    },
+    {
+      "rcsb_id": "148L"
+    },
+    {
+      "rcsb_id": "15C8"
+    },
+    {
+      "rcsb_id": "1A00"
+    },
+    {
+      "rcsb_id": "1A01"
+    },
+    {
+      "rcsb_id": "1A02"
+    },
+    {
+      "rcsb_id": "1A07"
+    }
+  ],
+  "selection_boundary": {
+    "already_screened_seed_sources": [
+      "1ACB",
+      "1AHW",
+      "1B6C",
+      "1BJ1",
+      "1BVK",
+      "1BVN",
+      "1CHO",
+      "1D6R",
+      "1DFJ",
+      "1E6E",
+      "1EAW",
+      "1EER",
+      "1EWY",
+      "1EZU",
+      "1F34",
+      "1FC2",
+      "1FIN",
+      "1FLE",
+      "1GLA",
+      "1GRN",
+      "1HE1",
+      "1I2M",
+      "1I4D",
+      "1JPS",
+      "1KAC",
+      "1KLU",
+      "1KTZ",
+      "1KXQ",
+      "1M10",
+      "1MAH",
+      "1MLC",
+      "1NCA",
+      "1NMB",
+      "1OPH",
+      "1PPE",
+      "1QFW",
+      "1R0R",
+      "1UDI",
+      "1US7",
+      "1WEJ",
+      "2BTF",
+      "2JEL",
+      "2MTA",
+      "2PCC",
+      "2SNI",
+      "2VIS",
+      "3HFM",
+      "3SGQ",
+      "4CPA"
+    ],
+    "branch_id": "w2_target_family_redesign_v1",
+    "cayuga_submission_allowed": false,
+    "excluded_current_protocol_sources": [
+      "1A2K",
+      "1AK4",
+      "1BRS",
+      "1BVK",
+      "1CGI",
+      "1CHO",
+      "1EER",
+      "1FQJ",
+      "1GCQ",
+      "1HE1",
+      "1KAC",
+      "1KLU",
+      "1MEL",
+      "1MLC",
+      "1NMB",
+      "1QFW",
+      "1S1Q",
+      "1SYX",
+      "2IDO",
+      "2MTA",
+      "2SIC",
+      "3PC8"
+    ],
+    "rcsb_search_docs": "https://search.rcsb.org/",
+    "rcsb_search_endpoint": "https://search.rcsb.org/rcsbsearch/v2/query",
+    "source_diverse_selection_required": true,
+    "w2_generalization_claim_supported": false
+  }
+}

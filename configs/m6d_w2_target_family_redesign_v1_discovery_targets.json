@@ -1,0 +1,10 @@
+{
+  "_note": "Fresh M6d W2 discovery candidates. This manifest is pre-MSA and not a Cayuga submit plan. Review source redundancy before treating selected chain-pairs as independent targets.",
+  "defaults": {
+    "num_seq": 100,
+    "objective": "binder",
+    "seed": 37,
+    "temp": 0.3
+  },
+  "targets": []
+}

@@ -1,0 +1,94 @@
+{
+  "_note": "Representative target subset emitted by complex_target_sequence_diversity. Use for scoped MSA precompute only; it does not certify broad W2 generalization.",
+  "defaults": {
+    "num_seq": 100,
+    "objective": "binder",
+    "seed": 37,
+    "temp": 0.3
+  },
+  "representative_target_ids": [
+    "1AY7_AB",
+    "1AYY_BA",
+    "1AZZ_DC",
+    "1B27_CF",
+    "1B2S_BE"
+  ],
+  "source_manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+  "targets": [
+    {
+      "binder_chain": "B",
+      "id": "1AY7_AB",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1AY7_AB",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AY7_AB/prepared_1AY7_AB.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AY7_AB/prepared_1AY7_AB.pdb",
+      "rcsb_id": "1AY7",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1AY7_AB/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_sources/source_1AY7.pdb",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AY7_AB/1AY7_AB_A.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AY7_AB/1AY7_AB_A.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AY7_AB/1AY7_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AY7_AB/1AY7_AB_A.a3m.report.json"
+    },
+    {
+      "binder_chain": "F",
+      "id": "1B27_CF",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1B27_CF",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B27_CF/prepared_1B27_CF.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B27_CF/prepared_1B27_CF.pdb",
+      "rcsb_id": "1B27",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1B27_CF/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_sources/source_1B27.pdb",
+      "target_chain": "C",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B27_CF/1B27_CF_C.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B27_CF/1B27_CF_C.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B27_CF/1B27_CF_C.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B27_CF/1B27_CF_C.a3m.report.json"
+    },
+    {
+      "binder_chain": "E",
+      "id": "1B2S_BE",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1B2S_BE",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B2S_BE/prepared_1B2S_BE.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B2S_BE/prepared_1B2S_BE.pdb",
+      "rcsb_id": "1B2S",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1B2S_BE/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_sources/source_1B2S.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B2S_BE/1B2S_BE_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B2S_BE/1B2S_BE_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B2S_BE/1B2S_BE_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1B2S_BE/1B2S_BE_B.a3m.report.json"
+    },
+    {
+      "binder_chain": "C",
+      "id": "1AZZ_DC",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1AZZ_DC",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AZZ_DC/prepared_1AZZ_DC.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AZZ_DC/prepared_1AZZ_DC.pdb",
+      "rcsb_id": "1AZZ",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1AZZ_DC/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_sources/source_1AZZ.pdb",
+      "target_chain": "D",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AZZ_DC/1AZZ_DC_D.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AZZ_DC/1AZZ_DC_D.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AZZ_DC/1AZZ_DC_D.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AZZ_DC/1AZZ_DC_D.a3m.report.json"
+    },
+    {
+      "binder_chain": "A",
+      "id": "1AYY_BA",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1AYY_BA",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AYY_BA/prepared_1AYY_BA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AYY_BA/prepared_1AYY_BA.pdb",
+      "rcsb_id": "1AYY",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v4_records/1AYY_BA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v4_sources/source_1AYY.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AYY_BA/1AYY_BA_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AYY_BA/1AYY_BA_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AYY_BA/1AYY_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v4_targets/1AYY_BA/1AYY_BA_B.a3m.report.json"
+    }
+  ]
+}

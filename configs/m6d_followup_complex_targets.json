@@ -1,0 +1,82 @@
+{
+  "_note": "W2 follow-up target discovery after the completed M6d replacement panel remained alpha=0.2 negative. Reuse completed 1BRS_AD and 3PC8_AB records as retained evidence; submit only the three new no-gap 3PC8-like candidates after target-MSA precompute.",
+  "defaults": {
+    "num_seq": 100,
+    "temp": 0.3,
+    "seed": 37,
+    "objective": "binder"
+  },
+  "targets": [
+    {
+      "id": "1BRS_AD",
+      "rcsb_id": "1BRS",
+      "source_pdb": "hpc_outputs/targets/source_1BRS.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1BRS_AD.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1BRS_AD.report.json",
+      "allow_numbering_gaps": true,
+      "target_chain": "A",
+      "binder_chain": "D",
+      "target_fasta": "hpc_outputs/targets/1BRS_A.fasta",
+      "target_msa": "hpc_outputs/targets/1BRS_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/1BRS_A.a3m.report.json",
+      "records": "hpc_outputs/m6d_redesign_targets/1BRS_AD/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_redesign_targets/1BRS_AD"
+    },
+    {
+      "id": "3PC8_AB",
+      "rcsb_id": "3PC8",
+      "source_pdb": "hpc_outputs/targets/source_3PC8.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_3PC8_AB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_3PC8_AB.report.json",
+      "target_chain": "A",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/3PC8_A.fasta",
+      "target_msa": "hpc_outputs/targets/3PC8_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/3PC8_A.a3m.report.json",
+      "records": "hpc_outputs/m6d_redesign_targets/3PC8_AB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_redesign_targets/3PC8_AB"
+    },
+    {
+      "id": "1MEL_MB",
+      "rcsb_id": "1MEL",
+      "source_pdb": "hpc_outputs/targets/source_1MEL.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1MEL_MB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1MEL_MB.report.json",
+      "target_chain": "M",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/1MEL_M.fasta",
+      "target_msa": "hpc_outputs/targets/1MEL_M.a3m",
+      "target_msa_report": "hpc_outputs/targets/1MEL_M.a3m.report.json",
+      "records": "hpc_outputs/m6d_followup_targets/1MEL_MB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_followup_targets/1MEL_MB"
+    },
+    {
+      "id": "1GCQ_CB",
+      "rcsb_id": "1GCQ",
+      "source_pdb": "hpc_outputs/targets/source_1GCQ.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1GCQ_CB.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1GCQ_CB.report.json",
+      "target_chain": "C",
+      "binder_chain": "B",
+      "target_fasta": "hpc_outputs/targets/1GCQ_C.fasta",
+      "target_msa": "hpc_outputs/targets/1GCQ_C.a3m",
+      "target_msa_report": "hpc_outputs/targets/1GCQ_C.a3m.report.json",
+      "records": "hpc_outputs/m6d_followup_targets/1GCQ_CB/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_followup_targets/1GCQ_CB"
+    },
+    {
+      "id": "2IDO_CD",
+      "rcsb_id": "2IDO",
+      "source_pdb": "hpc_outputs/targets/source_2IDO.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_2IDO_CD.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_2IDO_CD.report.json",
+      "target_chain": "C",
+      "binder_chain": "D",
+      "target_fasta": "hpc_outputs/targets/2IDO_C.fasta",
+      "target_msa": "hpc_outputs/targets/2IDO_C.a3m",
+      "target_msa_report": "hpc_outputs/targets/2IDO_C.a3m.report.json",
+      "records": "hpc_outputs/m6d_followup_targets/2IDO_CD/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_followup_targets/2IDO_CD"
+    }
+  ]
+}

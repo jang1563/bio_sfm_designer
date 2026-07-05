@@ -1,0 +1,56 @@
+{
+  "_note": "M6d W2 fresh-discovery unique-source pilot manifest. One selected chain-pair per source PDB from the fresh-discovery pool. This is a post-MSA pilot submit candidate, not a multi-target generalization certificate.",
+  "defaults": {
+    "num_seq": 100,
+    "temp": 0.3,
+    "seed": 37,
+    "objective": "binder"
+  },
+  "targets": [
+    {
+      "binder_chain": "B",
+      "id": "1FQJ_EB",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1FQJ_EB",
+      "prep_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1FQJ_EB/prepared_1FQJ_EB.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_fresh_discovery_targets/1FQJ_EB/prepared_1FQJ_EB.pdb",
+      "rcsb_id": "1FQJ",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1FQJ_EB/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_fresh_discovery_sources/source_1FQJ.pdb",
+      "target_chain": "E",
+      "target_fasta": "hpc_outputs/m6d_w2_fresh_discovery_targets/1FQJ_EB/1FQJ_EB_E.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1FQJ_EB/1FQJ_EB_E.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_fresh_discovery_targets/1FQJ_EB/1FQJ_EB_E.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1FQJ_EB/1FQJ_EB_E.a3m.report.json"
+    },
+    {
+      "binder_chain": "C",
+      "id": "1AK4_BC",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1AK4_BC",
+      "prep_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1AK4_BC/prepared_1AK4_BC.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_fresh_discovery_targets/1AK4_BC/prepared_1AK4_BC.pdb",
+      "rcsb_id": "1AK4",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1AK4_BC/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_fresh_discovery_sources/source_1AK4.pdb",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w2_fresh_discovery_targets/1AK4_BC/1AK4_BC_B.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1AK4_BC/1AK4_BC_B.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_fresh_discovery_targets/1AK4_BC/1AK4_BC_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1AK4_BC/1AK4_BC_B.a3m.report.json"
+    },
+    {
+      "binder_chain": "B",
+      "id": "1A2K_CB",
+      "out_prefix": "hpc_outputs/m6d_w2_fresh_discovery_records/1A2K_CB",
+      "prep_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1A2K_CB/prepared_1A2K_CB.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_fresh_discovery_targets/1A2K_CB/prepared_1A2K_CB.pdb",
+      "rcsb_id": "1A2K",
+      "records": "hpc_outputs/m6d_w2_fresh_discovery_records/1A2K_CB/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_fresh_discovery_sources/source_1A2K.pdb",
+      "target_chain": "C",
+      "target_fasta": "hpc_outputs/m6d_w2_fresh_discovery_targets/1A2K_CB/1A2K_CB_C.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1A2K_CB/1A2K_CB_C.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_fresh_discovery_targets/1A2K_CB/1A2K_CB_C.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_fresh_discovery_targets/1A2K_CB/1A2K_CB_C.a3m.report.json"
+    }
+  ]
+}

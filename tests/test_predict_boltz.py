@@ -58,6 +58,8 @@ class PredictBoltzContractTests(unittest.TestCase):
                 with open(os.path.join(pdir, f"confidence_{name}_model_0.json"), "w") as fh:
                     json.dump({"complex_plddt": 0.91, "ptm": 0.88, "iptm": 0.0}, fh)
 
+        original_run = mod.subprocess.run
+        self.addCleanup(setattr, mod.subprocess, "run", original_run)
         mod.subprocess.run = fake_run
 
         with tempfile.TemporaryDirectory() as d:
