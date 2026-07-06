@@ -64,6 +64,16 @@ from Chai records alone.
   `results/m6d_w2_target_family_redesign_v9_panel_approval_packet.{json,md}`
 - Current W2 v9 post-panel decision protocol:
   `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}`
+- Current W2 v9 panel report:
+  `results/m6d_w2_target_family_redesign_v9_panel_report.json`
+- Current W2 v9 post-panel redesign diagnostic:
+  `results/m6d_w2_target_family_redesign_v9_redesign_diagnostic.{json,md}`
+- Current W2 v9 gate strategy:
+  `results/m6d_w2_target_family_redesign_v9_gate_strategy.{json,md}`
+- Current W2 v10 follow-up contract:
+  `results/m6d_w2_target_family_redesign_v10_followup_contract.{json,md}`
+- Current W2 v10 candidate rules:
+  `configs/m6d_w2_target_family_redesign_v10_candidate_rules.json`
 - Current W2 revised branch: `results/m6d_w2_revised_branch.{json,md}`
 - Current W2 candidate-pool screen: `results/m6d_w2_candidate_pool_screen.{json,md}`
 - Current W2 next-branch design: `results/m6d_w2_next_branch_design.{json,md}`
@@ -764,6 +774,29 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     future synced panel records: completion/record-contract failures produce no claim; every target must
     certify target-wise for W2 generalization; partial certificates are target-specific only; pooled
     diagnostic success cannot override target-wise failure.
+61. The guarded W2 v9 full-14 ProteinMPNN/Boltz panel has completed and is evaluable but not certified:
+    `results/m6d_w2_target_family_redesign_v9_completion.json` is `ready_for_panel_report` with 14/14
+    completed targets, and `results/m6d_w2_target_family_redesign_v9_panel_report.json` is
+    `multi_target_evaluable_not_certified` at α=0.2 with 14 targets and 1400 records. The pooled diagnostic
+    certifies α=0.2, but pooled-only evidence remains diagnostic; only `1DLF_HL` is target-wise certified
+    (`τ=0.333`), and the other 13 targets are not certified. The refreshed
+    `results/m6c_project_status_w2_followup.json` now reports W2 as `evaluable_not_certified`.
+62. V9 post-panel diagnosis freezes the next branch as no-spend:
+    `results/m6d_w2_target_family_redesign_v9_redesign_diagnostic.{json,md}` recommends
+    `redesign_or_replace_low_success_targets`, and
+    `results/m6d_w2_target_family_redesign_v9_gate_strategy.{json,md}` reports
+    `no_spend_gate_strategy_required` with Cayuga submission disabled. Seven targets are low-success
+    target/protocol mismatches (`1AK4_BC`, `1CHO_GI`, `1CVS_CA`, `1CXZ_AB`, `1DGR_WV`, `1DGW_YX`,
+    `1DJ7_AB`); five all-success targets (`1BVK_ED`, `1D3B_LK`, `1DKE_BA`, `1DL7_HL`, `1DLH_BA`)
+    require a label-degeneracy policy before any gate claim; `1D2Z_BA` is a loose-α anchor rather than an
+    α=0.2 certificate; `1DLF_HL` is the single certified control.
+63. V10 follow-up contract and candidate rules are now the W2 resume point:
+    `results/m6d_w2_target_family_redesign_v10_followup_contract.{json,md}` records branch
+    `w2_target_family_redesign_v10_post_v9_decision`, status
+    `mixed_target_readout_redesign_contract_required`, and `ready_for_cayuga_submission=false`.
+    `configs/m6d_w2_target_family_redesign_v10_candidate_rules.json` keeps Cayuga submission blocked until
+    no-spend replacement-target discovery or a predeclared target/family calibration redesign admits at
+    least three non-anchor targets and strict post-MSA/pre-submit gates pass.
 
 ## W3 Decision Path
 

@@ -193,6 +193,21 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > approval packets and reports `parity_ok=true`; this is a no-submit agreement check and does not create a
 > target-MSA receipt. `results/m6c_project_status_w2_followup.json` consumes it through
 > `--w2-approval-parity`, preserving `approval_parity_ok=true` in W2 status.
+> The guarded v9 ProteinMPNN/Boltz panel was then explicitly submitted on Cayuga, completed, synced back,
+> and replayed locally: `results/m6d_w2_target_family_redesign_v9_completion.json` is
+> `ready_for_panel_report` with 14/14 completed targets, while
+> `results/m6d_w2_target_family_redesign_v9_panel_report.json` is
+> `multi_target_evaluable_not_certified` at α=0.2 with 14 targets and 1400 records. The pooled diagnostic
+> certifies α=0.2, but pooled-only evidence remains diagnostic; only `1DLF_HL` is target-wise certified
+> (`τ=0.333`), and the other 13 targets are not certified. The post-panel diagnostic/strategy artifacts
+> `results/m6d_w2_target_family_redesign_v9_redesign_diagnostic.{json,md}` and
+> `results/m6d_w2_target_family_redesign_v9_gate_strategy.{json,md}` classify seven low-success
+> target/protocol mismatches, five all-success label-degenerate controls, `1D2Z_BA` as a loose-α anchor
+> rather than an α=0.2 certificate, and `1DLF_HL` as the single certified control. The next branch is frozen
+> as `w2_target_family_redesign_v10_post_v9_decision` in
+> `results/m6d_w2_target_family_redesign_v10_followup_contract.{json,md}` and
+> `configs/m6d_w2_target_family_redesign_v10_candidate_rules.json`; Cayuga submission is `false` until a
+> no-spend replacement-target discovery or predeclared target/family calibration redesign passes its gates.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a
