@@ -6780,6 +6780,55 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("submit_receipt_or_summary_present", kinds)
         self.assertIn("panel_remote_submission_readiness_status_not_ok", kinds)
 
+    def test_w2_panel_remote_readiness_blocks_if_local_exact_check_is_stale(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "targets_report.json")
+            remote = os.path.join(d, "remote_readiness.json")
+            checked = os.path.join(d, "checked.py")
+            with open(checked, "w") as fh:
+                fh.write("current\n")
+            _write_json(manifest, {
+                "ok": True,
+                "n_targets": 7,
+                "n_ready_targets": 7,
+                "failures": [],
+            })
+            _write_json(remote, {
+                "artifact": "m6d_w2_v11_remote_submission_readiness",
+                "status": "remote_submission_readiness_ok",
+                "audit_ok": True,
+                "no_submit": True,
+                "can_submit_panel_if_user_explicitly_approves": True,
+                "can_claim_w2_generalization": False,
+                "local_root": d,
+                "n_exact_checks": 1,
+                "n_semantic_checks": 0,
+                "n_absence_checks": 2,
+                "n_failures": 0,
+                "exact_checks": [{
+                    "path": "checked.py",
+                    "ok": True,
+                    "local_bytes": 4,
+                    "local_sha256": hashlib.sha256(b"old\n").hexdigest(),
+                    "remote_bytes": 4,
+                    "remote_sha256": hashlib.sha256(b"old\n").hexdigest(),
+                }],
+                "failures": [],
+            })
+
+            rep = run_status(
+                target_manifest_path=manifest,
+                w2_panel_remote_readiness_path=remote,
+            )
+
+        w2 = rep["workstreams"]["W2_multi_target_panel"]
+        self.assertEqual(w2["status"], "panel_remote_submission_readiness_blocked")
+        self.assertFalse(w2["panel_remote_submission_readiness_ok"])
+        self.assertFalse(w2["panel_remote_local_exact_fresh"])
+        self.assertEqual(w2["panel_remote_local_exact_stale_count"], 1)
+        kinds = {failure["kind"] for failure in w2["failures"]}
+        self.assertIn("panel_remote_submission_readiness_local_exact_stale", kinds)
+
     def test_w2_approval_parity_attaches_to_ready_target_msa_gate(self):
         with tempfile.TemporaryDirectory() as d:
             gate = os.path.join(d, "gate.json")

@@ -913,7 +913,8 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     and `can_claim_w2_generalization_now=false`; full project status now reports W2 as
     `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
     `remote_submission_readiness_ok` after exact SHA, semantic JSON, and receipt-absence checks against
-    Cayuga. The final no-submit decision latch
+    Cayuga; project status also fail-closes if stored exact-check local SHA evidence no longer matches
+    the current checkout. The final no-submit decision latch
     `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` now records
     `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
     `can_claim_w2_generalization=false`. Do not reuse the earlier generated submit plan that pointed at

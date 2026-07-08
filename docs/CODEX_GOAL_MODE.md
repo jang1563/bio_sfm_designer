@@ -174,7 +174,8 @@ Current state:
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` with 14 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
-  checks. The final no-submit decision latch
+  checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches
+  the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and

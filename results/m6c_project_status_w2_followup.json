@@ -898,6 +898,8 @@
       "panel_remote_can_claim_w2_generalization": false,
       "panel_remote_can_submit_if_explicitly_approved": true,
       "panel_remote_exact_checks": 14,
+      "panel_remote_local_exact_fresh": true,
+      "panel_remote_local_exact_stale_count": 0,
       "panel_remote_no_submit": true,
       "panel_remote_semantic_checks": 5,
       "panel_remote_submission_readiness": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",

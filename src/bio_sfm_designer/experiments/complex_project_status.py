@@ -1743,8 +1743,18 @@ def _attach_w2_panel_remote_readiness(status: Dict[str, Any],
             "kind": "panel_remote_submission_readiness_failures_present",
             "observed": panel_remote_readiness.get("n_failures"),
         })
+    exact_checks = (
+        panel_remote_readiness.get("exact_checks")
+        if isinstance(panel_remote_readiness.get("exact_checks"), list)
+        else []
+    )
+    local_root = panel_remote_readiness.get("local_root")
+    local_exact_failures = _w2_remote_readiness_local_exact_failures(
+        exact_checks,
+        local_root=local_root if isinstance(local_root, str) else None,
+    )
 
-    ready = not readiness_failures and not consistency_failures
+    ready = not readiness_failures and not consistency_failures and not local_exact_failures
     status.update({
         "panel_remote_submission_readiness": panel_remote_readiness.get("_path"),
         "panel_remote_submission_readiness_ok": ready,
@@ -1757,7 +1767,11 @@ def _attach_w2_panel_remote_readiness(status: Dict[str, Any],
         "panel_remote_exact_checks": panel_remote_readiness.get("n_exact_checks"),
         "panel_remote_semantic_checks": panel_remote_readiness.get("n_semantic_checks"),
         "panel_remote_absence_checks": panel_remote_readiness.get("n_absence_checks"),
-        "panel_remote_submission_readiness_failures": readiness_failures + consistency_failures,
+        "panel_remote_local_exact_fresh": not local_exact_failures,
+        "panel_remote_local_exact_stale_count": len(local_exact_failures),
+        "panel_remote_submission_readiness_failures": (
+            readiness_failures + consistency_failures + local_exact_failures
+        ),
     })
     if ready:
         status.update({
@@ -1771,10 +1785,67 @@ def _attach_w2_panel_remote_readiness(status: Dict[str, Any],
         status.update({
             "status": "panel_remote_submission_readiness_blocked",
             "complete": False,
-            "failures": failures + readiness_failures + consistency_failures,
+            "failures": failures + readiness_failures + consistency_failures + local_exact_failures,
             "next_action": "repair remote submission readiness before panel approval or submission",
         })
     return status
+
+
+def _resolve_w2_exact_check_path(path: str, *, local_root: Optional[str]) -> str:
+    if os.path.isabs(path):
+        return path
+    cwd_path = os.path.abspath(path)
+    if os.path.exists(cwd_path):
+        return cwd_path
+    if local_root:
+        return os.path.join(local_root, path)
+    return cwd_path
+
+
+def _w2_remote_readiness_local_exact_failures(exact_checks: Any,
+                                             *,
+                                             local_root: Optional[str]) -> List[Dict[str, Any]]:
+    failures: List[Dict[str, Any]] = []
+    if not isinstance(exact_checks, list):
+        return failures
+    for row in exact_checks:
+        if not isinstance(row, dict):
+            failures.append({
+                "kind": "panel_remote_submission_readiness_local_exact_invalid",
+                "observed": row,
+            })
+            continue
+        rel_path = row.get("path")
+        expected_sha = row.get("local_sha256")
+        expected_bytes = row.get("local_bytes")
+        if not isinstance(rel_path, str) or not rel_path:
+            failures.append({
+                "kind": "panel_remote_submission_readiness_local_exact_missing_path",
+                "observed": rel_path,
+            })
+            continue
+        local_path = _resolve_w2_exact_check_path(rel_path, local_root=local_root)
+        if not os.path.exists(local_path):
+            failures.append({
+                "kind": "panel_remote_submission_readiness_local_exact_missing",
+                "path": rel_path,
+                "local_path": local_path,
+            })
+            continue
+        actual_sha = _sha256_file(local_path)
+        actual_bytes = os.path.getsize(local_path)
+        if actual_sha != expected_sha or (
+            isinstance(expected_bytes, int) and actual_bytes != expected_bytes
+        ):
+            failures.append({
+                "kind": "panel_remote_submission_readiness_local_exact_stale",
+                "path": rel_path,
+                "expected_sha256": expected_sha,
+                "actual_sha256": actual_sha,
+                "expected_bytes": expected_bytes,
+                "actual_bytes": actual_bytes,
+            })
+    return failures
 
 
 def _receipt_absence_rows_ok(rows: Any) -> bool:
