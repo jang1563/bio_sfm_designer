@@ -74,6 +74,22 @@ from Chai records alone.
   `results/m6d_w2_target_family_redesign_v10_followup_contract.{json,md}`
 - Current W2 v10 candidate rules:
   `configs/m6d_w2_target_family_redesign_v10_candidate_rules.json`
+- Current W2 v10 seed expansion:
+  `results/m6d_w2_target_family_redesign_v10_seed_expansion.{json,md}` and
+  `configs/m6d_w2_target_family_redesign_v10_seed_rcsb_ids.json`
+- Current W2 v10 discovery pool:
+  `results/m6d_w2_target_family_redesign_v10_discovery_pool.{json,md}` and
+  `configs/m6d_w2_target_family_redesign_v10_discovery_targets.json`
+- Current W2 v10 sequence-diversity audit:
+  `results/m6d_w2_target_family_redesign_v10_sequence_diversity.{json,md}`
+- Current W2 v10 representative manifest:
+  `configs/m6d_w2_target_family_redesign_v10_representative_targets.json`
+- Current W2 v10 pre-MSA manifest and MSA plan:
+  `results/m6d_w2_target_family_redesign_v10_manifest_pre_msa.json` and
+  `results/m6d_w2_target_family_redesign_v10_target_msas.sh`
+- Current W2 v10 pre-sync input-prep completion:
+  `results/m6d_w2_target_family_redesign_v10_input_prep_completion_pre_sync.{json,sh}` and
+  `results/m6d_w2_target_family_redesign_v10_pending_input_prep_paths.txt`
 - Current W2 revised branch: `results/m6d_w2_revised_branch.{json,md}`
 - Current W2 candidate-pool screen: `results/m6d_w2_candidate_pool_screen.{json,md}`
 - Current W2 next-branch design: `results/m6d_w2_next_branch_design.{json,md}`
@@ -797,6 +813,31 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `configs/m6d_w2_target_family_redesign_v10_candidate_rules.json` keeps Cayuga submission blocked until
     no-spend replacement-target discovery or a predeclared target/family calibration redesign admits at
     least three non-anchor targets and strict post-MSA/pre-submit gates pass.
+64. V10 no-spend replacement-target discovery has passed the local source/sequence gates:
+    `results/m6d_w2_target_family_redesign_v10_seed_expansion.{json,md}` selected 160 new RCSB seeds after
+    excluding 700 previously screened seeds and the v9 blocked/control sources. Local structural intake
+    `results/m6d_w2_target_family_redesign_v10_discovery_pool.{json,md}` screened 1082 chain pairs,
+    admitted 42 structurally, and selected 16 source-diverse candidates. One source fetch failed
+    (`11GY`, HTTP 404) and is recorded as data, not a blocker.
+65. V10 sequence diversity passes before MSA spend:
+    `results/m6d_w2_target_family_redesign_v10_sequence_diversity.{json,md}` reports
+    `sequence_diversity_ready_for_broad_w2_panel`, 16 targets, 15 clusters, largest cluster size 2, and
+    largest cluster fraction 0.125 under the v10 0.25 cap. The representative manifest
+    `configs/m6d_w2_target_family_redesign_v10_representative_targets.json` keeps 15 targets after dropping
+    the near-duplicate `1DXV_DC` from the `1DXU_DC`/`1DXV_DC` cluster.
+66. V10 pre-MSA manifest validation is ready but not submitted:
+    `results/m6d_w2_target_family_redesign_v10_manifest_pre_msa.json` is `ok=true` with 15/15 ready targets
+    and emits `results/m6d_w2_target_family_redesign_v10_target_msas.sh`. The MSA plan dry-run passes with
+    `TARGET_MSA_PRECOMPUTE_DRY_RUN=1`, confirming manifest freshness and target list without scheduler
+    submission or receipt mutation. Strict post-MSA validation
+    `results/m6d_w2_target_family_redesign_v10_manifest_post_msa_require_files.json` intentionally fails
+    closed on 30 missing target-MSA/MSA-report files.
+67. V10 pre-sync input-prep completion freezes the next boundary:
+    `results/m6d_w2_target_family_redesign_v10_input_prep_completion_pre_sync.json` is `blocked` with
+    75/105 artifacts present/nonempty and exactly 30 pending MSA/MSA-report artifacts listed in
+    `results/m6d_w2_target_family_redesign_v10_pending_input_prep_paths.txt`. No v10 Cayuga target-MSA,
+    ProteinMPNN, or Boltz jobs have been submitted. The next action is to create/guard the v10 target-MSA
+    approval bridge, then run it only with explicit user approval.
 
 ## W3 Decision Path
 

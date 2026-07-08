@@ -279,6 +279,21 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v10_followup_contract.{json,md}` and
   `configs/m6d_w2_target_family_redesign_v10_candidate_rules.json`; Cayuga submission is `false` until a
   no-spend replacement-target discovery or predeclared target/family calibration redesign passes its gates.
+  The v10 no-spend replacement-target discovery has now advanced locally:
+  `results/m6d_w2_target_family_redesign_v10_seed_expansion.{json,md}` selected 160 new RCSB seeds after
+  excluding 700 previously screened seeds and the v9 blocked/control sources;
+  `results/m6d_w2_target_family_redesign_v10_discovery_pool.{json,md}` screened 1082 chain pairs from
+  those seeds, admitted 42 structurally, and selected 16 source-diverse candidates in
+  `configs/m6d_w2_target_family_redesign_v10_discovery_targets.json`.
+  `results/m6d_w2_target_family_redesign_v10_sequence_diversity.{json,md}` passes with 16 targets,
+  15 sequence clusters, and largest cluster fraction 0.125; the representative manifest
+  `configs/m6d_w2_target_family_redesign_v10_representative_targets.json` keeps 15 targets after dropping
+  the near-duplicate `1DXV_DC`. Pre-MSA manifest validation is 15/15 ready and emits
+  `results/m6d_w2_target_family_redesign_v10_target_msas.sh`; strict post-MSA validation intentionally
+  fails closed on 30 missing target-MSA/MSA-report files, tracked in
+  `results/m6d_w2_target_family_redesign_v10_input_prep_completion_pre_sync.json` and
+  `results/m6d_w2_target_family_redesign_v10_pending_input_prep_paths.txt`. No Cayuga target-MSA or
+  ProteinMPNN/Boltz jobs have been submitted for v10.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`
