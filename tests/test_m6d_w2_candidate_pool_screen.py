@@ -129,11 +129,14 @@ class M6DW2CandidatePoolScreenTests(unittest.TestCase):
             _manifest(manifest, "new_target", prep)
             branch = os.path.join(d, "branch.json")
             _write_json(branch, {"target_decisions": []})
+            diagnostic = os.path.join(d, "diagnostic.json")
+            _write_json(diagnostic, {"targets": []})
             out_json = os.path.join(d, "screen.json")
             out_md = os.path.join(d, "screen.md")
 
             rc = main([
                 "--candidate-manifest", manifest,
+                "--diagnostic", diagnostic,
                 "--revised-branch", branch,
                 "--out-json", out_json,
                 "--out-md", out_md,
