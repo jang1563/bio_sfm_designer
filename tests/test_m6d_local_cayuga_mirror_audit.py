@@ -72,6 +72,11 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "workstreams.W2_multi_target_panel.panel_postsubmit_bridge_ok",
             status_fields,
         )
+        self.assertIn("resume_execution_ladder.next_role", status_fields)
+        self.assertIn(
+            "resume_execution_ladder.approval_disambiguation.continuation_phrases_are_approval",
+            status_fields,
+        )
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
 

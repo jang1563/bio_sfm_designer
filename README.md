@@ -343,7 +343,9 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
   Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
-  `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit Cayuga mirror audit
+  `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
+  post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,
+  sync-back, completion, and post-sync interpretation. The no-submit Cayuga mirror audit
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` after 23 exact SHA checks, 5 semantic JSON checks, and 2
   receipt-absence checks; project status also fail-closes if the stored exact-check local SHA evidence

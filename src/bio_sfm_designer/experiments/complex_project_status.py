@@ -1622,6 +1622,7 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         "panel_sync_back_command_after_jobs_finish": panel_approval_packet.get(
             "sync_back_command_after_jobs_finish"
         ),
+        "panel_completion_command_after_sync": panel_approval_packet.get("completion_command_after_sync"),
         "panel_postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
         "panel_job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
         "panel_receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
@@ -1958,6 +1959,16 @@ def _attach_w2_panel_submission_decision_state(status: Dict[str, Any],
             "kind": "panel_submission_decision_approval_not_required",
             "observed": panel_submission_decision_state.get("explicit_approval_required"),
         })
+    approval_disambiguation = (
+        panel_submission_decision_state.get("approval_disambiguation")
+        if isinstance(panel_submission_decision_state.get("approval_disambiguation"), dict)
+        else {}
+    )
+    if approval_disambiguation.get("continuation_phrases_are_approval") is not False:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_approval_disambiguation_missing",
+            "observed": approval_disambiguation,
+        })
     if panel_submission_decision_state.get("can_submit_if_explicitly_approved") is not True:
         consistency_failures.append({
             "kind": "panel_submission_decision_not_explicit_approval_ready",
@@ -1993,6 +2004,13 @@ def _attach_w2_panel_submission_decision_state(status: Dict[str, Any],
         "panel_submission_decision_explicit_approval_required": panel_submission_decision_state.get(
             "explicit_approval_required"
         ),
+        "panel_submission_decision_continuation_phrases_are_approval": approval_disambiguation.get(
+            "continuation_phrases_are_approval"
+        ),
+        "panel_submission_decision_approval_must_explicitly_name": approval_disambiguation.get(
+            "approval_must_explicitly_name"
+        ),
+        "panel_submission_decision_machine_gate": approval_disambiguation.get("machine_gate"),
         "panel_submission_decision_can_submit_if_explicitly_approved": panel_submission_decision_state.get(
             "can_submit_if_explicitly_approved"
         ),
@@ -8139,6 +8157,118 @@ def _external_remote_check_report_arg(rep: Dict[str, Any]) -> str:
     return "--external-remote-check-report <remote-check-report>"
 
 
+def _w2_panel_approval_ladder_step(
+    *,
+    role: str,
+    command: Optional[str],
+    label: str,
+    status: str,
+    blocked_by: Optional[str] = None,
+    next_action: Optional[str] = None,
+    ready: bool = False,
+) -> Dict[str, Any]:
+    step: Dict[str, Any] = {
+        "role": role,
+        "status": status,
+        "ready_to_execute_now": bool(ready),
+        "command": command,
+        "label": label,
+        "recommended": False,
+    }
+    if blocked_by:
+        step["blocked_by"] = blocked_by
+    if next_action:
+        step["next_action"] = next_action
+    return step
+
+
+def _attach_w2_panel_approval_ladder(rep: Dict[str, Any]) -> None:
+    if rep.get("resume_execution_ladder"):
+        return
+    streams = rep.get("workstreams")
+    if not isinstance(streams, dict):
+        return
+    w2 = streams.get("W2_multi_target_panel")
+    if not isinstance(w2, dict):
+        return
+    if w2.get("status") != "panel_approval_packet_ready_awaiting_explicit_approval":
+        return
+    if w2.get("panel_submission_decision") != "awaiting_explicit_approval":
+        return
+    steps = [
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_submit",
+            command=w2.get("panel_submit_command_if_approved"),
+            label="Submit guarded W2 v11 ProteinMPNN/Boltz panel after explicit approval",
+            status="waiting_for_explicit_approval",
+            next_action=(
+                "obtain explicit approval naming W2 v11 Cayuga ProteinMPNN/Boltz panel submission; "
+                "continuation phrases are not approval"
+            ),
+        ),
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_receipt_monitor",
+            command=w2.get("panel_receipt_monitor_after_submit"),
+            label="Sync submit receipt and summary only",
+            status="blocked_until_w2_panel_submit_creates_receipt",
+            blocked_by="w2_panel_submit",
+            next_action="after explicit submit creates a receipt, sync receipt/summary before any records",
+        ),
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_job_state_query",
+            command=w2.get("panel_job_state_query_after_receipt"),
+            label="Run read-only Slurm job-state query",
+            status="blocked_until_receipt_monitor_completes",
+            blocked_by="w2_panel_receipt_monitor",
+            next_action="after receipt sync, query job states without syncing panel records",
+        ),
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_postsubmit_status",
+            command=w2.get("panel_postsubmit_status_command_before_sync"),
+            label="Require postsubmit sync-ready state",
+            status="blocked_until_job_state_query_completes",
+            blocked_by="w2_panel_job_state_query",
+            next_action="wait for all submitted jobs to finish, then require sync-ready status",
+        ),
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_sync_back",
+            command=w2.get("panel_sync_back_command_after_jobs_finish"),
+            label="Sync panel records back from Cayuga",
+            status="blocked_until_postsubmit_sync_ready",
+            blocked_by="w2_panel_postsubmit_status",
+            next_action="sync records only after receipt, summary, job states, and sync-ready status pass",
+        ),
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_completion",
+            command=w2.get("panel_completion_command_after_sync"),
+            label="Run panel completion gate",
+            status="blocked_until_panel_sync_back_completes",
+            blocked_by="w2_panel_sync_back",
+            next_action="after record sync-back, run completion checks before interpretation",
+        ),
+        _w2_panel_approval_ladder_step(
+            role="w2_panel_postsync_replay",
+            command=w2.get("panel_postsync_replay_after_sync"),
+            label="Run target-wise report and post-sync interpretation",
+            status="blocked_until_panel_completion_completes",
+            blocked_by="w2_panel_completion",
+            next_action="generate target-wise panel report and refresh W2 interpretation",
+        ),
+    ]
+    rep["resume_execution_ladder"] = {
+        "next_role": "w2_panel_submit",
+        "next_command": w2.get("panel_submit_command_if_approved"),
+        "approval_disambiguation": {
+            "continuation_phrases_are_approval": w2.get(
+                "panel_submission_decision_continuation_phrases_are_approval"
+            ),
+            "approval_must_explicitly_name": w2.get("panel_submission_decision_approval_must_explicitly_name"),
+            "machine_gate": w2.get("panel_submission_decision_machine_gate"),
+        },
+        "steps": steps,
+    }
+
+
 def attach_resume_execution_ladder(rep: Dict[str, Any]) -> Dict[str, Any]:
     """Expose the bridge sequence needed to resume without rereading scripts."""
     scripts = _script_by_role(rep)
@@ -8306,6 +8436,7 @@ def attach_resume_execution_ladder(rep: Dict[str, Any]) -> Dict[str, Any]:
             "next_command": recommended.get("command"),
             "steps": steps,
         }
+    _attach_w2_panel_approval_ladder(rep)
     return rep
 
 
@@ -10736,7 +10867,7 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
     else:
         status = "m6_complex_in_progress"
         next_action = next((w["next_action"] for w in workstreams[:3] if not w["complete"]), "inspect artifacts")
-    return {
+    rep = {
         "ok": True,
         "status": status,
         "complete": complete,
@@ -10751,6 +10882,8 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
         "posthoc_science_claims_audit": posthoc_science_claims_audit,
         "next_action": next_action,
     }
+    attach_resume_execution_ladder(rep)
+    return rep
 
 
 def render_text(rep: Dict[str, Any]) -> str:

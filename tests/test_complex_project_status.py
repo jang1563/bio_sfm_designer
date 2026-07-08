@@ -6614,6 +6614,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "panel_approval_env_value": "approve-v11-panel-submit",
                 "submit_command_if_approved": "ssh cayuga 'bash submit_panel.sh'",
                 "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+                "completion_command_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
                 "receipt_monitor_after_submit": (
                     "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
                     "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
@@ -6678,6 +6679,11 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "explicit_approval_required": True,
                 "can_submit_if_explicitly_approved": True,
                 "can_claim_w2_generalization": False,
+                "approval_disambiguation": {
+                    "continuation_phrases_are_approval": False,
+                    "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+                    "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+                },
                 "receipt_absence": {
                     "local": [
                         {"path": "results/receipt.jsonl", "exists": False},
@@ -6752,6 +6758,29 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("panel_submission_decision_ready=True", render_text(rep))
         self.assertIn("panel_postsync_interpretation_ready=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])
+        ladder = rep["resume_execution_ladder"]
+        self.assertEqual(ladder["next_role"], "w2_panel_submit")
+        self.assertFalse(ladder["approval_disambiguation"]["continuation_phrases_are_approval"])
+        self.assertEqual(
+            [step["role"] for step in ladder["steps"]],
+            [
+                "w2_panel_submit",
+                "w2_panel_receipt_monitor",
+                "w2_panel_job_state_query",
+                "w2_panel_postsubmit_status",
+                "w2_panel_sync_back",
+                "w2_panel_completion",
+                "w2_panel_postsync_replay",
+            ],
+        )
+        self.assertEqual(ladder["steps"][0]["status"], "waiting_for_explicit_approval")
+        self.assertEqual(ladder["steps"][1]["blocked_by"], "w2_panel_submit")
+        self.assertIn("receipt_monitor", ladder["steps"][1]["command"])
+        self.assertIn("job_state_query", ladder["steps"][2]["command"])
+        self.assertIn("--require-sync-ready", ladder["steps"][3]["command"])
+        self.assertIn("sync_back", ladder["steps"][4]["command"])
+        self.assertIn("panel_completion", ladder["steps"][5]["command"])
+        self.assertIn("postsync_interpretation", ladder["steps"][6]["command"])
 
     def test_w2_panel_submission_decision_state_blocks_if_already_submitted(self):
         with tempfile.TemporaryDirectory() as d:

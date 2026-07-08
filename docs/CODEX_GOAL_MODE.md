@@ -177,7 +177,9 @@ Current state:
   invariant as `panel_postsubmit_bridge_ok=true`. The emitted approval packet plus
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
   decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; full project status now
-  reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness
+  reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval` and exposes the post-approval
+  `resume_execution_ladder` from guarded submit through receipt monitor, job-state query, sync-ready status,
+  sync-back, completion, and post-sync interpretation. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` with 23 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
   checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches

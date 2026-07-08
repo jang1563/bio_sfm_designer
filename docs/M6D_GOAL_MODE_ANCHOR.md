@@ -918,7 +918,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     that invariant as `panel_postsubmit_bridge_ok=true`. The v11 panel approval packet, decision protocol,
     and remote-readiness audit report approval-ready/no-submit state
     and `can_claim_w2_generalization_now=false`; full project status now reports W2 as
-    `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
+    `panel_approval_packet_ready_awaiting_explicit_approval` and exposes the post-approval
+    `resume_execution_ladder` from guarded submit through receipt monitor, job-state query, sync-ready
+    status, sync-back, completion, and post-sync interpretation. The no-submit remote readiness audit reports
     `remote_submission_readiness_ok` after 23 exact SHA, 5 semantic JSON, and 2 receipt-absence checks against
     Cayuga; project status also fail-closes if stored exact-check local SHA evidence no longer matches
     the current checkout. The final no-submit decision latch
