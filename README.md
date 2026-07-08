@@ -345,7 +345,10 @@ engine installs from GitHub):
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-  `can_claim_w2_generalization=false`. The panel has not been submitted.
+  `can_claim_w2_generalization=false`. The post-submit status gate
+  (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
+  `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
+  states before allowing sync-back. The panel has not been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

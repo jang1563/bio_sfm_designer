@@ -179,7 +179,10 @@ Current state:
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-  `can_claim_w2_generalization=false`. It has not been submitted.
+  `can_claim_w2_generalization=false`. The post-submit status gate
+  (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
+  `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
+  states before allowing sync-back. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.

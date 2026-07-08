@@ -1,0 +1,17 @@
+{
+  "artifact": "m6d_w2_panel_postsubmit_status",
+  "audit_ok": true,
+  "can_claim_w2_generalization": false,
+  "claim_boundary": "no-submit postsubmit status; no W2 evidence until synced records pass completion and panel report",
+  "failures": [],
+  "manifest_targets": 7,
+  "next_action": "await explicit approval and guarded panel submission before monitoring receipt job states",
+  "no_submit": true,
+  "receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+  "receipt_exists": false,
+  "status": "not_submitted",
+  "submitted": false,
+  "summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+  "summary_exists": false,
+  "sync_ready": false
+}
