@@ -277,7 +277,10 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `can_claim_w2_generalization=false`. The post-submit status gate
 > (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
 > `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
-> states before allowing sync-back. The panel has not been submitted.
+> states before allowing sync-back. The companion no-submit job-state probe
+> (`python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe`) currently records
+> `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
+> postsubmit-compatible `states` JSON. The panel has not been submitted.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a
@@ -585,9 +588,10 @@ the current honest state is `audit_ok=true`, `can_mark_goal_complete=false`, and
 `W2_multi_target_panel`; W2 remains incomplete until the v11 panel is explicitly approved, submitted,
 synced back, completed, and target-wise certified.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 11 exact SHA checks plus 11 semantic JSON checks, including the v11
-panel approval, remote-readiness, submission-decision, and post-submit status artifacts; the next action
-stays limited to explicit panel submission approval, sync-back, completion, and target-wise certification.
+and Cayuga artifacts agree across 11 exact SHA checks plus 12 semantic JSON checks, including the v11
+panel approval, remote-readiness, submission-decision, post-submit status, and job-state probe artifacts;
+the next action stays limited to explicit panel submission approval, sync-back, completion, and target-wise
+certification.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
 status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
 execution is `panel_submission_decision_ready_not_submitted`; it keeps the next action limited to explicit

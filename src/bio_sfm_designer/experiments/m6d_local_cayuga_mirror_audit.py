@@ -199,6 +199,16 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "receipt_exists",
         "summary_exists",
     ],
+    "results/m6d_w2_target_family_redesign_v11_job_state_probe.json": [
+        "status",
+        "audit_ok",
+        "no_submit",
+        "submitted",
+        "receipt_exists",
+        "n_jobs",
+        "n_states",
+        "n_missing_states",
+    ],
 }
 
 

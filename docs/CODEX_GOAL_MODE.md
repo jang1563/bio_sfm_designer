@@ -182,7 +182,10 @@ Current state:
   `can_claim_w2_generalization=false`. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
-  states before allowing sync-back. It has not been submitted.
+  states before allowing sync-back. The companion no-submit job-state probe
+  (`python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe`) currently records
+  `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
+  postsubmit-compatible `states` JSON. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.
@@ -758,8 +761,9 @@ bash results/m6c_project_external_sync_back.sh
   W2 v11 panel approval only, followed by sync-back, completion, and target-wise certification.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 11 semantic
-  checks, including v11 panel approval, remote-readiness, submission-decision, and post-submit status.
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 12 semantic
+  checks, including v11 panel approval, remote-readiness, submission-decision, post-submit status, and
+  job-state probe artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and
   `goal_completion_note` mirror that compact completion/resume state for lightweight checks.
 - `operator_next_action`, `operator_next_command`, and `operator_next_role` mirror the goal-audit first
