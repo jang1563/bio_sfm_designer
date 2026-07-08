@@ -161,7 +161,9 @@ Current state:
   corrected to write records under `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`; the guarded
   wrapper `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` passes local/Cayuga dry-runs,
   preserves the receipt path, and refuses real execution without
-  `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. It has not been submitted.
+  `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Regenerate the wrapper/preflight with
+  `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`. It has not
+  been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.

@@ -904,8 +904,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     records root `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`. The guarded wrapper
     `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` now delegates through the shared
     receipt-preserving wrapper, passes local/Cayuga dry-runs, and refuses real execution without
-    `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Do not reuse the earlier generated submit plan
-    that pointed at `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
+    `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Regenerate this approval-boundary state with
+    `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`. Do not
+    reuse the earlier generated submit plan that pointed at `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
     Cayuga default `python3` is Python 3.6.8 and fails on this repo; use
     `BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python` plus `PYTHONNOUSERSITE=1` for v11
     Cayuga replay/submission commands.

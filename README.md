@@ -327,7 +327,9 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` delegates through the shared
   receipt-preserving wrapper, refuses real execution without
   `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`, and passes local plus Cayuga dry-runs in
-  `results/m6d_w2_target_family_redesign_v11_panel_preflight.{json,md}`. It has not been submitted.
+  `results/m6d_w2_target_family_redesign_v11_panel_preflight.{json,md}`. The reproducible generator is
+  `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; it has
+  been run locally and on Cayuga without creating submit receipts. The panel has not been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

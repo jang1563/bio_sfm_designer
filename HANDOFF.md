@@ -256,7 +256,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` delegates through the shared
 > receipt-preserving wrapper, refuses real execution without
 > `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`, and passes local plus Cayuga dry-runs in
-> `results/m6d_w2_target_family_redesign_v11_panel_preflight.{json,md}`. It has not been submitted.
+> `results/m6d_w2_target_family_redesign_v11_panel_preflight.{json,md}`. The reproducible generator is
+> `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; it has
+> been run locally and on Cayuga without creating submit receipts. The panel has not been submitted.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a
