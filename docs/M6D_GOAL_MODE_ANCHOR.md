@@ -54,21 +54,30 @@ from Chai records alone.
   `results/m6d_w3_runtime_provision_packet.{json,md}` and
   `results/m6d_w3_runtime_provision_colabfold_guarded.sh`
 - Current local harness status: `results/m6d_goal_mode_local_harness_status.{json,md}`
-- Current W2 v9 target-MSA execution attempt:
+- Current active W2 v11 no-spend follow-up contract:
+  `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}`
+- Current active W2 v11 candidate rules:
+  `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`
+- Current W2 v10 full-panel completion/report/diagnostic:
+  `results/m6d_w2_target_family_redesign_v10_panel_completion.json`,
+  `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json`,
+  `results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json`, and
+  `results/m6d_w2_target_family_redesign_v10_redesign_diagnostic_alpha02.{json,md}`
+- Historical W2 v9 target-MSA execution attempt:
   `results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.{json,md}`
-- Current W2 v9 panel preflight:
+- Historical W2 v9 panel preflight:
   `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}`
-- Current W2 v9 panel wrapper guard:
+- Historical W2 v9 panel wrapper guard:
   `results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.{json,md}`
-- Current W2 v9 panel approval packet:
+- Historical W2 v9 panel approval packet:
   `results/m6d_w2_target_family_redesign_v9_panel_approval_packet.{json,md}`
-- Current W2 v9 post-panel decision protocol:
+- Historical W2 v9 post-panel decision protocol:
   `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}`
-- Current W2 v9 panel report:
+- Historical W2 v9 panel report:
   `results/m6d_w2_target_family_redesign_v9_panel_report.json`
-- Current W2 v9 post-panel redesign diagnostic:
+- Historical W2 v9 post-panel redesign diagnostic:
   `results/m6d_w2_target_family_redesign_v9_redesign_diagnostic.{json,md}`
-- Current W2 v9 gate strategy:
+- Historical W2 v9 gate strategy:
   `results/m6d_w2_target_family_redesign_v9_gate_strategy.{json,md}`
 - Current W2 v10 follow-up contract:
   `results/m6d_w2_target_family_redesign_v10_followup_contract.{json,md}`
@@ -840,7 +849,7 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `results/m6d_w2_target_family_redesign_v10_readiness.json` is `ready` with 15 ready targets for
     panel submission. `results/m6d_w2_target_family_redesign_v10_submit_panel.sh` is the v10-specific
     panel submit script.
-68. V10 panel submission is in flight on Cayuga:
+68. V10 panel submission completed on Cayuga:
     `results/m6d_w2_target_family_redesign_v10_submit_panel.sh` passed remote manifest preflight and
     submitted 15 ProteinMPNN/Boltz dependency pairs, logged in
     `results/m6d_w2_target_family_redesign_v10_submit_panel.log` and summarized in
@@ -848,19 +857,55 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `3073830,3073832,3073834,3073836,3073838,3073840,3073842,3073844,3073846,3073848,3073850,3073852,3073854,3073856,3073858`;
     dependent Boltz jobs are
     `3073831,3073833,3073835,3073837,3073839,3073841,3073843,3073845,3073847,3073849,3073851,3073853,3073855,3073857,3073859`.
-    Next action is to monitor these jobs, sync back `hpc_outputs/m6d_w2_target_family_redesign_v10_records/*/records_boltz_complex.jsonl`
-    after completion, then run panel completion and panel report.
-69. V10 partial smoke results are already constraining the science hypothesis:
-    the first four synced record files pass the completion/provenance gate as individual targets, but do
-    not yet support the planned strict `alpha=0.2` generalization. `1E44_BA` has 100 records, 47/100 raw
-    L-RMSD successes, certifies at `alpha=0.3`, and fails at `alpha=0.2`. `1EAY_BD` has 100 records,
-    72/100 raw L-RMSD successes, but fails at both `alpha=0.2` and `alpha=0.3`, suggesting that raw
-    success rate alone is not enough when `pae_interaction` does not cleanly separate failures. `1DVF_BA`
-    and `1DSF_HL` each have 100/100 raw L-RMSD successes, but remain not certified because the TrustGate
-    policy intentionally refuses one-class target calibration (`one_class_all_success_no_rcps_tau`) rather
-    than converting all-success targets into target-wise tau claims. Treat this as an early warning only;
-    the full 15-target `complex_panel_completion`/`complex_panel_report` is still pending, and no W2
-    multi-target certificate is claimed.
+    All final Boltz jobs, including `3073855`, `3073857`, and `3073859`, completed with exit code `0:0`.
+    The records were synced back from
+    `hpc_outputs/m6d_w2_target_family_redesign_v10_records/*/records_boltz_complex.jsonl`.
+69. V10 full-panel readout is completed negative evidence, not a W2 certificate:
+    `results/m6d_w2_target_family_redesign_v10_panel_completion.json` is `ready_for_panel_report`
+    with 15/15 completed targets, and
+    `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json` is
+    `multi_target_evaluable_not_certified` at α=0.2 with 15 targets and 1500 records. The pooled
+    diagnostic certifies α=0.2 (`tau=0.793`, 238 trusted test records, false-accept rate 0.067), but
+    pooled-only evidence remains diagnostic. Target-wise, only `1DXU_DC` certifies at α=0.2; 14 targets
+    remain not certified. The α=0.3 report
+    (`results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json`) also remains
+    `multi_target_evaluable_not_certified`; `1DXU_DC`, `1E44_BA`, `1EM8_AB`, and `1EMV_BA` certify
+    target-wise, while 11 targets still do not. One-class all-success targets remain intentionally
+    non-certified under `one_class_all_success_no_rcps_tau`; one-class all-failure targets remain
+    non-certified under `one_class_all_failure_no_rcps_tau`.
+70. V10 redesign diagnostics freeze the next no-spend branch:
+    `results/m6d_w2_target_family_redesign_v10_redesign_diagnostic_alpha02.{json,md}` recommends
+    `redesign_or_replace_low_success_targets`. It classifies `13IO_HC`, `1DS6_AB`, `1E50_CA`,
+    `1EER_BA`, and `1EQZ_AB` as low-success target/protocol mismatches; keeps `1DXU_DC` as a positive
+    control; and holds `1DQL_HL`, `1DSF_HL`, `1DVF_BA`, `1DXT_DC`, `1E44_BA`, `1E96_BA`, `1EAY_BD`,
+    `1EM8_AB`, and `1EMV_BA` until a low-pAE acceptance or target-specific/family calibration strategy
+    is predeclared. The next branch is now
+    `w2_target_family_redesign_v11_post_v10_decision`, recorded in
+    `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
+    `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`. Cayuga submission remains
+    `false` until at least three non-anchor replacement targets or a predeclared gate redesign pass strict
+    manifest, MSA, completion-plan, and panel-report replay gates.
+71. V11 no-spend replacement-target discovery and target-MSA prep are now complete, but panel submission
+    has not been run:
+    `results/m6d_w2_target_family_redesign_v11_seed_expansion.{json,md}` selected 160 new RCSB seeds
+    after applying v11 exclusions. `results/m6d_w2_target_family_redesign_v11_discovery_pool.{json,md}`
+    screened 2958 chain pairs and selected 20 source-diverse candidates. The full 20-target sequence audit
+    is not broad-panel ready (`sequence_diversity_dominated_by_near_duplicates`, 7 clusters, largest
+    cluster fraction 0.4), so the representative manifest
+    `configs/m6d_w2_target_family_redesign_v11_representative_targets.json` keeps 7 cluster representatives:
+    `10XZ_EF`, `10YB_GH`, `12NP_AH`, `10VB_IJ`, `10ZO_AB`, `1A2Y_BA`, and `1A6W_HL`.
+    The representative audit
+    `results/m6d_w2_target_family_redesign_v11_representative_sequence_diversity.{json,md}` passes with
+    7/7 clusters and largest cluster fraction 0.142857. Target-MSA jobs `3073871`-`3073877` completed on
+    Cayuga with exit code `0:0`; synced `.a3m` and report files pass local and remote
+    `complex_target_manifest --require-files` with 7/7 ready targets.
+    `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`, and the regenerated submit plan
+    `results/m6d_w2_target_family_redesign_v11_submit_panel.sh` writes to the corrected v11-specific
+    records root `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`. Do not reuse the earlier
+    generated submit plan that pointed at `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
+    Cayuga default `python3` is Python 3.6.8 and fails on this repo; use
+    `BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python` plus `PYTHONNOUSERSITE=1` for v11
+    Cayuga replay/submission commands.
 
 ## W3 Decision Path
 

@@ -420,17 +420,19 @@ Allowed decisions:
    roadmap status, W3/W4 sync pointers, combined external-artifact checklist, recommended next script,
    and next action stay explicit.
 6. Treat the current W2 panels as completed negative evidence, not missing runs. The latest durable
-   anchor is `docs/M6D_GOAL_MODE_ANCHOR.md`: `3PC8_AB` is target-specific alpha=0.2 evidence, while W2
-   generalization remains negative. The expanded next-branch panel is now complete and synced back:
-   `results/m6d_w2_expanded_next_branch_panel_report.json` is
-   `multi_target_evaluable_not_certified` at alpha=0.2 with 10 targets and 1000 records. The 3-target RCSB
-   representative follow-up is also complete and evaluable-not-certified. Resume W2 by continuing
-   `w2_target_family_redesign_v2`: use `results/m6d_w2_target_family_redesign_v2_design.{json,md}`,
-   `configs/m6d_w2_target_family_redesign_v2_candidate_rules.json`, and
-   `results/m6d_w2_target_family_redesign_v2_candidate_pool.{json,md}`. The v2 no-spend replay admits
-   0/25 local inventory targets and keeps the remaining source-redundant targets audit-only, so W2 now needs
-   sequence-diversity-aware discovery beyond excluded v2 sources plus a predeclared signal/calibration
-   strategy before target-MSA/Cayuga work.
+   anchor is `docs/M6D_GOAL_MODE_ANCHOR.md`: `3PC8_AB` remains target-specific alpha=0.2 evidence, while
+   W2 generalization remains negative. The latest v10 target-family panel is complete and synced back:
+   `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json` is
+   `multi_target_evaluable_not_certified` at alpha=0.2 with 15 targets and 1500 records. The pooled
+   diagnostic certifies alpha=0.2, but pooled-only evidence remains diagnostic; only `1DXU_DC` certifies
+   target-wise at alpha=0.2. Resume W2 from
+   `w2_target_family_redesign_v11_post_v10_decision`: use
+   `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
+   `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`. The v11 no-spend discovery and
+   target-MSA prep are complete: 20 candidates were structurally selected, a 7-target representative
+   manifest passes sequence diversity, jobs `3073871`-`3073877` completed target-MSA precompute, and
+   `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The next W2 decision is whether
+   to submit the corrected 7-target v11 ProteinMPNN/Boltz panel; no v11 panel records exist yet.
 7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract
    with 30 matched records, but `results/m6c_cross_predictor.json` reports Boltz-Chai label agreement
    of 0.600 against the required 0.800. Therefore independent-predictor robustness is not supported

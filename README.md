@@ -293,16 +293,37 @@ engine installs from GitHub):
   jobs `3073806`-`3073820`; three transient ColabFold/MSA-server fetch failures were repaired with
   jobs `3073822`-`3073824`. The 30 target-MSA/MSA-report files are synced back locally, and
   `results/m6d_w2_target_family_redesign_v10_manifest_post_msa_require_files.json` is now `ok=true`
-  with 15/15 ready targets. V10 panel submission is in flight: `results/m6d_w2_target_family_redesign_v10_submit_panel.sh`
-  submitted 15 ProteinMPNN/Boltz dependency pairs, recorded in
-  `results/m6d_w2_target_family_redesign_v10_submit_receipt.json` with ProteinMPNN jobs
-  `3073830,3073832,...,3073858` and dependent Boltz jobs `3073831,3073833,...,3073859`.
-  The first four synced records are an early science warning, not a panel claim:
-  `1E44_BA` has 100 records and certifies at `alpha=0.3` but not `alpha=0.2`; `1EAY_BD`
-  has 100 records, 72/100 raw L-RMSD successes, and does not certify at `alpha=0.3`;
-  `1DVF_BA` and `1DSF_HL` each have 100/100 raw successes but intentionally remain not certified
-  because the TrustGate policy refuses one-class target calibration (`one_class_all_success_no_rcps_tau`).
-  The full 15-target `complex_panel_completion`/`complex_panel_report` remains pending.
+  with 15/15 ready targets. V10 panel submission then completed on Cayuga: 15 ProteinMPNN/Boltz
+  dependency pairs in `results/m6d_w2_target_family_redesign_v10_submit_receipt.json`, with final
+  Boltz jobs `3073855`, `3073857`, and `3073859` all `COMPLETED` with exit code `0:0`.
+  The synced 15-target readout is now evaluable but not certified:
+  `results/m6d_w2_target_family_redesign_v10_panel_completion.json` is `ready_for_panel_report`,
+  while `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json` is
+  `multi_target_evaluable_not_certified` at α=0.2 with 15 targets and 1500 records. The pooled
+  diagnostic certifies α=0.2, but pooled-only evidence remains diagnostic; only `1DXU_DC` is
+  target-wise certified at α=0.2. The α=0.3 diagnostic
+  (`results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json`) also remains
+  `multi_target_evaluable_not_certified`, with `1DXU_DC`, `1E44_BA`, `1EM8_AB`, and `1EMV_BA`
+  target-wise certified controls but 11 targets still not certified. The v10 redesign diagnostic
+  (`results/m6d_w2_target_family_redesign_v10_redesign_diagnostic_alpha02.{json,md}`) classifies
+  five targets (`13IO_HC`, `1DS6_AB`, `1E50_CA`, `1EER_BA`, `1EQZ_AB`) as low-success
+  target/protocol mismatches and keeps one-class all-success targets non-certified under the TrustGate
+  one-class policy. The next branch is frozen as `w2_target_family_redesign_v11_post_v10_decision` in
+  `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
+  `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`; Cayuga submission is blocked until
+  a no-spend replacement-target discovery or predeclared gate redesign passes the v11 unlock conditions.
+  That no-spend v11 fork has now advanced through input preparation but not panel submission:
+  `results/m6d_w2_target_family_redesign_v11_seed_expansion.{json,md}` selected 160 new RCSB seeds,
+  `results/m6d_w2_target_family_redesign_v11_discovery_pool.{json,md}` screened 2958 chain pairs and
+  selected 20 source-diverse candidates, the full 20-target sequence audit was near-duplicate dominated
+  (7 clusters, largest fraction 0.4), and
+  `configs/m6d_w2_target_family_redesign_v11_representative_targets.json` keeps 7 cluster representatives
+  that pass diversity (`results/m6d_w2_target_family_redesign_v11_representative_sequence_diversity.{json,md}`).
+  Target-MSA precompute jobs `3073871`-`3073877` completed on Cayuga with exit code `0:0`, local and
+  remote `complex_target_manifest --require-files` both pass 7/7, and
+  `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The emitted
+  `results/m6d_w2_target_family_redesign_v11_submit_panel.sh` now writes records to
+  `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`, but it has not been run.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

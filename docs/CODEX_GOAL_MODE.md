@@ -68,13 +68,21 @@ Current W3 runtime provision packet:
 Current local harness status:
 `results/m6d_goal_mode_local_harness_status.{json,md}`.
 
-Current W2 v9 target-MSA execution and guarded panel boundary:
+Current W2 v10 full-panel readout:
+`results/m6d_w2_target_family_redesign_v10_panel_completion.json`,
+`results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json`,
+`results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json`, and
+`results/m6d_w2_target_family_redesign_v10_redesign_diagnostic_alpha02.{json,md}`.
+
+Current W2 v11 no-spend follow-up branch:
+`results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
+`configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`.
+
+Historical W2 v9 target-MSA execution, guarded panel boundary, and post-panel decision protocol:
 `results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.{json,md}`,
 `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}`,
-`results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.{json,md}`, and
-`results/m6d_w2_target_family_redesign_v9_panel_approval_packet.{json,md}`.
-
-Current W2 v9 post-panel decision protocol:
+`results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.{json,md}`,
+`results/m6d_w2_target_family_redesign_v9_panel_approval_packet.{json,md}`, and
 `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}`.
 
 Current W2 revised branch:
@@ -143,12 +151,26 @@ Current state:
 
 - W1: certified target-specific complex gate evidence.
 - W2: evaluable but not certified as multi-target generalization.
-- Current W2 branch: candidate discovery or protocol redesign is required before any new
-  Cayuga W2 submission; `results/m6d_w2_revised_branch.json` has
-  `ready_for_cayuga_submission=false`.
+- Current W2 branch: v10 is completed negative evidence, and v11 is a no-spend follow-up fork.
+  `results/m6d_w2_target_family_redesign_v11_followup_contract.json` and
+  `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json` define the fork. The v11 no-spend
+  replacement-target discovery has advanced through target-MSA prep: 20 structural candidates were found,
+  the full 20-target sequence panel was near-duplicate dominated, a 7-target representative manifest
+  passed diversity, target-MSA jobs `3073871`-`3073877` completed on Cayuga, and
+  `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The emitted panel submit plan is
+  corrected to write records under `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`, but it has
+  not been run.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.
+- Latest W2 v10 target-family panel: 15/15 Cayuga targets completed and synced back. The α=0.2 report
+  is `multi_target_evaluable_not_certified` with 15 targets and 1500 records; the pooled diagnostic
+  certifies α=0.2, but pooled-only evidence remains diagnostic, and only `1DXU_DC` certifies target-wise.
+  The α=0.3 diagnostic remains `multi_target_evaluable_not_certified` with four target-wise controls
+  (`1DXU_DC`, `1E44_BA`, `1EM8_AB`, `1EMV_BA`) and 11 targets still not certified.
+  The v10 diagnostic marks `13IO_HC`, `1DS6_AB`, `1E50_CA`, `1EER_BA`, and `1EQZ_AB` as low-success
+  target/protocol mismatches. Do not submit another W2 panel until the v11 no-spend branch admits at
+  least three replacement targets or a target/family calibration redesign passes strict preflight.
 - Current W2 fresh-discovery pool: screened 10 public RCSB seeds, selected 6 structural chain-pair
   candidates from 3 unique source PDBs. Target-MSA precompute has completed for all 6 candidates, and the
   full fresh manifest now passes strict `--require-files`. To avoid source-redundancy drift, the current
@@ -181,9 +203,9 @@ Current state:
   job `3056576` for `1QFW_BA` failed on a target-MSA/candidate sequence mismatch caused by a terminal
   atom-only residue, but repair job `3056582` completed using CA-target-sequence repaired candidates.
   This authorizes no W2 generalization claim: all 10 target-wise certificates are `not_certified`, even
-  though the pooled diagnostic can certify tau=0.4. The active branch has moved beyond the older
-  `w2_target_family_redesign_v1` and v6 inventory checks to the v9 target-family redesign gate.
-  `results/m6d_w2_target_family_redesign_v9_target_msa_gate_audit.{json,md}` is the current no-spend
+  though the pooled diagnostic can certify tau=0.4. This branch was later superseded by the v9 and v10
+  target-family redesign sequence; the active W2 fork is now v11 no-spend follow-up.
+  `results/m6d_w2_target_family_redesign_v9_target_msa_gate_audit.{json,md}` is a historical no-spend
   checkpoint: `audit_ok=true`, 14 representative targets, 28 expected pending target-MSA/MSA-report paths,
   70/98 input-prep artifacts present, and `ready_for_panel_submission=false`.
   `results/m6c_project_status_w2_followup.json` consumes this audit as superseded target-MSA-gate
@@ -212,7 +234,7 @@ Current state:
   after the target Cayuga no-submit probe, W3 runtime repair-plan consumption, and W3 guarded runtime
   provision-packet consumption. The current addition records the Cayuga probe as runtime-blocked and emits
   a guarded runtime validation packet, not execution inputs.
-- Current W2 execution attempt: after explicit full-14 target-MSA input-prep approval, the configured
+- Historical W2 v9 execution attempt: after explicit full-14 target-MSA input-prep approval, the configured
   Cayuga login host became reachable and the target-MSA-only wrapper ran successfully.
   `results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.{json,md}` reports
   `target_msa_outputs_synced_strict_require_files_passed`, latest check `2026-07-05T09:08:12+09:00`.
@@ -221,7 +243,7 @@ Current state:
   3 targets as jobs `3059577`-`3059579`, all completed. Sync-back then passed: `98/98` input-prep
   artifacts, strict manifest `14/14` targets ready, post-sync pending paths `0`. This is target-MSA
   input-prep provenance only, not W2 evidence and not ProteinMPNN/Boltz panel submission.
-- Current W2 v9 panel preflight: `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}`
+- Historical W2 v9 panel preflight: `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}`
   records `panel_preflight_dry_run_passed_not_submitted`. The generator emitted
   `results/m6d_w2_target_family_redesign_v9_submit_ready.json` and
   `results/m6d_w2_target_family_redesign_v9_submit_plan.sh`; branch-specific workflow entrypoints are
@@ -229,7 +251,7 @@ Current state:
   `results/m6d_w2_target_family_redesign_v9_completion.sh`, and
   `results/m6d_w2_target_family_redesign_v9_sync_back.sh`. Dry-run verified `14/14` targets, made no
   `sbatch` calls, and left the v9 submit receipt/summary absent. This is still not W2 panel evidence.
-- Current W2 v9 panel approval boundary:
+- Historical W2 v9 panel approval boundary:
   `results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.{json,md}` reports
   `panel_wrapper_guard_ok`: non-dry execution without
   `BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit` exits before submit receipt creation.
@@ -238,7 +260,7 @@ Current state:
   `can_claim_w2_generalization=false`. The packet fixes the guarded Cayuga submit command and sync-back
   command, but it is not approval and it is not W2 evidence. Project status consumes it through
   `--w2-panel-approval-packet` while keeping W2 incomplete.
-- Current W2 v9 post-panel decision protocol:
+- Historical W2 v9 post-panel decision protocol:
   `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}` reports
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
   It predeclares the alpha=0.2, 14-target decision rules for interpreting future synced panel records:
@@ -334,13 +356,11 @@ Current state:
   build-selection evidence.
 
 Do not resume from the older instruction to "scale matched Chai records"; that scale-up is done.
-Resume from the W2 v9 panel boundary unless the user explicitly selects the W3 decision fork. The
-explicit full-14 target-MSA input-prep approval has already been used, target-MSA outputs are synced, and
-strict `--require-files` passed. The v9 ProteinMPNN/Boltz panel preflight/dry-run now passes, and the
-panel approval packet is ready behind `BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit`, but panel
-submission has not happened. The post-panel decision protocol is ready and fixes how future records will
-be interpreted. The next W2 boundary is explicit v9 panel submission plus sync-back, completion, and
-target-wise panel certification; do not claim W2 generalization unless that certification passes. The W3
+Do not resume from the older W2 v9 submit boundary either; v9 and v10 panel execution are now completed
+negative/evaluable evidence. Resume from the W2 v11 representative-panel boundary unless the user explicitly
+selects the W3 decision fork. The next W2 boundary is an explicit decision on whether to run the 7-target
+v11 ProteinMPNN/Boltz panel from `results/m6d_w2_target_family_redesign_v11_submit_panel.sh`; do not claim
+W2 generalization unless a future target-wise panel certificate passes. The W3
 next protocol is now predeclared: third independent predictor/protocol first, stronger Chai MSA/template
 as a protocol-variant branch. The current W3 Cayuga probe has executed but is runtime-blocked; repair
 ColabFold/JAX/GPU availability through the guarded runtime provision-packet boundary, then rerun the
@@ -710,8 +730,8 @@ bash results/m6c_project_external_sync_back.sh
   remaining requirement.
 - `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit. The
   current honest state is `audit_ok=true`, `major_direction_drift=false`, direction aligned, claim
-  boundaries preserved, and next action limited to the next W2 v9 panel step plus target-wise
-  certification before any W2 generalization claim.
+  boundaries preserved, and next action limited to the W2 v11 no-spend follow-up branch plus a future
+  target-wise certificate before any W2 generalization claim.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
   or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 7 semantic checks.

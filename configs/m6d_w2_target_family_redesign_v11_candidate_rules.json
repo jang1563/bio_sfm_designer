@@ -1,0 +1,75 @@
+{
+  "artifact": "m6d_w2_target_family_followup_candidate_rules",
+  "can_mark_goal_complete": false,
+  "candidate_requirements": {
+    "max_largest_cluster_fraction_for_full_panel": 0.25,
+    "min_ca_interface_contacts": 20,
+    "min_non_anchor_candidates_for_revised_manifest": 3,
+    "reject_current_protocol_low_success_targets": true,
+    "reject_current_protocol_zero_trusted_targets_without_gate_redesign": true,
+    "require_prep_report": true,
+    "require_prepared_pdb": true,
+    "require_sequence_diversity_gate": true,
+    "require_source_pdb_deduplication": true,
+    "require_target_fasta": true,
+    "require_target_fasta_report": true,
+    "require_target_msa": true,
+    "require_target_msa_report": true
+  },
+  "date": "2026-07-08",
+  "excluded_source_rcsb_ids": [
+    "13IO",
+    "1DQL",
+    "1DS6",
+    "1DSF",
+    "1DVF",
+    "1DXT",
+    "1DXU",
+    "1E44",
+    "1E50",
+    "1E96",
+    "1EAY",
+    "1EER",
+    "1EM8",
+    "1EMV",
+    "1EQZ"
+  ],
+  "excluded_targets_under_current_protocol": [
+    "13IO_HC",
+    "1DQL_HL",
+    "1DS6_AB",
+    "1DSF_HL",
+    "1DVF_BA",
+    "1DXT_DC",
+    "1E44_BA",
+    "1E50_CA",
+    "1E96_BA",
+    "1EAY_BD",
+    "1EER_BA",
+    "1EM8_AB",
+    "1EMV_BA",
+    "1EQZ_AB"
+  ],
+  "gate_requirements": {
+    "disallow_pooled_only_claim": true,
+    "fixed_low_pae_cutoff_transfer_allowed": false,
+    "require_target_wise_certificates": true,
+    "target_alpha": 0.2,
+    "target_specific_or_family_rcps_must_be_predeclared": true
+  },
+  "positive_controls_not_generalization_targets": [
+    "1DXU_DC"
+  ],
+  "protocol_id": "w2_target_family_redesign_v11_post_v10_decision",
+  "ready_for_cayuga_submission": false,
+  "source_contract": "results/m6d_w2_target_family_redesign_v11_followup_contract.json",
+  "spend_gate": {
+    "cayuga_submission_allowed": false,
+    "unlock_conditions": [
+      "candidate screen admits at least three non-anchor targets under this contract",
+      "revised target manifest is written and linked from the goal anchor",
+      "strict post-MSA manifest preflight passes",
+      "receipt-preserving submit wrapper, completion plan, and panel report command are generated"
+    ]
+  }
+}
