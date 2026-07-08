@@ -288,12 +288,19 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v10_sequence_diversity.{json,md}` passes with 16 targets,
   15 sequence clusters, and largest cluster fraction 0.125; the representative manifest
   `configs/m6d_w2_target_family_redesign_v10_representative_targets.json` keeps 15 targets after dropping
-  the near-duplicate `1DXV_DC`. Pre-MSA manifest validation is 15/15 ready and emits
-  `results/m6d_w2_target_family_redesign_v10_target_msas.sh`; strict post-MSA validation intentionally
-  fails closed on 30 missing target-MSA/MSA-report files, tracked in
-  `results/m6d_w2_target_family_redesign_v10_input_prep_completion_pre_sync.json` and
-  `results/m6d_w2_target_family_redesign_v10_pending_input_prep_paths.txt`. No Cayuga target-MSA or
-  ProteinMPNN/Boltz jobs have been submitted for v10.
+  the near-duplicate `1DXV_DC`. Pre-MSA manifest validation was 15/15 ready and emitted
+  `results/m6d_w2_target_family_redesign_v10_target_msas.sh`. Cayuga target-MSA precompute submitted
+  jobs `3073806`-`3073820`; three transient ColabFold/MSA-server fetch failures were repaired with
+  jobs `3073822`-`3073824`. The 30 target-MSA/MSA-report files are synced back locally, and
+  `results/m6d_w2_target_family_redesign_v10_manifest_post_msa_require_files.json` is now `ok=true`
+  with 15/15 ready targets. V10 panel submission is in flight: `results/m6d_w2_target_family_redesign_v10_submit_panel.sh`
+  submitted 15 ProteinMPNN/Boltz dependency pairs, recorded in
+  `results/m6d_w2_target_family_redesign_v10_submit_receipt.json` with ProteinMPNN jobs
+  `3073830,3073832,...,3073858` and dependent Boltz jobs `3073831,3073833,...,3073859`.
+  The first two synced records are an early science warning, not a panel claim:
+  `1E44_BA` has 100 records and certifies at `alpha=0.3` but not `alpha=0.2`, while `1EAY_BD`
+  has 100 records, 72/100 raw L-RMSD successes, and does not certify at `alpha=0.3`; the full
+  15-target `complex_panel_completion`/`complex_panel_report` remains pending.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

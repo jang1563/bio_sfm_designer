@@ -825,19 +825,39 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     largest cluster fraction 0.125 under the v10 0.25 cap. The representative manifest
     `configs/m6d_w2_target_family_redesign_v10_representative_targets.json` keeps 15 targets after dropping
     the near-duplicate `1DXV_DC` from the `1DXU_DC`/`1DXV_DC` cluster.
-66. V10 pre-MSA manifest validation is ready but not submitted:
-    `results/m6d_w2_target_family_redesign_v10_manifest_pre_msa.json` is `ok=true` with 15/15 ready targets
-    and emits `results/m6d_w2_target_family_redesign_v10_target_msas.sh`. The MSA plan dry-run passes with
-    `TARGET_MSA_PRECOMPUTE_DRY_RUN=1`, confirming manifest freshness and target list without scheduler
-    submission or receipt mutation. Strict post-MSA validation
-    `results/m6d_w2_target_family_redesign_v10_manifest_post_msa_require_files.json` intentionally fails
-    closed on 30 missing target-MSA/MSA-report files.
-67. V10 pre-sync input-prep completion freezes the next boundary:
-    `results/m6d_w2_target_family_redesign_v10_input_prep_completion_pre_sync.json` is `blocked` with
-    75/105 artifacts present/nonempty and exactly 30 pending MSA/MSA-report artifacts listed in
-    `results/m6d_w2_target_family_redesign_v10_pending_input_prep_paths.txt`. No v10 Cayuga target-MSA,
-    ProteinMPNN, or Boltz jobs have been submitted. The next action is to create/guard the v10 target-MSA
-    approval bridge, then run it only with explicit user approval.
+66. V10 target-MSA precompute is complete after one repair pass:
+    `results/m6d_w2_target_family_redesign_v10_manifest_pre_msa.json` was `ok=true` with 15/15 ready
+    targets and emitted `results/m6d_w2_target_family_redesign_v10_target_msas.sh`. Cayuga submitted
+    target-MSA jobs `3073806`-`3073820`; three transient ColabFold/MSA-server fetch failures
+    (`1E44_BA`, `1DSF_HL`, `1EM8_AB`) were repaired with jobs `3073822`-`3073824`, recorded in
+    `results/m6d_w2_target_family_redesign_v10_target_msa_repair_receipt.jsonl`. Remote-check then passed
+    with all 30 MSA/report artifacts present, external sync-back pulled them locally, and
+    `results/m6d_w2_target_family_redesign_v10_manifest_post_msa_require_files.json` is now `ok=true`
+    with 15/15 ready targets.
+67. V10 input prep and readiness are now panel-ready:
+    `results/m6d_w2_target_family_redesign_v10_input_prep_completion_pre_sync.json` is
+    `ready_for_require_files` with 105/105 artifacts nonempty, and
+    `results/m6d_w2_target_family_redesign_v10_readiness.json` is `ready` with 15 ready targets for
+    panel submission. `results/m6d_w2_target_family_redesign_v10_submit_panel.sh` is the v10-specific
+    panel submit script.
+68. V10 panel submission is in flight on Cayuga:
+    `results/m6d_w2_target_family_redesign_v10_submit_panel.sh` passed remote manifest preflight and
+    submitted 15 ProteinMPNN/Boltz dependency pairs, logged in
+    `results/m6d_w2_target_family_redesign_v10_submit_panel.log` and summarized in
+    `results/m6d_w2_target_family_redesign_v10_submit_receipt.json`. ProteinMPNN jobs are
+    `3073830,3073832,3073834,3073836,3073838,3073840,3073842,3073844,3073846,3073848,3073850,3073852,3073854,3073856,3073858`;
+    dependent Boltz jobs are
+    `3073831,3073833,3073835,3073837,3073839,3073841,3073843,3073845,3073847,3073849,3073851,3073853,3073855,3073857,3073859`.
+    Next action is to monitor these jobs, sync back `hpc_outputs/m6d_w2_target_family_redesign_v10_records/*/records_boltz_complex.jsonl`
+    after completion, then run panel completion and panel report.
+69. V10 partial smoke results are already constraining the science hypothesis:
+    the first two synced record files pass the completion/provenance gate as individual targets, but do
+    not yet support the planned strict `alpha=0.2` generalization. `1E44_BA` has 100 records, 47/100 raw
+    L-RMSD successes, certifies at `alpha=0.3`, and fails at `alpha=0.2`. `1EAY_BD` has 100 records,
+    72/100 raw L-RMSD successes, but fails at both `alpha=0.2` and `alpha=0.3`, suggesting that raw
+    success rate alone is not enough when `pae_interaction` does not cleanly separate failures. Treat this
+    as an early warning only; the full 15-target `complex_panel_completion`/`complex_panel_report` is still
+    pending, and no W2 multi-target certificate is claimed.
 
 ## W3 Decision Path
 
