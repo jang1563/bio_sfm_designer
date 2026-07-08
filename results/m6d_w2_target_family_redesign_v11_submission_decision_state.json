@@ -5,6 +5,25 @@
     "submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
     "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
   },
+  "approval_disambiguation": {
+    "approval_must_acknowledge": [
+      "run the guarded Cayuga panel submit command",
+      "create submit receipt and Slurm jobs",
+      "spend GPU/compute before sync-back and target-wise certification"
+    ],
+    "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+    "continuation_phrases_are_approval": false,
+    "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+    "non_approval_continuation_phrases": [
+      "resume goal",
+      "resume goal mode",
+      "go ahead",
+      "continue",
+      "keep going",
+      "\uc774\uc5b4\uc11c",
+      "\uacc4\uc18d"
+    ]
+  },
   "artifact": "m6d_w2_v11_submission_decision_state",
   "audit_ok": true,
   "can_claim_w2_generalization": false,

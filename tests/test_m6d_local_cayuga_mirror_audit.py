@@ -53,6 +53,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
         ]
         status_fields = _JSON_FIELD_SPECS["results/m6c_project_status_w2_followup.json"]
+        decision_fields = _JSON_FIELD_SPECS[
+            "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
+        ]
 
         self.assertIn("postsubmit_status_before_sync", packet_fields)
         self.assertIn("job_state_probe_before_sync", packet_fields)
@@ -69,6 +72,8 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "workstreams.W2_multi_target_panel.panel_postsubmit_bridge_ok",
             status_fields,
         )
+        self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
+        self.assertIn("approval_disambiguation.machine_gate", decision_fields)
 
     def test_build_audit_accepts_matching_exact_and_semantic_fields(self):
         with tempfile.TemporaryDirectory() as d:

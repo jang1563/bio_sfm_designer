@@ -45,6 +45,13 @@ python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-
 
 This artifact does not submit jobs and does not create W2 evidence.
 
+## Approval Disambiguation
+
+- continuation phrases are approval: `False`
+- approval must explicitly name: `W2 v11 Cayuga ProteinMPNN/Boltz panel submission`
+- machine gate: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
+- non-approval continuation phrases: `resume goal`, `resume goal mode`, `go ahead`, `continue`, `keep going`, `이어서`, `계속`
+
 ## Next Action
 
 await explicit user approval before running submit_command_if_approved

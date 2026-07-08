@@ -26,6 +26,15 @@ _PROJECT_W2_READY_STATUS = "panel_approval_packet_ready_awaiting_explicit_approv
 _APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
 _REMOTE_READY_STATUS = "remote_submission_readiness_ok"
+_NON_APPROVAL_CONTINUATIONS = [
+    "resume goal",
+    "resume goal mode",
+    "go ahead",
+    "continue",
+    "keep going",
+    "이어서",
+    "계속",
+]
 _DRIFT_READY_EXECUTIONS = {
     "panel_remote_readiness_ready_not_submitted",
     "panel_submission_decision_ready_not_submitted",
@@ -420,6 +429,21 @@ def build_decision_state(
             "submit_command_if_approved": approval.get("submit_command_if_approved"),
             "sync_back_command_after_jobs_finish": approval.get("sync_back_command_after_jobs_finish"),
         },
+        "approval_disambiguation": {
+            "continuation_phrases_are_approval": False,
+            "non_approval_continuation_phrases": list(_NON_APPROVAL_CONTINUATIONS),
+            "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+            "approval_must_acknowledge": [
+                "run the guarded Cayuga panel submit command",
+                "create submit receipt and Slurm jobs",
+                "spend GPU/compute before sync-back and target-wise certification",
+            ],
+            "machine_gate": (
+                str(approval.get("panel_approval_env_var") or "")
+                + "="
+                + str(approval.get("panel_approval_env_value") or "")
+            ),
+        },
         "prerequisites": states,
         "receipt_absence": {
             "local": local_receipts,
@@ -498,6 +522,21 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "```",
         "",
         "This artifact does not submit jobs and does not create W2 evidence.",
+        "",
+    ])
+    disambiguation = (
+        rep.get("approval_disambiguation")
+        if isinstance(rep.get("approval_disambiguation"), dict)
+        else {}
+    )
+    non_approval = disambiguation.get("non_approval_continuation_phrases") or []
+    lines.extend([
+        "## Approval Disambiguation",
+        "",
+        f"- continuation phrases are approval: `{disambiguation.get('continuation_phrases_are_approval')}`",
+        f"- approval must explicitly name: `{disambiguation.get('approval_must_explicitly_name')}`",
+        f"- machine gate: `{disambiguation.get('machine_gate')}`",
+        "- non-approval continuation phrases: " + ", ".join(f"`{phrase}`" for phrase in non_approval),
         "",
     ])
     failures = rep.get("failures") or []

@@ -924,7 +924,8 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     the current checkout. The final no-submit decision latch
     `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` now records
     `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-    `can_claim_w2_generalization=false`. The post-submit status gate
+    `can_claim_w2_generalization=false`; its approval-disambiguation block records that continuation phrases
+    such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
     `results/m6d_w2_target_family_redesign_v11_postsubmit_status.{json,md}` currently records
     `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
     states before allowing sync-back. The no-submit receipt monitor
