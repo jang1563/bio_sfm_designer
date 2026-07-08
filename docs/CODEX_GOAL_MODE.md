@@ -168,7 +168,10 @@ Current state:
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The emitted approval packet plus
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
   decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; project status now
-  reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. It has not been submitted.
+  reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness
+  audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
+  `remote_submission_readiness_ok` with 14 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
+  checks. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.

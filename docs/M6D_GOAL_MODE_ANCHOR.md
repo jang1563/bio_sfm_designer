@@ -909,8 +909,10 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     emits the no-submit approval runbook, sync-back script, and panel-completion script for the approved-run
     aftermath. The v11 panel approval packet and decision protocol report approval-ready/no-submit state
     and `can_claim_w2_generalization_now=false`; project status now reports W2 as
-    `panel_approval_packet_ready_awaiting_explicit_approval`. Do not reuse the earlier generated submit plan
-    that pointed at `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
+    `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
+    `remote_submission_readiness_ok` after exact SHA, semantic JSON, and receipt-absence checks against
+    Cayuga. Do not reuse the earlier generated submit plan that pointed at
+    `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
     Cayuga default `python3` is Python 3.6.8 and fails on this repo; use
     `BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python` plus `PYTHONNOUSERSITE=1` for v11
     Cayuga replay/submission commands.

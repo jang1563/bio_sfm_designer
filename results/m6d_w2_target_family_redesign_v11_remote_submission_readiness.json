@@ -1,0 +1,430 @@
+{
+  "absence_checks": [
+    {
+      "local_exists": false,
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+      "remote_exists": false
+    },
+    {
+      "local_exists": false,
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+      "remote_exists": false
+    }
+  ],
+  "artifact": "m6d_w2_v11_remote_submission_readiness",
+  "audit_ok": true,
+  "can_claim_w2_generalization": false,
+  "can_submit_panel_if_user_explicitly_approves": true,
+  "claim_boundary": "no-submit remote readiness audit; it only supports the execution decision boundary, not W2 generalization evidence",
+  "exact_checks": [
+    {
+      "local_bytes": 7992,
+      "local_sha256": "df7bc48dd27f2d9f6927552621b5fe3d4da40dae7d30dd174014ea689b4ae052",
+      "ok": true,
+      "path": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+      "remote_bytes": 7992,
+      "remote_sha256": "df7bc48dd27f2d9f6927552621b5fe3d4da40dae7d30dd174014ea689b4ae052"
+    },
+    {
+      "local_bytes": 1790,
+      "local_sha256": "e1dea5345a3f4290483e9a81ca6918edeb1a86319576843faf363fcded5c7de0",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh",
+      "remote_bytes": 1790,
+      "remote_sha256": "e1dea5345a3f4290483e9a81ca6918edeb1a86319576843faf363fcded5c7de0"
+    },
+    {
+      "local_bytes": 1968,
+      "local_sha256": "e0303a6ee0ca85b89b61a261a37a590ebf59566f6066ff6f248aa3fd56bab363",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+      "remote_bytes": 1968,
+      "remote_sha256": "e0303a6ee0ca85b89b61a261a37a590ebf59566f6066ff6f248aa3fd56bab363"
+    },
+    {
+      "local_bytes": 525,
+      "local_sha256": "9fe7e6e26631ffe3ecd0721fd1e6bcf0ecf34e3b85486c9634af458747986249",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+      "remote_bytes": 525,
+      "remote_sha256": "9fe7e6e26631ffe3ecd0721fd1e6bcf0ecf34e3b85486c9634af458747986249"
+    },
+    {
+      "local_bytes": 11105,
+      "local_sha256": "0ed870f11f92727569e7bdc6dd37557c7d1eaad03c4dcf0d9c4e8a9940d2eaef",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh",
+      "remote_bytes": 11105,
+      "remote_sha256": "0ed870f11f92727569e7bdc6dd37557c7d1eaad03c4dcf0d9c4e8a9940d2eaef"
+    },
+    {
+      "local_bytes": 35473,
+      "local_sha256": "95cba261f27cd7c88aa8507959fbb0d2e09becef3f4446838e7f3e816365b0ee",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
+      "remote_bytes": 35473,
+      "remote_sha256": "95cba261f27cd7c88aa8507959fbb0d2e09becef3f4446838e7f3e816365b0ee"
+    },
+    {
+      "local_bytes": 19302,
+      "local_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_decision_protocol.py",
+      "remote_bytes": 19302,
+      "remote_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2"
+    },
+    {
+      "local_bytes": 490735,
+      "local_sha256": "4fe818aa0893908c777ce6bb6d5ec9d1907c50ff57efeb96cc0dee1ecddca963",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
+      "remote_bytes": 490735,
+      "remote_sha256": "4fe818aa0893908c777ce6bb6d5ec9d1907c50ff57efeb96cc0dee1ecddca963"
+    },
+    {
+      "local_bytes": 13348,
+      "local_sha256": "6560d7d07fbf5997e4028ea00aeb9ef6bc3a53f57874094afcbf9dcfc7276109",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/complex_panel_completion.py",
+      "remote_bytes": 13348,
+      "remote_sha256": "6560d7d07fbf5997e4028ea00aeb9ef6bc3a53f57874094afcbf9dcfc7276109"
+    },
+    {
+      "local_bytes": 10076,
+      "local_sha256": "ac0ab584c645a51dcca324de41e3a62155ce642dd4e6fc4bc8d3e04c7e16e30d",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/complex_panel_report.py",
+      "remote_bytes": 10076,
+      "remote_sha256": "ac0ab584c645a51dcca324de41e3a62155ce642dd4e6fc4bc8d3e04c7e16e30d"
+    },
+    {
+      "local_bytes": 8387,
+      "local_sha256": "0756eab287af76d330e779e44504da5b8d9e74741252a8a137bb3894101f4f35",
+      "ok": true,
+      "path": "hpc/generate_proteinmpnn_complex.py",
+      "remote_bytes": 8387,
+      "remote_sha256": "0756eab287af76d330e779e44504da5b8d9e74741252a8a137bb3894101f4f35"
+    },
+    {
+      "local_bytes": 13244,
+      "local_sha256": "1e54652bdd4c0ebe41915d12d758bace6d8e2c5fc0b8266cd210013fa9bbdcf1",
+      "ok": true,
+      "path": "hpc/predict_boltz_complex.py",
+      "remote_bytes": 13244,
+      "remote_sha256": "1e54652bdd4c0ebe41915d12d758bace6d8e2c5fc0b8266cd210013fa9bbdcf1"
+    },
+    {
+      "local_bytes": 1664,
+      "local_sha256": "d27d0000de46da05086f4715bfec0d7ff5d533ada3d7e59bdc4aa9712cd337a1",
+      "ok": true,
+      "path": "hpc/run_generate_proteinmpnn_complex.sbatch",
+      "remote_bytes": 1664,
+      "remote_sha256": "d27d0000de46da05086f4715bfec0d7ff5d533ada3d7e59bdc4aa9712cd337a1"
+    },
+    {
+      "local_bytes": 2319,
+      "local_sha256": "254e7c985fdd92d388261f8af01a319344a428a16e5bb0ecfbbc1c5bc2ca53d9",
+      "ok": true,
+      "path": "hpc/run_predict_boltz_complex.sbatch",
+      "remote_bytes": 2319,
+      "remote_sha256": "254e7c985fdd92d388261f8af01a319344a428a16e5bb0ecfbbc1c5bc2ca53d9"
+    }
+  ],
+  "failures": [],
+  "local_root": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer",
+  "n_absence_checks": 2,
+  "n_exact_checks": 14,
+  "n_failures": 0,
+  "n_semantic_checks": 5,
+  "next_action": "remote mirror is ready; still wait for explicit user approval before guarded W2 v11 panel submission",
+  "no_submit": true,
+  "remote_host": "cayuga-login1",
+  "remote_root": "/home/fs01/jak4013/bio_sfm_smoke",
+  "semantic_checks": [
+    {
+      "fields": [
+        {
+          "field": "status",
+          "local": "panel_preflight_dry_run_passed_not_submitted",
+          "ok": true,
+          "remote": "panel_preflight_dry_run_passed_not_submitted"
+        },
+        {
+          "field": "audit_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "submit_ready.ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "submit_ready.n_targets",
+          "local": 7,
+          "ok": true,
+          "remote": 7
+        },
+        {
+          "field": "submit_ready.n_ready_targets",
+          "local": 7,
+          "ok": true,
+          "remote": 7
+        },
+        {
+          "field": "panel_wrapper_guard.approval_env_var",
+          "local": "BIO_SFM_APPROVE_V11_PANEL",
+          "ok": true,
+          "remote": "BIO_SFM_APPROVE_V11_PANEL"
+        },
+        {
+          "field": "panel_wrapper_guard.approval_env_value",
+          "local": "approve-v11-panel-submit",
+          "ok": true,
+          "remote": "approve-v11-panel-submit"
+        },
+        {
+          "field": "panel_wrapper_guard.dry_run_env_var",
+          "local": "M6D_W2_V11_SUBMIT_DRY_RUN",
+          "ok": true,
+          "remote": "M6D_W2_V11_SUBMIT_DRY_RUN"
+        },
+        {
+          "field": "panel_wrapper_guard.no_env_non_dry_refuses_before_receipt",
+          "local": true,
+          "ok": true,
+          "remote": true
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_panel_preflight.json"
+    },
+    {
+      "fields": [
+        {
+          "field": "status",
+          "local": "panel_wrapper_guard_ok",
+          "ok": true,
+          "remote": "panel_wrapper_guard_ok"
+        },
+        {
+          "field": "audit_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "panel_approval_env_var",
+          "local": "BIO_SFM_APPROVE_V11_PANEL",
+          "ok": true,
+          "remote": "BIO_SFM_APPROVE_V11_PANEL"
+        },
+        {
+          "field": "panel_approval_env_value",
+          "local": "approve-v11-panel-submit",
+          "ok": true,
+          "remote": "approve-v11-panel-submit"
+        },
+        {
+          "field": "static_audit.ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "no_env_run.ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "no_env_run.receipt_exists_after",
+          "local": false,
+          "ok": true,
+          "remote": false
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json"
+    },
+    {
+      "fields": [
+        {
+          "field": "status",
+          "local": "panel_approval_packet_ready",
+          "ok": true,
+          "remote": "panel_approval_packet_ready"
+        },
+        {
+          "field": "audit_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "approval_packet_ready",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "can_submit_panel_if_user_explicitly_approves",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "can_claim_w2_generalization",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "panel_approval_env_var",
+          "local": "BIO_SFM_APPROVE_V11_PANEL",
+          "ok": true,
+          "remote": "BIO_SFM_APPROVE_V11_PANEL"
+        },
+        {
+          "field": "panel_approval_env_value",
+          "local": "approve-v11-panel-submit",
+          "ok": true,
+          "remote": "approve-v11-panel-submit"
+        },
+        {
+          "field": "checks.target_msa_strict_ready",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "checks.panel_preflight_ready",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "checks.panel_dry_run_no_sbatch",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "checks.panel_guard_no_env_refuses",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "checks.submit_receipt_absent",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "checks.submit_summary_absent",
+          "local": true,
+          "ok": true,
+          "remote": true
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
+    },
+    {
+      "fields": [
+        {
+          "field": "status",
+          "local": "post_panel_decision_protocol_ready",
+          "ok": true,
+          "remote": "post_panel_decision_protocol_ready"
+        },
+        {
+          "field": "audit_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "no_submit",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "can_submit_panel_if_user_explicitly_approves",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "can_claim_w2_generalization_now",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "current_panel_result.status",
+          "local": "not_available_not_submitted",
+          "ok": true,
+          "remote": "not_available_not_submitted"
+        },
+        {
+          "field": "current_panel_result.w2_generalization_supported",
+          "local": false,
+          "ok": true,
+          "remote": false
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json"
+    },
+    {
+      "fields": [
+        {
+          "field": "workstreams.W2_multi_target_panel.status",
+          "local": "panel_approval_packet_ready_awaiting_explicit_approval",
+          "ok": true,
+          "remote": "panel_approval_packet_ready_awaiting_explicit_approval"
+        },
+        {
+          "field": "workstreams.W2_multi_target_panel.complete",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "workstreams.W2_multi_target_panel.panel_approval_packet_ready",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "workstreams.W2_multi_target_panel.panel_decision_protocol_ready",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "workstreams.W2_multi_target_panel.panel_decision_no_submit",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "workstreams.W2_multi_target_panel.panel_decision_can_claim_w2_now",
+          "local": false,
+          "ok": true,
+          "remote": false
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_project_status.json"
+    }
+  ],
+  "status": "remote_submission_readiness_ok"
+}

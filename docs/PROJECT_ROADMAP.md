@@ -436,7 +436,8 @@ Allowed decisions:
    refuses real execution without `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`; the generator is
    `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`, which also
    emits the approval runbook, sync-back script, panel-completion script, approval packet, and decision
-   protocol. Project status reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The
+   protocol. Project status reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`, and the
+   no-submit remote readiness audit reports `remote_submission_readiness_ok` for the Cayuga mirror. The
    next W2 decision is whether to explicitly approve the corrected 7-target v11 ProteinMPNN/Boltz panel;
    no v11 panel records exist yet.
 7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract
