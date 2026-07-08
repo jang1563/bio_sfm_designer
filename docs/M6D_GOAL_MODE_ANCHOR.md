@@ -58,6 +58,8 @@ from Chai records alone.
   `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}`
 - Current active W2 v11 candidate rules:
   `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`
+- Current active W2 v11 panel submission-decision state:
+  `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}`
 - Current W2 v10 full-panel completion/report/diagnostic:
   `results/m6d_w2_target_family_redesign_v10_panel_completion.json`,
   `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json`,
@@ -911,7 +913,10 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     and `can_claim_w2_generalization_now=false`; full project status now reports W2 as
     `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
     `remote_submission_readiness_ok` after exact SHA, semantic JSON, and receipt-absence checks against
-    Cayuga. Do not reuse the earlier generated submit plan that pointed at
+    Cayuga. The final no-submit decision latch
+    `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` now records
+    `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
+    `can_claim_w2_generalization=false`. Do not reuse the earlier generated submit plan that pointed at
     `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
     Cayuga default `python3` is Python 3.6.8 and fails on this repo; use
     `BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python` plus `PYTHONNOUSERSITE=1` for v11

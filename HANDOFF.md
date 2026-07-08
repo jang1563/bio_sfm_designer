@@ -269,7 +269,11 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit Cayuga mirror audit
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
 > `remote_submission_readiness_ok` after 14 exact SHA checks, 5 semantic JSON checks, and 2
-> receipt-absence checks. The panel has not been submitted.
+> receipt-absence checks. The final no-submit decision latch
+> (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
+> writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
+> `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
+> `can_claim_w2_generalization=false`. The panel has not been submitted.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a

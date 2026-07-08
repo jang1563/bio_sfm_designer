@@ -78,6 +78,9 @@ Current W2 v11 no-spend follow-up branch:
 `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
 `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`.
 
+Current W2 v11 panel submission-decision state:
+`results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}`.
+
 Historical W2 v9 target-MSA execution, guarded panel boundary, and post-panel decision protocol:
 `results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.{json,md}`,
 `results/m6d_w2_target_family_redesign_v9_panel_preflight.{json,md}`,
@@ -171,7 +174,11 @@ Current state:
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` with 14 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
-  checks. It has not been submitted.
+  checks. The final no-submit decision latch
+  (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
+  writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
+  `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
+  `can_claim_w2_generalization=false`. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.

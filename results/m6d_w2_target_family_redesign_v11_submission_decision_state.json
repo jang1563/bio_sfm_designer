@@ -1,0 +1,142 @@
+{
+  "approval": {
+    "required_env_value": "approve-v11-panel-submit",
+    "required_env_var": "BIO_SFM_APPROVE_V11_PANEL",
+    "submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+    "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
+  },
+  "artifact": "m6d_w2_v11_submission_decision_state",
+  "audit_ok": true,
+  "can_claim_w2_generalization": false,
+  "can_submit_if_explicitly_approved": true,
+  "claim_boundary": {
+    "decision_state": "records readiness for an explicit approval decision only",
+    "job_launch": "not evidence; receipt and job IDs only prove execution started",
+    "panel_submission": "not approved by this artifact; still requires an explicit user submit decision",
+    "w2_generalization": "not supported until synced records pass completion and target-wise panel certification"
+  },
+  "date": "2026-07-08",
+  "decision": "awaiting_explicit_approval",
+  "explicit_approval_required": true,
+  "failures": [],
+  "next_action": "await explicit user approval before running submit_command_if_approved",
+  "no_submit": true,
+  "prerequisites": {
+    "approval_packet": {
+      "approval_packet_ready": true,
+      "audit_ok": true,
+      "can_claim_w2_generalization": false,
+      "can_submit_panel_if_user_explicitly_approves": true,
+      "ok": true,
+      "panel_approval_env_value": "approve-v11-panel-submit",
+      "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
+      "required_checks": {
+        "panel_dry_run_no_sbatch": true,
+        "panel_guard_no_env_refuses": true,
+        "panel_preflight_ready": true,
+        "submit_receipt_absent": true,
+        "submit_summary_absent": true,
+        "target_msa_strict_ready": true
+      },
+      "status": "panel_approval_packet_ready",
+      "submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+      "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
+    },
+    "goal_completion_audit": {
+      "audit_ok": true,
+      "can_mark_goal_complete": false,
+      "complete": false,
+      "ok": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_goal_completion_audit.json",
+      "status": "goal_active_w2_remaining",
+      "w2_panel_remote_failures": 0,
+      "w2_panel_remote_no_submit": true
+    },
+    "goal_drift_audit": {
+      "audit_ok": true,
+      "can_mark_goal_complete": false,
+      "execution": "panel_remote_readiness_ready_not_submitted",
+      "major_direction_drift": false,
+      "ok": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_goal_drift_audit.json",
+      "status": "no_major_direction_drift_w2_blocked"
+    },
+    "panel_decision_protocol": {
+      "audit_ok": true,
+      "can_claim_w2_generalization_now": false,
+      "can_submit_panel_if_user_explicitly_approves": true,
+      "current_panel_result_status": "not_available_not_submitted",
+      "current_panel_result_w2_supported": false,
+      "next_action": "await explicit user approval before guarded W2 panel submission",
+      "no_submit": true,
+      "ok": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
+      "status": "post_panel_decision_protocol_ready"
+    },
+    "project_status": {
+      "can_mark_goal_complete": false,
+      "complete": false,
+      "ok": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_project_status_w2_followup.json",
+      "status": "m6_complex_in_progress",
+      "w2_complete": false,
+      "w2_panel_approval_packet_ready": true,
+      "w2_panel_decision_protocol_ready": true,
+      "w2_panel_remote_submission_readiness_ok": true,
+      "w2_panel_submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+      "w2_status": "panel_approval_packet_ready_awaiting_explicit_approval"
+    },
+    "remote_submission_readiness": {
+      "absence_checks_ok": true,
+      "audit_ok": true,
+      "can_claim_w2_generalization": false,
+      "can_submit_panel_if_user_explicitly_approves": true,
+      "n_absence_checks": 2,
+      "n_exact_checks": 14,
+      "n_failures": 0,
+      "n_semantic_checks": 5,
+      "no_submit": true,
+      "ok": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
+      "remote_host": "cayuga-login1",
+      "remote_root": "/home/fs01/jak4013/bio_sfm_smoke",
+      "status": "remote_submission_readiness_ok"
+    }
+  },
+  "receipt_absence": {
+    "local": [
+      {
+        "exists": false,
+        "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+        "scope": "local"
+      },
+      {
+        "exists": false,
+        "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+        "scope": "local"
+      }
+    ],
+    "remote": [
+      {
+        "exists": false,
+        "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+        "remote_host": "cayuga-login1",
+        "remote_root": "/home/fs01/jak4013/bio_sfm_smoke",
+        "scope": "remote"
+      },
+      {
+        "exists": false,
+        "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+        "remote_host": "cayuga-login1",
+        "remote_root": "/home/fs01/jak4013/bio_sfm_smoke",
+        "scope": "remote"
+      }
+    ],
+    "remote_checked": true,
+    "remote_host": "cayuga-login1",
+    "remote_root": "/home/fs01/jak4013/bio_sfm_smoke"
+  },
+  "status": "awaiting_explicit_panel_submission_approval",
+  "submitted": false
+}

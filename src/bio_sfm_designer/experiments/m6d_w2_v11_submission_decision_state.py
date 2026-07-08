@@ -1,0 +1,534 @@
+"""Record the W2 v11 explicit panel-submission decision boundary.
+
+This is a no-submit latch. It consolidates the approval packet, post-panel
+decision protocol, remote readiness audit, project status, goal audits, and
+submit-receipt absence checks into one machine-readable state. A passing state
+means the panel is ready to submit only if the user explicitly approves it; it
+does not submit jobs and does not create W2 evidence.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shlex
+import subprocess
+from datetime import date
+from typing import Any, Dict, Iterable, List, Optional
+
+
+_DEFAULT_REMOTE_HOST = "cayuga-login1"
+_DEFAULT_REMOTE_ROOT = "/home/fs01/jak4013/bio_sfm_smoke"
+_READY_STATUS = "awaiting_explicit_panel_submission_approval"
+_BLOCKED_STATUS = "submission_decision_blocked"
+_PROJECT_W2_READY_STATUS = "panel_approval_packet_ready_awaiting_explicit_approval"
+_APPROVAL_READY_STATUS = "panel_approval_packet_ready"
+_DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
+_REMOTE_READY_STATUS = "remote_submission_readiness_ok"
+
+
+def _load_json(path: str) -> Dict[str, Any]:
+    with open(path) as fh:
+        obj = json.load(fh)
+    if not isinstance(obj, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    obj["_path"] = os.path.abspath(path)
+    return obj
+
+
+def _write_json(path: str, obj: Dict[str, Any]) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as fh:
+        json.dump(obj, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+
+
+def _write_text(path: str, text: str) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as fh:
+        fh.write(text)
+
+
+def _add_failure(
+    failures: List[Dict[str, Any]],
+    kind: str,
+    message: str,
+    *,
+    expected: Any = None,
+    observed: Any = None,
+    path: Optional[str] = None,
+) -> None:
+    row: Dict[str, Any] = {"kind": kind, "message": message}
+    if expected is not None:
+        row["expected"] = expected
+    if observed is not None:
+        row["observed"] = observed
+    if path is not None:
+        row["path"] = path
+    failures.append(row)
+
+
+def _field(obj: Any, dotted: str) -> Any:
+    cur = obj
+    for part in dotted.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return None
+        cur = cur[part]
+    return cur
+
+
+def _workstream(project_status: Dict[str, Any], key: str) -> Dict[str, Any]:
+    streams = project_status.get("workstreams")
+    if isinstance(streams, dict) and isinstance(streams.get(key), dict):
+        return streams[key]
+    return {}
+
+
+def _local_absence(paths: Iterable[str]) -> List[Dict[str, Any]]:
+    rows = []
+    for path in paths:
+        rows.append({"path": path, "exists": os.path.exists(path), "scope": "local"})
+    return rows
+
+
+def _run_ssh(remote_host: str, command: str, timeout: int) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", remote_host, command],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=timeout,
+    )
+
+
+def _remote_exists(remote_root: str, rel_path: str, *, remote_host: Optional[str], ssh_timeout: int) -> bool:
+    if not remote_host:
+        return os.path.exists(os.path.join(remote_root, rel_path))
+    path = os.path.join(remote_root, rel_path)
+    proc = _run_ssh(remote_host, "test -e " + shlex.quote(path), ssh_timeout)
+    if proc.returncode == 0:
+        return True
+    if proc.returncode == 1:
+        return False
+    raise RuntimeError(proc.stderr.decode("utf-8", errors="replace").strip())
+
+
+def _remote_absence(
+    paths: Iterable[str],
+    *,
+    remote_host: Optional[str],
+    remote_root: str,
+    ssh_timeout: int,
+) -> List[Dict[str, Any]]:
+    rows = []
+    for rel_path in paths:
+        row: Dict[str, Any] = {
+            "path": rel_path,
+            "scope": "remote",
+            "remote_host": remote_host or "",
+            "remote_root": remote_root,
+        }
+        try:
+            row["exists"] = _remote_exists(remote_root, rel_path, remote_host=remote_host, ssh_timeout=ssh_timeout)
+        except Exception as exc:
+            row["exists"] = None
+            row["error"] = str(exc)
+        rows.append(row)
+    return rows
+
+
+def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
+    checks = approval_packet.get("checks") if isinstance(approval_packet.get("checks"), dict) else {}
+    required_checks = [
+        "target_msa_strict_ready",
+        "panel_preflight_ready",
+        "panel_dry_run_no_sbatch",
+        "panel_guard_no_env_refuses",
+        "submit_receipt_absent",
+        "submit_summary_absent",
+    ]
+    checks_ok = all(checks.get(key) is True for key in required_checks)
+    ok = (
+        approval_packet.get("status") == _APPROVAL_READY_STATUS
+        and approval_packet.get("audit_ok") is True
+        and approval_packet.get("approval_packet_ready") is True
+        and approval_packet.get("can_submit_panel_if_user_explicitly_approves") is True
+        and approval_packet.get("can_claim_w2_generalization") is False
+        and checks_ok
+    )
+    return {
+        "path": approval_packet.get("_path"),
+        "status": approval_packet.get("status"),
+        "ok": ok,
+        "audit_ok": approval_packet.get("audit_ok"),
+        "approval_packet_ready": approval_packet.get("approval_packet_ready"),
+        "can_submit_panel_if_user_explicitly_approves": approval_packet.get(
+            "can_submit_panel_if_user_explicitly_approves"
+        ),
+        "can_claim_w2_generalization": approval_packet.get("can_claim_w2_generalization"),
+        "panel_approval_env_var": approval_packet.get("panel_approval_env_var"),
+        "panel_approval_env_value": approval_packet.get("panel_approval_env_value"),
+        "submit_command_if_approved": approval_packet.get("submit_command_if_approved"),
+        "sync_back_command_after_jobs_finish": approval_packet.get("sync_back_command_after_jobs_finish"),
+        "required_checks": {key: checks.get(key) for key in required_checks},
+    }
+
+
+def _panel_decision_state(panel_decision_protocol: Dict[str, Any]) -> Dict[str, Any]:
+    current = (
+        panel_decision_protocol.get("current_panel_result")
+        if isinstance(panel_decision_protocol.get("current_panel_result"), dict)
+        else {}
+    )
+    ok = (
+        panel_decision_protocol.get("status") == _DECISION_READY_STATUS
+        and panel_decision_protocol.get("audit_ok") is True
+        and panel_decision_protocol.get("no_submit") is True
+        and panel_decision_protocol.get("can_submit_panel_if_user_explicitly_approves") is True
+        and panel_decision_protocol.get("can_claim_w2_generalization_now") is False
+        and current.get("status") == "not_available_not_submitted"
+        and current.get("w2_generalization_supported") is False
+    )
+    return {
+        "path": panel_decision_protocol.get("_path"),
+        "status": panel_decision_protocol.get("status"),
+        "ok": ok,
+        "audit_ok": panel_decision_protocol.get("audit_ok"),
+        "no_submit": panel_decision_protocol.get("no_submit"),
+        "can_submit_panel_if_user_explicitly_approves": panel_decision_protocol.get(
+            "can_submit_panel_if_user_explicitly_approves"
+        ),
+        "can_claim_w2_generalization_now": panel_decision_protocol.get("can_claim_w2_generalization_now"),
+        "current_panel_result_status": current.get("status"),
+        "current_panel_result_w2_supported": current.get("w2_generalization_supported"),
+        "next_action": panel_decision_protocol.get("next_action"),
+    }
+
+
+def _remote_readiness_state(remote_readiness: Dict[str, Any]) -> Dict[str, Any]:
+    absence_checks = remote_readiness.get("absence_checks")
+    absence_rows = absence_checks if isinstance(absence_checks, list) else []
+    absence_ok = bool(absence_rows) and all(isinstance(row, dict) and row.get("ok") is True for row in absence_rows)
+    ok = (
+        remote_readiness.get("status") == _REMOTE_READY_STATUS
+        and remote_readiness.get("audit_ok") is True
+        and remote_readiness.get("no_submit") is True
+        and remote_readiness.get("can_submit_panel_if_user_explicitly_approves") is True
+        and remote_readiness.get("can_claim_w2_generalization") is False
+        and remote_readiness.get("n_failures") == 0
+        and absence_ok
+    )
+    return {
+        "path": remote_readiness.get("_path"),
+        "status": remote_readiness.get("status"),
+        "ok": ok,
+        "audit_ok": remote_readiness.get("audit_ok"),
+        "no_submit": remote_readiness.get("no_submit"),
+        "can_submit_panel_if_user_explicitly_approves": remote_readiness.get(
+            "can_submit_panel_if_user_explicitly_approves"
+        ),
+        "can_claim_w2_generalization": remote_readiness.get("can_claim_w2_generalization"),
+        "n_exact_checks": remote_readiness.get("n_exact_checks"),
+        "n_semantic_checks": remote_readiness.get("n_semantic_checks"),
+        "n_absence_checks": remote_readiness.get("n_absence_checks"),
+        "n_failures": remote_readiness.get("n_failures"),
+        "absence_checks_ok": absence_ok,
+        "remote_host": remote_readiness.get("remote_host"),
+        "remote_root": remote_readiness.get("remote_root"),
+    }
+
+
+def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
+    w2 = _workstream(project_status, "W2_multi_target_panel")
+    ok = (
+        project_status.get("status") == "m6_complex_in_progress"
+        and project_status.get("complete") is False
+        and project_status.get("can_mark_goal_complete") is False
+        and w2.get("status") == _PROJECT_W2_READY_STATUS
+        and w2.get("complete") is False
+        and w2.get("panel_approval_packet_ready") is True
+        and w2.get("panel_decision_protocol_ready") is True
+        and w2.get("panel_remote_submission_readiness_ok") is True
+    )
+    return {
+        "path": project_status.get("_path"),
+        "status": project_status.get("status"),
+        "ok": ok,
+        "complete": project_status.get("complete"),
+        "can_mark_goal_complete": project_status.get("can_mark_goal_complete"),
+        "w2_status": w2.get("status"),
+        "w2_complete": w2.get("complete"),
+        "w2_panel_approval_packet_ready": w2.get("panel_approval_packet_ready"),
+        "w2_panel_decision_protocol_ready": w2.get("panel_decision_protocol_ready"),
+        "w2_panel_remote_submission_readiness_ok": w2.get("panel_remote_submission_readiness_ok"),
+        "w2_panel_submit_command_if_approved": w2.get("panel_submit_command_if_approved"),
+    }
+
+
+def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, Any]:
+    ok = (
+        goal_completion_audit.get("status") == "goal_active_w2_remaining"
+        and goal_completion_audit.get("audit_ok") is True
+        and goal_completion_audit.get("complete") is False
+        and goal_completion_audit.get("can_mark_goal_complete") is False
+        and _field(goal_completion_audit, "w2_gate.panel_remote_no_submit") is True
+        and _field(goal_completion_audit, "w2_gate.panel_remote_failures") == 0
+    )
+    return {
+        "path": goal_completion_audit.get("_path"),
+        "status": goal_completion_audit.get("status"),
+        "ok": ok,
+        "audit_ok": goal_completion_audit.get("audit_ok"),
+        "complete": goal_completion_audit.get("complete"),
+        "can_mark_goal_complete": goal_completion_audit.get("can_mark_goal_complete"),
+        "w2_panel_remote_no_submit": _field(goal_completion_audit, "w2_gate.panel_remote_no_submit"),
+        "w2_panel_remote_failures": _field(goal_completion_audit, "w2_gate.panel_remote_failures"),
+    }
+
+
+def _drift_audit_state(goal_drift_audit: Dict[str, Any]) -> Dict[str, Any]:
+    ok = (
+        goal_drift_audit.get("status") == "no_major_direction_drift_w2_blocked"
+        and goal_drift_audit.get("audit_ok") is True
+        and goal_drift_audit.get("major_direction_drift") is False
+        and goal_drift_audit.get("can_mark_goal_complete") is False
+        and _field(goal_drift_audit, "drift_assessment.execution") == "panel_remote_readiness_ready_not_submitted"
+    )
+    return {
+        "path": goal_drift_audit.get("_path"),
+        "status": goal_drift_audit.get("status"),
+        "ok": ok,
+        "audit_ok": goal_drift_audit.get("audit_ok"),
+        "major_direction_drift": goal_drift_audit.get("major_direction_drift"),
+        "can_mark_goal_complete": goal_drift_audit.get("can_mark_goal_complete"),
+        "execution": _field(goal_drift_audit, "drift_assessment.execution"),
+    }
+
+
+def _collect_state_failures(failures: List[Dict[str, Any]], states: Dict[str, Dict[str, Any]]) -> None:
+    for key, state in states.items():
+        if state.get("ok") is not True:
+            _add_failure(
+                failures,
+                key + "_not_ready",
+                f"{key} does not satisfy the W2 v11 submission-decision boundary",
+                observed=state,
+                path=state.get("path"),
+            )
+
+
+def build_decision_state(
+    *,
+    approval_packet: Dict[str, Any],
+    panel_decision_protocol: Dict[str, Any],
+    remote_readiness: Dict[str, Any],
+    project_status: Dict[str, Any],
+    goal_completion_audit: Dict[str, Any],
+    goal_drift_audit: Dict[str, Any],
+    local_absent_paths: Iterable[str],
+    remote_absent_paths: Iterable[str] = (),
+    remote_host: Optional[str] = None,
+    remote_root: str = _DEFAULT_REMOTE_ROOT,
+    check_remote_receipts: bool = False,
+    ssh_timeout: int = 30,
+) -> Dict[str, Any]:
+    failures: List[Dict[str, Any]] = []
+    states = {
+        "approval_packet": _approval_state(approval_packet),
+        "panel_decision_protocol": _panel_decision_state(panel_decision_protocol),
+        "remote_submission_readiness": _remote_readiness_state(remote_readiness),
+        "project_status": _project_status_state(project_status),
+        "goal_completion_audit": _completion_audit_state(goal_completion_audit),
+        "goal_drift_audit": _drift_audit_state(goal_drift_audit),
+    }
+    _collect_state_failures(failures, states)
+
+    local_receipts = _local_absence(local_absent_paths)
+    for row in local_receipts:
+        if row.get("exists") is not False:
+            _add_failure(
+                failures,
+                "submit_receipt_or_summary_present",
+                "local submit receipt or summary exists; this is no longer a pre-submit decision state",
+                observed=row,
+                path=row.get("path"),
+            )
+
+    remote_receipts: List[Dict[str, Any]] = []
+    if check_remote_receipts:
+        remote_receipts = _remote_absence(
+            remote_absent_paths,
+            remote_host=remote_host,
+            remote_root=remote_root,
+            ssh_timeout=ssh_timeout,
+        )
+        for row in remote_receipts:
+            if row.get("exists") is not False:
+                _add_failure(
+                    failures,
+                    "remote_submit_receipt_or_summary_present_or_unknown",
+                    "remote submit receipt or summary exists, or the remote absence check failed",
+                    observed=row,
+                    path=row.get("path"),
+                )
+
+    audit_ok = not failures
+    approval = states["approval_packet"]
+    return {
+        "artifact": "m6d_w2_v11_submission_decision_state",
+        "date": date.today().isoformat(),
+        "status": _READY_STATUS if audit_ok else _BLOCKED_STATUS,
+        "decision": "awaiting_explicit_approval" if audit_ok else "blocked",
+        "audit_ok": audit_ok,
+        "no_submit": True,
+        "submitted": False,
+        "explicit_approval_required": True,
+        "can_submit_if_explicitly_approved": audit_ok,
+        "can_claim_w2_generalization": False,
+        "approval": {
+            "required_env_var": approval.get("panel_approval_env_var"),
+            "required_env_value": approval.get("panel_approval_env_value"),
+            "submit_command_if_approved": approval.get("submit_command_if_approved"),
+            "sync_back_command_after_jobs_finish": approval.get("sync_back_command_after_jobs_finish"),
+        },
+        "prerequisites": states,
+        "receipt_absence": {
+            "local": local_receipts,
+            "remote_checked": check_remote_receipts,
+            "remote": remote_receipts,
+            "remote_host": remote_host or "",
+            "remote_root": remote_root,
+        },
+        "claim_boundary": {
+            "decision_state": "records readiness for an explicit approval decision only",
+            "panel_submission": "not approved by this artifact; still requires an explicit user submit decision",
+            "job_launch": "not evidence; receipt and job IDs only prove execution started",
+            "w2_generalization": "not supported until synced records pass completion and target-wise panel certification",
+        },
+        "next_action": (
+            "await explicit user approval before running submit_command_if_approved"
+            if audit_ok else
+            "repair submission-decision blockers before any W2 v11 panel submission"
+        ),
+        "failures": failures,
+    }
+
+
+def render_markdown(rep: Dict[str, Any]) -> str:
+    lines = [
+        "# M6d W2 v11 Submission Decision State",
+        "",
+        f"Status: `{rep.get('status')}`.",
+        f"Decision: `{rep.get('decision')}`.",
+        f"Audit ok: `{rep.get('audit_ok')}`.",
+        f"No submit: `{rep.get('no_submit')}`.",
+        f"Submitted: `{rep.get('submitted')}`.",
+        f"Explicit approval required: `{rep.get('explicit_approval_required')}`.",
+        f"Can submit if explicitly approved: `{rep.get('can_submit_if_explicitly_approved')}`.",
+        f"Can claim W2 generalization: `{rep.get('can_claim_w2_generalization')}`.",
+        "",
+        "## Prerequisites",
+        "",
+        "| prerequisite | ok | status |",
+        "|---|---:|---|",
+    ]
+    prerequisites = rep.get("prerequisites") if isinstance(rep.get("prerequisites"), dict) else {}
+    for key, state in prerequisites.items():
+        status = state.get("status") or state.get("execution") or ""
+        lines.append(f"| {key} | {state.get('ok')} | {status} |")
+
+    receipt_absence = rep.get("receipt_absence") if isinstance(rep.get("receipt_absence"), dict) else {}
+    lines.extend(["", "## Receipt Absence", ""])
+    for row in receipt_absence.get("local") or []:
+        lines.append(f"- local `{row.get('path')}` exists: `{row.get('exists')}`")
+    if receipt_absence.get("remote_checked"):
+        remote_host = receipt_absence.get("remote_host") or ""
+        remote_root = receipt_absence.get("remote_root") or ""
+        lines.append(f"- remote checked: `{remote_host}:{remote_root}`")
+        for row in receipt_absence.get("remote") or []:
+            lines.append(f"- remote `{row.get('path')}` exists: `{row.get('exists')}`")
+    else:
+        lines.append("- direct remote receipt check: `False`")
+
+    approval = rep.get("approval") if isinstance(rep.get("approval"), dict) else {}
+    lines.extend([
+        "",
+        "## Approval Boundary",
+        "",
+        f"- required env: `{approval.get('required_env_var')}={approval.get('required_env_value')}`",
+        "- submit command if explicitly approved:",
+        "",
+        "```bash",
+        str(approval.get("submit_command_if_approved") or ""),
+        "```",
+        "",
+        "This artifact does not submit jobs and does not create W2 evidence.",
+        "",
+    ])
+    failures = rep.get("failures") or []
+    if failures:
+        lines.extend(["## Failures", ""])
+        for failure in failures:
+            lines.append(f"- `{failure.get('kind')}`: {failure.get('message')}")
+        lines.append("")
+    lines.extend(["## Next Action", "", str(rep.get("next_action") or ""), ""])
+    return "\n".join(lines)
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--approval-packet", default="results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json")
+    ap.add_argument("--panel-decision-protocol", default="results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json")
+    ap.add_argument("--remote-readiness", default="results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json")
+    ap.add_argument("--project-status", default="results/m6c_project_status_w2_followup.json")
+    ap.add_argument("--goal-completion-audit", default="results/m6d_goal_completion_audit.json")
+    ap.add_argument("--goal-drift-audit", default="results/m6d_goal_drift_audit.json")
+    ap.add_argument("--local-absent-path", action="append", default=None)
+    ap.add_argument("--remote-absent-path", action="append", default=None)
+    ap.add_argument("--remote-host", default=os.environ.get("CAYUGA_BIO_SFM_HOST", _DEFAULT_REMOTE_HOST))
+    ap.add_argument("--remote-root", default=os.environ.get("CAYUGA_BIO_SFM_ROOT", _DEFAULT_REMOTE_ROOT))
+    ap.add_argument("--check-remote-receipts", action="store_true")
+    ap.add_argument("--ssh-timeout", type=int, default=30)
+    ap.add_argument("--out-json", default="results/m6d_w2_target_family_redesign_v11_submission_decision_state.json")
+    ap.add_argument("--out-md", default="results/m6d_w2_target_family_redesign_v11_submission_decision_state.md")
+    args = ap.parse_args(argv)
+
+    local_absent_paths = args.local_absent_path or [
+        "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+        "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+    ]
+    remote_absent_paths = args.remote_absent_path or [
+        "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+        "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+    ]
+    rep = build_decision_state(
+        approval_packet=_load_json(args.approval_packet),
+        panel_decision_protocol=_load_json(args.panel_decision_protocol),
+        remote_readiness=_load_json(args.remote_readiness),
+        project_status=_load_json(args.project_status),
+        goal_completion_audit=_load_json(args.goal_completion_audit),
+        goal_drift_audit=_load_json(args.goal_drift_audit),
+        local_absent_paths=local_absent_paths,
+        remote_absent_paths=remote_absent_paths,
+        remote_host=args.remote_host or None,
+        remote_root=args.remote_root,
+        check_remote_receipts=args.check_remote_receipts,
+        ssh_timeout=args.ssh_timeout,
+    )
+    _write_json(args.out_json, rep)
+    _write_text(args.out_md, render_markdown(rep))
+    print(
+        "status={status} audit_ok={ok} decision={decision} no_submit={no_submit} submitted={submitted}".format(
+            status=rep["status"],
+            ok=rep["audit_ok"],
+            decision=rep["decision"],
+            no_submit=rep["no_submit"],
+            submitted=rep["submitted"],
+        )
+    )
+    return 0 if rep["audit_ok"] else 2
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
