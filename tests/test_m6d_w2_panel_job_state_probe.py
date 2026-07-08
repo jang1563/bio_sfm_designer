@@ -2,6 +2,8 @@
 
 import json
 import os
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -95,6 +97,59 @@ class M6DW2PanelJobStateProbeTests(unittest.TestCase):
             {"100": "COMPLETED", "101": "COMPLETED", "102": "RUNNING", "103": "PENDING"},
         )
         self.assertIn("--job-states", rep["postsubmit_status_command"])
+
+    def test_rendered_query_plan_runs_receipt_to_probe_with_fake_sacct(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            out_tsv = os.path.join(d, "states.tsv")
+            out_json = os.path.join(d, "probe.json")
+            out_md = os.path.join(d, "probe.md")
+            query = os.path.join(d, "query.sh")
+            fakebin = os.path.join(d, "bin")
+            _write_jsonl(receipt, _rows())
+            _write(query, render_query_plan(
+                [],
+                receipt_path=receipt,
+                out_tsv=out_tsv,
+                out_json=out_json,
+                out_md=out_md,
+            ))
+            os.chmod(query, 0o755)
+            _write(os.path.join(fakebin, "sacct"), "\n".join([
+                "#!/usr/bin/env bash",
+                "printf '%s\\n' 'JobIDRaw|State|ExitCode|Elapsed|NodeList'",
+                "printf '%s\\n' '100|COMPLETED|0:0|00:01:00|node1'",
+                "printf '%s\\n' '101.batch|COMPLETED|0:0|00:02:00|node1'",
+                "printf '%s\\n' '102|RUNNING|0:0|00:03:00|node2'",
+                "printf '%s\\n' '103|PENDING|0:0|00:00:00|'",
+                "",
+            ]))
+            os.chmod(os.path.join(fakebin, "sacct"), 0o755)
+            env = dict(os.environ)
+            env["PATH"] = fakebin + os.pathsep + env.get("PATH", "")
+            env["BIO_SFM_PYTHON"] = sys.executable
+            env["PYTHONPATH"] = os.getcwd() + "/src"
+
+            proc = subprocess.run(
+                ["bash", query],
+                check=False,
+                cwd=os.getcwd(),
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            with open(out_json) as fh:
+                saved = json.load(fh)
+            self.assertEqual(saved["status"], "job_states_collected")
+            self.assertEqual(saved["states"]["100"], "COMPLETED")
+            self.assertEqual(saved["states"]["101"], "COMPLETED")
+            self.assertEqual(saved["states"]["102"], "RUNNING")
+            self.assertEqual(saved["states"]["103"], "PENDING")
+            self.assertTrue(os.path.exists(out_tsv))
+            self.assertTrue(os.path.exists(out_md))
 
     def test_bad_receipt_blocks_probe(self):
         with tempfile.TemporaryDirectory() as d:
