@@ -920,7 +920,10 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `can_claim_w2_generalization=false`. The post-submit status gate
     `results/m6d_w2_target_family_redesign_v11_postsubmit_status.{json,md}` currently records
     `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
-    states before allowing sync-back. The companion no-submit job-state probe
+    states before allowing sync-back. The no-submit receipt monitor
+    `results/m6d_w2_target_family_redesign_v11_receipt_monitor.{json,md}` currently records
+    `receipt_absent_not_submitted`; after remote receipt creation it emits a receipt-only sync plan before
+    any record sync-back. The companion no-submit job-state probe
     `results/m6d_w2_target_family_redesign_v11_job_state_probe.{json,md}` currently records
     `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
     postsubmit-compatible `states` JSON. Do not reuse the earlier generated submit plan that pointed at
@@ -959,9 +962,9 @@ remaining requirement. Its current W2 execution evidence includes the approved f
 synced back locally with strict `--require-files` passing plus the v11 panel approval/decision/remote-readiness
 boundary; W2 remains incomplete until panel execution, sync-back, completion, and target-wise certification.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 11 exact SHA
-checks and 12 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
-submission-decision, post-submit status, and job-state probe artifacts; the mirrored next action is explicit
-W2 v11 panel approval, then sync-back, completion, and target-wise certification.
+checks and 13 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
+submission-decision, receipt monitor, post-submit status, and job-state probe artifacts; the mirrored next
+action is explicit W2 v11 panel approval, then sync-back, completion, and target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` independently audits goal-boundary drift without submitting work:
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
 direction aligned, claim boundaries preserved, and execution recorded as

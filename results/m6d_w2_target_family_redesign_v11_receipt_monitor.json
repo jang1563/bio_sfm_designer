@@ -1,0 +1,59 @@
+{
+  "artifact": "m6d_w2_panel_receipt_monitor",
+  "audit_ok": true,
+  "can_run_job_state_probe": false,
+  "can_sync_receipt": false,
+  "claim_boundary": "receipt monitor only; no records sync, no job submission, no W2 evidence",
+  "failures": [],
+  "job_state_probe_command": "python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe",
+  "local_receipt": {
+    "error": "[Errno 2] No such file or directory: './results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl'",
+    "exists": false,
+    "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+    "remote_host": "",
+    "root": ".",
+    "scope": "local",
+    "sha256": "",
+    "size_bytes": 0
+  },
+  "local_receipt_ready": false,
+  "local_summary": {
+    "error": "[Errno 2] No such file or directory: './results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json'",
+    "exists": false,
+    "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+    "remote_host": "",
+    "root": ".",
+    "scope": "local",
+    "sha256": "",
+    "size_bytes": 0
+  },
+  "next_action": "await explicit approval and guarded panel submission before receipt monitoring",
+  "no_submit": true,
+  "receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+  "remote_checked": true,
+  "remote_receipt": {
+    "error": "cat: /home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl: No such file or directory",
+    "exists": false,
+    "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+    "remote_host": "cayuga-login1",
+    "root": "/home/fs01/jak4013/bio_sfm_smoke",
+    "scope": "remote",
+    "sha256": "",
+    "size_bytes": 0
+  },
+  "remote_receipt_ready": false,
+  "remote_summary": {
+    "error": "cat: /home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json: No such file or directory",
+    "exists": false,
+    "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+    "remote_host": "cayuga-login1",
+    "root": "/home/fs01/jak4013/bio_sfm_smoke",
+    "scope": "remote",
+    "sha256": "",
+    "size_bytes": 0
+  },
+  "status": "receipt_absent_not_submitted",
+  "submitted": false,
+  "summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+  "sync_plan": "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+}

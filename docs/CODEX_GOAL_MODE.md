@@ -182,7 +182,10 @@ Current state:
   `can_claim_w2_generalization=false`. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
-  states before allowing sync-back. The companion no-submit job-state probe
+  states before allowing sync-back. The no-submit receipt monitor
+  (`python -m bio_sfm_designer.experiments.m6d_w2_panel_receipt_monitor`) currently records
+  `receipt_absent_not_submitted`; after remote receipt creation it emits a receipt-only sync plan before
+  any record sync-back. The companion no-submit job-state probe
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe`) currently records
   `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
   postsubmit-compatible `states` JSON. It has not been submitted.
@@ -761,9 +764,9 @@ bash results/m6c_project_external_sync_back.sh
   W2 v11 panel approval only, followed by sync-back, completion, and target-wise certification.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 12 semantic
-  checks, including v11 panel approval, remote-readiness, submission-decision, post-submit status, and
-  job-state probe artifacts.
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 13 semantic
+  checks, including v11 panel approval, remote-readiness, submission-decision, receipt monitor,
+  post-submit status, and job-state probe artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and
   `goal_completion_note` mirror that compact completion/resume state for lightweight checks.
 - `operator_next_action`, `operator_next_command`, and `operator_next_role` mirror the goal-audit first

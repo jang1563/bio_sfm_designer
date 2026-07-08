@@ -209,6 +209,17 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "n_states",
         "n_missing_states",
     ],
+    "results/m6d_w2_target_family_redesign_v11_receipt_monitor.json": [
+        "status",
+        "audit_ok",
+        "no_submit",
+        "submitted",
+        "remote_checked",
+        "local_receipt_ready",
+        "remote_receipt_ready",
+        "can_sync_receipt",
+        "can_run_job_state_probe",
+    ],
 }
 
 

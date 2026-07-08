@@ -348,7 +348,10 @@ engine installs from GitHub):
   `can_claim_w2_generalization=false`. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
-  states before allowing sync-back. The companion no-submit job-state probe
+  states before allowing sync-back. The no-submit receipt monitor
+  (`python -m bio_sfm_designer.experiments.m6d_w2_panel_receipt_monitor`) currently records
+  `receipt_absent_not_submitted`; after remote receipt creation it emits a receipt-only sync plan before
+  any record sync-back. The companion no-submit job-state probe
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe`) currently records
   `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
   postsubmit-compatible `states` JSON. The panel has not been submitted.
