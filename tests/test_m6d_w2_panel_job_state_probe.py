@@ -68,7 +68,10 @@ class M6DW2PanelJobStateProbeTests(unittest.TestCase):
         self.assertEqual(rep["n_jobs"], 4)
         self.assertEqual(rep["job_ids"], ["100", "101", "102", "103"])
         self.assertIn("sacct -P -j 100,101,102,103", rep["sacct_query_command"])
-        self.assertIn("sacct -P -j 100,101,102,103", render_query_plan(rep["job_ids"], out_tsv="states.tsv"))
+        plan = render_query_plan(rep["job_ids"], out_tsv="states.tsv", receipt_path=receipt)
+        self.assertIn("Last rendered job-id preview: 100,101,102,103", plan)
+        self.assertIn("m6d_w2_panel_job_state_probe", plan)
+        self.assertIn('sacct -P -j "$job_ids"', plan)
 
     def test_sacct_output_builds_postsubmit_compatible_states(self):
         with tempfile.TemporaryDirectory() as d:
@@ -128,6 +131,10 @@ class M6DW2PanelJobStateProbeTests(unittest.TestCase):
             self.assertEqual(saved["status"], "receipt_absent_not_submitted")
             self.assertTrue(os.path.exists(out_md))
             self.assertTrue(os.access(query, os.X_OK))
+            with open(query) as fh:
+                script = fh.read()
+            self.assertIn("submit receipt is missing", script)
+            self.assertIn("m6d_w2_panel_job_state_probe", script)
 
 
 if __name__ == "__main__":

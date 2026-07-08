@@ -155,6 +155,7 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
         "job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
         "receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
         "job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
+        "job_state_probe_sync_after_query": panel_approval_packet.get("job_state_probe_sync_after_query"),
         "postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
         "postsubmit_status_command_before_sync": panel_approval_packet.get("postsubmit_status_command_before_sync"),
         "postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
@@ -577,6 +578,22 @@ def build_audit(project_status: Dict[str, Any],
                 "W2 panel approval packet must name the read-only job-state query step",
                 expected="job_state_query_after_receipt",
                 observed=panel_approval.get("job_state_query_after_receipt"),
+            )
+        job_state_sync = str(panel_approval.get("job_state_probe_sync_after_query") or "")
+        if (
+            v11_panel_sync
+            and (
+                not job_state_sync
+                or "rsync" not in job_state_sync
+                or str(panel_approval.get("job_state_probe_before_sync") or "") not in job_state_sync
+            )
+        ):
+            _add_failure(
+                failures,
+                "w2_panel_approval_missing_job_state_probe_sync_bridge",
+                "W2 panel approval packet must sync the remote job-state probe locally after the read-only query",
+                expected="job_state_probe_sync_after_query",
+                observed=panel_approval.get("job_state_probe_sync_after_query"),
             )
         if v11_panel_sync and "--require-sync-ready" not in str(panel_approval.get("postsubmit_sync_ready_gate") or ""):
             _add_failure(

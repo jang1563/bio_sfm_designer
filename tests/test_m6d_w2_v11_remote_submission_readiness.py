@@ -59,6 +59,8 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         self.assertIn("job_state_probe_before_sync", fields)
         self.assertIn("receipt_monitor_after_submit", fields)
         self.assertIn("job_state_query_after_receipt", fields)
+        self.assertIn("job_state_probe_sync_after_query", fields)
+        self.assertIn("sacct_states_before_sync", fields)
         self.assertIn("postsubmit_sync_ready_gate", fields)
         self.assertIn("postsubmit_status_command_before_sync", fields)
         self.assertIn("postsync_replay_after_sync", fields)

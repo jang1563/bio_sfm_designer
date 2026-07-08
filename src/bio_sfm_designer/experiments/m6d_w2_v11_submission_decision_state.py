@@ -168,9 +168,16 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         and bool(approval_packet.get("job_state_probe_before_sync"))
         and "--require-sync-ready" in str(approval_packet.get("postsubmit_sync_ready_gate") or "")
     )
+    job_state_sync = str(approval_packet.get("job_state_probe_sync_after_query") or "")
+    job_state_query_bridge_ok = (
+        bool(approval_packet.get("job_state_query_after_receipt"))
+        and bool(job_state_sync)
+        and "rsync" in job_state_sync
+        and str(approval_packet.get("job_state_probe_before_sync") or "") in job_state_sync
+    )
     postsubmit_bridge_ok = (
         bool(approval_packet.get("receipt_monitor_after_submit"))
-        and bool(approval_packet.get("job_state_query_after_receipt"))
+        and job_state_query_bridge_ok
         and bool(approval_packet.get("postsubmit_status_command_before_sync"))
         and "--require-sync-ready" in str(approval_packet.get("postsubmit_status_command_before_sync") or "")
         and bool(approval_packet.get("postsync_replay_after_sync"))
@@ -203,6 +210,8 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         "job_state_probe_before_sync": approval_packet.get("job_state_probe_before_sync"),
         "receipt_monitor_after_submit": approval_packet.get("receipt_monitor_after_submit"),
         "job_state_query_after_receipt": approval_packet.get("job_state_query_after_receipt"),
+        "job_state_probe_sync_after_query": approval_packet.get("job_state_probe_sync_after_query"),
+        "job_state_query_bridge_ok": job_state_query_bridge_ok,
         "postsubmit_sync_ready_gate": approval_packet.get("postsubmit_sync_ready_gate"),
         "postsubmit_status_command_before_sync": approval_packet.get("postsubmit_status_command_before_sync"),
         "postsync_replay_after_sync": approval_packet.get("postsync_replay_after_sync"),

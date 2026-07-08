@@ -1577,10 +1577,17 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         and bool(panel_approval_packet.get("job_state_probe_before_sync"))
         and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_sync_ready_gate") or "")
     )
+    job_state_sync = str(panel_approval_packet.get("job_state_probe_sync_after_query") or "")
+    job_state_query_bridge_ok = (
+        bool(panel_approval_packet.get("job_state_query_after_receipt"))
+        and bool(job_state_sync)
+        and "rsync" in job_state_sync
+        and str(panel_approval_packet.get("job_state_probe_before_sync") or "") in job_state_sync
+    )
     postsubmit_bridge_ok = (
         postsubmit_sync_ready_gate_ok
         and bool(panel_approval_packet.get("receipt_monitor_after_submit"))
-        and bool(panel_approval_packet.get("job_state_query_after_receipt"))
+        and job_state_query_bridge_ok
         and bool(panel_approval_packet.get("postsubmit_status_command_before_sync"))
         and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_status_command_before_sync") or "")
         and bool(panel_approval_packet.get("postsync_replay_after_sync"))
@@ -1600,6 +1607,7 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
             "observed": {
                 "receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
                 "job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
+                "job_state_probe_sync_after_query": panel_approval_packet.get("job_state_probe_sync_after_query"),
                 "postsubmit_status_command_before_sync": panel_approval_packet.get(
                     "postsubmit_status_command_before_sync"
                 ),
@@ -1627,6 +1635,8 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         "panel_job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
         "panel_receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
         "panel_job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
+        "panel_job_state_probe_sync_after_query": panel_approval_packet.get("job_state_probe_sync_after_query"),
+        "panel_job_state_query_bridge_ok": job_state_query_bridge_ok,
         "panel_postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
         "panel_postsubmit_status_command_before_sync": panel_approval_packet.get(
             "postsubmit_status_command_before_sync"

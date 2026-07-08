@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import stat
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
@@ -162,26 +163,51 @@ def _sacct_command(job_ids: List[str]) -> str:
     return f"sacct -P -j {joined} --format=JobIDRaw,State,ExitCode,Elapsed,NodeList"
 
 
-def render_query_plan(job_ids: List[str], *, out_tsv: str) -> str:
-    if not job_ids:
-        return "\n".join([
-            "#!/usr/bin/env bash",
-            "# No W2 v11 submit receipt/job IDs are available yet.",
-            "set -euo pipefail",
-            "echo 'no W2 v11 submit receipt/job IDs available yet' >&2",
-            "exit 0",
-            "",
-        ])
-    command = _sacct_command(job_ids)
+def render_query_plan(job_ids: List[str],
+                      *,
+                      out_tsv: str,
+                      receipt_path: str = _DEFAULT_RECEIPT,
+                      out_json: str = _DEFAULT_OUT_JSON,
+                      out_md: str = _DEFAULT_OUT_MD) -> str:
+    preview = ",".join(job_ids)
     return "\n".join([
         "#!/usr/bin/env bash",
         "# Query W2 v11 panel Slurm states after guarded submission.",
-        "# This is read-only and does not submit jobs.",
+        "# This is read-only and does not submit jobs. It discovers job IDs from the submit receipt at runtime.",
+        f"# Last rendered job-id preview: {preview or 'receipt not available yet'}",
         "set -euo pipefail",
+        'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
+        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
+        f"RECEIPT={shlex.quote(receipt_path)}",
         f"OUT=${{1:-{out_tsv}}}",
+        f"OUT_JSON={shlex.quote(out_json)}",
+        f"OUT_MD={shlex.quote(out_md)}",
+        'test -s "$RECEIPT" || { echo "submit receipt is missing; run receipt monitor after guarded submit first: $RECEIPT" >&2; exit 2; }',
         "mkdir -p \"$(dirname \"$OUT\")\"",
-        f"{command} > \"$OUT\"",
+        'mkdir -p "$(dirname "$OUT_JSON")" "$(dirname "$OUT_MD")"',
+        (
+            '"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe '
+            '--receipt "$RECEIPT" --emit-query-plan "" --out-json "$OUT_JSON" --out-md "$OUT_MD"'
+        ),
+        'job_ids="$("$PYTHON_BIN" - "$OUT_JSON" <<\'PY\'',
+        "import json",
+        "import sys",
+        "with open(sys.argv[1]) as handle:",
+        "    rep = json.load(handle)",
+        "ids = [str(job_id) for job_id in rep.get('job_ids', []) if str(job_id)]",
+        "if not ids:",
+        "    raise SystemExit('job-state query has no job IDs in the submit receipt')",
+        "print(','.join(ids))",
+        "PY",
+        ')"',
+        'sacct -P -j "$job_ids" --format=JobIDRaw,State,ExitCode,Elapsed,NodeList > "$OUT"',
         "test -s \"$OUT\"",
+        (
+            '"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe '
+            '--receipt "$RECEIPT" --sacct-output "$OUT" --sacct-output-path "$OUT" '
+            '--emit-query-plan "" --out-json "$OUT_JSON" --out-md "$OUT_MD"'
+        ),
         "",
     ])
 
@@ -352,7 +378,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.emit_query_plan:
         _write_text(
             args.emit_query_plan,
-            render_query_plan(rep.get("job_ids") or [], out_tsv=args.sacct_output_path),
+            render_query_plan(
+                rep.get("job_ids") or [],
+                out_tsv=args.sacct_output_path,
+                receipt_path=args.receipt,
+                out_json=args.out_json,
+                out_md=args.out_md,
+            ),
             executable=True,
         )
     print(

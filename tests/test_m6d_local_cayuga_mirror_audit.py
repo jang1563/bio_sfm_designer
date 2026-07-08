@@ -61,6 +61,8 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("job_state_probe_before_sync", packet_fields)
         self.assertIn("receipt_monitor_after_submit", packet_fields)
         self.assertIn("job_state_query_after_receipt", packet_fields)
+        self.assertIn("job_state_probe_sync_after_query", packet_fields)
+        self.assertIn("sacct_states_before_sync", packet_fields)
         self.assertIn("postsubmit_sync_ready_gate", packet_fields)
         self.assertIn("postsubmit_status_command_before_sync", packet_fields)
         self.assertIn("postsync_replay_after_sync", packet_fields)
@@ -70,6 +72,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "workstreams.W2_multi_target_panel.panel_postsubmit_bridge_ok",
+            status_fields,
+        )
+        self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_job_state_query_bridge_ok",
             status_fields,
         )
         self.assertIn("resume_execution_ladder.next_role", status_fields)

@@ -146,6 +146,11 @@ def _panel_approval_packet():
             "ssh cayuga-login1 'cd /home/fs01/<user>/bio_sfm_smoke && "
             "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
         ),
+        "job_state_probe_sync_after_query": (
+            "rsync -avP cayuga-login1:/home/fs01/<user>/bio_sfm_smoke/"
+            "results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
+            "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+        ),
         "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
         "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
         "postsubmit_sync_ready_gate": (

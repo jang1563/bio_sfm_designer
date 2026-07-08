@@ -338,7 +338,10 @@ engine installs from GitHub):
   Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
   The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
   read-only job-state query, `--require-sync-ready` postsubmit status command, and post-sync replay;
-  project status records that invariant as `panel_postsubmit_bridge_ok=true`.
+  the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
+  receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
+  locally before postsubmit status. Project status records those invariants as
+  `panel_job_state_query_bridge_ok=true` and `panel_postsubmit_bridge_ok=true`.
   The same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
@@ -362,8 +365,9 @@ engine installs from GitHub):
   `receipt_absent_not_submitted`; after remote receipt creation it emits a receipt-only sync plan before
   any record sync-back. The companion no-submit job-state probe
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe`) currently records
-  `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
-  postsubmit-compatible `states` JSON. The post-sync interpretation gate
+  `receipt_absent_not_submitted`; the emitted read-only `sacct` query plan is receipt-driven at runtime,
+  writes postsubmit-compatible `states` JSON, and is synced back locally before record sync-back. The
+  post-sync interpretation gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsync_interpretation`) currently records
   `not_synced_not_interpretable`, emits the guarded replay path for sync-back -> completion ->
   `complex_panel_report` -> decision-protocol refresh, and keeps `can_claim_w2_generalization=false`.

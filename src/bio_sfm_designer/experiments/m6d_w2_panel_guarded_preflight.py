@@ -26,6 +26,7 @@ _DEFAULT_POSTSUBMIT_STATUS = "results/m6d_w2_target_family_redesign_v11_postsubm
 _DEFAULT_JOB_STATE_PROBE = "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
 _DEFAULT_RECEIPT_MONITOR = "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
 _DEFAULT_JOB_STATE_QUERY = "results/m6d_w2_target_family_redesign_v11_job_state_query.sh"
+_DEFAULT_SACCT_STATES = "results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
 _DEFAULT_POSTSYNC_REPLAY = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
 _DEFAULT_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V11_PANEL"
 _DEFAULT_APPROVAL_TOKEN = "approve-v11-panel-submit"
@@ -140,6 +141,7 @@ def render_sync_back_script(
     submit_summary: str,
     postsubmit_status: str = _DEFAULT_POSTSUBMIT_STATUS,
     job_state_probe: str = _DEFAULT_JOB_STATE_PROBE,
+    sacct_states: str = _DEFAULT_SACCT_STATES,
     remote_spec: str,
 ) -> str:
     remote_root_line = (
@@ -164,12 +166,20 @@ def render_sync_back_script(
         f"SUMMARY={shlex.quote(submit_summary)}",
         f"POSTSUBMIT={shlex.quote(postsubmit_status)}",
         f"JOB_STATES={shlex.quote(job_state_probe)}",
+        f"SACCT_STATES={shlex.quote(sacct_states)}",
         "export MANIFEST",
         "",
         'test -s "$MANIFEST" || { echo "manifest is missing or empty: $MANIFEST" >&2; exit 2; }',
         'test -s "$COMPLETION" || { echo "completion script is missing or empty: $COMPLETION" >&2; exit 2; }',
         'test -s "$RECEIPT" || { echo "submit receipt is missing locally; run receipt monitor first: $RECEIPT" >&2; exit 2; }',
         'test -s "$SUMMARY" || { echo "submit summary is missing locally; run receipt monitor first: $SUMMARY" >&2; exit 2; }',
+        'mkdir -p "$LOCAL_ROOT/$(dirname "$JOB_STATES")"',
+        (
+            'rsync -avP "$REMOTE_ROOT/$JOB_STATES" "$LOCAL_ROOT/$JOB_STATES" || '
+            '{ echo "remote job-state probe is missing; run the job-state query bridge first: $JOB_STATES" >&2; exit 2; }'
+        ),
+        'mkdir -p "$LOCAL_ROOT/$(dirname "$SACCT_STATES")"',
+        'rsync -avP "$REMOTE_ROOT/$SACCT_STATES" "$LOCAL_ROOT/$SACCT_STATES" || true',
         'test -s "$JOB_STATES" || { echo "job-state probe is missing locally; run the job-state query/probe before sync-back: $JOB_STATES" >&2; exit 2; }',
         "",
         (
@@ -448,6 +458,7 @@ def build_runbook(
     job_state_probe: str,
     receipt_monitor_script: str,
     job_state_query_script: str,
+    sacct_states: str,
     postsync_replay_script: str,
     sync_back_script: str,
     completion_script: str,
@@ -490,6 +501,23 @@ def build_runbook(
         + " "
         + shlex.quote("cd " + remote_root + " && bash " + job_state_query_script)
     )
+    job_state_probe_sync_dirs = sorted({
+        os.path.dirname(job_state_probe) or ".",
+        os.path.dirname(sacct_states) or ".",
+    })
+    job_state_probe_sync_command = (
+        "mkdir -p "
+        + " ".join(shlex.quote(path) for path in job_state_probe_sync_dirs)
+        + " && rsync -avP "
+        + shlex.quote(remote_spec + "/" + job_state_probe)
+        + " "
+        + shlex.quote(job_state_probe)
+        + " && rsync -avP "
+        + shlex.quote(remote_spec + "/" + sacct_states)
+        + " "
+        + shlex.quote(sacct_states)
+    )
+    job_state_query_bridge_command = job_state_query_command + " && " + job_state_probe_sync_command
     postsubmit_status_command = (
         "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
         "--job-states "
@@ -521,12 +549,14 @@ def build_runbook(
             "job_state_probe_command_after_receipt_sync": (
                 "python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe"
             ),
+            "job_state_probe_sync_after_query": job_state_probe_sync_command,
             "job_state_query_plan_after_probe": job_state_query_script,
-            "job_state_query_command_after_probe": job_state_query_command,
+            "job_state_query_command_after_probe": job_state_query_bridge_command,
             "sync_back_script": sync_back_script,
             "sync_back_command_after_jobs_finish": "bash " + shlex.quote(sync_back_script),
             "postsubmit_status": postsubmit_status,
             "job_state_probe": job_state_probe,
+            "sacct_states": sacct_states,
             "postsubmit_sync_ready_gate": (
                 "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
                 "--require-sync-ready"
@@ -586,6 +616,12 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
         "```bash",
         str(post.get("job_state_probe_command_after_receipt_sync") or ""),
         str(post.get("job_state_query_command_after_probe") or ""),
+        "```",
+        "",
+        "The job-state query bridge syncs the remote probe JSON/TSV back locally before postsubmit status:",
+        "",
+        "```bash",
+        str(post.get("job_state_probe_sync_after_query") or ""),
         "```",
         "",
         "Before record sync-back, require postsubmit sync-ready status:",
@@ -700,8 +736,10 @@ def build_approval_packet(
         "sync_back_command_after_jobs_finish": post_submit.get("sync_back_command_after_jobs_finish"),
         "receipt_monitor_after_submit": post_submit.get("receipt_monitor_command_after_submit"),
         "job_state_query_after_receipt": post_submit.get("job_state_query_command_after_probe"),
+        "job_state_probe_sync_after_query": post_submit.get("job_state_probe_sync_after_query"),
         "postsubmit_status_before_sync": post_submit.get("postsubmit_status"),
         "job_state_probe_before_sync": post_submit.get("job_state_probe"),
+        "sacct_states_before_sync": post_submit.get("sacct_states"),
         "postsubmit_sync_ready_gate": post_submit.get("postsubmit_sync_ready_gate"),
         "postsubmit_status_command_before_sync": post_submit.get("postsubmit_status_command_before_sync"),
         "completion_command_after_sync": post_submit.get("completion_command_after_sync"),
@@ -751,6 +789,12 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         "```bash",
         str(rep.get("receipt_monitor_after_submit") or ""),
         str(rep.get("job_state_query_after_receipt") or ""),
+        "```",
+        "",
+        "Job-state probe sync after query:",
+        "",
+        "```bash",
+        str(rep.get("job_state_probe_sync_after_query") or ""),
         "```",
         "",
         "Sync-back command after jobs finish:",
@@ -845,6 +889,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--job-state-probe", default=_DEFAULT_JOB_STATE_PROBE)
     ap.add_argument("--receipt-monitor-script", default=_DEFAULT_RECEIPT_MONITOR)
     ap.add_argument("--job-state-query-script", default=_DEFAULT_JOB_STATE_QUERY)
+    ap.add_argument("--sacct-states", default=_DEFAULT_SACCT_STATES)
     ap.add_argument("--postsync-replay-script", default=_DEFAULT_POSTSYNC_REPLAY)
     ap.add_argument("--manifest-report", default="results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json")
     ap.add_argument("--guard-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json")
@@ -913,6 +958,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             submit_summary=args.submit_summary,
             postsubmit_status=args.postsubmit_status,
             job_state_probe=args.job_state_probe,
+            sacct_states=args.sacct_states,
             remote_spec=remote_spec,
         ),
     )
@@ -980,6 +1026,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         job_state_probe=args.job_state_probe,
         receipt_monitor_script=args.receipt_monitor_script,
         job_state_query_script=args.job_state_query_script,
+        sacct_states=args.sacct_states,
         postsync_replay_script=args.postsync_replay_script,
         sync_back_script=args.sync_back_out,
         completion_script=args.completion_script_out,

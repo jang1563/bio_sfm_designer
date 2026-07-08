@@ -89,7 +89,8 @@
         "target_msa_strict_ready": true
       },
       "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
-      "job_state_query_after_receipt": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'",
+      "job_state_probe_sync_after_query": "mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+      "job_state_query_after_receipt": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
       "panel_approval_env_value": "approve-v11-panel-submit",
       "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
       "panel_dry_run_no_sbatch": true,

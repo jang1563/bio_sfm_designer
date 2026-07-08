@@ -134,6 +134,8 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
         self.assertIn("--require-sync-ready", text)
         self.assertIn("test -s \"$RECEIPT\"", text)
         self.assertIn("test -s \"$SUMMARY\"", text)
+        self.assertIn("remote job-state probe is missing", text)
+        self.assertIn("rsync -avP \"$REMOTE_ROOT/$JOB_STATES\"", text)
         self.assertIn("test -s \"$JOB_STATES\"", text)
         self.assertLess(
             text.index("m6d_w2_panel_postsubmit_status"),
@@ -217,6 +219,9 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertIn("BIO_SFM_APPROVE_V11_PANEL", runbook["approval"]["submit_command_if_explicitly_approved"])
             self.assertEqual(runbook["post_submit"]["receipt_monitor_script"], receipt_monitor)
             self.assertEqual(runbook["post_submit"]["job_state_query_plan_after_probe"], job_state_query)
+            self.assertIn("rsync -avP", runbook["post_submit"]["job_state_probe_sync_after_query"])
+            self.assertIn(job_state_probe, runbook["post_submit"]["job_state_probe_sync_after_query"])
+            self.assertIn("rsync -avP", runbook["post_submit"]["job_state_query_command_after_probe"])
             self.assertEqual(runbook["post_submit"]["postsync_replay_script"], postsync_replay)
             self.assertIn("m6d_w2_panel_job_state_probe", runbook["post_submit"]["job_state_probe_command_after_receipt_sync"])
             self.assertIn("--require-sync-ready", runbook["post_submit"]["postsubmit_status_command_before_sync"])
@@ -230,6 +235,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 sync_back_text = fh.read()
             self.assertIn("m6d_w2_panel_postsubmit_status", sync_back_text)
             self.assertIn("--require-sync-ready", sync_back_text)
+            self.assertIn("remote job-state probe is missing", sync_back_text)
             with open(approval_packet_json) as fh:
                 approval_packet = json.load(fh)
             self.assertEqual(approval_packet["status"], "panel_approval_packet_ready")
@@ -239,6 +245,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
             self.assertIn("receipt_monitor.sh", approval_packet["receipt_monitor_after_submit"])
             self.assertIn("job_state_query.sh", approval_packet["job_state_query_after_receipt"])
+            self.assertIn("rsync -avP", approval_packet["job_state_probe_sync_after_query"])
             self.assertIn("m6d_w2_panel_postsubmit_status", approval_packet["postsubmit_sync_ready_gate"])
             self.assertIn("--require-sync-ready", approval_packet["postsubmit_status_command_before_sync"])
             self.assertIn("postsync_replay.sh", approval_packet["postsync_replay_after_sync"])
