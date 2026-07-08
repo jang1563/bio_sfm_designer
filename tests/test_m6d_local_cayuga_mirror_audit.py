@@ -152,6 +152,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_receipt_monitor.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"), {"status": "s"})
 
             rc = main([
                 "--local-root", local,

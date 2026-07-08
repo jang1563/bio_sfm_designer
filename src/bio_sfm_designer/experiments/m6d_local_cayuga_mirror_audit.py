@@ -220,6 +220,17 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "can_sync_receipt",
         "can_run_job_state_probe",
     ],
+    "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json": [
+        "status",
+        "audit_ok",
+        "no_submit",
+        "submitted",
+        "sync_ready",
+        "can_claim_w2_generalization",
+        "target_alpha",
+        "min_targets",
+        "min_records_per_target",
+    ],
 }
 
 

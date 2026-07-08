@@ -354,7 +354,11 @@ engine installs from GitHub):
   any record sync-back. The companion no-submit job-state probe
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe`) currently records
   `receipt_absent_not_submitted`; after receipt creation it emits the read-only `sacct` query plan and
-  postsubmit-compatible `states` JSON. The panel has not been submitted.
+  postsubmit-compatible `states` JSON. The post-sync interpretation gate
+  (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsync_interpretation`) currently records
+  `not_synced_not_interpretable`, emits the guarded replay path for sync-back -> completion ->
+  `complex_panel_report` -> decision-protocol refresh, and keeps `can_claim_w2_generalization=false`.
+  The panel has not been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

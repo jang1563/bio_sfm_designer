@@ -1,0 +1,42 @@
+{
+  "artifact": "m6d_w2_panel_postsync_interpretation",
+  "audit_ok": true,
+  "can_claim_w2_generalization": false,
+  "claim_boundary": "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report",
+  "completion": "results/m6d_w2_target_family_redesign_v11_panel_completion.json",
+  "completion_probe": {
+    "n_completed_targets": 0,
+    "n_failures": 8,
+    "n_manifest_targets": 7,
+    "ok": false,
+    "status": "blocked"
+  },
+  "current_panel_result": {
+    "claim": "no W2 claim; panel records/report are not available",
+    "next_action": "after explicit approved panel execution, sync records and run completion/report",
+    "status": "not_available_not_submitted",
+    "w2_generalization_supported": false
+  },
+  "failures": [],
+  "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+  "min_records_per_target": 20,
+  "min_targets": 4,
+  "next_action": "await explicit approval, guarded submission, job completion, and sync-ready postsubmit status",
+  "no_submit": true,
+  "panel_report": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+  "postsubmit_status": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+  "records": [
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10XZ_EF/records_boltz_complex.jsonl",
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10YB_GH/records_boltz_complex.jsonl",
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/12NP_AH/records_boltz_complex.jsonl",
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10VB_IJ/records_boltz_complex.jsonl",
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10ZO_AB/records_boltz_complex.jsonl",
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/1A2Y_BA/records_boltz_complex.jsonl",
+    "hpc_outputs/m6d_w2_target_family_redesign_v11_records/1A6W_HL/records_boltz_complex.jsonl"
+  ],
+  "replay_script": "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+  "status": "not_synced_not_interpretable",
+  "submitted": false,
+  "sync_ready": false,
+  "target_alpha": 0.2
+}
