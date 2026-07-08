@@ -5911,9 +5911,11 @@ class ComplexProjectStatusTests(unittest.TestCase):
             pending_external = os.path.join(d, "pending_external.txt")
             external_sync = os.path.join(d, "external_sync.sh")
             post_sync = os.path.join(d, "post_sync.sh")
+            remote_readiness = os.path.join(d, "remote_readiness.json")
 
             main([
                 "--target-alpha", "0.1",
+                "--w2-panel-remote-readiness", remote_readiness,
                 "--out", out,
                 "--emit-pending-external-paths", pending_external,
                 "--emit-external-sync-back-plan", external_sync,
@@ -5925,6 +5927,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         command = saved["self_command"]
         self.assertIn("complex_project_status", command)
         self.assertIn("--target-alpha 0.1", command)
+        self.assertIn(f"--w2-panel-remote-readiness {remote_readiness}", command)
         self.assertIn(f"--out {out}", command)
         self.assertIn(f"--emit-pending-external-paths {pending_external}", command)
         self.assertIn(f"--emit-external-sync-back-plan {external_sync}", command)
@@ -6588,6 +6591,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
             manifest = os.path.join(d, "targets_report.json")
             packet = os.path.join(d, "panel_approval_packet.json")
             protocol = os.path.join(d, "panel_decision_protocol.json")
+            remote = os.path.join(d, "remote_readiness.json")
             _write_json(manifest, {
                 "ok": True,
                 "n_targets": 7,
@@ -6628,11 +6632,25 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 },
                 "failures": [],
             })
+            _write_json(remote, {
+                "artifact": "m6d_w2_v11_remote_submission_readiness",
+                "status": "remote_submission_readiness_ok",
+                "audit_ok": True,
+                "no_submit": True,
+                "can_submit_panel_if_user_explicitly_approves": True,
+                "can_claim_w2_generalization": False,
+                "n_exact_checks": 14,
+                "n_semantic_checks": 5,
+                "n_absence_checks": 2,
+                "n_failures": 0,
+                "failures": [],
+            })
 
             rep = run_status(
                 target_manifest_path=manifest,
                 w2_panel_approval_packet_path=packet,
                 w2_panel_decision_protocol_path=protocol,
+                w2_panel_remote_readiness_path=remote,
             )
 
         w2 = rep["workstreams"]["W2_multi_target_panel"]
@@ -6643,7 +6661,51 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_decision_protocol_ready"])
         self.assertTrue(w2["panel_decision_no_submit"])
         self.assertFalse(w2["panel_decision_can_claim_w2_now"])
+        self.assertTrue(w2["panel_remote_submission_readiness_ok"])
+        self.assertTrue(w2["panel_remote_no_submit"])
+        self.assertEqual(w2["panel_remote_exact_checks"], 14)
+        self.assertEqual(w2["panel_remote_semantic_checks"], 5)
+        self.assertEqual(w2["panel_remote_absence_checks"], 2)
+        self.assertIn("remote mirror is ready", w2["next_action"])
+        self.assertIn("panel_remote_submission_readiness_ok=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])
+
+    def test_w2_panel_remote_readiness_blocks_if_receipt_present(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "targets_report.json")
+            remote = os.path.join(d, "remote_readiness.json")
+            _write_json(manifest, {
+                "ok": True,
+                "n_targets": 7,
+                "n_ready_targets": 7,
+                "failures": [],
+            })
+            _write_json(remote, {
+                "artifact": "m6d_w2_v11_remote_submission_readiness",
+                "status": "remote_submission_readiness_blocked",
+                "audit_ok": False,
+                "no_submit": True,
+                "can_submit_panel_if_user_explicitly_approves": False,
+                "can_claim_w2_generalization": False,
+                "n_exact_checks": 14,
+                "n_semantic_checks": 5,
+                "n_absence_checks": 2,
+                "n_failures": 1,
+                "failures": [{"kind": "submit_receipt_or_summary_present", "path": "results/receipt.jsonl"}],
+            })
+
+            rep = run_status(
+                target_manifest_path=manifest,
+                w2_panel_remote_readiness_path=remote,
+            )
+
+        w2 = rep["workstreams"]["W2_multi_target_panel"]
+        self.assertEqual(w2["status"], "panel_remote_submission_readiness_blocked")
+        self.assertFalse(w2["complete"])
+        self.assertFalse(w2["panel_remote_submission_readiness_ok"])
+        kinds = {failure["kind"] for failure in w2["failures"]}
+        self.assertIn("submit_receipt_or_summary_present", kinds)
+        self.assertIn("panel_remote_submission_readiness_status_not_ok", kinds)
 
     def test_w2_approval_parity_attaches_to_ready_target_msa_gate(self):
         with tempfile.TemporaryDirectory() as d:

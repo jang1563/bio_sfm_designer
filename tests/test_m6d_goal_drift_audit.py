@@ -156,7 +156,7 @@ def _panel_approval_packet():
     }
 
 
-def _panel_decision_protocol():
+def _panel_decision_protocol(n_manifest_targets=14):
     return {
         "_path": "/tmp/panel_decision.json",
         "status": "post_panel_decision_protocol_ready",
@@ -165,7 +165,8 @@ def _panel_decision_protocol():
         "can_claim_w2_generalization_now": False,
         "panel_contract": {
             "target_alpha": 0.2,
-            "n_manifest_targets": 14,
+            "n_manifest_targets": n_manifest_targets,
+            "min_targets": 4,
             "min_records_per_target": 20,
         },
         "current_panel_result": {
@@ -173,6 +174,22 @@ def _panel_decision_protocol():
             "w2_generalization_supported": False,
             "claim": "no W2 claim; panel records/report are not available",
         },
+    }
+
+
+def _panel_remote_readiness():
+    return {
+        "_path": "/tmp/panel_remote_readiness.json",
+        "status": "remote_submission_readiness_ok",
+        "audit_ok": True,
+        "no_submit": True,
+        "can_submit_panel_if_user_explicitly_approves": True,
+        "can_claim_w2_generalization": False,
+        "n_exact_checks": 14,
+        "n_semantic_checks": 5,
+        "n_absence_checks": 2,
+        "n_failures": 0,
+        "next_action": "remote mirror is ready; still wait for explicit user approval",
     }
 
 
@@ -267,6 +284,32 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
         self.assertEqual(risks["panel_decision_protocol_boundary"], "managed")
         self.assertIn("W2_panel_decision_protocol", render_markdown(rep))
+
+    def test_v11_remote_readiness_ready_has_no_major_direction_drift(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+            _panel_decision_protocol(n_manifest_targets=7),
+            _panel_remote_readiness(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["execution"], "panel_remote_readiness_ready_not_submitted")
+        self.assertFalse(rep["current_state"]["W2_panel_remote_readiness"]["can_claim_w2_generalization"])
+        risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
+        self.assertEqual(risks["panel_remote_readiness_boundary"], "managed")
+        self.assertIn("W2_panel_remote_readiness", render_markdown(rep))
 
     def test_pre_submission_blocked_state_has_no_major_direction_drift(self):
         rep = build_audit(

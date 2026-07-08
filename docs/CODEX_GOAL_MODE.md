@@ -167,7 +167,7 @@ Current state:
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The emitted approval packet plus
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
-  decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; project status now
+  decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; full project status now
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` with 14 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
@@ -282,7 +282,7 @@ Current state:
 - Goal-boundary drift is now independently audited by
   `results/m6d_goal_drift_audit.{json,md}`. Current status is
   `no_major_direction_drift_w2_blocked`, with `major_direction_drift=false`, direction aligned,
-  claim boundaries preserved, and execution recorded as `panel_decision_protocol_ready_not_submitted`.
+  claim boundaries preserved, and execution recorded as `panel_remote_readiness_ready_not_submitted`.
 - W3: Chai-1 records exist and pass QC/contract, but Boltz-Chai label agreement is 0.600
   against the required 0.800, so independent-predictor robustness is not supported. This is
   treated as a negative no-MSA Chai robustness result only because strict adjudication integrity
@@ -739,11 +739,12 @@ bash results/m6c_project_external_sync_back.sh
   guard false unless W1, W2, W3, and W4 are all complete in the current status artifact.
 - `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit.
   The current honest state is `audit_ok=true` and `can_mark_goal_complete=false`, with W2 as the only
-  remaining requirement.
+  remaining requirement until the v11 panel is explicitly approved, submitted, synced back, completed, and
+  target-wise certified.
 - `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit. The
   current honest state is `audit_ok=true`, `major_direction_drift=false`, direction aligned, claim
-  boundaries preserved, and next action limited to the W2 v11 no-spend follow-up branch plus a future
-  target-wise certificate before any W2 generalization claim.
+  boundaries preserved, and execution `panel_remote_readiness_ready_not_submitted`; next action is explicit
+  W2 v11 panel approval only, followed by sync-back, completion, and target-wise certification.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
   or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 7 semantic checks.

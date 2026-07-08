@@ -27,6 +27,7 @@ _EXECUTION_SUBMITTED_STATUS = "target_msa_jobs_submitted_waiting_on_completion"
 _EXECUTION_SYNCED_STATUS = "target_msa_outputs_synced_strict_require_files_passed"
 _PANEL_APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _PANEL_DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
+_PANEL_REMOTE_READY_STATUS = "remote_submission_readiness_ok"
 
 
 _GOAL_TEXT_REQUIREMENTS = (
@@ -230,8 +231,37 @@ def _panel_decision_state(panel_decision_protocol: Optional[Dict[str, Any]]) -> 
         "current_result_w2_supported": current.get("w2_generalization_supported"),
         "target_alpha": contract.get("target_alpha"),
         "n_manifest_targets": contract.get("n_manifest_targets"),
+        "min_targets": contract.get("min_targets"),
         "min_records_per_target": contract.get("min_records_per_target"),
         "next_action": panel_decision_protocol.get("next_action"),
+    }
+
+
+def _panel_remote_readiness_state(panel_remote_readiness: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(panel_remote_readiness, dict):
+        return {
+            "path": None,
+            "status": "not_provided",
+            "audit_ok": False,
+            "no_submit": None,
+            "can_submit_panel_if_user_explicitly_approves": None,
+            "can_claim_w2_generalization": None,
+            "n_failures": None,
+        }
+    return {
+        "path": panel_remote_readiness.get("_path"),
+        "status": panel_remote_readiness.get("status"),
+        "audit_ok": panel_remote_readiness.get("audit_ok"),
+        "no_submit": panel_remote_readiness.get("no_submit"),
+        "can_submit_panel_if_user_explicitly_approves": panel_remote_readiness.get(
+            "can_submit_panel_if_user_explicitly_approves"
+        ),
+        "can_claim_w2_generalization": panel_remote_readiness.get("can_claim_w2_generalization"),
+        "n_exact_checks": panel_remote_readiness.get("n_exact_checks"),
+        "n_semantic_checks": panel_remote_readiness.get("n_semantic_checks"),
+        "n_absence_checks": panel_remote_readiness.get("n_absence_checks"),
+        "n_failures": panel_remote_readiness.get("n_failures"),
+        "next_action": panel_remote_readiness.get("next_action"),
     }
 
 
@@ -245,12 +275,14 @@ def build_audit(
     anchor_text: str,
     panel_approval_packet: Optional[Dict[str, Any]] = None,
     panel_decision_protocol: Optional[Dict[str, Any]] = None,
+    panel_remote_readiness: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     failures: List[Dict[str, Any]] = []
     combined_goal_text = "\n".join([goal_mode_text or "", anchor_text or ""])
     execution = _execution_state(execution_attempt)
     panel_approval = _panel_approval_state(panel_approval_packet)
     panel_decision = _panel_decision_state(panel_decision_protocol)
+    panel_remote = _panel_remote_readiness_state(panel_remote_readiness)
 
     for kind, needles, message in _GOAL_TEXT_REQUIREMENTS:
         if not _contains_all(combined_goal_text, needles):
@@ -552,17 +584,70 @@ def build_audit(
                 expected=False,
                 observed=panel_decision.get("current_result_w2_supported"),
             )
-        if panel_decision.get("target_alpha") != 0.2 or panel_decision.get("n_manifest_targets") != 14:
+        min_targets = panel_decision.get("min_targets") or 4
+        n_manifest_targets = panel_decision.get("n_manifest_targets")
+        if (
+            panel_decision.get("target_alpha") != 0.2
+            or not isinstance(n_manifest_targets, int)
+            or n_manifest_targets < min_targets
+        ):
             _add_failure(
                 failures,
                 "panel_decision_contract_drift",
-                "post-panel decision protocol must stay scoped to alpha=0.2 and 14 manifest targets",
+                "post-panel decision protocol must stay scoped to alpha=0.2 and enough manifest targets",
                 category="claim_boundary",
-                expected={"target_alpha": 0.2, "n_manifest_targets": 14},
+                expected={"target_alpha": 0.2, "n_manifest_targets": f">={min_targets}"},
                 observed={
                     "target_alpha": panel_decision.get("target_alpha"),
-                    "n_manifest_targets": panel_decision.get("n_manifest_targets"),
+                    "n_manifest_targets": n_manifest_targets,
                 },
+            )
+
+    if panel_remote_readiness is not None:
+        if panel_remote.get("status") != _PANEL_REMOTE_READY_STATUS or panel_remote.get("audit_ok") is not True:
+            _add_failure(
+                failures,
+                "panel_remote_readiness_not_ok",
+                "remote submission readiness audit must pass before it can support the current W2 panel boundary",
+                category="execution",
+                expected={"status": _PANEL_REMOTE_READY_STATUS, "audit_ok": True},
+                observed={"status": panel_remote.get("status"), "audit_ok": panel_remote.get("audit_ok")},
+            )
+        if panel_remote.get("no_submit") is not True:
+            _add_failure(
+                failures,
+                "panel_remote_readiness_submit_drift",
+                "remote submission readiness audit must remain no-submit",
+                category="approval_boundary",
+                expected=True,
+                observed=panel_remote.get("no_submit"),
+            )
+        if panel_remote.get("can_submit_panel_if_user_explicitly_approves") is not True:
+            _add_failure(
+                failures,
+                "panel_remote_not_explicit_approval_ready",
+                "remote readiness may only permit submission under explicit approval",
+                category="approval_boundary",
+                expected=True,
+                observed=panel_remote.get("can_submit_panel_if_user_explicitly_approves"),
+            )
+        if panel_remote.get("can_claim_w2_generalization") is not False:
+            _add_failure(
+                failures,
+                "panel_remote_readiness_claim_drift",
+                "remote submission readiness must not become a W2 generalization claim",
+                category="claim_boundary",
+                expected=False,
+                observed=panel_remote.get("can_claim_w2_generalization"),
+            )
+        if panel_remote.get("n_failures") != 0:
+            _add_failure(
+                failures,
+                "panel_remote_readiness_failures_present",
+                "remote submission readiness must have zero failures",
+                category="execution",
+                expected=0,
+                observed=panel_remote.get("n_failures"),
             )
 
     if w3_adjudication_audit.get("audit_ok") is not True:
@@ -630,6 +715,16 @@ def build_audit(
                     "wait for explicit user approval before running the guarded W2 v9 panel submit command; "
                     "then apply the predeclared post-panel decision protocol after sync-back and completion"
                 )
+                if panel_remote.get("status") == _PANEL_REMOTE_READY_STATUS:
+                    execution_assessment = "panel_remote_readiness_ready_not_submitted"
+                    w2_boundary = (
+                        "open_after_remote_submission_readiness_ready; explicit guarded panel submission still "
+                        "required; post-panel rules still require sync-back, completion, and target-wise certification"
+                    )
+                    next_action = (
+                        "wait for explicit user approval before running the guarded W2 panel submit command; "
+                        "then apply the predeclared post-panel decision protocol after sync-back and completion"
+                    )
     ssh_pre_submission_resolved = (
         execution.get("target_msa_jobs_submitted_waiting_on_completion") is True
         or execution.get("target_msa_outputs_synced_strict_require_files_passed") is True
@@ -661,6 +756,7 @@ def build_audit(
             "W2_target_msa_execution": execution,
             "W2_panel_approval": panel_approval,
             "W2_panel_decision_protocol": panel_decision,
+            "W2_panel_remote_readiness": panel_remote,
         },
         "drift_assessment": {
             "direction": "aligned" if not major_direction_drift else "drift_detected",
@@ -715,6 +811,11 @@ def build_audit(
                 "control": "post-panel decision protocol is no-submit interpretation only; it cannot authorize execution or claims",
             },
             {
+                "id": "panel_remote_readiness_boundary",
+                "status": "managed" if panel_remote.get("status") == _PANEL_REMOTE_READY_STATUS else "not_ready",
+                "control": "remote readiness is no-submit mirror evidence only; explicit approval and target-wise certification remain required",
+            },
+            {
                 "id": "pooled_only_w2_claim",
                 "status": "managed",
                 "control": "require target-wise certificates for W2 generalization",
@@ -728,6 +829,7 @@ def build_audit(
             "execution_attempt": execution.get("path"),
             "panel_approval_packet": panel_approval.get("path"),
             "panel_decision_protocol": panel_decision.get("path"),
+            "panel_remote_readiness": panel_remote.get("path"),
         },
         "failures": failures,
         "next_action": (
@@ -784,6 +886,18 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"can_claim_now=`{panel_decision.get('can_claim_w2_generalization_now')}` "
         f"current_result=`{panel_decision.get('current_result_status')}`"
     )
+    panel_remote = (
+        current.get("W2_panel_remote_readiness")
+        if isinstance(current.get("W2_panel_remote_readiness"), dict)
+        else {}
+    )
+    lines.append(
+        "- W2_panel_remote_readiness: "
+        f"status=`{panel_remote.get('status')}` "
+        f"no_submit=`{panel_remote.get('no_submit')}` "
+        f"can_claim_w2_generalization=`{panel_remote.get('can_claim_w2_generalization')}` "
+        f"failures=`{panel_remote.get('n_failures')}`"
+    )
     lines.extend(["", "## Active Risks", ""])
     for risk in rep.get("active_risks") or []:
         lines.append(f"- {risk.get('id')}: status=`{risk.get('status')}`; {risk.get('control')}")
@@ -805,6 +919,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--execution-attempt", default="results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.json")
     ap.add_argument("--panel-approval-packet", default="results/m6d_w2_target_family_redesign_v9_panel_approval_packet.json")
     ap.add_argument("--panel-decision-protocol", default="results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.json")
+    ap.add_argument("--panel-remote-readiness", default=None)
     ap.add_argument("--goal-mode-doc", default="docs/CODEX_GOAL_MODE.md")
     ap.add_argument("--anchor-doc", default="docs/M6D_GOAL_MODE_ANCHOR.md")
     ap.add_argument("--out-json", default="results/m6d_goal_drift_audit.json")
@@ -821,6 +936,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         if args.panel_decision_protocol and os.path.exists(args.panel_decision_protocol)
         else None
     )
+    panel_remote_readiness = (
+        _load_json(args.panel_remote_readiness)
+        if args.panel_remote_readiness and os.path.exists(args.panel_remote_readiness)
+        else None
+    )
 
     rep = build_audit(
         _load_json(args.project_status),
@@ -832,6 +952,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         _read_text(args.anchor_doc),
         panel_approval_packet,
         panel_decision_protocol,
+        panel_remote_readiness,
     )
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))

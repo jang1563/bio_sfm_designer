@@ -1,0 +1,524 @@
+{
+  "can_mark_goal_complete": false,
+  "complete": false,
+  "goal_completion_note": "do not mark the Codex goal complete; at least one W1-W4 requirement remains incomplete",
+  "goal_progress": "local_artifact_work_required",
+  "goal_progress_audit": {
+    "can_mark_goal_complete": false,
+    "complete": false,
+    "completion_note": "do not mark the Codex goal complete; at least one W1-W4 requirement remains incomplete",
+    "execution_ladder": null,
+    "external_blockers": [],
+    "first_action": null,
+    "local_blockers": [],
+    "next_action": "run complex_posthoc_bundle.py on synchronized records",
+    "remaining_requirements": 4,
+    "requirements": [
+      {
+        "accepted_statuses": [
+          "certified"
+        ],
+        "complete": false,
+        "evidence": null,
+        "evidence_empty_paths": [],
+        "evidence_file_ok": false,
+        "evidence_missing_paths": [],
+        "evidence_ok": false,
+        "evidence_parse_errors": [],
+        "evidence_paths": [],
+        "evidence_supports_status": null,
+        "id": "W1_M6c_scale_up",
+        "label": "tighten M6c complex gate beyond alpha=0.3 toward target alpha",
+        "next_action": "run complex_posthoc_bundle.py on synchronized records",
+        "raw_complete": false,
+        "status": "missing",
+        "status_complete": false,
+        "supporting_artifact_content_errors": [],
+        "supporting_artifact_empty": [],
+        "supporting_artifact_missing": [],
+        "supporting_artifact_ok": true,
+        "supporting_artifact_parse_errors": [],
+        "supporting_artifacts": []
+      },
+      {
+        "accepted_statuses": [
+          "multi_target_certified"
+        ],
+        "complete": false,
+        "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json",
+        "evidence_empty_paths": [],
+        "evidence_file_ok": true,
+        "evidence_missing_paths": [],
+        "evidence_ok": true,
+        "evidence_parse_errors": [],
+        "evidence_paths": [
+          "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json"
+        ],
+        "evidence_supports_status": null,
+        "id": "W2_multi_target_panel",
+        "label": "validate the complex signal target-wise across a multi-target panel",
+        "next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+        "raw_complete": false,
+        "status": "panel_approval_packet_ready_awaiting_explicit_approval",
+        "status_complete": false,
+        "supporting_artifact_content_errors": [],
+        "supporting_artifact_empty": [],
+        "supporting_artifact_missing": [],
+        "supporting_artifact_ok": true,
+        "supporting_artifact_parse_errors": [],
+        "supporting_artifacts": []
+      },
+      {
+        "accepted_statuses": [
+          "cross_predictor_ready",
+          "negative_robustness_result_adjudicated"
+        ],
+        "complete": false,
+        "evidence": null,
+        "evidence_empty_paths": [],
+        "evidence_file_ok": false,
+        "evidence_missing_paths": [],
+        "evidence_ok": false,
+        "evidence_parse_errors": [],
+        "evidence_paths": [],
+        "evidence_supports_status": null,
+        "id": "W3_independent_predictor",
+        "label": "validate or quantify the single-predictor caveat with an independent predictor",
+        "next_action": "validate a second-predictor contract, then generate matched records from an independent complex predictor",
+        "raw_complete": false,
+        "status": "missing",
+        "status_complete": false,
+        "supporting_artifact_content_errors": [],
+        "supporting_artifact_empty": [],
+        "supporting_artifact_missing": [],
+        "supporting_artifact_ok": true,
+        "supporting_artifact_parse_errors": [],
+        "supporting_artifacts": []
+      },
+      {
+        "accepted_statuses": [
+          "closed_loop_round_complete"
+        ],
+        "complete": false,
+        "evidence": null,
+        "evidence_empty_paths": [],
+        "evidence_file_ok": false,
+        "evidence_missing_paths": [],
+        "evidence_ok": false,
+        "evidence_parse_errors": [],
+        "evidence_paths": [],
+        "evidence_supports_status": null,
+        "id": "W4_closed_loop_DBTL",
+        "label": "integrate calibrated complex evidence into closed-loop DBTL routing",
+        "next_action": "run run_batch_round.py --strict-complex-records after synchronized candidates/records/verdicts exist",
+        "raw_complete": false,
+        "status": "missing",
+        "status_complete": false,
+        "supporting_artifact_content_errors": [],
+        "supporting_artifact_empty": [],
+        "supporting_artifact_missing": [],
+        "supporting_artifact_ok": true,
+        "supporting_artifact_parse_errors": [],
+        "supporting_artifacts": []
+      }
+    ],
+    "status": "local_artifact_work_required"
+  },
+  "n_pending_external_artifacts": 0,
+  "n_pending_input_prep_paths": 0,
+  "next_action": "run complex_posthoc_bundle.py on synchronized records",
+  "ok": true,
+  "operator_next_action": "run complex_posthoc_bundle.py on synchronized records",
+  "pending_artifact_local_audit": {
+    "external": {
+      "all_present_nonempty": false,
+      "n_empty": 0,
+      "n_missing": 0,
+      "n_nonempty": 0,
+      "n_paths": 0,
+      "n_present": 0,
+      "n_unreadable": 0,
+      "next_action": "no pending artifacts to audit",
+      "paths": [],
+      "status": "none"
+    },
+    "input_prep": {
+      "all_present_nonempty": false,
+      "n_empty": 0,
+      "n_missing": 0,
+      "n_nonempty": 0,
+      "n_paths": 0,
+      "n_present": 0,
+      "n_unreadable": 0,
+      "next_action": "no pending artifacts to audit",
+      "paths": [],
+      "status": "none"
+    }
+  },
+  "pending_external_artifacts": [],
+  "pending_external_followups": [],
+  "pending_external_manifest": {
+    "absolute_paths": false,
+    "kind": "pending_external_paths",
+    "manifest_file": null,
+    "n_paths": 0,
+    "path_file": null,
+    "paths": [],
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pending_external_summary": {
+    "by_artifact": {},
+    "by_category": {},
+    "by_field": {},
+    "by_target_id": {},
+    "by_workstream": {},
+    "n_paths": 0,
+    "workstreams": []
+  },
+  "pending_input_prep_manifest": {
+    "absolute_paths": false,
+    "kind": "pending_input_prep_paths",
+    "manifest_file": null,
+    "n_paths": 0,
+    "path_file": null,
+    "paths": [],
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pending_input_prep_paths": [],
+  "posthoc_science_claims": {},
+  "posthoc_science_claims_audit": {
+    "ok": true,
+    "status": "not_applicable"
+  },
+  "remaining": 4,
+  "remaining_requirements": 4,
+  "self_command": "python -m bio_sfm_designer.experiments.complex_project_status --panel-target-manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --target-manifest-report results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json --w2-panel-approval-packet results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json --w2-panel-decision-protocol results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json --w2-panel-remote-readiness results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json --panel-readiness-report results/m6d_w2_target_family_redesign_v11_readiness.json --out results/m6d_w2_target_family_redesign_v11_project_status.json --target-alpha 0.2",
+  "status": "m6_complex_in_progress",
+  "sync_manifest_audit": {
+    "checks": [],
+    "failures": [],
+    "n_checks": 0,
+    "n_failures": 0,
+    "ok": true
+  },
+  "target_alpha": 0.2,
+  "target_msa_precompute_outputs_satisfied": false,
+  "workstreams": {
+    "W1_M6c_scale_up": {
+      "complete": false,
+      "message": "No alpha decision artifact provided.",
+      "next_action": "run complex_posthoc_bundle.py on synchronized records",
+      "status": "missing",
+      "workstream": "W1_M6c_scale_up"
+    },
+    "W2_multi_target_panel": {
+      "can_claim_w2_generalization": false,
+      "can_submit_panel_if_user_explicitly_approves": true,
+      "complete": false,
+      "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json",
+      "failures": [],
+      "input_prep_artifacts": [
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_10XZ.pdb",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10XZ_EF/prepared_10XZ_EF.pdb",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10XZ_EF/prepared_10XZ_EF.report.json",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10XZ_EF/10XZ_EF_E.fasta",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10XZ_EF/10XZ_EF_E.fasta.report.json",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10XZ_EF/10XZ_EF_E.a3m",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10XZ_EF/10XZ_EF_E.a3m.report.json",
+          "target_id": "10XZ_EF"
+        },
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_10YB.pdb",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10YB_GH/prepared_10YB_GH.pdb",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10YB_GH/prepared_10YB_GH.report.json",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10YB_GH/10YB_GH_G.fasta",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10YB_GH/10YB_GH_G.fasta.report.json",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10YB_GH/10YB_GH_G.a3m",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10YB_GH/10YB_GH_G.a3m.report.json",
+          "target_id": "10YB_GH"
+        },
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_12NP.pdb",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/12NP_AH/prepared_12NP_AH.pdb",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/12NP_AH/prepared_12NP_AH.report.json",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/12NP_AH/12NP_AH_A.fasta",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/12NP_AH/12NP_AH_A.fasta.report.json",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/12NP_AH/12NP_AH_A.a3m",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/12NP_AH/12NP_AH_A.a3m.report.json",
+          "target_id": "12NP_AH"
+        },
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_10VB.pdb",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/prepared_10VB_IJ.pdb",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/prepared_10VB_IJ.report.json",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.fasta",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.fasta.report.json",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.a3m",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.a3m.report.json",
+          "target_id": "10VB_IJ"
+        },
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_10ZO.pdb",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/prepared_10ZO_AB.pdb",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/prepared_10ZO_AB.report.json",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.fasta",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.fasta.report.json",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.a3m",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.a3m.report.json",
+          "target_id": "10ZO_AB"
+        },
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_1A2Y.pdb",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A2Y_BA/prepared_1A2Y_BA.pdb",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A2Y_BA/prepared_1A2Y_BA.report.json",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A2Y_BA/1A2Y_BA_B.fasta",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A2Y_BA/1A2Y_BA_B.fasta.report.json",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A2Y_BA/1A2Y_BA_B.a3m",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A2Y_BA/1A2Y_BA_B.a3m.report.json",
+          "target_id": "1A2Y_BA"
+        },
+        {
+          "field": "source_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_1A6W.pdb",
+          "target_id": "1A6W_HL"
+        },
+        {
+          "field": "prepared_pdb",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A6W_HL/prepared_1A6W_HL.pdb",
+          "target_id": "1A6W_HL"
+        },
+        {
+          "field": "prep_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A6W_HL/prepared_1A6W_HL.report.json",
+          "target_id": "1A6W_HL"
+        },
+        {
+          "field": "target_fasta",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A6W_HL/1A6W_HL_H.fasta",
+          "target_id": "1A6W_HL"
+        },
+        {
+          "field": "target_fasta_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A6W_HL/1A6W_HL_H.fasta.report.json",
+          "target_id": "1A6W_HL"
+        },
+        {
+          "field": "target_msa",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A6W_HL/1A6W_HL_H.a3m",
+          "target_id": "1A6W_HL"
+        },
+        {
+          "field": "target_msa_report",
+          "path": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/1A6W_HL/1A6W_HL_H.a3m.report.json",
+          "target_id": "1A6W_HL"
+        }
+      ],
+      "n_ready_targets": 7,
+      "n_targets": 7,
+      "next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+      "panel_approval_checks": {
+        "panel_dry_run_no_sbatch": true,
+        "panel_guard_no_env_refuses": true,
+        "panel_preflight_ready": true,
+        "panel_submit_ready_targets": 7,
+        "submit_receipt_absent": true,
+        "submit_summary_absent": true,
+        "target_msa_strict_ready": true
+      },
+      "panel_approval_env_value": "approve-v11-panel-submit",
+      "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
+      "panel_approval_packet": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
+      "panel_approval_packet_failures": [],
+      "panel_approval_packet_ready": true,
+      "panel_approval_packet_status": "panel_approval_packet_ready",
+      "panel_decision_can_claim_w2_now": false,
+      "panel_decision_current_result_claim": "no W2 claim; panel records/report are not available",
+      "panel_decision_current_result_status": "not_available_not_submitted",
+      "panel_decision_no_submit": true,
+      "panel_decision_protocol": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
+      "panel_decision_protocol_failures": [],
+      "panel_decision_protocol_ready": true,
+      "panel_decision_protocol_status": "post_panel_decision_protocol_ready",
+      "panel_remote_absence_checks": 2,
+      "panel_remote_can_claim_w2_generalization": false,
+      "panel_remote_can_submit_if_explicitly_approved": true,
+      "panel_remote_exact_checks": 14,
+      "panel_remote_no_submit": true,
+      "panel_remote_semantic_checks": 5,
+      "panel_remote_submission_readiness": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
+      "panel_remote_submission_readiness_failures": [],
+      "panel_remote_submission_readiness_ok": true,
+      "panel_remote_submission_readiness_status": "remote_submission_readiness_ok",
+      "panel_submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+      "panel_sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+      "ready_for_panel_submission_if_explicitly_approved": true,
+      "status": "panel_approval_packet_ready_awaiting_explicit_approval",
+      "workstream": "W2_multi_target_panel"
+    },
+    "W3_independent_predictor": {
+      "complete": false,
+      "message": "No cross-predictor report provided.",
+      "next_action": "validate a second-predictor contract, then generate matched records from an independent complex predictor",
+      "status": "missing",
+      "workstream": "W3_independent_predictor"
+    },
+    "W4_closed_loop_DBTL": {
+      "complete": false,
+      "message": "No batch preflight or DBTL summary artifact provided.",
+      "next_action": "run run_batch_round.py --strict-complex-records after synchronized candidates/records/verdicts exist",
+      "status": "missing",
+      "workstream": "W4_closed_loop_DBTL"
+    }
+  }
+}

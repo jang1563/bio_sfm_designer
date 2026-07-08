@@ -336,7 +336,7 @@ engine installs from GitHub):
   same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
-  Project status now consumes those artifacts and reports W2 as
+  Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
   `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit Cayuga mirror audit
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` after 14 exact SHA checks, 5 semantic JSON checks, and 2
@@ -492,14 +492,15 @@ engine installs from GitHub):
   `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and
   `goal_completion_note` mirror the compact completion/resume state,
   while `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit:
-  it should pass with `audit_ok=true` and `can_mark_goal_complete=false` until W2 target-MSA execution,
-  sync-back, and strict replay finish,
+  it should pass with `audit_ok=true` and `can_mark_goal_complete=false` until the W2 v11 panel is
+  explicitly approved, submitted, synced back, completed, and target-wise certified,
 	  and `results/m6d_local_cayuga_mirror_audit.{json,md}` is the no-submit local/Cayuga mirror audit:
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
 	  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
-	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, and `major_direction_drift=false`, keeping the
-	  next action limited to explicit W2 v9 target-MSA input-prep approval only,
+	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
+	  `panel_remote_readiness_ready_not_submitted`, keeping the next action limited to explicit W2 v11 panel
+	  approval followed by sync-back, completion, and target-wise certification,
 	  so the same dashboard refresh can be replayed exactly,
 	  `--predictor-sync-back-plan` preserves the W3 second-predictor sync/rerun script in status and replay artifacts,
   `--batch-sync-back-plan` preserves the W4 missing-batch sync/rerun script in status and replay artifacts,

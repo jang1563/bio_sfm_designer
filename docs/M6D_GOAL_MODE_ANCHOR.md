@@ -786,12 +786,12 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     post-job sync-back command, but it is not approval, not a submitted panel, and not W2 evidence. The
     main project status now consumes this packet through `--w2-panel-approval-packet` and reports W2 as
     `panel_approval_packet_ready_awaiting_explicit_approval` with `complete=false`.
-59. Goal completion/drift audits now consume the panel approval packet:
+59. Goal completion/drift audits now consume the v11 panel approval, decision, and remote-readiness packets:
     `results/m6d_goal_completion_audit.{json,md}` keeps `can_mark_goal_complete=false` and records W2 as
     the sole remaining requirement. `results/m6d_goal_drift_audit.{json,md}` reports
     `no_major_direction_drift_w2_blocked`, `major_direction_drift=false`, and execution
-    `panel_decision_protocol_ready_not_submitted`. The next action remains explicit user approval before
-    guarded W2 v9 panel submission, followed by sync-back, completion, and target-wise certification.
+    `panel_remote_readiness_ready_not_submitted`. The next action remains explicit user approval before
+    guarded W2 v11 panel submission, followed by sync-back, completion, and target-wise certification.
 60. V9 post-panel decision protocol is predeclared without submitting:
     `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}` reports
     `post_panel_decision_protocol_ready`, `no_submit=true`, and
@@ -907,8 +907,8 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Regenerate this approval-boundary state with
     `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; it also
     emits the no-submit approval runbook, sync-back script, and panel-completion script for the approved-run
-    aftermath. The v11 panel approval packet and decision protocol report approval-ready/no-submit state
-    and `can_claim_w2_generalization_now=false`; project status now reports W2 as
+    aftermath. The v11 panel approval packet, decision protocol, and remote-readiness audit report approval-ready/no-submit state
+    and `can_claim_w2_generalization_now=false`; full project status now reports W2 as
     `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
     `remote_submission_readiness_ok` after exact SHA, semantic JSON, and receipt-absence checks against
     Cayuga. Do not reuse the earlier generated submit plan that pointed at
@@ -943,16 +943,16 @@ The project status artifact consumes this decision through `--w3-decision-protoc
 goal-mode requirement.
 `results/m6d_goal_completion_audit.{json,md}` independently audits that boundary: it passes with
 `audit_ok=true`, keeps `can_mark_goal_complete=false`, and names `W2_multi_target_panel` as the sole
-remaining requirement. Its current W2 execution evidence is the approved full-14 target-MSA path synced
-back locally with strict `--require-files` passing for 14 targets; W2 remains incomplete until panel
-execution and target-wise certification.
+remaining requirement. Its current W2 execution evidence includes the approved full-14 target-MSA path
+synced back locally with strict `--require-files` passing plus the v11 panel approval/decision/remote-readiness
+boundary; W2 remains incomplete until panel execution, sync-back, completion, and target-wise certification.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 11 exact SHA
 checks and 7 semantic JSON checks currently agree, so the resume artifacts are mirrored before any future
 approved W2 target-MSA step.
 `results/m6d_goal_drift_audit.{json,md}` independently audits goal-boundary drift without submitting work:
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
 direction aligned, claim boundaries preserved, and execution recorded as
-`panel_decision_protocol_ready_not_submitted`.
+`panel_remote_readiness_ready_not_submitted`.
 Runtime clarification checked on Cayuga: W2 production runs through the `boltz` env with Boltz-2 2.2.1;
 the completed W3 comparator uses the separate `chai1` env with `chai_lab`/`chai-lab` 0.6.1. These are
 separate predictor/protocol records and must not be pooled without the adjudication rule below.

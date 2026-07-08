@@ -265,7 +265,7 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
 > `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
 > `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
-> Project status now consumes those artifacts and reports W2 as
+> Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
 > `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit Cayuga mirror audit
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
 > `remote_submission_readiness_ok` after 14 exact SHA checks, 5 semantic JSON checks, and 2
@@ -574,13 +574,15 @@ as `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_comple
 `goal_completion_note` for lightweight resume checks.
 `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit:
 the current honest state is `audit_ok=true`, `can_mark_goal_complete=false`, and remaining requirement
-`W2_multi_target_panel`.
+`W2_multi_target_panel`; W2 remains incomplete until the v11 panel is explicitly approved, submitted,
+synced back, completed, and target-wise certified.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
 and Cayuga artifacts agree across 11 exact SHA checks plus 7 semantic JSON checks, keeping stale remote
 state from silently re-entering goal mode.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
-status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and it
-keeps the next action limited to explicit W2 v9 target-MSA input-prep approval only.
+status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
+execution is `panel_remote_readiness_ready_not_submitted`; it keeps the next action limited to explicit
+W2 v11 panel approval followed by sync-back, completion, and target-wise certification.
 It also understands the second-predictor contract report, so W3 can report
 `second_predictor_contract_ready` or `second_predictor_contract_blocked` before the final
 cross-predictor report exists; blocked W3 status does not re-expose runnable downstream commands

@@ -141,7 +141,7 @@ def _panel_approval_packet():
     }
 
 
-def _panel_decision_protocol():
+def _panel_decision_protocol(n_manifest_targets=14):
     return {
         "_path": "/tmp/panel_decision.json",
         "status": "post_panel_decision_protocol_ready",
@@ -150,7 +150,8 @@ def _panel_decision_protocol():
         "can_claim_w2_generalization_now": False,
         "panel_contract": {
             "target_alpha": 0.2,
-            "n_manifest_targets": 14,
+            "n_manifest_targets": n_manifest_targets,
+            "min_targets": 4,
             "min_records_per_target": 20,
         },
         "current_panel_result": {
@@ -158,6 +159,22 @@ def _panel_decision_protocol():
             "w2_generalization_supported": False,
             "claim": "no W2 claim; panel records/report are not available",
         },
+    }
+
+
+def _panel_remote_readiness():
+    return {
+        "_path": "/tmp/panel_remote_readiness.json",
+        "status": "remote_submission_readiness_ok",
+        "audit_ok": True,
+        "no_submit": True,
+        "can_submit_panel_if_user_explicitly_approves": True,
+        "can_claim_w2_generalization": False,
+        "n_exact_checks": 14,
+        "n_semantic_checks": 5,
+        "n_absence_checks": 2,
+        "n_failures": 0,
+        "next_action": "remote mirror is ready; still wait for explicit user approval",
     }
 
 
@@ -261,6 +278,36 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertEqual(rep["w2_gate"]["panel_decision_current_result_status"], "not_available_not_submitted")
         self.assertIn("post-panel decision protocol", rep["claim_boundary"]["w2"])
         self.assertIn("W2 panel decision protocol ready: `True`", render_markdown(rep))
+
+    def test_v11_remote_readiness_still_does_not_complete_goal(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                v9_receipt=receipt,
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["can_mark_goal_complete"])
+        self.assertIn("remote submission readiness", rep["claim_boundary"]["w2"])
+        self.assertTrue(rep["w2_gate"]["panel_remote_readiness_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_remote_no_submit"])
+        self.assertTrue(rep["w2_gate"]["panel_remote_can_submit_if_explicitly_approved"])
+        self.assertFalse(rep["w2_gate"]["panel_remote_can_claim_w2_generalization"])
+        self.assertIn("W2 panel remote readiness ok: `True`", render_markdown(rep))
 
     def test_pre_submission_blocked_state_also_passes_without_marking_complete(self):
         with tempfile.TemporaryDirectory() as d:
