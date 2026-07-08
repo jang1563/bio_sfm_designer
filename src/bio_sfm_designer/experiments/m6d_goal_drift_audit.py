@@ -196,7 +196,11 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
         "sync_back_command_after_jobs_finish": panel_approval_packet.get("sync_back_command_after_jobs_finish"),
         "postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
         "job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
+        "receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
+        "job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
         "postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
+        "postsubmit_status_command_before_sync": panel_approval_packet.get("postsubmit_status_command_before_sync"),
+        "postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
         "checks": checks,
         "target_msa_strict_ready": checks.get("target_msa_strict_ready"),
         "panel_dry_run_no_sbatch": checks.get("panel_dry_run_no_sbatch"),
@@ -650,6 +654,24 @@ def build_audit(
                 expected="job_state_probe_before_sync",
                 observed=panel_approval.get("job_state_probe_before_sync"),
             )
+        if v11_panel_sync and not panel_approval.get("receipt_monitor_after_submit"):
+            _add_failure(
+                failures,
+                "panel_approval_missing_receipt_monitor_bridge",
+                "panel approval packet must name the receipt-only monitor before record sync-back",
+                category="execution",
+                expected="receipt_monitor_after_submit",
+                observed=panel_approval.get("receipt_monitor_after_submit"),
+            )
+        if v11_panel_sync and not panel_approval.get("job_state_query_after_receipt"):
+            _add_failure(
+                failures,
+                "panel_approval_missing_job_state_query_bridge",
+                "panel approval packet must name the read-only job-state query step",
+                category="execution",
+                expected="job_state_query_after_receipt",
+                observed=panel_approval.get("job_state_query_after_receipt"),
+            )
         if v11_panel_sync and "--require-sync-ready" not in str(panel_approval.get("postsubmit_sync_ready_gate") or ""):
             _add_failure(
                 failures,
@@ -658,6 +680,27 @@ def build_audit(
                 category="execution",
                 expected="--require-sync-ready",
                 observed=panel_approval.get("postsubmit_sync_ready_gate"),
+            )
+        if (
+            v11_panel_sync
+            and "--require-sync-ready" not in str(panel_approval.get("postsubmit_status_command_before_sync") or "")
+        ):
+            _add_failure(
+                failures,
+                "panel_approval_missing_postsubmit_command_bridge",
+                "panel approval packet must name the postsubmit status command before record sync-back",
+                category="execution",
+                expected="--require-sync-ready",
+                observed=panel_approval.get("postsubmit_status_command_before_sync"),
+            )
+        if v11_panel_sync and not panel_approval.get("postsync_replay_after_sync"):
+            _add_failure(
+                failures,
+                "panel_approval_missing_postsync_replay_bridge",
+                "panel approval packet must name the post-sync replay path for report and interpretation",
+                category="execution",
+                expected="postsync_replay_after_sync",
+                observed=panel_approval.get("postsync_replay_after_sync"),
             )
 
     if panel_decision_protocol is not None:

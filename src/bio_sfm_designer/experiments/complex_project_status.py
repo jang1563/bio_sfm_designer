@@ -1577,6 +1577,14 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         and bool(panel_approval_packet.get("job_state_probe_before_sync"))
         and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_sync_ready_gate") or "")
     )
+    postsubmit_bridge_ok = (
+        postsubmit_sync_ready_gate_ok
+        and bool(panel_approval_packet.get("receipt_monitor_after_submit"))
+        and bool(panel_approval_packet.get("job_state_query_after_receipt"))
+        and bool(panel_approval_packet.get("postsubmit_status_command_before_sync"))
+        and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_status_command_before_sync") or "")
+        and bool(panel_approval_packet.get("postsync_replay_after_sync"))
+    )
     if v11_panel_sync and not postsubmit_sync_ready_gate_ok:
         consistency_failures.append({
             "kind": "panel_approval_packet_postsubmit_sync_ready_gate_missing",
@@ -1584,6 +1592,18 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
                 "postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
                 "job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
                 "postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
+            },
+        })
+    if v11_panel_sync and not postsubmit_bridge_ok:
+        consistency_failures.append({
+            "kind": "panel_approval_packet_postsubmit_bridge_missing",
+            "observed": {
+                "receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
+                "job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
+                "postsubmit_status_command_before_sync": panel_approval_packet.get(
+                    "postsubmit_status_command_before_sync"
+                ),
+                "postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
             },
         })
 
@@ -1604,8 +1624,15 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         ),
         "panel_postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
         "panel_job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
+        "panel_receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
+        "panel_job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
         "panel_postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
+        "panel_postsubmit_status_command_before_sync": panel_approval_packet.get(
+            "postsubmit_status_command_before_sync"
+        ),
+        "panel_postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
         "panel_postsubmit_sync_ready_gate_ok": postsubmit_sync_ready_gate_ok,
+        "panel_postsubmit_bridge_ok": postsubmit_bridge_ok,
         "panel_approval_checks": checks,
         "panel_approval_packet_failures": packet_failures + consistency_failures,
     })
@@ -10782,6 +10809,14 @@ def render_text(rep: Dict[str, Any]) -> str:
                         ok=w.get("panel_postsubmit_sync_ready_gate_ok"),
                         postsubmit=w.get("panel_postsubmit_status_before_sync"),
                         job_states=w.get("panel_job_state_probe_before_sync"),
+                    )
+                )
+            if "panel_postsubmit_bridge_ok" in w:
+                lines.append(
+                    "  panel_postsubmit_bridge_ok={ok} receipt_monitor={receipt} job_query={job_query}".format(
+                        ok=w.get("panel_postsubmit_bridge_ok"),
+                        receipt=w.get("panel_receipt_monitor_after_submit"),
+                        job_query=w.get("panel_job_state_query_after_receipt"),
                     )
                 )
         if key == "W2_multi_target_panel" and "panel_decision_protocol_ready" in w:

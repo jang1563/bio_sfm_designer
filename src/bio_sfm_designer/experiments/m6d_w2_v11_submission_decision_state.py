@@ -159,6 +159,13 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         and bool(approval_packet.get("job_state_probe_before_sync"))
         and "--require-sync-ready" in str(approval_packet.get("postsubmit_sync_ready_gate") or "")
     )
+    postsubmit_bridge_ok = (
+        bool(approval_packet.get("receipt_monitor_after_submit"))
+        and bool(approval_packet.get("job_state_query_after_receipt"))
+        and bool(approval_packet.get("postsubmit_status_command_before_sync"))
+        and "--require-sync-ready" in str(approval_packet.get("postsubmit_status_command_before_sync") or "")
+        and bool(approval_packet.get("postsync_replay_after_sync"))
+    )
     ok = (
         approval_packet.get("status") == _APPROVAL_READY_STATUS
         and approval_packet.get("audit_ok") is True
@@ -167,6 +174,7 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         and approval_packet.get("can_claim_w2_generalization") is False
         and checks_ok
         and postsubmit_sync_ready_gate_ok
+        and postsubmit_bridge_ok
     )
     return {
         "path": approval_packet.get("_path"),
@@ -184,8 +192,13 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         "sync_back_command_after_jobs_finish": approval_packet.get("sync_back_command_after_jobs_finish"),
         "postsubmit_status_before_sync": approval_packet.get("postsubmit_status_before_sync"),
         "job_state_probe_before_sync": approval_packet.get("job_state_probe_before_sync"),
+        "receipt_monitor_after_submit": approval_packet.get("receipt_monitor_after_submit"),
+        "job_state_query_after_receipt": approval_packet.get("job_state_query_after_receipt"),
         "postsubmit_sync_ready_gate": approval_packet.get("postsubmit_sync_ready_gate"),
+        "postsubmit_status_command_before_sync": approval_packet.get("postsubmit_status_command_before_sync"),
+        "postsync_replay_after_sync": approval_packet.get("postsync_replay_after_sync"),
         "postsubmit_sync_ready_gate_ok": postsubmit_sync_ready_gate_ok,
+        "postsubmit_bridge_ok": postsubmit_bridge_ok,
         "required_checks": {key: checks.get(key) for key in required_checks},
     }
 

@@ -265,6 +265,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > sync-back script now fail-closes before any record `rsync` unless local submit receipt/summary,
 > job-state probe output, and `m6d_w2_panel_postsubmit_status --require-sync-ready` all pass.
 > Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
+> The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
+> read-only job-state query, `--require-sync-ready` postsubmit status command, and post-sync replay;
+> project status records that invariant as `panel_postsubmit_bridge_ok=true`.
 > The same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
 > `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
 > `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.

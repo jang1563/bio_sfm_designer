@@ -154,11 +154,24 @@ def _panel_approval_packet():
             "submit_summary_absent": True,
         },
         "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+        "receipt_monitor_after_submit": (
+            "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
+            "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+        ),
+        "job_state_query_after_receipt": (
+            "ssh cayuga-login1 'cd /home/fs01/<user>/bio_sfm_smoke && "
+            "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
+        ),
         "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
         "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
         "postsubmit_sync_ready_gate": (
             "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
         ),
+        "postsubmit_status_command_before_sync": (
+            "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
+            "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready"
+        ),
+        "postsync_replay_after_sync": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
     }
 
 
@@ -313,6 +326,8 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
             "--require-sync-ready",
             rep["current_state"]["W2_panel_approval"]["postsubmit_sync_ready_gate"],
         )
+        self.assertIn("receipt_monitor", rep["current_state"]["W2_panel_approval"]["receipt_monitor_after_submit"])
+        self.assertIn("postsync_interpretation", rep["current_state"]["W2_panel_approval"]["postsync_replay_after_sync"])
         risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
         self.assertEqual(risks["panel_approval_packet_boundary"], "managed")
 
@@ -334,6 +349,25 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("panel_approval_missing_sync_ready_gate", kinds)
+
+    def test_panel_approval_packet_missing_postsubmit_bridge_is_drift(self):
+        packet = _panel_approval_packet()
+        packet.pop("job_state_query_after_receipt")
+
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            packet,
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("panel_approval_missing_job_state_query_bridge", kinds)
 
     def test_panel_decision_protocol_ready_has_no_major_direction_drift(self):
         project_status = _project_status()

@@ -171,7 +171,10 @@ Current state:
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The sync-back script now requires
   local submit receipt/summary, job-state probe output, and
   `m6d_w2_panel_postsubmit_status --require-sync-ready` before any record `rsync`; project status records
-  this no-submit guard as `panel_postsubmit_sync_ready_gate_ok=true`. The emitted approval packet plus
+  this no-submit guard as `panel_postsubmit_sync_ready_gate_ok=true`. The approval packet/runbook also
+  records the full post-submit bridge: receipt-only monitor, read-only job-state query,
+  `--require-sync-ready` postsubmit status command, and post-sync replay; project status records that
+  invariant as `panel_postsubmit_bridge_ok=true`. The emitted approval packet plus
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
   decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; full project status now
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness

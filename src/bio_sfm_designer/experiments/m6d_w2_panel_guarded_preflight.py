@@ -24,6 +24,9 @@ _DEFAULT_RECEIPT = "results/m6d_w2_target_family_redesign_v11_submit_receipt.jso
 _DEFAULT_SUMMARY = "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json"
 _DEFAULT_POSTSUBMIT_STATUS = "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
 _DEFAULT_JOB_STATE_PROBE = "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+_DEFAULT_RECEIPT_MONITOR = "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+_DEFAULT_JOB_STATE_QUERY = "results/m6d_w2_target_family_redesign_v11_job_state_query.sh"
+_DEFAULT_POSTSYNC_REPLAY = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
 _DEFAULT_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V11_PANEL"
 _DEFAULT_APPROVAL_TOKEN = "approve-v11-panel-submit"
 _DEFAULT_DRY_RUN_ENV_VAR = "M6D_W2_V11_SUBMIT_DRY_RUN"
@@ -443,6 +446,9 @@ def build_runbook(
     submit_summary: str,
     postsubmit_status: str,
     job_state_probe: str,
+    receipt_monitor_script: str,
+    job_state_query_script: str,
+    postsync_replay_script: str,
     sync_back_script: str,
     completion_script: str,
     completion_out: str,
@@ -471,6 +477,25 @@ def build_runbook(
         + wrapper_path
     )
     submit_command = "ssh " + remote_host + " " + shlex.quote(remote_submit)
+    remote_spec = f"{remote_host}:{remote_root}"
+    receipt_monitor_command = (
+        "CAYUGA_BIO_SFM_ROOT="
+        + shlex.quote(remote_spec)
+        + " bash "
+        + shlex.quote(receipt_monitor_script)
+    )
+    job_state_query_command = (
+        "ssh "
+        + remote_host
+        + " "
+        + shlex.quote("cd " + remote_root + " && bash " + job_state_query_script)
+    )
+    postsubmit_status_command = (
+        "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
+        "--job-states "
+        + shlex.quote(job_state_probe)
+        + " --require-sync-ready"
+    )
     return {
         "artifact": f"{workstream}_approval_runbook",
         "status": "approval_runbook_ready_not_submitted",
@@ -491,6 +516,13 @@ def build_runbook(
             "submit_command_if_explicitly_approved": submit_command,
         },
         "post_submit": {
+            "receipt_monitor_script": receipt_monitor_script,
+            "receipt_monitor_command_after_submit": receipt_monitor_command,
+            "job_state_probe_command_after_receipt_sync": (
+                "python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe"
+            ),
+            "job_state_query_plan_after_probe": job_state_query_script,
+            "job_state_query_command_after_probe": job_state_query_command,
             "sync_back_script": sync_back_script,
             "sync_back_command_after_jobs_finish": "bash " + shlex.quote(sync_back_script),
             "postsubmit_status": postsubmit_status,
@@ -499,9 +531,12 @@ def build_runbook(
                 "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
                 "--require-sync-ready"
             ),
+            "postsubmit_status_command_before_sync": postsubmit_status_command,
             "completion_script": completion_script,
             "completion_command_after_sync": "bash " + shlex.quote(completion_script),
             "completion_out": completion_out,
+            "postsync_replay_script": postsync_replay_script,
+            "postsync_replay_command_after_sync_ready": "bash " + shlex.quote(postsync_replay_script),
             "panel_out": panel_out,
             "target_alpha": target_alpha,
             "min_targets": min_targets,
@@ -540,7 +575,26 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
         str(approval.get("submit_command_if_explicitly_approved") or ""),
         "```",
         "",
-        "After jobs finish, sync back:",
+        "After submit, sync receipt/summary only:",
+        "",
+        "```bash",
+        str(post.get("receipt_monitor_command_after_submit") or ""),
+        "```",
+        "",
+        "After receipt sync, generate and run the read-only job-state query:",
+        "",
+        "```bash",
+        str(post.get("job_state_probe_command_after_receipt_sync") or ""),
+        str(post.get("job_state_query_command_after_probe") or ""),
+        "```",
+        "",
+        "Before record sync-back, require postsubmit sync-ready status:",
+        "",
+        "```bash",
+        str(post.get("postsubmit_status_command_before_sync") or post.get("postsubmit_sync_ready_gate") or ""),
+        "```",
+        "",
+        "After jobs finish and postsubmit status is sync-ready, sync back:",
         "",
         "```bash",
         str(post.get("sync_back_command_after_jobs_finish") or ""),
@@ -556,6 +610,12 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(post.get("completion_command_after_sync") or ""),
+        "```",
+        "",
+        "Post-sync report and interpretation replay:",
+        "",
+        "```bash",
+        str(post.get("postsync_replay_command_after_sync_ready") or ""),
         "```",
         "",
         "Claim boundary: " + str(rep.get("claim_boundary") or ""),
@@ -638,10 +698,14 @@ def build_approval_packet(
         "submit_command_if_approved": approval.get("submit_command_if_explicitly_approved"),
         "dry_run_command": local_dry_run.get("command"),
         "sync_back_command_after_jobs_finish": post_submit.get("sync_back_command_after_jobs_finish"),
+        "receipt_monitor_after_submit": post_submit.get("receipt_monitor_command_after_submit"),
+        "job_state_query_after_receipt": post_submit.get("job_state_query_command_after_probe"),
         "postsubmit_status_before_sync": post_submit.get("postsubmit_status"),
         "job_state_probe_before_sync": post_submit.get("job_state_probe"),
         "postsubmit_sync_ready_gate": post_submit.get("postsubmit_sync_ready_gate"),
+        "postsubmit_status_command_before_sync": post_submit.get("postsubmit_status_command_before_sync"),
         "completion_command_after_sync": post_submit.get("completion_command_after_sync"),
+        "postsync_replay_after_sync": post_submit.get("postsync_replay_command_after_sync_ready"),
         "panel_out": post_submit.get("panel_out"),
         "target_alpha": post_submit.get("target_alpha"),
         "checks": checks,
@@ -682,6 +746,13 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         str(rep.get("submit_command_if_approved") or ""),
         "```",
         "",
+        "Receipt/job-state bridge after explicit submit:",
+        "",
+        "```bash",
+        str(rep.get("receipt_monitor_after_submit") or ""),
+        str(rep.get("job_state_query_after_receipt") or ""),
+        "```",
+        "",
         "Sync-back command after jobs finish:",
         "",
         "```bash",
@@ -692,6 +763,12 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(rep.get("postsubmit_sync_ready_gate") or ""),
+        "```",
+        "",
+        "Post-sync replay after sync-ready status:",
+        "",
+        "```bash",
+        str(rep.get("postsync_replay_after_sync") or ""),
         "```",
         "",
         "Claim boundary: panel submission is not W2 evidence until records sync back, completion passes, and target-wise panel report certifies.",
@@ -766,6 +843,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--submit-summary", default=_DEFAULT_SUMMARY)
     ap.add_argument("--postsubmit-status", default=_DEFAULT_POSTSUBMIT_STATUS)
     ap.add_argument("--job-state-probe", default=_DEFAULT_JOB_STATE_PROBE)
+    ap.add_argument("--receipt-monitor-script", default=_DEFAULT_RECEIPT_MONITOR)
+    ap.add_argument("--job-state-query-script", default=_DEFAULT_JOB_STATE_QUERY)
+    ap.add_argument("--postsync-replay-script", default=_DEFAULT_POSTSYNC_REPLAY)
     ap.add_argument("--manifest-report", default="results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json")
     ap.add_argument("--guard-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json")
     ap.add_argument("--guard-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.md")
@@ -898,6 +978,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         submit_summary=args.submit_summary,
         postsubmit_status=args.postsubmit_status,
         job_state_probe=args.job_state_probe,
+        receipt_monitor_script=args.receipt_monitor_script,
+        job_state_query_script=args.job_state_query_script,
+        postsync_replay_script=args.postsync_replay_script,
         sync_back_script=args.sync_back_out,
         completion_script=args.completion_script_out,
         completion_out=args.completion_out,

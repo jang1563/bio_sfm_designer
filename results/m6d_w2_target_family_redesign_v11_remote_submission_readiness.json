@@ -84,12 +84,12 @@
       "remote_sha256": "0ed870f11f92727569e7bdc6dd37557c7d1eaad03c4dcf0d9c4e8a9940d2eaef"
     },
     {
-      "local_bytes": 38505,
-      "local_sha256": "2a177f16ae2f68a5aee39bbd325207c3d725548ba40dbefa8f38ab5a796ea777",
+      "local_bytes": 42340,
+      "local_sha256": "7353e580949165080fe9252a3d308f227f33aa4b20b50aa5dd6a2bd284ae1bb7",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
-      "remote_bytes": 38505,
-      "remote_sha256": "2a177f16ae2f68a5aee39bbd325207c3d725548ba40dbefa8f38ab5a796ea777"
+      "remote_bytes": 42340,
+      "remote_sha256": "7353e580949165080fe9252a3d308f227f33aa4b20b50aa5dd6a2bd284ae1bb7"
     },
     {
       "local_bytes": 12560,
@@ -132,28 +132,28 @@
       "remote_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2"
     },
     {
-      "local_bytes": 17477,
-      "local_sha256": "9927ccf612be90f2a0fe4a5ad1b4d4890a59f3cee4a331ba9e2d05a3f0d290fa",
+      "local_bytes": 17645,
+      "local_sha256": "ec787c00a8069e3e1714a517d2eb982a6d8f07926bb1d7c4e3bb2a53e657b979",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 17477,
-      "remote_sha256": "9927ccf612be90f2a0fe4a5ad1b4d4890a59f3cee4a331ba9e2d05a3f0d290fa"
+      "remote_bytes": 17645,
+      "remote_sha256": "ec787c00a8069e3e1714a517d2eb982a6d8f07926bb1d7c4e3bb2a53e657b979"
     },
     {
-      "local_bytes": 20102,
-      "local_sha256": "8a41f78742290b576a33565ac16261d0c4238ebd7e2e263b3e311b708f232048",
+      "local_bytes": 20342,
+      "local_sha256": "0fa6b7dd6ff2e197cbd5ef489d58d4528ddb0392cd88c5bfc98c3a4c93a5867a",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
-      "remote_bytes": 20102,
-      "remote_sha256": "8a41f78742290b576a33565ac16261d0c4238ebd7e2e263b3e311b708f232048"
+      "remote_bytes": 20342,
+      "remote_sha256": "0fa6b7dd6ff2e197cbd5ef489d58d4528ddb0392cd88c5bfc98c3a4c93a5867a"
     },
     {
-      "local_bytes": 515366,
-      "local_sha256": "48076dc0782c68fee21f9749e9b133ed6c81e4a18a98c0213b0aff0e67f45878",
+      "local_bytes": 517533,
+      "local_sha256": "f84eaf32cf8de0ec65402f6aad9cb7d8cbc5dd0321f8847b889c748cc08497b8",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
-      "remote_bytes": 515366,
-      "remote_sha256": "48076dc0782c68fee21f9749e9b133ed6c81e4a18a98c0213b0aff0e67f45878"
+      "remote_bytes": 517533,
+      "remote_sha256": "f84eaf32cf8de0ec65402f6aad9cb7d8cbc5dd0321f8847b889c748cc08497b8"
     },
     {
       "local_bytes": 13348,
@@ -368,6 +368,18 @@
           "remote": "approve-v11-panel-submit"
         },
         {
+          "field": "receipt_monitor_after_submit",
+          "local": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+          "ok": true,
+          "remote": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+        },
+        {
+          "field": "job_state_query_after_receipt",
+          "local": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'",
+          "ok": true,
+          "remote": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
+        },
+        {
           "field": "postsubmit_status_before_sync",
           "local": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
           "ok": true,
@@ -384,6 +396,18 @@
           "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready",
           "ok": true,
           "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
+        },
+        {
+          "field": "postsubmit_status_command_before_sync",
+          "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready",
+          "ok": true,
+          "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready"
+        },
+        {
+          "field": "postsync_replay_after_sync",
+          "local": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+          "ok": true,
+          "remote": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
         },
         {
           "field": "checks.target_msa_strict_ready",

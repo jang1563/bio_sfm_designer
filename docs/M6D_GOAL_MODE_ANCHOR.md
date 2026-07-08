@@ -912,7 +912,11 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     emits the no-submit approval runbook, sync-back script, and panel-completion script for the approved-run
     aftermath. The sync-back script now fail-closes before any record `rsync` unless local submit
     receipt/summary, job-state probe output, and `m6d_w2_panel_postsubmit_status --require-sync-ready` all
-    pass; project status records this as `panel_postsubmit_sync_ready_gate_ok=true`. The v11 panel approval packet, decision protocol, and remote-readiness audit report approval-ready/no-submit state
+    pass; project status records this as `panel_postsubmit_sync_ready_gate_ok=true`. The approval
+    packet/runbook also records the full post-submit bridge: receipt-only monitor, read-only job-state
+    query, `--require-sync-ready` postsubmit status command, and post-sync replay; project status records
+    that invariant as `panel_postsubmit_bridge_ok=true`. The v11 panel approval packet, decision protocol,
+    and remote-readiness audit report approval-ready/no-submit state
     and `can_claim_w2_generalization_now=false`; full project status now reports W2 as
     `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
     `remote_submission_readiness_ok` after 23 exact SHA, 5 semantic JSON, and 2 receipt-absence checks against

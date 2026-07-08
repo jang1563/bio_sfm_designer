@@ -57,7 +57,11 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
 
         self.assertIn("postsubmit_status_before_sync", fields)
         self.assertIn("job_state_probe_before_sync", fields)
+        self.assertIn("receipt_monitor_after_submit", fields)
+        self.assertIn("job_state_query_after_receipt", fields)
         self.assertIn("postsubmit_sync_ready_gate", fields)
+        self.assertIn("postsubmit_status_command_before_sync", fields)
+        self.assertIn("postsync_replay_after_sync", fields)
 
     def test_build_readiness_accepts_hash_match_and_semantic_path_drift(self):
         with tempfile.TemporaryDirectory() as d:

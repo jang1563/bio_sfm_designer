@@ -56,9 +56,17 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
 
         self.assertIn("postsubmit_status_before_sync", packet_fields)
         self.assertIn("job_state_probe_before_sync", packet_fields)
+        self.assertIn("receipt_monitor_after_submit", packet_fields)
+        self.assertIn("job_state_query_after_receipt", packet_fields)
         self.assertIn("postsubmit_sync_ready_gate", packet_fields)
+        self.assertIn("postsubmit_status_command_before_sync", packet_fields)
+        self.assertIn("postsync_replay_after_sync", packet_fields)
         self.assertIn(
             "workstreams.W2_multi_target_panel.panel_postsubmit_sync_ready_gate_ok",
+            status_fields,
+        )
+        self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_postsubmit_bridge_ok",
             status_fields,
         )
 

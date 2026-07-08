@@ -151,6 +151,11 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             wrapper = os.path.join(d, "submit_with_receipt.sh")
             receipt = os.path.join(d, "receipt.jsonl")
             summary = os.path.join(d, "summary.json")
+            postsubmit_status = os.path.join(d, "postsubmit_status.json")
+            job_state_probe = os.path.join(d, "job_state_probe.json")
+            receipt_monitor = os.path.join(d, "receipt_monitor.sh")
+            job_state_query = os.path.join(d, "job_state_query.sh")
+            postsync_replay = os.path.join(d, "postsync_replay.sh")
             manifest_report = os.path.join(d, "manifest_report.json")
             guard_json = os.path.join(d, "guard.json")
             guard_md = os.path.join(d, "guard.md")
@@ -171,6 +176,11 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 "--wrapper-out", wrapper,
                 "--submit-receipt", receipt,
                 "--submit-summary", summary,
+                "--postsubmit-status", postsubmit_status,
+                "--job-state-probe", job_state_probe,
+                "--receipt-monitor-script", receipt_monitor,
+                "--job-state-query-script", job_state_query,
+                "--postsync-replay-script", postsync_replay,
                 "--manifest-report", manifest_report,
                 "--guard-out-json", guard_json,
                 "--guard-out-md", guard_md,
@@ -205,6 +215,11 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertEqual(runbook["status"], "approval_runbook_ready_not_submitted")
             self.assertFalse(runbook["submit_state"]["submitted"])
             self.assertIn("BIO_SFM_APPROVE_V11_PANEL", runbook["approval"]["submit_command_if_explicitly_approved"])
+            self.assertEqual(runbook["post_submit"]["receipt_monitor_script"], receipt_monitor)
+            self.assertEqual(runbook["post_submit"]["job_state_query_plan_after_probe"], job_state_query)
+            self.assertEqual(runbook["post_submit"]["postsync_replay_script"], postsync_replay)
+            self.assertIn("m6d_w2_panel_job_state_probe", runbook["post_submit"]["job_state_probe_command_after_receipt_sync"])
+            self.assertIn("--require-sync-ready", runbook["post_submit"]["postsubmit_status_command_before_sync"])
             self.assertTrue(os.path.exists(sync_back))
             self.assertTrue(os.path.exists(completion_script))
             with open(completion_script) as fh:
@@ -222,7 +237,11 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertTrue(approval_packet["can_submit_panel_if_user_explicitly_approves"])
             self.assertFalse(approval_packet["can_claim_w2_generalization"])
             self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
+            self.assertIn("receipt_monitor.sh", approval_packet["receipt_monitor_after_submit"])
+            self.assertIn("job_state_query.sh", approval_packet["job_state_query_after_receipt"])
             self.assertIn("m6d_w2_panel_postsubmit_status", approval_packet["postsubmit_sync_ready_gate"])
+            self.assertIn("--require-sync-ready", approval_packet["postsubmit_status_command_before_sync"])
+            self.assertIn("postsync_replay.sh", approval_packet["postsync_replay_after_sync"])
 
             guard = build_audit(
                 wrapper,
