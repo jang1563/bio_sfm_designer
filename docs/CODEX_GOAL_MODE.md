@@ -176,7 +176,7 @@ Current state:
   decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; full project status now
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` with 14 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
+  `remote_submission_readiness_ok` with 23 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
   checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches
   the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
@@ -772,7 +772,7 @@ bash results/m6c_project_external_sync_back.sh
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 14 semantic
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 24 exact checks and 14 semantic
   checks, including v11 panel approval, remote-readiness, submission-decision, receipt monitor,
   post-submit status, job-state probe, and post-sync interpretation artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and

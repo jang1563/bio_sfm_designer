@@ -342,7 +342,7 @@ engine installs from GitHub):
   Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
   `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit Cayuga mirror audit
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` after 14 exact SHA checks, 5 semantic JSON checks, and 2
+  `remote_submission_readiness_ok` after 23 exact SHA checks, 5 semantic JSON checks, and 2
   receipt-absence checks; project status also fail-closes if the stored exact-check local SHA evidence
   no longer matches the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)

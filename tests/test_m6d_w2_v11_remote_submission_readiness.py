@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness import (
+    _EXACT_SHA_PATHS,
     _SEMANTIC_JSON_FIELDS,
     build_readiness,
     main,
@@ -33,6 +34,22 @@ def _make_roots(d):
 
 
 class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
+    def test_default_exact_paths_cover_postsubmit_bridge(self):
+        expected = {
+            "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+            "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
+            "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+            "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_receipt_monitor.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_job_state_probe.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_postsubmit_status.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
+            "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
+        }
+
+        self.assertTrue(expected.issubset(set(_EXACT_SHA_PATHS)))
+
     def test_default_semantic_fields_cover_postsubmit_sync_ready_gate(self):
         fields = _SEMANTIC_JSON_FIELDS[
             "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"

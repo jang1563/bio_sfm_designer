@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from bio_sfm_designer.experiments.m6d_local_cayuga_mirror_audit import (
+    _EXACT_SHA_PATHS,
     _JSON_FIELD_SPECS,
     build_audit,
     main,
@@ -28,6 +29,25 @@ def _write_json(path, obj):
 
 
 class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
+    def test_default_exact_paths_cover_v11_postsubmit_bridge(self):
+        expected = {
+            "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh",
+            "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+            "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
+            "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+            "results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+            "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_receipt_monitor.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_job_state_probe.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_postsubmit_status.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
+            "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
+        }
+
+        self.assertTrue(expected.issubset(set(_EXACT_SHA_PATHS)))
+
     def test_default_mirror_fields_cover_v11_postsubmit_sync_gate(self):
         packet_fields = _JSON_FIELD_SPECS[
             "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
@@ -143,10 +163,8 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             out_json = os.path.join(d, "audit.json")
             out_md = os.path.join(d, "audit.md")
             for root in [local, remote]:
-                _write(os.path.join(root, "README.md"), "same\n")
-                _write(os.path.join(root, "HANDOFF.md"), "same\n")
-                _write(os.path.join(root, "docs/CODEX_GOAL_MODE.md"), "same\n")
-                _write(os.path.join(root, "docs/M6D_GOAL_MODE_ANCHOR.md"), "same\n")
+                for rel_path in _EXACT_SHA_PATHS:
+                    _write(os.path.join(root, rel_path), "same\n")
                 _write_json(os.path.join(root, "results/m6d_goal_mode_current_anchor.json"), {"x": 1})
                 _write_json(os.path.join(root, "results/m6c_cross_predictor.json"), {"x": 1})
                 _write(os.path.join(root, "results/m6c_cross_predictor_matches.jsonl"), "{}\n")

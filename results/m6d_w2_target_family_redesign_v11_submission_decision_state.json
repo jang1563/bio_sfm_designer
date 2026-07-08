@@ -97,7 +97,7 @@
       "can_claim_w2_generalization": false,
       "can_submit_panel_if_user_explicitly_approves": true,
       "n_absence_checks": 2,
-      "n_exact_checks": 14,
+      "n_exact_checks": 23,
       "n_failures": 0,
       "n_semantic_checks": 5,
       "no_submit": true,

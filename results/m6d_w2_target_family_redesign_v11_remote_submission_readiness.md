@@ -10,7 +10,7 @@ Remote: `cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke`.
 
 | check type | count |
 |---|---:|
-| exact SHA checks | 14 |
+| exact SHA checks | 23 |
 | semantic JSON checks | 5 |
 | receipt absence checks | 2 |
 | failures | 0 |
