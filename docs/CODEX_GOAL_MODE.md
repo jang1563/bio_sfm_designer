@@ -758,7 +758,8 @@ bash results/m6c_project_external_sync_back.sh
   W2 v11 panel approval only, followed by sync-back, completion, and target-wise certification.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 7 semantic checks.
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 11 semantic
+  checks, including v11 panel approval, remote-readiness, submission-decision, and post-submit status.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and
   `goal_completion_note` mirror that compact completion/resume state for lightweight checks.
 - `operator_next_action`, `operator_next_command`, and `operator_next_role` mirror the goal-audit first

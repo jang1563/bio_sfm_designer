@@ -48,6 +48,12 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "workstreams.W2_multi_target_panel.approval_parity_ok",
         "workstreams.W2_multi_target_panel.wrapper_guard_audit_ok",
         "workstreams.W2_multi_target_panel.can_submit_proteinmpnn_boltz_panel",
+        "workstreams.W2_multi_target_panel.panel_approval_packet_ready",
+        "workstreams.W2_multi_target_panel.can_submit_panel_if_user_explicitly_approves",
+        "workstreams.W2_multi_target_panel.panel_submission_decision_ready",
+        "workstreams.W2_multi_target_panel.panel_submission_decision",
+        "workstreams.W2_multi_target_panel.panel_submission_decision_submitted",
+        "workstreams.W2_multi_target_panel.panel_submission_decision_can_claim_w2_generalization",
         "workstreams.W3_independent_predictor.status",
         "workstreams.W3_independent_predictor.complete",
         "workstreams.W3_independent_predictor.positive_claim_supported",
@@ -144,6 +150,55 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "adjudication_set_artifact_audit.n_rows",
         "adjudication_set_artifact_audit.actual_sha256",
     ],
+    "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json": [
+        "status",
+        "audit_ok",
+        "approval_packet_ready",
+        "can_submit_panel_if_user_explicitly_approves",
+        "can_claim_w2_generalization",
+        "checks.target_msa_strict_ready",
+        "checks.panel_preflight_ready",
+        "checks.panel_dry_run_no_sbatch",
+        "checks.panel_guard_no_env_refuses",
+        "checks.submit_receipt_absent",
+        "checks.submit_summary_absent",
+        "panel_approval_env_var",
+        "panel_approval_env_value",
+        "target_alpha",
+    ],
+    "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json": [
+        "status",
+        "audit_ok",
+        "no_submit",
+        "can_submit_panel_if_user_explicitly_approves",
+        "can_claim_w2_generalization",
+        "n_exact_checks",
+        "n_semantic_checks",
+        "n_absence_checks",
+        "n_failures",
+    ],
+    "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json": [
+        "status",
+        "audit_ok",
+        "decision",
+        "no_submit",
+        "submitted",
+        "explicit_approval_required",
+        "can_submit_if_explicitly_approved",
+        "can_claim_w2_generalization",
+        "receipt_absence.remote_checked",
+    ],
+    "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json": [
+        "status",
+        "audit_ok",
+        "no_submit",
+        "submitted",
+        "sync_ready",
+        "can_claim_w2_generalization",
+        "manifest_targets",
+        "receipt_exists",
+        "summary_exists",
+    ],
 }
 
 
@@ -171,6 +226,52 @@ def _field(obj: Any, dotted: str) -> Any:
             return None
         cur = cur[part]
     return cur
+
+
+def _semantic_value(semantic_checks: List[Dict[str, Any]], rel_path: str, dotted: str) -> Any:
+    for row in semantic_checks:
+        if row.get("path") != rel_path:
+            continue
+        for field in row.get("fields") or []:
+            if field.get("field") == dotted:
+                return field.get("local")
+    return None
+
+
+def _semantic_values(semantic_checks: List[Dict[str, Any]]) -> List[Any]:
+    values: List[Any] = []
+    for row in semantic_checks:
+        for field in row.get("fields") or []:
+            if isinstance(field, dict) and "local" in field:
+                values.append(field.get("local"))
+    return values
+
+
+def _next_action(*, audit_ok: bool, semantic_checks: List[Dict[str, Any]]) -> str:
+    if not audit_ok:
+        return "sync or regenerate mismatched local/Cayuga artifacts before continuing goal-mode execution"
+    w2_status = _semantic_value(
+        semantic_checks,
+        "results/m6c_project_status_w2_followup.json",
+        "workstreams.W2_multi_target_panel.status",
+    )
+    panel_decision_status = _semantic_value(
+        semantic_checks,
+        "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
+        "status",
+    )
+    semantic_values = _semantic_values(semantic_checks)
+    if (
+        w2_status == "panel_approval_packet_ready_awaiting_explicit_approval"
+        or panel_decision_status == "awaiting_explicit_panel_submission_approval"
+        or "panel_approval_packet_ready_awaiting_explicit_approval" in semantic_values
+        or "awaiting_explicit_panel_submission_approval" in semantic_values
+    ):
+        return (
+            "mirror is aligned; W2 remains blocked only on explicit panel submission approval, "
+            "then sync-back, completion, and target-wise certification"
+        )
+    return "mirror is aligned; W2 remains blocked only on explicit target-MSA approval and replay"
 
 
 def _read_local(root: str, rel_path: str) -> bytes:
@@ -292,11 +393,7 @@ def build_audit(*,
         "n_semantic_checks": len(semantic_checks),
         "n_failures": len(failures),
         "failures": failures,
-        "next_action": (
-            "mirror is aligned; W2 remains blocked only on explicit target-MSA approval and replay"
-            if audit_ok else
-            "sync or regenerate mismatched local/Cayuga artifacts before continuing goal-mode execution"
-        ),
+        "next_action": _next_action(audit_ok=audit_ok, semantic_checks=semantic_checks),
     }
 
 

@@ -956,8 +956,9 @@ remaining requirement. Its current W2 execution evidence includes the approved f
 synced back locally with strict `--require-files` passing plus the v11 panel approval/decision/remote-readiness
 boundary; W2 remains incomplete until panel execution, sync-back, completion, and target-wise certification.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 11 exact SHA
-checks and 7 semantic JSON checks currently agree, so the resume artifacts are mirrored before any future
-approved W2 target-MSA step.
+checks and 11 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
+submission-decision, and post-submit status artifacts; the mirrored next action is explicit W2 v11 panel
+approval, then sync-back, completion, and target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` independently audits goal-boundary drift without submitting work:
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
 direction aligned, claim boundaries preserved, and execution recorded as

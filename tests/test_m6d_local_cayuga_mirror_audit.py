@@ -89,6 +89,38 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("semantic_field_mismatch", kinds)
 
+    def test_build_audit_reports_panel_submission_as_next_action_for_v11_state(self):
+        with tempfile.TemporaryDirectory() as d:
+            local = os.path.join(d, "local")
+            remote = os.path.join(d, "remote")
+            project_status = {
+                "workstreams": {
+                    "W2_multi_target_panel": {
+                        "status": "panel_approval_packet_ready_awaiting_explicit_approval",
+                    }
+                }
+            }
+            decision_state = {
+                "status": "awaiting_explicit_panel_submission_approval",
+            }
+            for root in [local, remote]:
+                _write_json(os.path.join(root, "project.json"), project_status)
+                _write_json(os.path.join(root, "decision.json"), decision_state)
+
+            rep = build_audit(
+                local_root=local,
+                remote_root=remote,
+                remote_host=None,
+                exact_sha_paths=[],
+                json_field_specs={
+                    "project.json": ["workstreams.W2_multi_target_panel.status"],
+                    "decision.json": ["status"],
+                },
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertIn("explicit panel submission approval", rep["next_action"])
+
     def test_cli_writes_audit_against_filesystem_remote(self):
         with tempfile.TemporaryDirectory() as d:
             local = os.path.join(d, "local")
@@ -114,6 +146,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
                 _write(os.path.join(root, "results/m6d_w2_explicit_approval_runbook.md"), "same\n")
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v9_wrapper_guard_audit.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w3_adjudication_audit.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"), {"status": "s"})
 
             rc = main([
                 "--local-root", local,

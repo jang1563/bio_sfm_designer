@@ -585,8 +585,9 @@ the current honest state is `audit_ok=true`, `can_mark_goal_complete=false`, and
 `W2_multi_target_panel`; W2 remains incomplete until the v11 panel is explicitly approved, submitted,
 synced back, completed, and target-wise certified.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 11 exact SHA checks plus 7 semantic JSON checks, keeping stale remote
-state from silently re-entering goal mode.
+and Cayuga artifacts agree across 11 exact SHA checks plus 11 semantic JSON checks, including the v11
+panel approval, remote-readiness, submission-decision, and post-submit status artifacts; the next action
+stays limited to explicit panel submission approval, sync-back, completion, and target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
 status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
 execution is `panel_submission_decision_ready_not_submitted`; it keeps the next action limited to explicit
