@@ -851,13 +851,16 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     Next action is to monitor these jobs, sync back `hpc_outputs/m6d_w2_target_family_redesign_v10_records/*/records_boltz_complex.jsonl`
     after completion, then run panel completion and panel report.
 69. V10 partial smoke results are already constraining the science hypothesis:
-    the first two synced record files pass the completion/provenance gate as individual targets, but do
+    the first four synced record files pass the completion/provenance gate as individual targets, but do
     not yet support the planned strict `alpha=0.2` generalization. `1E44_BA` has 100 records, 47/100 raw
     L-RMSD successes, certifies at `alpha=0.3`, and fails at `alpha=0.2`. `1EAY_BD` has 100 records,
     72/100 raw L-RMSD successes, but fails at both `alpha=0.2` and `alpha=0.3`, suggesting that raw
-    success rate alone is not enough when `pae_interaction` does not cleanly separate failures. Treat this
-    as an early warning only; the full 15-target `complex_panel_completion`/`complex_panel_report` is still
-    pending, and no W2 multi-target certificate is claimed.
+    success rate alone is not enough when `pae_interaction` does not cleanly separate failures. `1DVF_BA`
+    and `1DSF_HL` each have 100/100 raw L-RMSD successes, but remain not certified because the TrustGate
+    policy intentionally refuses one-class target calibration (`one_class_all_success_no_rcps_tau`) rather
+    than converting all-success targets into target-wise tau claims. Treat this as an early warning only;
+    the full 15-target `complex_panel_completion`/`complex_panel_report` is still pending, and no W2
+    multi-target certificate is claimed.
 
 ## W3 Decision Path
 

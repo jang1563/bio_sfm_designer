@@ -226,10 +226,12 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > submitted 15 ProteinMPNN/Boltz dependency pairs, recorded in
 > `results/m6d_w2_target_family_redesign_v10_submit_receipt.json` with ProteinMPNN jobs
 > `3073830,3073832,...,3073858` and dependent Boltz jobs `3073831,3073833,...,3073859`.
-> The first two synced records are an early science warning, not a panel claim:
-> `1E44_BA` has 100 records and certifies at `alpha=0.3` but not `alpha=0.2`, while `1EAY_BD`
-> has 100 records, 72/100 raw L-RMSD successes, and does not certify at `alpha=0.3`; the full
-> 15-target `complex_panel_completion`/`complex_panel_report` remains pending.
+> The first four synced records are an early science warning, not a panel claim:
+> `1E44_BA` has 100 records and certifies at `alpha=0.3` but not `alpha=0.2`; `1EAY_BD`
+> has 100 records, 72/100 raw L-RMSD successes, and does not certify at `alpha=0.3`;
+> `1DVF_BA` and `1DSF_HL` each have 100/100 raw successes but intentionally remain not certified
+> because the TrustGate policy refuses one-class target calibration (`one_class_all_success_no_rcps_tau`).
+> The full 15-target `complex_panel_completion`/`complex_panel_report` remains pending.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a
