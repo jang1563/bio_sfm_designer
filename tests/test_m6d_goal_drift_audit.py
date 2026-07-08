@@ -219,6 +219,26 @@ def _panel_submission_decision_state():
     }
 
 
+def _panel_postsync_interpretation():
+    return {
+        "_path": "/tmp/panel_postsync.json",
+        "status": "not_synced_not_interpretable",
+        "audit_ok": True,
+        "no_submit": True,
+        "submitted": False,
+        "sync_ready": False,
+        "can_claim_w2_generalization": False,
+        "target_alpha": 0.2,
+        "min_targets": 4,
+        "min_records_per_target": 20,
+        "current_panel_result": {
+            "status": "not_available_not_submitted",
+            "w2_generalization_supported": False,
+        },
+        "failures": [],
+    }
+
+
 def _blocked_execution_attempt():
     execution = _execution_attempt()
     execution.update({
@@ -363,6 +383,53 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
         self.assertEqual(risks["panel_submission_decision_boundary"], "managed")
         self.assertIn("W2_panel_submission_decision", render_markdown(rep))
+
+    def test_v11_postsync_interpretation_has_no_major_direction_drift(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+            _panel_decision_protocol(n_manifest_targets=7),
+            _panel_remote_readiness(),
+            _panel_submission_decision_state(),
+            _panel_postsync_interpretation(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["execution"], "panel_postsync_interpretation_predeclared_not_synced")
+        self.assertFalse(rep["current_state"]["W2_panel_postsync_interpretation"]["can_claim_w2_generalization"])
+        risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
+        self.assertEqual(risks["panel_postsync_interpretation_boundary"], "managed")
+        self.assertIn("W2_panel_postsync_interpretation", render_markdown(rep))
+
+    def test_v11_postsync_interpretation_blocks_claim_drift(self):
+        postsync = _panel_postsync_interpretation()
+        postsync["can_claim_w2_generalization"] = True
+
+        rep = build_audit(
+            _project_status(),
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            panel_postsync_interpretation=postsync,
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("panel_postsync_interpretation_claim_drift", kinds)
 
     def test_pre_submission_blocked_state_has_no_major_direction_drift(self):
         rep = build_audit(

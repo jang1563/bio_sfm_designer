@@ -303,7 +303,7 @@ Current state:
 - Goal-boundary drift is now independently audited by
   `results/m6d_goal_drift_audit.{json,md}`. Current status is
   `no_major_direction_drift_w2_blocked`, with `major_direction_drift=false`, direction aligned,
-  claim boundaries preserved, and execution recorded as `panel_submission_decision_ready_not_submitted`.
+  claim boundaries preserved, and execution recorded as `panel_postsync_interpretation_predeclared_not_synced`.
 - W3: Chai-1 records exist and pass QC/contract, but Boltz-Chai label agreement is 0.600
   against the required 0.800, so independent-predictor robustness is not supported. This is
   treated as a negative no-MSA Chai robustness result only because strict adjudication integrity
@@ -764,8 +764,9 @@ bash results/m6c_project_external_sync_back.sh
   target-wise certified.
 - `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit. The
   current honest state is `audit_ok=true`, `major_direction_drift=false`, direction aligned, claim
-  boundaries preserved, and execution `panel_submission_decision_ready_not_submitted`; next action is explicit
-  W2 v11 panel approval only, followed by sync-back, completion, and target-wise certification.
+  boundaries preserved, and execution `panel_postsync_interpretation_predeclared_not_synced`; next action is
+  explicit W2 v11 panel approval only, followed by sync-back, completion, target-wise reporting, and refreshed
+  post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
   or Cayuga paths; current status is `local_cayuga_mirror_agree` with 11 exact checks and 14 semantic

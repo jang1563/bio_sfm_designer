@@ -46,6 +46,11 @@
       "status": "managed"
     },
     {
+      "control": "post-sync interpretation is no-submit and refuses W2 claims until target-wise evidence exists",
+      "id": "panel_postsync_interpretation_boundary",
+      "status": "managed"
+    },
+    {
       "control": "require target-wise certificates for W2 generalization",
       "id": "pooled_only_w2_claim",
       "status": "managed"
@@ -57,7 +62,7 @@
   "claim_boundary": {
     "publication": "not_current_goal",
     "w1": "preserved_target_specific_certificate",
-    "w2": "open_after_panel_submission_decision_ready; explicit guarded panel submission still required; local/remote receipts remain absent and target-wise certification is still required",
+    "w2": "open_after_panel_postsync_interpretation_predeclared; explicit guarded panel submission, sync-back, completion, target-wise report, and alpha-gate interpretation are still required",
     "w3": "negative_robustness_adjudicated; no positive independent-predictor claim",
     "w4": "closed_loop_plumbing_only"
   },
@@ -107,6 +112,21 @@
       "no_submit": true,
       "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
       "status": "post_panel_decision_protocol_ready",
+      "target_alpha": 0.2
+    },
+    "W2_panel_postsync_interpretation": {
+      "audit_ok": true,
+      "can_claim_w2_generalization": false,
+      "current_result_status": "not_available_not_submitted",
+      "min_records_per_target": 20,
+      "min_targets": 4,
+      "n_failures": 0,
+      "next_action": "await explicit approval, guarded submission, job completion, and sync-ready postsubmit status",
+      "no_submit": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
+      "status": "not_synced_not_interpretable",
+      "submitted": false,
+      "sync_ready": false,
       "target_alpha": 0.2
     },
     "W2_panel_remote_readiness": {
@@ -214,7 +234,7 @@
   "drift_assessment": {
     "claim_boundary": "preserved",
     "direction": "aligned",
-    "execution": "panel_submission_decision_ready_not_submitted"
+    "execution": "panel_postsync_interpretation_predeclared_not_synced"
   },
   "failures": [],
   "inputs": {
@@ -222,6 +242,7 @@
     "execution_attempt": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v9_full14_target_msa_execution_attempt.json",
     "panel_approval_packet": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
     "panel_decision_protocol": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
+    "panel_postsync_interpretation": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
     "panel_remote_readiness": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
     "panel_submission_decision_state": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
     "project_status": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_project_status_w2_followup.json",
@@ -229,6 +250,6 @@
     "w3_adjudication_audit": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification",
+  "next_action": "wait for explicit user approval before running the guarded W2 panel submit command; then use post-sync replay to sync back, run completion, generate target-wise report, and refresh interpretation",
   "status": "no_major_direction_drift_w2_blocked"
 }

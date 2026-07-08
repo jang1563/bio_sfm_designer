@@ -601,8 +601,9 @@ probe, and post-sync interpretation artifacts; the next action stays limited to 
 approval, sync-back, completion, and target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
 status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
-execution is `panel_submission_decision_ready_not_submitted`; it keeps the next action limited to explicit
-W2 v11 panel approval followed by sync-back, completion, and target-wise certification.
+execution is `panel_postsync_interpretation_predeclared_not_synced`; it keeps the next action limited to
+explicit W2 v11 panel approval followed by sync-back, completion, target-wise reporting, and refreshed
+post-sync interpretation.
 It also understands the second-predictor contract report, so W3 can report
 `second_predictor_contract_ready` or `second_predictor_contract_blocked` before the final
 cross-predictor report exists; blocked W3 status does not re-expose runnable downstream commands

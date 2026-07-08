@@ -29,6 +29,7 @@ _REMOTE_READY_STATUS = "remote_submission_readiness_ok"
 _DRIFT_READY_EXECUTIONS = {
     "panel_remote_readiness_ready_not_submitted",
     "panel_submission_decision_ready_not_submitted",
+    "panel_postsync_interpretation_predeclared_not_synced",
 }
 
 

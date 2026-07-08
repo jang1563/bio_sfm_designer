@@ -6,13 +6,13 @@
   "can_mark_goal_complete": false,
   "claim_boundary": {
     "w1": "target-specific certified evidence preserved",
-    "w2": "not complete; explicit panel-submission decision state is recorded as awaiting approval with local/remote receipts absent; W2 still needs explicit panel submission, sync-back, completion, and target-wise certification",
+    "w2": "not complete; explicit panel-submission decision state is awaiting approval and post-sync interpretation is predeclared as not yet interpretable; W2 still needs explicit panel submission, sync-back, completion, target-wise reporting, and alpha-gate interpretation",
     "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
     "w4": "closed-loop plumbing evidence preserved"
   },
   "complete": false,
   "failures": [],
-  "next_action": "wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification",
+  "next_action": "wait for explicit user approval before running the guarded W2 panel submit command; after jobs finish, use the post-sync replay to sync back, run completion, generate the target-wise panel report, and refresh interpretation",
   "panel_approval_packet": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
@@ -95,6 +95,12 @@
     "panel_decision_no_submit": true,
     "panel_decision_protocol_ready": true,
     "panel_guard_no_env_refuses": true,
+    "panel_postsync_can_claim_w2_generalization": false,
+    "panel_postsync_interpretation_ready": true,
+    "panel_postsync_no_submit": true,
+    "panel_postsync_status": "not_synced_not_interpretable",
+    "panel_postsync_submitted": false,
+    "panel_postsync_sync_ready": false,
     "panel_remote_can_claim_w2_generalization": false,
     "panel_remote_can_submit_if_explicitly_approved": true,
     "panel_remote_failures": 0,
@@ -150,6 +156,21 @@
     "no_submit": true,
     "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
     "status": "post_panel_decision_protocol_ready",
+    "target_alpha": 0.2
+  },
+  "w2_panel_postsync_interpretation": {
+    "audit_ok": true,
+    "can_claim_w2_generalization": false,
+    "current_result_status": "not_available_not_submitted",
+    "min_records_per_target": 20,
+    "min_targets": 4,
+    "n_failures": 0,
+    "next_action": "await explicit approval, guarded submission, job completion, and sync-ready postsubmit status",
+    "no_submit": true,
+    "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
+    "status": "not_synced_not_interpretable",
+    "submitted": false,
+    "sync_ready": false,
     "target_alpha": 0.2
   },
   "w2_panel_remote_readiness": {

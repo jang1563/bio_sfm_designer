@@ -204,6 +204,26 @@ def _panel_submission_decision_state():
     }
 
 
+def _panel_postsync_interpretation():
+    return {
+        "_path": "/tmp/panel_postsync.json",
+        "status": "not_synced_not_interpretable",
+        "audit_ok": True,
+        "no_submit": True,
+        "submitted": False,
+        "sync_ready": False,
+        "can_claim_w2_generalization": False,
+        "target_alpha": 0.2,
+        "min_targets": 4,
+        "min_records_per_target": 20,
+        "current_panel_result": {
+            "status": "not_available_not_submitted",
+            "w2_generalization_supported": False,
+        },
+        "failures": [],
+    }
+
+
 def _blocked_execution_attempt():
     execution = _execution_attempt()
     execution.update({
@@ -365,6 +385,57 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_submitted"])
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_can_claim_w2_generalization"])
         self.assertIn("W2 panel submission decision ready: `True`", render_markdown(rep))
+
+    def test_v11_postsync_interpretation_still_does_not_complete_goal(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                v9_receipt=receipt,
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["can_mark_goal_complete"])
+        self.assertIn("post-sync interpretation", rep["claim_boundary"]["w2"])
+        self.assertTrue(rep["w2_gate"]["panel_postsync_interpretation_ready"])
+        self.assertFalse(rep["w2_gate"]["panel_postsync_can_claim_w2_generalization"])
+        self.assertIn("W2 panel post-sync interpretation ready: `True`", render_markdown(rep))
+
+    def test_v11_postsync_interpretation_blocks_claim_leak(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            postsync = _panel_postsync_interpretation()
+            postsync["can_claim_w2_generalization"] = True
+
+            rep = build_audit(
+                _project_status(),
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                panel_postsync_interpretation=postsync,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_postsync_interpretation_claim_leak", kinds)
 
     def test_pre_submission_blocked_state_also_passes_without_marking_complete(self):
         with tempfile.TemporaryDirectory() as d:

@@ -29,6 +29,8 @@ _PANEL_APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _PANEL_DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
 _PANEL_REMOTE_READY_STATUS = "remote_submission_readiness_ok"
 _PANEL_SUBMISSION_DECISION_READY_STATUS = "awaiting_explicit_panel_submission_approval"
+_PANEL_POSTSYNC_NOT_SYNCED_STATUS = "not_synced_not_interpretable"
+_PANEL_POSTSYNC_SUPPORTED_STATUS = "w2_generalization_supported_by_target_wise_panel"
 
 
 _GOAL_TEXT_REQUIREMENTS = (
@@ -308,6 +310,39 @@ def _panel_submission_decision_state(panel_submission_decision_state: Optional[D
     }
 
 
+def _panel_postsync_interpretation_state(panel_postsync_interpretation: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(panel_postsync_interpretation, dict):
+        return {
+            "path": None,
+            "status": "not_provided",
+            "audit_ok": False,
+            "no_submit": None,
+            "submitted": None,
+            "sync_ready": None,
+            "can_claim_w2_generalization": None,
+        }
+    current = (
+        panel_postsync_interpretation.get("current_panel_result")
+        if isinstance(panel_postsync_interpretation.get("current_panel_result"), dict)
+        else {}
+    )
+    return {
+        "path": panel_postsync_interpretation.get("_path"),
+        "status": panel_postsync_interpretation.get("status"),
+        "audit_ok": panel_postsync_interpretation.get("audit_ok"),
+        "no_submit": panel_postsync_interpretation.get("no_submit"),
+        "submitted": panel_postsync_interpretation.get("submitted"),
+        "sync_ready": panel_postsync_interpretation.get("sync_ready"),
+        "can_claim_w2_generalization": panel_postsync_interpretation.get("can_claim_w2_generalization"),
+        "current_result_status": current.get("status"),
+        "target_alpha": panel_postsync_interpretation.get("target_alpha"),
+        "min_targets": panel_postsync_interpretation.get("min_targets"),
+        "min_records_per_target": panel_postsync_interpretation.get("min_records_per_target"),
+        "n_failures": len(panel_postsync_interpretation.get("failures") or []),
+        "next_action": panel_postsync_interpretation.get("next_action"),
+    }
+
+
 def build_audit(
     project_status: Dict[str, Any],
     completion_audit: Dict[str, Any],
@@ -320,6 +355,7 @@ def build_audit(
     panel_decision_protocol: Optional[Dict[str, Any]] = None,
     panel_remote_readiness: Optional[Dict[str, Any]] = None,
     panel_submission_decision_state: Optional[Dict[str, Any]] = None,
+    panel_postsync_interpretation: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     failures: List[Dict[str, Any]] = []
     combined_goal_text = "\n".join([goal_mode_text or "", anchor_text or ""])
@@ -328,6 +364,7 @@ def build_audit(
     panel_decision = _panel_decision_state(panel_decision_protocol)
     panel_remote = _panel_remote_readiness_state(panel_remote_readiness)
     panel_submission_decision = _panel_submission_decision_state(panel_submission_decision_state)
+    panel_postsync = _panel_postsync_interpretation_state(panel_postsync_interpretation)
 
     for kind, needles, message in _GOAL_TEXT_REQUIREMENTS:
         if not _contains_all(combined_goal_text, needles):
@@ -775,6 +812,66 @@ def build_audit(
                 observed=panel_submission_decision.get("n_failures"),
             )
 
+    if panel_postsync_interpretation is not None:
+        allowed_statuses = {
+            _PANEL_POSTSYNC_NOT_SYNCED_STATUS,
+            "ready_for_target_wise_panel_report",
+            _PANEL_POSTSYNC_SUPPORTED_STATUS,
+            "w2_generalization_not_supported_target_wise",
+            "panel_report_not_multi_target_proof",
+        }
+        if panel_postsync.get("status") not in allowed_statuses or panel_postsync.get("audit_ok") is not True:
+            _add_failure(
+                failures,
+                "panel_postsync_interpretation_not_ready",
+                "post-sync interpretation must pass before it can govern W2 interpretation",
+                category="execution",
+                expected={"status": sorted(allowed_statuses), "audit_ok": True},
+                observed={"status": panel_postsync.get("status"), "audit_ok": panel_postsync.get("audit_ok")},
+            )
+        if panel_postsync.get("no_submit") is not True:
+            _add_failure(
+                failures,
+                "panel_postsync_interpretation_submit_drift",
+                "post-sync interpretation must remain no-submit",
+                category="approval_boundary",
+                expected=True,
+                observed=panel_postsync.get("no_submit"),
+            )
+        if (
+            panel_postsync.get("can_claim_w2_generalization") is True
+            and panel_postsync.get("status") != _PANEL_POSTSYNC_SUPPORTED_STATUS
+        ):
+            _add_failure(
+                failures,
+                "panel_postsync_interpretation_claim_drift",
+                "post-sync interpretation may only claim W2 generalization after target-wise support",
+                category="claim_boundary",
+                expected=_PANEL_POSTSYNC_SUPPORTED_STATUS,
+                observed={
+                    "status": panel_postsync.get("status"),
+                    "can_claim_w2_generalization": panel_postsync.get("can_claim_w2_generalization"),
+                },
+            )
+        if panel_postsync.get("target_alpha") != 0.2:
+            _add_failure(
+                failures,
+                "panel_postsync_interpretation_alpha_drift",
+                "post-sync interpretation must stay scoped to alpha=0.2",
+                category="claim_boundary",
+                expected=0.2,
+                observed=panel_postsync.get("target_alpha"),
+            )
+        if panel_postsync.get("n_failures") != 0:
+            _add_failure(
+                failures,
+                "panel_postsync_interpretation_failures_present",
+                "post-sync interpretation must have zero failures",
+                category="execution",
+                expected=0,
+                observed=panel_postsync.get("n_failures"),
+            )
+
     if w3_adjudication_audit.get("audit_ok") is not True:
         _add_failure(
             failures,
@@ -860,6 +957,17 @@ def build_audit(
                             "wait for explicit user approval before running the recorded guarded W2 panel submit command; "
                             "then sync back, run completion, and apply target-wise certification"
                         )
+                        if panel_postsync.get("status") == _PANEL_POSTSYNC_NOT_SYNCED_STATUS:
+                            execution_assessment = "panel_postsync_interpretation_predeclared_not_synced"
+                            w2_boundary = (
+                                "open_after_panel_postsync_interpretation_predeclared; explicit guarded panel submission, "
+                                "sync-back, completion, target-wise report, and alpha-gate interpretation are still required"
+                            )
+                            next_action = (
+                                "wait for explicit user approval before running the guarded W2 panel submit command; "
+                                "then use post-sync replay to sync back, run completion, generate target-wise report, "
+                                "and refresh interpretation"
+                            )
     ssh_pre_submission_resolved = (
         execution.get("target_msa_jobs_submitted_waiting_on_completion") is True
         or execution.get("target_msa_outputs_synced_strict_require_files_passed") is True
@@ -893,6 +1001,7 @@ def build_audit(
             "W2_panel_decision_protocol": panel_decision,
             "W2_panel_remote_readiness": panel_remote,
             "W2_panel_submission_decision": panel_submission_decision,
+            "W2_panel_postsync_interpretation": panel_postsync,
         },
         "drift_assessment": {
             "direction": "aligned" if not major_direction_drift else "drift_detected",
@@ -961,6 +1070,11 @@ def build_audit(
                 "control": "submission-decision state records approval wait only; it cannot authorize execution or claims",
             },
             {
+                "id": "panel_postsync_interpretation_boundary",
+                "status": "managed" if panel_postsync.get("status") == _PANEL_POSTSYNC_NOT_SYNCED_STATUS else "not_ready",
+                "control": "post-sync interpretation is no-submit and refuses W2 claims until target-wise evidence exists",
+            },
+            {
                 "id": "pooled_only_w2_claim",
                 "status": "managed",
                 "control": "require target-wise certificates for W2 generalization",
@@ -976,6 +1090,7 @@ def build_audit(
             "panel_decision_protocol": panel_decision.get("path"),
             "panel_remote_readiness": panel_remote.get("path"),
             "panel_submission_decision_state": panel_submission_decision.get("path"),
+            "panel_postsync_interpretation": panel_postsync.get("path"),
         },
         "failures": failures,
         "next_action": (
@@ -1056,6 +1171,18 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"submitted=`{panel_submission_decision.get('submitted')}` "
         f"can_claim_w2_generalization=`{panel_submission_decision.get('can_claim_w2_generalization')}`"
     )
+    panel_postsync = (
+        current.get("W2_panel_postsync_interpretation")
+        if isinstance(current.get("W2_panel_postsync_interpretation"), dict)
+        else {}
+    )
+    lines.append(
+        "- W2_panel_postsync_interpretation: "
+        f"status=`{panel_postsync.get('status')}` "
+        f"no_submit=`{panel_postsync.get('no_submit')}` "
+        f"sync_ready=`{panel_postsync.get('sync_ready')}` "
+        f"can_claim_w2_generalization=`{panel_postsync.get('can_claim_w2_generalization')}`"
+    )
     lines.extend(["", "## Active Risks", ""])
     for risk in rep.get("active_risks") or []:
         lines.append(f"- {risk.get('id')}: status=`{risk.get('status')}`; {risk.get('control')}")
@@ -1079,6 +1206,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--panel-decision-protocol", default="results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.json")
     ap.add_argument("--panel-remote-readiness", default=None)
     ap.add_argument("--panel-submission-decision-state", default=None)
+    ap.add_argument("--panel-postsync-interpretation", default=None)
     ap.add_argument("--goal-mode-doc", default="docs/CODEX_GOAL_MODE.md")
     ap.add_argument("--anchor-doc", default="docs/M6D_GOAL_MODE_ANCHOR.md")
     ap.add_argument("--out-json", default="results/m6d_goal_drift_audit.json")
@@ -1105,6 +1233,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         if args.panel_submission_decision_state and os.path.exists(args.panel_submission_decision_state)
         else None
     )
+    panel_postsync_interpretation = (
+        _load_json(args.panel_postsync_interpretation)
+        if args.panel_postsync_interpretation and os.path.exists(args.panel_postsync_interpretation)
+        else None
+    )
 
     rep = build_audit(
         _load_json(args.project_status),
@@ -1118,6 +1251,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         panel_decision_protocol,
         panel_remote_readiness,
         panel_submission_decision_state,
+        panel_postsync_interpretation,
     )
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))

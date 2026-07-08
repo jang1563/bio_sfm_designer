@@ -76,12 +76,12 @@
       "remote_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2"
     },
     {
-      "local_bytes": 507840,
-      "local_sha256": "951bf6de41167933e3b66de9044ca76c7e8f62ff26e7640b9bf20c2af73591d2",
+      "local_bytes": 513543,
+      "local_sha256": "f59755569f8ed6f266ac380c36dbb31cc6872c332338a885a7ef0ebbdd23d7b0",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
-      "remote_bytes": 507840,
-      "remote_sha256": "951bf6de41167933e3b66de9044ca76c7e8f62ff26e7640b9bf20c2af73591d2"
+      "remote_bytes": 513543,
+      "remote_sha256": "f59755569f8ed6f266ac380c36dbb31cc6872c332338a885a7ef0ebbdd23d7b0"
     },
     {
       "local_bytes": 13348,

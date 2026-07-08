@@ -54,6 +54,12 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "workstreams.W2_multi_target_panel.panel_submission_decision",
         "workstreams.W2_multi_target_panel.panel_submission_decision_submitted",
         "workstreams.W2_multi_target_panel.panel_submission_decision_can_claim_w2_generalization",
+        "workstreams.W2_multi_target_panel.panel_postsync_interpretation_ready",
+        "workstreams.W2_multi_target_panel.panel_postsync_status",
+        "workstreams.W2_multi_target_panel.panel_postsync_no_submit",
+        "workstreams.W2_multi_target_panel.panel_postsync_submitted",
+        "workstreams.W2_multi_target_panel.panel_postsync_sync_ready",
+        "workstreams.W2_multi_target_panel.panel_postsync_can_claim_w2_generalization",
         "workstreams.W3_independent_predictor.status",
         "workstreams.W3_independent_predictor.complete",
         "workstreams.W3_independent_predictor.positive_claim_supported",
@@ -81,6 +87,12 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "w2_gate.wrapper_guard_ok",
         "w2_gate.panel_submission_blocked",
         "w2_gate.target_msa_ready_if_explicitly_approved",
+        "w2_gate.panel_postsync_interpretation_ready",
+        "w2_gate.panel_postsync_status",
+        "w2_gate.panel_postsync_no_submit",
+        "w2_gate.panel_postsync_submitted",
+        "w2_gate.panel_postsync_sync_ready",
+        "w2_gate.panel_postsync_can_claim_w2_generalization",
         "w3_gate.audit_ok",
         "w3_gate.positive_claim_supported",
         "w3_gate.adjudication_rows",
@@ -301,7 +313,7 @@ def _next_action(*, audit_ok: bool, semantic_checks: List[Dict[str, Any]]) -> st
     ):
         return (
             "mirror is aligned; W2 remains blocked only on explicit panel submission approval, "
-            "then sync-back, completion, and target-wise certification"
+            "then sync-back, completion, target-wise reporting, and post-sync interpretation"
         )
     return "mirror is aligned; W2 remains blocked only on explicit target-MSA approval and replay"
 

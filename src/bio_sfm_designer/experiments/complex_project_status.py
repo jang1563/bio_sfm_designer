@@ -1976,6 +1976,92 @@ def _attach_w2_panel_submission_decision_state(status: Dict[str, Any],
     return status
 
 
+def _attach_w2_panel_postsync_interpretation(status: Dict[str, Any],
+                                             panel_postsync_interpretation: Dict[str, Any]) -> Dict[str, Any]:
+    if _is_missing_artifact(panel_postsync_interpretation):
+        status.update({
+            "status": "panel_postsync_interpretation_missing",
+            "panel_postsync_interpretation_ready": False,
+            "panel_postsync_interpretation": panel_postsync_interpretation.get("_path"),
+            "message": panel_postsync_interpretation.get("message", ""),
+            "next_action": "rerun m6d_w2_panel_postsync_interpretation.py before post-sync W2 interpretation",
+        })
+        return status
+
+    failures = (
+        panel_postsync_interpretation.get("failures")
+        if isinstance(panel_postsync_interpretation.get("failures"), list)
+        else []
+    )
+    consistency_failures: List[Dict[str, Any]] = []
+    allowed_statuses = {
+        "not_synced_not_interpretable",
+        "ready_for_target_wise_panel_report",
+        "w2_generalization_supported_by_target_wise_panel",
+        "w2_generalization_not_supported_target_wise",
+        "panel_report_not_multi_target_proof",
+    }
+    current_result = (
+        panel_postsync_interpretation.get("current_panel_result")
+        if isinstance(panel_postsync_interpretation.get("current_panel_result"), dict)
+        else {}
+    )
+    ready = True
+    if panel_postsync_interpretation.get("status") not in allowed_statuses:
+        consistency_failures.append({
+            "kind": "panel_postsync_interpretation_status_unknown",
+            "observed": panel_postsync_interpretation.get("status"),
+        })
+    if panel_postsync_interpretation.get("audit_ok") is not True:
+        consistency_failures.append({
+            "kind": "panel_postsync_interpretation_audit_not_ok",
+            "observed": panel_postsync_interpretation.get("audit_ok"),
+        })
+    if panel_postsync_interpretation.get("no_submit") is not True:
+        consistency_failures.append({
+            "kind": "panel_postsync_interpretation_submit_drift",
+            "observed": panel_postsync_interpretation.get("no_submit"),
+        })
+    if (
+        panel_postsync_interpretation.get("can_claim_w2_generalization") is True
+        and current_result.get("status") != "w2_generalization_supported_by_target_wise_panel"
+    ):
+        consistency_failures.append({
+            "kind": "panel_postsync_interpretation_claim_without_supported_panel",
+            "observed": {
+                "can_claim_w2_generalization": panel_postsync_interpretation.get("can_claim_w2_generalization"),
+                "current_panel_result.status": current_result.get("status"),
+            },
+        })
+    if consistency_failures or failures:
+        ready = False
+
+    status.update({
+        "panel_postsync_interpretation": panel_postsync_interpretation.get("_path"),
+        "panel_postsync_interpretation_ready": ready,
+        "panel_postsync_status": panel_postsync_interpretation.get("status"),
+        "panel_postsync_no_submit": panel_postsync_interpretation.get("no_submit"),
+        "panel_postsync_submitted": panel_postsync_interpretation.get("submitted"),
+        "panel_postsync_sync_ready": panel_postsync_interpretation.get("sync_ready"),
+        "panel_postsync_can_claim_w2_generalization": panel_postsync_interpretation.get(
+            "can_claim_w2_generalization"
+        ),
+        "panel_postsync_target_alpha": panel_postsync_interpretation.get("target_alpha"),
+        "panel_postsync_min_targets": panel_postsync_interpretation.get("min_targets"),
+        "panel_postsync_min_records_per_target": panel_postsync_interpretation.get("min_records_per_target"),
+        "panel_postsync_current_result_status": current_result.get("status"),
+        "panel_postsync_interpretation_failures": failures + consistency_failures,
+    })
+    if not ready:
+        status.update({
+            "status": "panel_postsync_interpretation_blocked",
+            "complete": False,
+            "failures": failures + consistency_failures,
+            "next_action": "repair post-sync interpretation before W2 panel claim or goal completion",
+        })
+    return status
+
+
 def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Optional[Dict[str, Any]],
                panel_report: Optional[Dict[str, Any]], target_alpha: float,
                input_prep_completion: Optional[Dict[str, Any]] = None,
@@ -1985,7 +2071,8 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
                panel_approval_packet: Optional[Dict[str, Any]] = None,
                panel_decision_protocol: Optional[Dict[str, Any]] = None,
                panel_remote_readiness: Optional[Dict[str, Any]] = None,
-               panel_submission_decision_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+               panel_submission_decision_state: Optional[Dict[str, Any]] = None,
+               panel_postsync_interpretation: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     missing_panel_report = panel_report if _is_missing_artifact(panel_report) else None
     if missing_panel_report is not None:
         panel_report = None
@@ -2017,6 +2104,8 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
             status = _attach_w2_panel_remote_readiness(status, panel_remote_readiness)
         if panel_submission_decision_state is not None:
             status = _attach_w2_panel_submission_decision_state(status, panel_submission_decision_state)
+        if panel_postsync_interpretation is not None:
+            status = _attach_w2_panel_postsync_interpretation(status, panel_postsync_interpretation)
         return status
     if panel_report is not None:
         mismatch = _alpha_mismatch(panel_report, target_alpha)
@@ -2094,6 +2183,8 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
             status = _attach_w2_panel_remote_readiness(status, panel_remote_readiness)
         if panel_submission_decision_state is not None:
             status = _attach_w2_panel_submission_decision_state(status, panel_submission_decision_state)
+        if panel_postsync_interpretation is not None:
+            status = _attach_w2_panel_postsync_interpretation(status, panel_postsync_interpretation)
         return status
 
     if input_prep_completion is not None:
@@ -10439,6 +10530,7 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
                w2_panel_decision_protocol_path: Optional[str] = None,
                w2_panel_remote_readiness_path: Optional[str] = None,
                w2_panel_submission_decision_state_path: Optional[str] = None,
+               w2_panel_postsync_interpretation_path: Optional[str] = None,
                panel_completion_path: Optional[str] = None,
                panel_report_path: Optional[str] = None,
                predictor_contract_path: Optional[str] = None,
@@ -10490,6 +10582,10 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
     w2_panel_submission_decision_state = _load_json(
         w2_panel_submission_decision_state_path,
         role="w2_panel_submission_decision_state",
+    )
+    w2_panel_postsync_interpretation = _load_json(
+        w2_panel_postsync_interpretation_path,
+        role="w2_panel_postsync_interpretation",
     )
     panel_completion = _load_json(panel_completion_path, role="panel_completion")
     panel_report = _load_json(panel_report_path, role="panel_report")
@@ -10569,6 +10665,7 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
             panel_decision_protocol=w2_panel_decision_protocol,
             panel_remote_readiness=w2_panel_remote_readiness,
             panel_submission_decision_state=w2_panel_submission_decision_state,
+            panel_postsync_interpretation=w2_panel_postsync_interpretation,
         ),
         w3,
         w4,
@@ -10686,6 +10783,15 @@ def render_text(rep: Dict[str, Any]) -> str:
                     no_submit=w.get("panel_submission_decision_no_submit"),
                     submitted=w.get("panel_submission_decision_submitted"),
                     claim=w.get("panel_submission_decision_can_claim_w2_generalization"),
+                )
+            )
+        if key == "W2_multi_target_panel" and "panel_postsync_interpretation_ready" in w:
+            lines.append(
+                "  panel_postsync_interpretation_ready={ready} status={status} sync_ready={sync_ready} can_claim_w2={claim}".format(
+                    ready=w.get("panel_postsync_interpretation_ready"),
+                    status=w.get("panel_postsync_status"),
+                    sync_ready=w.get("panel_postsync_sync_ready"),
+                    claim=w.get("panel_postsync_can_claim_w2_generalization"),
                 )
             )
         if key == "W3_independent_predictor" and "w3_next_protocol_ready" in w:
@@ -11003,6 +11109,8 @@ def main(argv=None) -> Dict[str, Any]:
                     help="optional no-submit W2 v11 Cayuga mirror readiness audit")
     ap.add_argument("--w2-panel-submission-decision-state", default=None,
                     help="optional no-submit W2 v11 explicit panel-submission decision state")
+    ap.add_argument("--w2-panel-postsync-interpretation", default=None,
+                    help="optional no-submit W2 v11 post-sync interpretation state")
     ap.add_argument("--panel-completion", default=None)
     ap.add_argument("--panel-report", default=None)
     ap.add_argument("--predictor-contract-report", default=None)
@@ -11088,6 +11196,7 @@ def main(argv=None) -> Dict[str, Any]:
         w2_panel_decision_protocol_path=args.w2_panel_decision_protocol,
         w2_panel_remote_readiness_path=args.w2_panel_remote_readiness,
         w2_panel_submission_decision_state_path=args.w2_panel_submission_decision_state,
+        w2_panel_postsync_interpretation_path=args.w2_panel_postsync_interpretation,
         panel_completion_path=args.panel_completion,
         panel_report_path=args.panel_report,
         predictor_contract_path=args.predictor_contract_report,

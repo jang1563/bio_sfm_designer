@@ -6596,6 +6596,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
             protocol = os.path.join(d, "panel_decision_protocol.json")
             remote = os.path.join(d, "remote_readiness.json")
             submission_decision = os.path.join(d, "submission_decision.json")
+            postsync = os.path.join(d, "postsync.json")
             _write_json(manifest, {
                 "ok": True,
                 "n_targets": 7,
@@ -6672,6 +6673,23 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 },
                 "failures": [],
             })
+            _write_json(postsync, {
+                "artifact": "m6d_w2_panel_postsync_interpretation",
+                "status": "not_synced_not_interpretable",
+                "audit_ok": True,
+                "no_submit": True,
+                "submitted": False,
+                "sync_ready": False,
+                "can_claim_w2_generalization": False,
+                "target_alpha": 0.2,
+                "min_targets": 4,
+                "min_records_per_target": 20,
+                "current_panel_result": {
+                    "status": "not_available_not_submitted",
+                    "w2_generalization_supported": False,
+                },
+                "failures": [],
+            })
 
             rep = run_status(
                 target_manifest_path=manifest,
@@ -6679,6 +6697,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 w2_panel_decision_protocol_path=protocol,
                 w2_panel_remote_readiness_path=remote,
                 w2_panel_submission_decision_state_path=submission_decision,
+                w2_panel_postsync_interpretation_path=postsync,
             )
 
         w2 = rep["workstreams"]["W2_multi_target_panel"]
@@ -6699,9 +6718,13 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_submission_decision_no_submit"])
         self.assertFalse(w2["panel_submission_decision_submitted"])
         self.assertFalse(w2["panel_submission_decision_can_claim_w2_generalization"])
+        self.assertTrue(w2["panel_postsync_interpretation_ready"])
+        self.assertEqual(w2["panel_postsync_status"], "not_synced_not_interpretable")
+        self.assertFalse(w2["panel_postsync_can_claim_w2_generalization"])
         self.assertIn("submission decision is recorded", w2["next_action"])
         self.assertIn("panel_remote_submission_readiness_ok=True", render_text(rep))
         self.assertIn("panel_submission_decision_ready=True", render_text(rep))
+        self.assertIn("panel_postsync_interpretation_ready=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])
 
     def test_w2_panel_submission_decision_state_blocks_if_already_submitted(self):
@@ -6742,6 +6765,43 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertFalse(w2["panel_submission_decision_ready"])
         kinds = {failure["kind"] for failure in w2["failures"]}
         self.assertIn("panel_submission_decision_already_submitted", kinds)
+
+    def test_w2_panel_postsync_interpretation_blocks_claim_leak(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "targets_report.json")
+            postsync = os.path.join(d, "postsync.json")
+            _write_json(manifest, {
+                "ok": True,
+                "n_targets": 7,
+                "n_ready_targets": 7,
+                "failures": [],
+            })
+            _write_json(postsync, {
+                "artifact": "m6d_w2_panel_postsync_interpretation",
+                "status": "not_synced_not_interpretable",
+                "audit_ok": True,
+                "no_submit": True,
+                "submitted": False,
+                "sync_ready": False,
+                "can_claim_w2_generalization": True,
+                "target_alpha": 0.2,
+                "current_panel_result": {
+                    "status": "not_available_not_submitted",
+                    "w2_generalization_supported": False,
+                },
+                "failures": [],
+            })
+
+            rep = run_status(
+                target_manifest_path=manifest,
+                w2_panel_postsync_interpretation_path=postsync,
+            )
+
+        w2 = rep["workstreams"]["W2_multi_target_panel"]
+        self.assertEqual(w2["status"], "panel_postsync_interpretation_blocked")
+        self.assertFalse(w2["panel_postsync_interpretation_ready"])
+        kinds = {failure["kind"] for failure in w2["failures"]}
+        self.assertIn("panel_postsync_interpretation_claim_without_supported_panel", kinds)
 
     def test_w2_panel_remote_readiness_blocks_if_receipt_present(self):
         with tempfile.TemporaryDirectory() as d:

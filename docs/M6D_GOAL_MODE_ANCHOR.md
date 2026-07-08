@@ -792,8 +792,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `results/m6d_goal_completion_audit.{json,md}` keeps `can_mark_goal_complete=false` and records W2 as
     the sole remaining requirement. `results/m6d_goal_drift_audit.{json,md}` reports
     `no_major_direction_drift_w2_blocked`, `major_direction_drift=false`, and execution
-    `panel_submission_decision_ready_not_submitted`. The next action remains explicit user approval before
-    guarded W2 v11 panel submission, followed by sync-back, completion, and target-wise certification.
+    `panel_postsync_interpretation_predeclared_not_synced`. The next action remains explicit user approval
+    before guarded W2 v11 panel submission, followed by sync-back, completion, target-wise reporting, and
+    refreshed post-sync interpretation.
 60. V9 post-panel decision protocol is predeclared without submitting:
     `results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.{json,md}` reports
     `post_panel_decision_protocol_ready`, `no_submit=true`, and
@@ -973,7 +974,7 @@ target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` independently audits goal-boundary drift without submitting work:
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
 direction aligned, claim boundaries preserved, and execution recorded as
-`panel_submission_decision_ready_not_submitted`.
+`panel_postsync_interpretation_predeclared_not_synced`.
 Runtime clarification checked on Cayuga: W2 production runs through the `boltz` env with Boltz-2 2.2.1;
 the completed W3 comparator uses the separate `chai1` env with `chai_lab`/`chai-lab` 0.6.1. These are
 separate predictor/protocol records and must not be pooled without the adjudication rule below.

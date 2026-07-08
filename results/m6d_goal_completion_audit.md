@@ -44,7 +44,10 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel submission decision no-submit: `True`
 - W2 panel submission decision submitted: `False`
 - W2 panel submission decision can claim generalization: `False`
+- W2 panel post-sync interpretation ready: `True`
+- W2 panel post-sync status: `not_synced_not_interpretable`
+- W2 panel post-sync can claim generalization: `False`
 - W3 standalone audit ok: `True`
 - W3 positive claim supported: `False`
 
-Next action: wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification
+Next action: wait for explicit user approval before running the guarded W2 panel submit command; after jobs finish, use the post-sync replay to sync back, run completion, generate the target-wise panel report, and refresh interpretation

@@ -194,15 +194,15 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("remote_submission_readiness_not_ready", kinds)
 
-    def test_accepts_drift_audit_after_submission_decision_latch_is_attached(self):
+    def test_accepts_drift_audit_after_postsync_boundary_is_attached(self):
         drift = _goal_drift_audit()
-        drift["drift_assessment"]["execution"] = "panel_submission_decision_ready_not_submitted"
+        drift["drift_assessment"]["execution"] = "panel_postsync_interpretation_predeclared_not_synced"
 
         rep = _build(goal_drift_audit=drift)
 
         self.assertTrue(rep["audit_ok"])
         self.assertEqual(rep["prerequisites"]["goal_drift_audit"]["execution"],
-                         "panel_submission_decision_ready_not_submitted")
+                         "panel_postsync_interpretation_predeclared_not_synced")
 
     def test_direct_remote_receipt_check_can_use_local_fixture_root(self):
         with tempfile.TemporaryDirectory() as d:

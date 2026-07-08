@@ -517,8 +517,9 @@ engine installs from GitHub):
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
 	  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
 	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
-	  `panel_submission_decision_ready_not_submitted`, keeping the next action limited to explicit W2 v11 panel
-	  approval followed by sync-back, completion, and target-wise certification,
+	  `panel_postsync_interpretation_predeclared_not_synced`, keeping the next action limited to explicit
+	  W2 v11 panel approval followed by sync-back, completion, target-wise reporting, and refreshed
+	  post-sync interpretation,
 	  so the same dashboard refresh can be replayed exactly,
 	  `--predictor-sync-back-plan` preserves the W3 second-predictor sync/rerun script in status and replay artifacts,
   `--batch-sync-back-plan` preserves the W4 missing-batch sync/rerun script in status and replay artifacts,
