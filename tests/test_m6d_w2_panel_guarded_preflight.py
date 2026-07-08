@@ -133,6 +133,12 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             guard_md = os.path.join(d, "guard.md")
             preflight_json = os.path.join(d, "preflight.json")
             preflight_md = os.path.join(d, "preflight.md")
+            runbook_json = os.path.join(d, "runbook.json")
+            runbook_md = os.path.join(d, "runbook.md")
+            sync_back = os.path.join(d, "sync_back.sh")
+            completion = os.path.join(d, "completion.json")
+            completion_script = os.path.join(d, "completion.sh")
+            panel_out = os.path.join(d, "panel_report.json")
 
             rc = main([
                 "--manifest", manifest,
@@ -145,6 +151,12 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 "--guard-out-md", guard_md,
                 "--preflight-out-json", preflight_json,
                 "--preflight-out-md", preflight_md,
+                "--runbook-out-json", runbook_json,
+                "--runbook-out-md", runbook_md,
+                "--sync-back-out", sync_back,
+                "--completion-out", completion,
+                "--completion-script-out", completion_script,
+                "--panel-out", panel_out,
                 "--approval-env-var", "BIO_SFM_APPROVE_V11_PANEL",
                 "--approval-token", "approve-v11-panel-submit",
                 "--dry-run-env-var", "M6D_W2_V11_SUBMIT_DRY_RUN",
@@ -161,6 +173,17 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertEqual(preflight["status"], "panel_preflight_dry_run_passed_not_submitted")
             self.assertEqual(preflight["submit_ready"]["n_ready_targets"], 2)
             self.assertEqual(preflight["local_dry_run"]["n_targets_enumerated"], 2)
+            with open(runbook_json) as fh:
+                runbook = json.load(fh)
+            self.assertEqual(runbook["status"], "approval_runbook_ready_not_submitted")
+            self.assertFalse(runbook["submit_state"]["submitted"])
+            self.assertIn("BIO_SFM_APPROVE_V11_PANEL", runbook["approval"]["submit_command_if_explicitly_approved"])
+            self.assertTrue(os.path.exists(sync_back))
+            self.assertTrue(os.path.exists(completion_script))
+            with open(completion_script) as fh:
+                completion_text = fh.read()
+            self.assertIn('PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"', completion_text)
+            self.assertIn('"$PYTHON_BIN" -m bio_sfm_designer.experiments.complex_panel_completion', completion_text)
 
             guard = build_audit(
                 wrapper,

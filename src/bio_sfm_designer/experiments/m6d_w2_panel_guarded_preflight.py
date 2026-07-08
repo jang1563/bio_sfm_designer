@@ -60,6 +60,135 @@ def _target_ids(manifest_path: str) -> List[str]:
     return ids
 
 
+def _record_paths(manifest_path: str) -> List[str]:
+    manifest = _load_json(manifest_path)
+    paths = []
+    for index, target in enumerate(manifest.get("targets", [])):
+        if not isinstance(target, dict):
+            continue
+        target_id = str(target.get("id", f"target_{index}"))
+        out_prefix = str(target.get("out_prefix") or f"hpc_outputs/{target_id}")
+        paths.append(str(target.get("records") or os.path.join(out_prefix, "records_boltz_complex.jsonl")))
+    return paths
+
+
+def _completion_command(
+    *,
+    manifest: str,
+    min_targets: int,
+    min_records_per_target: int,
+    target_alpha: float,
+    panel_out: str,
+    completion_out: str,
+    emit_plan: Optional[str] = None,
+) -> str:
+    parts = [
+        "python", "-m", "bio_sfm_designer.experiments.complex_panel_completion",
+        "--manifest", manifest,
+        "--min-targets", str(min_targets),
+        "--min-records-per-target", str(min_records_per_target),
+        "--target-alpha", str(target_alpha),
+        "--panel-out", panel_out,
+        "--out", completion_out,
+    ]
+    if emit_plan:
+        parts.extend(["--emit-plan", emit_plan])
+    return shlex.join(parts)
+
+
+def render_completion_script(
+    *,
+    manifest: str,
+    min_targets: int,
+    min_records_per_target: int,
+    target_alpha: float,
+    panel_out: str,
+    completion_out: str,
+) -> str:
+    command = _completion_command(
+        manifest=manifest,
+        min_targets=min_targets,
+        min_records_per_target=min_records_per_target,
+        target_alpha=target_alpha,
+        panel_out=panel_out,
+        completion_out=completion_out,
+    )
+    return "\n".join([
+        "#!/usr/bin/env bash",
+        "# Replay the v11 panel completion gate after records are synced back.",
+        "set -euo pipefail",
+        'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
+        "",
+        command.replace("python -m ", '"$PYTHON_BIN" -m ', 1),
+        "",
+    ])
+
+
+def render_sync_back_script(
+    *,
+    manifest: str,
+    completion_script: str,
+    submit_receipt: str,
+    submit_summary: str,
+    remote_spec: str,
+) -> str:
+    return "\n".join([
+        "#!/usr/bin/env bash",
+        "# Sync completed W2 panel records back from Cayuga, then replay the local completion gate.",
+        "# Run only after the submitted Boltz jobs in the submit receipt have finished.",
+        "set -euo pipefail",
+        "",
+        f'REMOTE_ROOT="${{CAYUGA_BIO_SFM_ROOT:-{remote_spec}}}"',
+        'LOCAL_ROOT="${LOCAL_BIO_SFM_ROOT:-$(pwd)}"',
+        'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
+        f"MANIFEST={shlex.quote(manifest)}",
+        f"COMPLETION={shlex.quote(completion_script)}",
+        f"RECEIPT={shlex.quote(submit_receipt)}",
+        f"SUMMARY={shlex.quote(submit_summary)}",
+        "export MANIFEST",
+        "",
+        'test -s "$MANIFEST" || { echo "manifest is missing or empty: $MANIFEST" >&2; exit 2; }',
+        'test -s "$COMPLETION" || { echo "completion script is missing or empty: $COMPLETION" >&2; exit 2; }',
+        "",
+        'record_paths="$("$PYTHON_BIN" - <<\'PY\'',
+        "import json, os",
+        'with open(os.environ["MANIFEST"]) as handle:',
+        "    manifest = json.load(handle)",
+        'for target in manifest.get("targets", []):',
+        "    if not isinstance(target, dict):",
+        "        continue",
+        '    target_id = str(target.get("id", "target"))',
+        '    out_prefix = str(target.get("out_prefix") or f"hpc_outputs/{target_id}")',
+        '    records = str(target.get("records") or f"{out_prefix}/records_boltz_complex.jsonl")',
+        "    if records:",
+        "        print(records)",
+        "PY",
+        ')"',
+        "",
+        'if [ -z "$record_paths" ]; then',
+        '  echo "manifest has no record paths: $MANIFEST" >&2',
+        "  exit 2",
+        "fi",
+        "",
+        'while IFS= read -r relpath; do',
+        '  if [ -z "$relpath" ]; then',
+        "    continue",
+        "  fi",
+        '  mkdir -p "$LOCAL_ROOT/$(dirname "$relpath")"',
+        '  rsync -avP "$REMOTE_ROOT/$relpath" "$LOCAL_ROOT/$relpath"',
+        '  test -s "$LOCAL_ROOT/$relpath"',
+        'done <<< "$record_paths"',
+        "",
+        'mkdir -p "$LOCAL_ROOT/results"',
+        'rsync -avP "$REMOTE_ROOT/$RECEIPT" "$REMOTE_ROOT/$SUMMARY" "$LOCAL_ROOT/results/"',
+        'test -s "$LOCAL_ROOT/$RECEIPT"',
+        'test -s "$LOCAL_ROOT/$SUMMARY"',
+        "",
+        'BIO_SFM_PYTHON="$PYTHON_BIN" PYTHONNOUSERSITE=1 bash "$COMPLETION"',
+        "",
+    ])
+
+
 def render_guarded_wrapper(
     *,
     manifest: str,
@@ -274,6 +403,123 @@ def build_preflight(
     }
 
 
+def build_runbook(
+    *,
+    manifest_path: str,
+    wrapper_path: str,
+    submit_receipt: str,
+    submit_summary: str,
+    sync_back_script: str,
+    completion_script: str,
+    completion_out: str,
+    panel_out: str,
+    workstream: str,
+    approval_env_var: str,
+    approval_token: str,
+    dry_run_env_var: str,
+    remote_host: str,
+    remote_root: str,
+    cayuga_python: str,
+    target_alpha: float,
+    min_targets: int,
+    min_records_per_target: int,
+) -> Dict[str, Any]:
+    remote_submit = (
+        "cd "
+        + remote_root
+        + " && BIO_SFM_PYTHON="
+        + cayuga_python
+        + " PYTHONNOUSERSITE=1 "
+        + approval_env_var
+        + "="
+        + approval_token
+        + " bash "
+        + wrapper_path
+    )
+    submit_command = "ssh " + remote_host + " " + shlex.quote(remote_submit)
+    return {
+        "artifact": f"{workstream}_approval_runbook",
+        "status": "approval_runbook_ready_not_submitted",
+        "submit_state": {
+            "submitted": False,
+            "submit_receipt": submit_receipt,
+            "submit_summary": submit_summary,
+            "local_submit_receipt_exists": os.path.exists(submit_receipt),
+            "local_submit_summary_exists": os.path.exists(submit_summary),
+        },
+        "manifest": manifest_path,
+        "target_ids": _target_ids(manifest_path),
+        "record_paths": _record_paths(manifest_path),
+        "approval": {
+            "required_env_var": approval_env_var,
+            "required_env_value": approval_token,
+            "dry_run_env_var": dry_run_env_var,
+            "submit_command_if_explicitly_approved": submit_command,
+        },
+        "post_submit": {
+            "sync_back_script": sync_back_script,
+            "sync_back_command_after_jobs_finish": "bash " + shlex.quote(sync_back_script),
+            "completion_script": completion_script,
+            "completion_command_after_sync": "bash " + shlex.quote(completion_script),
+            "completion_out": completion_out,
+            "panel_out": panel_out,
+            "target_alpha": target_alpha,
+            "min_targets": min_targets,
+            "min_records_per_target": min_records_per_target,
+        },
+        "claim_boundary": (
+            "not W2 panel evidence until explicit approval, successful submit receipt, completed Boltz jobs, "
+            "sync-back, complex_panel_completion ok=true, and complex_panel_report target-wise interpretation"
+        ),
+        "next_action": "await explicit approval before running submit_command_if_explicitly_approved",
+    }
+
+
+def render_runbook_markdown(rep: Dict[str, Any]) -> str:
+    approval = rep.get("approval") if isinstance(rep.get("approval"), dict) else {}
+    post = rep.get("post_submit") if isinstance(rep.get("post_submit"), dict) else {}
+    ids = rep.get("target_ids") if isinstance(rep.get("target_ids"), list) else []
+    lines = [
+        "# M6d W2 Panel Approval Runbook",
+        "",
+        f"Status: `{rep.get('status')}`.",
+        f"Submitted: `{rep.get('submit_state', {}).get('submitted')}`.",
+        "",
+        f"Manifest: `{rep.get('manifest')}`.",
+        f"Target IDs: {', '.join('`' + str(target_id) + '`' for target_id in ids)}.",
+        "",
+        "Required approval environment:",
+        "",
+        "```bash",
+        f"export {approval.get('required_env_var')}={approval.get('required_env_value')}",
+        "```",
+        "",
+        "Submit command if explicitly approved:",
+        "",
+        "```bash",
+        str(approval.get("submit_command_if_explicitly_approved") or ""),
+        "```",
+        "",
+        "After jobs finish, sync back:",
+        "",
+        "```bash",
+        str(post.get("sync_back_command_after_jobs_finish") or ""),
+        "```",
+        "",
+        "After sync-back, completion gate:",
+        "",
+        "```bash",
+        str(post.get("completion_command_after_sync") or ""),
+        "```",
+        "",
+        "Claim boundary: " + str(rep.get("claim_boundary") or ""),
+        "",
+        "Next action: " + str(rep.get("next_action") or ""),
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def render_preflight_markdown(rep: Dict[str, Any]) -> str:
     ids = rep.get("target_ids") if isinstance(rep.get("target_ids"), list) else []
     submit_ready = rep.get("submit_ready") if isinstance(rep.get("submit_ready"), dict) else {}
@@ -334,12 +580,20 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--guard-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.md")
     ap.add_argument("--preflight-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_preflight.json")
     ap.add_argument("--preflight-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_preflight.md")
+    ap.add_argument("--runbook-out-json", default="results/m6d_w2_target_family_redesign_v11_approval_runbook.json")
+    ap.add_argument("--runbook-out-md", default="results/m6d_w2_target_family_redesign_v11_approval_runbook.md")
+    ap.add_argument("--sync-back-out", default="results/m6d_w2_target_family_redesign_v11_sync_back.sh")
+    ap.add_argument("--completion-out", default="results/m6d_w2_target_family_redesign_v11_panel_completion.json")
+    ap.add_argument("--completion-script-out", default="results/m6d_w2_target_family_redesign_v11_panel_completion.sh")
+    ap.add_argument("--panel-out", default="results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json")
     ap.add_argument("--approval-env-var", default=_DEFAULT_APPROVAL_ENV_VAR)
     ap.add_argument("--approval-token", default=_DEFAULT_APPROVAL_TOKEN)
     ap.add_argument("--dry-run-env-var", default=_DEFAULT_DRY_RUN_ENV_VAR)
     ap.add_argument("--shared-wrapper", default=_DEFAULT_SHARED_WRAPPER)
     ap.add_argument("--min-targets", type=int, default=4)
     ap.add_argument("--min-contacts", type=int, default=20)
+    ap.add_argument("--min-records-per-target", type=int, default=20)
+    ap.add_argument("--target-alpha", type=float, default=0.2)
     ap.add_argument("--local-python", default=sys.executable)
     ap.add_argument("--cayuga-python", default=_DEFAULT_CAYUGA_PYTHON)
     ap.add_argument("--remote-host", default=None)
@@ -360,6 +614,34 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
     _write_text(args.wrapper_out, wrapper)
     _set_executable(args.wrapper_out)
+    remote_spec = (
+        f"{args.remote_host}:{args.remote_root}"
+        if args.remote_host and args.remote_root else
+        "cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke"
+    )
+    _write_text(
+        args.completion_script_out,
+        render_completion_script(
+            manifest=args.manifest,
+            min_targets=args.min_targets,
+            min_records_per_target=args.min_records_per_target,
+            target_alpha=args.target_alpha,
+            panel_out=args.panel_out,
+            completion_out=args.completion_out,
+        ),
+    )
+    _set_executable(args.completion_script_out)
+    _write_text(
+        args.sync_back_out,
+        render_sync_back_script(
+            manifest=args.manifest,
+            completion_script=args.completion_script_out,
+            submit_receipt=args.submit_receipt,
+            submit_summary=args.submit_summary,
+            remote_spec=remote_spec,
+        ),
+    )
+    _set_executable(args.sync_back_out)
 
     manifest_report = validate_manifest(
         args.manifest,
@@ -414,11 +696,34 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
     _write_json(args.preflight_out_json, preflight)
     _write_text(args.preflight_out_md, render_preflight_markdown(preflight))
+    runbook = build_runbook(
+        manifest_path=args.manifest,
+        wrapper_path=args.wrapper_out,
+        submit_receipt=args.submit_receipt,
+        submit_summary=args.submit_summary,
+        sync_back_script=args.sync_back_out,
+        completion_script=args.completion_script_out,
+        completion_out=args.completion_out,
+        panel_out=args.panel_out,
+        workstream=args.workstream,
+        approval_env_var=args.approval_env_var,
+        approval_token=args.approval_token,
+        dry_run_env_var=args.dry_run_env_var,
+        remote_host=args.remote_host or "cayuga-login1",
+        remote_root=args.remote_root or "/home/fs01/jak4013/bio_sfm_smoke",
+        cayuga_python=args.cayuga_python,
+        target_alpha=args.target_alpha,
+        min_targets=args.min_targets,
+        min_records_per_target=args.min_records_per_target,
+    )
+    _write_json(args.runbook_out_json, runbook)
+    _write_text(args.runbook_out_md, render_runbook_markdown(runbook))
 
     print(f"# guarded panel preflight  ok={preflight['audit_ok']} status={preflight['status']}")
     print(f"wrote {args.wrapper_out}")
     print(f"wrote {args.guard_out_json}")
     print(f"wrote {args.preflight_out_json}")
+    print(f"wrote {args.runbook_out_json}")
     return 0 if preflight["audit_ok"] else 2
 
 

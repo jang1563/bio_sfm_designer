@@ -162,8 +162,10 @@ Current state:
   wrapper `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` passes local/Cayuga dry-runs,
   preserves the receipt path, and refuses real execution without
   `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Regenerate the wrapper/preflight with
-  `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`. It has not
-  been submitted.
+  `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; this also
+  emits `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
+  `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
+  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.
