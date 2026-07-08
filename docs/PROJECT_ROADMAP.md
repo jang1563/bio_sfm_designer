@@ -431,8 +431,11 @@ Allowed decisions:
    `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`. The v11 no-spend discovery and
    target-MSA prep are complete: 20 candidates were structurally selected, a 7-target representative
    manifest passes sequence diversity, jobs `3073871`-`3073877` completed target-MSA precompute, and
-   `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The next W2 decision is whether
-   to submit the corrected 7-target v11 ProteinMPNN/Boltz panel; no v11 panel records exist yet.
+   `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The guarded
+   `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` passes local/Cayuga dry-runs and
+   refuses real execution without `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. The next W2
+   decision is whether to explicitly approve the corrected 7-target v11 ProteinMPNN/Boltz panel; no v11
+   panel records exist yet.
 7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract
    with 30 matched records, but `results/m6c_cross_predictor.json` reports Boltz-Chai label agreement
    of 0.600 against the required 0.800. Therefore independent-predictor robustness is not supported

@@ -899,10 +899,13 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     7/7 clusters and largest cluster fraction 0.142857. Target-MSA jobs `3073871`-`3073877` completed on
     Cayuga with exit code `0:0`; synced `.a3m` and report files pass local and remote
     `complex_target_manifest --require-files` with 7/7 ready targets.
-    `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`, and the regenerated submit plan
-    `results/m6d_w2_target_family_redesign_v11_submit_panel.sh` writes to the corrected v11-specific
-    records root `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`. Do not reuse the earlier
-    generated submit plan that pointed at `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
+    `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`, and the regenerated raw submit
+    plan `results/m6d_w2_target_family_redesign_v11_submit_panel.sh` writes to the corrected v11-specific
+    records root `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`. The guarded wrapper
+    `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` now delegates through the shared
+    receipt-preserving wrapper, passes local/Cayuga dry-runs, and refuses real execution without
+    `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Do not reuse the earlier generated submit plan
+    that pointed at `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
     Cayuga default `python3` is Python 3.6.8 and fails on this repo; use
     `BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python` plus `PYTHONNOUSERSITE=1` for v11
     Cayuga replay/submission commands.

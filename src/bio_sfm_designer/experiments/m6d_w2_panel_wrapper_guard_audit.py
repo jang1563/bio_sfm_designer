@@ -1,4 +1,4 @@
-"""Audit the W2 v9 panel submit wrapper approval guard without submitting jobs."""
+"""Audit a W2 panel submit wrapper approval guard without submitting jobs."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ _APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V9_PANEL"
 _APPROVAL_TOKEN = "approve-v9-panel-submit"
 _DRY_RUN_ENV_VAR = "M6D_W2_V9_SUBMIT_DRY_RUN"
 _REFUSAL = "refusing v9 panel submission without explicit approval env"
+_SHARED_WRAPPER_MARKER = 'm6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"'
 
 
 def _read_text(path: str) -> str:
@@ -60,18 +61,28 @@ def _add_failure(failures: List[Dict[str, Any]], kind: str, message: str, **extr
     failures.append(row)
 
 
-def _static_audit(wrapper_path: str, receipt_path: str, text: str) -> Dict[str, Any]:
+def _static_audit(
+    wrapper_path: str,
+    receipt_path: str,
+    text: str,
+    *,
+    approval_env_var: str = _APPROVAL_ENV_VAR,
+    approval_token: str = _APPROVAL_TOKEN,
+    dry_run_env_var: str = _DRY_RUN_ENV_VAR,
+    refusal_message: str = _REFUSAL,
+    shared_wrapper_marker: str = _SHARED_WRAPPER_MARKER,
+) -> Dict[str, Any]:
     failures: List[Dict[str, Any]] = []
     markers = {
-        "approval_env_var": _APPROVAL_ENV_VAR,
-        "approval_token": _APPROVAL_TOKEN,
-        "dry_run_env_var": _DRY_RUN_ENV_VAR,
+        "approval_env_var": approval_env_var,
+        "approval_token": approval_token,
+        "dry_run_env_var": dry_run_env_var,
         "bio_sfm_submit_dry_run_export": "export BIO_SFM_SUBMIT_DRY_RUN=",
         "dry_run_guard": 'if [ "${BIO_SFM_SUBMIT_DRY_RUN:-0}" = "1" ]; then',
-        "approval_guard": f'if [ "${{{_APPROVAL_ENV_VAR}:-}}" != "$APPROVAL_TOKEN" ]; then',
-        "refusal_message": _REFUSAL,
+        "approval_guard": f'if [ "${{{approval_env_var}:-}}" != "$APPROVAL_TOKEN" ]; then',
+        "refusal_message": refusal_message,
         "refusal_exit": "exit 2",
-        "shared_wrapper_exec": 'm6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"',
+        "shared_wrapper_exec": shared_wrapper_marker,
         "receipt_assignment": f'export SUBMIT_RECEIPT="${{SUBMIT_RECEIPT:-{receipt_path}}}"',
     }
     positions = {name: _index(text, marker) for name, marker in markers.items()}
@@ -136,7 +147,15 @@ def _static_audit(wrapper_path: str, receipt_path: str, text: str) -> Dict[str, 
     }
 
 
-def _run_no_env_check(wrapper_path: str, receipt_path: str, *, static_ok: bool) -> Dict[str, Any]:
+def _run_no_env_check(
+    wrapper_path: str,
+    receipt_path: str,
+    *,
+    static_ok: bool,
+    approval_env_var: str = _APPROVAL_ENV_VAR,
+    dry_run_env_var: str = _DRY_RUN_ENV_VAR,
+    refusal_message: str = _REFUSAL,
+) -> Dict[str, Any]:
     if not static_ok:
         return {
             "ran": False,
@@ -155,21 +174,21 @@ def _run_no_env_check(wrapper_path: str, receipt_path: str, *, static_ok: bool) 
         }
 
     env = os.environ.copy()
-    env.pop(_APPROVAL_ENV_VAR, None)
-    env.pop(_DRY_RUN_ENV_VAR, None)
+    env.pop(approval_env_var, None)
+    env.pop(dry_run_env_var, None)
     env["BIO_SFM_SUBMIT_DRY_RUN"] = "0"
     proc = subprocess.run(["bash", wrapper_path], text=True, capture_output=True, env=env)
     receipt_exists_after = os.path.exists(receipt_path)
     stderr = proc.stderr[-2000:]
     stdout = proc.stdout[-2000:]
-    ok = proc.returncode == 2 and _REFUSAL in proc.stderr and not receipt_exists_after
+    ok = proc.returncode == 2 and refusal_message in proc.stderr and not receipt_exists_after
     return {
         "ran": True,
         "ok": ok,
         "returncode": proc.returncode,
         "stderr_tail": stderr,
         "stdout_tail": stdout,
-        "refusal_message_seen": _REFUSAL in proc.stderr,
+        "refusal_message_seen": refusal_message in proc.stderr,
         "receipt_exists_before": receipt_existed_before,
         "receipt_exists_after": receipt_exists_after,
         "receipt": receipt_path,
@@ -181,6 +200,12 @@ def build_audit(
     receipt_path: str,
     *,
     run_no_env_check: bool = False,
+    approval_env_var: str = _APPROVAL_ENV_VAR,
+    approval_token: str = _APPROVAL_TOKEN,
+    dry_run_env_var: str = _DRY_RUN_ENV_VAR,
+    refusal_message: str = _REFUSAL,
+    shared_wrapper_marker: str = _SHARED_WRAPPER_MARKER,
+    panel_label: str = "W2 panel",
 ) -> Dict[str, Any]:
     failures: List[Dict[str, Any]] = []
     text = ""
@@ -191,7 +216,16 @@ def build_audit(
         if not text.strip():
             _add_failure(failures, "wrapper_empty", "panel wrapper is empty", path=wrapper_path)
 
-    static = _static_audit(wrapper_path, receipt_path, text) if text else {
+    static = _static_audit(
+        wrapper_path,
+        receipt_path,
+        text,
+        approval_env_var=approval_env_var,
+        approval_token=approval_token,
+        dry_run_env_var=dry_run_env_var,
+        refusal_message=refusal_message,
+        shared_wrapper_marker=shared_wrapper_marker,
+    ) if text else {
         "ok": False,
         "wrapper": wrapper_path,
         "wrapper_sha256": None,
@@ -203,7 +237,14 @@ def build_audit(
     }
     failures.extend(static.get("failures", []))
     no_env = (
-        _run_no_env_check(wrapper_path, receipt_path, static_ok=not failures)
+        _run_no_env_check(
+            wrapper_path,
+            receipt_path,
+            static_ok=not failures,
+            approval_env_var=approval_env_var,
+            dry_run_env_var=dry_run_env_var,
+            refusal_message=refusal_message,
+        )
         if run_no_env_check else
         {"ran": False, "ok": None, "reason": "not_requested", "receipt": receipt_path}
     )
@@ -223,14 +264,17 @@ def build_audit(
         "claim_boundary": "no-submit panel wrapper guard audit only; does not approve or run ProteinMPNN/Boltz jobs",
         "wrapper": wrapper_path,
         "receipt": receipt_path,
-        "panel_approval_env_var": _APPROVAL_ENV_VAR,
-        "panel_approval_env_value": _APPROVAL_TOKEN,
-        "dry_run_env_var": _DRY_RUN_ENV_VAR,
+        "panel_label": panel_label,
+        "panel_approval_env_var": approval_env_var,
+        "panel_approval_env_value": approval_token,
+        "dry_run_env_var": dry_run_env_var,
+        "refusal_message": refusal_message,
+        "shared_wrapper_marker": shared_wrapper_marker,
         "static_audit": static,
         "no_env_run": no_env,
         "failures": failures,
         "next_action": (
-            "wait for explicit approval before W2 v9 panel submission"
+            f"wait for explicit approval before {panel_label} submission"
             if audit_ok else
             "repair the panel wrapper guard before approval or submission"
         ),
@@ -285,12 +329,28 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--wrapper", default="results/m6d_w2_target_family_redesign_v9_submit_with_receipt.sh")
     ap.add_argument("--receipt", default="results/m6d_w2_target_family_redesign_v9_submit_receipt.jsonl")
+    ap.add_argument("--approval-env-var", default=_APPROVAL_ENV_VAR)
+    ap.add_argument("--approval-token", default=_APPROVAL_TOKEN)
+    ap.add_argument("--dry-run-env-var", default=_DRY_RUN_ENV_VAR)
+    ap.add_argument("--refusal-message", default=_REFUSAL)
+    ap.add_argument("--shared-wrapper-marker", default=_SHARED_WRAPPER_MARKER)
+    ap.add_argument("--panel-label", default="W2 panel")
     ap.add_argument("--run-no-env-check", action="store_true")
     ap.add_argument("--out-json", default="results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.json")
     ap.add_argument("--out-md", default="results/m6d_w2_target_family_redesign_v9_panel_wrapper_guard_audit.md")
     args = ap.parse_args(argv)
 
-    rep = build_audit(args.wrapper, args.receipt, run_no_env_check=args.run_no_env_check)
+    rep = build_audit(
+        args.wrapper,
+        args.receipt,
+        run_no_env_check=args.run_no_env_check,
+        approval_env_var=args.approval_env_var,
+        approval_token=args.approval_token,
+        dry_run_env_var=args.dry_run_env_var,
+        refusal_message=args.refusal_message,
+        shared_wrapper_marker=args.shared_wrapper_marker,
+        panel_label=args.panel_label,
+    )
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))
     print(f"# panel wrapper guard audit  ok={rep['audit_ok']} status={rep['status']}")

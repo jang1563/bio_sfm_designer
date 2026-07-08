@@ -250,9 +250,13 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > that pass diversity (`results/m6d_w2_target_family_redesign_v11_representative_sequence_diversity.{json,md}`).
 > Target-MSA precompute jobs `3073871`-`3073877` completed on Cayuga with exit code `0:0`, local and
 > remote `complex_target_manifest --require-files` both pass 7/7, and
-> `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The emitted
+> `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The raw
 > `results/m6d_w2_target_family_redesign_v11_submit_panel.sh` now writes records to
-> `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`, but it has not been run.
+> `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`; the guarded
+> `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` delegates through the shared
+> receipt-preserving wrapper, refuses real execution without
+> `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`, and passes local plus Cayuga dry-runs in
+> `results/m6d_w2_target_family_redesign_v11_panel_preflight.{json,md}`. It has not been submitted.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a

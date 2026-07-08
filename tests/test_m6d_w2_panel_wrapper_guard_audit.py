@@ -18,18 +18,25 @@ def _write_text(path, text):
         fh.write(text)
 
 
-def _wrapper(receipt):
+def _wrapper(
+    receipt,
+    *,
+    approval_env_var="BIO_SFM_APPROVE_V9_PANEL",
+    approval_token="approve-v9-panel-submit",
+    dry_run_env_var="M6D_W2_V9_SUBMIT_DRY_RUN",
+    refusal_message="refusing v9 panel submission without explicit approval env:",
+):
     return f"""#!/usr/bin/env bash
 set -euo pipefail
 export SUBMIT_RECEIPT="${{SUBMIT_RECEIPT:-{receipt}}}"
-export BIO_SFM_SUBMIT_DRY_RUN="${{M6D_W2_V9_SUBMIT_DRY_RUN:-${{BIO_SFM_SUBMIT_DRY_RUN:-0}}}}"
-APPROVAL_ENV_VAR="BIO_SFM_APPROVE_V9_PANEL"
-APPROVAL_TOKEN="approve-v9-panel-submit"
+export BIO_SFM_SUBMIT_DRY_RUN="${{{dry_run_env_var}:-${{BIO_SFM_SUBMIT_DRY_RUN:-0}}}}"
+APPROVAL_ENV_VAR="{approval_env_var}"
+APPROVAL_TOKEN="{approval_token}"
 if [ "${{BIO_SFM_SUBMIT_DRY_RUN:-0}}" = "1" ]; then
   exec "$SCRIPT_DIR/m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
 fi
-if [ "${{BIO_SFM_APPROVE_V9_PANEL:-}}" != "$APPROVAL_TOKEN" ]; then
-  echo "refusing v9 panel submission without explicit approval env:" >&2
+if [ "${{{approval_env_var}:-}}" != "$APPROVAL_TOKEN" ]; then
+  echo "{refusal_message}" >&2
   exit 2
 fi
 exec "$SCRIPT_DIR/m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
@@ -51,6 +58,39 @@ class M6DW2PanelWrapperGuardAuditTests(unittest.TestCase):
         self.assertEqual(rep["no_env_run"]["returncode"], 2)
         self.assertFalse(rep["no_env_run"]["receipt_exists_after"])
         self.assertIn("Required approval environment", render_markdown(rep))
+
+    def test_static_and_no_env_guard_pass_with_v11_parameters(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            wrapper = os.path.join(d, "wrapper.sh")
+            _write_text(
+                wrapper,
+                _wrapper(
+                    receipt,
+                    approval_env_var="BIO_SFM_APPROVE_V11_PANEL",
+                    approval_token="approve-v11-panel-submit",
+                    dry_run_env_var="M6D_W2_V11_SUBMIT_DRY_RUN",
+                    refusal_message="refusing v11 panel submission without explicit approval env:",
+                ),
+            )
+
+            rep = build_audit(
+                wrapper,
+                receipt,
+                run_no_env_check=True,
+                approval_env_var="BIO_SFM_APPROVE_V11_PANEL",
+                approval_token="approve-v11-panel-submit",
+                dry_run_env_var="M6D_W2_V11_SUBMIT_DRY_RUN",
+                refusal_message="refusing v11 panel submission without explicit approval env",
+                panel_label="W2 v11 panel",
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
+        self.assertEqual(rep["panel_approval_env_value"], "approve-v11-panel-submit")
+        self.assertEqual(rep["dry_run_env_var"], "M6D_W2_V11_SUBMIT_DRY_RUN")
+        self.assertEqual(rep["panel_label"], "W2 v11 panel")
+        self.assertIn("W2 v11 panel submission", rep["next_action"])
 
     def test_static_audit_blocks_shared_wrapper_exec_before_approval_guard(self):
         with tempfile.TemporaryDirectory() as d:

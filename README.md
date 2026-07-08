@@ -321,9 +321,13 @@ engine installs from GitHub):
   that pass diversity (`results/m6d_w2_target_family_redesign_v11_representative_sequence_diversity.{json,md}`).
   Target-MSA precompute jobs `3073871`-`3073877` completed on Cayuga with exit code `0:0`, local and
   remote `complex_target_manifest --require-files` both pass 7/7, and
-  `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The emitted
+  `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The raw
   `results/m6d_w2_target_family_redesign_v11_submit_panel.sh` now writes records to
-  `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`, but it has not been run.
+  `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`; the guarded
+  `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` delegates through the shared
+  receipt-preserving wrapper, refuses real execution without
+  `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`, and passes local plus Cayuga dry-runs in
+  `results/m6d_w2_target_family_redesign_v11_panel_preflight.{json,md}`. It has not been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

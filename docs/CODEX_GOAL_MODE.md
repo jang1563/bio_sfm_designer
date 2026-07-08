@@ -157,9 +157,11 @@ Current state:
   replacement-target discovery has advanced through target-MSA prep: 20 structural candidates were found,
   the full 20-target sequence panel was near-duplicate dominated, a 7-target representative manifest
   passed diversity, target-MSA jobs `3073871`-`3073877` completed on Cayuga, and
-  `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The emitted panel submit plan is
-  corrected to write records under `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`, but it has
-  not been run.
+  `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The raw panel submit plan is
+  corrected to write records under `hpc_outputs/m6d_w2_target_family_redesign_v11_records/...`; the guarded
+  wrapper `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` passes local/Cayuga dry-runs,
+  preserves the receipt path, and refuses real execution without
+  `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.
