@@ -1571,6 +1571,21 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
                 "check": key,
                 "observed": checks.get(key),
             })
+    v11_panel_sync = "v11" in str(panel_approval_packet.get("sync_back_command_after_jobs_finish") or "")
+    postsubmit_sync_ready_gate_ok = (
+        bool(panel_approval_packet.get("postsubmit_status_before_sync"))
+        and bool(panel_approval_packet.get("job_state_probe_before_sync"))
+        and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_sync_ready_gate") or "")
+    )
+    if v11_panel_sync and not postsubmit_sync_ready_gate_ok:
+        consistency_failures.append({
+            "kind": "panel_approval_packet_postsubmit_sync_ready_gate_missing",
+            "observed": {
+                "postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
+                "job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
+                "postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
+            },
+        })
 
     packet_ready = not packet_failures and not consistency_failures
     status.update({
@@ -1587,6 +1602,10 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         "panel_sync_back_command_after_jobs_finish": panel_approval_packet.get(
             "sync_back_command_after_jobs_finish"
         ),
+        "panel_postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
+        "panel_job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
+        "panel_postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
+        "panel_postsubmit_sync_ready_gate_ok": postsubmit_sync_ready_gate_ok,
         "panel_approval_checks": checks,
         "panel_approval_packet_failures": packet_failures + consistency_failures,
     })
@@ -10757,6 +10776,14 @@ def render_text(rep: Dict[str, Any]) -> str:
                     claim=w.get("can_claim_w2_generalization"),
                 )
             )
+            if "panel_postsubmit_sync_ready_gate_ok" in w:
+                lines.append(
+                    "  panel_postsubmit_sync_ready_gate_ok={ok} postsubmit={postsubmit} job_states={job_states}".format(
+                        ok=w.get("panel_postsubmit_sync_ready_gate_ok"),
+                        postsubmit=w.get("panel_postsubmit_status_before_sync"),
+                        job_states=w.get("panel_job_state_probe_before_sync"),
+                    )
+                )
         if key == "W2_multi_target_panel" and "panel_decision_protocol_ready" in w:
             lines.append(
                 "  panel_decision_protocol_ready={ready} no_submit={no_submit} can_claim_w2_now={claim}".format(

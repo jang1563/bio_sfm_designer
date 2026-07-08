@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from bio_sfm_designer.experiments.m6d_local_cayuga_mirror_audit import (
+    _JSON_FIELD_SPECS,
     build_audit,
     main,
     render_markdown,
@@ -27,6 +28,20 @@ def _write_json(path, obj):
 
 
 class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
+    def test_default_mirror_fields_cover_v11_postsubmit_sync_gate(self):
+        packet_fields = _JSON_FIELD_SPECS[
+            "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
+        ]
+        status_fields = _JSON_FIELD_SPECS["results/m6c_project_status_w2_followup.json"]
+
+        self.assertIn("postsubmit_status_before_sync", packet_fields)
+        self.assertIn("job_state_probe_before_sync", packet_fields)
+        self.assertIn("postsubmit_sync_ready_gate", packet_fields)
+        self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_postsubmit_sync_ready_gate_ok",
+            status_fields,
+        )
+
     def test_build_audit_accepts_matching_exact_and_semantic_fields(self):
         with tempfile.TemporaryDirectory() as d:
             local = os.path.join(d, "local")

@@ -22,6 +22,8 @@ _DEFAULT_MANIFEST = "configs/m6d_w2_target_family_redesign_v11_representative_ta
 _DEFAULT_WRAPPER = "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh"
 _DEFAULT_RECEIPT = "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl"
 _DEFAULT_SUMMARY = "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json"
+_DEFAULT_POSTSUBMIT_STATUS = "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
+_DEFAULT_JOB_STATE_PROBE = "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
 _DEFAULT_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V11_PANEL"
 _DEFAULT_APPROVAL_TOKEN = "approve-v11-panel-submit"
 _DEFAULT_DRY_RUN_ENV_VAR = "M6D_W2_V11_SUBMIT_DRY_RUN"
@@ -133,6 +135,8 @@ def render_sync_back_script(
     completion_script: str,
     submit_receipt: str,
     submit_summary: str,
+    postsubmit_status: str = _DEFAULT_POSTSUBMIT_STATUS,
+    job_state_probe: str = _DEFAULT_JOB_STATE_PROBE,
     remote_spec: str,
 ) -> str:
     remote_root_line = (
@@ -149,14 +153,28 @@ def render_sync_back_script(
         remote_root_line,
         'LOCAL_ROOT="${LOCAL_BIO_SFM_ROOT:-$(pwd)}"',
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
+        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         f"MANIFEST={shlex.quote(manifest)}",
         f"COMPLETION={shlex.quote(completion_script)}",
         f"RECEIPT={shlex.quote(submit_receipt)}",
         f"SUMMARY={shlex.quote(submit_summary)}",
+        f"POSTSUBMIT={shlex.quote(postsubmit_status)}",
+        f"JOB_STATES={shlex.quote(job_state_probe)}",
         "export MANIFEST",
         "",
         'test -s "$MANIFEST" || { echo "manifest is missing or empty: $MANIFEST" >&2; exit 2; }',
         'test -s "$COMPLETION" || { echo "completion script is missing or empty: $COMPLETION" >&2; exit 2; }',
+        'test -s "$RECEIPT" || { echo "submit receipt is missing locally; run receipt monitor first: $RECEIPT" >&2; exit 2; }',
+        'test -s "$SUMMARY" || { echo "submit summary is missing locally; run receipt monitor first: $SUMMARY" >&2; exit 2; }',
+        'test -s "$JOB_STATES" || { echo "job-state probe is missing locally; run the job-state query/probe before sync-back: $JOB_STATES" >&2; exit 2; }',
+        "",
+        (
+            '"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status '
+            '--manifest "$MANIFEST" --receipt "$RECEIPT" --summary "$SUMMARY" '
+            '--job-states "$JOB_STATES" --require-sync-ready '
+            '--out-json "$POSTSUBMIT"'
+        ),
         "",
         'record_paths="$("$PYTHON_BIN" - <<\'PY\'',
         "import json, os",
@@ -423,6 +441,8 @@ def build_runbook(
     wrapper_path: str,
     submit_receipt: str,
     submit_summary: str,
+    postsubmit_status: str,
+    job_state_probe: str,
     sync_back_script: str,
     completion_script: str,
     completion_out: str,
@@ -473,6 +493,12 @@ def build_runbook(
         "post_submit": {
             "sync_back_script": sync_back_script,
             "sync_back_command_after_jobs_finish": "bash " + shlex.quote(sync_back_script),
+            "postsubmit_status": postsubmit_status,
+            "job_state_probe": job_state_probe,
+            "postsubmit_sync_ready_gate": (
+                "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
+                "--require-sync-ready"
+            ),
             "completion_script": completion_script,
             "completion_command_after_sync": "bash " + shlex.quote(completion_script),
             "completion_out": completion_out,
@@ -518,6 +544,12 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(post.get("sync_back_command_after_jobs_finish") or ""),
+        "```",
+        "",
+        "The sync-back script first requires postsubmit sync-ready evidence:",
+        "",
+        "```bash",
+        str(post.get("postsubmit_sync_ready_gate") or ""),
         "```",
         "",
         "After sync-back, completion gate:",
@@ -606,6 +638,9 @@ def build_approval_packet(
         "submit_command_if_approved": approval.get("submit_command_if_explicitly_approved"),
         "dry_run_command": local_dry_run.get("command"),
         "sync_back_command_after_jobs_finish": post_submit.get("sync_back_command_after_jobs_finish"),
+        "postsubmit_status_before_sync": post_submit.get("postsubmit_status"),
+        "job_state_probe_before_sync": post_submit.get("job_state_probe"),
+        "postsubmit_sync_ready_gate": post_submit.get("postsubmit_sync_ready_gate"),
         "completion_command_after_sync": post_submit.get("completion_command_after_sync"),
         "panel_out": post_submit.get("panel_out"),
         "target_alpha": post_submit.get("target_alpha"),
@@ -651,6 +686,12 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(rep.get("sync_back_command_after_jobs_finish") or ""),
+        "```",
+        "",
+        "Postsubmit sync-ready gate before record sync-back:",
+        "",
+        "```bash",
+        str(rep.get("postsubmit_sync_ready_gate") or ""),
         "```",
         "",
         "Claim boundary: panel submission is not W2 evidence until records sync back, completion passes, and target-wise panel report certifies.",
@@ -723,6 +764,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--wrapper-out", default=_DEFAULT_WRAPPER)
     ap.add_argument("--submit-receipt", default=_DEFAULT_RECEIPT)
     ap.add_argument("--submit-summary", default=_DEFAULT_SUMMARY)
+    ap.add_argument("--postsubmit-status", default=_DEFAULT_POSTSUBMIT_STATUS)
+    ap.add_argument("--job-state-probe", default=_DEFAULT_JOB_STATE_PROBE)
     ap.add_argument("--manifest-report", default="results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json")
     ap.add_argument("--guard-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json")
     ap.add_argument("--guard-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.md")
@@ -788,6 +831,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             completion_script=args.completion_script_out,
             submit_receipt=args.submit_receipt,
             submit_summary=args.submit_summary,
+            postsubmit_status=args.postsubmit_status,
+            job_state_probe=args.job_state_probe,
             remote_spec=remote_spec,
         ),
     )
@@ -851,6 +896,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         wrapper_path=args.wrapper_out,
         submit_receipt=args.submit_receipt,
         submit_summary=args.submit_summary,
+        postsubmit_status=args.postsubmit_status,
+        job_state_probe=args.job_state_probe,
         sync_back_script=args.sync_back_out,
         completion_script=args.completion_script_out,
         completion_out=args.completion_out,

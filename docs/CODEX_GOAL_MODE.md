@@ -168,7 +168,10 @@ Current state:
   `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; this also
   emits `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
-  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The emitted approval packet plus
+  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The sync-back script now requires
+  local submit receipt/summary, job-state probe output, and
+  `m6d_w2_panel_postsubmit_status --require-sync-ready` before any record `rsync`; project status records
+  this no-submit guard as `panel_postsubmit_sync_ready_gate_ok=true`. The emitted approval packet plus
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
   decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; full project status now
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness

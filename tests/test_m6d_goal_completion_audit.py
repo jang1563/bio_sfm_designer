@@ -137,7 +137,12 @@ def _panel_approval_packet():
             "submit_summary_absent": True,
         },
         "submit_command_if_approved": "ssh ${CAYUGA_BIO_SFM_HOST} 'BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit bash wrapper.sh'",
-        "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v9_sync_back.sh",
+        "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+        "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+        "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
+        "postsubmit_sync_ready_gate": (
+            "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
+        ),
     }
 
 
@@ -294,7 +299,29 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_approval_packet_ready"])
         self.assertTrue(rep["w2_gate"]["panel_can_submit_if_explicitly_approved"])
         self.assertFalse(rep["w2_gate"]["panel_can_claim_w2_generalization"])
+        self.assertIn("--require-sync-ready", rep["w2_gate"]["panel_postsubmit_sync_ready_gate"])
         self.assertIn("explicit panel submission", rep["claim_boundary"]["w2"])
+
+    def test_panel_approval_packet_missing_postsubmit_gate_blocks_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            packet = _panel_approval_packet()
+            packet.pop("postsubmit_sync_ready_gate")
+
+            rep = build_audit(
+                _project_status(),
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                packet,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_approval_missing_sync_ready_gate", kinds)
 
     def test_panel_decision_protocol_ready_still_does_not_complete_goal(self):
         with tempfile.TemporaryDirectory() as d:

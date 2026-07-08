@@ -37,6 +37,12 @@ Can claim W2 generalization: `False`.
 ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'
 ```
 
+Postsubmit sync-ready gate before record sync-back:
+
+```bash
+python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready
+```
+
 This artifact does not submit jobs and does not create W2 evidence.
 
 ## Next Action

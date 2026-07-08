@@ -36,12 +36,12 @@
       "remote_sha256": "e1dea5345a3f4290483e9a81ca6918edeb1a86319576843faf363fcded5c7de0"
     },
     {
-      "local_bytes": 1968,
-      "local_sha256": "e0303a6ee0ca85b89b61a261a37a590ebf59566f6066ff6f248aa3fd56bab363",
+      "local_bytes": 2801,
+      "local_sha256": "9de802edc40a506a045ca503549ce05b2add7f44816b4b364d63716a6af3517c",
       "ok": true,
       "path": "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
-      "remote_bytes": 1968,
-      "remote_sha256": "e0303a6ee0ca85b89b61a261a37a590ebf59566f6066ff6f248aa3fd56bab363"
+      "remote_bytes": 2801,
+      "remote_sha256": "9de802edc40a506a045ca503549ce05b2add7f44816b4b364d63716a6af3517c"
     },
     {
       "local_bytes": 525,
@@ -60,12 +60,12 @@
       "remote_sha256": "0ed870f11f92727569e7bdc6dd37557c7d1eaad03c4dcf0d9c4e8a9940d2eaef"
     },
     {
-      "local_bytes": 35959,
-      "local_sha256": "e26277fc7feddf68e401a72b7f2877aa681e40e7f7bcc3963ee31e6bf13ccc7d",
+      "local_bytes": 38505,
+      "local_sha256": "2a177f16ae2f68a5aee39bbd325207c3d725548ba40dbefa8f38ab5a796ea777",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
-      "remote_bytes": 35959,
-      "remote_sha256": "e26277fc7feddf68e401a72b7f2877aa681e40e7f7bcc3963ee31e6bf13ccc7d"
+      "remote_bytes": 38505,
+      "remote_sha256": "2a177f16ae2f68a5aee39bbd325207c3d725548ba40dbefa8f38ab5a796ea777"
     },
     {
       "local_bytes": 19302,
@@ -76,12 +76,12 @@
       "remote_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2"
     },
     {
-      "local_bytes": 513543,
-      "local_sha256": "f59755569f8ed6f266ac380c36dbb31cc6872c332338a885a7ef0ebbdd23d7b0",
+      "local_bytes": 515366,
+      "local_sha256": "48076dc0782c68fee21f9749e9b133ed6c81e4a18a98c0213b0aff0e67f45878",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
-      "remote_bytes": 513543,
-      "remote_sha256": "f59755569f8ed6f266ac380c36dbb31cc6872c332338a885a7ef0ebbdd23d7b0"
+      "remote_bytes": 515366,
+      "remote_sha256": "48076dc0782c68fee21f9749e9b133ed6c81e4a18a98c0213b0aff0e67f45878"
     },
     {
       "local_bytes": 13348,
@@ -294,6 +294,24 @@
           "local": "approve-v11-panel-submit",
           "ok": true,
           "remote": "approve-v11-panel-submit"
+        },
+        {
+          "field": "postsubmit_status_before_sync",
+          "local": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+          "ok": true,
+          "remote": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
+        },
+        {
+          "field": "job_state_probe_before_sync",
+          "local": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
+          "ok": true,
+          "remote": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+        },
+        {
+          "field": "postsubmit_sync_ready_gate",
+          "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready",
+          "ok": true,
+          "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
         },
         {
           "field": "checks.target_msa_strict_ready",

@@ -333,7 +333,10 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath. The
-  same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
+  sync-back script now fail-closes before any record `rsync` unless local submit receipt/summary,
+  job-state probe output, and `m6d_w2_panel_postsubmit_status --require-sync-ready` all pass.
+  Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
+  The same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
   Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as

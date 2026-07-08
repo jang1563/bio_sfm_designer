@@ -60,6 +60,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "workstreams.W2_multi_target_panel.panel_postsync_submitted",
         "workstreams.W2_multi_target_panel.panel_postsync_sync_ready",
         "workstreams.W2_multi_target_panel.panel_postsync_can_claim_w2_generalization",
+        "workstreams.W2_multi_target_panel.panel_postsubmit_sync_ready_gate_ok",
         "workstreams.W3_independent_predictor.status",
         "workstreams.W3_independent_predictor.complete",
         "workstreams.W3_independent_predictor.positive_claim_supported",
@@ -176,6 +177,9 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "checks.submit_summary_absent",
         "panel_approval_env_var",
         "panel_approval_env_value",
+        "postsubmit_status_before_sync",
+        "job_state_probe_before_sync",
+        "postsubmit_sync_ready_gate",
         "target_alpha",
     ],
     "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json": [

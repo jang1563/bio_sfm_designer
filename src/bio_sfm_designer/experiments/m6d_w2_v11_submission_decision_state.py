@@ -154,6 +154,11 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         "submit_summary_absent",
     ]
     checks_ok = all(checks.get(key) is True for key in required_checks)
+    postsubmit_sync_ready_gate_ok = (
+        bool(approval_packet.get("postsubmit_status_before_sync"))
+        and bool(approval_packet.get("job_state_probe_before_sync"))
+        and "--require-sync-ready" in str(approval_packet.get("postsubmit_sync_ready_gate") or "")
+    )
     ok = (
         approval_packet.get("status") == _APPROVAL_READY_STATUS
         and approval_packet.get("audit_ok") is True
@@ -161,6 +166,7 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         and approval_packet.get("can_submit_panel_if_user_explicitly_approves") is True
         and approval_packet.get("can_claim_w2_generalization") is False
         and checks_ok
+        and postsubmit_sync_ready_gate_ok
     )
     return {
         "path": approval_packet.get("_path"),
@@ -176,6 +182,10 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         "panel_approval_env_value": approval_packet.get("panel_approval_env_value"),
         "submit_command_if_approved": approval_packet.get("submit_command_if_approved"),
         "sync_back_command_after_jobs_finish": approval_packet.get("sync_back_command_after_jobs_finish"),
+        "postsubmit_status_before_sync": approval_packet.get("postsubmit_status_before_sync"),
+        "job_state_probe_before_sync": approval_packet.get("job_state_probe_before_sync"),
+        "postsubmit_sync_ready_gate": approval_packet.get("postsubmit_sync_ready_gate"),
+        "postsubmit_sync_ready_gate_ok": postsubmit_sync_ready_gate_ok,
         "required_checks": {key: checks.get(key) for key in required_checks},
     }
 
@@ -466,6 +476,12 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(approval.get("submit_command_if_approved") or ""),
+        "```",
+        "",
+        "Postsubmit sync-ready gate before record sync-back:",
+        "",
+        "```bash",
+        str((prerequisites.get("approval_packet") or {}).get("postsubmit_sync_ready_gate") or ""),
         "```",
         "",
         "This artifact does not submit jobs and does not create W2 evidence.",

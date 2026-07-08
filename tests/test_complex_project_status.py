@@ -6613,7 +6613,12 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
                 "panel_approval_env_value": "approve-v11-panel-submit",
                 "submit_command_if_approved": "ssh cayuga 'bash submit_panel.sh'",
-                "sync_back_command_after_jobs_finish": "bash sync_panel.sh",
+                "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+                "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+                "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
+                "postsubmit_sync_ready_gate": (
+                    "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
+                ),
                 "checks": {
                     "target_msa_strict_ready": True,
                     "panel_preflight_ready": True,
@@ -6705,6 +6710,8 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertFalse(w2["complete"])
         self.assertEqual(w2["n_ready_targets"], 7)
         self.assertTrue(w2["panel_approval_packet_ready"])
+        self.assertTrue(w2["panel_postsubmit_sync_ready_gate_ok"])
+        self.assertIn("--require-sync-ready", w2["panel_postsubmit_sync_ready_gate"])
         self.assertTrue(w2["panel_decision_protocol_ready"])
         self.assertTrue(w2["panel_decision_no_submit"])
         self.assertFalse(w2["panel_decision_can_claim_w2_now"])
@@ -6723,6 +6730,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertFalse(w2["panel_postsync_can_claim_w2_generalization"])
         self.assertIn("submission decision is recorded", w2["next_action"])
         self.assertIn("panel_remote_submission_readiness_ok=True", render_text(rep))
+        self.assertIn("panel_postsubmit_sync_ready_gate_ok=True", render_text(rep))
         self.assertIn("panel_submission_decision_ready=True", render_text(rep))
         self.assertIn("panel_postsync_interpretation_ready=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])

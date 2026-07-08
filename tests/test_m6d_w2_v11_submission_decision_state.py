@@ -32,6 +32,11 @@ def _approval_packet():
         "panel_approval_env_value": "approve-v11-panel-submit",
         "submit_command_if_approved": "ssh cayuga-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
         "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+        "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+        "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
+        "postsubmit_sync_ready_gate": (
+            "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
+        ),
         "checks": {
             "target_msa_strict_ready": True,
             "panel_preflight_ready": True,
@@ -166,6 +171,7 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertTrue(rep["can_submit_if_explicitly_approved"])
         self.assertFalse(rep["can_claim_w2_generalization"])
         self.assertIn("BIO_SFM_APPROVE_V11_PANEL", rep["approval"]["required_env_var"])
+        self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_sync_ready_gate_ok"])
         self.assertIn("does not submit jobs", render_markdown(rep))
 
     def test_existing_local_receipt_blocks_pre_submit_decision_state(self):
@@ -193,6 +199,17 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("remote_submission_readiness_not_ready", kinds)
+
+    def test_missing_postsubmit_sync_ready_gate_blocks_decision_state(self):
+        approval = _approval_packet()
+        approval.pop("postsubmit_sync_ready_gate")
+
+        rep = _build(approval_packet=approval)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("approval_packet_not_ready", kinds)
 
     def test_accepts_drift_audit_after_postsync_boundary_is_attached(self):
         drift = _goal_drift_audit()

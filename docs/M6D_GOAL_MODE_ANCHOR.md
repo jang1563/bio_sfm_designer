@@ -910,7 +910,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`. Regenerate this approval-boundary state with
     `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; it also
     emits the no-submit approval runbook, sync-back script, and panel-completion script for the approved-run
-    aftermath. The v11 panel approval packet, decision protocol, and remote-readiness audit report approval-ready/no-submit state
+    aftermath. The sync-back script now fail-closes before any record `rsync` unless local submit
+    receipt/summary, job-state probe output, and `m6d_w2_panel_postsubmit_status --require-sync-ready` all
+    pass; project status records this as `panel_postsubmit_sync_ready_gate_ok=true`. The v11 panel approval packet, decision protocol, and remote-readiness audit report approval-ready/no-submit state
     and `can_claim_w2_generalization_now=false`; full project status now reports W2 as
     `panel_approval_packet_ready_awaiting_explicit_approval`. The no-submit remote readiness audit reports
     `remote_submission_readiness_ok` after exact SHA, semantic JSON, and receipt-absence checks against

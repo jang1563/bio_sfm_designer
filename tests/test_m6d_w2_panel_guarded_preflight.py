@@ -9,6 +9,7 @@ from bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight import (
     build_preflight,
     main,
     render_guarded_wrapper,
+    render_sync_back_script,
 )
 from bio_sfm_designer.experiments.m6d_w2_panel_wrapper_guard_audit import build_audit
 
@@ -118,6 +119,27 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertIn("wrapper_guard_not_ok", {failure["kind"] for failure in rep["failures"]})
 
+    def test_sync_back_script_requires_postsubmit_sync_ready_before_records(self):
+        text = render_sync_back_script(
+            manifest="configs/v11.json",
+            completion_script="results/completion.sh",
+            submit_receipt="results/receipt.jsonl",
+            submit_summary="results/summary.json",
+            postsubmit_status="results/postsubmit.json",
+            job_state_probe="results/job_states.json",
+            remote_spec="cayuga-login1:/remote/root",
+        )
+
+        self.assertIn("m6d_w2_panel_postsubmit_status", text)
+        self.assertIn("--require-sync-ready", text)
+        self.assertIn("test -s \"$RECEIPT\"", text)
+        self.assertIn("test -s \"$SUMMARY\"", text)
+        self.assertIn("test -s \"$JOB_STATES\"", text)
+        self.assertLess(
+            text.index("m6d_w2_panel_postsubmit_status"),
+            text.index("rsync -avP \"$REMOTE_ROOT/$relpath\""),
+        )
+
     def test_cli_generates_wrapper_guard_and_preflight_without_submit(self):
         with tempfile.TemporaryDirectory() as d:
             manifest = os.path.join(d, "targets.json")
@@ -189,6 +211,10 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 completion_text = fh.read()
             self.assertIn('PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"', completion_text)
             self.assertIn('"$PYTHON_BIN" -m bio_sfm_designer.experiments.complex_panel_completion', completion_text)
+            with open(sync_back) as fh:
+                sync_back_text = fh.read()
+            self.assertIn("m6d_w2_panel_postsubmit_status", sync_back_text)
+            self.assertIn("--require-sync-ready", sync_back_text)
             with open(approval_packet_json) as fh:
                 approval_packet = json.load(fh)
             self.assertEqual(approval_packet["status"], "panel_approval_packet_ready")
@@ -196,6 +222,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertTrue(approval_packet["can_submit_panel_if_user_explicitly_approves"])
             self.assertFalse(approval_packet["can_claim_w2_generalization"])
             self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
+            self.assertIn("m6d_w2_panel_postsubmit_status", approval_packet["postsubmit_sync_ready_gate"])
 
             guard = build_audit(
                 wrapper,

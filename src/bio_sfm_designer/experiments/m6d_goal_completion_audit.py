@@ -151,6 +151,9 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
         "panel_approval_env_value": panel_approval_packet.get("panel_approval_env_value"),
         "submit_command_if_approved": panel_approval_packet.get("submit_command_if_approved"),
         "sync_back_command_after_jobs_finish": panel_approval_packet.get("sync_back_command_after_jobs_finish"),
+        "postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
+        "job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
+        "postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
         "checks": checks,
         "target_msa_strict_ready": checks.get("target_msa_strict_ready"),
         "panel_dry_run_no_sbatch": checks.get("panel_dry_run_no_sbatch"),
@@ -496,6 +499,7 @@ def build_audit(project_status: Dict[str, Any],
             )
 
     if panel_approval_packet is not None:
+        v11_panel_sync = "v11" in str(panel_approval.get("sync_back_command_after_jobs_finish") or "")
         if panel_approval.get("status") != _PANEL_APPROVAL_READY_STATUS or panel_approval.get("approval_packet_ready") is not True:
             _add_failure(
                 failures,
@@ -538,6 +542,30 @@ def build_audit(project_status: Dict[str, Any],
                     expected={key: True},
                     observed={key: panel_approval.get(key)},
                 )
+        if v11_panel_sync and not panel_approval.get("postsubmit_status_before_sync"):
+            _add_failure(
+                failures,
+                "w2_panel_approval_missing_postsubmit_status_gate",
+                "W2 panel sync-back must require a postsubmit status artifact before record sync-back",
+                expected="postsubmit_status_before_sync",
+                observed=panel_approval.get("postsubmit_status_before_sync"),
+            )
+        if v11_panel_sync and not panel_approval.get("job_state_probe_before_sync"):
+            _add_failure(
+                failures,
+                "w2_panel_approval_missing_job_state_probe_gate",
+                "W2 panel sync-back must require job-state probe evidence before record sync-back",
+                expected="job_state_probe_before_sync",
+                observed=panel_approval.get("job_state_probe_before_sync"),
+            )
+        if v11_panel_sync and "--require-sync-ready" not in str(panel_approval.get("postsubmit_sync_ready_gate") or ""):
+            _add_failure(
+                failures,
+                "w2_panel_approval_missing_sync_ready_gate",
+                "W2 panel sync-back must fail closed unless postsubmit status is sync-ready",
+                expected="--require-sync-ready",
+                observed=panel_approval.get("postsubmit_sync_ready_gate"),
+            )
 
     if panel_decision_protocol is not None:
         if panel_decision.get("status") != _PANEL_DECISION_READY_STATUS or panel_decision.get("audit_ok") is not True:
@@ -926,6 +954,9 @@ def build_audit(project_status: Dict[str, Any],
             ),
             "panel_can_claim_w2_generalization": panel_approval.get("can_claim_w2_generalization"),
             "panel_guard_no_env_refuses": panel_approval.get("panel_guard_no_env_refuses"),
+            "panel_postsubmit_status_before_sync": panel_approval.get("postsubmit_status_before_sync"),
+            "panel_job_state_probe_before_sync": panel_approval.get("job_state_probe_before_sync"),
+            "panel_postsubmit_sync_ready_gate": panel_approval.get("postsubmit_sync_ready_gate"),
             "panel_decision_protocol_ready": panel_decision.get("status") == _PANEL_DECISION_READY_STATUS,
             "panel_decision_no_submit": panel_decision.get("no_submit"),
             "panel_decision_can_claim_w2_now": panel_decision.get("can_claim_w2_generalization_now"),
