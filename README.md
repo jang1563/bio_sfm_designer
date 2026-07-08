@@ -333,7 +333,11 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath. The
-  panel has not been submitted.
+  same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
+  `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
+  `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
+  Project status now consumes those artifacts and reports W2 as
+  `panel_approval_packet_ready_awaiting_explicit_approval`. The panel has not been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

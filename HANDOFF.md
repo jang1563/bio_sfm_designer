@@ -262,7 +262,11 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
 > `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
 > `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath. The
-> panel has not been submitted.
+> same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
+> `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
+> `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
+> Project status now consumes those artifacts and reports W2 as
+> `panel_approval_packet_ready_awaiting_explicit_approval`. The panel has not been submitted.
 > A separate
 > source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2 generalization.
 > W3 no-MSA Chai scale-up is now a

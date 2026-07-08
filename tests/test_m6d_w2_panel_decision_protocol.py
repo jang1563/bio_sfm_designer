@@ -54,6 +54,8 @@ def _approval_packet():
         "can_claim_w2_generalization": False,
         "submit_receipt": "/tmp/absent_receipt.jsonl",
         "submit_summary": "/tmp/absent_summary.json",
+        "panel_approval_env_var": "BIO_SFM_APPROVE_V9_PANEL",
+        "panel_approval_env_value": "approve-v9-panel-submit",
         "submit_command_if_approved": "ssh ${CAYUGA_BIO_SFM_HOST} 'BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit bash wrapper.sh'",
         "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v9_sync_back.sh",
         "checks": {
@@ -103,6 +105,10 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
         self.assertEqual(rep["current_panel_result"]["status"], "not_available_not_submitted")
         self.assertIn("target-wise panel certification", rep["claim_boundary"]["w2_multi_target_generalization"])
         self.assertIn("submit_guarded_panel", [step["step"] for step in rep["execution_sequence_if_explicitly_approved"]])
+        self.assertIn(
+            "BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit",
+            rep["execution_sequence_if_explicitly_approved"][0]["requires"],
+        )
         self.assertIn("pooled diagnostic", render_markdown(rep))
 
     def test_claim_drift_in_approval_packet_blocks_protocol(self):

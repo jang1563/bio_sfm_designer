@@ -165,7 +165,10 @@ Current state:
   `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; this also
   emits `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
-  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. It has not been submitted.
+  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The emitted approval packet plus
+  `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
+  decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; project status now
+  reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`. It has not been submitted.
 - Current known W2 candidate pool: screened 12 known local targets, including the completed fresh
   unique-source pilot targets, admitted 0 for pilot,
   and does not authorize a revised manifest or Cayuga submission.

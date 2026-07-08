@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 from bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight import (
+    build_approval_packet,
     build_preflight,
     main,
     render_guarded_wrapper,
@@ -135,6 +136,8 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             preflight_md = os.path.join(d, "preflight.md")
             runbook_json = os.path.join(d, "runbook.json")
             runbook_md = os.path.join(d, "runbook.md")
+            approval_packet_json = os.path.join(d, "approval_packet.json")
+            approval_packet_md = os.path.join(d, "approval_packet.md")
             sync_back = os.path.join(d, "sync_back.sh")
             completion = os.path.join(d, "completion.json")
             completion_script = os.path.join(d, "completion.sh")
@@ -153,6 +156,8 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 "--preflight-out-md", preflight_md,
                 "--runbook-out-json", runbook_json,
                 "--runbook-out-md", runbook_md,
+                "--approval-packet-out-json", approval_packet_json,
+                "--approval-packet-out-md", approval_packet_md,
                 "--sync-back-out", sync_back,
                 "--completion-out", completion,
                 "--completion-script-out", completion_script,
@@ -184,6 +189,13 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 completion_text = fh.read()
             self.assertIn('PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"', completion_text)
             self.assertIn('"$PYTHON_BIN" -m bio_sfm_designer.experiments.complex_panel_completion', completion_text)
+            with open(approval_packet_json) as fh:
+                approval_packet = json.load(fh)
+            self.assertEqual(approval_packet["status"], "panel_approval_packet_ready")
+            self.assertTrue(approval_packet["approval_packet_ready"])
+            self.assertTrue(approval_packet["can_submit_panel_if_user_explicitly_approves"])
+            self.assertFalse(approval_packet["can_claim_w2_generalization"])
+            self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
 
             guard = build_audit(
                 wrapper,

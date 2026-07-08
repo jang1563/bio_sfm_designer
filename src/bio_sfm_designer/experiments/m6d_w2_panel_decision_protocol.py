@@ -1,6 +1,6 @@
-"""Predeclare the W2 v9 post-panel decision protocol.
+"""Predeclare a W2 post-panel decision protocol.
 
-This helper is deliberately no-submit. It binds the current v9 representative
+This helper is deliberately no-submit. It binds a representative
 manifest, submit-ready report, and panel approval packet into a durable
 decision protocol for what to do after a future explicitly approved
 ProteinMPNN/Boltz panel run. The protocol keeps panel readiness separate from
@@ -136,7 +136,7 @@ def classify_panel_report(
             "w2_generalization_supported": True,
             "certified_targets": certified,
             "not_certified_targets": [],
-            "claim": "W2 multi-target generalization is supported for the predeclared v9 panel/protocol",
+            "claim": "W2 multi-target generalization is supported for the predeclared panel/protocol",
             "next_action": "preserve this as W2 evidence, then decide whether W3 robustness remains the limiting caveat",
         }
 
@@ -253,6 +253,8 @@ def build_protocol(
     }
     panel_result = classify_panel_report(panel_report, target_alpha=target_alpha, min_targets=min_targets)
     protocol_ready = not failures
+    approval_env_var = approval_packet.get("panel_approval_env_var") or "panel approval env"
+    approval_env_value = approval_packet.get("panel_approval_env_value") or "panel approval token"
 
     return {
         "artifact": "m6d_w2_panel_decision_protocol",
@@ -292,7 +294,7 @@ def build_protocol(
         "execution_sequence_if_explicitly_approved": [
             {
                 "step": "submit_guarded_panel",
-                "requires": "explicit user approval plus BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit",
+                "requires": f"explicit user approval plus {approval_env_var}={approval_env_value}",
                 "command": approval_packet.get("submit_command_if_approved"),
             },
             {
@@ -337,7 +339,7 @@ def build_protocol(
         "current_completion_state": completion_state,
         "current_panel_result": panel_result,
         "next_action": (
-            "await explicit user approval before guarded W2 v9 panel submission"
+            "await explicit user approval before guarded W2 panel submission"
             if protocol_ready
             else "repair protocol failures before any W2 panel approval"
         ),
@@ -390,7 +392,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
 
 
 def main(argv=None) -> Dict[str, Any]:
-    ap = argparse.ArgumentParser(description="build no-submit W2 v9 post-panel decision protocol")
+    ap = argparse.ArgumentParser(description="build no-submit W2 post-panel decision protocol")
     ap.add_argument("--target-manifest", default="configs/m6d_w2_target_family_redesign_v9_representative_targets.json")
     ap.add_argument("--submit-ready", default="results/m6d_w2_target_family_redesign_v9_submit_ready.json")
     ap.add_argument("--approval-packet", default="results/m6d_w2_target_family_redesign_v9_panel_approval_packet.json")

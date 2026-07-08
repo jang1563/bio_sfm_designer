@@ -520,6 +520,140 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def build_approval_packet(
+    *,
+    preflight: Dict[str, Any],
+    runbook: Dict[str, Any],
+    wrapper_guard: Dict[str, Any],
+    manifest_report: Dict[str, Any],
+    approval_env_var: str,
+    approval_token: str,
+) -> Dict[str, Any]:
+    submit_state = runbook.get("submit_state") if isinstance(runbook.get("submit_state"), dict) else {}
+    approval = runbook.get("approval") if isinstance(runbook.get("approval"), dict) else {}
+    post_submit = runbook.get("post_submit") if isinstance(runbook.get("post_submit"), dict) else {}
+    local_dry_run = preflight.get("local_dry_run") if isinstance(preflight.get("local_dry_run"), dict) else {}
+    no_env = wrapper_guard.get("no_env_run") if isinstance(wrapper_guard.get("no_env_run"), dict) else {}
+    checks = {
+        "target_msa_strict_ready": manifest_report.get("ok") is True,
+        "panel_preflight_ready": (
+            preflight.get("status") == "panel_preflight_dry_run_passed_not_submitted"
+            and preflight.get("audit_ok") is True
+        ),
+        "panel_submit_ready_targets": preflight.get("submit_ready", {}).get("n_ready_targets"),
+        "panel_dry_run_no_sbatch": (
+            local_dry_run.get("exit_code") == 0
+            and local_dry_run.get("sbatch_called") is False
+            and local_dry_run.get("receipt_exists_after") is False
+            and local_dry_run.get("summary_exists_after") is False
+        ),
+        "panel_guard_no_env_refuses": (
+            wrapper_guard.get("audit_ok") is True
+            and no_env.get("ok") is True
+            and no_env.get("receipt_exists_after") is False
+        ),
+        "submit_receipt_absent": submit_state.get("local_submit_receipt_exists") is False,
+        "submit_summary_absent": submit_state.get("local_submit_summary_exists") is False,
+    }
+    failures = []
+    for key in (
+        "target_msa_strict_ready",
+        "panel_preflight_ready",
+        "panel_dry_run_no_sbatch",
+        "panel_guard_no_env_refuses",
+        "submit_receipt_absent",
+        "submit_summary_absent",
+    ):
+        if checks.get(key) is not True:
+            failures.append({
+                "kind": "approval_check_failed",
+                "check": key,
+                "message": f"{key} must be true before approval packet readiness",
+                "observed": checks.get(key),
+            })
+    ready = not failures
+    return {
+        "artifact": "m6d_w2_panel_approval_packet",
+        "status": "panel_approval_packet_ready" if ready else "panel_approval_packet_blocked",
+        "audit_ok": ready,
+        "approval_packet_ready": ready,
+        "can_submit_panel_if_user_explicitly_approves": ready,
+        "can_claim_w2_generalization": False,
+        "panel_approval_env_var": approval_env_var,
+        "panel_approval_env_value": approval_token,
+        "inputs": {
+            "preflight": preflight.get("artifact"),
+            "runbook": runbook.get("artifact"),
+            "wrapper_guard": wrapper_guard.get("artifact"),
+            "manifest_report": manifest_report.get("manifest"),
+        },
+        "submit_receipt": submit_state.get("submit_receipt"),
+        "submit_summary": submit_state.get("submit_summary"),
+        "submit_command_if_approved": approval.get("submit_command_if_explicitly_approved"),
+        "dry_run_command": local_dry_run.get("command"),
+        "sync_back_command_after_jobs_finish": post_submit.get("sync_back_command_after_jobs_finish"),
+        "completion_command_after_sync": post_submit.get("completion_command_after_sync"),
+        "panel_out": post_submit.get("panel_out"),
+        "target_alpha": post_submit.get("target_alpha"),
+        "checks": checks,
+        "claim_boundary": {
+            "panel_submission": "allowed only after explicit approval env is supplied",
+            "w2_multi_target_generalization": "not_supported",
+            "evidence_status": (
+                "not W2 evidence until records sync back, completion passes, and target-wise panel report certifies"
+            ),
+        },
+        "failures": failures,
+        "next_action": (
+            "wait for explicit user approval before running submit_command_if_approved"
+            if ready else
+            "repair approval packet failures before any panel submission"
+        ),
+    }
+
+
+def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
+    lines = [
+        "# M6d W2 Panel Approval Packet",
+        "",
+        f"Status: `{rep.get('status')}`.",
+        f"Approval packet ready: `{rep.get('approval_packet_ready')}`.",
+        f"Can submit panel if explicitly approved: `{rep.get('can_submit_panel_if_user_explicitly_approves')}`.",
+        f"Can claim W2 generalization: `{rep.get('can_claim_w2_generalization')}`.",
+        "",
+        "Required approval environment:",
+        "",
+        "```bash",
+        f"export {rep.get('panel_approval_env_var')}={rep.get('panel_approval_env_value')}",
+        "```",
+        "",
+        "Submit command if explicitly approved:",
+        "",
+        "```bash",
+        str(rep.get("submit_command_if_approved") or ""),
+        "```",
+        "",
+        "Sync-back command after jobs finish:",
+        "",
+        "```bash",
+        str(rep.get("sync_back_command_after_jobs_finish") or ""),
+        "```",
+        "",
+        "Claim boundary: panel submission is not W2 evidence until records sync back, completion passes, and target-wise panel report certifies.",
+        "",
+        "## Failures",
+        "",
+    ]
+    failures = rep.get("failures") or []
+    if failures:
+        for failure in failures:
+            lines.append(f"- `{failure.get('kind')}`: {failure.get('message')}")
+    else:
+        lines.append("- none")
+    lines.extend(["", "## Next Action", "", str(rep.get("next_action") or ""), ""])
+    return "\n".join(lines)
+
+
 def render_preflight_markdown(rep: Dict[str, Any]) -> str:
     ids = rep.get("target_ids") if isinstance(rep.get("target_ids"), list) else []
     submit_ready = rep.get("submit_ready") if isinstance(rep.get("submit_ready"), dict) else {}
@@ -582,6 +716,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--preflight-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_preflight.md")
     ap.add_argument("--runbook-out-json", default="results/m6d_w2_target_family_redesign_v11_approval_runbook.json")
     ap.add_argument("--runbook-out-md", default="results/m6d_w2_target_family_redesign_v11_approval_runbook.md")
+    ap.add_argument("--approval-packet-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json")
+    ap.add_argument("--approval-packet-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_approval_packet.md")
     ap.add_argument("--sync-back-out", default="results/m6d_w2_target_family_redesign_v11_sync_back.sh")
     ap.add_argument("--completion-out", default="results/m6d_w2_target_family_redesign_v11_panel_completion.json")
     ap.add_argument("--completion-script-out", default="results/m6d_w2_target_family_redesign_v11_panel_completion.sh")
@@ -718,12 +854,23 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
     _write_json(args.runbook_out_json, runbook)
     _write_text(args.runbook_out_md, render_runbook_markdown(runbook))
+    approval_packet = build_approval_packet(
+        preflight=preflight,
+        runbook=runbook,
+        wrapper_guard=guard,
+        manifest_report=manifest_report,
+        approval_env_var=args.approval_env_var,
+        approval_token=args.approval_token,
+    )
+    _write_json(args.approval_packet_out_json, approval_packet)
+    _write_text(args.approval_packet_out_md, render_approval_packet_markdown(approval_packet))
 
     print(f"# guarded panel preflight  ok={preflight['audit_ok']} status={preflight['status']}")
     print(f"wrote {args.wrapper_out}")
     print(f"wrote {args.guard_out_json}")
     print(f"wrote {args.preflight_out_json}")
     print(f"wrote {args.runbook_out_json}")
+    print(f"wrote {args.approval_packet_out_json}")
     return 0 if preflight["audit_ok"] else 2
 
 

@@ -1594,7 +1594,7 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
             "complete": False,
             "ready_for_panel_submission_if_explicitly_approved": True,
             "next_action": (
-                "await explicit user approval before guarded W2 v9 panel submission; "
+                "await explicit user approval before guarded W2 panel submission; "
                 "then sync back, run completion, and certify target-wise panel report"
             ),
         })
@@ -1677,7 +1677,7 @@ def _attach_w2_panel_decision_protocol(status: Dict[str, Any],
         status.update({
             "complete": False,
             "next_action": (
-                "await explicit user approval before guarded W2 v9 panel submission; "
+                "await explicit user approval before guarded W2 panel submission; "
                 "post-panel decision protocol is predeclared for sync-back, completion, and target-wise certification"
             ),
         })
@@ -1794,7 +1794,12 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
         return _w2_completion_status(panel_completion, target_alpha=target_alpha)
 
     if target_manifest is not None:
-        return _w2_target_manifest_status(target_manifest)
+        status = _w2_target_manifest_status(target_manifest)
+        if panel_approval_packet is not None:
+            status = _attach_w2_panel_approval_packet(status, panel_approval_packet)
+        if panel_decision_protocol is not None:
+            status = _attach_w2_panel_decision_protocol(status, panel_decision_protocol)
+        return status
 
     if input_prep_completion is not None:
         return _input_prep_completion_status(

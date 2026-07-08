@@ -6583,6 +6583,68 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertEqual(w2["panel_decision_protocol_failures"], [])
         self.assertIn("panel_decision_protocol_ready=True", render_text(rep))
 
+    def test_w2_panel_packets_attach_to_ready_manifest_status(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "targets_report.json")
+            packet = os.path.join(d, "panel_approval_packet.json")
+            protocol = os.path.join(d, "panel_decision_protocol.json")
+            _write_json(manifest, {
+                "ok": True,
+                "n_targets": 7,
+                "n_ready_targets": 7,
+                "failures": [],
+            })
+            _write_json(packet, {
+                "artifact": "m6d_w2_panel_approval_packet",
+                "status": "panel_approval_packet_ready",
+                "audit_ok": True,
+                "approval_packet_ready": True,
+                "can_submit_panel_if_user_explicitly_approves": True,
+                "can_claim_w2_generalization": False,
+                "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
+                "panel_approval_env_value": "approve-v11-panel-submit",
+                "submit_command_if_approved": "ssh cayuga 'bash submit_panel.sh'",
+                "sync_back_command_after_jobs_finish": "bash sync_panel.sh",
+                "checks": {
+                    "target_msa_strict_ready": True,
+                    "panel_preflight_ready": True,
+                    "panel_dry_run_no_sbatch": True,
+                    "panel_guard_no_env_refuses": True,
+                    "submit_receipt_absent": True,
+                    "submit_summary_absent": True,
+                },
+                "failures": [],
+            })
+            _write_json(protocol, {
+                "artifact": "m6d_w2_panel_decision_protocol",
+                "status": "post_panel_decision_protocol_ready",
+                "audit_ok": True,
+                "no_submit": True,
+                "can_claim_w2_generalization_now": False,
+                "current_panel_result": {
+                    "status": "not_available_not_submitted",
+                    "w2_generalization_supported": False,
+                    "claim": "no W2 claim; panel records/report are not available",
+                },
+                "failures": [],
+            })
+
+            rep = run_status(
+                target_manifest_path=manifest,
+                w2_panel_approval_packet_path=packet,
+                w2_panel_decision_protocol_path=protocol,
+            )
+
+        w2 = rep["workstreams"]["W2_multi_target_panel"]
+        self.assertEqual(w2["status"], "panel_approval_packet_ready_awaiting_explicit_approval")
+        self.assertFalse(w2["complete"])
+        self.assertEqual(w2["n_ready_targets"], 7)
+        self.assertTrue(w2["panel_approval_packet_ready"])
+        self.assertTrue(w2["panel_decision_protocol_ready"])
+        self.assertTrue(w2["panel_decision_no_submit"])
+        self.assertFalse(w2["panel_decision_can_claim_w2_now"])
+        self.assertIn("W2 panel submission", w2["next_action"])
+
     def test_w2_approval_parity_attaches_to_ready_target_msa_gate(self):
         with tempfile.TemporaryDirectory() as d:
             gate = os.path.join(d, "gate.json")
