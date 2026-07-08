@@ -63,6 +63,23 @@ class ComplexPanelReportTests(unittest.TestCase):
         self.assertEqual(rep["failures"], [{"kind": "target_not_certified",
                                              "targets": ["t0", "t1", "t2"]}])
 
+    def test_all_success_target_explains_one_class_no_tau_without_certifying(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "panel.jsonl")
+            with open(path, "w") as fh:
+                for i in range(12):
+                    fh.write(json.dumps(_record("all_success", i)) + "\n")
+            rep = run_panel([path], min_targets=1, min_records_per_target=5, target_alpha=0.99)
+        self.assertFalse(rep["ok"])
+        self.assertEqual(rep["panel_status"], "multi_target_evaluable_not_certified")
+        target = rep["targets"][0]
+        self.assertFalse(target["certified"])
+        self.assertEqual(target["success"], 12)
+        self.assertEqual(target["failure"], 0)
+        self.assertEqual(target["not_certified_reason"], "one_class_all_success_no_rcps_tau")
+        self.assertEqual(target["base_rate_fail"], 0.0)
+        self.assertIsNone(target["auroc_pae"])
+
     def test_too_few_records_per_target_blocks_claim(self):
         with tempfile.TemporaryDirectory() as d:
             path = os.path.join(d, "panel.jsonl")

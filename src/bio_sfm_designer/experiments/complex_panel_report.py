@@ -66,15 +66,29 @@ def _target_report(target_id: str, rows: List[dict], *, target_alpha: float,
                        n_cal=n_cal_eff, seed=seed)
     except ValueError as exc:
         return {**base, "status": "split_failed", "certified": False, "message": str(exc)}
+    not_certified_reason = None
+    if rep["tau"] is None:
+        if success == n:
+            not_certified_reason = "one_class_all_success_no_rcps_tau"
+        elif success == 0:
+            not_certified_reason = "one_class_all_failure_no_rcps_tau"
+        elif rep.get("auroc_pae") is None:
+            not_certified_reason = "unrankable_signal_no_rcps_tau"
+        else:
+            not_certified_reason = "no_rcps_tau"
     return {
         **base,
         "status": "certified" if rep["tau"] is not None else "not_certified",
         "certified": rep["tau"] is not None,
+        "not_certified_reason": not_certified_reason,
         "n_cal": rep["n_cal"],
         "n_test": rep["n_test"],
+        "auroc_pae": rep.get("auroc_pae"),
+        "base_rate_fail": rep.get("base_rate_fail"),
         "tau": rep["tau"],
         "trusted": rep["conformal"]["trusted"],
         "false_accept_rate": rep["conformal"]["false_accept_rate"],
+        "conformal_actions": rep["conformal"]["actions"],
         "trust_all_false_accept_rate": rep["trust_all"]["false_accept_rate"],
     }
 
