@@ -325,7 +325,7 @@ the measurement project the engine was extracted from — referenced, not requir
 ```bash
 # fresh venv (NOTE: /tmp is ephemeral — recreate when gone; needs modern pip for PEP 660 editable installs)
 python3 -m venv /tmp/bio_sfm_venv && /tmp/bio_sfm_venv/bin/pip install -U pip
-/tmp/bio_sfm_venv/bin/pip install -e ".[dev]" numpy
+/tmp/bio_sfm_venv/bin/pip install -e ".[dev]"                         # includes pytest + numpy for CI parity
 /tmp/bio_sfm_venv/bin/python -m pytest -q                             # public clone smoke: 118 passed, 4 skipped
 ```
 
@@ -585,7 +585,7 @@ and Cayuga artifacts agree across 11 exact SHA checks plus 7 semantic JSON check
 state from silently re-entering goal mode.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
 status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
-execution is `panel_remote_readiness_ready_not_submitted`; it keeps the next action limited to explicit
+execution is `panel_submission_decision_ready_not_submitted`; it keeps the next action limited to explicit
 W2 v11 panel approval followed by sync-back, completion, and target-wise certification.
 It also understands the second-predictor contract report, so W3 can report
 `second_predictor_contract_ready` or `second_predictor_contract_blocked` before the final

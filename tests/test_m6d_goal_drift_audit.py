@@ -193,6 +193,32 @@ def _panel_remote_readiness():
     }
 
 
+def _panel_submission_decision_state():
+    return {
+        "_path": "/tmp/panel_submission_decision.json",
+        "status": "awaiting_explicit_panel_submission_approval",
+        "decision": "awaiting_explicit_approval",
+        "audit_ok": True,
+        "no_submit": True,
+        "submitted": False,
+        "explicit_approval_required": True,
+        "can_submit_if_explicitly_approved": True,
+        "can_claim_w2_generalization": False,
+        "receipt_absence": {
+            "local": [
+                {"path": "results/receipt.jsonl", "exists": False},
+                {"path": "results/summary.json", "exists": False},
+            ],
+            "remote_checked": True,
+            "remote": [
+                {"path": "results/receipt.jsonl", "exists": False},
+                {"path": "results/summary.json", "exists": False},
+            ],
+        },
+        "failures": [],
+    }
+
+
 def _blocked_execution_attempt():
     execution = _execution_attempt()
     execution.update({
@@ -310,6 +336,33 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
         self.assertEqual(risks["panel_remote_readiness_boundary"], "managed")
         self.assertIn("W2_panel_remote_readiness", render_markdown(rep))
+
+    def test_v11_submission_decision_ready_has_no_major_direction_drift(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+            _panel_decision_protocol(n_manifest_targets=7),
+            _panel_remote_readiness(),
+            _panel_submission_decision_state(),
+        )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["execution"], "panel_submission_decision_ready_not_submitted")
+        self.assertFalse(rep["current_state"]["W2_panel_submission_decision"]["can_claim_w2_generalization"])
+        risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
+        self.assertEqual(risks["panel_submission_decision_boundary"], "managed")
+        self.assertIn("W2_panel_submission_decision", render_markdown(rep))
 
     def test_pre_submission_blocked_state_has_no_major_direction_drift(self):
         rep = build_audit(

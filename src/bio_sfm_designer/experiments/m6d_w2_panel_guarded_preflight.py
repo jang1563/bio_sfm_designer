@@ -26,7 +26,10 @@ _DEFAULT_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V11_PANEL"
 _DEFAULT_APPROVAL_TOKEN = "approve-v11-panel-submit"
 _DEFAULT_DRY_RUN_ENV_VAR = "M6D_W2_V11_SUBMIT_DRY_RUN"
 _DEFAULT_SHARED_WRAPPER = "m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
-_DEFAULT_CAYUGA_PYTHON = "/home/fs01/jak4013/.conda/envs/boltz/bin/python"
+_DEFAULT_CAYUGA_PYTHON = ""
+_PUBLIC_REMOTE_HOST = "${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}"
+_PUBLIC_REMOTE_ROOT = "${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}"
+_PUBLIC_CAYUGA_PYTHON = "${BIO_SFM_PYTHON:?set BIO_SFM_PYTHON}"
 _DRY_RUN_TARGET_RE = re.compile(r"^dry-run [^:]+: ProteinMPNN -> ")
 
 
@@ -132,13 +135,18 @@ def render_sync_back_script(
     submit_summary: str,
     remote_spec: str,
 ) -> str:
+    remote_root_line = (
+        f'REMOTE_ROOT="${{CAYUGA_BIO_SFM_ROOT:-{remote_spec}}}"'
+        if remote_spec else
+        'REMOTE_ROOT="${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT, e.g. NETID@cayuga:/scratch/NETID/bio_sfm_designer}"'
+    )
     return "\n".join([
         "#!/usr/bin/env bash",
         "# Sync completed W2 panel records back from Cayuga, then replay the local completion gate.",
         "# Run only after the submitted Boltz jobs in the submit receipt have finished.",
         "set -euo pipefail",
         "",
-        f'REMOTE_ROOT="${{CAYUGA_BIO_SFM_ROOT:-{remote_spec}}}"',
+        remote_root_line,
         'LOCAL_ROOT="${LOCAL_BIO_SFM_ROOT:-$(pwd)}"',
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
         f"MANIFEST={shlex.quote(manifest)}",
@@ -204,7 +212,7 @@ def render_guarded_wrapper(
     record_artifact = f"{workstream}_submit_record"
     summary_artifact = f"{workstream}_submit_receipt_summary"
     refusal = f"refusing {workstream.split('_')[-1]} panel submission without explicit approval env:"
-    return "\n".join([
+    lines = [
         "#!/usr/bin/env bash",
         f"# Submit {workstream} through the shared receipt-preserving wrapper.",
         f"# Run with {dry_run_env_var}=1 first.",
@@ -221,10 +229,15 @@ def render_guarded_wrapper(
         f"export BIO_SFM_SUBMIT_DRY_RUN=\"${{{dry_run_env_var}:-${{BIO_SFM_SUBMIT_DRY_RUN:-0}}}}\"",
         'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         "",
-        f"if [ -z \"${{BIO_SFM_PYTHON:-}}\" ] && [ -x {shlex.quote(cayuga_python)} ]; then",
-        f"  export BIO_SFM_PYTHON={shlex.quote(cayuga_python)}",
-        "fi",
-        "",
+    ]
+    if cayuga_python:
+        lines.extend([
+            f"if [ -z \"${{BIO_SFM_PYTHON:-}}\" ] && [ -x {shlex.quote(cayuga_python)} ]; then",
+            f"  export BIO_SFM_PYTHON={shlex.quote(cayuga_python)}",
+            "fi",
+            "",
+        ])
+    lines.extend([
         f"APPROVAL_ENV_VAR=\"{approval_env_var}\"",
         f"APPROVAL_TOKEN=\"{approval_token}\"",
         "",
@@ -242,6 +255,7 @@ def render_guarded_wrapper(
         f"exec \"$SCRIPT_DIR/{shared_wrapper}\"",
         "",
     ])
+    return "\n".join(lines)
 
 
 def _set_executable(path: str) -> None:
@@ -731,7 +745,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--min-records-per-target", type=int, default=20)
     ap.add_argument("--target-alpha", type=float, default=0.2)
     ap.add_argument("--local-python", default=sys.executable)
-    ap.add_argument("--cayuga-python", default=_DEFAULT_CAYUGA_PYTHON)
+    ap.add_argument("--cayuga-python", default=os.environ.get("BIO_SFM_PYTHON", _DEFAULT_CAYUGA_PYTHON))
     ap.add_argument("--remote-host", default=None)
     ap.add_argument("--remote-root", default=None)
     ap.add_argument("--run-local-dry-run", action="store_true")
@@ -753,7 +767,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     remote_spec = (
         f"{args.remote_host}:{args.remote_root}"
         if args.remote_host and args.remote_root else
-        "cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke"
+        ""
     )
     _write_text(
         args.completion_script_out,
@@ -845,9 +859,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         approval_env_var=args.approval_env_var,
         approval_token=args.approval_token,
         dry_run_env_var=args.dry_run_env_var,
-        remote_host=args.remote_host or "cayuga-login1",
-        remote_root=args.remote_root or "/home/fs01/jak4013/bio_sfm_smoke",
-        cayuga_python=args.cayuga_python,
+        remote_host=args.remote_host or _PUBLIC_REMOTE_HOST,
+        remote_root=args.remote_root or _PUBLIC_REMOTE_ROOT,
+        cayuga_python=args.cayuga_python or _PUBLIC_CAYUGA_PYTHON,
         target_alpha=args.target_alpha,
         min_targets=args.min_targets,
         min_records_per_target=args.min_records_per_target,

@@ -17,8 +17,8 @@ import subprocess
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-_DEFAULT_REMOTE_HOST = "cayuga-login1"
-_DEFAULT_REMOTE_ROOT = "/home/fs01/jak4013/bio_sfm_smoke"
+_DEFAULT_REMOTE_HOST = ""
+_DEFAULT_REMOTE_ROOT = ""
 _DEFAULT_OUT_JSON = "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json"
 _DEFAULT_OUT_MD = "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.md"
 
@@ -382,6 +382,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--out-json", default=_DEFAULT_OUT_JSON)
     ap.add_argument("--out-md", default=_DEFAULT_OUT_MD)
     args = ap.parse_args(argv)
+    if not args.remote_root:
+        ap.error("--remote-root or CAYUGA_BIO_SFM_ROOT is required for remote readiness checks")
 
     semantic_specs = (
         _parse_semantic_field_specs(args.semantic_field)

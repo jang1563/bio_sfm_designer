@@ -178,6 +178,32 @@ def _panel_remote_readiness():
     }
 
 
+def _panel_submission_decision_state():
+    return {
+        "_path": "/tmp/panel_submission_decision.json",
+        "status": "awaiting_explicit_panel_submission_approval",
+        "decision": "awaiting_explicit_approval",
+        "audit_ok": True,
+        "no_submit": True,
+        "submitted": False,
+        "explicit_approval_required": True,
+        "can_submit_if_explicitly_approved": True,
+        "can_claim_w2_generalization": False,
+        "receipt_absence": {
+            "local": [
+                {"path": "results/receipt.jsonl", "exists": False},
+                {"path": "results/summary.json", "exists": False},
+            ],
+            "remote_checked": True,
+            "remote": [
+                {"path": "results/receipt.jsonl", "exists": False},
+                {"path": "results/summary.json", "exists": False},
+            ],
+        },
+        "failures": [],
+    }
+
+
 def _blocked_execution_attempt():
     execution = _execution_attempt()
     execution.update({
@@ -308,6 +334,37 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_remote_can_submit_if_explicitly_approved"])
         self.assertFalse(rep["w2_gate"]["panel_remote_can_claim_w2_generalization"])
         self.assertIn("W2 panel remote readiness ok: `True`", render_markdown(rep))
+
+    def test_v11_submission_decision_state_still_does_not_complete_goal(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                v9_receipt=receipt,
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["can_mark_goal_complete"])
+        self.assertIn("panel-submission decision", rep["claim_boundary"]["w2"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_ready"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_no_submit"])
+        self.assertFalse(rep["w2_gate"]["panel_submission_decision_submitted"])
+        self.assertFalse(rep["w2_gate"]["panel_submission_decision_can_claim_w2_generalization"])
+        self.assertIn("W2 panel submission decision ready: `True`", render_markdown(rep))
 
     def test_pre_submission_blocked_state_also_passes_without_marking_complete(self):
         with tempfile.TemporaryDirectory() as d:

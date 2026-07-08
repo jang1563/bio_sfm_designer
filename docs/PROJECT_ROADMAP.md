@@ -440,7 +440,7 @@ Allowed decisions:
    no-submit remote readiness audit reports `remote_submission_readiness_ok` for the Cayuga mirror. The
    no-submit submission-decision state records `awaiting_explicit_panel_submission_approval`,
    `submitted=false`, local/remote receipt absence, and `can_claim_w2_generalization=false`. Goal drift
-   now records execution as `panel_remote_readiness_ready_not_submitted`. The
+   now records execution as `panel_submission_decision_ready_not_submitted`. The
    next W2 decision is whether to explicitly approve the corrected 7-target v11 ProteinMPNN/Boltz panel;
    no v11 panel records exist yet.
 7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract

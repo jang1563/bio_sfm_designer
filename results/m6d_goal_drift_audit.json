@@ -41,6 +41,11 @@
       "status": "managed"
     },
     {
+      "control": "submission-decision state records approval wait only; it cannot authorize execution or claims",
+      "id": "panel_submission_decision_boundary",
+      "status": "managed"
+    },
+    {
       "control": "require target-wise certificates for W2 generalization",
       "id": "pooled_only_w2_claim",
       "status": "managed"
@@ -52,7 +57,7 @@
   "claim_boundary": {
     "publication": "not_current_goal",
     "w1": "preserved_target_specific_certificate",
-    "w2": "open_after_remote_submission_readiness_ready; explicit guarded panel submission still required; post-panel rules still require sync-back, completion, and target-wise certification",
+    "w2": "open_after_panel_submission_decision_ready; explicit guarded panel submission still required; local/remote receipts remain absent and target-wise certification is still required",
     "w3": "negative_robustness_adjudicated; no positive independent-predictor claim",
     "w4": "closed_loop_plumbing_only"
   },
@@ -116,6 +121,22 @@
       "no_submit": true,
       "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
       "status": "remote_submission_readiness_ok"
+    },
+    "W2_panel_submission_decision": {
+      "audit_ok": true,
+      "can_claim_w2_generalization": false,
+      "can_submit_if_explicitly_approved": true,
+      "decision": "awaiting_explicit_approval",
+      "explicit_approval_required": true,
+      "local_receipt_absence_ok": true,
+      "n_failures": 0,
+      "next_action": "await explicit user approval before running submit_command_if_approved",
+      "no_submit": true,
+      "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
+      "remote_checked": true,
+      "remote_receipt_absence_ok": true,
+      "status": "awaiting_explicit_panel_submission_approval",
+      "submitted": false
     },
     "W2_target_msa_execution": {
       "approval_scope": "W2 v9 full 14-target target-MSA input prep only",
@@ -193,7 +214,7 @@
   "drift_assessment": {
     "claim_boundary": "preserved",
     "direction": "aligned",
-    "execution": "panel_remote_readiness_ready_not_submitted"
+    "execution": "panel_submission_decision_ready_not_submitted"
   },
   "failures": [],
   "inputs": {
@@ -202,11 +223,12 @@
     "panel_approval_packet": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
     "panel_decision_protocol": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
     "panel_remote_readiness": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
+    "panel_submission_decision_state": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
     "project_status": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_project_status_w2_followup.json",
     "runbook": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_explicit_approval_runbook.json",
     "w3_adjudication_audit": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "wait for explicit user approval before running the guarded W2 panel submit command; then apply the predeclared post-panel decision protocol after sync-back and completion",
+  "next_action": "wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification",
   "status": "no_major_direction_drift_w2_blocked"
 }

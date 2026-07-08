@@ -5912,10 +5912,12 @@ class ComplexProjectStatusTests(unittest.TestCase):
             external_sync = os.path.join(d, "external_sync.sh")
             post_sync = os.path.join(d, "post_sync.sh")
             remote_readiness = os.path.join(d, "remote_readiness.json")
+            submission_decision = os.path.join(d, "submission_decision.json")
 
             main([
                 "--target-alpha", "0.1",
                 "--w2-panel-remote-readiness", remote_readiness,
+                "--w2-panel-submission-decision-state", submission_decision,
                 "--out", out,
                 "--emit-pending-external-paths", pending_external,
                 "--emit-external-sync-back-plan", external_sync,
@@ -5928,6 +5930,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("complex_project_status", command)
         self.assertIn("--target-alpha 0.1", command)
         self.assertIn(f"--w2-panel-remote-readiness {remote_readiness}", command)
+        self.assertIn(f"--w2-panel-submission-decision-state {submission_decision}", command)
         self.assertIn(f"--out {out}", command)
         self.assertIn(f"--emit-pending-external-paths {pending_external}", command)
         self.assertIn(f"--emit-external-sync-back-plan {external_sync}", command)
@@ -6592,6 +6595,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
             packet = os.path.join(d, "panel_approval_packet.json")
             protocol = os.path.join(d, "panel_decision_protocol.json")
             remote = os.path.join(d, "remote_readiness.json")
+            submission_decision = os.path.join(d, "submission_decision.json")
             _write_json(manifest, {
                 "ok": True,
                 "n_targets": 7,
@@ -6645,12 +6649,36 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "n_failures": 0,
                 "failures": [],
             })
+            _write_json(submission_decision, {
+                "artifact": "m6d_w2_v11_submission_decision_state",
+                "status": "awaiting_explicit_panel_submission_approval",
+                "decision": "awaiting_explicit_approval",
+                "audit_ok": True,
+                "no_submit": True,
+                "submitted": False,
+                "explicit_approval_required": True,
+                "can_submit_if_explicitly_approved": True,
+                "can_claim_w2_generalization": False,
+                "receipt_absence": {
+                    "local": [
+                        {"path": "results/receipt.jsonl", "exists": False},
+                        {"path": "results/summary.json", "exists": False},
+                    ],
+                    "remote_checked": True,
+                    "remote": [
+                        {"path": "results/receipt.jsonl", "exists": False},
+                        {"path": "results/summary.json", "exists": False},
+                    ],
+                },
+                "failures": [],
+            })
 
             rep = run_status(
                 target_manifest_path=manifest,
                 w2_panel_approval_packet_path=packet,
                 w2_panel_decision_protocol_path=protocol,
                 w2_panel_remote_readiness_path=remote,
+                w2_panel_submission_decision_state_path=submission_decision,
             )
 
         w2 = rep["workstreams"]["W2_multi_target_panel"]
@@ -6666,9 +6694,54 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertEqual(w2["panel_remote_exact_checks"], 14)
         self.assertEqual(w2["panel_remote_semantic_checks"], 5)
         self.assertEqual(w2["panel_remote_absence_checks"], 2)
-        self.assertIn("remote mirror is ready", w2["next_action"])
+        self.assertTrue(w2["panel_submission_decision_ready"])
+        self.assertEqual(w2["panel_submission_decision"], "awaiting_explicit_approval")
+        self.assertTrue(w2["panel_submission_decision_no_submit"])
+        self.assertFalse(w2["panel_submission_decision_submitted"])
+        self.assertFalse(w2["panel_submission_decision_can_claim_w2_generalization"])
+        self.assertIn("submission decision is recorded", w2["next_action"])
         self.assertIn("panel_remote_submission_readiness_ok=True", render_text(rep))
+        self.assertIn("panel_submission_decision_ready=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])
+
+    def test_w2_panel_submission_decision_state_blocks_if_already_submitted(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "targets_report.json")
+            submission_decision = os.path.join(d, "submission_decision.json")
+            _write_json(manifest, {
+                "ok": True,
+                "n_targets": 7,
+                "n_ready_targets": 7,
+                "failures": [],
+            })
+            _write_json(submission_decision, {
+                "artifact": "m6d_w2_v11_submission_decision_state",
+                "status": "awaiting_explicit_panel_submission_approval",
+                "decision": "awaiting_explicit_approval",
+                "audit_ok": True,
+                "no_submit": True,
+                "submitted": True,
+                "explicit_approval_required": True,
+                "can_submit_if_explicitly_approved": True,
+                "can_claim_w2_generalization": False,
+                "receipt_absence": {
+                    "local": [{"path": "results/receipt.jsonl", "exists": False}],
+                    "remote_checked": True,
+                    "remote": [{"path": "results/receipt.jsonl", "exists": False}],
+                },
+                "failures": [],
+            })
+
+            rep = run_status(
+                target_manifest_path=manifest,
+                w2_panel_submission_decision_state_path=submission_decision,
+            )
+
+        w2 = rep["workstreams"]["W2_multi_target_panel"]
+        self.assertEqual(w2["status"], "panel_submission_decision_state_blocked")
+        self.assertFalse(w2["panel_submission_decision_ready"])
+        kinds = {failure["kind"] for failure in w2["failures"]}
+        self.assertIn("panel_submission_decision_already_submitted", kinds)
 
     def test_w2_panel_remote_readiness_blocks_if_receipt_present(self):
         with tempfile.TemporaryDirectory() as d:

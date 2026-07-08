@@ -56,7 +56,7 @@
     "goal_drift_audit": {
       "audit_ok": true,
       "can_mark_goal_complete": false,
-      "execution": "panel_remote_readiness_ready_not_submitted",
+      "execution": "panel_submission_decision_ready_not_submitted",
       "major_direction_drift": false,
       "ok": true,
       "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_goal_drift_audit.json",

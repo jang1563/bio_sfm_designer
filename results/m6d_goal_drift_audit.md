@@ -8,7 +8,7 @@ Can mark goal complete: `False`.
 ## Assessment
 
 - direction: `aligned`
-- execution: `panel_remote_readiness_ready_not_submitted`
+- execution: `panel_submission_decision_ready_not_submitted`
 - claim_boundary: `preserved`
 
 ## Current State
@@ -21,6 +21,7 @@ Can mark goal complete: `False`.
 - W2_panel_approval: status=`panel_approval_packet_ready` ready=`True` can_claim_w2_generalization=`False`
 - W2_panel_decision_protocol: status=`post_panel_decision_protocol_ready` no_submit=`True` can_claim_now=`False` current_result=`not_available_not_submitted`
 - W2_panel_remote_readiness: status=`remote_submission_readiness_ok` no_submit=`True` can_claim_w2_generalization=`False` failures=`0`
+- W2_panel_submission_decision: status=`awaiting_explicit_panel_submission_approval` no_submit=`True` submitted=`False` can_claim_w2_generalization=`False`
 
 ## Active Risks
 
@@ -32,6 +33,7 @@ Can mark goal complete: `False`.
 - panel_approval_packet_boundary: status=`managed`; panel approval packet is no-submit readiness only; explicit approval and target-wise certification remain required
 - panel_decision_protocol_boundary: status=`managed`; post-panel decision protocol is no-submit interpretation only; it cannot authorize execution or claims
 - panel_remote_readiness_boundary: status=`managed`; remote readiness is no-submit mirror evidence only; explicit approval and target-wise certification remain required
+- panel_submission_decision_boundary: status=`managed`; submission-decision state records approval wait only; it cannot authorize execution or claims
 - pooled_only_w2_claim: status=`managed`; require target-wise certificates for W2 generalization
 
-Next action: wait for explicit user approval before running the guarded W2 panel submit command; then apply the predeclared post-panel decision protocol after sync-back and completion
+Next action: wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification

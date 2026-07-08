@@ -21,7 +21,7 @@ dependencies = [
 safety = ["constitutional-bioguard"]   # real DeBERTa biosafety screen (M2; pulls torch/transformers)
 structure = ["gemmi"]                  # CA-lDDT truth for the protein substrate (M1)
 yaml = ["pyyaml"]                       # load ObjectiveSpec from YAML configs
-dev = ["pytest"]
+dev = ["pytest", "numpy"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

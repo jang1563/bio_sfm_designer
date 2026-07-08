@@ -18,14 +18,18 @@ from datetime import date
 from typing import Any, Dict, Iterable, List, Optional
 
 
-_DEFAULT_REMOTE_HOST = "cayuga-login1"
-_DEFAULT_REMOTE_ROOT = "/home/fs01/jak4013/bio_sfm_smoke"
+_DEFAULT_REMOTE_HOST = ""
+_DEFAULT_REMOTE_ROOT = ""
 _READY_STATUS = "awaiting_explicit_panel_submission_approval"
 _BLOCKED_STATUS = "submission_decision_blocked"
 _PROJECT_W2_READY_STATUS = "panel_approval_packet_ready_awaiting_explicit_approval"
 _APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
 _REMOTE_READY_STATUS = "remote_submission_readiness_ok"
+_DRIFT_READY_EXECUTIONS = {
+    "panel_remote_readiness_ready_not_submitted",
+    "panel_submission_decision_ready_not_submitted",
+}
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -293,7 +297,7 @@ def _drift_audit_state(goal_drift_audit: Dict[str, Any]) -> Dict[str, Any]:
         and goal_drift_audit.get("audit_ok") is True
         and goal_drift_audit.get("major_direction_drift") is False
         and goal_drift_audit.get("can_mark_goal_complete") is False
-        and _field(goal_drift_audit, "drift_assessment.execution") == "panel_remote_readiness_ready_not_submitted"
+        and _field(goal_drift_audit, "drift_assessment.execution") in _DRIFT_READY_EXECUTIONS
     )
     return {
         "path": goal_drift_audit.get("_path"),
@@ -493,6 +497,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--out-json", default="results/m6d_w2_target_family_redesign_v11_submission_decision_state.json")
     ap.add_argument("--out-md", default="results/m6d_w2_target_family_redesign_v11_submission_decision_state.md")
     args = ap.parse_args(argv)
+    if args.check_remote_receipts and not args.remote_root:
+        ap.error("--remote-root or CAYUGA_BIO_SFM_ROOT is required with --check-remote-receipts")
 
     local_absent_paths = args.local_absent_path or [
         "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",

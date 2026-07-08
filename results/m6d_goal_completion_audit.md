@@ -40,7 +40,11 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel remote readiness ok: `True`
 - W2 panel remote readiness no-submit: `True`
 - W2 panel remote can claim generalization: `False`
+- W2 panel submission decision ready: `True`
+- W2 panel submission decision no-submit: `True`
+- W2 panel submission decision submitted: `False`
+- W2 panel submission decision can claim generalization: `False`
 - W3 standalone audit ok: `True`
 - W3 positive claim supported: `False`
 
-Next action: wait for explicit user approval before running the guarded W2 panel submit command; then apply the predeclared post-panel decision protocol after sync-back and completion
+Next action: wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification

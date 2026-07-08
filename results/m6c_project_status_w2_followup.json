@@ -209,7 +209,7 @@
     "external_blockers": [],
     "first_action": null,
     "local_blockers": [],
-    "next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+    "next_action": "submission decision is recorded; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
     "remaining_requirements": 1,
     "requirements": [
       {
@@ -257,7 +257,7 @@
         "evidence_supports_status": null,
         "id": "W2_multi_target_panel",
         "label": "validate the complex signal target-wise across a multi-target panel",
-        "next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+        "next_action": "submission decision is recorded; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
         "raw_complete": false,
         "status": "panel_approval_packet_ready_awaiting_explicit_approval",
         "status_complete": false,
@@ -346,9 +346,9 @@
   },
   "n_pending_external_artifacts": 0,
   "n_pending_input_prep_paths": 0,
-  "next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+  "next_action": "submission decision is recorded; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
   "ok": true,
-  "operator_next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+  "operator_next_action": "submission decision is recorded; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
   "pending_artifact_local_audit": {
     "external": {
       "all_present_nonempty": false,
@@ -454,7 +454,7 @@
   },
   "remaining": 1,
   "remaining_requirements": 1,
-  "self_command": "python -m bio_sfm_designer.experiments.complex_project_status --posthoc-manifest results/m6c_posthoc_t030_protocol/manifest.json --decision results/m6c_posthoc_t030_protocol/complex_alpha_decision.json --scale-input-prep-completion results/m6c_input_prep_completion.json --panel-input-prep-completion results/m6d_w2_target_family_redesign_v11_input_prep_completion.json --scale-target-manifest configs/template_complex_targets.json --panel-target-manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --target-manifest-report results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json --w2-panel-approval-packet results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json --w2-panel-decision-protocol results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json --w2-panel-remote-readiness results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json --predictor-contract-report results/m6c_second_predictor_contract.json --cross-predictor-report results/m6c_cross_predictor.json --w3-decision-protocol results/m6d_w2_w3_decision_protocol.json --w3-next-protocol results/m6d_w3_next_protocol.json --w3-challenge-manifest results/m6d_w3_challenge_manifest.json --w3-third-predictor-contract results/m6d_w3_third_predictor_contract.json --w3-predictor-selection-card results/m6d_w3_predictor_selection_card.json --w3-runtime-probe-plan results/m6d_w3_runtime_probe_plan.json --w3-runtime-probe-report results/m6d_w3_runtime_probe_report.json --w3-runtime-repair-plan results/m6d_w3_runtime_repair_plan.json --w3-runtime-provision-packet results/m6d_w3_runtime_provision_packet.json --predictor-sync-back-plan results/m6c_second_predictor_sync_back.sh --batch-preflight results/m6c_w4_round/preflight.json --batch-summary results/m6c_w4_round/summary.json --batch-campaign results/m6c_w4_round/campaign.jsonl --batch-sync-back-plan results/m6c_w4_sync_back.sh --scale-readiness-report results/m6c_readiness.json --panel-readiness-report results/m6d_w2_target_family_redesign_v11_readiness.json --out results/m6c_project_status_w2_followup.json --emit-pending-input-prep-paths results/m6c_project_w2_followup_pending_input_prep_paths.txt --emit-pending-external-paths results/m6c_project_w2_followup_pending_external_paths.txt --emit-sync-back-plan results/m6c_project_w2_followup_sync_back.sh --emit-external-sync-back-plan results/m6c_project_w2_followup_external_sync_back.sh --emit-external-remote-check-plan results/m6c_project_w2_followup_remote_check.sh --external-remote-check-report results/m6c_project_w2_followup_remote_check.json --emit-target-msa-precompute-plan results/m6c_project_w2_followup_target_msa_precompute.sh --target-msa-precompute-receipt results/m6d_w2_target_family_redesign_v11_target_msa_precompute_receipt.jsonl --emit-post-sync-plan results/m6c_project_w2_followup_post_sync.sh --target-alpha 0.2",
+  "self_command": "python -m bio_sfm_designer.experiments.complex_project_status --posthoc-manifest results/m6c_posthoc_t030_protocol/manifest.json --decision results/m6c_posthoc_t030_protocol/complex_alpha_decision.json --scale-input-prep-completion results/m6c_input_prep_completion.json --panel-input-prep-completion results/m6d_w2_target_family_redesign_v11_input_prep_completion.json --scale-target-manifest configs/template_complex_targets.json --panel-target-manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --target-manifest-report results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json --w2-panel-approval-packet results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json --w2-panel-decision-protocol results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json --w2-panel-remote-readiness results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json --w2-panel-submission-decision-state results/m6d_w2_target_family_redesign_v11_submission_decision_state.json --predictor-contract-report results/m6c_second_predictor_contract.json --cross-predictor-report results/m6c_cross_predictor.json --w3-decision-protocol results/m6d_w2_w3_decision_protocol.json --w3-next-protocol results/m6d_w3_next_protocol.json --w3-challenge-manifest results/m6d_w3_challenge_manifest.json --w3-third-predictor-contract results/m6d_w3_third_predictor_contract.json --w3-predictor-selection-card results/m6d_w3_predictor_selection_card.json --w3-runtime-probe-plan results/m6d_w3_runtime_probe_plan.json --w3-runtime-probe-report results/m6d_w3_runtime_probe_report.json --w3-runtime-repair-plan results/m6d_w3_runtime_repair_plan.json --w3-runtime-provision-packet results/m6d_w3_runtime_provision_packet.json --predictor-sync-back-plan results/m6c_second_predictor_sync_back.sh --batch-preflight results/m6c_w4_round/preflight.json --batch-summary results/m6c_w4_round/summary.json --batch-campaign results/m6c_w4_round/campaign.jsonl --batch-sync-back-plan results/m6c_w4_sync_back.sh --scale-readiness-report results/m6c_readiness.json --panel-readiness-report results/m6d_w2_target_family_redesign_v11_readiness.json --out results/m6c_project_status_w2_followup.json --emit-pending-input-prep-paths results/m6c_project_w2_followup_pending_input_prep_paths.txt --emit-pending-external-paths results/m6c_project_w2_followup_pending_external_paths.txt --emit-sync-back-plan results/m6c_project_w2_followup_sync_back.sh --emit-external-sync-back-plan results/m6c_project_w2_followup_external_sync_back.sh --emit-external-remote-check-plan results/m6c_project_w2_followup_remote_check.sh --external-remote-check-report results/m6c_project_w2_followup_remote_check.json --emit-target-msa-precompute-plan results/m6c_project_w2_followup_target_msa_precompute.sh --target-msa-precompute-receipt results/m6d_w2_target_family_redesign_v11_target_msa_precompute_receipt.jsonl --emit-post-sync-plan results/m6c_project_w2_followup_post_sync.sh --target-alpha 0.2",
   "status": "m6_complex_in_progress",
   "sync_manifest_audit": {
     "checks": [
@@ -870,7 +870,7 @@
       ],
       "n_ready_targets": 7,
       "n_targets": 7,
-      "next_action": "remote mirror is ready; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
+      "next_action": "submission decision is recorded; await explicit user approval before guarded W2 panel submission; then sync back, run completion, and certify target-wise panel report",
       "panel_approval_checks": {
         "panel_dry_run_no_sbatch": true,
         "panel_guard_no_env_refuses": true,
@@ -904,6 +904,19 @@
       "panel_remote_submission_readiness_failures": [],
       "panel_remote_submission_readiness_ok": true,
       "panel_remote_submission_readiness_status": "remote_submission_readiness_ok",
+      "panel_submission_decision": "awaiting_explicit_approval",
+      "panel_submission_decision_can_claim_w2_generalization": false,
+      "panel_submission_decision_can_submit_if_explicitly_approved": true,
+      "panel_submission_decision_explicit_approval_required": true,
+      "panel_submission_decision_failures": [],
+      "panel_submission_decision_local_receipt_absence_ok": true,
+      "panel_submission_decision_no_submit": true,
+      "panel_submission_decision_ready": true,
+      "panel_submission_decision_remote_checked": true,
+      "panel_submission_decision_remote_receipt_absence_ok": true,
+      "panel_submission_decision_state": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
+      "panel_submission_decision_status": "awaiting_explicit_panel_submission_approval",
+      "panel_submission_decision_submitted": false,
       "panel_submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
       "panel_sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
       "ready_for_panel_submission_if_explicitly_approved": true,

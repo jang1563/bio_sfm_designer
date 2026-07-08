@@ -25,6 +25,7 @@ from .complex_target_manifest import render_target_msa_plan
 _W2_PANEL_APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _W2_PANEL_DECISION_PROTOCOL_READY_STATUS = "post_panel_decision_protocol_ready"
 _W2_REMOTE_SUBMISSION_READY_STATUS = "remote_submission_readiness_ok"
+_W2_PANEL_SUBMISSION_DECISION_READY_STATUS = "awaiting_explicit_panel_submission_approval"
 
 
 def _write_text_atomic(path: str, text: str) -> None:
@@ -1776,6 +1777,134 @@ def _attach_w2_panel_remote_readiness(status: Dict[str, Any],
     return status
 
 
+def _receipt_absence_rows_ok(rows: Any) -> bool:
+    if not isinstance(rows, list) or not rows:
+        return False
+    return all(isinstance(row, dict) and row.get("exists") is False for row in rows)
+
+
+def _attach_w2_panel_submission_decision_state(status: Dict[str, Any],
+                                               panel_submission_decision_state: Dict[str, Any]) -> Dict[str, Any]:
+    if _is_missing_artifact(panel_submission_decision_state):
+        status.update({
+            "status": "panel_submission_decision_state_missing",
+            "panel_submission_decision_ready": False,
+            "panel_submission_decision_state": panel_submission_decision_state.get("_path"),
+            "complete": False,
+            "message": panel_submission_decision_state.get("message", ""),
+            "next_action": "rerun m6d_w2_v11_submission_decision_state.py before panel approval or submission",
+        })
+        return status
+
+    failures = list(status.get("failures", [])) if isinstance(status.get("failures", []), list) else []
+    decision_failures = (
+        panel_submission_decision_state.get("failures")
+        if isinstance(panel_submission_decision_state.get("failures"), list)
+        else []
+    )
+    receipt_absence = (
+        panel_submission_decision_state.get("receipt_absence")
+        if isinstance(panel_submission_decision_state.get("receipt_absence"), dict)
+        else {}
+    )
+    remote_checked = receipt_absence.get("remote_checked") is True
+    local_absence_ok = _receipt_absence_rows_ok(receipt_absence.get("local"))
+    remote_absence_ok = remote_checked and _receipt_absence_rows_ok(receipt_absence.get("remote"))
+    consistency_failures = []
+    if panel_submission_decision_state.get("status") != _W2_PANEL_SUBMISSION_DECISION_READY_STATUS:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_status_not_ready",
+            "observed": panel_submission_decision_state.get("status"),
+        })
+    if panel_submission_decision_state.get("decision") != "awaiting_explicit_approval":
+        consistency_failures.append({
+            "kind": "panel_submission_decision_not_awaiting_explicit_approval",
+            "observed": panel_submission_decision_state.get("decision"),
+        })
+    if panel_submission_decision_state.get("audit_ok") is not True:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_audit_not_ok",
+            "observed": panel_submission_decision_state.get("audit_ok"),
+        })
+    if panel_submission_decision_state.get("no_submit") is not True:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_submit_drift",
+            "observed": panel_submission_decision_state.get("no_submit"),
+        })
+    if panel_submission_decision_state.get("submitted") is not False:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_already_submitted",
+            "observed": panel_submission_decision_state.get("submitted"),
+        })
+    if panel_submission_decision_state.get("explicit_approval_required") is not True:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_approval_not_required",
+            "observed": panel_submission_decision_state.get("explicit_approval_required"),
+        })
+    if panel_submission_decision_state.get("can_submit_if_explicitly_approved") is not True:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_not_explicit_approval_ready",
+            "observed": panel_submission_decision_state.get("can_submit_if_explicitly_approved"),
+        })
+    if panel_submission_decision_state.get("can_claim_w2_generalization") is not False:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_claim_boundary_drift",
+            "observed": panel_submission_decision_state.get("can_claim_w2_generalization"),
+        })
+    if not local_absence_ok:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_local_receipt_absence_not_verified",
+            "observed": receipt_absence.get("local"),
+        })
+    if not remote_absence_ok:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_remote_receipt_absence_not_verified",
+            "observed": {
+                "remote_checked": receipt_absence.get("remote_checked"),
+                "remote": receipt_absence.get("remote"),
+            },
+        })
+
+    ready = not decision_failures and not consistency_failures
+    status.update({
+        "panel_submission_decision_state": panel_submission_decision_state.get("_path"),
+        "panel_submission_decision_ready": ready,
+        "panel_submission_decision_status": panel_submission_decision_state.get("status"),
+        "panel_submission_decision": panel_submission_decision_state.get("decision"),
+        "panel_submission_decision_no_submit": panel_submission_decision_state.get("no_submit"),
+        "panel_submission_decision_submitted": panel_submission_decision_state.get("submitted"),
+        "panel_submission_decision_explicit_approval_required": panel_submission_decision_state.get(
+            "explicit_approval_required"
+        ),
+        "panel_submission_decision_can_submit_if_explicitly_approved": panel_submission_decision_state.get(
+            "can_submit_if_explicitly_approved"
+        ),
+        "panel_submission_decision_can_claim_w2_generalization": panel_submission_decision_state.get(
+            "can_claim_w2_generalization"
+        ),
+        "panel_submission_decision_remote_checked": remote_checked,
+        "panel_submission_decision_local_receipt_absence_ok": local_absence_ok,
+        "panel_submission_decision_remote_receipt_absence_ok": remote_absence_ok,
+        "panel_submission_decision_failures": decision_failures + consistency_failures,
+    })
+    if ready:
+        status.update({
+            "complete": False,
+            "next_action": (
+                "submission decision is recorded; await explicit user approval before guarded W2 panel submission; "
+                "then sync back, run completion, and certify target-wise panel report"
+            ),
+        })
+    else:
+        status.update({
+            "status": "panel_submission_decision_state_blocked",
+            "complete": False,
+            "failures": failures + decision_failures + consistency_failures,
+            "next_action": "repair panel submission-decision state before panel approval or submission",
+        })
+    return status
+
+
 def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Optional[Dict[str, Any]],
                panel_report: Optional[Dict[str, Any]], target_alpha: float,
                input_prep_completion: Optional[Dict[str, Any]] = None,
@@ -1784,7 +1913,8 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
                target_msa_approval_parity: Optional[Dict[str, Any]] = None,
                panel_approval_packet: Optional[Dict[str, Any]] = None,
                panel_decision_protocol: Optional[Dict[str, Any]] = None,
-               panel_remote_readiness: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+               panel_remote_readiness: Optional[Dict[str, Any]] = None,
+               panel_submission_decision_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     missing_panel_report = panel_report if _is_missing_artifact(panel_report) else None
     if missing_panel_report is not None:
         panel_report = None
@@ -1814,6 +1944,8 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
             status = _attach_w2_panel_decision_protocol(status, panel_decision_protocol)
         if panel_remote_readiness is not None:
             status = _attach_w2_panel_remote_readiness(status, panel_remote_readiness)
+        if panel_submission_decision_state is not None:
+            status = _attach_w2_panel_submission_decision_state(status, panel_submission_decision_state)
         return status
     if panel_report is not None:
         mismatch = _alpha_mismatch(panel_report, target_alpha)
@@ -1889,6 +2021,8 @@ def _w2_status(target_manifest: Optional[Dict[str, Any]], panel_completion: Opti
             status = _attach_w2_panel_decision_protocol(status, panel_decision_protocol)
         if panel_remote_readiness is not None:
             status = _attach_w2_panel_remote_readiness(status, panel_remote_readiness)
+        if panel_submission_decision_state is not None:
+            status = _attach_w2_panel_submission_decision_state(status, panel_submission_decision_state)
         return status
 
     if input_prep_completion is not None:
@@ -6885,6 +7019,7 @@ def _project_status_command(args) -> str:
         ("--w2-panel-approval-packet", args.w2_panel_approval_packet),
         ("--w2-panel-decision-protocol", args.w2_panel_decision_protocol),
         ("--w2-panel-remote-readiness", args.w2_panel_remote_readiness),
+        ("--w2-panel-submission-decision-state", args.w2_panel_submission_decision_state),
         ("--panel-completion", args.panel_completion),
         ("--panel-report", args.panel_report),
         ("--predictor-contract-report", args.predictor_contract_report),
@@ -10232,6 +10367,7 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
                w2_panel_approval_packet_path: Optional[str] = None,
                w2_panel_decision_protocol_path: Optional[str] = None,
                w2_panel_remote_readiness_path: Optional[str] = None,
+               w2_panel_submission_decision_state_path: Optional[str] = None,
                panel_completion_path: Optional[str] = None,
                panel_report_path: Optional[str] = None,
                predictor_contract_path: Optional[str] = None,
@@ -10279,6 +10415,10 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
     w2_panel_remote_readiness = _load_json(
         w2_panel_remote_readiness_path,
         role="w2_panel_remote_readiness",
+    )
+    w2_panel_submission_decision_state = _load_json(
+        w2_panel_submission_decision_state_path,
+        role="w2_panel_submission_decision_state",
     )
     panel_completion = _load_json(panel_completion_path, role="panel_completion")
     panel_report = _load_json(panel_report_path, role="panel_report")
@@ -10357,6 +10497,7 @@ def run_status(*, posthoc_manifest_path: Optional[str] = None,
             panel_approval_packet=w2_panel_approval_packet,
             panel_decision_protocol=w2_panel_decision_protocol,
             panel_remote_readiness=w2_panel_remote_readiness,
+            panel_submission_decision_state=w2_panel_submission_decision_state,
         ),
         w3,
         w4,
@@ -10464,6 +10605,16 @@ def render_text(rep: Dict[str, Any]) -> str:
                     exact=w.get("panel_remote_exact_checks"),
                     semantic=w.get("panel_remote_semantic_checks"),
                     absent=w.get("panel_remote_absence_checks"),
+                )
+            )
+        if key == "W2_multi_target_panel" and "panel_submission_decision_ready" in w:
+            lines.append(
+                "  panel_submission_decision_ready={ready} decision={decision} no_submit={no_submit} submitted={submitted} can_claim_w2={claim}".format(
+                    ready=w.get("panel_submission_decision_ready"),
+                    decision=w.get("panel_submission_decision"),
+                    no_submit=w.get("panel_submission_decision_no_submit"),
+                    submitted=w.get("panel_submission_decision_submitted"),
+                    claim=w.get("panel_submission_decision_can_claim_w2_generalization"),
                 )
             )
         if key == "W3_independent_predictor" and "w3_next_protocol_ready" in w:
@@ -10779,6 +10930,8 @@ def main(argv=None) -> Dict[str, Any]:
                     help="optional no-submit W2 post-panel decision protocol")
     ap.add_argument("--w2-panel-remote-readiness", default=None,
                     help="optional no-submit W2 v11 Cayuga mirror readiness audit")
+    ap.add_argument("--w2-panel-submission-decision-state", default=None,
+                    help="optional no-submit W2 v11 explicit panel-submission decision state")
     ap.add_argument("--panel-completion", default=None)
     ap.add_argument("--panel-report", default=None)
     ap.add_argument("--predictor-contract-report", default=None)
@@ -10863,6 +11016,7 @@ def main(argv=None) -> Dict[str, Any]:
         w2_panel_approval_packet_path=args.w2_panel_approval_packet,
         w2_panel_decision_protocol_path=args.w2_panel_decision_protocol,
         w2_panel_remote_readiness_path=args.w2_panel_remote_readiness,
+        w2_panel_submission_decision_state_path=args.w2_panel_submission_decision_state,
         panel_completion_path=args.panel_completion,
         panel_report_path=args.panel_report,
         predictor_contract_path=args.predictor_contract_report,

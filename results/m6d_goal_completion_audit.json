@@ -6,13 +6,13 @@
   "can_mark_goal_complete": false,
   "claim_boundary": {
     "w1": "target-specific certified evidence preserved",
-    "w2": "not complete; panel approval, post-panel decision protocol, and remote submission readiness are prepared; W2 still needs explicit panel submission, sync-back, completion, and target-wise certification",
+    "w2": "not complete; explicit panel-submission decision state is recorded as awaiting approval with local/remote receipts absent; W2 still needs explicit panel submission, sync-back, completion, and target-wise certification",
     "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
     "w4": "closed-loop plumbing evidence preserved"
   },
   "complete": false,
   "failures": [],
-  "next_action": "wait for explicit user approval before running the guarded W2 panel submit command; then apply the predeclared post-panel decision protocol after sync-back and completion",
+  "next_action": "wait for explicit user approval before running the recorded guarded W2 panel submit command; then sync back, run completion, and apply target-wise certification",
   "panel_approval_packet": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
@@ -101,6 +101,11 @@
     "panel_remote_no_submit": true,
     "panel_remote_readiness_ok": true,
     "panel_submission_blocked": true,
+    "panel_submission_decision_can_claim_w2_generalization": false,
+    "panel_submission_decision_no_submit": true,
+    "panel_submission_decision_ready": true,
+    "panel_submission_decision_remote_receipt_absence_ok": true,
+    "panel_submission_decision_submitted": false,
     "target_msa_approved_but_blocked_before_submission": false,
     "target_msa_execution_status": "target_msa_outputs_synced_strict_require_files_passed",
     "target_msa_jobs_submitted_waiting_on_completion": false,
@@ -159,6 +164,22 @@
     "no_submit": true,
     "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
     "status": "remote_submission_readiness_ok"
+  },
+  "w2_panel_submission_decision": {
+    "audit_ok": true,
+    "can_claim_w2_generalization": false,
+    "can_submit_if_explicitly_approved": true,
+    "decision": "awaiting_explicit_approval",
+    "explicit_approval_required": true,
+    "local_receipt_absence_ok": true,
+    "n_failures": 0,
+    "next_action": "await explicit user approval before running submit_command_if_approved",
+    "no_submit": true,
+    "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
+    "remote_checked": true,
+    "remote_receipt_absence_ok": true,
+    "status": "awaiting_explicit_panel_submission_approval",
+    "submitted": false
   },
   "w3_adjudication_audit": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_adjudication_audit.json",
   "w3_gate": {
