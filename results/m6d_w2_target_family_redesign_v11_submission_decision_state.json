@@ -83,6 +83,11 @@
       "path": "<repo-root>/results/m6d_goal_completion_audit.json",
       "status": "goal_active_w2_remaining",
       "w2_panel_public_approval_bundle_ready": true,
+      "w2_panel_public_approval_bundle_workflow_all_commands_present": true,
+      "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": true,
+      "w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation": true,
+      "w2_panel_public_approval_bundle_workflow_step_count": 9,
+      "w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync": true,
       "w2_panel_remote_failures": 0,
       "w2_panel_remote_no_submit": true
     },

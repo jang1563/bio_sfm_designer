@@ -276,6 +276,11 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "prerequisites.remote_submission_readiness.n_shell_syntax_checks",
         "prerequisites.remote_submission_readiness.shell_syntax_checks_ok",
         "prerequisites.project_status.w2_panel_remote_shell_syntax_checks",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_step_count",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_all_commands_present",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_sync_ready_only",
     ],
     "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json": [
         "status",

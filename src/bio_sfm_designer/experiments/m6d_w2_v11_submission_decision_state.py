@@ -360,6 +360,26 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, Any]:
+    workflow_step_count = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_step_count",
+    )
+    workflow_all_commands_present = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_all_commands_present",
+    )
+    workflow_sync_ready_before_record_sync = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
+    )
+    workflow_includes_postsync = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_includes_postsync_interpretation",
+    )
+    workflow_driver_sync_ready_only = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_sync_ready_only",
+    )
     ok = (
         goal_completion_audit.get("status") == "goal_active_w2_remaining"
         and goal_completion_audit.get("audit_ok") is True
@@ -368,6 +388,11 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and _field(goal_completion_audit, "w2_gate.panel_remote_no_submit") is True
         and _field(goal_completion_audit, "w2_gate.panel_remote_failures") == 0
         and _field(goal_completion_audit, "w2_gate.panel_public_approval_bundle_ready") is True
+        and workflow_step_count == 9
+        and workflow_all_commands_present is True
+        and workflow_sync_ready_before_record_sync is True
+        and workflow_includes_postsync is True
+        and workflow_driver_sync_ready_only is True
     )
     return {
         "path": goal_completion_audit.get("_path"),
@@ -382,6 +407,13 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
             goal_completion_audit,
             "w2_gate.panel_public_approval_bundle_ready",
         ),
+        "w2_panel_public_approval_bundle_workflow_step_count": workflow_step_count,
+        "w2_panel_public_approval_bundle_workflow_all_commands_present": workflow_all_commands_present,
+        "w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync": (
+            workflow_sync_ready_before_record_sync
+        ),
+        "w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation": workflow_includes_postsync,
+        "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": workflow_driver_sync_ready_only,
     }
 
 

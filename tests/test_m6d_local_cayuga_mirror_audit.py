@@ -122,6 +122,26 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
             decision_fields,
         )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_step_count",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_all_commands_present",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_sync_ready_only",
+            decision_fields,
+        )
         self.assertIn("w2_gate.panel_remote_exact_checks", completion_fields)
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks", completion_fields)
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks_ok", completion_fields)

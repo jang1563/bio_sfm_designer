@@ -185,6 +185,11 @@ def _goal_completion_audit():
             "panel_remote_no_submit": True,
             "panel_remote_failures": 0,
             "panel_public_approval_bundle_ready": True,
+            "panel_public_approval_bundle_workflow_step_count": 9,
+            "panel_public_approval_bundle_workflow_all_commands_present": True,
+            "panel_public_approval_bundle_workflow_sync_ready_before_record_sync": True,
+            "panel_public_approval_bundle_workflow_includes_postsync_interpretation": True,
+            "panel_public_approval_bundle_workflow_driver_sync_ready_only": True,
         },
     }
 
@@ -242,6 +247,17 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertTrue(rep["prerequisites"]["remote_submission_readiness"]["shell_syntax_checks_ok"])
         self.assertEqual(rep["prerequisites"]["remote_submission_readiness"]["n_shell_syntax_checks"], 4)
         self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_remote_shell_syntax_checks"], 4)
+        self.assertEqual(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_step_count"
+            ],
+            9,
+        )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync"
+            ]
+        )
         self.assertIn("does not submit jobs", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
         self.assertIn("continuation phrases are approval: `False`", render_markdown(rep))
@@ -287,6 +303,18 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
     def test_missing_public_approval_bundle_readiness_blocks_decision_state(self):
         completion = _goal_completion_audit()
         completion["w2_gate"].pop("panel_public_approval_bundle_ready")
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_missing_public_approval_workflow_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"].pop("panel_public_approval_bundle_workflow_step_count")
 
         rep = _build(goal_completion_audit=completion)
 

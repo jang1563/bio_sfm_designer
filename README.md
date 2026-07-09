@@ -368,14 +368,14 @@ engine installs from GitHub):
   sync-back, completion, and post-sync interpretation, and carries the non-approval phrase list used by
   goal-mode resumes. The no-submit Cayuga mirror audit
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` after 23 exact SHA checks, 5 semantic JSON checks, and 2
-  receipt-absence checks; project status also fail-closes if the stored exact-check local SHA evidence
+  `remote_submission_readiness_ok` after 25 exact SHA checks, 5 semantic JSON checks, 2
+  receipt-absence checks, and 10 shell-syntax checks; project status also fail-closes if the stored exact-check local SHA evidence
   no longer matches the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
   `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-  readiness before the decision can stay approval-ready. Its approval-disambiguation block records that continuation phrases
+  readiness and 9-step post-approval workflow before the decision can stay approval-ready. Its approval-disambiguation block records that continuation phrases
   such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
