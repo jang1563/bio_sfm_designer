@@ -334,8 +334,8 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath, plus
   `results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` to chain the receipt monitor,
-  remote job-state query, sync-ready gate, sync-back, completion, and post-sync replay after a future
-  explicit approval. The
+  remote job-state query, polling sync-ready gate, sync-back, completion, and post-sync replay after a future
+  explicit approval (`M6D_W2_POSTSUBMIT_MAX_POLLS` / `M6D_W2_POSTSUBMIT_POLL_SECONDS` tune waiting). The
   sync-back script now fail-closes before any record `rsync` unless local submit receipt/summary,
   job-state probe output, and strict `m6d_w2_panel_postsubmit_status` with explicit
   `--manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json` all pass.

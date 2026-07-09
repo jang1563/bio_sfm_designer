@@ -150,6 +150,10 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             postsync_replay_script="results/postsync_replay.sh",
             job_state_probe="results/job_state_probe.json",
             sacct_states="results/sacct_states.tsv",
+            manifest="configs/v11.json",
+            submit_receipt="results/receipt.jsonl",
+            submit_summary="results/summary.json",
+            postsubmit_status="results/postsubmit_status.json",
             remote_host="hpc-login",
             remote_root="/remote/root",
         )
@@ -159,6 +163,13 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
         self.assertIn('REMOTE_PATH="${CAYUGA_BIO_SFM_REMOTE_ROOT:-/remote/root}"', text)
         self.assertIn('bash "$RECEIPT_MONITOR"', text)
         self.assertIn('ssh "$REMOTE_HOST" "$remote_cmd"', text)
+        self.assertIn('MAX_POLLS="${M6D_W2_POSTSUBMIT_MAX_POLLS:-120}"', text)
+        self.assertIn('POLL_SECONDS="${M6D_W2_POSTSUBMIT_POLL_SECONDS:-300}"', text)
+        self.assertIn("W2 v11 postsubmit poll", text)
+        self.assertIn("m6d_w2_panel_postsubmit_status", text)
+        self.assertIn("--out-json \"$POSTSUBMIT\"", text)
+        self.assertIn("rep.get('sync_ready') is True", text)
+        self.assertIn("postsubmit jobs are not sync-ready", text)
         self.assertIn('rsync -avP "$REMOTE_ROOT/$JOB_STATES"', text)
         self.assertIn('rsync -avP "$REMOTE_ROOT/$SACCT_STATES"', text)
         self.assertIn('bash "$POSTSYNC_REPLAY"', text)
@@ -266,6 +277,9 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 postsubmit_driver_text = fh.read()
             self.assertIn("This script never submits jobs", postsubmit_driver_text)
             self.assertIn('bash "$RECEIPT_MONITOR"', postsubmit_driver_text)
+            self.assertIn('MAX_POLLS="${M6D_W2_POSTSUBMIT_MAX_POLLS:-120}"', postsubmit_driver_text)
+            self.assertIn("m6d_w2_panel_postsubmit_status", postsubmit_driver_text)
+            self.assertIn("rep.get('sync_ready') is True", postsubmit_driver_text)
             self.assertNotIn("sbatch", postsubmit_driver_text)
             with open(completion_script) as fh:
                 completion_text = fh.read()
