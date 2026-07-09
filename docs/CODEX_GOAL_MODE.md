@@ -203,10 +203,11 @@ Current state:
   `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
   readiness, 9-step post-approval workflow, `script_chain_static_ok=true`, and 7-target/700-design/14-job
   approval scope before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
-  submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
-  14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision latch
-  re-consumes the completion audit's operator-checklist verdict, so a stale or incomplete checklist blocks
-  approval-ready status instead of relying only on the raw submission-decision artifact. The public approval
+  submit entrypoint, postsubmit driver, post-sync replay, script-chain static sub-gates, local/remote receipt
+  absence, 700 planned designs, 14 expected Slurm jobs, and the explicit approval phrase in one
+  operator-facing block. The decision latch re-consumes the completion audit's operator-checklist and
+  operator script-chain verdicts, so a stale or incomplete checklist blocks approval-ready status instead
+  of relying only on the raw submission-decision artifact. The public approval
   bundle also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
   fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
   target-wise report generation, decision refresh, and post-sync interpretation. Tracked result/status artifacts are public-safe and
@@ -803,12 +804,15 @@ bash results/m6c_project_external_sync_back.sh
   The current honest state is `audit_ok=true` and `can_mark_goal_complete=false`, with W2 as the only
   remaining requirement until the v11 panel is explicitly approved, submitted, synced back, completed, and
   target-wise certified. It also records `panel_public_approval_bundle_ready=true` when the public-safe
-  v11 approval bundle passes its no-submit/claim-boundary checks.
+  v11 approval bundle passes its no-submit/claim-boundary checks, and
+  `panel_submission_decision_operator_script_chain_static_ok=true` when the operator-facing checklist has
+  the same script-chain gate closed.
 - `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit. The
   current honest state is `audit_ok=true`, `major_direction_drift=false`, direction aligned, claim
   boundaries preserved, and execution `panel_postsync_interpretation_predeclared_not_synced`; it also records
-  `current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the operator
-  checklist drifts. The next action is
+  `current_state.W2_panel_submission_decision.operator_checklist_ok=true` and
+  `current_state.W2_panel_submission_decision.operator_script_chain_static_ok=true`, and fails closed if the
+  operator checklist or script-chain gate drifts. The next action is
   explicit W2 v11 panel approval only, followed by sync-back, completion, target-wise reporting, and refreshed
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares

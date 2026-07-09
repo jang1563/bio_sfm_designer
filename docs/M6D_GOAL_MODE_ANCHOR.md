@@ -939,8 +939,8 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
     readiness, 9-step post-approval workflow, `script_chain_static_ok=true`, and 7-target/700-design/14-job
     approval scope before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded submit
-    entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
-    14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The public approval
+    entrypoint, postsubmit driver, post-sync replay, script-chain static sub-gates, local/remote receipt absence,
+    700 planned designs, 14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The public approval
     bundle reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
     fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
     target-wise report generation, decision refresh, and post-sync interpretation. Tracked result/status artifacts are public-safe and use
@@ -1007,7 +1007,8 @@ target-wise certification.
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
 direction aligned, claim boundaries preserved, and execution recorded as
 `panel_postsync_interpretation_predeclared_not_synced`. It also records
-`current_state.W2_panel_submission_decision.operator_checklist_ok=true` and
+`current_state.W2_panel_submission_decision.operator_checklist_ok=true`,
+`current_state.W2_panel_submission_decision.operator_script_chain_static_ok=true`, and
 `current_state.completion_audit.panel_public_approval_bundle_workflow_script_chain_static_ok=true`,
 and fails closed if either the operator checklist or script-chain gate drifts. The submission-decision latch likewise re-consumes the completion audit's
 operator-checklist verdict, so a stale or incomplete checklist blocks approval-ready status instead of relying
