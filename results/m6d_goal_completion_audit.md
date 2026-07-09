@@ -56,6 +56,7 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel submission decision operator submit allowed: `True`
 - W2 panel submission decision operator submission performed: `False`
 - W2 panel submission decision operator driver/replay pair ready: `True`
+- W2 panel submission decision operator script chain static ok: `True`
 - W2 panel submission decision operator remote receipts absent: `True`
 - W2 panel submission decision operator planned designs: `700`
 - W2 panel submission decision operator expected Slurm jobs: `14`

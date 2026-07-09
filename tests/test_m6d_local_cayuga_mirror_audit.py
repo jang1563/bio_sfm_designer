@@ -193,6 +193,11 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("operator_approval_checklist.postsubmit_driver_command", decision_fields)
         self.assertIn("operator_approval_checklist.postsync_replay_command", decision_fields)
         self.assertIn("operator_approval_checklist.driver_replay_command_pair_ready", decision_fields)
+        self.assertIn("operator_approval_checklist.postsubmit_driver_static_chain_ok", decision_fields)
+        self.assertIn("operator_approval_checklist.postsync_replay_static_chain_ok", decision_fields)
+        self.assertIn("operator_approval_checklist.sync_back_static_chain_ok", decision_fields)
+        self.assertIn("operator_approval_checklist.completion_static_chain_ok", decision_fields)
+        self.assertIn("operator_approval_checklist.script_chain_static_ok", decision_fields)
         self.assertIn("operator_approval_checklist.remote_receipts_checked", decision_fields)
         self.assertIn("operator_approval_checklist.remote_receipts_absent", decision_fields)
         self.assertIn("operator_approval_checklist.planned_design_records", decision_fields)
@@ -284,6 +289,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_driver_replay_pair_ready",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_script_chain_static_ok",
             decision_fields,
         )
         self.assertIn(
@@ -397,6 +406,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "w2_gate.panel_submission_decision_operator_driver_replay_pair_ready",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_submission_decision_operator_script_chain_static_ok",
             completion_fields,
         )
         self.assertIn("w2_gate.panel_submission_decision_operator_local_receipts_absent", completion_fields)

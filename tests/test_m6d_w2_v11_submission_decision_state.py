@@ -261,6 +261,7 @@ def _goal_completion_audit():
                 "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
             ),
             "panel_submission_decision_operator_driver_replay_pair_ready": True,
+            "panel_submission_decision_operator_script_chain_static_ok": True,
             "panel_submission_decision_operator_remote_receipts_absent": True,
             "panel_submission_decision_operator_planned_design_records": 700,
             "panel_submission_decision_operator_expected_slurm_jobs": 14,
@@ -404,6 +405,11 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
                 "w2_panel_submission_decision_operator_submission_performed"
             ]
         )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_submission_decision_operator_script_chain_static_ok"
+            ]
+        )
         self.assertEqual(
             rep["prerequisites"]["goal_completion_audit"][
                 "w2_panel_submission_decision_operator_planned_design_records"
@@ -427,6 +433,11 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
             "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
         )
         self.assertTrue(checklist["driver_replay_command_pair_ready"])
+        self.assertTrue(checklist["postsubmit_driver_static_chain_ok"])
+        self.assertTrue(checklist["postsync_replay_static_chain_ok"])
+        self.assertTrue(checklist["sync_back_static_chain_ok"])
+        self.assertTrue(checklist["completion_static_chain_ok"])
+        self.assertTrue(checklist["script_chain_static_ok"])
         self.assertTrue(checklist["local_receipts_absent"])
         self.assertFalse(checklist["remote_receipts_checked"])
         self.assertIsNone(checklist["remote_receipts_absent"])
@@ -438,6 +449,7 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertIn("Approval Scope", render_markdown(rep))
         self.assertIn("Operator Approval Checklist", render_markdown(rep))
         self.assertIn("driver/replay command pair ready: `True`", render_markdown(rep))
+        self.assertIn("script chain static ok: `True`", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
         self.assertIn("continuation phrases are approval: `False`", render_markdown(rep))
 
@@ -575,8 +587,23 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
                 "w2_panel_public_approval_bundle_workflow_script_chain_static_ok"
             ]
         )
+        self.assertFalse(rep["operator_approval_checklist"]["script_chain_static_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_legacy_completion_operator_script_chain_field_bootstraps_from_workflow_gate(self):
+        completion = _goal_completion_audit()
+        del completion["w2_gate"]["panel_submission_decision_operator_script_chain_static_ok"]
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_submission_decision_operator_script_chain_static_ok"
+            ]
+        )
+        self.assertTrue(rep["operator_approval_checklist"]["script_chain_static_ok"])
 
     def test_missing_completion_operator_checklist_blocks_decision_state(self):
         completion = _goal_completion_audit()

@@ -63,6 +63,7 @@ This artifact does not submit jobs and does not create W2 evidence.
 - continuation phrases are approval: `False`
 - machine gate: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
 - driver/replay command pair ready: `True`
+- script chain static ok: `True`
 - local receipts absent: `True`
 - remote receipts checked: `True`
 - remote receipts absent: `True`

@@ -581,6 +581,12 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_submission_decision_operator_driver_replay_pair_ready",
     )
+    operator_script_chain_static_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_script_chain_static_ok",
+    )
+    if operator_script_chain_static_ok is None:
+        operator_script_chain_static_ok = workflow_script_chain_static_ok
     operator_remote_receipts_absent = _field(
         goal_completion_audit,
         "w2_gate.panel_submission_decision_operator_remote_receipts_absent",
@@ -640,6 +646,7 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and operator_postsubmit_driver_command == _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND
         and operator_postsync_replay_command == _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND
         and operator_driver_replay_pair_ready is True
+        and operator_script_chain_static_ok is True
         and operator_remote_receipts_absent is True
         and operator_planned_design_records == 700
         and operator_expected_slurm_jobs == 14
@@ -721,6 +728,7 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         "w2_panel_submission_decision_operator_driver_replay_pair_ready": (
             operator_driver_replay_pair_ready
         ),
+        "w2_panel_submission_decision_operator_script_chain_static_ok": operator_script_chain_static_ok,
         "w2_panel_submission_decision_operator_remote_receipts_absent": operator_remote_receipts_absent,
         "w2_panel_submission_decision_operator_planned_design_records": operator_planned_design_records,
         "w2_panel_submission_decision_operator_expected_slurm_jobs": operator_expected_slurm_jobs,
@@ -796,6 +804,21 @@ def _operator_approval_checklist(
         "postsync_replay_command": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
         "driver_replay_command_pair_ready": completion.get(
             "w2_panel_public_approval_bundle_workflow_driver_replay_command_pair_ready"
+        ),
+        "postsubmit_driver_static_chain_ok": completion.get(
+            "w2_panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok"
+        ),
+        "postsync_replay_static_chain_ok": completion.get(
+            "w2_panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok"
+        ),
+        "sync_back_static_chain_ok": completion.get(
+            "w2_panel_public_approval_bundle_workflow_sync_back_static_chain_ok"
+        ),
+        "completion_static_chain_ok": completion.get(
+            "w2_panel_public_approval_bundle_workflow_completion_static_chain_ok"
+        ),
+        "script_chain_static_ok": completion.get(
+            "w2_panel_public_approval_bundle_workflow_script_chain_static_ok"
         ),
         "approval_packet_ok": (states.get("approval_packet") or {}).get("ok"),
         "remote_readiness_ok": (states.get("remote_submission_readiness") or {}).get("ok"),
@@ -1025,6 +1048,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- continuation phrases are approval: `{checklist.get('continuation_phrases_are_approval')}`",
         f"- machine gate: `{checklist.get('machine_gate')}`",
         f"- driver/replay command pair ready: `{checklist.get('driver_replay_command_pair_ready')}`",
+        f"- script chain static ok: `{checklist.get('script_chain_static_ok')}`",
         f"- local receipts absent: `{checklist.get('local_receipts_absent')}`",
         f"- remote receipts checked: `{checklist.get('remote_receipts_checked')}`",
         f"- remote receipts absent: `{checklist.get('remote_receipts_absent')}`",

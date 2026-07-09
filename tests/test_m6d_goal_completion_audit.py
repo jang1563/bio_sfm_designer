@@ -277,6 +277,11 @@ def _panel_submission_decision_state():
                 "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
             ),
             "driver_replay_command_pair_ready": True,
+            "postsubmit_driver_static_chain_ok": True,
+            "postsync_replay_static_chain_ok": True,
+            "sync_back_static_chain_ok": True,
+            "completion_static_chain_ok": True,
+            "script_chain_static_ok": True,
             "local_receipts_absent": True,
             "remote_receipts_checked": True,
             "remote_receipts_absent": True,
@@ -642,6 +647,7 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_submit_allowed"])
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_operator_submission_performed"])
         self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_driver_replay_pair_ready"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_script_chain_static_ok"])
         self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_remote_receipts_absent"])
         self.assertEqual(rep["w2_gate"]["panel_submission_decision_operator_planned_design_records"], 700)
         self.assertEqual(rep["w2_gate"]["panel_submission_decision_operator_expected_slurm_jobs"], 14)
@@ -674,6 +680,36 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
 
         self.assertFalse(rep["audit_ok"])
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_operator_checklist_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_submission_decision_operator_checklist_not_ready", kinds)
+
+    def test_v11_submission_decision_operator_script_chain_blocks_drift(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            decision = _panel_submission_decision_state()
+            decision["operator_approval_checklist"]["script_chain_static_ok"] = False
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                decision,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_submission_decision_operator_checklist_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_submission_decision_operator_script_chain_static_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("w2_panel_submission_decision_operator_checklist_not_ready", kinds)
 

@@ -171,6 +171,7 @@
       "operator_expected_slurm_jobs": 14,
       "operator_planned_design_records": 700,
       "operator_remote_receipts_absent": true,
+      "operator_script_chain_static_ok": true,
       "operator_submission_performed_by_this_artifact": false,
       "operator_submit_allowed_by_this_artifact": true,
       "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",

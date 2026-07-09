@@ -346,6 +346,11 @@ def _operator_approval_checklist_ok(checklist: Any) -> bool:
         and checklist.get("postsubmit_driver_command") == _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND
         and checklist.get("postsync_replay_command") == _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND
         and checklist.get("driver_replay_command_pair_ready") is True
+        and checklist.get("postsubmit_driver_static_chain_ok") is True
+        and checklist.get("postsync_replay_static_chain_ok") is True
+        and checklist.get("sync_back_static_chain_ok") is True
+        and checklist.get("completion_static_chain_ok") is True
+        and checklist.get("script_chain_static_ok") is True
         and checklist.get("local_receipts_absent") is True
         and checklist.get("remote_receipts_checked") is True
         and checklist.get("remote_receipts_absent") is True
@@ -398,6 +403,7 @@ def _panel_submission_decision_state(panel_submission_decision_state: Optional[D
         "operator_submit_allowed_by_this_artifact": operator.get("submit_allowed_by_this_artifact"),
         "operator_submission_performed_by_this_artifact": operator.get("submission_performed_by_this_artifact"),
         "operator_driver_replay_command_pair_ready": operator.get("driver_replay_command_pair_ready"),
+        "operator_script_chain_static_ok": operator.get("script_chain_static_ok"),
         "operator_remote_receipts_absent": operator.get("remote_receipts_absent"),
         "operator_planned_design_records": operator.get("planned_design_records"),
         "operator_expected_slurm_jobs": operator.get("expected_slurm_jobs"),
@@ -1037,6 +1043,9 @@ def build_audit(
                     ),
                     "submission_performed_by_this_artifact": panel_submission_decision.get(
                         "operator_submission_performed_by_this_artifact"
+                    ),
+                    "script_chain_static_ok": panel_submission_decision.get(
+                        "operator_script_chain_static_ok"
                     ),
                     "remote_receipts_absent": panel_submission_decision.get(
                         "operator_remote_receipts_absent"
