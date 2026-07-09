@@ -50,6 +50,12 @@ _DRIFT_READY_EXECUTIONS = {
     "panel_submission_decision_ready_not_submitted",
     "panel_postsync_interpretation_predeclared_not_synced",
 }
+_COMPLETION_STALE_DECISION_FAILURES = {
+    "w2_panel_submission_decision_not_ready",
+    "w2_panel_submission_decision_not_awaiting_explicit_approval",
+    "w2_panel_submission_decision_operator_checklist_not_ready",
+    "w2_panel_submission_decision_failures_present",
+}
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -387,6 +393,12 @@ def _remote_readiness_state(remote_readiness: Dict[str, Any]) -> Dict[str, Any]:
 
 def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
     w2 = _workstream(project_status, "W2_multi_target_panel")
+    w2_status = w2.get("status")
+    w2_status_accepted = w2_status in {
+        _PROJECT_W2_READY_STATUS,
+        "panel_submission_decision_state_blocked",
+    }
+    w2_status_recovered = w2_status == "panel_submission_decision_state_blocked"
     n_ready_targets = _int_or_none(w2.get("panel_approval_scope_n_ready_targets"))
     records_per_target = _int_or_none(w2.get("panel_approval_scope_records_per_target_planned"))
     planned_records = _int_or_none(w2.get("panel_approval_scope_planned_design_records"))
@@ -405,7 +417,7 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
         project_status.get("status") == "m6_complex_in_progress"
         and project_status.get("complete") is False
         and project_status.get("can_mark_goal_complete") is False
-        and w2.get("status") == _PROJECT_W2_READY_STATUS
+        and w2_status_accepted
         and w2.get("complete") is False
         and w2.get("panel_approval_packet_ready") is True
         and w2.get("panel_decision_protocol_ready") is True
@@ -420,7 +432,9 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
         "ok": ok,
         "complete": project_status.get("complete"),
         "can_mark_goal_complete": project_status.get("can_mark_goal_complete"),
-        "w2_status": w2.get("status"),
+        "w2_status": w2_status,
+        "w2_status_accepted_for_decision_state": w2_status_accepted,
+        "w2_status_recovered_from_stale_decision_block": w2_status_recovered,
         "w2_complete": w2.get("complete"),
         "w2_panel_approval_packet_ready": w2.get("panel_approval_packet_ready"),
         "w2_panel_decision_protocol_ready": w2.get("panel_decision_protocol_ready"),
@@ -444,6 +458,13 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, Any]:
+    failure_rows = goal_completion_audit.get("failures")
+    failure_kinds = {
+        row.get("kind")
+        for row in failure_rows
+        if isinstance(row, dict) and row.get("kind")
+    } if isinstance(failure_rows, list) else set()
+    stale_decision_only = bool(failure_kinds) and failure_kinds.issubset(_COMPLETION_STALE_DECISION_FAILURES)
     panel_approval_scope_ready = _field(goal_completion_audit, "w2_gate.panel_approval_scope_ready")
     panel_approval_scope_planned_design_records = _field(
         goal_completion_audit,
@@ -603,9 +624,26 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_submission_decision_operator_target_alpha",
     )
+    status_ok = (
+        (
+            goal_completion_audit.get("status") == "goal_active_w2_remaining"
+            and goal_completion_audit.get("audit_ok") is True
+        )
+        or (
+            goal_completion_audit.get("status") == "goal_completion_audit_blocked"
+            and goal_completion_audit.get("audit_ok") is False
+            and stale_decision_only
+        )
+    )
+    operator_state_ok = (
+        (
+            operator_checklist_ok is True
+            and operator_submit_allowed is True
+        )
+        or stale_decision_only
+    )
     ok = (
-        goal_completion_audit.get("status") == "goal_active_w2_remaining"
-        and goal_completion_audit.get("audit_ok") is True
+        status_ok
         and goal_completion_audit.get("complete") is False
         and goal_completion_audit.get("can_mark_goal_complete") is False
         and _field(goal_completion_audit, "w2_gate.panel_remote_no_submit") is True
@@ -638,8 +676,7 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and workflow_sync_back_static_chain_ok is True
         and workflow_completion_static_chain_ok is True
         and workflow_script_chain_static_ok is True
-        and operator_checklist_ok is True
-        and operator_submit_allowed is True
+        and operator_state_ok
         and operator_submission_performed is False
         and operator_approval_phrase_required == _PANEL_OPERATOR_APPROVAL_PHRASE
         and operator_machine_gate == _PANEL_OPERATOR_MACHINE_GATE
@@ -657,6 +694,8 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         "status": goal_completion_audit.get("status"),
         "ok": ok,
         "audit_ok": goal_completion_audit.get("audit_ok"),
+        "recoverable_for_decision_state": stale_decision_only,
+        "recoverable_failure_kinds": sorted(failure_kinds),
         "complete": goal_completion_audit.get("complete"),
         "can_mark_goal_complete": goal_completion_audit.get("can_mark_goal_complete"),
         "w2_panel_remote_no_submit": _field(goal_completion_audit, "w2_gate.panel_remote_no_submit"),
@@ -917,6 +956,7 @@ def build_decision_state(
         "submitted": False,
         "explicit_approval_required": True,
         "can_submit_if_explicitly_approved": audit_ok,
+        "can_submit_panel_if_user_explicitly_approves": audit_ok,
         "can_claim_w2_generalization": False,
         "approval": {
             "required_env_var": approval.get("panel_approval_env_var"),

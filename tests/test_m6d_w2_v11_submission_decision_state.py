@@ -309,6 +309,7 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["submitted"])
         self.assertTrue(rep["explicit_approval_required"])
         self.assertTrue(rep["can_submit_if_explicitly_approved"])
+        self.assertTrue(rep["can_submit_panel_if_user_explicitly_approves"])
         self.assertFalse(rep["can_claim_w2_generalization"])
         self.assertIn("BIO_SFM_APPROVE_V11_PANEL", rep["approval"]["required_env_var"])
         self.assertFalse(rep["approval_disambiguation"]["continuation_phrases_are_approval"])
@@ -327,6 +328,10 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertEqual(rep["prerequisites"]["remote_submission_readiness"]["n_shell_syntax_checks"], 4)
         self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_remote_shell_syntax_checks"], 4)
         self.assertTrue(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_ok"])
+        self.assertTrue(rep["prerequisites"]["project_status"]["w2_status_accepted_for_decision_state"])
+        self.assertFalse(
+            rep["prerequisites"]["project_status"]["w2_status_recovered_from_stale_decision_block"]
+        )
         self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_planned_design_records"], 700)
         self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_expected_slurm_jobs"], 14)
         self.assertEqual(
@@ -466,6 +471,7 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("submit_receipt_or_summary_present", kinds)
         self.assertFalse(rep["can_submit_if_explicitly_approved"])
+        self.assertFalse(rep["can_submit_panel_if_user_explicitly_approves"])
         self.assertFalse(rep["operator_approval_checklist"]["pre_submit_state_ok"])
         self.assertFalse(rep["operator_approval_checklist"]["submit_allowed_by_this_artifact"])
         self.assertFalse(rep["operator_approval_checklist"]["local_receipts_absent"])
@@ -614,8 +620,47 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "submission_decision_blocked")
         self.assertFalse(rep["can_submit_if_explicitly_approved"])
+        self.assertFalse(rep["can_submit_panel_if_user_explicitly_approves"])
         self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
         self.assertFalse(rep["operator_approval_checklist"]["pre_submit_state_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_stale_completion_submission_decision_block_recovers_when_other_completion_gates_are_ready(self):
+        completion = _goal_completion_audit()
+        completion["status"] = "goal_completion_audit_blocked"
+        completion["audit_ok"] = False
+        completion["failures"] = [
+            {"kind": "w2_panel_submission_decision_not_ready"},
+            {"kind": "w2_panel_submission_decision_not_awaiting_explicit_approval"},
+            {"kind": "w2_panel_submission_decision_operator_checklist_not_ready"},
+            {"kind": "w2_panel_submission_decision_failures_present"},
+        ]
+        completion["w2_gate"]["panel_submission_decision_operator_checklist_ok"] = False
+        completion["w2_gate"]["panel_submission_decision_operator_submit_allowed"] = False
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertTrue(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        self.assertTrue(rep["prerequisites"]["goal_completion_audit"]["recoverable_for_decision_state"])
+        self.assertTrue(rep["can_submit_if_explicitly_approved"])
+        self.assertTrue(rep["can_submit_panel_if_user_explicitly_approves"])
+
+    def test_stale_completion_submission_decision_recovery_rejects_unrelated_completion_failure(self):
+        completion = _goal_completion_audit()
+        completion["status"] = "goal_completion_audit_blocked"
+        completion["audit_ok"] = False
+        completion["failures"] = [
+            {"kind": "w2_panel_submission_decision_not_ready"},
+            {"kind": "panel_public_approval_bundle_missing"},
+        ]
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["recoverable_for_decision_state"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
 
@@ -631,6 +676,39 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "submission_decision_blocked")
         self.assertFalse(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("project_status_not_ready", kinds)
+
+    def test_stale_project_status_decision_block_recovers_when_core_project_gates_are_ready(self):
+        status = _project_status()
+        w2 = status["workstreams"]["W2_multi_target_panel"]
+        w2["status"] = "panel_submission_decision_state_blocked"
+
+        rep = _build(project_status=status)
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["status"], "awaiting_explicit_panel_submission_approval")
+        self.assertTrue(rep["prerequisites"]["project_status"]["ok"])
+        self.assertTrue(
+            rep["prerequisites"]["project_status"]["w2_status_accepted_for_decision_state"]
+        )
+        self.assertTrue(
+            rep["prerequisites"]["project_status"]["w2_status_recovered_from_stale_decision_block"]
+        )
+        self.assertTrue(rep["can_submit_if_explicitly_approved"])
+        self.assertTrue(rep["can_submit_panel_if_user_explicitly_approves"])
+
+    def test_stale_project_status_decision_block_still_requires_remote_readiness(self):
+        status = _project_status()
+        w2 = status["workstreams"]["W2_multi_target_panel"]
+        w2["status"] = "panel_submission_decision_state_blocked"
+        w2["panel_remote_submission_readiness_ok"] = False
+
+        rep = _build(project_status=status)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["project_status"]["ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("project_status_not_ready", kinds)
 

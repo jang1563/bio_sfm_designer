@@ -129,6 +129,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
+        self.assertIn("can_submit_panel_if_user_explicitly_approves", decision_fields)
         self.assertIn("approval_scope.planned_design_records", decision_fields)
         self.assertIn("approval_scope.expected_slurm_jobs", decision_fields)
         self.assertIn("prerequisites.approval_packet.approval_scope_ok", decision_fields)
@@ -154,6 +155,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             decision_fields,
         )
         self.assertIn("prerequisites.goal_completion_audit.w2_panel_approval_scope_ready", decision_fields)
+        self.assertIn(
+            "prerequisites.goal_completion_audit.recoverable_for_decision_state",
+            decision_fields,
+        )
         self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_approval_scope_planned_design_records",
             decision_fields,

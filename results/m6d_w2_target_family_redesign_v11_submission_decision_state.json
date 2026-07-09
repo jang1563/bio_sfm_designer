@@ -58,6 +58,7 @@
   "audit_ok": true,
   "can_claim_w2_generalization": false,
   "can_submit_if_explicitly_approved": true,
+  "can_submit_panel_if_user_explicitly_approves": true,
   "claim_boundary": {
     "decision_state": "records readiness for an explicit approval decision only",
     "job_launch": "not evidence; receipt and job IDs only prove execution started",
@@ -175,6 +176,8 @@
       "complete": false,
       "ok": true,
       "path": "<repo-root>/results/m6d_goal_completion_audit.json",
+      "recoverable_failure_kinds": [],
+      "recoverable_for_decision_state": false,
       "status": "goal_active_w2_remaining",
       "w2_panel_approval_scope_expected_slurm_jobs": 14,
       "w2_panel_approval_scope_planned_design_records": 700,
@@ -260,7 +263,9 @@
       "w2_panel_remote_shell_syntax_checks": 10,
       "w2_panel_remote_submission_readiness_ok": true,
       "w2_panel_submit_command_if_approved": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && BIO_SFM_PYTHON=${BIO_SFM_PYTHON:?set BIO_SFM_PYTHON} PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
-      "w2_status": "panel_approval_packet_ready_awaiting_explicit_approval"
+      "w2_status": "panel_approval_packet_ready_awaiting_explicit_approval",
+      "w2_status_accepted_for_decision_state": true,
+      "w2_status_recovered_from_stale_decision_block": false
     },
     "remote_submission_readiness": {
       "absence_checks_ok": true,
