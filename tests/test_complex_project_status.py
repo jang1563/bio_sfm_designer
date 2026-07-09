@@ -6625,6 +6625,10 @@ class ComplexProjectStatusTests(unittest.TestCase):
                     "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
                     "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
                 ),
+                "postsubmit_driver_after_submit": (
+                    "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+                ),
+                "postsubmit_driver_script": "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
                 "job_state_query_after_receipt": (
                     "ssh cayuga-login1 'cd /home/fs01/<user>/bio_sfm_smoke && "
                     "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
@@ -6763,6 +6767,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_postsubmit_sync_ready_gate_ok"])
         self.assertTrue(w2["panel_postsubmit_bridge_ok"])
         self.assertIn("receipt_monitor", w2["panel_receipt_monitor_after_submit"])
+        self.assertIn("postsubmit_driver", w2["panel_postsubmit_driver_after_submit"])
         self.assertIn("job_state_query", w2["panel_job_state_query_after_receipt"])
         self.assertIn("postsync_interpretation", w2["panel_postsync_replay_after_sync"])
         self.assertIn("--require-sync-ready", w2["panel_postsubmit_sync_ready_gate"])
@@ -6790,6 +6795,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("panel_remote_submission_readiness_ok=True", render_text(rep))
         self.assertIn("panel_postsubmit_sync_ready_gate_ok=True", render_text(rep))
         self.assertIn("panel_postsubmit_bridge_ok=True", render_text(rep))
+        self.assertIn("driver=bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh", render_text(rep))
         self.assertIn("panel_submission_decision_ready=True", render_text(rep))
         self.assertIn("panel_postsync_interpretation_ready=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])

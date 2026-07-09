@@ -10,7 +10,7 @@ Remote: `<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke`.
 
 | check type | count |
 |---|---:|
-| exact SHA checks | 23 |
+| exact SHA checks | 24 |
 | semantic JSON checks | 5 |
 | receipt absence checks | 2 |
 | failures | 0 |

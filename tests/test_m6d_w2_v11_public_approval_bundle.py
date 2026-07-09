@@ -49,6 +49,7 @@ def _runbook():
         },
         "post_submit": {
             "receipt_monitor_script": "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+            "postsubmit_driver_script": "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
             "job_state_query_plan_after_probe": "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
             "sync_back_script": "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
             "completion_script": "results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
@@ -128,6 +129,10 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertNotIn("private_user_123", text)
         self.assertNotIn("cayuga-login-private", text)
         self.assertIn("<hpc-login-host>", text)
+        self.assertIn(
+            "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+            rep["portable_commands"]["postsubmit_driver_after_submit"],
+        )
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
 

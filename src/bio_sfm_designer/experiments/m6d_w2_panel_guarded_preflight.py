@@ -28,6 +28,7 @@ _DEFAULT_RECEIPT_MONITOR = "results/m6d_w2_target_family_redesign_v11_receipt_mo
 _DEFAULT_JOB_STATE_QUERY = "results/m6d_w2_target_family_redesign_v11_job_state_query.sh"
 _DEFAULT_SACCT_STATES = "results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
 _DEFAULT_POSTSYNC_REPLAY = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+_DEFAULT_POSTSUBMIT_DRIVER = "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
 _DEFAULT_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V11_PANEL"
 _DEFAULT_APPROVAL_TOKEN = "approve-v11-panel-submit"
 _DEFAULT_DRY_RUN_ENV_VAR = "M6D_W2_V11_SUBMIT_DRY_RUN"
@@ -226,6 +227,64 @@ def render_sync_back_script(
         'test -s "$LOCAL_ROOT/$SUMMARY"',
         "",
         'BIO_SFM_PYTHON="$PYTHON_BIN" PYTHONNOUSERSITE=1 bash "$COMPLETION"',
+        "",
+    ])
+
+
+def render_postsubmit_driver_script(
+    *,
+    receipt_monitor_script: str,
+    job_state_query_script: str,
+    postsync_replay_script: str,
+    job_state_probe: str,
+    sacct_states: str,
+    remote_host: Optional[str] = None,
+    remote_root: Optional[str] = None,
+) -> str:
+    remote_host_line = (
+        f'REMOTE_HOST="${{CAYUGA_BIO_SFM_HOST:-{remote_host}}}"'
+        if remote_host else
+        'REMOTE_HOST="${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}"'
+    )
+    remote_path_line = (
+        f'REMOTE_PATH="${{CAYUGA_BIO_SFM_REMOTE_ROOT:-{remote_root}}}"'
+        if remote_root else
+        'REMOTE_PATH="${CAYUGA_BIO_SFM_REMOTE_ROOT:?set CAYUGA_BIO_SFM_REMOTE_ROOT}"'
+    )
+    return "\n".join([
+        "#!/usr/bin/env bash",
+        "# Drive the W2 v11 post-submit ladder after an explicitly approved guarded submit.",
+        "# This script never submits jobs; it requires an existing submit receipt.",
+        "set -euo pipefail",
+        "",
+        remote_host_line,
+        remote_path_line,
+        'REMOTE_ROOT="${CAYUGA_BIO_SFM_ROOT:-$REMOTE_HOST:$REMOTE_PATH}"',
+        'LOCAL_ROOT="${LOCAL_BIO_SFM_ROOT:-$(pwd)}"',
+        'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
+        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
+        f"RECEIPT_MONITOR={shlex.quote(receipt_monitor_script)}",
+        f"JOB_STATE_QUERY={shlex.quote(job_state_query_script)}",
+        f"POSTSYNC_REPLAY={shlex.quote(postsync_replay_script)}",
+        f"JOB_STATES={shlex.quote(job_state_probe)}",
+        f"SACCT_STATES={shlex.quote(sacct_states)}",
+        "",
+        'cd "$LOCAL_ROOT"',
+        'test -s "$RECEIPT_MONITOR" || { echo "receipt monitor script is missing: $RECEIPT_MONITOR" >&2; exit 2; }',
+        'test -s "$JOB_STATE_QUERY" || { echo "job-state query script is missing: $JOB_STATE_QUERY" >&2; exit 2; }',
+        'test -s "$POSTSYNC_REPLAY" || { echo "post-sync replay script is missing: $POSTSYNC_REPLAY" >&2; exit 2; }',
+        "",
+        'CAYUGA_BIO_SFM_ROOT="$REMOTE_ROOT" LOCAL_BIO_SFM_ROOT="$LOCAL_ROOT" BIO_SFM_PYTHON="$PYTHON_BIN" bash "$RECEIPT_MONITOR"',
+        'remote_cmd="$(printf \'cd %q && bash %q\' "$REMOTE_PATH" "$JOB_STATE_QUERY")"',
+        'ssh "$REMOTE_HOST" "$remote_cmd"',
+        'mkdir -p "$LOCAL_ROOT/$(dirname "$JOB_STATES")" "$LOCAL_ROOT/$(dirname "$SACCT_STATES")"',
+        'rsync -avP "$REMOTE_ROOT/$JOB_STATES" "$LOCAL_ROOT/$JOB_STATES"',
+        'rsync -avP "$REMOTE_ROOT/$SACCT_STATES" "$LOCAL_ROOT/$SACCT_STATES"',
+        'test -s "$LOCAL_ROOT/$JOB_STATES"',
+        'test -s "$LOCAL_ROOT/$SACCT_STATES"',
+        "",
+        'BIO_SFM_PYTHON="$PYTHON_BIN" PYTHONNOUSERSITE=1 bash "$POSTSYNC_REPLAY"',
         "",
     ])
 
@@ -480,6 +539,7 @@ def build_runbook(
     receipt_monitor_script: str,
     job_state_query_script: str,
     sacct_states: str,
+    postsubmit_driver_script: str,
     postsync_replay_script: str,
     sync_back_script: str,
     completion_script: str,
@@ -568,6 +628,8 @@ def build_runbook(
         "post_submit": {
             "receipt_monitor_script": receipt_monitor_script,
             "receipt_monitor_command_after_submit": receipt_monitor_command,
+            "postsubmit_driver_script": postsubmit_driver_script,
+            "postsubmit_driver_command_after_submit": "bash " + shlex.quote(postsubmit_driver_script),
             "job_state_probe_command_after_receipt_sync": (
                 "python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe"
             ),
@@ -628,6 +690,12 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(post.get("receipt_monitor_command_after_submit") or ""),
+        "```",
+        "",
+        "One-command no-submit post-submit driver after approved submit:",
+        "",
+        "```bash",
+        str(post.get("postsubmit_driver_command_after_submit") or ""),
         "```",
         "",
         "After receipt sync, generate and run the read-only job-state query:",
@@ -755,6 +823,8 @@ def build_approval_packet(
         "dry_run_command": local_dry_run.get("command"),
         "sync_back_command_after_jobs_finish": post_submit.get("sync_back_command_after_jobs_finish"),
         "receipt_monitor_after_submit": post_submit.get("receipt_monitor_command_after_submit"),
+        "postsubmit_driver_after_submit": post_submit.get("postsubmit_driver_command_after_submit"),
+        "postsubmit_driver_script": post_submit.get("postsubmit_driver_script"),
         "job_state_query_after_receipt": post_submit.get("job_state_query_command_after_probe"),
         "job_state_probe_sync_after_query": post_submit.get("job_state_probe_sync_after_query"),
         "postsubmit_status_before_sync": post_submit.get("postsubmit_status"),
@@ -809,6 +879,12 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         "```bash",
         str(rep.get("receipt_monitor_after_submit") or ""),
         str(rep.get("job_state_query_after_receipt") or ""),
+        "```",
+        "",
+        "One-command no-submit post-submit driver:",
+        "",
+        "```bash",
+        str(rep.get("postsubmit_driver_after_submit") or ""),
         "```",
         "",
         "Job-state probe sync after query:",
@@ -911,6 +987,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--job-state-query-script", default=_DEFAULT_JOB_STATE_QUERY)
     ap.add_argument("--sacct-states", default=_DEFAULT_SACCT_STATES)
     ap.add_argument("--postsync-replay-script", default=_DEFAULT_POSTSYNC_REPLAY)
+    ap.add_argument("--postsubmit-driver-script", default=_DEFAULT_POSTSUBMIT_DRIVER)
     ap.add_argument("--manifest-report", default="results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json")
     ap.add_argument("--guard-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json")
     ap.add_argument("--guard-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.md")
@@ -983,6 +1060,19 @@ def main(argv: Optional[List[str]] = None) -> int:
         ),
     )
     _set_executable(args.sync_back_out)
+    _write_text(
+        args.postsubmit_driver_script,
+        render_postsubmit_driver_script(
+            receipt_monitor_script=args.receipt_monitor_script,
+            job_state_query_script=args.job_state_query_script,
+            postsync_replay_script=args.postsync_replay_script,
+            job_state_probe=args.job_state_probe,
+            sacct_states=args.sacct_states,
+            remote_host=args.remote_host,
+            remote_root=args.remote_root,
+        ),
+    )
+    _set_executable(args.postsubmit_driver_script)
 
     manifest_report = validate_manifest(
         args.manifest,
@@ -1047,6 +1137,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         receipt_monitor_script=args.receipt_monitor_script,
         job_state_query_script=args.job_state_query_script,
         sacct_states=args.sacct_states,
+        postsubmit_driver_script=args.postsubmit_driver_script,
         postsync_replay_script=args.postsync_replay_script,
         sync_back_script=args.sync_back_out,
         completion_script=args.completion_script_out,
@@ -1081,6 +1172,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     print(f"wrote {args.guard_out_json}")
     print(f"wrote {args.preflight_out_json}")
     print(f"wrote {args.runbook_out_json}")
+    print(f"wrote {args.postsubmit_driver_script}")
     print(f"wrote {args.approval_packet_out_json}")
     return 0 if preflight["audit_ok"] else 2
 

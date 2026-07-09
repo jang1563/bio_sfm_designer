@@ -15,6 +15,7 @@
   "portable_commands": {
     "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
     "job_state_query_after_receipt": "ssh \"$CAYUGA_BIO_SFM_HOST\" \"cd \\\"$CAYUGA_BIO_SFM_REMOTE_ROOT\\\" && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh\"",
+    "postsubmit_driver_after_submit": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
     "postsync_replay": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
     "receipt_monitor_after_submit": "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
     "setup_environment": "export CAYUGA_BIO_SFM_HOST=<hpc-login-host>\nexport CAYUGA_BIO_SFM_REMOTE_ROOT=<remote-repo-root>\nexport CAYUGA_BIO_SFM_ROOT=\"$CAYUGA_BIO_SFM_HOST:$CAYUGA_BIO_SFM_REMOTE_ROOT\"\nexport BIO_SFM_PYTHON=<python-with-boltz-and-proteinmpnn-runtime>",

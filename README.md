@@ -332,13 +332,17 @@ engine installs from GitHub):
   been run locally and on Cayuga without creating submit receipts. It also emits the no-submit
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
-  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath. The
+  `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath, plus
+  `results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` to chain the receipt monitor,
+  remote job-state query, sync-ready gate, sync-back, completion, and post-sync replay after a future
+  explicit approval. The
   sync-back script now fail-closes before any record `rsync` unless local submit receipt/summary,
   job-state probe output, and strict `m6d_w2_panel_postsubmit_status` with explicit
   `--manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json` all pass.
   Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
   The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
-  read-only job-state query, strict postsubmit status command, and post-sync replay;
+  one-command no-submit postsubmit driver, read-only job-state query, strict postsubmit status command,
+  and post-sync replay;
   the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
   receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
   locally before postsubmit status. Project status records those invariants as

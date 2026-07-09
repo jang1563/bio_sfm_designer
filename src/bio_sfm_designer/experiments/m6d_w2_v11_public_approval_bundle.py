@@ -83,6 +83,7 @@ def _portable_commands(runbook: Dict[str, Any], packet: Dict[str, Any]) -> Dict[
     submit_script = "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh"
     receipt_monitor = str(post.get("receipt_monitor_script") or "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh")
     job_state_query = str(post.get("job_state_query_plan_after_probe") or "results/m6d_w2_target_family_redesign_v11_job_state_query.sh")
+    postsubmit_driver = str(post.get("postsubmit_driver_script") or "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh")
     sync_back = str(post.get("sync_back_script") or packet.get("sync_back_command_after_jobs_finish") or "")
     completion = str(post.get("completion_script") or packet.get("completion_command_after_sync") or "")
     postsync = str(post.get("postsync_replay_script") or packet.get("postsync_replay_after_sync") or "")
@@ -105,6 +106,7 @@ def _portable_commands(runbook: Dict[str, Any], packet: Dict[str, Any]) -> Dict[
             f"PYTHONNOUSERSITE=1 {approval_env_var}={approval_env_value} bash {submit_script}\""
         ),
         "receipt_monitor_after_submit": f"bash {receipt_monitor}",
+        "postsubmit_driver_after_submit": f"bash {postsubmit_driver}",
         "job_state_query_after_receipt": (
             "ssh \"$CAYUGA_BIO_SFM_HOST\" "
             f"\"cd \\\"$CAYUGA_BIO_SFM_REMOTE_ROOT\\\" && bash {job_state_query}\""
@@ -259,6 +261,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "setup_environment",
         "submit_if_explicitly_approved",
         "receipt_monitor_after_submit",
+        "postsubmit_driver_after_submit",
         "job_state_query_after_receipt",
         "sync_job_state_probe_after_query",
         "strict_postsubmit_status_before_sync",

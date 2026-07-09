@@ -27,6 +27,7 @@ _EXACT_SHA_PATHS = [
     "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
     "results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
     "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+    "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
     "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
     "src/bio_sfm_designer/experiments/m6d_w2_panel_receipt_monitor.py",
     "src/bio_sfm_designer/experiments/m6d_w2_panel_job_state_probe.py",

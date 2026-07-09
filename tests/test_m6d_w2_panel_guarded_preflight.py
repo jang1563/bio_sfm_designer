@@ -9,6 +9,7 @@ from bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight import (
     build_preflight,
     main,
     render_guarded_wrapper,
+    render_postsubmit_driver_script,
     render_sync_back_script,
 )
 from bio_sfm_designer.experiments.m6d_w2_panel_wrapper_guard_audit import build_audit
@@ -142,6 +143,27 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             text.index("rsync -avP \"$REMOTE_ROOT/$relpath\""),
         )
 
+    def test_postsubmit_driver_chains_read_only_bridge_without_submit(self):
+        text = render_postsubmit_driver_script(
+            receipt_monitor_script="results/receipt_monitor.sh",
+            job_state_query_script="results/job_state_query.sh",
+            postsync_replay_script="results/postsync_replay.sh",
+            job_state_probe="results/job_state_probe.json",
+            sacct_states="results/sacct_states.tsv",
+            remote_host="hpc-login",
+            remote_root="/remote/root",
+        )
+
+        self.assertIn("This script never submits jobs", text)
+        self.assertIn('REMOTE_HOST="${CAYUGA_BIO_SFM_HOST:-hpc-login}"', text)
+        self.assertIn('REMOTE_PATH="${CAYUGA_BIO_SFM_REMOTE_ROOT:-/remote/root}"', text)
+        self.assertIn('bash "$RECEIPT_MONITOR"', text)
+        self.assertIn('ssh "$REMOTE_HOST" "$remote_cmd"', text)
+        self.assertIn('rsync -avP "$REMOTE_ROOT/$JOB_STATES"', text)
+        self.assertIn('rsync -avP "$REMOTE_ROOT/$SACCT_STATES"', text)
+        self.assertIn('bash "$POSTSYNC_REPLAY"', text)
+        self.assertNotIn("sbatch", text)
+
     def test_cli_generates_wrapper_guard_and_preflight_without_submit(self):
         with tempfile.TemporaryDirectory() as d:
             manifest = os.path.join(d, "targets.json")
@@ -158,6 +180,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             receipt_monitor = os.path.join(d, "receipt_monitor.sh")
             job_state_query = os.path.join(d, "job_state_query.sh")
             postsync_replay = os.path.join(d, "postsync_replay.sh")
+            postsubmit_driver = os.path.join(d, "postsubmit_driver.sh")
             manifest_report = os.path.join(d, "manifest_report.json")
             guard_json = os.path.join(d, "guard.json")
             guard_md = os.path.join(d, "guard.md")
@@ -183,6 +206,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 "--receipt-monitor-script", receipt_monitor,
                 "--job-state-query-script", job_state_query,
                 "--postsync-replay-script", postsync_replay,
+                "--postsubmit-driver-script", postsubmit_driver,
                 "--manifest-report", manifest_report,
                 "--guard-out-json", guard_json,
                 "--guard-out-md", guard_md,
@@ -222,6 +246,11 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertIn("rsync -avP", runbook["post_submit"]["job_state_probe_sync_after_query"])
             self.assertIn(job_state_probe, runbook["post_submit"]["job_state_probe_sync_after_query"])
             self.assertIn("rsync -avP", runbook["post_submit"]["job_state_query_command_after_probe"])
+            self.assertEqual(runbook["post_submit"]["postsubmit_driver_script"], postsubmit_driver)
+            self.assertEqual(
+                runbook["post_submit"]["postsubmit_driver_command_after_submit"],
+                "bash " + postsubmit_driver,
+            )
             self.assertEqual(runbook["post_submit"]["postsync_replay_script"], postsync_replay)
             self.assertIn("m6d_w2_panel_job_state_probe", runbook["post_submit"]["job_state_probe_command_after_receipt_sync"])
             self.assertIn("--require-sync-ready", runbook["post_submit"]["postsubmit_status_command_before_sync"])
@@ -232,6 +261,12 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertIn(f"--out-json {postsubmit_status}", runbook["post_submit"]["postsubmit_status_command_before_sync"])
             self.assertTrue(os.path.exists(sync_back))
             self.assertTrue(os.path.exists(completion_script))
+            self.assertTrue(os.path.exists(postsubmit_driver))
+            with open(postsubmit_driver) as fh:
+                postsubmit_driver_text = fh.read()
+            self.assertIn("This script never submits jobs", postsubmit_driver_text)
+            self.assertIn('bash "$RECEIPT_MONITOR"', postsubmit_driver_text)
+            self.assertNotIn("sbatch", postsubmit_driver_text)
             with open(completion_script) as fh:
                 completion_text = fh.read()
             self.assertIn('PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"', completion_text)
@@ -252,6 +287,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
             self.assertEqual(approval_packet["manifest"], manifest)
             self.assertIn("receipt_monitor.sh", approval_packet["receipt_monitor_after_submit"])
+            self.assertIn("postsubmit_driver.sh", approval_packet["postsubmit_driver_after_submit"])
             self.assertIn("job_state_query.sh", approval_packet["job_state_query_after_receipt"])
             self.assertIn("rsync -avP", approval_packet["job_state_probe_sync_after_query"])
             self.assertIn("m6d_w2_panel_postsubmit_status", approval_packet["postsubmit_sync_ready_gate"])

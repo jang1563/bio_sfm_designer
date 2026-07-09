@@ -1610,6 +1610,7 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
     postsubmit_bridge_ok = (
         postsubmit_sync_ready_gate_ok
         and bool(panel_approval_packet.get("receipt_monitor_after_submit"))
+        and bool(panel_approval_packet.get("postsubmit_driver_after_submit"))
         and job_state_query_bridge_ok
         and bool(panel_approval_packet.get("postsubmit_status_command_before_sync"))
         and _strict_postsubmit_command_ok(panel_approval_packet.get("postsubmit_status_command_before_sync"))
@@ -1629,6 +1630,7 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
             "kind": "panel_approval_packet_postsubmit_bridge_missing",
             "observed": {
                 "receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
+                "postsubmit_driver_after_submit": panel_approval_packet.get("postsubmit_driver_after_submit"),
                 "job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
                 "job_state_probe_sync_after_query": panel_approval_packet.get("job_state_probe_sync_after_query"),
                 "postsubmit_status_command_before_sync": panel_approval_packet.get(
@@ -1657,6 +1659,8 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         "panel_postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
         "panel_job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
         "panel_receipt_monitor_after_submit": panel_approval_packet.get("receipt_monitor_after_submit"),
+        "panel_postsubmit_driver_after_submit": panel_approval_packet.get("postsubmit_driver_after_submit"),
+        "panel_postsubmit_driver_script": panel_approval_packet.get("postsubmit_driver_script"),
         "panel_job_state_query_after_receipt": panel_approval_packet.get("job_state_query_after_receipt"),
         "panel_job_state_probe_sync_after_query": panel_approval_packet.get("job_state_probe_sync_after_query"),
         "panel_job_state_query_bridge_ok": job_state_query_bridge_ok,
@@ -10992,9 +10996,10 @@ def render_text(rep: Dict[str, Any]) -> str:
                 )
             if "panel_postsubmit_bridge_ok" in w:
                 lines.append(
-                    "  panel_postsubmit_bridge_ok={ok} receipt_monitor={receipt} job_query={job_query}".format(
+                    "  panel_postsubmit_bridge_ok={ok} receipt_monitor={receipt} driver={driver} job_query={job_query}".format(
                         ok=w.get("panel_postsubmit_bridge_ok"),
                         receipt=w.get("panel_receipt_monitor_after_submit"),
+                        driver=w.get("panel_postsubmit_driver_after_submit"),
                         job_query=w.get("panel_job_state_query_after_receipt"),
                     )
                 )
