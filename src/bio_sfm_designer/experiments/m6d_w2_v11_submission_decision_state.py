@@ -26,6 +26,14 @@ _PROJECT_W2_READY_STATUS = "panel_approval_packet_ready_awaiting_explicit_approv
 _APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _DECISION_READY_STATUS = "post_panel_decision_protocol_ready"
 _REMOTE_READY_STATUS = "remote_submission_readiness_ok"
+_PANEL_OPERATOR_APPROVAL_PHRASE = "W2 v11 Cayuga ProteinMPNN/Boltz panel submission"
+_PANEL_OPERATOR_MACHINE_GATE = "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
+_PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND = (
+    "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+)
+_PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND = (
+    "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+)
 _NON_APPROVAL_CONTINUATIONS = [
     "resume goal",
     "resume goal mode",
@@ -521,6 +529,54 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_sync_ready_only",
     )
+    operator_checklist_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_checklist_ok",
+    )
+    operator_submit_allowed = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_submit_allowed",
+    )
+    operator_submission_performed = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_submission_performed",
+    )
+    operator_approval_phrase_required = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_approval_phrase_required",
+    )
+    operator_machine_gate = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_machine_gate",
+    )
+    operator_postsubmit_driver_command = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_postsubmit_driver_command",
+    )
+    operator_postsync_replay_command = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_postsync_replay_command",
+    )
+    operator_driver_replay_pair_ready = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_driver_replay_pair_ready",
+    )
+    operator_remote_receipts_absent = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_remote_receipts_absent",
+    )
+    operator_planned_design_records = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_planned_design_records",
+    )
+    operator_expected_slurm_jobs = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_expected_slurm_jobs",
+    )
+    operator_target_alpha = _field(
+        goal_completion_audit,
+        "w2_gate.panel_submission_decision_operator_target_alpha",
+    )
     ok = (
         goal_completion_audit.get("status") == "goal_active_w2_remaining"
         and goal_completion_audit.get("audit_ok") is True
@@ -551,6 +607,18 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and workflow_driver_polling_default_poll_seconds == 300
         and workflow_driver_polling_sync_ready_gate == "m6d_w2_panel_postsubmit_status.sync_ready"
         and workflow_driver_sync_ready_only is True
+        and operator_checklist_ok is True
+        and operator_submit_allowed is True
+        and operator_submission_performed is False
+        and operator_approval_phrase_required == _PANEL_OPERATOR_APPROVAL_PHRASE
+        and operator_machine_gate == _PANEL_OPERATOR_MACHINE_GATE
+        and operator_postsubmit_driver_command == _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND
+        and operator_postsync_replay_command == _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND
+        and operator_driver_replay_pair_ready is True
+        and operator_remote_receipts_absent is True
+        and operator_planned_design_records == 700
+        and operator_expected_slurm_jobs == 14
+        and operator_target_alpha == 0.2
     )
     return {
         "path": goal_completion_audit.get("_path"),
@@ -605,6 +673,24 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
             workflow_driver_polling_sync_ready_gate
         ),
         "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": workflow_driver_sync_ready_only,
+        "w2_panel_submission_decision_operator_checklist_ok": operator_checklist_ok,
+        "w2_panel_submission_decision_operator_submit_allowed": operator_submit_allowed,
+        "w2_panel_submission_decision_operator_submission_performed": operator_submission_performed,
+        "w2_panel_submission_decision_operator_approval_phrase_required": (
+            operator_approval_phrase_required
+        ),
+        "w2_panel_submission_decision_operator_machine_gate": operator_machine_gate,
+        "w2_panel_submission_decision_operator_postsubmit_driver_command": (
+            operator_postsubmit_driver_command
+        ),
+        "w2_panel_submission_decision_operator_postsync_replay_command": operator_postsync_replay_command,
+        "w2_panel_submission_decision_operator_driver_replay_pair_ready": (
+            operator_driver_replay_pair_ready
+        ),
+        "w2_panel_submission_decision_operator_remote_receipts_absent": operator_remote_receipts_absent,
+        "w2_panel_submission_decision_operator_planned_design_records": operator_planned_design_records,
+        "w2_panel_submission_decision_operator_expected_slurm_jobs": operator_expected_slurm_jobs,
+        "w2_panel_submission_decision_operator_target_alpha": operator_target_alpha,
     }
 
 

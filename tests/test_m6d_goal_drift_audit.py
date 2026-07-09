@@ -250,6 +250,30 @@ def _panel_submission_decision_state():
         "explicit_approval_required": True,
         "can_submit_if_explicitly_approved": True,
         "can_claim_w2_generalization": False,
+        "operator_approval_checklist": {
+            "pre_submit_state_ok": True,
+            "submit_allowed_by_this_artifact": True,
+            "submission_performed_by_this_artifact": False,
+            "approval_phrase_required": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+            "continuation_phrases_are_approval": False,
+            "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+            "postsubmit_driver_command": (
+                "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+            ),
+            "postsync_replay_command": (
+                "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+            ),
+            "driver_replay_command_pair_ready": True,
+            "local_receipts_absent": True,
+            "remote_receipts_checked": True,
+            "remote_receipts_absent": True,
+            "planned_design_records": 700,
+            "expected_slurm_jobs": 14,
+            "target_alpha": 0.2,
+            "no_submit": True,
+            "submitted": False,
+            "can_claim_w2_generalization": False,
+        },
         "receipt_absence": {
             "local": [
                 {"path": "results/receipt.jsonl", "exists": False},
@@ -501,9 +525,40 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         self.assertFalse(rep["major_direction_drift"])
         self.assertEqual(rep["drift_assessment"]["execution"], "panel_submission_decision_ready_not_submitted")
         self.assertFalse(rep["current_state"]["W2_panel_submission_decision"]["can_claim_w2_generalization"])
+        self.assertTrue(rep["current_state"]["W2_panel_submission_decision"]["operator_checklist_ok"])
         risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
         self.assertEqual(risks["panel_submission_decision_boundary"], "managed")
         self.assertIn("W2_panel_submission_decision", render_markdown(rep))
+        self.assertIn("operator_checklist_ok=`True`", render_markdown(rep))
+
+    def test_v11_submission_decision_operator_checklist_drift_blocks_audit(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        decision = _panel_submission_decision_state()
+        decision["operator_approval_checklist"]["submit_allowed_by_this_artifact"] = False
+
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+            _panel_decision_protocol(n_manifest_targets=7),
+            _panel_remote_readiness(),
+            decision,
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["major_direction_drift"])
+        self.assertEqual(rep["drift_assessment"]["claim_boundary"], "repair_required")
+        self.assertFalse(rep["current_state"]["W2_panel_submission_decision"]["operator_checklist_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("panel_submission_decision_operator_checklist_drift", kinds)
 
     def test_v11_postsync_interpretation_has_no_major_direction_drift(self):
         project_status = _project_status()

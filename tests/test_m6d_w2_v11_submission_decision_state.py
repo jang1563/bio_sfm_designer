@@ -240,6 +240,26 @@ def _goal_completion_audit():
                 "m6d_w2_panel_postsubmit_status.sync_ready"
             ),
             "panel_public_approval_bundle_workflow_driver_sync_ready_only": True,
+            "panel_submission_decision_operator_checklist_ok": True,
+            "panel_submission_decision_operator_submit_allowed": True,
+            "panel_submission_decision_operator_submission_performed": False,
+            "panel_submission_decision_operator_approval_phrase_required": (
+                "W2 v11 Cayuga ProteinMPNN/Boltz panel submission"
+            ),
+            "panel_submission_decision_operator_machine_gate": (
+                "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
+            ),
+            "panel_submission_decision_operator_postsubmit_driver_command": (
+                "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+            ),
+            "panel_submission_decision_operator_postsync_replay_command": (
+                "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+            ),
+            "panel_submission_decision_operator_driver_replay_pair_ready": True,
+            "panel_submission_decision_operator_remote_receipts_absent": True,
+            "panel_submission_decision_operator_planned_design_records": 700,
+            "panel_submission_decision_operator_expected_slurm_jobs": 14,
+            "panel_submission_decision_operator_target_alpha": 0.2,
         },
     }
 
@@ -358,6 +378,27 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
                 "w2_panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds"
             ],
             300,
+        )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_submission_decision_operator_checklist_ok"
+            ]
+        )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_submission_decision_operator_submit_allowed"
+            ]
+        )
+        self.assertFalse(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_submission_decision_operator_submission_performed"
+            ]
+        )
+        self.assertEqual(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_submission_decision_operator_planned_design_records"
+            ],
+            700,
         )
         checklist = rep["operator_approval_checklist"]
         self.assertTrue(checklist["pre_submit_state_ok"])
@@ -506,6 +547,20 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "submission_decision_blocked")
         self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_missing_completion_operator_checklist_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"]["panel_submission_decision_operator_checklist_ok"] = False
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["can_submit_if_explicitly_approved"])
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        self.assertFalse(rep["operator_approval_checklist"]["pre_submit_state_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
 

@@ -31,6 +31,14 @@ _PANEL_REMOTE_READY_STATUS = "remote_submission_readiness_ok"
 _PANEL_SUBMISSION_DECISION_READY_STATUS = "awaiting_explicit_panel_submission_approval"
 _PANEL_POSTSYNC_NOT_SYNCED_STATUS = "not_synced_not_interpretable"
 _PANEL_POSTSYNC_SUPPORTED_STATUS = "w2_generalization_supported_by_target_wise_panel"
+_PANEL_OPERATOR_APPROVAL_PHRASE = "W2 v11 Cayuga ProteinMPNN/Boltz panel submission"
+_PANEL_OPERATOR_MACHINE_GATE = "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
+_PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND = (
+    "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+)
+_PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND = (
+    "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+)
 
 
 _GOAL_TEXT_REQUIREMENTS = (
@@ -325,6 +333,31 @@ def _receipt_absence_rows_ok(rows: Any) -> bool:
     return all(isinstance(row, dict) and row.get("exists") is False for row in rows)
 
 
+def _operator_approval_checklist_ok(checklist: Any) -> bool:
+    if not isinstance(checklist, dict):
+        return False
+    return (
+        checklist.get("pre_submit_state_ok") is True
+        and checklist.get("submit_allowed_by_this_artifact") is True
+        and checklist.get("submission_performed_by_this_artifact") is False
+        and checklist.get("approval_phrase_required") == _PANEL_OPERATOR_APPROVAL_PHRASE
+        and checklist.get("continuation_phrases_are_approval") is False
+        and checklist.get("machine_gate") == _PANEL_OPERATOR_MACHINE_GATE
+        and checklist.get("postsubmit_driver_command") == _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND
+        and checklist.get("postsync_replay_command") == _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND
+        and checklist.get("driver_replay_command_pair_ready") is True
+        and checklist.get("local_receipts_absent") is True
+        and checklist.get("remote_receipts_checked") is True
+        and checklist.get("remote_receipts_absent") is True
+        and checklist.get("planned_design_records") == 700
+        and checklist.get("expected_slurm_jobs") == 14
+        and checklist.get("target_alpha") == 0.2
+        and checklist.get("no_submit") is True
+        and checklist.get("submitted") is False
+        and checklist.get("can_claim_w2_generalization") is False
+    )
+
+
 def _panel_submission_decision_state(panel_submission_decision_state: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     if not isinstance(panel_submission_decision_state, dict):
         return {
@@ -341,6 +374,11 @@ def _panel_submission_decision_state(panel_submission_decision_state: Optional[D
         else {}
     )
     remote_checked = receipt_absence.get("remote_checked") is True
+    operator = (
+        panel_submission_decision_state.get("operator_approval_checklist")
+        if isinstance(panel_submission_decision_state.get("operator_approval_checklist"), dict)
+        else {}
+    )
     return {
         "path": panel_submission_decision_state.get("_path"),
         "status": panel_submission_decision_state.get("status"),
@@ -356,6 +394,13 @@ def _panel_submission_decision_state(panel_submission_decision_state: Optional[D
         "remote_checked": remote_checked,
         "local_receipt_absence_ok": _receipt_absence_rows_ok(receipt_absence.get("local")),
         "remote_receipt_absence_ok": remote_checked and _receipt_absence_rows_ok(receipt_absence.get("remote")),
+        "operator_checklist_ok": _operator_approval_checklist_ok(operator),
+        "operator_submit_allowed_by_this_artifact": operator.get("submit_allowed_by_this_artifact"),
+        "operator_submission_performed_by_this_artifact": operator.get("submission_performed_by_this_artifact"),
+        "operator_driver_replay_command_pair_ready": operator.get("driver_replay_command_pair_ready"),
+        "operator_remote_receipts_absent": operator.get("remote_receipts_absent"),
+        "operator_planned_design_records": operator.get("planned_design_records"),
+        "operator_expected_slurm_jobs": operator.get("expected_slurm_jobs"),
         "n_failures": len(panel_submission_decision_state.get("failures") or []),
         "next_action": panel_submission_decision_state.get("next_action"),
     }
@@ -969,6 +1014,32 @@ def build_audit(
                 expected=True,
                 observed=panel_submission_decision.get("remote_receipt_absence_ok"),
             )
+        if panel_submission_decision.get("operator_checklist_ok") is not True:
+            _add_failure(
+                failures,
+                "panel_submission_decision_operator_checklist_drift",
+                "panel submission-decision state must preserve the explicit operator approval checklist",
+                category="approval_boundary",
+                expected=True,
+                observed={
+                    "operator_checklist_ok": panel_submission_decision.get("operator_checklist_ok"),
+                    "submit_allowed_by_this_artifact": panel_submission_decision.get(
+                        "operator_submit_allowed_by_this_artifact"
+                    ),
+                    "submission_performed_by_this_artifact": panel_submission_decision.get(
+                        "operator_submission_performed_by_this_artifact"
+                    ),
+                    "remote_receipts_absent": panel_submission_decision.get(
+                        "operator_remote_receipts_absent"
+                    ),
+                    "planned_design_records": panel_submission_decision.get(
+                        "operator_planned_design_records"
+                    ),
+                    "expected_slurm_jobs": panel_submission_decision.get(
+                        "operator_expected_slurm_jobs"
+                    ),
+                },
+            )
         if panel_submission_decision.get("n_failures") != 0:
             _add_failure(
                 failures,
@@ -1353,7 +1424,8 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"status=`{panel_submission_decision.get('status')}` "
         f"no_submit=`{panel_submission_decision.get('no_submit')}` "
         f"submitted=`{panel_submission_decision.get('submitted')}` "
-        f"can_claim_w2_generalization=`{panel_submission_decision.get('can_claim_w2_generalization')}`"
+        f"can_claim_w2_generalization=`{panel_submission_decision.get('can_claim_w2_generalization')}` "
+        f"operator_checklist_ok=`{panel_submission_decision.get('operator_checklist_ok')}`"
     )
     panel_postsync = (
         current.get("W2_panel_postsync_interpretation")

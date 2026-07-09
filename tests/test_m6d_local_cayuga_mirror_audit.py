@@ -250,6 +250,34 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_sync_ready_only",
             decision_fields,
         )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_checklist_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_submit_allowed",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_submission_performed",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_driver_replay_pair_ready",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_remote_receipts_absent",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_planned_design_records",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_expected_slurm_jobs",
+            decision_fields,
+        )
         self.assertIn("w2_gate.panel_remote_exact_checks", completion_fields)
         self.assertIn("w2_gate.panel_approval_scope_ready", completion_fields)
         self.assertIn("w2_gate.panel_approval_scope_planned_design_records", completion_fields)
@@ -369,6 +397,31 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "current_state.completion_audit.panel_public_approval_bundle_ready",
+            drift_fields,
+        )
+        self.assertIn("current_state.W2_panel_submission_decision.operator_checklist_ok", drift_fields)
+        self.assertIn(
+            "current_state.W2_panel_submission_decision.operator_submit_allowed_by_this_artifact",
+            drift_fields,
+        )
+        self.assertIn(
+            "current_state.W2_panel_submission_decision.operator_submission_performed_by_this_artifact",
+            drift_fields,
+        )
+        self.assertIn(
+            "current_state.W2_panel_submission_decision.operator_driver_replay_command_pair_ready",
+            drift_fields,
+        )
+        self.assertIn(
+            "current_state.W2_panel_submission_decision.operator_remote_receipts_absent",
+            drift_fields,
+        )
+        self.assertIn(
+            "current_state.W2_panel_submission_decision.operator_planned_design_records",
+            drift_fields,
+        )
+        self.assertIn(
+            "current_state.W2_panel_submission_decision.operator_expected_slurm_jobs",
             drift_fields,
         )
         self.assertIn("current_state.W2_panel_remote_readiness.n_exact_checks", drift_fields)
