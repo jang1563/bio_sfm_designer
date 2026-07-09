@@ -143,6 +143,21 @@ def _contains_forbidden_public_text(obj: Dict[str, Any]) -> List[str]:
     return [snippet for snippet in _forbidden_public_snippets() if snippet in text]
 
 
+def _shell_syntax_checks_ok(remote_readiness: Dict[str, Any]) -> bool:
+    rows = remote_readiness.get("shell_syntax_checks")
+    checks = rows if isinstance(rows, list) else []
+    return (
+        bool(checks)
+        and all(
+            isinstance(row, dict)
+            and row.get("ok") is True
+            and row.get("local_returncode") == 0
+            and row.get("remote_returncode") == 0
+            for row in checks
+        )
+    )
+
+
 def build_bundle(
     *,
     runbook: Dict[str, Any],
@@ -156,6 +171,7 @@ def build_bundle(
     postsubmit_driver_polling = post.get("postsubmit_driver_polling")
     if not isinstance(postsubmit_driver_polling, dict):
         postsubmit_driver_polling = {}
+    remote_shell_syntax_ok = _shell_syntax_checks_ok(remote_readiness)
     failures: List[Dict[str, Any]] = []
     if runbook.get("status") != "approval_runbook_ready_not_submitted":
         failures.append({"kind": "runbook_not_ready", "observed": runbook.get("status")})
@@ -184,6 +200,23 @@ def build_bundle(
             "kind": "remote_readiness_not_ok",
             "observed": {"status": remote_readiness.get("status"), "audit_ok": remote_readiness.get("audit_ok")},
         })
+    if remote_readiness.get("no_submit") is not True:
+        failures.append({"kind": "remote_readiness_submit_drift", "observed": remote_readiness.get("no_submit")})
+    if remote_readiness.get("can_claim_w2_generalization") is not False:
+        failures.append({
+            "kind": "remote_readiness_claim_boundary_drift",
+            "observed": remote_readiness.get("can_claim_w2_generalization"),
+        })
+    if remote_readiness.get("n_failures") != 0:
+        failures.append({"kind": "remote_readiness_failures_present", "observed": remote_readiness.get("n_failures")})
+    if remote_shell_syntax_ok is not True:
+        failures.append({
+            "kind": "remote_readiness_shell_syntax_not_ok",
+            "observed": {
+                "n_shell_syntax_checks": remote_readiness.get("n_shell_syntax_checks"),
+                "shell_syntax_checks_ok": remote_shell_syntax_ok,
+            },
+        })
     if not _strict_postsubmit_command_ok(commands.get("strict_postsubmit_status_before_sync"), packet):
         failures.append({
             "kind": "strict_postsubmit_command_not_portable_or_complete",
@@ -211,6 +244,27 @@ def build_bundle(
             "preflight": preflight.get("_source_path"),
             "submission_decision_state": decision_state.get("_source_path"),
             "remote_readiness": remote_readiness.get("_source_path"),
+        },
+        "prerequisites": {
+            "submission_decision": {
+                "status": decision_state.get("status"),
+                "audit_ok": decision_state.get("audit_ok"),
+                "no_submit": decision_state.get("no_submit"),
+                "submitted": decision_state.get("submitted"),
+                "can_claim_w2_generalization": decision_state.get("can_claim_w2_generalization"),
+            },
+            "remote_readiness": {
+                "status": remote_readiness.get("status"),
+                "audit_ok": remote_readiness.get("audit_ok"),
+                "no_submit": remote_readiness.get("no_submit"),
+                "can_claim_w2_generalization": remote_readiness.get("can_claim_w2_generalization"),
+                "n_exact_checks": remote_readiness.get("n_exact_checks"),
+                "n_semantic_checks": remote_readiness.get("n_semantic_checks"),
+                "n_absence_checks": remote_readiness.get("n_absence_checks"),
+                "n_shell_syntax_checks": remote_readiness.get("n_shell_syntax_checks"),
+                "shell_syntax_checks_ok": remote_shell_syntax_ok,
+                "n_failures": remote_readiness.get("n_failures"),
+            },
         },
         "target_contract": {
             "manifest": packet.get("manifest"),
@@ -281,6 +335,18 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "```text",
         json.dumps(rep.get("postsubmit_driver_polling") or {}, sort_keys=True),
         "```",
+        "",
+    ])
+    prereqs = rep.get("prerequisites") if isinstance(rep.get("prerequisites"), dict) else {}
+    remote = prereqs.get("remote_readiness") if isinstance(prereqs.get("remote_readiness"), dict) else {}
+    lines.extend([
+        "## Prerequisites",
+        "",
+        f"- remote readiness status: `{remote.get('status')}`",
+        f"- remote exact checks: `{remote.get('n_exact_checks')}`",
+        f"- remote shell syntax checks: `{remote.get('n_shell_syntax_checks')}`",
+        f"- remote shell syntax checks ok: `{remote.get('shell_syntax_checks_ok')}`",
+        f"- remote failures: `{remote.get('n_failures')}`",
         "",
     ])
     lines.extend([

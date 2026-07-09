@@ -287,6 +287,15 @@ def _panel_public_approval_bundle():
             "min_targets": 4,
             "min_records_per_target": 20,
         },
+        "prerequisites": {
+            "remote_readiness": {
+                "status": "remote_submission_readiness_ok",
+                "n_exact_checks": 25,
+                "n_shell_syntax_checks": 4,
+                "shell_syntax_checks_ok": True,
+                "n_failures": 0,
+            },
+        },
         "portable_commands": {
             "strict_postsubmit_status_before_sync": (
                 "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
@@ -541,6 +550,37 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_can_claim_w2_generalization"])
         self.assertIn("W2 panel submission decision ready: `True`", render_markdown(rep))
 
+    def test_public_approval_bundle_missing_remote_syntax_gate_blocks_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            bundle = _panel_public_approval_bundle()
+            bundle.pop("prerequisites")
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                bundle,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_public_approval_bundle_remote_readiness_drift", kinds)
+
     def test_v11_postsync_interpretation_still_does_not_complete_goal(self):
         with tempfile.TemporaryDirectory() as d:
             receipt = os.path.join(d, "receipt.jsonl")
@@ -601,7 +641,10 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_no_submit"])
         self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_submitted"])
         self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_can_claim_w2_generalization"])
+        self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks"], 4)
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks_ok"])
         self.assertIn("W2 panel public approval bundle ready: `True`", render_markdown(rep))
+        self.assertIn("W2 panel public approval bundle remote shell syntax checks ok: `True`", render_markdown(rep))
 
     def test_v11_public_approval_bundle_blocks_boundary_drift(self):
         with tempfile.TemporaryDirectory() as d:

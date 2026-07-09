@@ -375,6 +375,16 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         if isinstance(panel_public_approval_bundle.get("portable_commands"), dict)
         else {}
     )
+    prereqs = (
+        panel_public_approval_bundle.get("prerequisites")
+        if isinstance(panel_public_approval_bundle.get("prerequisites"), dict)
+        else {}
+    )
+    remote = (
+        prereqs.get("remote_readiness")
+        if isinstance(prereqs.get("remote_readiness"), dict)
+        else {}
+    )
     return {
         "path": panel_public_approval_bundle.get("_path"),
         "status": panel_public_approval_bundle.get("status"),
@@ -390,6 +400,11 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         "target_alpha": target.get("target_alpha"),
         "strict_postsubmit_status_before_sync": commands.get("strict_postsubmit_status_before_sync"),
         "submit_if_explicitly_approved": commands.get("submit_if_explicitly_approved"),
+        "remote_readiness_status": remote.get("status"),
+        "remote_readiness_exact_checks": remote.get("n_exact_checks"),
+        "remote_readiness_shell_syntax_checks": remote.get("n_shell_syntax_checks"),
+        "remote_readiness_shell_syntax_checks_ok": remote.get("shell_syntax_checks_ok"),
+        "remote_readiness_failures": remote.get("n_failures"),
         "n_failures": len(panel_public_approval_bundle.get("failures") or []),
     }
 
@@ -1030,6 +1045,31 @@ def build_audit(project_status: Dict[str, Any],
                 expected=0,
                 observed=panel_public_bundle.get("n_failures"),
             )
+        if (
+            panel_public_bundle.get("remote_readiness_status") != _PANEL_REMOTE_READY_STATUS
+            or panel_public_bundle.get("remote_readiness_shell_syntax_checks_ok") is not True
+            or panel_public_bundle.get("remote_readiness_failures") != 0
+        ):
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_remote_readiness_drift",
+                "W2 public approval bundle must include the current passing remote readiness syntax gate",
+                expected={
+                    "remote_readiness_status": _PANEL_REMOTE_READY_STATUS,
+                    "remote_readiness_shell_syntax_checks_ok": True,
+                    "remote_readiness_failures": 0,
+                },
+                observed={
+                    "remote_readiness_status": panel_public_bundle.get("remote_readiness_status"),
+                    "remote_readiness_shell_syntax_checks": panel_public_bundle.get(
+                        "remote_readiness_shell_syntax_checks"
+                    ),
+                    "remote_readiness_shell_syntax_checks_ok": panel_public_bundle.get(
+                        "remote_readiness_shell_syntax_checks_ok"
+                    ),
+                    "remote_readiness_failures": panel_public_bundle.get("remote_readiness_failures"),
+                },
+            )
 
     if w3_adjudication_audit.get("audit_ok") is not True:
         _add_failure(failures, "w3_standalone_adjudication_audit_not_ok",
@@ -1263,6 +1303,12 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_can_claim_w2_generalization": panel_public_bundle.get(
                 "can_claim_w2_generalization"
             ),
+            "panel_public_approval_bundle_remote_shell_syntax_checks": panel_public_bundle.get(
+                "remote_readiness_shell_syntax_checks"
+            ),
+            "panel_public_approval_bundle_remote_shell_syntax_checks_ok": panel_public_bundle.get(
+                "remote_readiness_shell_syntax_checks_ok"
+            ),
             "panel_public_approval_bundle_explicit_approval_required": panel_public_bundle.get(
                 "explicit_approval_required"
             ),
@@ -1334,6 +1380,8 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel post-sync status: `{rep.get('w2_gate', {}).get('panel_postsync_status')}`",
         f"- W2 panel post-sync can claim generalization: `{rep.get('w2_gate', {}).get('panel_postsync_can_claim_w2_generalization')}`",
         f"- W2 panel public approval bundle ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_ready')}`",
+        f"- W2 panel public approval bundle remote shell syntax checks: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_remote_shell_syntax_checks')}`",
+        f"- W2 panel public approval bundle remote shell syntax checks ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_remote_shell_syntax_checks_ok')}`",
         f"- W3 standalone audit ok: `{rep.get('w3_gate', {}).get('audit_ok')}`",
         f"- W3 positive claim supported: `{rep.get('w3_gate', {}).get('positive_claim_supported')}`",
         "",

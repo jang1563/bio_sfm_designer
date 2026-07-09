@@ -42,6 +42,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "src/bio_sfm_designer/experiments/m6d_w2_panel_job_state_probe.py",
             "src/bio_sfm_designer/experiments/m6d_w2_panel_postsubmit_status.py",
             "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_v11_public_approval_bundle.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
             "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
@@ -59,6 +60,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         status_fields = _JSON_FIELD_SPECS["results/m6c_project_status_w2_followup.json"]
         decision_fields = _JSON_FIELD_SPECS[
             "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
+        ]
+        public_bundle_fields = _JSON_FIELD_SPECS[
+            "results/m6d_w2_target_family_redesign_v11_public_approval_bundle.json"
         ]
         completion_fields = _JSON_FIELD_SPECS["results/m6d_goal_completion_audit.json"]
         drift_fields = _JSON_FIELD_SPECS["results/m6d_goal_drift_audit.json"]
@@ -121,6 +125,11 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("w2_gate.panel_remote_exact_checks", completion_fields)
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks", completion_fields)
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks_ok", completion_fields)
+        self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks", completion_fields)
+        self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks_ok", completion_fields)
+        self.assertIn("prerequisites.remote_readiness.n_exact_checks", public_bundle_fields)
+        self.assertIn("prerequisites.remote_readiness.n_shell_syntax_checks", public_bundle_fields)
+        self.assertIn("prerequisites.remote_readiness.shell_syntax_checks_ok", public_bundle_fields)
         self.assertIn(
             "current_state.completion_audit.panel_public_approval_bundle_ready",
             drift_fields,
@@ -250,6 +259,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
                 _write_json(os.path.join(root, "results/m6d_w3_adjudication_audit.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_public_approval_bundle.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"), {"status": "s"})

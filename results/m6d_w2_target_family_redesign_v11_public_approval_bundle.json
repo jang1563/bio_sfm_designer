@@ -32,6 +32,27 @@
     "proceeds_only_when_sync_ready": true,
     "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready"
   },
+  "prerequisites": {
+    "remote_readiness": {
+      "audit_ok": true,
+      "can_claim_w2_generalization": false,
+      "n_absence_checks": 2,
+      "n_exact_checks": 25,
+      "n_failures": 0,
+      "n_semantic_checks": 5,
+      "n_shell_syntax_checks": 10,
+      "no_submit": true,
+      "shell_syntax_checks_ok": true,
+      "status": "remote_submission_readiness_ok"
+    },
+    "submission_decision": {
+      "audit_ok": true,
+      "can_claim_w2_generalization": false,
+      "no_submit": true,
+      "status": "awaiting_explicit_panel_submission_approval",
+      "submitted": false
+    }
+  },
   "source_artifacts": {
     "approval_packet": "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
     "preflight": "results/m6d_w2_target_family_redesign_v11_panel_preflight.json",

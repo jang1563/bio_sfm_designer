@@ -114,6 +114,17 @@ def _remote():
         "audit_ok": True,
         "no_submit": True,
         "can_claim_w2_generalization": False,
+        "n_exact_checks": 25,
+        "n_semantic_checks": 5,
+        "n_absence_checks": 2,
+        "n_shell_syntax_checks": 4,
+        "n_failures": 0,
+        "shell_syntax_checks": [
+            {"path": "results/submit.sh", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "results/monitor.sh", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "hpc/generate.sbatch", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "hpc/predict.sbatch", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+        ],
     }
 
 
@@ -146,8 +157,12 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
             "M6D_W2_POSTSUBMIT_MAX_POLLS",
         )
         self.assertTrue(rep["postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
+        self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_exact_checks"], 25)
+        self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_shell_syntax_checks"], 4)
+        self.assertTrue(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
+        self.assertIn("remote shell syntax checks ok: `True`", render_markdown(rep))
 
     def test_non_strict_postsubmit_command_blocks_bundle(self):
         rep = build_bundle(
@@ -161,6 +176,24 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "public_approval_bundle_blocked")
         self.assertIn("strict_postsubmit_command_not_portable_or_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_missing_remote_shell_syntax_gate_blocks_bundle(self):
+        remote = _remote()
+        remote.pop("n_shell_syntax_checks")
+        remote.pop("shell_syntax_checks")
+
+        rep = build_bundle(
+            runbook=_runbook(),
+            packet=_packet(),
+            preflight=_preflight(),
+            decision_state=_decision(),
+            remote_readiness=remote,
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertFalse(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
+        self.assertIn("remote_readiness_shell_syntax_not_ok", {f["kind"] for f in rep["failures"]})
 
     def test_cli_writes_json_and_markdown(self):
         with tempfile.TemporaryDirectory() as d:
