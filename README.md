@@ -355,7 +355,9 @@ engine installs from GitHub):
   intentionally public-safe and may use `<hpc-login-host>`, `/home/fs01/<user>`, and `<repo-root>`
   placeholders; the executable Cayuga command bridge remains only in ignored local artifacts such as
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}` and
-  `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`.
+  `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked
+  status/results from private local inputs, run
+  `python -m bio_sfm_designer.experiments.public_surface_sanitize --apply` before committing.
   Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
   `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
   post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,

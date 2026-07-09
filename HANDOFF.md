@@ -296,7 +296,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > readiness before the decision can stay approval-ready. Tracked result/status artifacts are public-safe and
 > use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
 > in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
-> and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. Its approval-disambiguation block records that continuation phrases
+> and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked
+> status/results from private local inputs, run
+> `python -m bio_sfm_designer.experiments.public_surface_sanitize --apply` before committing. Its approval-disambiguation block records that continuation phrases
 > such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
 > (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
 > `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
