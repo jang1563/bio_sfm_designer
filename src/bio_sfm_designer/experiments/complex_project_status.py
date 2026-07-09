@@ -1536,6 +1536,11 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         if isinstance(panel_approval_packet.get("checks"), dict)
         else {}
     )
+    approval_scope = (
+        panel_approval_packet.get("approval_scope")
+        if isinstance(panel_approval_packet.get("approval_scope"), dict)
+        else {}
+    )
     consistency_failures = []
     if panel_approval_packet.get("status") != _W2_PANEL_APPROVAL_READY_STATUS:
         consistency_failures.append({
@@ -1594,7 +1599,47 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
             and all(str(path) in text for path in required_paths if path)
         )
 
+    def _int_or_none(value: Any) -> Optional[int]:
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    def _approval_scope_ok(scope: Dict[str, Any]) -> bool:
+        n_ready = _int_or_none(scope.get("n_ready_targets"))
+        n_targets = _int_or_none(scope.get("n_targets"))
+        min_targets = _int_or_none(scope.get("min_targets"))
+        records_per_target = _int_or_none(scope.get("records_per_target_planned"))
+        planned_records = _int_or_none(scope.get("planned_design_records"))
+        expected_job_pairs = _int_or_none(scope.get("expected_job_pairs"))
+        expected_slurm_jobs = _int_or_none(scope.get("expected_slurm_jobs"))
+        target_ids = scope.get("target_ids")
+        return (
+            bool(scope.get("manifest"))
+            and isinstance(target_ids, list)
+            and n_ready is not None
+            and n_targets is not None
+            and min_targets is not None
+            and len(target_ids) == n_ready
+            and n_ready == checks.get("panel_submit_ready_targets")
+            and n_targets >= n_ready
+            and n_ready >= min_targets
+            and records_per_target is not None
+            and records_per_target > 0
+            and planned_records == n_ready * records_per_target
+            and expected_job_pairs == n_ready
+            and expected_slurm_jobs == n_ready * 2
+            and scope.get("job_pair_model") == "ProteinMPNN -> Boltz"
+            and scope.get("target_alpha") == panel_approval_packet.get("target_alpha")
+            and bool(scope.get("panel_out"))
+            and bool(scope.get("completion_after_sync"))
+            and bool(scope.get("sync_back_after_jobs_finish"))
+            and scope.get("no_submit") is True
+            and scope.get("can_claim_w2_generalization") is False
+        )
+
     v11_panel_sync = "v11" in str(panel_approval_packet.get("sync_back_command_after_jobs_finish") or "")
+    approval_scope_ok = _approval_scope_ok(approval_scope)
     postsubmit_sync_ready_gate_ok = (
         bool(panel_approval_packet.get("postsubmit_status_before_sync"))
         and bool(panel_approval_packet.get("job_state_probe_before_sync"))
@@ -1639,6 +1684,11 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
                 "postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
             },
         })
+    if v11_panel_sync and not approval_scope_ok:
+        consistency_failures.append({
+            "kind": "panel_approval_packet_scope_missing_or_inconsistent",
+            "observed": approval_scope,
+        })
 
     packet_ready = not packet_failures and not consistency_failures
     status.update({
@@ -1672,6 +1722,15 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         "panel_postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
         "panel_postsubmit_sync_ready_gate_ok": postsubmit_sync_ready_gate_ok,
         "panel_postsubmit_bridge_ok": postsubmit_bridge_ok,
+        "panel_approval_scope": approval_scope,
+        "panel_approval_scope_ready": approval_scope_ok,
+        "panel_approval_scope_n_targets": approval_scope.get("n_targets"),
+        "panel_approval_scope_n_ready_targets": approval_scope.get("n_ready_targets"),
+        "panel_approval_scope_records_per_target_planned": approval_scope.get("records_per_target_planned"),
+        "panel_approval_scope_planned_design_records": approval_scope.get("planned_design_records"),
+        "panel_approval_scope_expected_job_pairs": approval_scope.get("expected_job_pairs"),
+        "panel_approval_scope_expected_slurm_jobs": approval_scope.get("expected_slurm_jobs"),
+        "panel_approval_scope_target_alpha": approval_scope.get("target_alpha"),
         "panel_approval_checks": checks,
         "panel_approval_packet_failures": packet_failures + consistency_failures,
     })
@@ -8318,6 +8377,7 @@ def _attach_w2_panel_approval_ladder(rep: Dict[str, Any]) -> None:
     rep["resume_execution_ladder"] = {
         "next_role": "w2_panel_submit",
         "next_command": w2.get("panel_submit_command_if_approved"),
+        "approval_scope": w2.get("panel_approval_scope"),
         "approval_disambiguation": {
             "continuation_phrases_are_approval": w2.get(
                 "panel_submission_decision_continuation_phrases_are_approval"
@@ -11014,6 +11074,16 @@ def render_text(rep: Dict[str, Any]) -> str:
                         receipt=w.get("panel_receipt_monitor_after_submit"),
                         driver=w.get("panel_postsubmit_driver_after_submit"),
                         job_query=w.get("panel_job_state_query_after_receipt"),
+                    )
+                )
+            if "panel_approval_scope_ready" in w:
+                lines.append(
+                    "  panel_approval_scope_ready={ready} targets={targets} planned_designs={planned} expected_slurm_jobs={jobs} alpha={alpha}".format(
+                        ready=w.get("panel_approval_scope_ready"),
+                        targets=w.get("panel_approval_scope_n_ready_targets"),
+                        planned=w.get("panel_approval_scope_planned_design_records"),
+                        jobs=w.get("panel_approval_scope_expected_slurm_jobs"),
+                        alpha=w.get("panel_approval_scope_target_alpha"),
                     )
                 )
         if key == "W2_multi_target_panel" and "panel_decision_protocol_ready" in w:

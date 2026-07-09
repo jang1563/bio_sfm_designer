@@ -6621,6 +6621,26 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
                 "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
                 "completion_command_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+                "target_alpha": 0.2,
+                "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+                "approval_scope": {
+                    "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+                    "target_ids": ["t0", "t1", "t2", "t3", "t4", "t5", "t6"],
+                    "n_targets": 7,
+                    "n_ready_targets": 7,
+                    "min_targets": 4,
+                    "records_per_target_planned": 100,
+                    "planned_design_records": 700,
+                    "expected_job_pairs": 7,
+                    "expected_slurm_jobs": 14,
+                    "job_pair_model": "ProteinMPNN -> Boltz",
+                    "target_alpha": 0.2,
+                    "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+                    "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+                    "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+                    "no_submit": True,
+                    "can_claim_w2_generalization": False,
+                },
                 "receipt_monitor_after_submit": (
                     "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
                     "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
@@ -6668,10 +6688,12 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "checks": {
                     "target_msa_strict_ready": True,
                     "panel_preflight_ready": True,
+                    "panel_submit_ready_targets": 7,
                     "panel_dry_run_no_sbatch": True,
                     "panel_guard_no_env_refuses": True,
                     "submit_receipt_absent": True,
                     "submit_summary_absent": True,
+                    "approval_scope_ready": True,
                 },
                 "failures": [],
             })
@@ -6775,6 +6797,11 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_approval_packet_ready"])
         self.assertTrue(w2["panel_postsubmit_sync_ready_gate_ok"])
         self.assertTrue(w2["panel_postsubmit_bridge_ok"])
+        self.assertTrue(w2["panel_approval_scope_ready"])
+        self.assertEqual(w2["panel_approval_scope_n_ready_targets"], 7)
+        self.assertEqual(w2["panel_approval_scope_planned_design_records"], 700)
+        self.assertEqual(w2["panel_approval_scope_expected_slurm_jobs"], 14)
+        self.assertEqual(w2["panel_approval_scope_target_alpha"], 0.2)
         self.assertIn("receipt_monitor", w2["panel_receipt_monitor_after_submit"])
         self.assertIn("postsubmit_driver", w2["panel_postsubmit_driver_after_submit"])
         self.assertEqual(
@@ -6811,12 +6838,16 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("syntax=4", render_text(rep))
         self.assertIn("panel_postsubmit_sync_ready_gate_ok=True", render_text(rep))
         self.assertIn("panel_postsubmit_bridge_ok=True", render_text(rep))
+        self.assertIn("panel_approval_scope_ready=True", render_text(rep))
+        self.assertIn("planned_designs=700", render_text(rep))
         self.assertIn("driver=bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh", render_text(rep))
         self.assertIn("panel_submission_decision_ready=True", render_text(rep))
         self.assertIn("panel_postsync_interpretation_ready=True", render_text(rep))
         self.assertIn("W2 panel submission", w2["next_action"])
         ladder = rep["resume_execution_ladder"]
         self.assertEqual(ladder["next_role"], "w2_panel_submit")
+        self.assertEqual(ladder["approval_scope"]["planned_design_records"], 700)
+        self.assertEqual(ladder["approval_scope"]["expected_slurm_jobs"], 14)
         self.assertFalse(ladder["approval_disambiguation"]["continuation_phrases_are_approval"])
         self.assertIn(
             "continue working toward the active thread goal",
@@ -6845,6 +6876,71 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("sync_back", ladder["steps"][5]["command"])
         self.assertIn("panel_completion", ladder["steps"][6]["command"])
         self.assertIn("postsync_interpretation", ladder["steps"][7]["command"])
+
+    def test_w2_v11_panel_approval_packet_missing_scope_blocks_status(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "targets_report.json")
+            packet = os.path.join(d, "panel_approval_packet.json")
+            strict = (
+                "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
+                "--manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json "
+                "--receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl "
+                "--summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json "
+                "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
+                "--require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
+            )
+            _write_json(manifest, {
+                "ok": True,
+                "n_targets": 7,
+                "n_ready_targets": 7,
+                "failures": [],
+            })
+            _write_json(packet, {
+                "artifact": "m6d_w2_panel_approval_packet",
+                "status": "panel_approval_packet_ready",
+                "audit_ok": True,
+                "approval_packet_ready": True,
+                "can_submit_panel_if_user_explicitly_approves": True,
+                "can_claim_w2_generalization": False,
+                "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
+                "panel_approval_env_value": "approve-v11-panel-submit",
+                "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+                "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+                "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+                "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+                "completion_command_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+                "target_alpha": 0.2,
+                "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+                "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
+                "receipt_monitor_after_submit": "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+                "postsubmit_driver_after_submit": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+                "job_state_query_after_receipt": "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
+                "job_state_probe_sync_after_query": (
+                    "rsync results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
+                    "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+                ),
+                "postsubmit_sync_ready_gate": strict,
+                "postsubmit_status_command_before_sync": strict,
+                "postsync_replay_after_sync": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+                "checks": {
+                    "target_msa_strict_ready": True,
+                    "panel_preflight_ready": True,
+                    "panel_submit_ready_targets": 7,
+                    "panel_dry_run_no_sbatch": True,
+                    "panel_guard_no_env_refuses": True,
+                    "submit_receipt_absent": True,
+                    "submit_summary_absent": True,
+                },
+                "failures": [],
+            })
+
+            rep = run_status(target_manifest_path=manifest, w2_panel_approval_packet_path=packet)
+
+        w2 = rep["workstreams"]["W2_multi_target_panel"]
+        self.assertEqual(w2["status"], "panel_approval_packet_blocked")
+        self.assertFalse(w2["panel_approval_scope_ready"])
+        kinds = {failure["kind"] for failure in w2["failures"]}
+        self.assertIn("panel_approval_packet_scope_missing_or_inconsistent", kinds)
 
     def test_w2_panel_submission_decision_state_blocks_if_already_submitted(self):
         with tempfile.TemporaryDirectory() as d:

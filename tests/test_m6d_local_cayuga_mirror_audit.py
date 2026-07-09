@@ -98,7 +98,18 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "workstreams.W2_multi_target_panel.panel_remote_shell_syntax_checks",
             status_fields,
         )
+        self.assertIn("workstreams.W2_multi_target_panel.panel_approval_scope_ready", status_fields)
+        self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_approval_scope_planned_design_records",
+            status_fields,
+        )
+        self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_approval_scope_expected_slurm_jobs",
+            status_fields,
+        )
         self.assertIn("resume_execution_ladder.next_role", status_fields)
+        self.assertIn("resume_execution_ladder.approval_scope.planned_design_records", status_fields)
+        self.assertIn("resume_execution_ladder.approval_scope.expected_slurm_jobs", status_fields)
         self.assertIn(
             "resume_execution_ladder.approval_disambiguation.continuation_phrases_are_approval",
             status_fields,
