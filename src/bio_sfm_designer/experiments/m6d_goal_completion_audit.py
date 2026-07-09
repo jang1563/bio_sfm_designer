@@ -33,6 +33,17 @@ _PANEL_SUBMISSION_DECISION_READY_STATUS = "awaiting_explicit_panel_submission_ap
 _PANEL_POSTSYNC_NOT_SYNCED_STATUS = "not_synced_not_interpretable"
 _PANEL_POSTSYNC_SUPPORTED_STATUS = "w2_generalization_supported_by_target_wise_panel"
 _PANEL_PUBLIC_APPROVAL_BUNDLE_STATUS = "public_approval_bundle_ready_not_submitted"
+_PANEL_OPERATOR_APPROVAL_PHRASE = "W2 v11 Cayuga ProteinMPNN/Boltz panel submission"
+_PANEL_OPERATOR_MACHINE_GATE = "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
+_PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND = (
+    "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+)
+_PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND = (
+    "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+)
+_PANEL_OPERATOR_PLANNED_DESIGN_RECORDS = 700
+_PANEL_OPERATOR_EXPECTED_SLURM_JOBS = 14
+_PANEL_OPERATOR_TARGET_ALPHA = 0.2
 _POSTSUBMIT_DRIVER_POLLING_CONTRACT = {
     "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
     "default_max_polls": 120,
@@ -368,6 +379,73 @@ def _receipt_absence_rows_ok(rows: Any) -> bool:
     return all(isinstance(row, dict) and row.get("exists") is False for row in rows)
 
 
+def _operator_approval_checklist_state(checklist: Any) -> Dict[str, Any]:
+    if not isinstance(checklist, dict):
+        return {
+            "present": False,
+            "ok": False,
+            "checks": {"present": False},
+        }
+    checks = {
+        "present": True,
+        "pre_submit_state_ok": checklist.get("pre_submit_state_ok") is True,
+        "submit_allowed_by_this_artifact": checklist.get("submit_allowed_by_this_artifact") is True,
+        "submission_performed_by_this_artifact": (
+            checklist.get("submission_performed_by_this_artifact") is False
+        ),
+        "approval_phrase_required": (
+            checklist.get("approval_phrase_required") == _PANEL_OPERATOR_APPROVAL_PHRASE
+        ),
+        "continuation_phrases_are_approval": (
+            checklist.get("continuation_phrases_are_approval") is False
+        ),
+        "machine_gate": checklist.get("machine_gate") == _PANEL_OPERATOR_MACHINE_GATE,
+        "postsubmit_driver_command": (
+            checklist.get("postsubmit_driver_command") == _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND
+        ),
+        "postsync_replay_command": (
+            checklist.get("postsync_replay_command") == _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND
+        ),
+        "driver_replay_command_pair_ready": checklist.get("driver_replay_command_pair_ready") is True,
+        "local_receipts_absent": checklist.get("local_receipts_absent") is True,
+        "remote_receipts_checked": checklist.get("remote_receipts_checked") is True,
+        "remote_receipts_absent": checklist.get("remote_receipts_absent") is True,
+        "planned_design_records": (
+            checklist.get("planned_design_records") == _PANEL_OPERATOR_PLANNED_DESIGN_RECORDS
+        ),
+        "expected_slurm_jobs": (
+            checklist.get("expected_slurm_jobs") == _PANEL_OPERATOR_EXPECTED_SLURM_JOBS
+        ),
+        "target_alpha": checklist.get("target_alpha") == _PANEL_OPERATOR_TARGET_ALPHA,
+        "no_submit": checklist.get("no_submit") is True,
+        "submitted": checklist.get("submitted") is False,
+        "can_claim_w2_generalization": checklist.get("can_claim_w2_generalization") is False,
+    }
+    return {
+        "present": True,
+        "ok": all(checks.values()),
+        "checks": checks,
+        "pre_submit_state_ok": checklist.get("pre_submit_state_ok"),
+        "submit_allowed_by_this_artifact": checklist.get("submit_allowed_by_this_artifact"),
+        "submission_performed_by_this_artifact": checklist.get("submission_performed_by_this_artifact"),
+        "approval_phrase_required": checklist.get("approval_phrase_required"),
+        "continuation_phrases_are_approval": checklist.get("continuation_phrases_are_approval"),
+        "machine_gate": checklist.get("machine_gate"),
+        "postsubmit_driver_command": checklist.get("postsubmit_driver_command"),
+        "postsync_replay_command": checklist.get("postsync_replay_command"),
+        "driver_replay_command_pair_ready": checklist.get("driver_replay_command_pair_ready"),
+        "local_receipts_absent": checklist.get("local_receipts_absent"),
+        "remote_receipts_checked": checklist.get("remote_receipts_checked"),
+        "remote_receipts_absent": checklist.get("remote_receipts_absent"),
+        "planned_design_records": checklist.get("planned_design_records"),
+        "expected_slurm_jobs": checklist.get("expected_slurm_jobs"),
+        "target_alpha": checklist.get("target_alpha"),
+        "no_submit": checklist.get("no_submit"),
+        "submitted": checklist.get("submitted"),
+        "can_claim_w2_generalization": checklist.get("can_claim_w2_generalization"),
+    }
+
+
 def _panel_submission_decision_state(panel_submission_decision_state: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     if not isinstance(panel_submission_decision_state, dict):
         return {
@@ -384,6 +462,9 @@ def _panel_submission_decision_state(panel_submission_decision_state: Optional[D
         else {}
     )
     remote_checked = receipt_absence.get("remote_checked") is True
+    operator = _operator_approval_checklist_state(
+        panel_submission_decision_state.get("operator_approval_checklist")
+    )
     return {
         "path": panel_submission_decision_state.get("_path"),
         "status": panel_submission_decision_state.get("status"),
@@ -399,6 +480,27 @@ def _panel_submission_decision_state(panel_submission_decision_state: Optional[D
         "remote_checked": remote_checked,
         "local_receipt_absence_ok": _receipt_absence_rows_ok(receipt_absence.get("local")),
         "remote_receipt_absence_ok": remote_checked and _receipt_absence_rows_ok(receipt_absence.get("remote")),
+        "operator_checklist_present": operator.get("present"),
+        "operator_checklist_ok": operator.get("ok"),
+        "operator_checklist_checks": operator.get("checks"),
+        "operator_pre_submit_state_ok": operator.get("pre_submit_state_ok"),
+        "operator_submit_allowed_by_this_artifact": operator.get("submit_allowed_by_this_artifact"),
+        "operator_submission_performed_by_this_artifact": operator.get("submission_performed_by_this_artifact"),
+        "operator_approval_phrase_required": operator.get("approval_phrase_required"),
+        "operator_continuation_phrases_are_approval": operator.get("continuation_phrases_are_approval"),
+        "operator_machine_gate": operator.get("machine_gate"),
+        "operator_postsubmit_driver_command": operator.get("postsubmit_driver_command"),
+        "operator_postsync_replay_command": operator.get("postsync_replay_command"),
+        "operator_driver_replay_command_pair_ready": operator.get("driver_replay_command_pair_ready"),
+        "operator_local_receipts_absent": operator.get("local_receipts_absent"),
+        "operator_remote_receipts_checked": operator.get("remote_receipts_checked"),
+        "operator_remote_receipts_absent": operator.get("remote_receipts_absent"),
+        "operator_planned_design_records": operator.get("planned_design_records"),
+        "operator_expected_slurm_jobs": operator.get("expected_slurm_jobs"),
+        "operator_target_alpha": operator.get("target_alpha"),
+        "operator_no_submit": operator.get("no_submit"),
+        "operator_submitted": operator.get("submitted"),
+        "operator_can_claim_w2_generalization": operator.get("can_claim_w2_generalization"),
         "n_failures": len(panel_submission_decision_state.get("failures") or []),
         "next_action": panel_submission_decision_state.get("next_action"),
     }
@@ -1048,6 +1150,25 @@ def build_audit(project_status: Dict[str, Any],
                 expected=True,
                 observed=panel_submission_decision.get("remote_receipt_absence_ok"),
             )
+        if panel_submission_decision.get("operator_checklist_ok") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_submission_decision_operator_checklist_not_ready",
+                "W2 panel submission-decision state must expose a complete operator approval checklist",
+                expected={
+                    "approval_phrase_required": _PANEL_OPERATOR_APPROVAL_PHRASE,
+                    "machine_gate": _PANEL_OPERATOR_MACHINE_GATE,
+                    "postsubmit_driver_command": _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND,
+                    "postsync_replay_command": _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND,
+                    "planned_design_records": _PANEL_OPERATOR_PLANNED_DESIGN_RECORDS,
+                    "expected_slurm_jobs": _PANEL_OPERATOR_EXPECTED_SLURM_JOBS,
+                    "target_alpha": _PANEL_OPERATOR_TARGET_ALPHA,
+                    "no_submit": True,
+                    "submitted": False,
+                    "can_claim_w2_generalization": False,
+                },
+                observed=panel_submission_decision.get("operator_checklist_checks"),
+            )
         if panel_submission_decision.get("n_failures") != 0:
             _add_failure(
                 failures,
@@ -1527,6 +1648,48 @@ def build_audit(project_status: Dict[str, Any],
             "panel_submission_decision_remote_receipt_absence_ok": panel_submission_decision.get(
                 "remote_receipt_absence_ok"
             ),
+            "panel_submission_decision_operator_checklist_ok": panel_submission_decision.get(
+                "operator_checklist_ok"
+            ),
+            "panel_submission_decision_operator_submit_allowed": panel_submission_decision.get(
+                "operator_submit_allowed_by_this_artifact"
+            ),
+            "panel_submission_decision_operator_submission_performed": panel_submission_decision.get(
+                "operator_submission_performed_by_this_artifact"
+            ),
+            "panel_submission_decision_operator_approval_phrase_required": panel_submission_decision.get(
+                "operator_approval_phrase_required"
+            ),
+            "panel_submission_decision_operator_machine_gate": panel_submission_decision.get(
+                "operator_machine_gate"
+            ),
+            "panel_submission_decision_operator_postsubmit_driver_command": panel_submission_decision.get(
+                "operator_postsubmit_driver_command"
+            ),
+            "panel_submission_decision_operator_postsync_replay_command": panel_submission_decision.get(
+                "operator_postsync_replay_command"
+            ),
+            "panel_submission_decision_operator_driver_replay_pair_ready": panel_submission_decision.get(
+                "operator_driver_replay_command_pair_ready"
+            ),
+            "panel_submission_decision_operator_local_receipts_absent": panel_submission_decision.get(
+                "operator_local_receipts_absent"
+            ),
+            "panel_submission_decision_operator_remote_receipts_checked": panel_submission_decision.get(
+                "operator_remote_receipts_checked"
+            ),
+            "panel_submission_decision_operator_remote_receipts_absent": panel_submission_decision.get(
+                "operator_remote_receipts_absent"
+            ),
+            "panel_submission_decision_operator_planned_design_records": panel_submission_decision.get(
+                "operator_planned_design_records"
+            ),
+            "panel_submission_decision_operator_expected_slurm_jobs": panel_submission_decision.get(
+                "operator_expected_slurm_jobs"
+            ),
+            "panel_submission_decision_operator_target_alpha": panel_submission_decision.get(
+                "operator_target_alpha"
+            ),
             "panel_postsync_interpretation_ready": (
                 panel_postsync.get("status") in {
                     _PANEL_POSTSYNC_NOT_SYNCED_STATUS,
@@ -1676,6 +1839,13 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel submission decision no-submit: `{rep.get('w2_gate', {}).get('panel_submission_decision_no_submit')}`",
         f"- W2 panel submission decision submitted: `{rep.get('w2_gate', {}).get('panel_submission_decision_submitted')}`",
         f"- W2 panel submission decision can claim generalization: `{rep.get('w2_gate', {}).get('panel_submission_decision_can_claim_w2_generalization')}`",
+        f"- W2 panel submission decision operator checklist ok: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_checklist_ok')}`",
+        f"- W2 panel submission decision operator submit allowed: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_submit_allowed')}`",
+        f"- W2 panel submission decision operator submission performed: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_submission_performed')}`",
+        f"- W2 panel submission decision operator driver/replay pair ready: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_driver_replay_pair_ready')}`",
+        f"- W2 panel submission decision operator remote receipts absent: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_remote_receipts_absent')}`",
+        f"- W2 panel submission decision operator planned designs: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_planned_design_records')}`",
+        f"- W2 panel submission decision operator expected Slurm jobs: `{rep.get('w2_gate', {}).get('panel_submission_decision_operator_expected_slurm_jobs')}`",
         f"- W2 panel post-sync interpretation ready: `{rep.get('w2_gate', {}).get('panel_postsync_interpretation_ready')}`",
         f"- W2 panel post-sync status: `{rep.get('w2_gate', {}).get('panel_postsync_status')}`",
         f"- W2 panel post-sync can claim generalization: `{rep.get('w2_gate', {}).get('panel_postsync_can_claim_w2_generalization')}`",

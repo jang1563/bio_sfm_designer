@@ -263,6 +263,30 @@ def _panel_submission_decision_state():
         "explicit_approval_required": True,
         "can_submit_if_explicitly_approved": True,
         "can_claim_w2_generalization": False,
+        "operator_approval_checklist": {
+            "pre_submit_state_ok": True,
+            "submit_allowed_by_this_artifact": True,
+            "submission_performed_by_this_artifact": False,
+            "approval_phrase_required": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+            "continuation_phrases_are_approval": False,
+            "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+            "postsubmit_driver_command": (
+                "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+            ),
+            "postsync_replay_command": (
+                "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+            ),
+            "driver_replay_command_pair_ready": True,
+            "local_receipts_absent": True,
+            "remote_receipts_checked": True,
+            "remote_receipts_absent": True,
+            "planned_design_records": 700,
+            "expected_slurm_jobs": 14,
+            "target_alpha": 0.2,
+            "no_submit": True,
+            "submitted": False,
+            "can_claim_w2_generalization": False,
+        },
         "receipt_absence": {
             "local": [
                 {"path": "results/receipt.jsonl", "exists": False},
@@ -609,7 +633,44 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_submission_decision_no_submit"])
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_submitted"])
         self.assertFalse(rep["w2_gate"]["panel_submission_decision_can_claim_w2_generalization"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_checklist_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_submit_allowed"])
+        self.assertFalse(rep["w2_gate"]["panel_submission_decision_operator_submission_performed"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_driver_replay_pair_ready"])
+        self.assertTrue(rep["w2_gate"]["panel_submission_decision_operator_remote_receipts_absent"])
+        self.assertEqual(rep["w2_gate"]["panel_submission_decision_operator_planned_design_records"], 700)
+        self.assertEqual(rep["w2_gate"]["panel_submission_decision_operator_expected_slurm_jobs"], 14)
         self.assertIn("W2 panel submission decision ready: `True`", render_markdown(rep))
+        self.assertIn("W2 panel submission decision operator checklist ok: `True`", render_markdown(rep))
+
+    def test_v11_submission_decision_operator_checklist_blocks_drift(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            decision = _panel_submission_decision_state()
+            decision["operator_approval_checklist"]["remote_receipts_absent"] = False
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                decision,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_submission_decision_operator_checklist_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_submission_decision_operator_checklist_not_ready", kinds)
 
     def test_public_approval_bundle_missing_remote_syntax_gate_blocks_audit(self):
         with tempfile.TemporaryDirectory() as d:

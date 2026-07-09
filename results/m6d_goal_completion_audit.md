@@ -52,6 +52,13 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel submission decision no-submit: `True`
 - W2 panel submission decision submitted: `False`
 - W2 panel submission decision can claim generalization: `False`
+- W2 panel submission decision operator checklist ok: `True`
+- W2 panel submission decision operator submit allowed: `True`
+- W2 panel submission decision operator submission performed: `False`
+- W2 panel submission decision operator driver/replay pair ready: `True`
+- W2 panel submission decision operator remote receipts absent: `True`
+- W2 panel submission decision operator planned designs: `700`
+- W2 panel submission decision operator expected Slurm jobs: `14`
 - W2 panel post-sync interpretation ready: `True`
 - W2 panel post-sync status: `not_synced_not_interpretable`
 - W2 panel post-sync can claim generalization: `False`

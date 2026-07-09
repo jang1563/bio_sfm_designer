@@ -156,12 +156,12 @@
       "remote_sha256": "ba2abe2b91d7909fe57591db9f87db17c7a16a566bb69d2ff1a828a1ce344f58"
     },
     {
-      "local_bytes": 31588,
-      "local_sha256": "7d743030871bd5e1de565e8cbe92df0ef97d41aef14619be2e7c6693cc562338",
+      "local_bytes": 32631,
+      "local_sha256": "15ec04a84d36c768ee29d778bcc37c4c32ce0b49c1cd5af2658c1bd999c948d6",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
-      "remote_bytes": 31588,
-      "remote_sha256": "7d743030871bd5e1de565e8cbe92df0ef97d41aef14619be2e7c6693cc562338"
+      "remote_bytes": 32631,
+      "remote_sha256": "15ec04a84d36c768ee29d778bcc37c4c32ce0b49c1cd5af2658c1bd999c948d6"
     },
     {
       "local_bytes": 530775,

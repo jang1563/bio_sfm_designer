@@ -311,6 +311,32 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_ready", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_planned_design_records", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_expected_slurm_jobs", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_checklist_ok", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_submit_allowed", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_submission_performed", completion_fields)
+        self.assertIn(
+            "w2_gate.panel_submission_decision_operator_approval_phrase_required",
+            completion_fields,
+        )
+        self.assertIn("w2_gate.panel_submission_decision_operator_machine_gate", completion_fields)
+        self.assertIn(
+            "w2_gate.panel_submission_decision_operator_postsubmit_driver_command",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_submission_decision_operator_postsync_replay_command",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_submission_decision_operator_driver_replay_pair_ready",
+            completion_fields,
+        )
+        self.assertIn("w2_gate.panel_submission_decision_operator_local_receipts_absent", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_remote_receipts_checked", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_remote_receipts_absent", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_planned_design_records", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_expected_slurm_jobs", completion_fields)
+        self.assertIn("w2_gate.panel_submission_decision_operator_target_alpha", completion_fields)
         self.assertIn("prerequisites.remote_readiness.n_exact_checks", public_bundle_fields)
         self.assertIn("approval_scope.planned_design_records", public_bundle_fields)
         self.assertIn("approval_scope.expected_slurm_jobs", public_bundle_fields)
