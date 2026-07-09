@@ -7279,6 +7279,7 @@ def _project_status_command(args) -> str:
         ("--w2-panel-decision-protocol", args.w2_panel_decision_protocol),
         ("--w2-panel-remote-readiness", args.w2_panel_remote_readiness),
         ("--w2-panel-submission-decision-state", args.w2_panel_submission_decision_state),
+        ("--w2-panel-postsync-interpretation", args.w2_panel_postsync_interpretation),
         ("--panel-completion", args.panel_completion),
         ("--panel-report", args.panel_report),
         ("--predictor-contract-report", args.predictor_contract_report),

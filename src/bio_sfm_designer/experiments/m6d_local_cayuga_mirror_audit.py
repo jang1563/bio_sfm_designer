@@ -227,6 +227,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "approval_disambiguation.continuation_phrases_are_approval",
         "approval_disambiguation.approval_must_explicitly_name",
         "approval_disambiguation.machine_gate",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
         "can_submit_if_explicitly_approved",
         "can_claim_w2_generalization",
         "receipt_absence.remote_checked",

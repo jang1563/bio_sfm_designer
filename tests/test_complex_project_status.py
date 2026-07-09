@@ -5913,11 +5913,13 @@ class ComplexProjectStatusTests(unittest.TestCase):
             post_sync = os.path.join(d, "post_sync.sh")
             remote_readiness = os.path.join(d, "remote_readiness.json")
             submission_decision = os.path.join(d, "submission_decision.json")
+            postsync_interpretation = os.path.join(d, "postsync_interpretation.json")
 
             main([
                 "--target-alpha", "0.1",
                 "--w2-panel-remote-readiness", remote_readiness,
                 "--w2-panel-submission-decision-state", submission_decision,
+                "--w2-panel-postsync-interpretation", postsync_interpretation,
                 "--out", out,
                 "--emit-pending-external-paths", pending_external,
                 "--emit-external-sync-back-plan", external_sync,
@@ -5931,6 +5933,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertIn("--target-alpha 0.1", command)
         self.assertIn(f"--w2-panel-remote-readiness {remote_readiness}", command)
         self.assertIn(f"--w2-panel-submission-decision-state {submission_decision}", command)
+        self.assertIn(f"--w2-panel-postsync-interpretation {postsync_interpretation}", command)
         self.assertIn(f"--out {out}", command)
         self.assertIn(f"--emit-pending-external-paths {pending_external}", command)
         self.assertIn(f"--emit-external-sync-back-plan {external_sync}", command)

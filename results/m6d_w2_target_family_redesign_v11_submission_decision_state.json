@@ -80,6 +80,7 @@
       "ok": true,
       "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_goal_completion_audit.json",
       "status": "goal_active_w2_remaining",
+      "w2_panel_public_approval_bundle_ready": true,
       "w2_panel_remote_failures": 0,
       "w2_panel_remote_no_submit": true
     },

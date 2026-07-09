@@ -347,6 +347,7 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and goal_completion_audit.get("can_mark_goal_complete") is False
         and _field(goal_completion_audit, "w2_gate.panel_remote_no_submit") is True
         and _field(goal_completion_audit, "w2_gate.panel_remote_failures") == 0
+        and _field(goal_completion_audit, "w2_gate.panel_public_approval_bundle_ready") is True
     )
     return {
         "path": goal_completion_audit.get("_path"),
@@ -357,6 +358,10 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         "can_mark_goal_complete": goal_completion_audit.get("can_mark_goal_complete"),
         "w2_panel_remote_no_submit": _field(goal_completion_audit, "w2_gate.panel_remote_no_submit"),
         "w2_panel_remote_failures": _field(goal_completion_audit, "w2_gate.panel_remote_failures"),
+        "w2_panel_public_approval_bundle_ready": _field(
+            goal_completion_audit,
+            "w2_gate.panel_public_approval_bundle_ready",
+        ),
     }
 
 

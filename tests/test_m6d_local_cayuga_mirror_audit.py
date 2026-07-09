@@ -85,6 +85,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
+            decision_fields,
+        )
 
     def test_build_audit_accepts_matching_exact_and_semantic_fields(self):
         with tempfile.TemporaryDirectory() as d:

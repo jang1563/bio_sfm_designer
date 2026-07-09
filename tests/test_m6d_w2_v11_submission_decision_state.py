@@ -156,6 +156,7 @@ def _goal_completion_audit():
         "w2_gate": {
             "panel_remote_no_submit": True,
             "panel_remote_failures": 0,
+            "panel_public_approval_bundle_ready": True,
         },
     }
 
@@ -235,6 +236,18 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("remote_submission_readiness_not_ready", kinds)
+
+    def test_missing_public_approval_bundle_readiness_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"].pop("panel_public_approval_bundle_ready")
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
 
     def test_missing_postsubmit_sync_ready_gate_blocks_decision_state(self):
         approval = _approval_packet()
