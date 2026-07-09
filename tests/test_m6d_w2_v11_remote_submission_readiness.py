@@ -56,10 +56,19 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         fields = _SEMANTIC_JSON_FIELDS[
             "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
         ]
+        wrapper_fields = _SEMANTIC_JSON_FIELDS[
+            "results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json"
+        ]
         decision_fields = _SEMANTIC_JSON_FIELDS[
             "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json"
         ]
 
+        self.assertIn("no_env_run.ok", wrapper_fields)
+        self.assertIn("no_env_run.ran", wrapper_fields)
+        self.assertIn("no_env_run.returncode", wrapper_fields)
+        self.assertIn("no_env_run.receipt_exists_before", wrapper_fields)
+        self.assertIn("no_env_run.receipt_exists_after", wrapper_fields)
+        self.assertIn("no_env_run.refusal_message_seen", wrapper_fields)
         self.assertIn("postsubmit_status_before_sync", fields)
         self.assertIn("job_state_probe_before_sync", fields)
         self.assertIn("receipt_monitor_after_submit", fields)

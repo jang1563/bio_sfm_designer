@@ -69,7 +69,11 @@ _SEMANTIC_JSON_FIELDS = {
         "panel_approval_env_value",
         "static_audit.ok",
         "no_env_run.ok",
+        "no_env_run.ran",
+        "no_env_run.returncode",
+        "no_env_run.receipt_exists_before",
         "no_env_run.receipt_exists_after",
+        "no_env_run.refusal_message_seen",
     ],
     "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json": [
         "status",

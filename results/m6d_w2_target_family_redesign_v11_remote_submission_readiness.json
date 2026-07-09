@@ -148,12 +148,12 @@
       "remote_sha256": "9c5a36a916f0a37d335b1df92dd34b7688a64e944a4ad8469352e16fab985792"
     },
     {
-      "local_bytes": 21750,
-      "local_sha256": "ba2abe2b91d7909fe57591db9f87db17c7a16a566bb69d2ff1a828a1ce344f58",
+      "local_bytes": 21896,
+      "local_sha256": "596c0ce0bda089d6aebdfbce5a654e3ab1cbd5ca5bdb817a2ac4147bf93676db",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 21750,
-      "remote_sha256": "ba2abe2b91d7909fe57591db9f87db17c7a16a566bb69d2ff1a828a1ce344f58"
+      "remote_bytes": 21896,
+      "remote_sha256": "596c0ce0bda089d6aebdfbce5a654e3ab1cbd5ca5bdb817a2ac4147bf93676db"
     },
     {
       "local_bytes": 36077,
@@ -331,10 +331,34 @@
           "remote": true
         },
         {
+          "field": "no_env_run.ran",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "no_env_run.returncode",
+          "local": 2,
+          "ok": true,
+          "remote": 2
+        },
+        {
+          "field": "no_env_run.receipt_exists_before",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
           "field": "no_env_run.receipt_exists_after",
           "local": false,
           "ok": true,
           "remote": false
+        },
+        {
+          "field": "no_env_run.refusal_message_seen",
+          "local": true,
+          "ok": true,
+          "remote": true
         }
       ],
       "ok": true,
