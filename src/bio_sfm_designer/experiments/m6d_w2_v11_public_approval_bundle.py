@@ -94,7 +94,7 @@ def _portable_commands(runbook: Dict[str, Any], packet: Dict[str, Any]) -> Dict[
         postsync = postsync.split(" ", 1)[1]
     return {
         "setup_environment": (
-            "export CAYUGA_BIO_SFM_HOST=<cayuga-login-host>\n"
+            "export CAYUGA_BIO_SFM_HOST=<hpc-login-host>\n"
             "export CAYUGA_BIO_SFM_REMOTE_ROOT=<remote-repo-root>\n"
             "export CAYUGA_BIO_SFM_ROOT=\"$CAYUGA_BIO_SFM_HOST:$CAYUGA_BIO_SFM_REMOTE_ROOT\"\n"
             "export BIO_SFM_PYTHON=<python-with-boltz-and-proteinmpnn-runtime>"

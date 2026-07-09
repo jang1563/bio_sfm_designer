@@ -127,7 +127,7 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertNotIn("/home/fs01", text)
         self.assertNotIn("private_user_123", text)
         self.assertNotIn("cayuga-login-private", text)
-        self.assertIn("<cayuga-login-host>", text)
+        self.assertIn("<hpc-login-host>", text)
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
 

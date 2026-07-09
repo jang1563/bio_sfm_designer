@@ -17,7 +17,7 @@ Can claim W2 generalization: `False`.
 ### setup_environment
 
 ```bash
-export CAYUGA_BIO_SFM_HOST=<cayuga-login-host>
+export CAYUGA_BIO_SFM_HOST=<hpc-login-host>
 export CAYUGA_BIO_SFM_REMOTE_ROOT=<remote-repo-root>
 export CAYUGA_BIO_SFM_ROOT="$CAYUGA_BIO_SFM_HOST:$CAYUGA_BIO_SFM_REMOTE_ROOT"
 export BIO_SFM_PYTHON=<python-with-boltz-and-proteinmpnn-runtime>
