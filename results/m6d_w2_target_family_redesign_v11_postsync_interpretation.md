@@ -20,7 +20,7 @@ Can claim W2 generalization: `False`.
 
 ## Claim Boundary
 
-post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report
+post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report with exact manifest target-set, duplicate-free target rows, and matching report target counts
 
 ## Next Action
 

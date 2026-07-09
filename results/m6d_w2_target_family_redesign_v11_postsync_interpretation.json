@@ -2,7 +2,7 @@
   "artifact": "m6d_w2_panel_postsync_interpretation",
   "audit_ok": true,
   "can_claim_w2_generalization": false,
-  "claim_boundary": "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report",
+  "claim_boundary": "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report with exact manifest target-set, duplicate-free target rows, and matching report target counts",
   "completion": "results/m6d_w2_target_family_redesign_v11_panel_completion.json",
   "completion_probe": {
     "n_completed_targets": 0,

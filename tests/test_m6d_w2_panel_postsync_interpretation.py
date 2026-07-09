@@ -142,6 +142,8 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
         self.assertTrue(rep["can_claim_w2_generalization"])
         self.assertTrue(rep["audit_ok"])
         self.assertEqual(rep["panel_label"], "W2 v11 Boltz-2 representative panel/protocol")
+        self.assertIn("exact manifest target-set", rep["claim_boundary"])
+        self.assertIn("duplicate-free target rows", rep["claim_boundary"])
         self.assertIn("W2 v11 Boltz-2 representative panel/protocol", rep["current_panel_result"]["claim"])
 
     def test_panel_report_target_set_mismatch_blocks_claim_and_audit(self):

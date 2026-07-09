@@ -36,7 +36,7 @@
   "artifact": "m6d_w2_v11_public_approval_bundle",
   "audit_ok": true,
   "can_claim_w2_generalization": false,
-  "claim_boundary": "not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report, and refreshed interpretation",
+  "claim_boundary": "not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report with exact manifest target-set, duplicate-free target rows, matching report target counts, and refreshed interpretation",
   "failures": [],
   "next_action": "await explicit approval before using submit_if_explicitly_approved; otherwise keep no-submit state",
   "no_submit": true,

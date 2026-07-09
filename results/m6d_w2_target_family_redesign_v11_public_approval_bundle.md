@@ -129,7 +129,7 @@ bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 
 ## Claim Boundary
 
-not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report, and refreshed interpretation
+not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report with exact manifest target-set, duplicate-free target rows, matching report target counts, and refreshed interpretation
 
 ## Failures
 

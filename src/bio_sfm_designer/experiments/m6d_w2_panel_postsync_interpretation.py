@@ -280,7 +280,10 @@ def build_interpretation(*,
         },
         "current_panel_result": panel_result,
         "failures": failures,
-        "claim_boundary": "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report",
+        "claim_boundary": (
+            "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report "
+            "with exact manifest target-set, duplicate-free target rows, and matching report target counts"
+        ),
         "next_action": next_action,
     }
 

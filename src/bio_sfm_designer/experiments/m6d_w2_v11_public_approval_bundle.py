@@ -656,7 +656,8 @@ def build_bundle(
         "postsubmit_driver_polling": postsubmit_driver_polling,
         "claim_boundary": (
             "not W2 evidence until explicit approval, successful submit receipt, completed jobs, "
-            "sync-back, completion, target-wise report, and refreshed interpretation"
+            "sync-back, completion, target-wise report with exact manifest target-set, duplicate-free "
+            "target rows, matching report target counts, and refreshed interpretation"
         ),
         "failures": failures,
         "next_action": (

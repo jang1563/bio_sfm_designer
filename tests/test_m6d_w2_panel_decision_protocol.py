@@ -105,6 +105,12 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
         self.assertEqual(rep["panel_contract"]["n_manifest_targets"], 14)
         self.assertEqual(rep["current_panel_result"]["status"], "not_available_not_submitted")
         self.assertIn("target-wise panel certification", rep["claim_boundary"]["w2_multi_target_generalization"])
+        self.assertIn("exact manifest target-set", rep["claim_boundary"]["w2_multi_target_generalization"])
+        self.assertIn("duplicate-free target rows", rep["claim_boundary"]["w2_multi_target_generalization"])
+        self.assertIn(
+            "report target counts match",
+            " ".join(rule["if"] for rule in rep["decision_rules"]),
+        )
         self.assertIn("submit_guarded_panel", [step["step"] for step in rep["execution_sequence_if_explicitly_approved"]])
         self.assertIn(
             "BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit",

@@ -359,6 +359,9 @@ engine installs from GitHub):
   ProteinMPNN-to-Boltz job pairs, and 14 expected dependent Slurm jobs at target α=0.2.
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
+  Its post-panel claim boundary is stricter than `multi_target_certified` alone: a W2 generalization claim
+  also requires the panel report target set to exactly match the 7-target manifest, duplicate-free target
+  rows, matching reported target counts, and target-wise certificates for every target.
   For public handoff/release surfaces, use
   `results/m6d_w2_target_family_redesign_v11_public_approval_bundle.{json,md}` instead of the raw
   environment-specific runbook; regenerate it with
@@ -410,8 +413,8 @@ engine installs from GitHub):
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsync_interpretation`) currently records
   `not_synced_not_interpretable`, emits the guarded replay path for sync-back -> completion ->
   `complex_panel_report` -> decision-protocol refresh, explicitly revalidates postsubmit status with the
-  manifest, submit receipt/summary, and job-state JSON before sync-back, and keeps
-  `can_claim_w2_generalization=false`.
+  manifest, submit receipt/summary, and job-state JSON before sync-back, fail-closes on panel-report
+  target-set drift, duplicate target rows, or target-count mismatch, and keeps `can_claim_w2_generalization=false`.
   The panel has not been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files

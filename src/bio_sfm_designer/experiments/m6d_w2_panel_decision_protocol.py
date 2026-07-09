@@ -355,7 +355,10 @@ def build_protocol(
             "panel_approval_packet": "not approval and not evidence",
             "panel_submission": "requires explicit user approval env before any real submit",
             "panel_completion": "requires synced records for all manifest targets before report",
-            "w2_multi_target_generalization": "not supported until target-wise panel certification passes",
+            "w2_multi_target_generalization": (
+                "not supported until target-wise panel certification passes with exact manifest target-set, "
+                "duplicate-free target rows, and matching report target counts"
+            ),
             "pooled_diagnostic": "cannot override target-wise panel certification",
         },
         "inputs": {
@@ -406,8 +409,16 @@ def build_protocol(
                 "then": "no W2 claim; repair sync/record contract before panel report",
             },
             {
-                "if": "panel report is multi_target_certified at target_alpha with every target certified",
+                "if": (
+                    "panel report is multi_target_certified at target_alpha, every target is certified, "
+                    "the report target set exactly matches the manifest, target rows are duplicate-free, "
+                    "and report target counts match"
+                ),
                 "then": f"W2 generalization supported for the {panel_label}",
+            },
+            {
+                "if": "panel report target set, duplicate target rows, or reported target counts drift from the manifest",
+                "then": "no W2 claim; repair sync/report target-set contract before science interpretation",
             },
             {
                 "if": "panel report is evaluable but any target is not certified",
