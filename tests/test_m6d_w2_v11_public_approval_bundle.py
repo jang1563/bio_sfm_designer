@@ -201,6 +201,9 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertTrue(rep["post_approval_workflow"]["includes_completion"])
         self.assertTrue(rep["post_approval_workflow"]["includes_postsync_interpretation"])
         self.assertTrue(rep["post_approval_workflow"]["driver_proceeds_only_when_sync_ready"])
+        self.assertTrue(rep["post_approval_workflow"]["driver_command_expected"])
+        self.assertTrue(rep["post_approval_workflow"]["postsync_replay_command_expected"])
+        self.assertTrue(rep["post_approval_workflow"]["driver_replay_command_pair_ready"])
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_exact_checks"], 25)
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_shell_syntax_checks"], 4)
         self.assertTrue(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
@@ -208,6 +211,9 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertIn("Approval Boundary", render_markdown(rep))
         self.assertIn("Approval Scope", render_markdown(rep))
         self.assertIn("Post-Approval Workflow", render_markdown(rep))
+        self.assertIn("driver command expected: `True`", render_markdown(rep))
+        self.assertIn("post-sync replay command expected: `True`", render_markdown(rep))
+        self.assertIn("driver/replay command pair ready: `True`", render_markdown(rep))
         self.assertIn("driver polling contract ok: `True`", render_markdown(rep))
         self.assertIn("remote shell syntax checks ok: `True`", render_markdown(rep))
 
@@ -272,6 +278,45 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "public_approval_bundle_blocked")
         self.assertFalse(rep["post_approval_workflow"]["driver_polling_contract_ok"])
+        self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_wrong_postsubmit_driver_command_blocks_bundle(self):
+        runbook = _runbook()
+        runbook["post_submit"]["postsubmit_driver_script"] = "results/custom_postsubmit_driver.sh"
+
+        rep = build_bundle(
+            runbook=runbook,
+            packet=_packet(),
+            preflight=_preflight(),
+            decision_state=_decision(),
+            remote_readiness=_remote(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertTrue(rep["post_approval_workflow"]["driver_command_present"])
+        self.assertFalse(rep["post_approval_workflow"]["driver_command_expected"])
+        self.assertTrue(rep["post_approval_workflow"]["postsync_replay_command_expected"])
+        self.assertFalse(rep["post_approval_workflow"]["driver_replay_command_pair_ready"])
+        self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_wrong_postsync_replay_command_blocks_bundle(self):
+        runbook = _runbook()
+        runbook["post_submit"]["postsync_replay_script"] = "results/custom_postsync_replay.sh"
+
+        rep = build_bundle(
+            runbook=runbook,
+            packet=_packet(),
+            preflight=_preflight(),
+            decision_state=_decision(),
+            remote_readiness=_remote(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertTrue(rep["post_approval_workflow"]["driver_command_expected"])
+        self.assertFalse(rep["post_approval_workflow"]["postsync_replay_command_expected"])
+        self.assertFalse(rep["post_approval_workflow"]["driver_replay_command_pair_ready"])
         self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
 
     def test_missing_remote_shell_syntax_gate_blocks_bundle(self):

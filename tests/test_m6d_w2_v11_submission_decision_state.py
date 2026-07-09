@@ -230,6 +230,9 @@ def _goal_completion_audit():
             "panel_public_approval_bundle_workflow_sync_ready_before_record_sync": True,
             "panel_public_approval_bundle_workflow_includes_postsync_interpretation": True,
             "panel_public_approval_bundle_workflow_driver_command_present": True,
+            "panel_public_approval_bundle_workflow_driver_command_expected": True,
+            "panel_public_approval_bundle_workflow_postsync_replay_command_expected": True,
+            "panel_public_approval_bundle_workflow_driver_replay_command_pair_ready": True,
             "panel_public_approval_bundle_workflow_driver_polling_contract_ok": True,
             "panel_public_approval_bundle_workflow_driver_polling_default_max_polls": 120,
             "panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds": 300,
@@ -444,6 +447,24 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "submission_decision_blocked")
         self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_wrong_public_approval_driver_replay_pair_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"]["panel_public_approval_bundle_workflow_postsync_replay_command_expected"] = False
+        completion["w2_gate"]["panel_public_approval_bundle_workflow_driver_replay_command_pair_ready"] = False
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        self.assertFalse(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_postsync_replay_command_expected"
+            ]
+        )
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
 

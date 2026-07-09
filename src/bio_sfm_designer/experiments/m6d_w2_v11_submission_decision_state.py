@@ -489,6 +489,18 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_command_present",
     )
+    workflow_driver_command_expected = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_command_expected",
+    )
+    workflow_postsync_replay_command_expected = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_postsync_replay_command_expected",
+    )
+    workflow_driver_replay_command_pair_ready = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_replay_command_pair_ready",
+    )
     workflow_driver_polling_contract_ok = _field(
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_polling_contract_ok",
@@ -531,6 +543,9 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and workflow_sync_ready_before_record_sync is True
         and workflow_includes_postsync is True
         and workflow_driver_command_present is True
+        and workflow_driver_command_expected is True
+        and workflow_postsync_replay_command_expected is True
+        and workflow_driver_replay_command_pair_ready is True
         and workflow_driver_polling_contract_ok is True
         and workflow_driver_polling_default_max_polls == 120
         and workflow_driver_polling_default_poll_seconds == 300
@@ -570,6 +585,13 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         ),
         "w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation": workflow_includes_postsync,
         "w2_panel_public_approval_bundle_workflow_driver_command_present": workflow_driver_command_present,
+        "w2_panel_public_approval_bundle_workflow_driver_command_expected": workflow_driver_command_expected,
+        "w2_panel_public_approval_bundle_workflow_postsync_replay_command_expected": (
+            workflow_postsync_replay_command_expected
+        ),
+        "w2_panel_public_approval_bundle_workflow_driver_replay_command_pair_ready": (
+            workflow_driver_replay_command_pair_ready
+        ),
         "w2_panel_public_approval_bundle_workflow_driver_polling_contract_ok": (
             workflow_driver_polling_contract_ok
         ),

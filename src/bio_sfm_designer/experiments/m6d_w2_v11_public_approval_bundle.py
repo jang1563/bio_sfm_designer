@@ -74,6 +74,8 @@ _POSTSUBMIT_DRIVER_POLLING_CONTRACT: Dict[str, Any] = {
     "proceeds_only_when_sync_ready": True,
     "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready",
 }
+_EXPECTED_POSTSUBMIT_DRIVER_COMMAND = "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+_EXPECTED_POSTSYNC_REPLAY_COMMAND = "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -231,6 +233,14 @@ def _post_approval_workflow(
     manual_step_ids = [str(step["id"]) for step in manual_steps]
     strict_i = manual_step_ids.index("strict_postsubmit_status_before_sync")
     sync_i = manual_step_ids.index("sync_back_after_sync_ready")
+    driver_command_expected = (
+        str(commands.get("postsubmit_driver_after_submit") or "").strip()
+        == _EXPECTED_POSTSUBMIT_DRIVER_COMMAND
+    )
+    postsync_replay_command_expected = (
+        str(commands.get("postsync_replay") or "").strip()
+        == _EXPECTED_POSTSYNC_REPLAY_COMMAND
+    )
     return {
         "manual_steps": manual_steps,
         "manual_step_count": len(manual_steps),
@@ -249,6 +259,11 @@ def _post_approval_workflow(
         "includes_postsync_interpretation": "postsync_replay" in manual_step_ids,
         "driver_command_key": "postsubmit_driver_after_submit",
         "driver_command_present": _command_present(commands, "postsubmit_driver_after_submit"),
+        "driver_command_expected": driver_command_expected,
+        "postsync_replay_command_expected": postsync_replay_command_expected,
+        "driver_replay_command_pair_ready": (
+            driver_command_expected and postsync_replay_command_expected
+        ),
         "driver_polling_contract_ok": _postsubmit_driver_polling_ok(postsubmit_driver_polling),
         "driver_proceeds_only_when_sync_ready": (
             postsubmit_driver_polling.get("proceeds_only_when_sync_ready") is True
@@ -272,6 +287,9 @@ def _post_approval_workflow_ok(workflow: Dict[str, Any]) -> bool:
         and workflow.get("includes_completion") is True
         and workflow.get("includes_postsync_interpretation") is True
         and workflow.get("driver_command_present") is True
+        and workflow.get("driver_command_expected") is True
+        and workflow.get("postsync_replay_command_expected") is True
+        and workflow.get("driver_replay_command_pair_ready") is True
         and workflow.get("driver_polling_contract_ok") is True
         and workflow.get("driver_proceeds_only_when_sync_ready") is True
     )
@@ -394,6 +412,13 @@ def build_bundle(
                     "includes_postsync_interpretation"
                 ),
                 "driver_command_present": post_approval_workflow.get("driver_command_present"),
+                "driver_command_expected": post_approval_workflow.get("driver_command_expected"),
+                "postsync_replay_command_expected": post_approval_workflow.get(
+                    "postsync_replay_command_expected"
+                ),
+                "driver_replay_command_pair_ready": post_approval_workflow.get(
+                    "driver_replay_command_pair_ready"
+                ),
                 "driver_polling_contract_ok": post_approval_workflow.get("driver_polling_contract_ok"),
                 "postsubmit_driver_polling": {
                     key: postsubmit_driver_polling.get(key)
@@ -533,6 +558,9 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- all manual commands present: `{workflow.get('all_manual_commands_present')}`",
         f"- sync-ready gate before record sync: `{workflow.get('requires_sync_ready_before_record_sync')}`",
         f"- includes post-sync interpretation: `{workflow.get('includes_postsync_interpretation')}`",
+        f"- driver command expected: `{workflow.get('driver_command_expected')}`",
+        f"- post-sync replay command expected: `{workflow.get('postsync_replay_command_expected')}`",
+        f"- driver/replay command pair ready: `{workflow.get('driver_replay_command_pair_ready')}`",
         f"- driver polling contract ok: `{workflow.get('driver_polling_contract_ok')}`",
         f"- driver proceeds only when sync-ready: `{workflow.get('driver_proceeds_only_when_sync_ready')}`",
         "",

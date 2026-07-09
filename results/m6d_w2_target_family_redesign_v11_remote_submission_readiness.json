@@ -140,12 +140,12 @@
       "remote_sha256": "72133952cbbe6ace5908fe0255585ee364050ea705f0bd58c5ce591e0313fb4a"
     },
     {
-      "local_bytes": 33798,
-      "local_sha256": "16a55e4965dfd9a54bcae5756bc8cf9cd35c128524f0a15fc15df49bf67687b1",
+      "local_bytes": 41157,
+      "local_sha256": "1aeeb0f4975f75acea985721e19d2fe9131803061d45ca05e1c587373fdec39d",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
-      "remote_bytes": 33798,
-      "remote_sha256": "16a55e4965dfd9a54bcae5756bc8cf9cd35c128524f0a15fc15df49bf67687b1"
+      "remote_bytes": 41157,
+      "remote_sha256": "1aeeb0f4975f75acea985721e19d2fe9131803061d45ca05e1c587373fdec39d"
     },
     {
       "local_bytes": 21750,
@@ -156,12 +156,12 @@
       "remote_sha256": "ba2abe2b91d7909fe57591db9f87db17c7a16a566bb69d2ff1a828a1ce344f58"
     },
     {
-      "local_bytes": 26374,
-      "local_sha256": "abff3ba18431ffceed4abfda07e19924c19ba667fc564d49573cbe904b3e929e",
+      "local_bytes": 30468,
+      "local_sha256": "dd20a07d6e87dd8a03d26cd37a6a19c994176bb83d353200c16f5de231e47c02",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
-      "remote_bytes": 26374,
-      "remote_sha256": "abff3ba18431ffceed4abfda07e19924c19ba667fc564d49573cbe904b3e929e"
+      "remote_bytes": 30468,
+      "remote_sha256": "dd20a07d6e87dd8a03d26cd37a6a19c994176bb83d353200c16f5de231e47c02"
     },
     {
       "local_bytes": 530775,
