@@ -187,6 +187,20 @@ def _redact_line(line: str) -> str:
     return out[:220]
 
 
+def _is_synthetic_test_internal_context_line(rel: str, line: str) -> bool:
+    if not rel.startswith("tests/"):
+        return False
+    synthetic_markers = (
+        "<user>",
+        "<local-user>",
+        "<hpc-login-host>",
+        "/remote/root",
+        "private_user_",
+        CAYUGA_LOGIN_PREFIX + "-private",
+    )
+    return any(marker in line for marker in synthetic_markers)
+
+
 def _line_findings(
     *,
     root: str,
@@ -201,6 +215,8 @@ def _line_findings(
     for line_no, line in enumerate(text.splitlines(), start=1):
         for kind, pattern in patterns:
             if pattern.search(line):
+                if category == "internal_context" and _is_synthetic_test_internal_context_line(rel, line):
+                    continue
                 finding_severity = "warning" if category == "internal_context" and rel.startswith("tests/") else severity
                 findings.append({
                     "severity": finding_severity,

@@ -109,6 +109,42 @@ class PublicReleaseReadinessTests(unittest.TestCase):
             self.assertIn("cayuga_login_host", kinds)
             self.assertIn("exposed_key_incident_note", kinds)
 
+    def test_synthetic_test_placeholders_do_not_warn(self):
+        with tempfile.TemporaryDirectory() as d:
+            _write_public_skeleton(d)
+            _write(
+                os.path.join(d, "tests", "test_fixture.py"),
+                "\n".join([
+                    "cmd = 'ssh cayuga-login1 cd /home/fs01/<user>/bio_sfm_smoke'",
+                    "remote_spec = 'cayuga-login1:/remote/root'",
+                    "private_fixture = 'cayuga-login-private:/home/fs01/private_user_123/project'",
+                    "",
+                ]),
+            )
+
+            rep = build_audit(d, repo_visibility="public")
+
+            self.assertTrue(rep["audit_ok"])
+            self.assertEqual(rep["status"], "public_release_ready")
+            self.assertEqual(rep["summary"]["n_warnings"], 0)
+
+    def test_real_internal_context_in_tests_stays_warning(self):
+        with tempfile.TemporaryDirectory() as d:
+            _write_public_skeleton(d)
+            real_cayuga_path = "/" + "home" + "/" + "fs01" + "/" + "jak4013" + "/bio_sfm_smoke"
+            _write(
+                os.path.join(d, "tests", "test_fixture.py"),
+                f"remote_root = '{real_cayuga_path}'\n",
+            )
+
+            rep = build_audit(d, repo_visibility="public")
+
+            self.assertTrue(rep["audit_ok"])
+            self.assertEqual(rep["status"], "public_release_ready_with_warnings")
+            warnings = [finding for finding in rep["findings"] if finding["severity"] == "warning"]
+            self.assertEqual(len(warnings), 1)
+            self.assertEqual(warnings[0]["kind"], "cayuga_home_path")
+
     def test_bare_trust_dependency_blocks_public_installability(self):
         with tempfile.TemporaryDirectory() as d:
             _write_public_skeleton(d)

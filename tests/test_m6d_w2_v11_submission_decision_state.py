@@ -30,7 +30,7 @@ def _approval_packet():
         "can_claim_w2_generalization": False,
         "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
         "panel_approval_env_value": "approve-v11-panel-submit",
-        "submit_command_if_approved": "ssh cayuga-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
+        "submit_command_if_approved": "ssh hpc-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
         "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
         "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
         "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
@@ -107,8 +107,8 @@ def _remote_readiness():
         "n_semantic_checks": 5,
         "n_absence_checks": 2,
         "n_failures": 0,
-        "remote_host": "cayuga-login1",
-        "remote_root": "/home/fs01/jak4013/bio_sfm_smoke",
+        "remote_host": "hpc-login1",
+        "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
         "absence_checks": [
             {
                 "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
@@ -139,7 +139,7 @@ def _project_status():
                 "panel_approval_packet_ready": True,
                 "panel_decision_protocol_ready": True,
                 "panel_remote_submission_readiness_ok": True,
-                "panel_submit_command_if_approved": "ssh cayuga-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
+                "panel_submit_command_if_approved": "ssh hpc-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
             }
         },
     }
