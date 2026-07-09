@@ -272,9 +272,12 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
 > one-command no-submit postsubmit driver, read-only job-state query, strict postsubmit status command,
 > and post-sync replay. The public approval bundle, completion audit, submission-decision state, and
-> local/Cayuga mirror audit now also require the exact driver/replay command pair:
+> local/Cayuga mirror audit now also require the exact driver/replay command pair and tracked
+> script-content chain:
 > `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` followed by
-> `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`;
+> `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`; the driver, sync-back,
+> completion, and post-sync replay scripts must statically verify as
+> `post_approval_workflow.script_chain_static_ok=true`;
 > the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
 > receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
 > locally before postsubmit status. Project status records those invariants as
@@ -286,8 +289,11 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `results/m6d_w2_target_family_redesign_v11_public_approval_bundle.{json,md}` instead of the raw
 > environment-specific runbook; regenerate it with
 > `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. It preserves the explicit
-> approval boundary and post-submit command order with portable placeholders, while keeping
-> `no_submit=true` and `can_claim_w2_generalization=false`.
+> approval boundary and post-submit command order with portable placeholders, and it now reads the
+> tracked postsubmit driver, sync-back, completion, and post-sync replay scripts; the bundle fails closed
+> unless that ordered chain reaches strict postsubmit status, sync-back, completion, target-wise report
+> generation, decision refresh, and post-sync interpretation, while keeping `no_submit=true` and
+> `can_claim_w2_generalization=false`.
 > Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
 > `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
 > post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,
@@ -301,7 +307,8 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
 > `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
 > `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-> readiness before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
+> readiness, 9-step post-approval workflow, `script_chain_static_ok=true`, and the 7-target/700-design/14-job
+> approval scope before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
 > submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
 > 14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision latch
 > re-consumes the completion audit's operator-checklist verdict, so a stale or incomplete checklist blocks
@@ -634,8 +641,9 @@ as `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_comple
 the current honest state is `audit_ok=true`, `can_mark_goal_complete=false`, and remaining requirement
 `W2_multi_target_panel`; W2 remains incomplete until the v11 panel is explicitly approved, submitted,
 synced back, completed, and target-wise certified. It now also records
-`panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle preserves no-submit and
-claim-boundary checks.
+`panel_public_approval_bundle_ready=true` and
+`panel_public_approval_bundle_workflow_script_chain_static_ok=true` when the public-safe v11 approval
+bundle preserves no-submit, claim-boundary, and tracked postsubmit script-chain checks.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
 and Cayuga artifacts agree across 30 exact SHA checks plus 16 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state
@@ -644,8 +652,9 @@ approval, sync-back, completion, and target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
 status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
 execution is `panel_postsync_interpretation_predeclared_not_synced`; it also records
-`current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the operator
-checklist drifts. It keeps the next action limited to
+`current_state.W2_panel_submission_decision.operator_checklist_ok=true` and
+`current_state.completion_audit.panel_public_approval_bundle_workflow_script_chain_static_ok=true`;
+it fails closed if either the operator checklist or script-chain gate drifts. It keeps the next action limited to
 explicit W2 v11 panel approval followed by sync-back, completion, target-wise reporting, and refreshed
 post-sync interpretation.
 It also understands the second-predictor contract report, so W3 can report

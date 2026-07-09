@@ -201,11 +201,15 @@ Current state:
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
   `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-  readiness before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
+  readiness, 9-step post-approval workflow, `script_chain_static_ok=true`, and 7-target/700-design/14-job
+  approval scope before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
   submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
   14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision latch
   re-consumes the completion audit's operator-checklist verdict, so a stale or incomplete checklist blocks
-  approval-ready status instead of relying only on the raw submission-decision artifact. Tracked result/status artifacts are public-safe and
+  approval-ready status instead of relying only on the raw submission-decision artifact. The public approval
+  bundle also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
+  fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
+  target-wise report generation, decision refresh, and post-sync interpretation. Tracked result/status artifacts are public-safe and
   use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
   in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
   and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked

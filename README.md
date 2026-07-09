@@ -343,9 +343,12 @@ engine installs from GitHub):
   The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
   one-command no-submit postsubmit driver, read-only job-state query, strict postsubmit status command,
   and post-sync replay. The public approval bundle, completion audit, submission-decision state, and
-  local/Cayuga mirror audit now also require the exact driver/replay command pair:
+  local/Cayuga mirror audit now also require the exact driver/replay command pair and the tracked
+  script-content chain:
   `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` followed by
-  `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`;
+  `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`; the driver, sync-back,
+  completion, and post-sync replay scripts must statically verify as
+  `post_approval_workflow.script_chain_static_ok=true`;
   the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
   receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
   locally before postsubmit status. Project status records those invariants as
@@ -361,7 +364,10 @@ engine installs from GitHub):
   environment-specific runbook; regenerate it with
   `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. It preserves the explicit
   approval boundary, post-submit command order, and structured post-approval workflow with portable
-  placeholders, while keeping `no_submit=true` and `can_claim_w2_generalization=false`. Tracked result/status artifacts are
+  placeholders; it also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay
+  scripts and fails closed unless their ordered chain reaches strict postsubmit status, sync-back,
+  completion, target-wise report generation, decision refresh, and post-sync interpretation, while keeping
+  `no_submit=true` and `can_claim_w2_generalization=false`. Tracked result/status artifacts are
   intentionally public-safe and may use `<hpc-login-host>`, `/home/fs01/<user>`, and `<repo-root>`
   placeholders; the executable Cayuga command bridge remains only in ignored local artifacts such as
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}` and
@@ -381,7 +387,8 @@ engine installs from GitHub):
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
   `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-  readiness, 9-step post-approval workflow, and matching 7-target/700-design/14-job approval scope
+  readiness, 9-step post-approval workflow, `script_chain_static_ok=true`, and matching
+  7-target/700-design/14-job approval scope
   before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded submit
   entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
   14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision
@@ -558,8 +565,9 @@ engine installs from GitHub):
   while `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit:
   it should pass with `audit_ok=true` and `can_mark_goal_complete=false` until the W2 v11 panel is
   explicitly approved, submitted, synced back, completed, and target-wise certified,
-  and it now records `panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle
-  passes its no-submit/claim-boundary checks,
+  and it now records `panel_public_approval_bundle_ready=true` plus
+  `panel_public_approval_bundle_workflow_script_chain_static_ok=true` when the public-safe v11 approval
+  bundle preserves no-submit/claim-boundary checks and the tracked postsubmit script chain,
 	  and `results/m6d_local_cayuga_mirror_audit.{json,md}` is the no-submit local/Cayuga mirror audit:
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
@@ -567,8 +575,9 @@ engine installs from GitHub):
 		  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
 		  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
 		  `panel_postsync_interpretation_predeclared_not_synced`; it also records
-		  `current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the
-		  operator checklist drifts, keeping the next action limited to explicit W2 v11 panel approval followed
+			  `current_state.W2_panel_submission_decision.operator_checklist_ok=true` and
+			  `current_state.completion_audit.panel_public_approval_bundle_workflow_script_chain_static_ok=true`,
+			  and fails closed if either the operator checklist or script-chain gate drifts, keeping the next action limited to explicit W2 v11 panel approval followed
 		  by sync-back, completion, target-wise reporting, and refreshed post-sync interpretation,
 	  so the same dashboard refresh can be replayed exactly,
 	  `--predictor-sync-back-plan` preserves the W3 second-predictor sync/rerun script in status and replay artifacts,
