@@ -138,7 +138,7 @@ def _remote():
         "no_submit": True,
         "can_claim_w2_generalization": False,
         "n_exact_checks": 25,
-        "n_semantic_checks": 5,
+        "n_semantic_checks": 7,
         "n_absence_checks": 2,
         "n_shell_syntax_checks": 4,
         "n_failures": 0,

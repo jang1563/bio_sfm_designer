@@ -148,12 +148,12 @@
       "remote_sha256": "9c5a36a916f0a37d335b1df92dd34b7688a64e944a4ad8469352e16fab985792"
     },
     {
-      "local_bytes": 21896,
-      "local_sha256": "596c0ce0bda089d6aebdfbce5a654e3ab1cbd5ca5bdb817a2ac4147bf93676db",
+      "local_bytes": 22573,
+      "local_sha256": "579c98ee229f245975cfb2d77ba6d2190aa640a14a5341005c1122ac4e8b787c",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 21896,
-      "remote_sha256": "596c0ce0bda089d6aebdfbce5a654e3ab1cbd5ca5bdb817a2ac4147bf93676db"
+      "remote_bytes": 22573,
+      "remote_sha256": "579c98ee229f245975cfb2d77ba6d2190aa640a14a5341005c1122ac4e8b787c"
     },
     {
       "local_bytes": 36077,
@@ -225,7 +225,7 @@
   "n_absence_checks": 2,
   "n_exact_checks": 25,
   "n_failures": 0,
-  "n_semantic_checks": 5,
+  "n_semantic_checks": 7,
   "n_shell_syntax_checks": 10,
   "next_action": "remote mirror is ready; still wait for explicit user approval before guarded W2 v11 panel submission",
   "no_submit": true,
@@ -619,6 +619,12 @@
           "remote": false
         },
         {
+          "field": "claim_boundary.w2_multi_target_generalization",
+          "local": "not supported until target-wise panel certification passes with exact manifest target-set, duplicate-free target rows, and matching report target counts",
+          "ok": true,
+          "remote": "not supported until target-wise panel certification passes with exact manifest target-set, duplicate-free target rows, and matching report target counts"
+        },
+        {
           "field": "panel_contract.panel_label",
           "local": "W2 v11 Boltz-2 representative panel/protocol",
           "ok": true,
@@ -639,6 +645,108 @@
       ],
       "ok": true,
       "path": "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json"
+    },
+    {
+      "fields": [
+        {
+          "field": "status",
+          "local": "not_synced_not_interpretable",
+          "ok": true,
+          "remote": "not_synced_not_interpretable"
+        },
+        {
+          "field": "audit_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "no_submit",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "sync_ready",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "can_claim_w2_generalization",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "claim_boundary",
+          "local": "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report with exact manifest target-set, duplicate-free target rows, and matching report target counts",
+          "ok": true,
+          "remote": "post-sync interpretation only; W2 claim requires target-wise multi_target_certified panel report with exact manifest target-set, duplicate-free target rows, and matching report target counts"
+        },
+        {
+          "field": "current_panel_result.status",
+          "local": "not_available_not_submitted",
+          "ok": true,
+          "remote": "not_available_not_submitted"
+        },
+        {
+          "field": "current_panel_result.w2_generalization_supported",
+          "local": false,
+          "ok": true,
+          "remote": false
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"
+    },
+    {
+      "fields": [
+        {
+          "field": "status",
+          "local": "public_approval_bundle_ready_not_submitted",
+          "ok": true,
+          "remote": "public_approval_bundle_ready_not_submitted"
+        },
+        {
+          "field": "audit_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "no_submit",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "submitted",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "can_claim_w2_generalization",
+          "local": false,
+          "ok": true,
+          "remote": false
+        },
+        {
+          "field": "claim_boundary",
+          "local": "not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report with exact manifest target-set, duplicate-free target rows, matching report target counts, and refreshed interpretation",
+          "ok": true,
+          "remote": "not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report with exact manifest target-set, duplicate-free target rows, matching report target counts, and refreshed interpretation"
+        },
+        {
+          "field": "post_approval_workflow.script_chain_static_ok",
+          "local": true,
+          "ok": true,
+          "remote": true
+        }
+      ],
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_public_approval_bundle.json"
     },
     {
       "fields": [

@@ -6642,7 +6642,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
                     "can_claim_w2_generalization": False,
                 },
                 "receipt_monitor_after_submit": (
-                    "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
+                    "CAYUGA_BIO_SFM_ROOT=<cayuga_login_host>:/home/fs01/<user>/bio_sfm_smoke "
                     "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
                 ),
                 "postsubmit_driver_after_submit": (
@@ -6658,11 +6658,11 @@ class ComplexProjectStatusTests(unittest.TestCase):
                     "proceeds_only_when_sync_ready": True,
                 },
                 "job_state_query_after_receipt": (
-                    "ssh cayuga-login1 'cd /home/fs01/<user>/bio_sfm_smoke && "
+                    "ssh <cayuga_login_host> 'cd /home/fs01/<user>/bio_sfm_smoke && "
                     "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
                 ),
                 "job_state_probe_sync_after_query": (
-                    "rsync -avP cayuga-login1:/home/fs01/<user>/bio_sfm_smoke/"
+                    "rsync -avP <cayuga_login_host>:/home/fs01/<user>/bio_sfm_smoke/"
                     "results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
                     "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
                 ),
@@ -6718,7 +6718,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "can_submit_panel_if_user_explicitly_approves": True,
                 "can_claim_w2_generalization": False,
                 "n_exact_checks": 14,
-                "n_semantic_checks": 5,
+                "n_semantic_checks": 7,
                 "n_absence_checks": 2,
                 "n_shell_syntax_checks": 4,
                 "n_failures": 0,
@@ -6818,7 +6818,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_remote_submission_readiness_ok"])
         self.assertTrue(w2["panel_remote_no_submit"])
         self.assertEqual(w2["panel_remote_exact_checks"], 14)
-        self.assertEqual(w2["panel_remote_semantic_checks"], 5)
+        self.assertEqual(w2["panel_remote_semantic_checks"], 7)
         self.assertEqual(w2["panel_remote_absence_checks"], 2)
         self.assertEqual(w2["panel_remote_shell_syntax_checks"], 4)
         self.assertTrue(w2["panel_submission_decision_ready"])
@@ -7036,7 +7036,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "can_submit_panel_if_user_explicitly_approves": False,
                 "can_claim_w2_generalization": False,
                 "n_exact_checks": 14,
-                "n_semantic_checks": 5,
+                "n_semantic_checks": 7,
                 "n_absence_checks": 2,
                 "n_failures": 1,
                 "failures": [{"kind": "submit_receipt_or_summary_present", "path": "results/receipt.jsonl"}],

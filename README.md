@@ -383,7 +383,7 @@ engine installs from GitHub):
   sync-back, completion, and post-sync interpretation, and carries the non-approval phrase list used by
   goal-mode resumes. The no-submit Cayuga mirror audit
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` after 25 exact SHA checks, 5 semantic JSON checks, 2
+  `remote_submission_readiness_ok` after 25 exact SHA checks, 7 semantic JSON checks, 2
   receipt-absence checks, and 10 shell-syntax checks; project status also fail-closes if the stored exact-check local SHA evidence
   no longer matches the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)

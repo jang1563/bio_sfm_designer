@@ -62,6 +62,12 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         decision_fields = _SEMANTIC_JSON_FIELDS[
             "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json"
         ]
+        postsync_fields = _SEMANTIC_JSON_FIELDS[
+            "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"
+        ]
+        public_bundle_fields = _SEMANTIC_JSON_FIELDS[
+            "results/m6d_w2_target_family_redesign_v11_public_approval_bundle.json"
+        ]
 
         self.assertIn("no_env_run.ok", wrapper_fields)
         self.assertIn("no_env_run.ran", wrapper_fields)
@@ -85,7 +91,12 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         self.assertIn("approval_scope.planned_design_records", fields)
         self.assertIn("approval_scope.expected_slurm_jobs", fields)
         self.assertIn("approval_scope.target_alpha", fields)
+        self.assertIn("claim_boundary.w2_multi_target_generalization", decision_fields)
         self.assertIn("panel_contract.panel_label", decision_fields)
+        self.assertIn("claim_boundary", postsync_fields)
+        self.assertIn("current_panel_result.w2_generalization_supported", postsync_fields)
+        self.assertIn("claim_boundary", public_bundle_fields)
+        self.assertIn("post_approval_workflow.script_chain_static_ok", public_bundle_fields)
 
     def test_build_readiness_accepts_hash_match_and_semantic_path_drift(self):
         with tempfile.TemporaryDirectory() as d:

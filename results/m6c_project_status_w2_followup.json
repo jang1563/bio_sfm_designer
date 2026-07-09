@@ -1229,7 +1229,7 @@
       "panel_remote_local_exact_fresh": true,
       "panel_remote_local_exact_stale_count": 0,
       "panel_remote_no_submit": true,
-      "panel_remote_semantic_checks": 5,
+      "panel_remote_semantic_checks": 7,
       "panel_remote_shell_syntax_checks": 10,
       "panel_remote_submission_readiness": "<repo-root>/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
       "panel_remote_submission_readiness_failures": [],

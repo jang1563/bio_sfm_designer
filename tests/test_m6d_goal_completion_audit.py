@@ -174,15 +174,15 @@ def _panel_approval_packet():
         "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
         "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
         "receipt_monitor_after_submit": (
-            "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
+            "CAYUGA_BIO_SFM_ROOT=<cayuga_login_host>:/home/fs01/<user>/bio_sfm_smoke "
             "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
         ),
         "job_state_query_after_receipt": (
-            "ssh cayuga-login1 'cd /home/fs01/<user>/bio_sfm_smoke && "
+            "ssh <cayuga_login_host> 'cd /home/fs01/<user>/bio_sfm_smoke && "
             "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
         ),
         "job_state_probe_sync_after_query": (
-            "rsync -avP cayuga-login1:/home/fs01/<user>/bio_sfm_smoke/"
+            "rsync -avP <cayuga_login_host>:/home/fs01/<user>/bio_sfm_smoke/"
             "results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
             "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
         ),
@@ -238,7 +238,7 @@ def _panel_remote_readiness():
         "can_submit_panel_if_user_explicitly_approves": True,
         "can_claim_w2_generalization": False,
         "n_exact_checks": 14,
-        "n_semantic_checks": 5,
+        "n_semantic_checks": 7,
         "n_absence_checks": 2,
         "n_shell_syntax_checks": 4,
         "n_failures": 0,
