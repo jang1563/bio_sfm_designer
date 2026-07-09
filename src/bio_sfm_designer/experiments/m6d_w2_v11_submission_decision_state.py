@@ -29,8 +29,10 @@ _REMOTE_READY_STATUS = "remote_submission_readiness_ok"
 _NON_APPROVAL_CONTINUATIONS = [
     "resume goal",
     "resume goal mode",
+    "goal mode resume",
     "go ahead",
     "continue",
+    "continue working toward the active thread goal",
     "keep going",
     "이어서",
     "계속",

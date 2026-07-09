@@ -50,7 +50,7 @@ This artifact does not submit jobs and does not create W2 evidence.
 - continuation phrases are approval: `False`
 - approval must explicitly name: `W2 v11 Cayuga ProteinMPNN/Boltz panel submission`
 - machine gate: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
-- non-approval continuation phrases: `resume goal`, `resume goal mode`, `go ahead`, `continue`, `keep going`, `이어서`, `계속`
+- non-approval continuation phrases: `resume goal`, `resume goal mode`, `goal mode resume`, `go ahead`, `continue`, `continue working toward the active thread goal`, `keep going`, `이어서`, `계속`
 
 ## Next Action
 

@@ -204,6 +204,10 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertIn("BIO_SFM_APPROVE_V11_PANEL", rep["approval"]["required_env_var"])
         self.assertFalse(rep["approval_disambiguation"]["continuation_phrases_are_approval"])
         self.assertIn("go ahead", rep["approval_disambiguation"]["non_approval_continuation_phrases"])
+        self.assertIn(
+            "continue working toward the active thread goal",
+            rep["approval_disambiguation"]["non_approval_continuation_phrases"],
+        )
         self.assertIn("W2 v11", rep["approval_disambiguation"]["approval_must_explicitly_name"])
         self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_sync_ready_gate_ok"])
         self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_bridge_ok"])
