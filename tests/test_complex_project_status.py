@@ -6698,6 +6698,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "n_exact_checks": 14,
                 "n_semantic_checks": 5,
                 "n_absence_checks": 2,
+                "n_shell_syntax_checks": 4,
                 "n_failures": 0,
                 "failures": [],
             })
@@ -6792,6 +6793,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertEqual(w2["panel_remote_exact_checks"], 14)
         self.assertEqual(w2["panel_remote_semantic_checks"], 5)
         self.assertEqual(w2["panel_remote_absence_checks"], 2)
+        self.assertEqual(w2["panel_remote_shell_syntax_checks"], 4)
         self.assertTrue(w2["panel_submission_decision_ready"])
         self.assertEqual(w2["panel_submission_decision"], "awaiting_explicit_approval")
         self.assertTrue(w2["panel_submission_decision_no_submit"])
@@ -6806,6 +6808,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertFalse(w2["panel_postsync_can_claim_w2_generalization"])
         self.assertIn("submission decision is recorded", w2["next_action"])
         self.assertIn("panel_remote_submission_readiness_ok=True", render_text(rep))
+        self.assertIn("syntax=4", render_text(rep))
         self.assertIn("panel_postsubmit_sync_ready_gate_ok=True", render_text(rep))
         self.assertIn("panel_postsubmit_bridge_ok=True", render_text(rep))
         self.assertIn("driver=bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh", render_text(rep))

@@ -140,28 +140,28 @@
       "remote_sha256": "72133952cbbe6ace5908fe0255585ee364050ea705f0bd58c5ce591e0313fb4a"
     },
     {
-      "local_bytes": 17833,
-      "local_sha256": "5793eb26e621c676c6eb554e0c0daa8ae1c1fdddc6667c8b077b978ad26dce2f",
+      "local_bytes": 21357,
+      "local_sha256": "9841777151b1a758be3032893ce955dc875da22bf94e11f6f6d56c1e47559e4e",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 17833,
-      "remote_sha256": "5793eb26e621c676c6eb554e0c0daa8ae1c1fdddc6667c8b077b978ad26dce2f"
+      "remote_bytes": 21357,
+      "remote_sha256": "9841777151b1a758be3032893ce955dc875da22bf94e11f6f6d56c1e47559e4e"
     },
     {
-      "local_bytes": 21842,
-      "local_sha256": "e28a3f4717b748c2abb229c0670b84bd0f0eb96c20c5373a7132e29d7fc1c92b",
+      "local_bytes": 21953,
+      "local_sha256": "ac5ba2fa1698917e6ff1a2fbc1d864f5e33d5ce7a1dc1e8706a3da01e8466fc9",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
-      "remote_bytes": 21842,
-      "remote_sha256": "e28a3f4717b748c2abb229c0670b84bd0f0eb96c20c5373a7132e29d7fc1c92b"
+      "remote_bytes": 21953,
+      "remote_sha256": "ac5ba2fa1698917e6ff1a2fbc1d864f5e33d5ce7a1dc1e8706a3da01e8466fc9"
     },
     {
-      "local_bytes": 526839,
-      "local_sha256": "a60cf9cab3cb2dd10eecdd5baf1c40f6088a466fc83d6d99e80c135bb183742a",
+      "local_bytes": 527022,
+      "local_sha256": "d3743073ad4f809913d9d5d1802ab61f25340190d17f0d0a466cdd1a37649ed4",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
-      "remote_bytes": 526839,
-      "remote_sha256": "a60cf9cab3cb2dd10eecdd5baf1c40f6088a466fc83d6d99e80c135bb183742a"
+      "remote_bytes": 527022,
+      "remote_sha256": "d3743073ad4f809913d9d5d1802ab61f25340190d17f0d0a466cdd1a37649ed4"
     },
     {
       "local_bytes": 13348,
@@ -218,6 +218,7 @@
   "n_exact_checks": 24,
   "n_failures": 0,
   "n_semantic_checks": 5,
+  "n_shell_syntax_checks": 10,
   "next_action": "remote mirror is ready; still wait for explicit user approval before guarded W2 v11 panel submission",
   "no_submit": true,
   "remote_host": "<hpc-login-host>",
@@ -380,6 +381,48 @@
           "local": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
           "ok": true,
           "remote": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+        },
+        {
+          "field": "postsubmit_driver_after_submit",
+          "local": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+          "ok": true,
+          "remote": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+        },
+        {
+          "field": "postsubmit_driver_polling.max_polls_env_var",
+          "local": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+          "ok": true,
+          "remote": "M6D_W2_POSTSUBMIT_MAX_POLLS"
+        },
+        {
+          "field": "postsubmit_driver_polling.default_max_polls",
+          "local": 120,
+          "ok": true,
+          "remote": 120
+        },
+        {
+          "field": "postsubmit_driver_polling.poll_seconds_env_var",
+          "local": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+          "ok": true,
+          "remote": "M6D_W2_POSTSUBMIT_POLL_SECONDS"
+        },
+        {
+          "field": "postsubmit_driver_polling.default_poll_seconds",
+          "local": 300,
+          "ok": true,
+          "remote": 300
+        },
+        {
+          "field": "postsubmit_driver_polling.proceeds_only_when_sync_ready",
+          "local": true,
+          "ok": true,
+          "remote": true
+        },
+        {
+          "field": "postsubmit_driver_polling.sync_ready_gate",
+          "local": "m6d_w2_panel_postsubmit_status.sync_ready",
+          "ok": true,
+          "remote": "m6d_w2_panel_postsubmit_status.sync_ready"
         },
         {
           "field": "job_state_query_after_receipt",
@@ -564,6 +607,88 @@
       ],
       "ok": true,
       "path": "results/m6d_w2_target_family_redesign_v11_project_status.json"
+    }
+  ],
+  "shell_syntax_checks": [
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "results/m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "hpc/run_generate_proteinmpnn_complex.sbatch",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
+    },
+    {
+      "local_returncode": 0,
+      "local_stderr_tail": "",
+      "ok": true,
+      "path": "hpc/run_predict_boltz_complex.sbatch",
+      "remote_returncode": 0,
+      "remote_stderr_tail": ""
     }
   ],
   "status": "remote_submission_readiness_ok"

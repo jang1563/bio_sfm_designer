@@ -39,6 +39,7 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
             "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
             "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
             "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+            "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
             "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
             "src/bio_sfm_designer/experiments/m6d_w2_panel_receipt_monitor.py",
             "src/bio_sfm_designer/experiments/m6d_w2_panel_job_state_probe.py",
@@ -61,6 +62,9 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         self.assertIn("postsubmit_status_before_sync", fields)
         self.assertIn("job_state_probe_before_sync", fields)
         self.assertIn("receipt_monitor_after_submit", fields)
+        self.assertIn("postsubmit_driver_after_submit", fields)
+        self.assertIn("postsubmit_driver_polling.max_polls_env_var", fields)
+        self.assertIn("postsubmit_driver_polling.proceeds_only_when_sync_ready", fields)
         self.assertIn("job_state_query_after_receipt", fields)
         self.assertIn("job_state_probe_sync_after_query", fields)
         self.assertIn("sacct_states_before_sync", fields)
@@ -99,6 +103,8 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         self.assertTrue(rep["no_submit"])
         self.assertTrue(rep["can_submit_panel_if_user_explicitly_approves"])
         self.assertFalse(rep["can_claim_w2_generalization"])
+        self.assertEqual(rep["n_shell_syntax_checks"], 1)
+        self.assertTrue(rep["shell_syntax_checks"][0]["ok"])
         self.assertIn("does not submit jobs", render_markdown(rep))
 
     def test_build_readiness_rejects_exact_sha_mismatch(self):
@@ -136,6 +142,26 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
 
         self.assertFalse(rep["audit_ok"])
         self.assertIn("semantic_field_mismatch", {failure["kind"] for failure in rep["failures"]})
+
+    def test_build_readiness_rejects_shell_syntax_failure(self):
+        with tempfile.TemporaryDirectory() as d:
+            local, remote = _make_roots(d)
+            for root in [local, remote]:
+                _write(os.path.join(root, "results/submit.sh"), "if then\n")
+
+            rep = build_readiness(
+                local_root=local,
+                remote_root=remote,
+                remote_host=None,
+                exact_sha_paths=["results/submit.sh"],
+                semantic_json_fields={},
+                absent_paths=[],
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["n_shell_syntax_checks"], 1)
+        self.assertIn("local_shell_syntax_failed", {failure["kind"] for failure in rep["failures"]})
+        self.assertIn("remote_shell_syntax_failed", {failure["kind"] for failure in rep["failures"]})
 
     def test_build_readiness_rejects_local_or_remote_receipt_presence(self):
         with tempfile.TemporaryDirectory() as d:

@@ -13,6 +13,7 @@ Remote: `<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke`.
 | exact SHA checks | 24 |
 | semantic JSON checks | 5 |
 | receipt absence checks | 2 |
+| shell syntax checks | 10 |
 | failures | 0 |
 
 Claim boundary: this audit does not submit jobs and does not create W2 panel evidence.

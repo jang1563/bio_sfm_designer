@@ -79,6 +79,13 @@ _SEMANTIC_JSON_FIELDS = {
         "panel_approval_env_var",
         "panel_approval_env_value",
         "receipt_monitor_after_submit",
+        "postsubmit_driver_after_submit",
+        "postsubmit_driver_polling.max_polls_env_var",
+        "postsubmit_driver_polling.default_max_polls",
+        "postsubmit_driver_polling.poll_seconds_env_var",
+        "postsubmit_driver_polling.default_poll_seconds",
+        "postsubmit_driver_polling.proceeds_only_when_sync_ready",
+        "postsubmit_driver_polling.sync_ready_gate",
         "job_state_query_after_receipt",
         "job_state_probe_sync_after_query",
         "postsubmit_status_before_sync",
@@ -118,6 +125,10 @@ _ABSENT_PATHS = [
     "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
     "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
 ]
+
+
+def _default_shell_syntax_paths(paths: Iterable[str]) -> List[str]:
+    return [path for path in paths if path.endswith((".sh", ".sbatch"))]
 
 
 def _sha256(data: bytes) -> str:
@@ -183,6 +194,26 @@ def _remote_exists(remote_root: str, rel_path: str, *, remote_host: Optional[str
     raise RuntimeError(proc.stderr.decode("utf-8", errors="replace").strip())
 
 
+def _bash_syntax_local(root: str, rel_path: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["bash", "-n", os.path.join(root, rel_path)],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+
+def _bash_syntax_remote(remote_root: str,
+                        rel_path: str,
+                        *,
+                        remote_host: Optional[str],
+                        ssh_timeout: int) -> subprocess.CompletedProcess:
+    if not remote_host:
+        return _bash_syntax_local(remote_root, rel_path)
+    path = os.path.join(remote_root, rel_path)
+    return _run_ssh(remote_host, "bash -n " + shlex.quote(path), ssh_timeout)
+
+
 def _read_pair(
     local_root: str,
     remote_root: str,
@@ -225,14 +256,18 @@ def build_readiness(
     exact_sha_paths: Iterable[str] = _EXACT_SHA_PATHS,
     semantic_json_fields: Dict[str, List[str]] = _SEMANTIC_JSON_FIELDS,
     absent_paths: Iterable[str] = _ABSENT_PATHS,
+    shell_syntax_paths: Optional[Iterable[str]] = None,
     ssh_timeout: int = 30,
 ) -> Dict[str, Any]:
     failures: List[Dict[str, Any]] = []
     exact_checks: List[Dict[str, Any]] = []
     semantic_checks: List[Dict[str, Any]] = []
     absence_checks: List[Dict[str, Any]] = []
+    shell_syntax_checks: List[Dict[str, Any]] = []
+    exact_paths = list(exact_sha_paths)
+    syntax_paths = list(shell_syntax_paths) if shell_syntax_paths is not None else _default_shell_syntax_paths(exact_paths)
 
-    for rel_path in exact_sha_paths:
+    for rel_path in exact_paths:
         local, remote, read_failures = _read_pair(
             local_root, remote_root, rel_path, remote_host=remote_host, ssh_timeout=ssh_timeout
         )
@@ -326,6 +361,41 @@ def build_readiness(
             })
         absence_checks.append(row)
 
+    for rel_path in syntax_paths:
+        row: Dict[str, Any] = {"path": rel_path, "ok": False}
+        try:
+            local_proc = _bash_syntax_local(local_root, rel_path)
+            row["local_returncode"] = local_proc.returncode
+            row["local_stderr_tail"] = local_proc.stderr.decode("utf-8", errors="replace")[-1000:]
+        except Exception as exc:
+            row["local_returncode"] = None
+            row["local_stderr_tail"] = str(exc)[-1000:]
+        try:
+            remote_proc = _bash_syntax_remote(
+                remote_root, rel_path, remote_host=remote_host, ssh_timeout=ssh_timeout
+            )
+            row["remote_returncode"] = remote_proc.returncode
+            row["remote_stderr_tail"] = remote_proc.stderr.decode("utf-8", errors="replace")[-1000:]
+        except Exception as exc:
+            row["remote_returncode"] = None
+            row["remote_stderr_tail"] = str(exc)[-1000:]
+        row["ok"] = row.get("local_returncode") == 0 and row.get("remote_returncode") == 0
+        if row.get("local_returncode") != 0:
+            failures.append({
+                "kind": "local_shell_syntax_failed",
+                "path": rel_path,
+                "returncode": row.get("local_returncode"),
+                "stderr_tail": row.get("local_stderr_tail"),
+            })
+        if row.get("remote_returncode") != 0:
+            failures.append({
+                "kind": "remote_shell_syntax_failed",
+                "path": rel_path,
+                "returncode": row.get("remote_returncode"),
+                "stderr_tail": row.get("remote_stderr_tail"),
+            })
+        shell_syntax_checks.append(row)
+
     audit_ok = not failures
     return {
         "artifact": "m6d_w2_v11_remote_submission_readiness",
@@ -340,9 +410,11 @@ def build_readiness(
         "exact_checks": exact_checks,
         "semantic_checks": semantic_checks,
         "absence_checks": absence_checks,
+        "shell_syntax_checks": shell_syntax_checks,
         "n_exact_checks": len(exact_checks),
         "n_semantic_checks": len(semantic_checks),
         "n_absence_checks": len(absence_checks),
+        "n_shell_syntax_checks": len(shell_syntax_checks),
         "n_failures": len(failures),
         "failures": failures,
         "claim_boundary": (
@@ -374,6 +446,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"| exact SHA checks | {rep.get('n_exact_checks')} |",
         f"| semantic JSON checks | {rep.get('n_semantic_checks')} |",
         f"| receipt absence checks | {rep.get('n_absence_checks')} |",
+        f"| shell syntax checks | {rep.get('n_shell_syntax_checks')} |",
         f"| failures | {rep.get('n_failures')} |",
         "",
         "Claim boundary: this audit does not submit jobs and does not create W2 panel evidence.",
@@ -398,6 +471,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--exact-path", action="append", default=None)
     ap.add_argument("--semantic-field", action="append", default=None, help="Repeat RELPATH:field")
     ap.add_argument("--absent-path", action="append", default=None)
+    ap.add_argument("--shell-syntax-path", action="append", default=None)
     ap.add_argument("--ssh-timeout", type=int, default=30)
     ap.add_argument("--out-json", default=_DEFAULT_OUT_JSON)
     ap.add_argument("--out-md", default=_DEFAULT_OUT_MD)
@@ -417,17 +491,19 @@ def main(argv: Optional[List[str]] = None) -> int:
         exact_sha_paths=args.exact_path if args.exact_path is not None else _EXACT_SHA_PATHS,
         semantic_json_fields=semantic_specs,
         absent_paths=args.absent_path if args.absent_path is not None else _ABSENT_PATHS,
+        shell_syntax_paths=args.shell_syntax_path,
         ssh_timeout=args.ssh_timeout,
     )
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))
     print(
-        "status={status} audit_ok={ok} exact={exact} semantic={semantic} absent={absent} failures={failures}".format(
+        "status={status} audit_ok={ok} exact={exact} semantic={semantic} absent={absent} syntax={syntax} failures={failures}".format(
             status=rep["status"],
             ok=rep["audit_ok"],
             exact=rep["n_exact_checks"],
             semantic=rep["n_semantic_checks"],
             absent=rep["n_absence_checks"],
+            syntax=rep["n_shell_syntax_checks"],
             failures=rep["n_failures"],
         )
     )

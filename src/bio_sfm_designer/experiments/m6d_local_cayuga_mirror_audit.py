@@ -79,6 +79,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "workstreams.W2_multi_target_panel.panel_postsubmit_sync_ready_gate_ok",
         "workstreams.W2_multi_target_panel.panel_postsubmit_bridge_ok",
         "workstreams.W2_multi_target_panel.panel_job_state_query_bridge_ok",
+        "workstreams.W2_multi_target_panel.panel_remote_shell_syntax_checks",
         "resume_execution_ladder.next_role",
         "resume_execution_ladder.approval_disambiguation.continuation_phrases_are_approval",
         "resume_execution_ladder.approval_disambiguation.non_approval_continuation_phrases",
@@ -219,6 +220,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "n_exact_checks",
         "n_semantic_checks",
         "n_absence_checks",
+        "n_shell_syntax_checks",
         "n_failures",
     ],
     "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json": [

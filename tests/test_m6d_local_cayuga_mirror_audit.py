@@ -59,6 +59,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
         ]
         drift_fields = _JSON_FIELD_SPECS["results/m6d_goal_drift_audit.json"]
+        remote_readiness_fields = _JSON_FIELD_SPECS[
+            "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json"
+        ]
 
         self.assertIn("postsubmit_status_before_sync", packet_fields)
         self.assertIn("job_state_probe_before_sync", packet_fields)
@@ -81,6 +84,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "workstreams.W2_multi_target_panel.panel_job_state_query_bridge_ok",
             status_fields,
         )
+        self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_remote_shell_syntax_checks",
+            status_fields,
+        )
         self.assertIn("resume_execution_ladder.next_role", status_fields)
         self.assertIn(
             "resume_execution_ladder.approval_disambiguation.continuation_phrases_are_approval",
@@ -101,6 +108,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             drift_fields,
         )
         self.assertIn("drift_assessment.execution", drift_fields)
+        self.assertIn("n_shell_syntax_checks", remote_readiness_fields)
 
     def test_build_audit_accepts_matching_exact_and_semantic_fields(self):
         with tempfile.TemporaryDirectory() as d:

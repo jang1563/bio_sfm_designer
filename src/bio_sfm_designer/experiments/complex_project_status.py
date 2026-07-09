@@ -1852,6 +1852,7 @@ def _attach_w2_panel_remote_readiness(status: Dict[str, Any],
         "panel_remote_exact_checks": panel_remote_readiness.get("n_exact_checks"),
         "panel_remote_semantic_checks": panel_remote_readiness.get("n_semantic_checks"),
         "panel_remote_absence_checks": panel_remote_readiness.get("n_absence_checks"),
+        "panel_remote_shell_syntax_checks": panel_remote_readiness.get("n_shell_syntax_checks"),
         "panel_remote_local_exact_fresh": not local_exact_failures,
         "panel_remote_local_exact_stale_count": len(local_exact_failures),
         "panel_remote_submission_readiness_failures": (
@@ -11025,12 +11026,13 @@ def render_text(rep: Dict[str, Any]) -> str:
             )
         if key == "W2_multi_target_panel" and "panel_remote_submission_readiness_ok" in w:
             lines.append(
-                "  panel_remote_submission_readiness_ok={ready} no_submit={no_submit} exact={exact} semantic={semantic} absent={absent}".format(
+                "  panel_remote_submission_readiness_ok={ready} no_submit={no_submit} exact={exact} semantic={semantic} absent={absent} syntax={syntax}".format(
                     ready=w.get("panel_remote_submission_readiness_ok"),
                     no_submit=w.get("panel_remote_no_submit"),
                     exact=w.get("panel_remote_exact_checks"),
                     semantic=w.get("panel_remote_semantic_checks"),
                     absent=w.get("panel_remote_absence_checks"),
+                    syntax=w.get("panel_remote_shell_syntax_checks"),
                 )
             )
         if key == "W2_multi_target_panel" and "panel_submission_decision_ready" in w:
