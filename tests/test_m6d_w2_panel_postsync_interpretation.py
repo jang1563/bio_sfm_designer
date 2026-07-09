@@ -144,6 +144,40 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
         self.assertEqual(rep["panel_label"], "W2 v11 Boltz-2 representative panel/protocol")
         self.assertIn("W2 v11 Boltz-2 representative panel/protocol", rep["current_panel_result"]["claim"])
 
+    def test_panel_report_target_set_mismatch_blocks_claim_and_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "manifest.json")
+            postsubmit = os.path.join(d, "postsubmit.json")
+            completion = os.path.join(d, "completion.json")
+            panel = os.path.join(d, "panel.json")
+            obj = _manifest(d)
+            mismatched_panel = _panel_report()
+            mismatched_panel["targets"][1]["complex_target_id"] = "t_extra"
+            _write_json(manifest, obj)
+            _write_json(postsubmit, _postsubmit(True))
+            _write_json(completion, _completion_report())
+            _write_json(panel, mismatched_panel)
+            for target in obj["targets"]:
+                _write_jsonl(target["records"], [{"complex_target_id": target["id"]}])
+
+            rep = build_interpretation(
+                manifest_path=manifest,
+                postsubmit_path=postsubmit,
+                completion_path=completion,
+                panel_report_path=panel,
+                min_targets=2,
+            )
+
+        self.assertEqual(rep["status"], "panel_report_target_set_mismatch")
+        self.assertFalse(rep["can_claim_w2_generalization"])
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("panel_report_target_set_mismatch", kinds)
+        self.assertEqual(
+            rep["current_panel_result"]["target_set_check"]["missing_target_ids"],
+            ["t1"],
+        )
+
     def test_replay_script_requires_sync_ready_and_refreshes_decision_protocol(self):
         script = render_replay_script(
             manifest="custom/manifest.json",

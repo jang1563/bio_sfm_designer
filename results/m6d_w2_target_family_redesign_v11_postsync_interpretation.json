@@ -19,6 +19,15 @@
   },
   "failures": [],
   "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+  "manifest_target_ids": [
+    "10XZ_EF",
+    "10YB_GH",
+    "12NP_AH",
+    "10VB_IJ",
+    "10ZO_AB",
+    "1A2Y_BA",
+    "1A6W_HL"
+  ],
   "min_records_per_target": 20,
   "min_targets": 4,
   "next_action": "await explicit approval, guarded submission, job completion, and sync-ready postsubmit status",

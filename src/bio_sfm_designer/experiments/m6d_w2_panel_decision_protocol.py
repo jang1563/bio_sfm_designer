@@ -70,6 +70,33 @@ def _as_set(values: Iterable[Any]) -> Set[str]:
     return {str(value) for value in values if str(value)}
 
 
+def _target_set_check(targets: List[Dict[str, Any]],
+                      expected_target_ids: Optional[Iterable[str]]) -> Dict[str, Any]:
+    observed = sorted({
+        str(row.get("complex_target_id")).strip()
+        for row in targets
+        if isinstance(row, dict) and str(row.get("complex_target_id") or "").strip()
+    })
+    if expected_target_ids is None:
+        return {
+            "expected_target_ids": None,
+            "observed_target_ids": observed,
+            "missing_target_ids": [],
+            "unexpected_target_ids": [],
+            "ok": True,
+        }
+    expected = sorted({str(target_id).strip() for target_id in expected_target_ids if str(target_id).strip()})
+    expected_set = set(expected)
+    observed_set = set(observed)
+    return {
+        "expected_target_ids": expected,
+        "observed_target_ids": observed,
+        "missing_target_ids": sorted(expected_set - observed_set),
+        "unexpected_target_ids": sorted(observed_set - expected_set),
+        "ok": expected_set == observed_set,
+    }
+
+
 def _add_failure(failures: List[Dict[str, Any]], kind: str, message: str, **extra: Any) -> None:
     row = {"kind": kind, "message": message}
     row.update(extra)
@@ -101,6 +128,7 @@ def classify_panel_report(
     target_alpha: float,
     min_targets: int,
     panel_label: str = _DEFAULT_PANEL_LABEL,
+    expected_target_ids: Optional[Iterable[str]] = None,
 ) -> Dict[str, Any]:
     if not isinstance(panel_report, dict):
         return {
@@ -121,9 +149,21 @@ def classify_panel_report(
         for row in targets
         if isinstance(row, dict) and row.get("certified") is not True and row.get("complex_target_id")
     ]
+    target_set_check = _target_set_check(targets, expected_target_ids)
     alpha_matches = panel_report.get("target_alpha") == target_alpha
     target_count_ok = isinstance(panel_report.get("n_targets"), int) and panel_report["n_targets"] >= min_targets
     all_targets_certified = bool(targets) and len(certified) == len(targets)
+
+    if not target_set_check["ok"]:
+        return {
+            "status": "panel_report_target_set_mismatch",
+            "w2_generalization_supported": False,
+            "certified_targets": certified,
+            "not_certified_targets": not_certified,
+            "target_set_check": target_set_check,
+            "claim": "no W2 generalization claim; panel report targets do not match representative manifest",
+            "next_action": "repair sync/report target-set contract before science interpretation",
+        }
 
     if (
         panel_report.get("ok") is True
@@ -138,6 +178,7 @@ def classify_panel_report(
             "w2_generalization_supported": True,
             "certified_targets": certified,
             "not_certified_targets": [],
+            "target_set_check": target_set_check,
             "claim": f"W2 multi-target generalization is supported for the {panel_label}",
             "next_action": "preserve this as W2 evidence, then decide whether W3 robustness remains the limiting caveat",
         }
@@ -148,6 +189,7 @@ def classify_panel_report(
             "w2_generalization_supported": False,
             "certified_targets": certified,
             "not_certified_targets": not_certified,
+            "target_set_check": target_set_check,
             "claim": "no W2 generalization claim; any certified targets are target-specific only",
             "next_action": "diagnose certified versus failed targets and redesign the next W2 target/protocol branch",
         }
@@ -157,6 +199,7 @@ def classify_panel_report(
         "w2_generalization_supported": False,
         "certified_targets": certified,
         "not_certified_targets": not_certified,
+        "target_set_check": target_set_check,
         "claim": "no W2 generalization claim; repair panel/report contract before science interpretation",
         "next_action": "inspect panel report failures before spending or claiming",
     }
@@ -259,6 +302,7 @@ def build_protocol(
         target_alpha=target_alpha,
         min_targets=min_targets,
         panel_label=panel_label,
+        expected_target_ids=manifest_ids,
     )
     protocol_ready = not failures
     approval_env_var = approval_packet.get("panel_approval_env_var") or "panel approval env"

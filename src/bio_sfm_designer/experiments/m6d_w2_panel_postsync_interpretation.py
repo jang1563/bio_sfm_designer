@@ -83,6 +83,17 @@ def _records_from_manifest(manifest: Dict[str, Any]) -> List[str]:
     return records
 
 
+def _target_ids_from_manifest(manifest: Dict[str, Any]) -> List[str]:
+    target_ids = []
+    for target in manifest.get("targets", []):
+        if not isinstance(target, dict):
+            continue
+        target_id = str(target.get("id") or "").strip()
+        if target_id:
+            target_ids.append(target_id)
+    return target_ids
+
+
 def _quote_paths(paths: List[str]) -> str:
     return " ".join(shlex.quote(path) for path in paths)
 
@@ -186,6 +197,7 @@ def build_interpretation(*,
     completion_report = _load_json_optional(completion_path)
     panel_report = _load_json_optional(panel_report_path)
     records = _records_from_manifest(manifest)
+    manifest_target_ids = _target_ids_from_manifest(manifest)
     failures: List[Dict[str, Any]] = []
     sync_ready = bool(isinstance(postsubmit, dict) and postsubmit.get("sync_ready") is True)
     completion_probe = run_completion(
@@ -201,6 +213,7 @@ def build_interpretation(*,
         target_alpha=target_alpha,
         min_targets=min_targets,
         panel_label=panel_label,
+        expected_target_ids=manifest_target_ids,
     )
 
     if panel_report is not None:
@@ -208,6 +221,14 @@ def build_interpretation(*,
             failures.append({
                 "kind": "panel_report_without_ready_completion",
                 "message": "panel report exists without a ready completion artifact",
+            })
+        target_set_check = panel_result.get("target_set_check")
+        if isinstance(target_set_check, dict) and target_set_check.get("ok") is not True:
+            failures.append({
+                "kind": "panel_report_target_set_mismatch",
+                "message": "panel report target IDs must exactly match the representative manifest",
+                "missing_target_ids": target_set_check.get("missing_target_ids") or [],
+                "unexpected_target_ids": target_set_check.get("unexpected_target_ids") or [],
             })
         status = panel_result["status"]
         can_claim = panel_result["w2_generalization_supported"] is True and not failures
@@ -245,6 +266,7 @@ def build_interpretation(*,
         "panel_report": panel_report_path,
         "replay_script": replay_script,
         "records": records,
+        "manifest_target_ids": manifest_target_ids,
         "completion_probe": {
             "status": completion_probe.get("status"),
             "ok": completion_probe.get("ok"),

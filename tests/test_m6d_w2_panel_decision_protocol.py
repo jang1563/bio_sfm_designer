@@ -146,6 +146,26 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
         self.assertEqual(len(result["certified_targets"]), 14)
         self.assertIn("W2 v11 Boltz-2 representative panel/protocol", result["claim"])
 
+    def test_target_set_mismatch_blocks_w2_support_even_when_certified(self):
+        panel = _panel_report(
+            "multi_target_certified",
+            ok=True,
+            certified_ids=["t0", "t_extra"],
+        )
+
+        result = classify_panel_report(
+            panel,
+            target_alpha=0.2,
+            min_targets=2,
+            expected_target_ids=["t0", "t1"],
+        )
+
+        self.assertEqual(result["status"], "panel_report_target_set_mismatch")
+        self.assertFalse(result["w2_generalization_supported"])
+        self.assertEqual(result["target_set_check"]["missing_target_ids"], ["t1"])
+        self.assertEqual(result["target_set_check"]["unexpected_target_ids"], ["t_extra"])
+        self.assertIn("targets do not match", result["claim"])
+
     def test_classifies_partial_target_certificates_as_target_specific_only(self):
         panel = _panel_report(
             "multi_target_evaluable_not_certified",
