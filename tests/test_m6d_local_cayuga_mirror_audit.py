@@ -100,6 +100,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn("workstreams.W2_multi_target_panel.panel_approval_scope_ready", status_fields)
         self.assertIn(
+            "workstreams.W2_multi_target_panel.panel_approval_scope_records_per_target_planned",
+            status_fields,
+        )
+        self.assertIn(
             "workstreams.W2_multi_target_panel.panel_approval_scope_planned_design_records",
             status_fields,
         )
@@ -135,6 +139,48 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "prerequisites.project_status.w2_panel_remote_shell_syntax_checks",
             decision_fields,
         )
+        self.assertIn("prerequisites.project_status.w2_panel_approval_scope_ok", decision_fields)
+        self.assertIn(
+            "prerequisites.project_status.w2_panel_approval_scope_planned_design_records",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.project_status.w2_panel_approval_scope_expected_slurm_jobs",
+            decision_fields,
+        )
+        self.assertIn("prerequisites.goal_completion_audit.w2_panel_approval_scope_ready", decision_fields)
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_approval_scope_planned_design_records",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_approval_scope_expected_slurm_jobs",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_project_status_panel_approval_scope_ready",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_project_status_panel_approval_scope_planned_design_records",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_project_status_panel_approval_scope_expected_slurm_jobs",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_scope_ready",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_scope_planned_design_records",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_scope_expected_slurm_jobs",
+            decision_fields,
+        )
         self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
             decision_fields,
@@ -160,6 +206,18 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             decision_fields,
         )
         self.assertIn("w2_gate.panel_remote_exact_checks", completion_fields)
+        self.assertIn("w2_gate.panel_approval_scope_ready", completion_fields)
+        self.assertIn("w2_gate.panel_approval_scope_planned_design_records", completion_fields)
+        self.assertIn("w2_gate.panel_approval_scope_expected_slurm_jobs", completion_fields)
+        self.assertIn("w2_gate.project_status_panel_approval_scope_ready", completion_fields)
+        self.assertIn(
+            "w2_gate.project_status_panel_approval_scope_planned_design_records",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.project_status_panel_approval_scope_expected_slurm_jobs",
+            completion_fields,
+        )
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks", completion_fields)
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks_ok", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks", completion_fields)
@@ -173,6 +231,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "w2_gate.panel_public_approval_bundle_workflow_includes_postsync_interpretation",
             completion_fields,
         )
+        self.assertIn("w2_gate.panel_public_approval_bundle_scope_ready", completion_fields)
+        self.assertIn("w2_gate.panel_public_approval_bundle_scope_planned_design_records", completion_fields)
+        self.assertIn("w2_gate.panel_public_approval_bundle_scope_expected_slurm_jobs", completion_fields)
         self.assertIn("prerequisites.remote_readiness.n_exact_checks", public_bundle_fields)
         self.assertIn("approval_scope.planned_design_records", public_bundle_fields)
         self.assertIn("approval_scope.expected_slurm_jobs", public_bundle_fields)

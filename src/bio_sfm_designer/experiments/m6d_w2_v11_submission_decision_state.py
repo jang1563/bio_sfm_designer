@@ -379,6 +379,20 @@ def _remote_readiness_state(remote_readiness: Dict[str, Any]) -> Dict[str, Any]:
 
 def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
     w2 = _workstream(project_status, "W2_multi_target_panel")
+    n_ready_targets = _int_or_none(w2.get("panel_approval_scope_n_ready_targets"))
+    records_per_target = _int_or_none(w2.get("panel_approval_scope_records_per_target_planned"))
+    planned_records = _int_or_none(w2.get("panel_approval_scope_planned_design_records"))
+    expected_jobs = _int_or_none(w2.get("panel_approval_scope_expected_slurm_jobs"))
+    scope_ok = (
+        w2.get("panel_approval_scope_ready") is True
+        and n_ready_targets is not None
+        and n_ready_targets > 0
+        and records_per_target is not None
+        and records_per_target > 0
+        and planned_records == n_ready_targets * records_per_target
+        and expected_jobs == n_ready_targets * 2
+        and w2.get("panel_approval_scope_target_alpha") == 0.2
+    )
     ok = (
         project_status.get("status") == "m6_complex_in_progress"
         and project_status.get("complete") is False
@@ -390,6 +404,7 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
         and w2.get("panel_remote_submission_readiness_ok") is True
         and isinstance(w2.get("panel_remote_shell_syntax_checks"), int)
         and w2.get("panel_remote_shell_syntax_checks") > 0
+        and scope_ok
     )
     return {
         "path": project_status.get("_path"),
@@ -403,11 +418,57 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
         "w2_panel_decision_protocol_ready": w2.get("panel_decision_protocol_ready"),
         "w2_panel_remote_submission_readiness_ok": w2.get("panel_remote_submission_readiness_ok"),
         "w2_panel_remote_shell_syntax_checks": w2.get("panel_remote_shell_syntax_checks"),
+        "w2_panel_approval_scope_ready": w2.get("panel_approval_scope_ready"),
+        "w2_panel_approval_scope_n_ready_targets": w2.get("panel_approval_scope_n_ready_targets"),
+        "w2_panel_approval_scope_records_per_target_planned": w2.get(
+            "panel_approval_scope_records_per_target_planned"
+        ),
+        "w2_panel_approval_scope_planned_design_records": w2.get(
+            "panel_approval_scope_planned_design_records"
+        ),
+        "w2_panel_approval_scope_expected_slurm_jobs": w2.get(
+            "panel_approval_scope_expected_slurm_jobs"
+        ),
+        "w2_panel_approval_scope_target_alpha": w2.get("panel_approval_scope_target_alpha"),
+        "w2_panel_approval_scope_ok": scope_ok,
         "w2_panel_submit_command_if_approved": w2.get("panel_submit_command_if_approved"),
     }
 
 
 def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, Any]:
+    panel_approval_scope_ready = _field(goal_completion_audit, "w2_gate.panel_approval_scope_ready")
+    panel_approval_scope_planned_design_records = _field(
+        goal_completion_audit,
+        "w2_gate.panel_approval_scope_planned_design_records",
+    )
+    panel_approval_scope_expected_slurm_jobs = _field(
+        goal_completion_audit,
+        "w2_gate.panel_approval_scope_expected_slurm_jobs",
+    )
+    project_status_scope_ready = _field(
+        goal_completion_audit,
+        "w2_gate.project_status_panel_approval_scope_ready",
+    )
+    project_status_scope_planned_design_records = _field(
+        goal_completion_audit,
+        "w2_gate.project_status_panel_approval_scope_planned_design_records",
+    )
+    project_status_scope_expected_slurm_jobs = _field(
+        goal_completion_audit,
+        "w2_gate.project_status_panel_approval_scope_expected_slurm_jobs",
+    )
+    public_bundle_scope_ready = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_scope_ready",
+    )
+    public_bundle_scope_planned_design_records = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_scope_planned_design_records",
+    )
+    public_bundle_scope_expected_slurm_jobs = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_scope_expected_slurm_jobs",
+    )
     workflow_step_count = _field(
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_step_count",
@@ -436,6 +497,15 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and _field(goal_completion_audit, "w2_gate.panel_remote_no_submit") is True
         and _field(goal_completion_audit, "w2_gate.panel_remote_failures") == 0
         and _field(goal_completion_audit, "w2_gate.panel_public_approval_bundle_ready") is True
+        and panel_approval_scope_ready is True
+        and project_status_scope_ready is True
+        and public_bundle_scope_ready is True
+        and panel_approval_scope_planned_design_records == 700
+        and project_status_scope_planned_design_records == 700
+        and public_bundle_scope_planned_design_records == 700
+        and panel_approval_scope_expected_slurm_jobs == 14
+        and project_status_scope_expected_slurm_jobs == 14
+        and public_bundle_scope_expected_slurm_jobs == 14
         and workflow_step_count == 9
         and workflow_all_commands_present is True
         and workflow_sync_ready_before_record_sync is True
@@ -455,6 +525,19 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
             goal_completion_audit,
             "w2_gate.panel_public_approval_bundle_ready",
         ),
+        "w2_panel_approval_scope_ready": panel_approval_scope_ready,
+        "w2_panel_approval_scope_planned_design_records": panel_approval_scope_planned_design_records,
+        "w2_panel_approval_scope_expected_slurm_jobs": panel_approval_scope_expected_slurm_jobs,
+        "w2_project_status_panel_approval_scope_ready": project_status_scope_ready,
+        "w2_project_status_panel_approval_scope_planned_design_records": (
+            project_status_scope_planned_design_records
+        ),
+        "w2_project_status_panel_approval_scope_expected_slurm_jobs": project_status_scope_expected_slurm_jobs,
+        "w2_panel_public_approval_bundle_scope_ready": public_bundle_scope_ready,
+        "w2_panel_public_approval_bundle_scope_planned_design_records": (
+            public_bundle_scope_planned_design_records
+        ),
+        "w2_panel_public_approval_bundle_scope_expected_slurm_jobs": public_bundle_scope_expected_slurm_jobs,
         "w2_panel_public_approval_bundle_workflow_step_count": workflow_step_count,
         "w2_panel_public_approval_bundle_workflow_all_commands_present": workflow_all_commands_present,
         "w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync": (

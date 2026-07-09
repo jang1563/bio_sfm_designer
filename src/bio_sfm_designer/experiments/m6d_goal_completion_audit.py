@@ -140,6 +140,11 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
             "can_claim_w2_generalization": None,
         }
     checks = panel_approval_packet.get("checks") if isinstance(panel_approval_packet.get("checks"), dict) else {}
+    approval_scope = (
+        panel_approval_packet.get("approval_scope")
+        if isinstance(panel_approval_packet.get("approval_scope"), dict)
+        else {}
+    )
     return {
         "path": panel_approval_packet.get("_path"),
         "status": panel_approval_packet.get("status"),
@@ -163,6 +168,8 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
         "postsubmit_sync_ready_gate": panel_approval_packet.get("postsubmit_sync_ready_gate"),
         "postsubmit_status_command_before_sync": panel_approval_packet.get("postsubmit_status_command_before_sync"),
         "postsync_replay_after_sync": panel_approval_packet.get("postsync_replay_after_sync"),
+        "approval_scope": approval_scope,
+        "approval_scope_ok": _approval_scope_ok(approval_scope, target_alpha=panel_approval_packet.get("target_alpha")),
         "checks": checks,
         "target_msa_strict_ready": checks.get("target_msa_strict_ready"),
         "panel_dry_run_no_sbatch": checks.get("panel_dry_run_no_sbatch"),
@@ -194,6 +201,75 @@ def _strict_postsubmit_command_ok(command: Any, panel_approval: Dict[str, Any]) 
         and all(flag in text for flag in required_flags)
         and all(str(path) in text for path in required_paths if path)
     )
+
+
+def _int_or_none(value: Any) -> Optional[int]:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _approval_scope_ok(scope: Dict[str, Any], *, target_alpha: Any = None) -> bool:
+    n_ready = _int_or_none(scope.get("n_ready_targets"))
+    n_targets = _int_or_none(scope.get("n_targets"))
+    min_targets = _int_or_none(scope.get("min_targets"))
+    records_per_target = _int_or_none(scope.get("records_per_target_planned"))
+    planned_records = _int_or_none(scope.get("planned_design_records"))
+    expected_job_pairs = _int_or_none(scope.get("expected_job_pairs"))
+    expected_slurm_jobs = _int_or_none(scope.get("expected_slurm_jobs"))
+    target_ids = scope.get("target_ids")
+    alpha_ok = True if target_alpha is None else scope.get("target_alpha") == target_alpha
+    return (
+        bool(scope.get("manifest"))
+        and isinstance(target_ids, list)
+        and n_ready is not None
+        and n_targets is not None
+        and min_targets is not None
+        and len(target_ids) == n_ready
+        and n_targets >= n_ready
+        and n_ready >= min_targets
+        and records_per_target is not None
+        and records_per_target > 0
+        and planned_records == n_ready * records_per_target
+        and expected_job_pairs == n_ready
+        and expected_slurm_jobs == n_ready * 2
+        and scope.get("job_pair_model") == "ProteinMPNN -> Boltz"
+        and alpha_ok
+        and bool(scope.get("panel_out"))
+        and bool(scope.get("completion_after_sync"))
+        and bool(scope.get("sync_back_after_jobs_finish"))
+        and scope.get("no_submit") is True
+        and scope.get("can_claim_w2_generalization") is False
+    )
+
+
+def _project_status_approval_scope(project_status_w2: Dict[str, Any]) -> Dict[str, Any]:
+    n_ready = _int_or_none(project_status_w2.get("panel_approval_scope_n_ready_targets"))
+    records_per_target = _int_or_none(project_status_w2.get("panel_approval_scope_records_per_target_planned"))
+    planned_records = _int_or_none(project_status_w2.get("panel_approval_scope_planned_design_records"))
+    expected_jobs = _int_or_none(project_status_w2.get("panel_approval_scope_expected_slurm_jobs"))
+    ok = (
+        project_status_w2.get("panel_approval_scope_ready") is True
+        and n_ready is not None
+        and n_ready > 0
+        and records_per_target is not None
+        and records_per_target > 0
+        and planned_records == n_ready * records_per_target
+        and expected_jobs == n_ready * 2
+        and project_status_w2.get("panel_approval_scope_target_alpha") == 0.2
+    )
+    return {
+        "ready": project_status_w2.get("panel_approval_scope_ready"),
+        "ok": ok,
+        "n_ready_targets": project_status_w2.get("panel_approval_scope_n_ready_targets"),
+        "records_per_target_planned": project_status_w2.get(
+            "panel_approval_scope_records_per_target_planned"
+        ),
+        "planned_design_records": project_status_w2.get("panel_approval_scope_planned_design_records"),
+        "expected_slurm_jobs": project_status_w2.get("panel_approval_scope_expected_slurm_jobs"),
+        "target_alpha": project_status_w2.get("panel_approval_scope_target_alpha"),
+    }
 
 
 def _panel_decision_state(panel_decision_protocol: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -370,6 +446,11 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         if isinstance(panel_public_approval_bundle.get("target_contract"), dict)
         else {}
     )
+    approval_scope = (
+        panel_public_approval_bundle.get("approval_scope")
+        if isinstance(panel_public_approval_bundle.get("approval_scope"), dict)
+        else {}
+    )
     commands = (
         panel_public_approval_bundle.get("portable_commands")
         if isinstance(panel_public_approval_bundle.get("portable_commands"), dict)
@@ -403,6 +484,8 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         "machine_gate": approval.get("machine_gate"),
         "manifest": target.get("manifest"),
         "target_alpha": target.get("target_alpha"),
+        "approval_scope": approval_scope,
+        "approval_scope_ok": _approval_scope_ok(approval_scope, target_alpha=target.get("target_alpha")),
         "strict_postsubmit_status_before_sync": commands.get("strict_postsubmit_status_before_sync"),
         "submit_if_explicitly_approved": commands.get("submit_if_explicitly_approved"),
         "remote_readiness_status": remote.get("status"),
@@ -556,6 +639,7 @@ def build_audit(project_status: Dict[str, Any],
     panel_submission_decision = _panel_submission_decision_state(panel_submission_decision_state)
     panel_postsync = _panel_postsync_interpretation_state(panel_postsync_interpretation)
     panel_public_bundle = _panel_public_approval_bundle_state(panel_public_approval_bundle)
+    project_panel_scope = _project_status_approval_scope(w2)
     receipt_allowed = execution.get("target_msa_jobs_submitted_waiting_on_completion") is True
     receipt_allowed = receipt_allowed or execution.get("target_msa_outputs_synced_strict_require_files_passed") is True
     if receipt.get("exists") is not False and not receipt_allowed:
@@ -749,6 +833,22 @@ def build_audit(project_status: Dict[str, Any],
                 "W2 panel approval packet must name the post-sync replay path for report and interpretation",
                 expected="postsync_replay_after_sync",
                 observed=panel_approval.get("postsync_replay_after_sync"),
+            )
+        if v11_panel_sync and panel_approval.get("approval_scope_ok") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_approval_scope_not_ready",
+                "W2 v11 panel approval packet must bind explicit approval to a concrete target/design/job scope",
+                expected=True,
+                observed=panel_approval.get("approval_scope"),
+            )
+        if v11_panel_sync and project_panel_scope.get("ok") is not True:
+            _add_failure(
+                failures,
+                "w2_project_status_panel_scope_not_ready",
+                "Project status must expose the W2 v11 approval scope before the goal audit can stay ready",
+                expected=True,
+                observed=project_panel_scope,
             )
 
     if panel_decision_protocol is not None:
@@ -1138,6 +1238,14 @@ def build_audit(project_status: Dict[str, Any],
                     ),
                 },
             )
+        if panel_public_bundle.get("approval_scope_ok") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_scope_not_ready",
+                "W2 public approval bundle must carry the concrete target/design/job approval scope",
+                expected=True,
+                observed=panel_public_bundle.get("approval_scope"),
+            )
 
     if w3_adjudication_audit.get("audit_ok") is not True:
         _add_failure(failures, "w3_standalone_adjudication_audit_not_ok",
@@ -1316,6 +1424,20 @@ def build_audit(project_status: Dict[str, Any],
                 "postsubmit_status_command_before_sync"
             ),
             "panel_postsync_replay_after_sync": panel_approval.get("postsync_replay_after_sync"),
+            "panel_approval_scope_ready": panel_approval.get("approval_scope_ok"),
+            "panel_approval_scope_planned_design_records": (
+                panel_approval.get("approval_scope") or {}
+            ).get("planned_design_records"),
+            "panel_approval_scope_expected_slurm_jobs": (
+                panel_approval.get("approval_scope") or {}
+            ).get("expected_slurm_jobs"),
+            "project_status_panel_approval_scope_ready": project_panel_scope.get("ok"),
+            "project_status_panel_approval_scope_planned_design_records": project_panel_scope.get(
+                "planned_design_records"
+            ),
+            "project_status_panel_approval_scope_expected_slurm_jobs": project_panel_scope.get(
+                "expected_slurm_jobs"
+            ),
             "panel_decision_protocol_ready": panel_decision.get("status") == _PANEL_DECISION_READY_STATUS,
             "panel_decision_no_submit": panel_decision.get("no_submit"),
             "panel_decision_can_claim_w2_now": panel_decision.get("can_claim_w2_generalization_now"),
@@ -1395,6 +1517,13 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_explicit_approval_required": panel_public_bundle.get(
                 "explicit_approval_required"
             ),
+            "panel_public_approval_bundle_scope_ready": panel_public_bundle.get("approval_scope_ok"),
+            "panel_public_approval_bundle_scope_planned_design_records": (
+                panel_public_bundle.get("approval_scope") or {}
+            ).get("planned_design_records"),
+            "panel_public_approval_bundle_scope_expected_slurm_jobs": (
+                panel_public_bundle.get("approval_scope") or {}
+            ).get("expected_slurm_jobs"),
         },
         "w3_gate": {
             "audit_ok": w3_adjudication_audit.get("audit_ok"),
@@ -1446,6 +1575,12 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel can submit if explicitly approved: `{rep.get('w2_gate', {}).get('panel_can_submit_if_explicitly_approved')}`",
         f"- W2 panel can claim generalization: `{rep.get('w2_gate', {}).get('panel_can_claim_w2_generalization')}`",
         f"- W2 panel no-env guard refuses: `{rep.get('w2_gate', {}).get('panel_guard_no_env_refuses')}`",
+        f"- W2 panel approval scope ready: `{rep.get('w2_gate', {}).get('panel_approval_scope_ready')}`",
+        f"- W2 panel approval scope planned designs: `{rep.get('w2_gate', {}).get('panel_approval_scope_planned_design_records')}`",
+        f"- W2 panel approval scope expected Slurm jobs: `{rep.get('w2_gate', {}).get('panel_approval_scope_expected_slurm_jobs')}`",
+        f"- W2 project-status approval scope ready: `{rep.get('w2_gate', {}).get('project_status_panel_approval_scope_ready')}`",
+        f"- W2 project-status approval scope planned designs: `{rep.get('w2_gate', {}).get('project_status_panel_approval_scope_planned_design_records')}`",
+        f"- W2 project-status approval scope expected Slurm jobs: `{rep.get('w2_gate', {}).get('project_status_panel_approval_scope_expected_slurm_jobs')}`",
         f"- W2 panel decision protocol ready: `{rep.get('w2_gate', {}).get('panel_decision_protocol_ready')}`",
         f"- W2 panel decision protocol no-submit: `{rep.get('w2_gate', {}).get('panel_decision_no_submit')}`",
         f"- W2 panel decision can claim now: `{rep.get('w2_gate', {}).get('panel_decision_can_claim_w2_now')}`",
@@ -1468,6 +1603,9 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel public approval bundle workflow steps: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_step_count')}`",
         f"- W2 panel public approval bundle workflow sync-ready before record sync: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_sync_ready_before_record_sync')}`",
         f"- W2 panel public approval bundle workflow includes post-sync interpretation: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_includes_postsync_interpretation')}`",
+        f"- W2 panel public approval bundle scope ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_ready')}`",
+        f"- W2 panel public approval bundle scope planned designs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_planned_design_records')}`",
+        f"- W2 panel public approval bundle scope expected Slurm jobs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_expected_slurm_jobs')}`",
         f"- W3 standalone audit ok: `{rep.get('w3_gate', {}).get('audit_ok')}`",
         f"- W3 positive claim supported: `{rep.get('w3_gate', {}).get('positive_claim_supported')}`",
         "",

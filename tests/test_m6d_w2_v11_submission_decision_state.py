@@ -192,6 +192,12 @@ def _project_status():
                 "panel_decision_protocol_ready": True,
                 "panel_remote_submission_readiness_ok": True,
                 "panel_remote_shell_syntax_checks": 4,
+                "panel_approval_scope_ready": True,
+                "panel_approval_scope_n_ready_targets": 7,
+                "panel_approval_scope_records_per_target_planned": 100,
+                "panel_approval_scope_planned_design_records": 700,
+                "panel_approval_scope_expected_slurm_jobs": 14,
+                "panel_approval_scope_target_alpha": 0.2,
                 "panel_submit_command_if_approved": "ssh hpc-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
             }
         },
@@ -210,6 +216,15 @@ def _goal_completion_audit():
             "panel_remote_no_submit": True,
             "panel_remote_failures": 0,
             "panel_public_approval_bundle_ready": True,
+            "panel_approval_scope_ready": True,
+            "panel_approval_scope_planned_design_records": 700,
+            "panel_approval_scope_expected_slurm_jobs": 14,
+            "project_status_panel_approval_scope_ready": True,
+            "project_status_panel_approval_scope_planned_design_records": 700,
+            "project_status_panel_approval_scope_expected_slurm_jobs": 14,
+            "panel_public_approval_bundle_scope_ready": True,
+            "panel_public_approval_bundle_scope_planned_design_records": 700,
+            "panel_public_approval_bundle_scope_expected_slurm_jobs": 14,
             "panel_public_approval_bundle_workflow_step_count": 9,
             "panel_public_approval_bundle_workflow_all_commands_present": True,
             "panel_public_approval_bundle_workflow_sync_ready_before_record_sync": True,
@@ -275,11 +290,37 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertTrue(rep["prerequisites"]["remote_submission_readiness"]["shell_syntax_checks_ok"])
         self.assertEqual(rep["prerequisites"]["remote_submission_readiness"]["n_shell_syntax_checks"], 4)
         self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_remote_shell_syntax_checks"], 4)
+        self.assertTrue(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_ok"])
+        self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_planned_design_records"], 700)
+        self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_expected_slurm_jobs"], 14)
         self.assertEqual(
             rep["prerequisites"]["goal_completion_audit"][
                 "w2_panel_public_approval_bundle_workflow_step_count"
             ],
             9,
+        )
+        self.assertTrue(rep["prerequisites"]["goal_completion_audit"]["w2_panel_approval_scope_ready"])
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_project_status_panel_approval_scope_ready"
+            ]
+        )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_scope_ready"
+            ]
+        )
+        self.assertEqual(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_scope_planned_design_records"
+            ],
+            700,
+        )
+        self.assertEqual(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_scope_expected_slurm_jobs"
+            ],
+            14,
         )
         self.assertTrue(
             rep["prerequisites"]["goal_completion_audit"][
@@ -341,6 +382,18 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
 
+    def test_missing_completion_scope_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"].pop("panel_public_approval_bundle_scope_ready")
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
     def test_missing_public_approval_workflow_blocks_decision_state(self):
         completion = _goal_completion_audit()
         completion["w2_gate"].pop("panel_public_approval_bundle_workflow_step_count")
@@ -352,6 +405,21 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_missing_project_status_scope_blocks_decision_state(self):
+        status = _project_status()
+        w2 = status["workstreams"]["W2_multi_target_panel"]
+        for key in list(w2):
+            if key.startswith("panel_approval_scope"):
+                w2.pop(key)
+
+        rep = _build(project_status=status)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["project_status"]["w2_panel_approval_scope_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("project_status_not_ready", kinds)
 
     def test_missing_postsubmit_sync_ready_gate_blocks_decision_state(self):
         approval = _approval_packet()

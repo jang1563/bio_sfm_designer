@@ -32,6 +32,12 @@ def _project_status():
                 "status": "target_msa_gate_ready_awaiting_explicit_approval",
                 "complete": False,
                 "positive_claim_supported": False,
+                "panel_approval_scope_ready": True,
+                "panel_approval_scope_n_ready_targets": 7,
+                "panel_approval_scope_records_per_target_planned": 100,
+                "panel_approval_scope_planned_design_records": 700,
+                "panel_approval_scope_expected_slurm_jobs": 14,
+                "panel_approval_scope_target_alpha": 0.2,
             },
             "W3_independent_predictor": {
                 "status": "negative_robustness_result_adjudicated",
@@ -40,6 +46,30 @@ def _project_status():
             },
             "W4_closed_loop_DBTL": {"status": "closed_loop_round_complete", "complete": True},
         },
+    }
+
+
+def _panel_approval_scope():
+    target_ids = ["10XZ_EF", "10YB_GH", "12NP_AH", "10VB_IJ", "10ZO_AB", "1A2Y_BA", "1A6W_HL"]
+    return {
+        "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "target_ids": target_ids,
+        "n_targets": 7,
+        "n_ready_targets": 7,
+        "min_targets": 4,
+        "records_per_target_planned": 100,
+        "planned_design_records": 700,
+        "expected_job_pairs": 7,
+        "expected_slurm_jobs": 14,
+        "job_pair_model": "ProteinMPNN -> Boltz",
+        "target_alpha": 0.2,
+        "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+        "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+        "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+        "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+        "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+        "no_submit": True,
+        "can_claim_w2_generalization": False,
     }
 
 
@@ -136,6 +166,8 @@ def _panel_approval_packet():
             "submit_receipt_absent": True,
             "submit_summary_absent": True,
         },
+        "target_alpha": 0.2,
+        "approval_scope": _panel_approval_scope(),
         "submit_command_if_approved": "ssh ${CAYUGA_BIO_SFM_HOST} 'BIO_SFM_APPROVE_V9_PANEL=approve-v9-panel-submit bash wrapper.sh'",
         "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
         "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
@@ -287,6 +319,7 @@ def _panel_public_approval_bundle():
             "min_targets": 4,
             "min_records_per_target": 20,
         },
+        "approval_scope": _panel_approval_scope(),
         "prerequisites": {
             "remote_readiness": {
                 "status": "remote_submission_readiness_ok",
@@ -394,6 +427,10 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertIn("--require-sync-ready", rep["w2_gate"]["panel_postsubmit_sync_ready_gate"])
         self.assertIn("receipt_monitor", rep["w2_gate"]["panel_receipt_monitor_after_submit"])
         self.assertIn("postsync_interpretation", rep["w2_gate"]["panel_postsync_replay_after_sync"])
+        self.assertTrue(rep["w2_gate"]["panel_approval_scope_ready"])
+        self.assertTrue(rep["w2_gate"]["project_status_panel_approval_scope_ready"])
+        self.assertEqual(rep["w2_gate"]["panel_approval_scope_planned_design_records"], 700)
+        self.assertEqual(rep["w2_gate"]["panel_approval_scope_expected_slurm_jobs"], 14)
         self.assertIn("explicit panel submission", rep["claim_boundary"]["w2"])
 
     def test_panel_approval_packet_missing_postsubmit_gate_blocks_audit(self):
@@ -659,9 +696,84 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_sync_ready_before_record_sync"])
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_includes_postsync_interpretation"])
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_sync_ready_only"])
-        self.assertIn("W2 panel public approval bundle ready: `True`", render_markdown(rep))
-        self.assertIn("W2 panel public approval bundle remote shell syntax checks ok: `True`", render_markdown(rep))
-        self.assertIn("W2 panel public approval bundle workflow steps: `9`", render_markdown(rep))
+        self.assertTrue(rep["w2_gate"]["panel_approval_scope_ready"])
+        self.assertTrue(rep["w2_gate"]["project_status_panel_approval_scope_ready"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_scope_ready"])
+        self.assertEqual(rep["w2_gate"]["panel_approval_scope_planned_design_records"], 700)
+        self.assertEqual(rep["w2_gate"]["project_status_panel_approval_scope_planned_design_records"], 700)
+        self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_scope_planned_design_records"], 700)
+        self.assertEqual(rep["w2_gate"]["panel_approval_scope_expected_slurm_jobs"], 14)
+        self.assertEqual(rep["w2_gate"]["project_status_panel_approval_scope_expected_slurm_jobs"], 14)
+        self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_scope_expected_slurm_jobs"], 14)
+        md = render_markdown(rep)
+        self.assertIn("W2 panel public approval bundle ready: `True`", md)
+        self.assertIn("W2 panel public approval bundle remote shell syntax checks ok: `True`", md)
+        self.assertIn("W2 panel public approval bundle workflow steps: `9`", md)
+        self.assertIn("W2 panel approval scope ready: `True`", md)
+        self.assertIn("W2 project-status approval scope ready: `True`", md)
+        self.assertIn("W2 panel public approval bundle scope ready: `True`", md)
+
+    def test_missing_project_status_scope_blocks_v11_panel_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            w2 = project_status["workstreams"]["W2_multi_target_panel"]
+            w2["status"] = "panel_approval_packet_ready_awaiting_explicit_approval"
+            for key in list(w2):
+                if key.startswith("panel_approval_scope"):
+                    w2.pop(key)
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                _panel_public_approval_bundle(),
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["project_status_panel_approval_scope_ready"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_project_status_panel_scope_not_ready", kinds)
+
+    def test_missing_public_bundle_scope_blocks_v11_panel_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            bundle = _panel_public_approval_bundle()
+            bundle.pop("approval_scope")
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                bundle,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_scope_ready"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_public_approval_bundle_scope_not_ready", kinds)
 
     def test_public_approval_bundle_missing_workflow_blocks_audit(self):
         with tempfile.TemporaryDirectory() as d:

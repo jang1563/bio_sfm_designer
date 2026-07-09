@@ -33,6 +33,12 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel can submit if explicitly approved: `True`
 - W2 panel can claim generalization: `False`
 - W2 panel no-env guard refuses: `True`
+- W2 panel approval scope ready: `True`
+- W2 panel approval scope planned designs: `700`
+- W2 panel approval scope expected Slurm jobs: `14`
+- W2 project-status approval scope ready: `True`
+- W2 project-status approval scope planned designs: `700`
+- W2 project-status approval scope expected Slurm jobs: `14`
 - W2 panel decision protocol ready: `True`
 - W2 panel decision protocol no-submit: `True`
 - W2 panel decision can claim now: `False`
@@ -55,6 +61,9 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel public approval bundle workflow steps: `9`
 - W2 panel public approval bundle workflow sync-ready before record sync: `True`
 - W2 panel public approval bundle workflow includes post-sync interpretation: `True`
+- W2 panel public approval bundle scope ready: `True`
+- W2 panel public approval bundle scope planned designs: `700`
+- W2 panel public approval bundle scope expected Slurm jobs: `14`
 - W3 standalone audit ok: `True`
 - W3 positive claim supported: `False`
 
