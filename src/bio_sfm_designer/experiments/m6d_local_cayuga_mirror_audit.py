@@ -19,6 +19,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 _EXACT_SHA_PATHS = [
     "README.md",
     "HANDOFF.md",
+    "docs/PROJECT_ROADMAP.md",
     "docs/CODEX_GOAL_MODE.md",
     "docs/M6D_GOAL_MODE_ANCHOR.md",
     "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh",

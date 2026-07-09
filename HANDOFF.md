@@ -648,7 +648,7 @@ bundle preserves no-submit, claim-boundary, and tracked postsubmit script-chain 
 `panel_submission_decision_operator_script_chain_static_ok=true` when the operator-facing checklist has the
 same script-chain gate closed.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 30 exact SHA checks plus 16 semantic JSON checks, including the v11
+and Cayuga artifacts agree across 31 exact SHA checks plus 16 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state
 probe, and post-sync interpretation artifacts; the next action stays limited to explicit panel submission
 approval, sync-back, completion, and target-wise certification.

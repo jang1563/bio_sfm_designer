@@ -31,6 +31,11 @@ def _write_json(path, obj):
 class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
     def test_default_exact_paths_cover_v11_postsubmit_bridge(self):
         expected = {
+            "README.md",
+            "HANDOFF.md",
+            "docs/PROJECT_ROADMAP.md",
+            "docs/CODEX_GOAL_MODE.md",
+            "docs/M6D_GOAL_MODE_ANCHOR.md",
             "results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh",
             "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
             "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",

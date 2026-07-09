@@ -570,7 +570,7 @@ engine installs from GitHub):
   `panel_submission_decision_operator_script_chain_static_ok=true` when the public-safe v11 approval bundle
   and operator-facing checklist preserve the same no-submit script-chain gate. The no-submit local/Cayuga
   mirror audit, `results/m6d_local_cayuga_mirror_audit.{json,md}`, currently reports
-  `local_cayuga_mirror_agree` with 30 exact checks and 16 semantic checks. The no-submit goal-boundary drift
+  `local_cayuga_mirror_agree` with 31 exact checks and 16 semantic checks. The no-submit goal-boundary drift
   audit, `results/m6d_goal_drift_audit.{json,md}`, currently reports
   `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
   `panel_postsync_interpretation_predeclared_not_synced`; it also records
