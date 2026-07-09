@@ -32,22 +32,22 @@
   "receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
   "remote_checked": true,
   "remote_receipt": {
-    "error": "cat: /home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl: No such file or directory",
+    "error": "cat: /home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl: No such file or directory",
     "exists": false,
     "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
-    "remote_host": "cayuga-login1",
-    "root": "/home/fs01/jak4013/bio_sfm_smoke",
+    "remote_host": "<hpc-login-host>",
+    "root": "/home/fs01/<user>/bio_sfm_smoke",
     "scope": "remote",
     "sha256": "",
     "size_bytes": 0
   },
   "remote_receipt_ready": false,
   "remote_summary": {
-    "error": "cat: /home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json: No such file or directory",
+    "error": "cat: /home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json: No such file or directory",
     "exists": false,
     "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
-    "remote_host": "cayuga-login1",
-    "root": "/home/fs01/jak4013/bio_sfm_smoke",
+    "remote_host": "<hpc-login-host>",
+    "root": "/home/fs01/<user>/bio_sfm_smoke",
     "scope": "remote",
     "sha256": "",
     "size_bytes": 0

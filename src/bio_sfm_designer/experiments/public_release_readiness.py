@@ -160,6 +160,26 @@ def _iter_files(root: str, *, include_results: bool) -> Iterable[str]:
                 yield path
 
 
+def _tracked_file_paths(root: str, *, include_results: bool) -> Tuple[List[str], Optional[str]]:
+    proc = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+    )
+    if proc.returncode != 0:
+        message = proc.stderr.decode("utf-8", errors="replace").strip() or "git ls-files failed"
+        return [], message
+    paths = []
+    for rel_bytes in proc.stdout.split(b"\0"):
+        if not rel_bytes:
+            continue
+        rel = rel_bytes.decode("utf-8", errors="replace")
+        if not _is_excluded(rel, include_results=include_results):
+            paths.append(os.path.join(root, rel))
+    return paths, None
+
+
 def _read_text(path: str, *, max_bytes: int) -> Tuple[Optional[str], Optional[str]]:
     try:
         size = os.path.getsize(path)
@@ -229,11 +249,24 @@ def _line_findings(
     return findings
 
 
-def _scan_files(root: str, *, include_results: bool, max_bytes: int) -> Dict[str, Any]:
+def _scan_files(root: str, *, include_results: bool, max_bytes: int, tracked_only: bool) -> Dict[str, Any]:
     findings: List[Dict[str, Any]] = []
     skipped: List[Dict[str, Any]] = []
     scanned_files = 0
-    for path in sorted(_iter_files(root, include_results=include_results)):
+    if tracked_only:
+        paths, tracked_error = _tracked_file_paths(root, include_results=include_results)
+        if tracked_error:
+            findings.append({
+                "severity": "blocker",
+                "category": "scan_scope",
+                "kind": "tracked_file_scan_unavailable",
+                "message": f"Could not enumerate git-tracked files: {tracked_error}",
+            })
+            skipped.append({"path": ".", "reason": "git_ls_files_failed"})
+            paths = []
+    else:
+        paths = list(_iter_files(root, include_results=include_results))
+    for path in sorted(paths):
         text, reason = _read_text(path, max_bytes=max_bytes)
         rel = _relpath(root, path)
         if text is None:
@@ -426,12 +459,13 @@ def build_audit(
     *,
     repo_visibility: str = "unknown",
     include_results: bool = False,
+    tracked_only: bool = False,
     check_git_status: bool = False,
     max_bytes: int = 1_500_000,
 ) -> Dict[str, Any]:
     root = os.path.abspath(root)
     presence = _file_presence(root)
-    scan = _scan_files(root, include_results=include_results, max_bytes=max_bytes)
+    scan = _scan_files(root, include_results=include_results, max_bytes=max_bytes, tracked_only=tracked_only)
     claim_boundaries = _claim_boundary_findings(root)
     dependencies = _dependency_findings(root)
 
@@ -473,6 +507,7 @@ def build_audit(
         "repo_visibility": repo_visibility,
         "scope": {
             "include_results": include_results,
+            "tracked_only": tracked_only,
             "max_bytes": max_bytes,
             "check_git_status": check_git_status,
         },
@@ -552,6 +587,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--root", default=".")
     ap.add_argument("--repo-visibility", choices=("unknown", "private", "public"), default="unknown")
     ap.add_argument("--include-results", action="store_true")
+    ap.add_argument("--tracked-only", action="store_true")
     ap.add_argument("--check-git-status", action="store_true")
     ap.add_argument("--max-bytes", type=int, default=1_500_000)
     ap.add_argument("--out-json", default="results/public_release_readiness_audit.json")
@@ -562,6 +598,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         args.root,
         repo_visibility=args.repo_visibility,
         include_results=args.include_results,
+        tracked_only=args.tracked_only,
         check_git_status=args.check_git_status,
         max_bytes=args.max_bytes,
     )

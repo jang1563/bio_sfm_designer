@@ -27,15 +27,15 @@
     },
     "ready_for_external_sync": true,
     "remote_artifacts_ready": true,
-    "remote_dir": "/home/fs01/jak4013/bio_sfm_smoke",
-    "remote_host": "cayuga-login1",
+    "remote_dir": "/home/fs01/<user>/bio_sfm_smoke",
+    "remote_host": "<hpc-login-host>",
     "remote_missing_followups": [],
-    "remote_root": "cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke",
+    "remote_root": "<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke",
     "report_n_paths": 0,
     "report_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "status": "ready_for_external_sync",
     "target_msa_precompute_receipt_sync": {
-      "local_path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v10_target_msa_precompute_receipt.jsonl",
+      "local_path": "<repo-root>/results/m6d_w2_target_family_redesign_v10_target_msa_precompute_receipt.jsonl",
       "path": "results/m6d_w2_target_family_redesign_v10_target_msa_precompute_receipt.jsonl",
       "requested": true,
       "returncode": 0,
@@ -211,11 +211,11 @@
         "continuation_phrases_are_approval": false,
         "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
       },
-      "next_command": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+      "next_command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
       "next_role": "w2_panel_submit",
       "steps": [
         {
-          "command": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+          "command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
           "label": "Submit guarded W2 v11 ProteinMPNN/Boltz panel after explicit approval",
           "next_action": "obtain explicit approval naming W2 v11 Cayuga ProteinMPNN/Boltz panel submission; continuation phrases are not approval",
           "ready_to_execute_now": false,
@@ -225,7 +225,7 @@
         },
         {
           "blocked_by": "w2_panel_submit",
-          "command": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+          "command": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
           "label": "Sync submit receipt and summary only",
           "next_action": "after explicit submit creates a receipt, sync receipt/summary before any records",
           "ready_to_execute_now": false,
@@ -235,7 +235,7 @@
         },
         {
           "blocked_by": "w2_panel_receipt_monitor",
-          "command": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+          "command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
           "label": "Run read-only Slurm job-state query",
           "next_action": "after receipt sync, query job states without syncing panel records",
           "ready_to_execute_now": false,
@@ -296,14 +296,14 @@
           "certified"
         ],
         "complete": true,
-        "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_posthoc_t030_protocol/complex_alpha_decision.json",
+        "evidence": "<repo-root>/results/m6c_posthoc_t030_protocol/complex_alpha_decision.json",
         "evidence_empty_paths": [],
         "evidence_file_ok": true,
         "evidence_missing_paths": [],
         "evidence_ok": true,
         "evidence_parse_errors": [],
         "evidence_paths": [
-          "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_posthoc_t030_protocol/complex_alpha_decision.json"
+          "<repo-root>/results/m6c_posthoc_t030_protocol/complex_alpha_decision.json"
         ],
         "evidence_supports_status": true,
         "id": "W1_M6c_scale_up",
@@ -324,14 +324,14 @@
           "multi_target_certified"
         ],
         "complete": false,
-        "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json",
+        "evidence": "<repo-root>/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json",
         "evidence_empty_paths": [],
         "evidence_file_ok": true,
         "evidence_missing_paths": [],
         "evidence_ok": true,
         "evidence_parse_errors": [],
         "evidence_paths": [
-          "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json"
+          "<repo-root>/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json"
         ],
         "evidence_supports_status": null,
         "id": "W2_multi_target_panel",
@@ -353,14 +353,14 @@
           "negative_robustness_result_adjudicated"
         ],
         "complete": true,
-        "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_w3_decision_protocol.json",
+        "evidence": "<repo-root>/results/m6d_w2_w3_decision_protocol.json",
         "evidence_empty_paths": [],
         "evidence_file_ok": true,
         "evidence_missing_paths": [],
         "evidence_ok": true,
         "evidence_parse_errors": [],
         "evidence_paths": [
-          "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_w3_decision_protocol.json"
+          "<repo-root>/results/m6d_w2_w3_decision_protocol.json"
         ],
         "evidence_supports_status": true,
         "id": "W3_independent_predictor",
@@ -381,14 +381,14 @@
           "closed_loop_round_complete"
         ],
         "complete": true,
-        "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/summary.json",
+        "evidence": "<repo-root>/results/m6c_w4_round/summary.json",
         "evidence_empty_paths": [],
         "evidence_file_ok": true,
         "evidence_missing_paths": [],
         "evidence_ok": true,
         "evidence_parse_errors": [],
         "evidence_paths": [
-          "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/summary.json"
+          "<repo-root>/results/m6c_w4_round/summary.json"
         ],
         "evidence_supports_status": true,
         "id": "W4_closed_loop_DBTL",
@@ -405,12 +405,12 @@
         "supporting_artifacts": [
           {
             "kind": "json",
-            "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/preflight.json",
+            "path": "<repo-root>/results/m6c_w4_round/preflight.json",
             "role": "preflight"
           },
           {
             "kind": "json",
-            "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/summary.json",
+            "path": "<repo-root>/results/m6c_w4_round/summary.json",
             "role": "summary"
           },
           {
@@ -510,7 +510,7 @@
     "planning_diagnostics": [
       "scale_projection_alpha_0_2"
     ],
-    "report_json": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_posthoc_t030_protocol/m6c_report.json",
+    "report_json": "<repo-root>/results/m6c_posthoc_t030_protocol/m6c_report.json",
     "source": "posthoc_manifest",
     "supported": [
       "complex_pae_interaction_signal",
@@ -528,7 +528,7 @@
       "decisive_next"
     ],
     "ok": true,
-    "report_json": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_posthoc_t030_protocol/m6c_report.json",
+    "report_json": "<repo-root>/results/m6c_posthoc_t030_protocol/m6c_report.json",
     "status": "ok"
   },
   "remaining": 1,
@@ -539,11 +539,11 @@
       "continuation_phrases_are_approval": false,
       "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
     },
-    "next_command": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+    "next_command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
     "next_role": "w2_panel_submit",
     "steps": [
       {
-        "command": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+        "command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
         "label": "Submit guarded W2 v11 ProteinMPNN/Boltz panel after explicit approval",
         "next_action": "obtain explicit approval naming W2 v11 Cayuga ProteinMPNN/Boltz panel submission; continuation phrases are not approval",
         "ready_to_execute_now": false,
@@ -553,7 +553,7 @@
       },
       {
         "blocked_by": "w2_panel_submit",
-        "command": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+        "command": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
         "label": "Sync submit receipt and summary only",
         "next_action": "after explicit submit creates a receipt, sync receipt/summary before any records",
         "ready_to_execute_now": false,
@@ -563,7 +563,7 @@
       },
       {
         "blocked_by": "w2_panel_receipt_monitor",
-        "command": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+        "command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
         "label": "Run read-only Slurm job-state query",
         "next_action": "after receipt sync, query job states without syncing panel records",
         "ready_to_execute_now": false,
@@ -748,7 +748,7 @@
       ],
       "complete": true,
       "estimated_additional_records": 0,
-      "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_posthoc_t030_protocol/complex_alpha_decision.json",
+      "evidence": "<repo-root>/results/m6c_posthoc_t030_protocol/complex_alpha_decision.json",
       "failures": [],
       "label_threshold_audit": {
         "examples": [],
@@ -778,7 +778,7 @@
       "can_claim_w2_generalization": false,
       "can_submit_panel_if_user_explicitly_approves": true,
       "complete": false,
-      "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json",
+      "evidence": "<repo-root>/results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json",
       "failures": [],
       "input_prep_artifacts": [
         {
@@ -1041,7 +1041,7 @@
       },
       "panel_approval_env_value": "approve-v11-panel-submit",
       "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
-      "panel_approval_packet": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
+      "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
       "panel_approval_packet_failures": [],
       "panel_approval_packet_ready": true,
       "panel_approval_packet_status": "panel_approval_packet_ready",
@@ -1050,13 +1050,13 @@
       "panel_decision_current_result_claim": "no W2 claim; panel records/report are not available",
       "panel_decision_current_result_status": "not_available_not_submitted",
       "panel_decision_no_submit": true,
-      "panel_decision_protocol": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
+      "panel_decision_protocol": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
       "panel_decision_protocol_failures": [],
       "panel_decision_protocol_ready": true,
       "panel_decision_protocol_status": "post_panel_decision_protocol_ready",
       "panel_job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
-      "panel_job_state_probe_sync_after_query": "mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
-      "panel_job_state_query_after_receipt": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+      "panel_job_state_probe_sync_after_query": "mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+      "panel_job_state_query_after_receipt": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
       "panel_job_state_query_bridge_ok": true,
       "panel_postsubmit_bridge_ok": true,
       "panel_postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
@@ -1065,7 +1065,7 @@
       "panel_postsubmit_sync_ready_gate_ok": true,
       "panel_postsync_can_claim_w2_generalization": false,
       "panel_postsync_current_result_status": "not_available_not_submitted",
-      "panel_postsync_interpretation": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
+      "panel_postsync_interpretation": "<repo-root>/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
       "panel_postsync_interpretation_failures": [],
       "panel_postsync_interpretation_ready": true,
       "panel_postsync_min_records_per_target": 20,
@@ -1076,7 +1076,7 @@
       "panel_postsync_submitted": false,
       "panel_postsync_sync_ready": false,
       "panel_postsync_target_alpha": 0.2,
-      "panel_receipt_monitor_after_submit": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+      "panel_receipt_monitor_after_submit": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
       "panel_remote_absence_checks": 2,
       "panel_remote_can_claim_w2_generalization": false,
       "panel_remote_can_submit_if_explicitly_approved": true,
@@ -1085,7 +1085,7 @@
       "panel_remote_local_exact_stale_count": 0,
       "panel_remote_no_submit": true,
       "panel_remote_semantic_checks": 5,
-      "panel_remote_submission_readiness": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
+      "panel_remote_submission_readiness": "<repo-root>/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
       "panel_remote_submission_readiness_failures": [],
       "panel_remote_submission_readiness_ok": true,
       "panel_remote_submission_readiness_status": "remote_submission_readiness_ok",
@@ -1102,10 +1102,10 @@
       "panel_submission_decision_ready": true,
       "panel_submission_decision_remote_checked": true,
       "panel_submission_decision_remote_receipt_absence_ok": true,
-      "panel_submission_decision_state": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
+      "panel_submission_decision_state": "<repo-root>/results/m6d_w2_target_family_redesign_v11_submission_decision_state.json",
       "panel_submission_decision_status": "awaiting_explicit_panel_submission_approval",
       "panel_submission_decision_submitted": false,
-      "panel_submit_command_if_approved": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+      "panel_submit_command_if_approved": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
       "panel_sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
       "ready_for_panel_submission_if_explicitly_approved": true,
       "status": "panel_approval_packet_ready_awaiting_explicit_approval",
@@ -1186,17 +1186,17 @@
         "failures": [],
         "n_rows": 18,
         "ok": true,
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_adjudication_set.jsonl"
+        "path": "<repo-root>/results/m6d_w3_adjudication_set.jsonl"
       },
       "can_claim_independent_predictor_robustness_now": false,
       "claim_boundary": "independent_predictor_robustness_not_supported",
       "complete": true,
-      "cross_predictor_evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_cross_predictor.json",
+      "cross_predictor_evidence": "<repo-root>/results/m6c_cross_predictor.json",
       "cross_predictor_failure_kinds": [
         "label_agreement_below_min"
       ],
       "current_protocol_verdict": "negative_robustness_result_for_no_msa_chai",
-      "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w2_w3_decision_protocol.json",
+      "evidence": "<repo-root>/results/m6d_w2_w3_decision_protocol.json",
       "future_w3_execution_requires_approval_gated_wrapper": true,
       "future_w3_execution_requires_explicit_approval": true,
       "future_w3_execution_requires_input_manifest": true,
@@ -1237,11 +1237,11 @@
         "no_api_spend": true,
         "no_gpu_spend": true,
         "no_submit": true,
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_challenge_manifest.json",
+        "path": "<repo-root>/results/m6d_w3_challenge_manifest.json",
         "ready": true,
         "source_record_audit": [
           {
-            "absolute_path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/hpc_outputs/m6d_followup_3PC8_AB_scale_t030/records_boltz_complex_t030.jsonl",
+            "absolute_path": "<repo-root>/hpc_outputs/m6d_followup_3PC8_AB_scale_t030/records_boltz_complex_t030.jsonl",
             "exists": true,
             "missing_selected_target_ids": [],
             "n_records": 50,
@@ -1252,7 +1252,7 @@
             "selected_seen": 18
           },
           {
-            "absolute_path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/hpc_outputs/m6c_second_predictor/chai1_complex_records.jsonl",
+            "absolute_path": "<repo-root>/hpc_outputs/m6c_second_predictor/chai1_complex_records.jsonl",
             "exists": true,
             "missing_selected_target_ids": [],
             "n_records": 30,
@@ -1367,7 +1367,7 @@
         "no_api_spend": true,
         "no_gpu_spend": true,
         "no_submit": true,
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_next_protocol.json",
+        "path": "<repo-root>/results/m6d_w3_next_protocol.json",
         "ready": true,
         "recommended_routes": [
           "third_independent_predictor_or_protocol",
@@ -1391,7 +1391,7 @@
           "w3_challenge_panel_adjudication_report"
         ],
         "model_or_protocol_family": "AlphaFold2-Multimer via ColabFold/localcolabfold",
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_predictor_selection_card.json",
+        "path": "<repo-root>/results/m6d_w3_predictor_selection_card.json",
         "ready": true,
         "runtime_probe_required": {
           "checks": [
@@ -1423,7 +1423,7 @@
           "execution_input_manifest",
           "approval_gated_command_wrapper"
         ],
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_runtime_probe_plan.json",
+        "path": "<repo-root>/results/m6d_w3_runtime_probe_plan.json",
         "probe_contract_checks": [
           "env_discovery",
           "cli_help",
@@ -1447,7 +1447,7 @@
         "execution_inputs_emitted": false,
         "execution_ready": false,
         "failures": [],
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_runtime_probe_report.json",
+        "path": "<repo-root>/results/m6d_w3_runtime_probe_report.json",
         "probe_executed": true,
         "probe_surface": "cayuga_gpu_no_submit",
         "readiness_blockers": [
@@ -1472,7 +1472,7 @@
         "execution_ready": false,
         "failures": [],
         "install_executed": false,
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_runtime_provision_packet.json",
+        "path": "<repo-root>/results/m6d_w3_runtime_provision_packet.json",
         "ready": true,
         "receipt": "results/m6d_w3_runtime_provision_receipt.json",
         "runtime_ready": false,
@@ -1496,7 +1496,7 @@
           "dry_run_enumeration",
           "msa_policy"
         ],
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_runtime_repair_plan.json",
+        "path": "<repo-root>/results/m6d_w3_runtime_repair_plan.json",
         "ready": true,
         "repair_item_ids": [
           "provision_colabfold_cli",
@@ -1534,7 +1534,7 @@
         "no_api_spend": true,
         "no_gpu_spend": true,
         "no_submit": true,
-        "path": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6d_w3_third_predictor_contract.json",
+        "path": "<repo-root>/results/m6d_w3_third_predictor_contract.json",
         "planned_result_jsonl": "results/m6d_w3_third_predictor_challenge_records.jsonl",
         "ready": true,
         "required_result_schema": [
@@ -1571,7 +1571,7 @@
       "campaign": "results/m6c_w4_round/campaign.jsonl",
       "campaign_records": 50,
       "complete": true,
-      "evidence": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/summary.json",
+      "evidence": "<repo-root>/results/m6c_w4_round/summary.json",
       "gate_calibrated": true,
       "gate_prevalidation": {
         "batch_contract": {
@@ -1703,10 +1703,10 @@
       "n_candidates": 50,
       "n_routed": 50,
       "next_action": "use the closed-loop round summary to choose the next batch or broaden to de-novo binder generation",
-      "preflight": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/preflight.json",
+      "preflight": "<repo-root>/results/m6c_w4_round/preflight.json",
       "screen_backend": "precomputed_deberta",
       "status": "closed_loop_round_complete",
-      "summary": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer/results/m6c_w4_round/summary.json",
+      "summary": "<repo-root>/results/m6c_w4_round/summary.json",
       "workstream": "W4_closed_loop_DBTL"
     }
   }

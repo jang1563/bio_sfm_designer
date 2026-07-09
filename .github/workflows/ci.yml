@@ -24,4 +24,6 @@ jobs:
         run: |
           python -m bio_sfm_designer.experiments.public_release_readiness \
             --repo-visibility public \
+            --tracked-only \
+            --include-results \
             --check-git-status

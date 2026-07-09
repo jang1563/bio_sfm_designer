@@ -6,7 +6,7 @@ No submit: `True`.
 Can submit panel if explicitly approved: `True`.
 Can claim W2 generalization: `False`.
 
-Remote: `cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke`.
+Remote: `<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke`.
 
 | check type | count |
 |---|---:|

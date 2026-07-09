@@ -24,7 +24,7 @@ Can claim W2 generalization: `False`.
 
 - local `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
 - local `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
-- remote checked: `cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke`
+- remote checked: `<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke`
 - remote `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
 - remote `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
 
@@ -34,7 +34,7 @@ Can claim W2 generalization: `False`.
 - submit command if explicitly approved:
 
 ```bash
-ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/jak4013/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'
+ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'
 ```
 
 Postsubmit sync-ready gate before record sync-back:

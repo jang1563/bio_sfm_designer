@@ -205,15 +205,15 @@
     }
   ],
   "failures": [],
-  "local_root": "/Users/jak4013/Dropbox/Bioinformatics/Claude/bio_sfm_designer",
+  "local_root": "<repo-root>",
   "n_absence_checks": 2,
   "n_exact_checks": 23,
   "n_failures": 0,
   "n_semantic_checks": 5,
   "next_action": "remote mirror is ready; still wait for explicit user approval before guarded W2 v11 panel submission",
   "no_submit": true,
-  "remote_host": "cayuga-login1",
-  "remote_root": "/home/fs01/jak4013/bio_sfm_smoke",
+  "remote_host": "<hpc-login-host>",
+  "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
   "semantic_checks": [
     {
       "fields": [
@@ -369,21 +369,21 @@
         },
         {
           "field": "receipt_monitor_after_submit",
-          "local": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+          "local": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
           "ok": true,
-          "remote": "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+          "remote": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
         },
         {
           "field": "job_state_query_after_receipt",
-          "local": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+          "local": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
           "ok": true,
-          "remote": "ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
+          "remote": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
         },
         {
           "field": "job_state_probe_sync_after_query",
-          "local": "mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+          "local": "mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
           "ok": true,
-          "remote": "mkdir -p results && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP cayuga-login1:/home/fs01/jak4013/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
+          "remote": "mkdir -p results && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_job_state_probe.json results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP <hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
         },
         {
           "field": "postsubmit_status_before_sync",

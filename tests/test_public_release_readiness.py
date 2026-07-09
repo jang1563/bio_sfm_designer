@@ -2,6 +2,7 @@
 
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 
@@ -144,6 +145,38 @@ class PublicReleaseReadinessTests(unittest.TestCase):
             warnings = [finding for finding in rep["findings"] if finding["severity"] == "warning"]
             self.assertEqual(len(warnings), 1)
             self.assertEqual(warnings[0]["kind"], "cayuga_home_path")
+
+    def test_tracked_only_include_results_scans_git_surface_not_scratch(self):
+        with tempfile.TemporaryDirectory() as d:
+            _write_public_skeleton(d)
+            real_cayuga_path = "/" + "home" + "/" + "fs01" + "/" + "jak4013" + "/bio_sfm_smoke"
+            _write(os.path.join(d, "results", "tracked.json"), f"remote = '{real_cayuga_path}'\n")
+            subprocess.run(["git", "init", "-q"], cwd=d, check=True)
+            subprocess.run(["git", "add", "."], cwd=d, check=True)
+            secret = "sk-ant-" + ("A" * 36)
+            _write(os.path.join(d, "results", "scratch.json"), f"API_KEY = '{secret}'\n")
+
+            rep = build_audit(
+                d,
+                repo_visibility="public",
+                include_results=True,
+                tracked_only=True,
+            )
+
+            self.assertFalse(rep["audit_ok"])
+            kinds = {finding["kind"] for finding in rep["findings"]}
+            self.assertIn("cayuga_home_path", kinds)
+            self.assertNotIn("anthropic_api_key", kinds)
+
+    def test_tracked_only_requires_git_checkout(self):
+        with tempfile.TemporaryDirectory() as d:
+            _write_public_skeleton(d)
+
+            rep = build_audit(d, repo_visibility="public", tracked_only=True)
+
+            self.assertFalse(rep["audit_ok"])
+            kinds = {finding["kind"] for finding in rep["findings"]}
+            self.assertIn("tracked_file_scan_unavailable", kinds)
 
     def test_bare_trust_dependency_blocks_public_installability(self):
         with tempfile.TemporaryDirectory() as d:
