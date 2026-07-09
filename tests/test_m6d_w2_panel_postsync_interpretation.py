@@ -162,11 +162,21 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
         self.assertIn("SUMMARY=custom/summary.json", script)
         self.assertIn("POSTSUBMIT=custom/postsubmit.json", script)
         self.assertIn("JOB_STATES=custom/job_states.json", script)
+        self.assertIn("COMPLETION_SCRIPT=results/m6d_w2_target_family_redesign_v11_panel_completion.sh", script)
+        self.assertIn("COMPLETION_REPORT=results/m6d_w2_target_family_redesign_v11_panel_completion.json", script)
         self.assertIn("--manifest \"$MANIFEST\"", script)
         self.assertIn("--receipt \"$RECEIPT\"", script)
         self.assertIn("--summary \"$SUMMARY\"", script)
         self.assertIn("--job-states \"$JOB_STATES\"", script)
         self.assertIn("--out-json \"$POSTSUBMIT\"", script)
+        self.assertLess(
+            script.index("bash \"$COMPLETION_SCRIPT\""),
+            script.index("complex_panel_report"),
+        )
+        self.assertLess(
+            script.index("test -s \"$COMPLETION_REPORT\""),
+            script.index("complex_panel_report"),
+        )
         self.assertIn("complex_panel_report", script)
         self.assertIn("m6d_w2_panel_decision_protocol", script)
         self.assertIn("m6d_w2_panel_postsync_interpretation", script)

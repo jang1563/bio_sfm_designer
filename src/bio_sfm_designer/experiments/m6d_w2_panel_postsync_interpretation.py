@@ -122,17 +122,22 @@ def render_replay_script(*,
         f"SUMMARY={shlex.quote(summary)}",
         f"POSTSUBMIT={shlex.quote(postsubmit)}",
         f"JOB_STATES={shlex.quote(job_states)}",
+        f"COMPLETION_SCRIPT={shlex.quote(completion_script)}",
+        f"COMPLETION_REPORT={shlex.quote(completion)}",
         "test -s \"$MANIFEST\"",
         "test -s \"$RECEIPT\"",
         "test -s \"$SUMMARY\"",
         "test -s \"$POSTSUBMIT\"",
         "test -s \"$JOB_STATES\"",
+        "test -s \"$COMPLETION_SCRIPT\"",
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
             "--manifest \"$MANIFEST\" --receipt \"$RECEIPT\" --summary \"$SUMMARY\" "
             "--job-states \"$JOB_STATES\" --require-sync-ready --out-json \"$POSTSUBMIT\""
         ),
         f"bash {shlex.quote(sync_back)}",
+        "BIO_SFM_PYTHON=\"$PYTHON_BIN\" PYTHONNOUSERSITE=1 bash \"$COMPLETION_SCRIPT\"",
+        "test -s \"$COMPLETION_REPORT\"",
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.complex_panel_report "
             f"--records {record_args} "
