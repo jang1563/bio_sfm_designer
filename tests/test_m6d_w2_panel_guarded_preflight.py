@@ -235,6 +235,8 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             with open(completion_script) as fh:
                 completion_text = fh.read()
             self.assertIn('PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"', completion_text)
+            self.assertIn('export PYTHONPATH="${PYTHONPATH:-src}"', completion_text)
+            self.assertIn('export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"', completion_text)
             self.assertIn('"$PYTHON_BIN" -m bio_sfm_designer.experiments.complex_panel_completion', completion_text)
             with open(sync_back) as fh:
                 sync_back_text = fh.read()

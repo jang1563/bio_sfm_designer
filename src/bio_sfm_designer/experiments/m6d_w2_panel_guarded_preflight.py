@@ -127,6 +127,8 @@ def render_completion_script(
         "# Replay the v11 panel completion gate after records are synced back.",
         "set -euo pipefail",
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
+        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         "",
         command.replace("python -m ", '"$PYTHON_BIN" -m ', 1),
         "",
