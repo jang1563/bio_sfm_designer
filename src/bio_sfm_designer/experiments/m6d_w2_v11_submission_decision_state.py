@@ -639,6 +639,66 @@ def _collect_state_failures(failures: List[Dict[str, Any]], states: Dict[str, Di
             )
 
 
+def _receipt_rows_absent(rows: List[Dict[str, Any]]) -> Optional[bool]:
+    if not rows:
+        return True
+    if any(row.get("exists") is None for row in rows):
+        return None
+    return all(row.get("exists") is False for row in rows)
+
+
+def _operator_approval_checklist(
+    *,
+    audit_ok: bool,
+    approval: Dict[str, Any],
+    states: Dict[str, Dict[str, Any]],
+    local_receipts: List[Dict[str, Any]],
+    remote_receipts: List[Dict[str, Any]],
+    check_remote_receipts: bool,
+) -> Dict[str, Any]:
+    scope = approval.get("approval_scope") if isinstance(approval.get("approval_scope"), dict) else {}
+    completion = states.get("goal_completion_audit") or {}
+    machine_gate = (
+        str(approval.get("panel_approval_env_var") or "")
+        + "="
+        + str(approval.get("panel_approval_env_value") or "")
+    )
+    remote_absent = _receipt_rows_absent(remote_receipts) if check_remote_receipts else None
+    return {
+        "pre_submit_state_ok": audit_ok,
+        "submit_allowed_by_this_artifact": audit_ok,
+        "submission_performed_by_this_artifact": False,
+        "approval_phrase_required": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+        "continuation_phrases_are_approval": False,
+        "machine_gate": machine_gate,
+        "guarded_submit_entrypoint": approval.get("submit_command_if_approved"),
+        "postsubmit_driver_command": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+        "postsync_replay_command": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+        "driver_replay_command_pair_ready": completion.get(
+            "w2_panel_public_approval_bundle_workflow_driver_replay_command_pair_ready"
+        ),
+        "approval_packet_ok": (states.get("approval_packet") or {}).get("ok"),
+        "remote_readiness_ok": (states.get("remote_submission_readiness") or {}).get("ok"),
+        "goal_completion_audit_ok": completion.get("ok"),
+        "goal_drift_audit_ok": (states.get("goal_drift_audit") or {}).get("ok"),
+        "local_receipts_absent": _receipt_rows_absent(local_receipts),
+        "remote_receipts_checked": check_remote_receipts,
+        "remote_receipts_absent": remote_absent,
+        "no_submit": True,
+        "submitted": False,
+        "can_claim_w2_generalization": False,
+        "planned_design_records": scope.get("planned_design_records"),
+        "expected_slurm_jobs": scope.get("expected_slurm_jobs"),
+        "target_alpha": scope.get("target_alpha"),
+        "must_acknowledge": [
+            "run the guarded Cayuga panel submit command",
+            "create submit receipt and Slurm jobs",
+            "spend GPU/compute before sync-back and target-wise certification",
+            "do not claim W2 generalization until target-wise certification passes",
+        ],
+    }
+
+
 def build_decision_state(
     *,
     approval_packet: Dict[str, Any],
@@ -696,6 +756,14 @@ def build_decision_state(
 
     audit_ok = not failures
     approval = states["approval_packet"]
+    operator_checklist = _operator_approval_checklist(
+        audit_ok=audit_ok,
+        approval=approval,
+        states=states,
+        local_receipts=local_receipts,
+        remote_receipts=remote_receipts,
+        check_remote_receipts=check_remote_receipts,
+    )
     return {
         "artifact": "m6d_w2_v11_submission_decision_state",
         "date": date.today().isoformat(),
@@ -729,6 +797,7 @@ def build_decision_state(
                 + str(approval.get("panel_approval_env_value") or "")
             ),
         },
+        "operator_approval_checklist": operator_checklist,
         "prerequisites": states,
         "receipt_absence": {
             "local": local_receipts,
@@ -819,6 +888,47 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "```",
         "",
         "This artifact does not submit jobs and does not create W2 evidence.",
+        "",
+    ])
+    checklist = (
+        rep.get("operator_approval_checklist")
+        if isinstance(rep.get("operator_approval_checklist"), dict)
+        else {}
+    )
+    lines.extend([
+        "## Operator Approval Checklist",
+        "",
+        f"- pre-submit state ok: `{checklist.get('pre_submit_state_ok')}`",
+        f"- submit allowed by this artifact: `{checklist.get('submit_allowed_by_this_artifact')}`",
+        f"- submission performed by this artifact: `{checklist.get('submission_performed_by_this_artifact')}`",
+        f"- approval phrase required: `{checklist.get('approval_phrase_required')}`",
+        f"- continuation phrases are approval: `{checklist.get('continuation_phrases_are_approval')}`",
+        f"- machine gate: `{checklist.get('machine_gate')}`",
+        f"- driver/replay command pair ready: `{checklist.get('driver_replay_command_pair_ready')}`",
+        f"- local receipts absent: `{checklist.get('local_receipts_absent')}`",
+        f"- remote receipts checked: `{checklist.get('remote_receipts_checked')}`",
+        f"- remote receipts absent: `{checklist.get('remote_receipts_absent')}`",
+        f"- planned designs: `{checklist.get('planned_design_records')}`",
+        f"- expected Slurm jobs: `{checklist.get('expected_slurm_jobs')}`",
+        f"- target alpha: `{checklist.get('target_alpha')}`",
+        "",
+        "Guarded submit entrypoint:",
+        "",
+        "```bash",
+        str(checklist.get("guarded_submit_entrypoint") or ""),
+        "```",
+        "",
+        "Postsubmit driver:",
+        "",
+        "```bash",
+        str(checklist.get("postsubmit_driver_command") or ""),
+        "```",
+        "",
+        "Post-sync replay:",
+        "",
+        "```bash",
+        str(checklist.get("postsync_replay_command") or ""),
+        "```",
         "",
     ])
     disambiguation = (

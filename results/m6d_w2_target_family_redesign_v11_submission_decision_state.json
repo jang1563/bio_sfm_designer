@@ -70,6 +70,37 @@
   "failures": [],
   "next_action": "await explicit user approval before running submit_command_if_approved",
   "no_submit": true,
+  "operator_approval_checklist": {
+    "approval_packet_ok": true,
+    "approval_phrase_required": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+    "can_claim_w2_generalization": false,
+    "continuation_phrases_are_approval": false,
+    "driver_replay_command_pair_ready": true,
+    "expected_slurm_jobs": 14,
+    "goal_completion_audit_ok": true,
+    "goal_drift_audit_ok": true,
+    "guarded_submit_entrypoint": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && BIO_SFM_PYTHON=${BIO_SFM_PYTHON:?set BIO_SFM_PYTHON} PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+    "local_receipts_absent": true,
+    "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+    "must_acknowledge": [
+      "run the guarded Cayuga panel submit command",
+      "create submit receipt and Slurm jobs",
+      "spend GPU/compute before sync-back and target-wise certification",
+      "do not claim W2 generalization until target-wise certification passes"
+    ],
+    "no_submit": true,
+    "planned_design_records": 700,
+    "postsubmit_driver_command": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+    "postsync_replay_command": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+    "pre_submit_state_ok": true,
+    "remote_readiness_ok": true,
+    "remote_receipts_absent": true,
+    "remote_receipts_checked": true,
+    "submission_performed_by_this_artifact": false,
+    "submit_allowed_by_this_artifact": true,
+    "submitted": false,
+    "target_alpha": 0.2
+  },
   "prerequisites": {
     "approval_packet": {
       "approval_packet_ready": true,

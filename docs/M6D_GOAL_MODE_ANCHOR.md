@@ -936,7 +936,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     the current checkout. The final no-submit decision latch
     `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` now records
     `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-    `can_claim_w2_generalization=false`; tracked result/status artifacts are public-safe and use
+    `can_claim_w2_generalization=false`; its `operator_approval_checklist` binds the guarded submit
+    entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
+    14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. Tracked result/status artifacts are public-safe and use
     placeholders for host, user, and repo-root values, while the executable Cayuga command bridge remains
     only in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
     and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`; its approval-disambiguation block records that continuation phrases

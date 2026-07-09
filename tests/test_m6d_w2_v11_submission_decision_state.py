@@ -359,8 +359,34 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
             ],
             300,
         )
+        checklist = rep["operator_approval_checklist"]
+        self.assertTrue(checklist["pre_submit_state_ok"])
+        self.assertTrue(checklist["submit_allowed_by_this_artifact"])
+        self.assertFalse(checklist["submission_performed_by_this_artifact"])
+        self.assertEqual(checklist["approval_phrase_required"], "W2 v11 Cayuga ProteinMPNN/Boltz panel submission")
+        self.assertFalse(checklist["continuation_phrases_are_approval"])
+        self.assertEqual(checklist["machine_gate"], "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit")
+        self.assertIn("BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit", checklist["guarded_submit_entrypoint"])
+        self.assertEqual(
+            checklist["postsubmit_driver_command"],
+            "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+        )
+        self.assertEqual(
+            checklist["postsync_replay_command"],
+            "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+        )
+        self.assertTrue(checklist["driver_replay_command_pair_ready"])
+        self.assertTrue(checklist["local_receipts_absent"])
+        self.assertFalse(checklist["remote_receipts_checked"])
+        self.assertIsNone(checklist["remote_receipts_absent"])
+        self.assertEqual(checklist["planned_design_records"], 700)
+        self.assertEqual(checklist["expected_slurm_jobs"], 14)
+        self.assertEqual(checklist["target_alpha"], 0.2)
+        self.assertFalse(checklist["can_claim_w2_generalization"])
         self.assertIn("does not submit jobs", render_markdown(rep))
         self.assertIn("Approval Scope", render_markdown(rep))
+        self.assertIn("Operator Approval Checklist", render_markdown(rep))
+        self.assertIn("driver/replay command pair ready: `True`", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
         self.assertIn("continuation phrases are approval: `False`", render_markdown(rep))
 
@@ -377,6 +403,9 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("submit_receipt_or_summary_present", kinds)
         self.assertFalse(rep["can_submit_if_explicitly_approved"])
+        self.assertFalse(rep["operator_approval_checklist"]["pre_submit_state_ok"])
+        self.assertFalse(rep["operator_approval_checklist"]["submit_allowed_by_this_artifact"])
+        self.assertFalse(rep["operator_approval_checklist"]["local_receipts_absent"])
 
     def test_remote_readiness_drift_blocks_decision_state(self):
         remote = _remote_readiness()

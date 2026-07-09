@@ -301,7 +301,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
 > `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
 > `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-> readiness before the decision can stay approval-ready. Tracked result/status artifacts are public-safe and
+> readiness before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
+> submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
+> 14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. Tracked result/status artifacts are public-safe and
 > use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
 > in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
 > and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked

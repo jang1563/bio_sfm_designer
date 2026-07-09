@@ -441,9 +441,11 @@ Allowed decisions:
    fail-closes unless that driver is paired with
    `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`. Full project status reports
    W2 as `panel_approval_packet_ready_awaiting_explicit_approval`, and the
-   no-submit remote readiness audit reports `remote_submission_readiness_ok` for the Cayuga mirror. The
-   no-submit submission-decision state records `awaiting_explicit_panel_submission_approval`,
-   `submitted=false`, local/remote receipt absence, and `can_claim_w2_generalization=false`. Goal drift
+	   no-submit remote readiness audit reports `remote_submission_readiness_ok` for the Cayuga mirror. The
+	   no-submit submission-decision state records `awaiting_explicit_panel_submission_approval`,
+	   `submitted=false`, local/remote receipt absence, and `can_claim_w2_generalization=false`, with an
+	   `operator_approval_checklist` for the guarded submit entrypoint, postsubmit driver, post-sync replay,
+	   700 planned designs, 14 expected Slurm jobs, and explicit approval phrase. Goal drift
    now records execution as `panel_postsync_interpretation_predeclared_not_synced`. Tracked result/status
    artifacts are public-safe placeholders; private executable Cayuga commands remain only in ignored local
    runbook/approval-packet artifacts. The

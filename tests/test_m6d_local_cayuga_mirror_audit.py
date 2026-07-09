@@ -185,6 +185,19 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
             decision_fields,
         )
+        self.assertIn("operator_approval_checklist.pre_submit_state_ok", decision_fields)
+        self.assertIn("operator_approval_checklist.submit_allowed_by_this_artifact", decision_fields)
+        self.assertIn("operator_approval_checklist.submission_performed_by_this_artifact", decision_fields)
+        self.assertIn("operator_approval_checklist.approval_phrase_required", decision_fields)
+        self.assertIn("operator_approval_checklist.machine_gate", decision_fields)
+        self.assertIn("operator_approval_checklist.postsubmit_driver_command", decision_fields)
+        self.assertIn("operator_approval_checklist.postsync_replay_command", decision_fields)
+        self.assertIn("operator_approval_checklist.driver_replay_command_pair_ready", decision_fields)
+        self.assertIn("operator_approval_checklist.remote_receipts_checked", decision_fields)
+        self.assertIn("operator_approval_checklist.remote_receipts_absent", decision_fields)
+        self.assertIn("operator_approval_checklist.planned_design_records", decision_fields)
+        self.assertIn("operator_approval_checklist.expected_slurm_jobs", decision_fields)
+        self.assertIn("operator_approval_checklist.target_alpha", decision_fields)
         self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_step_count",
             decision_fields,
