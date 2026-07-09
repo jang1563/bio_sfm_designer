@@ -34,6 +34,7 @@ _EXACT_SHA_PATHS = [
     "src/bio_sfm_designer/experiments/m6d_w2_panel_postsubmit_status.py",
     "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
     "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
+    "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
     "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
     "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
     "src/bio_sfm_designer/experiments/public_surface_sanitize.py",
@@ -237,6 +238,9 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "can_submit_if_explicitly_approved",
         "can_claim_w2_generalization",
         "receipt_absence.remote_checked",
+        "prerequisites.remote_submission_readiness.n_shell_syntax_checks",
+        "prerequisites.remote_submission_readiness.shell_syntax_checks_ok",
+        "prerequisites.project_status.w2_panel_remote_shell_syntax_checks",
     ],
     "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json": [
         "status",

@@ -43,6 +43,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "src/bio_sfm_designer/experiments/m6d_w2_panel_postsubmit_status.py",
             "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
             "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
             "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
             "src/bio_sfm_designer/experiments/public_surface_sanitize.py",
@@ -99,6 +100,18 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
+        self.assertIn(
+            "prerequisites.remote_submission_readiness.n_shell_syntax_checks",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.remote_submission_readiness.shell_syntax_checks_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.project_status.w2_panel_remote_shell_syntax_checks",
+            decision_fields,
+        )
         self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
             decision_fields,

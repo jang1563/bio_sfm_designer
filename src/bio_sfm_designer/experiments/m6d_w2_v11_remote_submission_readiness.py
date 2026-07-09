@@ -38,6 +38,7 @@ _EXACT_SHA_PATHS = [
     "src/bio_sfm_designer/experiments/m6d_w2_panel_postsubmit_status.py",
     "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
     "src/bio_sfm_designer/experiments/m6d_w2_panel_decision_protocol.py",
+    "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
     "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
     "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
     "src/bio_sfm_designer/experiments/complex_project_status.py",

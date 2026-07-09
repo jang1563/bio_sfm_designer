@@ -106,6 +106,7 @@ def _remote_readiness():
         "n_exact_checks": 14,
         "n_semantic_checks": 5,
         "n_absence_checks": 2,
+        "n_shell_syntax_checks": 4,
         "n_failures": 0,
         "remote_host": "hpc-login1",
         "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
@@ -121,6 +122,32 @@ def _remote_readiness():
                 "ok": True,
                 "local_exists": False,
                 "remote_exists": False,
+            },
+        ],
+        "shell_syntax_checks": [
+            {
+                "path": "results/submit.sh",
+                "ok": True,
+                "local_returncode": 0,
+                "remote_returncode": 0,
+            },
+            {
+                "path": "results/monitor.sh",
+                "ok": True,
+                "local_returncode": 0,
+                "remote_returncode": 0,
+            },
+            {
+                "path": "hpc/generate.sbatch",
+                "ok": True,
+                "local_returncode": 0,
+                "remote_returncode": 0,
+            },
+            {
+                "path": "hpc/predict.sbatch",
+                "ok": True,
+                "local_returncode": 0,
+                "remote_returncode": 0,
             },
         ],
     }
@@ -139,6 +166,7 @@ def _project_status():
                 "panel_approval_packet_ready": True,
                 "panel_decision_protocol_ready": True,
                 "panel_remote_submission_readiness_ok": True,
+                "panel_remote_shell_syntax_checks": 4,
                 "panel_submit_command_if_approved": "ssh hpc-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
             }
         },
@@ -211,6 +239,9 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertIn("W2 v11", rep["approval_disambiguation"]["approval_must_explicitly_name"])
         self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_sync_ready_gate_ok"])
         self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_bridge_ok"])
+        self.assertTrue(rep["prerequisites"]["remote_submission_readiness"]["shell_syntax_checks_ok"])
+        self.assertEqual(rep["prerequisites"]["remote_submission_readiness"]["n_shell_syntax_checks"], 4)
+        self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_remote_shell_syntax_checks"], 4)
         self.assertIn("does not submit jobs", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
         self.assertIn("continuation phrases are approval: `False`", render_markdown(rep))
@@ -238,6 +269,18 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         rep = _build(remote_readiness=remote)
 
         self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("remote_submission_readiness_not_ready", kinds)
+
+    def test_missing_shell_syntax_gate_blocks_decision_state(self):
+        remote = _remote_readiness()
+        remote.pop("n_shell_syntax_checks")
+        remote.pop("shell_syntax_checks")
+
+        rep = _build(remote_readiness=remote)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["prerequisites"]["remote_submission_readiness"]["shell_syntax_checks_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("remote_submission_readiness_not_ready", kinds)
 

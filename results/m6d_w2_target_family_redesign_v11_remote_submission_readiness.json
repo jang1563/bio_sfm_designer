@@ -140,20 +140,28 @@
       "remote_sha256": "72133952cbbe6ace5908fe0255585ee364050ea705f0bd58c5ce591e0313fb4a"
     },
     {
-      "local_bytes": 21357,
-      "local_sha256": "9841777151b1a758be3032893ce955dc875da22bf94e11f6f6d56c1e47559e4e",
+      "local_bytes": 29263,
+      "local_sha256": "4a3c532267cd2ae59089dabefa701c2861223c35f1e6f7713fec7aa58ec75615",
       "ok": true,
-      "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 21357,
-      "remote_sha256": "9841777151b1a758be3032893ce955dc875da22bf94e11f6f6d56c1e47559e4e"
+      "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
+      "remote_bytes": 29263,
+      "remote_sha256": "4a3c532267cd2ae59089dabefa701c2861223c35f1e6f7713fec7aa58ec75615"
     },
     {
-      "local_bytes": 21953,
-      "local_sha256": "ac5ba2fa1698917e6ff1a2fbc1d864f5e33d5ce7a1dc1e8706a3da01e8466fc9",
+      "local_bytes": 21437,
+      "local_sha256": "71bbf7cb19bde481a6b7be1903db97e9c387e9191b597cdda0e356322ee6e683",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
+      "remote_bytes": 21437,
+      "remote_sha256": "71bbf7cb19bde481a6b7be1903db97e9c387e9191b597cdda0e356322ee6e683"
+    },
+    {
+      "local_bytes": 22260,
+      "local_sha256": "d9f5a9bee15b439a026bbb952c8f2a72bee5b3a47a1e5634a5eb28489b44c3d9",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
-      "remote_bytes": 21953,
-      "remote_sha256": "ac5ba2fa1698917e6ff1a2fbc1d864f5e33d5ce7a1dc1e8706a3da01e8466fc9"
+      "remote_bytes": 22260,
+      "remote_sha256": "d9f5a9bee15b439a026bbb952c8f2a72bee5b3a47a1e5634a5eb28489b44c3d9"
     },
     {
       "local_bytes": 527022,
@@ -215,7 +223,7 @@
   "failures": [],
   "local_root": "<repo-root>",
   "n_absence_checks": 2,
-  "n_exact_checks": 24,
+  "n_exact_checks": 25,
   "n_failures": 0,
   "n_semantic_checks": 5,
   "n_shell_syntax_checks": 10,

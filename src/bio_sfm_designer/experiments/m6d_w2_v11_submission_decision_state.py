@@ -285,6 +285,18 @@ def _remote_readiness_state(remote_readiness: Dict[str, Any]) -> Dict[str, Any]:
     absence_checks = remote_readiness.get("absence_checks")
     absence_rows = absence_checks if isinstance(absence_checks, list) else []
     absence_ok = bool(absence_rows) and all(isinstance(row, dict) and row.get("ok") is True for row in absence_rows)
+    shell_syntax_checks = remote_readiness.get("shell_syntax_checks")
+    shell_syntax_rows = shell_syntax_checks if isinstance(shell_syntax_checks, list) else []
+    shell_syntax_ok = (
+        bool(shell_syntax_rows)
+        and all(
+            isinstance(row, dict)
+            and row.get("ok") is True
+            and row.get("local_returncode") == 0
+            and row.get("remote_returncode") == 0
+            for row in shell_syntax_rows
+        )
+    )
     ok = (
         remote_readiness.get("status") == _REMOTE_READY_STATUS
         and remote_readiness.get("audit_ok") is True
@@ -293,6 +305,7 @@ def _remote_readiness_state(remote_readiness: Dict[str, Any]) -> Dict[str, Any]:
         and remote_readiness.get("can_claim_w2_generalization") is False
         and remote_readiness.get("n_failures") == 0
         and absence_ok
+        and shell_syntax_ok
     )
     return {
         "path": remote_readiness.get("_path"),
@@ -307,8 +320,10 @@ def _remote_readiness_state(remote_readiness: Dict[str, Any]) -> Dict[str, Any]:
         "n_exact_checks": remote_readiness.get("n_exact_checks"),
         "n_semantic_checks": remote_readiness.get("n_semantic_checks"),
         "n_absence_checks": remote_readiness.get("n_absence_checks"),
+        "n_shell_syntax_checks": remote_readiness.get("n_shell_syntax_checks"),
         "n_failures": remote_readiness.get("n_failures"),
         "absence_checks_ok": absence_ok,
+        "shell_syntax_checks_ok": shell_syntax_ok,
         "remote_host": remote_readiness.get("remote_host"),
         "remote_root": remote_readiness.get("remote_root"),
     }
@@ -325,6 +340,8 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
         and w2.get("panel_approval_packet_ready") is True
         and w2.get("panel_decision_protocol_ready") is True
         and w2.get("panel_remote_submission_readiness_ok") is True
+        and isinstance(w2.get("panel_remote_shell_syntax_checks"), int)
+        and w2.get("panel_remote_shell_syntax_checks") > 0
     )
     return {
         "path": project_status.get("_path"),
@@ -337,6 +354,7 @@ def _project_status_state(project_status: Dict[str, Any]) -> Dict[str, Any]:
         "w2_panel_approval_packet_ready": w2.get("panel_approval_packet_ready"),
         "w2_panel_decision_protocol_ready": w2.get("panel_decision_protocol_ready"),
         "w2_panel_remote_submission_readiness_ok": w2.get("panel_remote_submission_readiness_ok"),
+        "w2_panel_remote_shell_syntax_checks": w2.get("panel_remote_shell_syntax_checks"),
         "w2_panel_submit_command_if_approved": w2.get("panel_submit_command_if_approved"),
     }
 
