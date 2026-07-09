@@ -45,6 +45,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
             "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
+            "src/bio_sfm_designer/experiments/m6d_goal_completion_audit.py",
             "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
             "src/bio_sfm_designer/experiments/public_surface_sanitize.py",
         }
@@ -59,6 +60,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         decision_fields = _JSON_FIELD_SPECS[
             "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
         ]
+        completion_fields = _JSON_FIELD_SPECS["results/m6d_goal_completion_audit.json"]
         drift_fields = _JSON_FIELD_SPECS["results/m6d_goal_drift_audit.json"]
         remote_readiness_fields = _JSON_FIELD_SPECS[
             "results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json"
@@ -116,10 +118,16 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
             decision_fields,
         )
+        self.assertIn("w2_gate.panel_remote_exact_checks", completion_fields)
+        self.assertIn("w2_gate.panel_remote_shell_syntax_checks", completion_fields)
+        self.assertIn("w2_gate.panel_remote_shell_syntax_checks_ok", completion_fields)
         self.assertIn(
             "current_state.completion_audit.panel_public_approval_bundle_ready",
             drift_fields,
         )
+        self.assertIn("current_state.W2_panel_remote_readiness.n_exact_checks", drift_fields)
+        self.assertIn("current_state.W2_panel_remote_readiness.n_shell_syntax_checks", drift_fields)
+        self.assertIn("current_state.W2_panel_remote_readiness.shell_syntax_checks_ok", drift_fields)
         self.assertIn("drift_assessment.execution", drift_fields)
         self.assertIn("n_shell_syntax_checks", remote_readiness_fields)
 

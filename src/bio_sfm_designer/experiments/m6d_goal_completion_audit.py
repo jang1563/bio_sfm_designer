@@ -243,6 +243,18 @@ def _panel_remote_readiness_state(panel_remote_readiness: Optional[Dict[str, Any
             "can_submit_panel_if_user_explicitly_approves": None,
             "can_claim_w2_generalization": None,
         }
+    shell_syntax_checks = panel_remote_readiness.get("shell_syntax_checks")
+    shell_syntax_rows = shell_syntax_checks if isinstance(shell_syntax_checks, list) else []
+    shell_syntax_ok = (
+        bool(shell_syntax_rows)
+        and all(
+            isinstance(row, dict)
+            and row.get("ok") is True
+            and row.get("local_returncode") == 0
+            and row.get("remote_returncode") == 0
+            for row in shell_syntax_rows
+        )
+    )
     return {
         "path": panel_remote_readiness.get("_path"),
         "status": panel_remote_readiness.get("status"),
@@ -255,6 +267,8 @@ def _panel_remote_readiness_state(panel_remote_readiness: Optional[Dict[str, Any
         "n_exact_checks": panel_remote_readiness.get("n_exact_checks"),
         "n_semantic_checks": panel_remote_readiness.get("n_semantic_checks"),
         "n_absence_checks": panel_remote_readiness.get("n_absence_checks"),
+        "n_shell_syntax_checks": panel_remote_readiness.get("n_shell_syntax_checks"),
+        "shell_syntax_checks_ok": shell_syntax_ok,
         "n_failures": panel_remote_readiness.get("n_failures"),
         "next_action": panel_remote_readiness.get("next_action"),
     }
@@ -796,6 +810,17 @@ def build_audit(project_status: Dict[str, Any],
                 expected=0,
                 observed=panel_remote.get("n_failures"),
             )
+        if panel_remote.get("shell_syntax_checks_ok") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_remote_shell_syntax_not_ok",
+                "W2 remote readiness must prove local and Cayuga shell/sbatch syntax checks passed",
+                expected=True,
+                observed={
+                    "shell_syntax_checks_ok": panel_remote.get("shell_syntax_checks_ok"),
+                    "n_shell_syntax_checks": panel_remote.get("n_shell_syntax_checks"),
+                },
+            )
 
     if panel_submission_decision_state is not None:
         if (
@@ -1187,12 +1212,21 @@ def build_audit(project_status: Dict[str, Any],
             "panel_decision_no_submit": panel_decision.get("no_submit"),
             "panel_decision_can_claim_w2_now": panel_decision.get("can_claim_w2_generalization_now"),
             "panel_decision_current_result_status": panel_decision.get("current_result_status"),
-            "panel_remote_readiness_ok": panel_remote.get("status") == _PANEL_REMOTE_READY_STATUS,
+            "panel_remote_readiness_ok": (
+                panel_remote.get("status") == _PANEL_REMOTE_READY_STATUS
+                and panel_remote.get("shell_syntax_checks_ok") is True
+                and panel_remote.get("n_failures") == 0
+            ),
             "panel_remote_no_submit": panel_remote.get("no_submit"),
             "panel_remote_can_submit_if_explicitly_approved": panel_remote.get(
                 "can_submit_panel_if_user_explicitly_approves"
             ),
             "panel_remote_can_claim_w2_generalization": panel_remote.get("can_claim_w2_generalization"),
+            "panel_remote_exact_checks": panel_remote.get("n_exact_checks"),
+            "panel_remote_semantic_checks": panel_remote.get("n_semantic_checks"),
+            "panel_remote_absence_checks": panel_remote.get("n_absence_checks"),
+            "panel_remote_shell_syntax_checks": panel_remote.get("n_shell_syntax_checks"),
+            "panel_remote_shell_syntax_checks_ok": panel_remote.get("shell_syntax_checks_ok"),
             "panel_remote_failures": panel_remote.get("n_failures"),
             "panel_submission_decision_ready": (
                 panel_submission_decision.get("status") == _PANEL_SUBMISSION_DECISION_READY_STATUS
@@ -1290,6 +1324,8 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel remote readiness ok: `{rep.get('w2_gate', {}).get('panel_remote_readiness_ok')}`",
         f"- W2 panel remote readiness no-submit: `{rep.get('w2_gate', {}).get('panel_remote_no_submit')}`",
         f"- W2 panel remote can claim generalization: `{rep.get('w2_gate', {}).get('panel_remote_can_claim_w2_generalization')}`",
+        f"- W2 panel remote shell syntax checks: `{rep.get('w2_gate', {}).get('panel_remote_shell_syntax_checks')}`",
+        f"- W2 panel remote shell syntax checks ok: `{rep.get('w2_gate', {}).get('panel_remote_shell_syntax_checks_ok')}`",
         f"- W2 panel submission decision ready: `{rep.get('w2_gate', {}).get('panel_submission_decision_ready')}`",
         f"- W2 panel submission decision no-submit: `{rep.get('w2_gate', {}).get('panel_submission_decision_no_submit')}`",
         f"- W2 panel submission decision submitted: `{rep.get('w2_gate', {}).get('panel_submission_decision_submitted')}`",

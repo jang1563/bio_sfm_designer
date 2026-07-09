@@ -208,7 +208,14 @@ def _panel_remote_readiness():
         "n_exact_checks": 14,
         "n_semantic_checks": 5,
         "n_absence_checks": 2,
+        "n_shell_syntax_checks": 4,
         "n_failures": 0,
+        "shell_syntax_checks": [
+            {"path": "results/submit.sh", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "results/monitor.sh", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "hpc/generate.sbatch", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "hpc/predict.sbatch", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+        ],
         "next_action": "remote mirror is ready; still wait for explicit user approval",
     }
 
@@ -468,7 +475,40 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_remote_no_submit"])
         self.assertTrue(rep["w2_gate"]["panel_remote_can_submit_if_explicitly_approved"])
         self.assertFalse(rep["w2_gate"]["panel_remote_can_claim_w2_generalization"])
+        self.assertEqual(rep["w2_gate"]["panel_remote_shell_syntax_checks"], 4)
+        self.assertTrue(rep["w2_gate"]["panel_remote_shell_syntax_checks_ok"])
         self.assertIn("W2 panel remote readiness ok: `True`", render_markdown(rep))
+        self.assertIn("W2 panel remote shell syntax checks ok: `True`", render_markdown(rep))
+
+    def test_missing_panel_remote_shell_syntax_gate_blocks_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            remote = _panel_remote_readiness()
+            remote.pop("n_shell_syntax_checks")
+            remote.pop("shell_syntax_checks")
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                remote,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_remote_readiness_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_remote_shell_syntax_checks_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_remote_shell_syntax_not_ok", kinds)
 
     def test_v11_submission_decision_state_still_does_not_complete_goal(self):
         with tempfile.TemporaryDirectory() as d:

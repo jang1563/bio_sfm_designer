@@ -40,6 +40,8 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel remote readiness ok: `True`
 - W2 panel remote readiness no-submit: `True`
 - W2 panel remote can claim generalization: `False`
+- W2 panel remote shell syntax checks: `10`
+- W2 panel remote shell syntax checks ok: `True`
 - W2 panel submission decision ready: `True`
 - W2 panel submission decision no-submit: `True`
 - W2 panel submission decision submitted: `False`

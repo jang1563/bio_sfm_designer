@@ -227,7 +227,14 @@ def _panel_remote_readiness():
         "n_exact_checks": 14,
         "n_semantic_checks": 5,
         "n_absence_checks": 2,
+        "n_shell_syntax_checks": 4,
         "n_failures": 0,
+        "shell_syntax_checks": [
+            {"path": "results/submit.sh", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "results/monitor.sh", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "hpc/generate.sbatch", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+            {"path": "hpc/predict.sbatch", "ok": True, "local_returncode": 0, "remote_returncode": 0},
+        ],
         "next_action": "remote mirror is ready; still wait for explicit user approval",
     }
 
@@ -436,9 +443,40 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         self.assertFalse(rep["major_direction_drift"])
         self.assertEqual(rep["drift_assessment"]["execution"], "panel_remote_readiness_ready_not_submitted")
         self.assertFalse(rep["current_state"]["W2_panel_remote_readiness"]["can_claim_w2_generalization"])
+        self.assertEqual(rep["current_state"]["W2_panel_remote_readiness"]["n_shell_syntax_checks"], 4)
+        self.assertTrue(rep["current_state"]["W2_panel_remote_readiness"]["shell_syntax_checks_ok"])
         risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
         self.assertEqual(risks["panel_remote_readiness_boundary"], "managed")
         self.assertIn("W2_panel_remote_readiness", render_markdown(rep))
+        self.assertIn("syntax_ok=`True`", render_markdown(rep))
+
+    def test_missing_panel_remote_shell_syntax_gate_is_execution_drift(self):
+        project_status = _project_status()
+        project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+            "panel_approval_packet_ready_awaiting_explicit_approval"
+        )
+        remote = _panel_remote_readiness()
+        remote.pop("n_shell_syntax_checks")
+        remote.pop("shell_syntax_checks")
+
+        rep = build_audit(
+            project_status,
+            _completion_audit(),
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+            _panel_approval_packet(),
+            _panel_decision_protocol(n_manifest_targets=7),
+            remote,
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        risks = {risk["id"]: risk["status"] for risk in rep["active_risks"]}
+        self.assertEqual(risks["panel_remote_readiness_boundary"], "not_ready")
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("panel_remote_shell_syntax_not_ok", kinds)
 
     def test_v11_submission_decision_ready_has_no_major_direction_drift(self):
         project_status = _project_status()

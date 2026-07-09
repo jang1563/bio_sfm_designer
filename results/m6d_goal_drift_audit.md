@@ -20,7 +20,7 @@ Can mark goal complete: `False`.
 - W2_target_msa_execution: status=`target_msa_outputs_synced_strict_require_files_passed` jobs_submitted=`17` receipt_created_or_updated=`True`
 - W2_panel_approval: status=`panel_approval_packet_ready` ready=`True` can_claim_w2_generalization=`False`
 - W2_panel_decision_protocol: status=`post_panel_decision_protocol_ready` no_submit=`True` can_claim_now=`False` current_result=`not_available_not_submitted`
-- W2_panel_remote_readiness: status=`remote_submission_readiness_ok` no_submit=`True` can_claim_w2_generalization=`False` failures=`0`
+- W2_panel_remote_readiness: status=`remote_submission_readiness_ok` no_submit=`True` can_claim_w2_generalization=`False` syntax=`10` syntax_ok=`True` failures=`0`
 - W2_panel_submission_decision: status=`awaiting_explicit_panel_submission_approval` no_submit=`True` submitted=`False` can_claim_w2_generalization=`False`
 - W2_panel_postsync_interpretation: status=`not_synced_not_interpretable` no_submit=`True` sync_ready=`False` can_claim_w2_generalization=`False`
 
