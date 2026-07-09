@@ -413,6 +413,17 @@ def _postsubmit_status_command(
     ])
 
 
+def _postsubmit_driver_polling_contract() -> Dict[str, Any]:
+    return {
+        "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+        "default_max_polls": 120,
+        "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+        "default_poll_seconds": 300,
+        "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready",
+        "proceeds_only_when_sync_ready": True,
+    }
+
+
 def _run_local_dry_run(
     *,
     wrapper_path: str,
@@ -662,6 +673,7 @@ def build_runbook(
             "receipt_monitor_command_after_submit": receipt_monitor_command,
             "postsubmit_driver_script": postsubmit_driver_script,
             "postsubmit_driver_command_after_submit": "bash " + shlex.quote(postsubmit_driver_script),
+            "postsubmit_driver_polling": _postsubmit_driver_polling_contract(),
             "job_state_probe_command_after_receipt_sync": (
                 "python -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe"
             ),
@@ -728,6 +740,12 @@ def render_runbook_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(post.get("postsubmit_driver_command_after_submit") or ""),
+        "```",
+        "",
+        "Post-submit driver polling:",
+        "",
+        "```text",
+        json.dumps(post.get("postsubmit_driver_polling") or {}, sort_keys=True),
         "```",
         "",
         "After receipt sync, generate and run the read-only job-state query:",
@@ -857,6 +875,7 @@ def build_approval_packet(
         "receipt_monitor_after_submit": post_submit.get("receipt_monitor_command_after_submit"),
         "postsubmit_driver_after_submit": post_submit.get("postsubmit_driver_command_after_submit"),
         "postsubmit_driver_script": post_submit.get("postsubmit_driver_script"),
+        "postsubmit_driver_polling": post_submit.get("postsubmit_driver_polling"),
         "job_state_query_after_receipt": post_submit.get("job_state_query_command_after_probe"),
         "job_state_probe_sync_after_query": post_submit.get("job_state_probe_sync_after_query"),
         "postsubmit_status_before_sync": post_submit.get("postsubmit_status"),
@@ -917,6 +936,12 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         "",
         "```bash",
         str(rep.get("postsubmit_driver_after_submit") or ""),
+        "```",
+        "",
+        "Post-submit driver polling:",
+        "",
+        "```text",
+        json.dumps(rep.get("postsubmit_driver_polling") or {}, sort_keys=True),
         "```",
         "",
         "Job-state probe sync after query:",

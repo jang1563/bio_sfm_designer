@@ -6629,6 +6629,14 @@ class ComplexProjectStatusTests(unittest.TestCase):
                     "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
                 ),
                 "postsubmit_driver_script": "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+                "postsubmit_driver_polling": {
+                    "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+                    "default_max_polls": 120,
+                    "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+                    "default_poll_seconds": 300,
+                    "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready",
+                    "proceeds_only_when_sync_ready": True,
+                },
                 "job_state_query_after_receipt": (
                     "ssh cayuga-login1 'cd /home/fs01/<user>/bio_sfm_smoke && "
                     "bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh'"
@@ -6768,6 +6776,11 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_postsubmit_bridge_ok"])
         self.assertIn("receipt_monitor", w2["panel_receipt_monitor_after_submit"])
         self.assertIn("postsubmit_driver", w2["panel_postsubmit_driver_after_submit"])
+        self.assertEqual(
+            w2["panel_postsubmit_driver_polling"]["max_polls_env_var"],
+            "M6D_W2_POSTSUBMIT_MAX_POLLS",
+        )
+        self.assertTrue(w2["panel_postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
         self.assertIn("job_state_query", w2["panel_job_state_query_after_receipt"])
         self.assertIn("postsync_interpretation", w2["panel_postsync_replay_after_sync"])
         self.assertIn("--require-sync-ready", w2["panel_postsubmit_sync_ready_gate"])

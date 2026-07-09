@@ -92,12 +92,12 @@
       "remote_sha256": "0ed870f11f92727569e7bdc6dd37557c7d1eaad03c4dcf0d9c4e8a9940d2eaef"
     },
     {
-      "local_bytes": 51215,
-      "local_sha256": "4467b3162ad5dc4d0ce28a8ef41b2670ba0b55f59716dffc53eaa3c1335f075e",
+      "local_bytes": 52131,
+      "local_sha256": "6de8f7ab133a3d1aaa781271c8195d549429f8298e5c5700a3c082337354aa54",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
-      "remote_bytes": 51215,
-      "remote_sha256": "4467b3162ad5dc4d0ce28a8ef41b2670ba0b55f59716dffc53eaa3c1335f075e"
+      "remote_bytes": 52131,
+      "remote_sha256": "6de8f7ab133a3d1aaa781271c8195d549429f8298e5c5700a3c082337354aa54"
     },
     {
       "local_bytes": 12560,
@@ -156,12 +156,12 @@
       "remote_sha256": "e28a3f4717b748c2abb229c0670b84bd0f0eb96c20c5373a7132e29d7fc1c92b"
     },
     {
-      "local_bytes": 526740,
-      "local_sha256": "0f2efcc8e50d3e1503f8bd7c6694bbbb90d77a299e503974eb8f3376a5647694",
+      "local_bytes": 526839,
+      "local_sha256": "a60cf9cab3cb2dd10eecdd5baf1c40f6088a466fc83d6d99e80c135bb183742a",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
-      "remote_bytes": 526740,
-      "remote_sha256": "0f2efcc8e50d3e1503f8bd7c6694bbbb90d77a299e503974eb8f3376a5647694"
+      "remote_bytes": 526839,
+      "remote_sha256": "a60cf9cab3cb2dd10eecdd5baf1c40f6088a466fc83d6d99e80c135bb183742a"
     },
     {
       "local_bytes": 13348,

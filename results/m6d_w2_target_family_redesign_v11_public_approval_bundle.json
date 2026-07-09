@@ -24,6 +24,14 @@
     "sync_back_after_sync_ready": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
     "sync_job_state_probe_after_query": "mkdir -p results && rsync -avP \"$CAYUGA_BIO_SFM_ROOT/results/m6d_w2_target_family_redesign_v11_job_state_probe.json\" results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP \"$CAYUGA_BIO_SFM_ROOT/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv\" results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
   },
+  "postsubmit_driver_polling": {
+    "default_max_polls": 120,
+    "default_poll_seconds": 300,
+    "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+    "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+    "proceeds_only_when_sync_ready": true,
+    "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready"
+  },
   "source_artifacts": {
     "approval_packet": "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
     "preflight": "results/m6d_w2_target_family_redesign_v11_panel_preflight.json",

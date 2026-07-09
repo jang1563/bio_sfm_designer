@@ -152,6 +152,10 @@ def build_bundle(
     remote_readiness: Dict[str, Any],
 ) -> Dict[str, Any]:
     commands = _portable_commands(runbook, packet)
+    post = runbook.get("post_submit") if isinstance(runbook.get("post_submit"), dict) else {}
+    postsubmit_driver_polling = post.get("postsubmit_driver_polling")
+    if not isinstance(postsubmit_driver_polling, dict):
+        postsubmit_driver_polling = {}
     failures: List[Dict[str, Any]] = []
     if runbook.get("status") != "approval_runbook_ready_not_submitted":
         failures.append({"kind": "runbook_not_ready", "observed": runbook.get("status")})
@@ -217,6 +221,7 @@ def build_bundle(
             if isinstance(runbook.get("post_submit"), dict) else None,
         },
         "portable_commands": commands,
+        "postsubmit_driver_polling": postsubmit_driver_polling,
         "claim_boundary": (
             "not W2 evidence until explicit approval, successful submit receipt, completed jobs, "
             "sync-back, completion, target-wise report, and refreshed interpretation"
@@ -270,6 +275,14 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "postsync_replay",
     ):
         lines.extend([f"### {key}", "", "```bash", str(commands.get(key) or ""), "```", ""])
+    lines.extend([
+        "## Postsubmit Driver Polling",
+        "",
+        "```text",
+        json.dumps(rep.get("postsubmit_driver_polling") or {}, sort_keys=True),
+        "```",
+        "",
+    ])
     lines.extend([
         "## Claim Boundary",
         "",

@@ -50,6 +50,14 @@ def _runbook():
         "post_submit": {
             "receipt_monitor_script": "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
             "postsubmit_driver_script": "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+            "postsubmit_driver_polling": {
+                "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+                "default_max_polls": 120,
+                "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+                "default_poll_seconds": 300,
+                "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready",
+                "proceeds_only_when_sync_ready": True,
+            },
             "job_state_query_plan_after_probe": "results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
             "sync_back_script": "results/m6d_w2_target_family_redesign_v11_sync_back.sh",
             "completion_script": "results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
@@ -133,6 +141,11 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
             "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
             rep["portable_commands"]["postsubmit_driver_after_submit"],
         )
+        self.assertEqual(
+            rep["postsubmit_driver_polling"]["max_polls_env_var"],
+            "M6D_W2_POSTSUBMIT_MAX_POLLS",
+        )
+        self.assertTrue(rep["postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
 
@@ -184,6 +197,7 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertTrue(saved["audit_ok"])
         self.assertIn("Portable Commands", md)
+        self.assertIn("Postsubmit Driver Polling", md)
 
 
 if __name__ == "__main__":

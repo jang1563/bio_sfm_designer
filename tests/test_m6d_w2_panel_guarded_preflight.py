@@ -262,6 +262,12 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 runbook["post_submit"]["postsubmit_driver_command_after_submit"],
                 "bash " + postsubmit_driver,
             )
+            self.assertEqual(
+                runbook["post_submit"]["postsubmit_driver_polling"]["max_polls_env_var"],
+                "M6D_W2_POSTSUBMIT_MAX_POLLS",
+            )
+            self.assertEqual(runbook["post_submit"]["postsubmit_driver_polling"]["default_max_polls"], 120)
+            self.assertTrue(runbook["post_submit"]["postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
             self.assertEqual(runbook["post_submit"]["postsync_replay_script"], postsync_replay)
             self.assertIn("m6d_w2_panel_job_state_probe", runbook["post_submit"]["job_state_probe_command_after_receipt_sync"])
             self.assertIn("--require-sync-ready", runbook["post_submit"]["postsubmit_status_command_before_sync"])
@@ -302,6 +308,10 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertEqual(approval_packet["manifest"], manifest)
             self.assertIn("receipt_monitor.sh", approval_packet["receipt_monitor_after_submit"])
             self.assertIn("postsubmit_driver.sh", approval_packet["postsubmit_driver_after_submit"])
+            self.assertEqual(
+                approval_packet["postsubmit_driver_polling"]["poll_seconds_env_var"],
+                "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+            )
             self.assertIn("job_state_query.sh", approval_packet["job_state_query_after_receipt"])
             self.assertIn("rsync -avP", approval_packet["job_state_probe_sync_after_query"])
             self.assertIn("m6d_w2_panel_postsubmit_status", approval_packet["postsubmit_sync_ready_gate"])

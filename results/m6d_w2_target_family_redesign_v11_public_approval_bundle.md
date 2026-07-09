@@ -77,6 +77,12 @@ bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh
 bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 ```
 
+## Postsubmit Driver Polling
+
+```text
+{"default_max_polls": 120, "default_poll_seconds": 300, "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS", "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS", "proceeds_only_when_sync_ready": true, "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready"}
+```
+
 ## Claim Boundary
 
 not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report, and refreshed interpretation
