@@ -180,7 +180,11 @@ Current state:
   status; project status records these invariants as `panel_job_state_query_bridge_ok=true` and
   `panel_postsubmit_bridge_ok=true`. The emitted approval packet plus
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` records the current W2
-  decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence; full project status now
+  decision as ready for explicit approval, still `no_submit=true`, and not W2 evidence. For public
+  handoff/release surfaces, use
+  `results/m6d_w2_target_family_redesign_v11_public_approval_bundle.{json,md}` instead of the raw
+  environment-specific runbook; regenerate it with
+  `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. Full project status now
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval` and exposes the post-approval
   `resume_execution_ladder` from guarded submit through receipt monitor, job-state query, sync-ready status,
   sync-back, completion, and post-sync interpretation. The no-submit remote readiness

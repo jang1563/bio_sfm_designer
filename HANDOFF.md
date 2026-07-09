@@ -275,6 +275,12 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > The same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
 > `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
 > `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
+> For public handoff/release surfaces, use
+> `results/m6d_w2_target_family_redesign_v11_public_approval_bundle.{json,md}` instead of the raw
+> environment-specific runbook; regenerate it with
+> `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. It preserves the explicit
+> approval boundary and post-submit command order with portable placeholders, while keeping
+> `no_submit=true` and `can_claim_w2_generalization=false`.
 > Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
 > `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
 > post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,
