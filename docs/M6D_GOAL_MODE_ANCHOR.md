@@ -930,7 +930,10 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     the current checkout. The final no-submit decision latch
     `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` now records
     `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-    `can_claim_w2_generalization=false`; its approval-disambiguation block records that continuation phrases
+    `can_claim_w2_generalization=false`; tracked result/status artifacts are public-safe and use
+    placeholders for host, user, and repo-root values, while the executable Cayuga command bridge remains
+    only in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
+    and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`; its approval-disambiguation block records that continuation phrases
     such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
     `results/m6d_w2_target_family_redesign_v11_postsubmit_status.{json,md}` currently records
     `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
@@ -982,8 +985,8 @@ goal-mode requirement.
 remaining requirement. Its current W2 execution evidence includes the approved full-14 target-MSA path
 synced back locally with strict `--require-files` passing plus the v11 panel approval/decision/remote-readiness
 boundary; W2 remains incomplete until panel execution, sync-back, completion, and target-wise certification.
-`results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 24 exact SHA
-checks and 14 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
+`results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 25 exact SHA
+checks and 15 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
 submission-decision, receipt monitor, post-submit status, job-state probe, and post-sync interpretation
 artifacts; the mirrored next action is explicit W2 v11 panel approval, then sync-back, completion, and
 target-wise certification.

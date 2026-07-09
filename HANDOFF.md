@@ -293,7 +293,10 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
 > `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
 > `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-> readiness before the decision can stay approval-ready. Its approval-disambiguation block records that continuation phrases
+> readiness before the decision can stay approval-ready. Tracked result/status artifacts are public-safe and
+> use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
+> in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
+> and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. Its approval-disambiguation block records that continuation phrases
 > such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
 > (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
 > `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
@@ -620,7 +623,7 @@ synced back, completed, and target-wise certified. It now also records
 `panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle preserves no-submit and
 claim-boundary checks.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 24 exact SHA checks plus 14 semantic JSON checks, including the v11
+and Cayuga artifacts agree across 25 exact SHA checks plus 15 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state
 probe, and post-sync interpretation artifacts; the next action stays limited to explicit panel submission
 approval, sync-back, completion, and target-wise certification.

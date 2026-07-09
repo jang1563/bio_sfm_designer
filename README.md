@@ -351,7 +351,11 @@ engine installs from GitHub):
   environment-specific runbook; regenerate it with
   `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. It preserves the explicit
   approval boundary and post-submit command order with portable placeholders, while keeping
-  `no_submit=true` and `can_claim_w2_generalization=false`.
+  `no_submit=true` and `can_claim_w2_generalization=false`. Tracked result/status artifacts are
+  intentionally public-safe and may use `<hpc-login-host>`, `/home/fs01/<user>`, and `<repo-root>`
+  placeholders; the executable Cayuga command bridge remains only in ignored local artifacts such as
+  `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}` and
+  `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`.
   Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
   `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
   post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,
@@ -540,6 +544,7 @@ engine installs from GitHub):
 	  and `results/m6d_local_cayuga_mirror_audit.{json,md}` is the no-submit local/Cayuga mirror audit:
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
+	  currently `local_cayuga_mirror_agree` with 25 exact checks and 15 semantic checks,
 	  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
 	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
 	  `panel_postsync_interpretation_predeclared_not_synced`, keeping the next action limited to explicit

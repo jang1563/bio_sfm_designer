@@ -196,7 +196,10 @@ Current state:
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
   `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-  readiness before the decision can stay approval-ready. Its approval-disambiguation block records that continuation phrases
+  readiness before the decision can stay approval-ready. Tracked result/status artifacts are public-safe and
+  use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
+  in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
+  and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. Its approval-disambiguation block records that continuation phrases
   such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
@@ -791,7 +794,7 @@ bash results/m6c_project_external_sync_back.sh
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 24 exact checks and 14 semantic
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 25 exact checks and 15 semantic
   checks, including v11 panel approval, remote-readiness, submission-decision, receipt monitor,
   post-submit status, job-state probe, and post-sync interpretation artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and
