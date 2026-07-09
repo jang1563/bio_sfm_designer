@@ -781,7 +781,8 @@ bash results/m6c_project_external_sync_back.sh
 - `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit.
   The current honest state is `audit_ok=true` and `can_mark_goal_complete=false`, with W2 as the only
   remaining requirement until the v11 panel is explicitly approved, submitted, synced back, completed, and
-  target-wise certified.
+  target-wise certified. It also records `panel_public_approval_bundle_ready=true` when the public-safe
+  v11 approval bundle passes its no-submit/claim-boundary checks.
 - `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit. The
   current honest state is `audit_ok=true`, `major_direction_drift=false`, direction aligned, claim
   boundaries preserved, and execution `panel_postsync_interpretation_predeclared_not_synced`; next action is

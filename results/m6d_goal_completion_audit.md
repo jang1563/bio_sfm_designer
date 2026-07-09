@@ -47,6 +47,7 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel post-sync interpretation ready: `True`
 - W2 panel post-sync status: `not_synced_not_interpretable`
 - W2 panel post-sync can claim generalization: `False`
+- W2 panel public approval bundle ready: `True`
 - W3 standalone audit ok: `True`
 - W3 positive claim supported: `False`
 

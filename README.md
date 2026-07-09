@@ -534,6 +534,8 @@ engine installs from GitHub):
   while `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit:
   it should pass with `audit_ok=true` and `can_mark_goal_complete=false` until the W2 v11 panel is
   explicitly approved, submitted, synced back, completed, and target-wise certified,
+  and it now records `panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle
+  passes its no-submit/claim-boundary checks,
 	  and `results/m6d_local_cayuga_mirror_audit.{json,md}` is the no-submit local/Cayuga mirror audit:
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,

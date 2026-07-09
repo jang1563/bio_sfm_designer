@@ -615,7 +615,9 @@ as `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_comple
 `results/m6d_goal_completion_audit.{json,md}` is the standalone no-submit completion-boundary audit:
 the current honest state is `audit_ok=true`, `can_mark_goal_complete=false`, and remaining requirement
 `W2_multi_target_panel`; W2 remains incomplete until the v11 panel is explicitly approved, submitted,
-synced back, completed, and target-wise certified.
+synced back, completed, and target-wise certified. It now also records
+`panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle preserves no-submit and
+claim-boundary checks.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
 and Cayuga artifacts agree across 24 exact SHA checks plus 14 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state

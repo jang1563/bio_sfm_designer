@@ -259,6 +259,41 @@ def _panel_postsync_interpretation():
     }
 
 
+def _panel_public_approval_bundle():
+    return {
+        "_path": "/tmp/panel_public_bundle.json",
+        "artifact": "m6d_w2_v11_public_approval_bundle",
+        "status": "public_approval_bundle_ready_not_submitted",
+        "audit_ok": True,
+        "no_submit": True,
+        "submitted": False,
+        "can_claim_w2_generalization": False,
+        "approval_boundary": {
+            "explicit_approval_required": True,
+            "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+            "continuation_phrases_are_approval": False,
+            "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+        },
+        "target_contract": {
+            "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+            "target_alpha": 0.2,
+            "min_targets": 4,
+            "min_records_per_target": 20,
+        },
+        "portable_commands": {
+            "strict_postsubmit_status_before_sync": (
+                "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
+                "--manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json "
+                "--receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl "
+                "--summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json "
+                "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
+                "--require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
+            )
+        },
+        "failures": [],
+    }
+
+
 def _blocked_execution_attempt():
     execution = _execution_attempt()
     execution.update({
@@ -495,6 +530,61 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_postsync_interpretation_ready"])
         self.assertFalse(rep["w2_gate"]["panel_postsync_can_claim_w2_generalization"])
         self.assertIn("W2 panel post-sync interpretation ready: `True`", render_markdown(rep))
+
+    def test_v11_public_approval_bundle_still_does_not_complete_goal(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                _panel_public_approval_bundle(),
+                v9_receipt=receipt,
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertFalse(rep["can_mark_goal_complete"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_ready"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_no_submit"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_submitted"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_can_claim_w2_generalization"])
+        self.assertIn("W2 panel public approval bundle ready: `True`", render_markdown(rep))
+
+    def test_v11_public_approval_bundle_blocks_boundary_drift(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            bundle = _panel_public_approval_bundle()
+            bundle["submitted"] = True
+            bundle["can_claim_w2_generalization"] = True
+
+            rep = build_audit(
+                _project_status(),
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                panel_public_approval_bundle=bundle,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_public_approval_bundle_boundary_drift", kinds)
 
     def test_v11_postsync_interpretation_blocks_claim_leak(self):
         with tempfile.TemporaryDirectory() as d:

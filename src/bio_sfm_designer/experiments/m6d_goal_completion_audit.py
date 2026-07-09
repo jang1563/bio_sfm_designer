@@ -32,6 +32,7 @@ _PANEL_REMOTE_READY_STATUS = "remote_submission_readiness_ok"
 _PANEL_SUBMISSION_DECISION_READY_STATUS = "awaiting_explicit_panel_submission_approval"
 _PANEL_POSTSYNC_NOT_SYNCED_STATUS = "not_synced_not_interpretable"
 _PANEL_POSTSYNC_SUPPORTED_STATUS = "w2_generalization_supported_by_target_wise_panel"
+_PANEL_PUBLIC_APPROVAL_BUNDLE_STATUS = "public_approval_bundle_ready_not_submitted"
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -334,6 +335,51 @@ def _panel_postsync_interpretation_state(panel_postsync_interpretation: Optional
     }
 
 
+def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(panel_public_approval_bundle, dict):
+        return {
+            "path": None,
+            "status": "not_provided",
+            "audit_ok": False,
+            "no_submit": None,
+            "submitted": None,
+            "can_claim_w2_generalization": None,
+            "explicit_approval_required": None,
+        }
+    approval = (
+        panel_public_approval_bundle.get("approval_boundary")
+        if isinstance(panel_public_approval_bundle.get("approval_boundary"), dict)
+        else {}
+    )
+    target = (
+        panel_public_approval_bundle.get("target_contract")
+        if isinstance(panel_public_approval_bundle.get("target_contract"), dict)
+        else {}
+    )
+    commands = (
+        panel_public_approval_bundle.get("portable_commands")
+        if isinstance(panel_public_approval_bundle.get("portable_commands"), dict)
+        else {}
+    )
+    return {
+        "path": panel_public_approval_bundle.get("_path"),
+        "status": panel_public_approval_bundle.get("status"),
+        "audit_ok": panel_public_approval_bundle.get("audit_ok"),
+        "no_submit": panel_public_approval_bundle.get("no_submit"),
+        "submitted": panel_public_approval_bundle.get("submitted"),
+        "can_claim_w2_generalization": panel_public_approval_bundle.get("can_claim_w2_generalization"),
+        "explicit_approval_required": approval.get("explicit_approval_required"),
+        "continuation_phrases_are_approval": approval.get("continuation_phrases_are_approval"),
+        "approval_must_explicitly_name": approval.get("approval_must_explicitly_name"),
+        "machine_gate": approval.get("machine_gate"),
+        "manifest": target.get("manifest"),
+        "target_alpha": target.get("target_alpha"),
+        "strict_postsubmit_status_before_sync": commands.get("strict_postsubmit_status_before_sync"),
+        "submit_if_explicitly_approved": commands.get("submit_if_explicitly_approved"),
+        "n_failures": len(panel_public_approval_bundle.get("failures") or []),
+    }
+
+
 def build_audit(project_status: Dict[str, Any],
                 approval_packet: Dict[str, Any],
                 approval_parity: Dict[str, Any],
@@ -345,6 +391,7 @@ def build_audit(project_status: Dict[str, Any],
                 panel_remote_readiness: Optional[Dict[str, Any]] = None,
                 panel_submission_decision_state: Optional[Dict[str, Any]] = None,
                 panel_postsync_interpretation: Optional[Dict[str, Any]] = None,
+                panel_public_approval_bundle: Optional[Dict[str, Any]] = None,
                 *,
                 v9_receipt: str) -> Dict[str, Any]:
     failures: List[Dict[str, Any]] = []
@@ -461,6 +508,7 @@ def build_audit(project_status: Dict[str, Any],
     panel_remote = _panel_remote_readiness_state(panel_remote_readiness)
     panel_submission_decision = _panel_submission_decision_state(panel_submission_decision_state)
     panel_postsync = _panel_postsync_interpretation_state(panel_postsync_interpretation)
+    panel_public_bundle = _panel_public_approval_bundle_state(panel_public_approval_bundle)
     receipt_allowed = execution.get("target_msa_jobs_submitted_waiting_on_completion") is True
     receipt_allowed = receipt_allowed or execution.get("target_msa_outputs_synced_strict_require_files_passed") is True
     if receipt.get("exists") is not False and not receipt_allowed:
@@ -876,6 +924,88 @@ def build_audit(project_status: Dict[str, Any],
                 observed=panel_postsync.get("n_failures"),
             )
 
+    if panel_public_approval_bundle is not None:
+        if (
+            panel_public_bundle.get("status") != _PANEL_PUBLIC_APPROVAL_BUNDLE_STATUS
+            or panel_public_bundle.get("audit_ok") is not True
+        ):
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_not_ready",
+                "W2 public approval bundle must pass before it can be used as the public handoff surface",
+                expected={"status": _PANEL_PUBLIC_APPROVAL_BUNDLE_STATUS, "audit_ok": True},
+                observed={
+                    "status": panel_public_bundle.get("status"),
+                    "audit_ok": panel_public_bundle.get("audit_ok"),
+                },
+            )
+        for key, expected in (
+            ("no_submit", True),
+            ("submitted", False),
+            ("can_claim_w2_generalization", False),
+            ("explicit_approval_required", True),
+            ("continuation_phrases_are_approval", False),
+        ):
+            if panel_public_bundle.get(key) is not expected:
+                _add_failure(
+                    failures,
+                    "w2_panel_public_approval_bundle_boundary_drift",
+                    "W2 public approval bundle must preserve the no-submit explicit-approval boundary",
+                    expected={key: expected},
+                    observed={key: panel_public_bundle.get(key)},
+                )
+        if panel_public_bundle.get("approval_must_explicitly_name") != "W2 v11 Cayuga ProteinMPNN/Boltz panel submission":
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_approval_name_drift",
+                "W2 public approval bundle must retain the explicit approval phrase",
+                expected="W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
+                observed=panel_public_bundle.get("approval_must_explicitly_name"),
+            )
+        if panel_public_bundle.get("machine_gate") != "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit":
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_machine_gate_drift",
+                "W2 public approval bundle must retain the guarded submit machine gate",
+                expected="BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+                observed=panel_public_bundle.get("machine_gate"),
+            )
+        if panel_public_bundle.get("manifest") != panel_approval.get("manifest"):
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_manifest_drift",
+                "W2 public approval bundle manifest must match the approval packet",
+                expected=panel_approval.get("manifest"),
+                observed=panel_public_bundle.get("manifest"),
+            )
+        if panel_public_bundle.get("target_alpha") != 0.2:
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_alpha_drift",
+                "W2 public approval bundle must stay scoped to alpha=0.2",
+                expected=0.2,
+                observed=panel_public_bundle.get("target_alpha"),
+            )
+        if not _strict_postsubmit_command_ok(
+            panel_public_bundle.get("strict_postsubmit_status_before_sync"),
+            panel_approval,
+        ):
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_missing_strict_postsubmit_command",
+                "W2 public approval bundle must preserve the strict postsubmit status command",
+                expected="strict postsubmit command with manifest/receipt/summary/job-state paths",
+                observed=panel_public_bundle.get("strict_postsubmit_status_before_sync"),
+            )
+        if panel_public_bundle.get("n_failures") != 0:
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_failures_present",
+                "W2 public approval bundle must have zero failures",
+                expected=0,
+                observed=panel_public_bundle.get("n_failures"),
+            )
+
     if w3_adjudication_audit.get("audit_ok") is not True:
         _add_failure(failures, "w3_standalone_adjudication_audit_not_ok",
                      "standalone W3 adjudication audit must pass")
@@ -1009,6 +1139,7 @@ def build_audit(project_status: Dict[str, Any],
         "w2_panel_remote_readiness": panel_remote,
         "w2_panel_submission_decision": panel_submission_decision,
         "w2_panel_postsync_interpretation": panel_postsync,
+        "w2_panel_public_approval_bundle": panel_public_bundle,
         "workstream_status": {
             "W1_M6c_scale_up": {"status": w1.get("status"), "complete": w1.get("complete")},
             "W2_multi_target_panel": {"status": w2.get("status"), "complete": w2.get("complete")},
@@ -1089,6 +1220,18 @@ def build_audit(project_status: Dict[str, Any],
             "panel_postsync_sync_ready": panel_postsync.get("sync_ready"),
             "panel_postsync_can_claim_w2_generalization": panel_postsync.get("can_claim_w2_generalization"),
             "panel_postsync_status": panel_postsync.get("status"),
+            "panel_public_approval_bundle_ready": (
+                panel_public_bundle.get("status") == _PANEL_PUBLIC_APPROVAL_BUNDLE_STATUS
+                and panel_public_bundle.get("audit_ok") is True
+            ),
+            "panel_public_approval_bundle_no_submit": panel_public_bundle.get("no_submit"),
+            "panel_public_approval_bundle_submitted": panel_public_bundle.get("submitted"),
+            "panel_public_approval_bundle_can_claim_w2_generalization": panel_public_bundle.get(
+                "can_claim_w2_generalization"
+            ),
+            "panel_public_approval_bundle_explicit_approval_required": panel_public_bundle.get(
+                "explicit_approval_required"
+            ),
         },
         "w3_gate": {
             "audit_ok": w3_adjudication_audit.get("audit_ok"),
@@ -1154,6 +1297,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel post-sync interpretation ready: `{rep.get('w2_gate', {}).get('panel_postsync_interpretation_ready')}`",
         f"- W2 panel post-sync status: `{rep.get('w2_gate', {}).get('panel_postsync_status')}`",
         f"- W2 panel post-sync can claim generalization: `{rep.get('w2_gate', {}).get('panel_postsync_can_claim_w2_generalization')}`",
+        f"- W2 panel public approval bundle ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_ready')}`",
         f"- W3 standalone audit ok: `{rep.get('w3_gate', {}).get('audit_ok')}`",
         f"- W3 positive claim supported: `{rep.get('w3_gate', {}).get('positive_claim_supported')}`",
         "",
@@ -1184,6 +1328,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--panel-remote-readiness", default=None)
     ap.add_argument("--panel-submission-decision-state", default=None)
     ap.add_argument("--panel-postsync-interpretation", default=None)
+    ap.add_argument("--panel-public-approval-bundle", default=None)
     ap.add_argument("--v9-receipt", default="results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl")
     ap.add_argument("--out-json", default="results/m6d_goal_completion_audit.json")
     ap.add_argument("--out-md", default="results/m6d_goal_completion_audit.md")
@@ -1214,6 +1359,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         if args.panel_postsync_interpretation and os.path.exists(args.panel_postsync_interpretation)
         else None
     )
+    panel_public_approval_bundle = (
+        _load_json(args.panel_public_approval_bundle)
+        if args.panel_public_approval_bundle and os.path.exists(args.panel_public_approval_bundle)
+        else None
+    )
 
     rep = build_audit(
         _load_json(args.project_status),
@@ -1227,6 +1377,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         panel_remote_readiness,
         panel_submission_decision_state,
         panel_postsync_interpretation,
+        panel_public_approval_bundle,
         v9_receipt=args.v9_receipt,
     )
     _write_json(args.out_json, rep)
