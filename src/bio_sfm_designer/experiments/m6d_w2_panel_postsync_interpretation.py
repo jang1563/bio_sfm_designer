@@ -23,6 +23,8 @@ from .m6d_w2_panel_decision_protocol import classify_panel_report
 _DEFAULT_MANIFEST = "configs/m6d_w2_target_family_redesign_v11_representative_targets.json"
 _DEFAULT_POSTSUBMIT = "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
 _DEFAULT_JOB_STATES = "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+_DEFAULT_RECEIPT = "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl"
+_DEFAULT_SUMMARY = "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json"
 _DEFAULT_SYNC_BACK = "results/m6d_w2_target_family_redesign_v11_sync_back.sh"
 _DEFAULT_COMPLETION_SCRIPT = "results/m6d_w2_target_family_redesign_v11_panel_completion.sh"
 _DEFAULT_COMPLETION = "results/m6d_w2_target_family_redesign_v11_panel_completion.json"
@@ -88,6 +90,8 @@ def render_replay_script(*,
                          manifest: str = _DEFAULT_MANIFEST,
                          postsubmit: str = _DEFAULT_POSTSUBMIT,
                          job_states: str = _DEFAULT_JOB_STATES,
+                         receipt: str = _DEFAULT_RECEIPT,
+                         summary: str = _DEFAULT_SUMMARY,
                          sync_back: str = _DEFAULT_SYNC_BACK,
                          panel_report: str = _DEFAULT_PANEL_REPORT,
                          decision_protocol: str = _DEFAULT_DECISION_PROTOCOL,
@@ -111,13 +115,20 @@ def render_replay_script(*,
         "PYTHON_BIN=\"${BIO_SFM_PYTHON:-${ENV_PY:-python3}}\"",
         "export PYTHONPATH=\"${PYTHONPATH:-src}\"",
         "export PYTHONNOUSERSITE=\"${PYTHONNOUSERSITE:-1}\"",
+        f"MANIFEST={shlex.quote(manifest)}",
+        f"RECEIPT={shlex.quote(receipt)}",
+        f"SUMMARY={shlex.quote(summary)}",
         f"POSTSUBMIT={shlex.quote(postsubmit)}",
         f"JOB_STATES={shlex.quote(job_states)}",
+        "test -s \"$MANIFEST\"",
+        "test -s \"$RECEIPT\"",
+        "test -s \"$SUMMARY\"",
         "test -s \"$POSTSUBMIT\"",
         "test -s \"$JOB_STATES\"",
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
-            f"--job-states {shlex.quote(job_states)} --require-sync-ready"
+            "--manifest \"$MANIFEST\" --receipt \"$RECEIPT\" --summary \"$SUMMARY\" "
+            "--job-states \"$JOB_STATES\" --require-sync-ready --out-json \"$POSTSUBMIT\""
         ),
         f"bash {shlex.quote(sync_back)}",
         (
@@ -277,8 +288,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--manifest", default=_DEFAULT_MANIFEST)
     ap.add_argument("--postsubmit-status", default=_DEFAULT_POSTSUBMIT)
+    ap.add_argument("--job-states", default=_DEFAULT_JOB_STATES)
+    ap.add_argument("--receipt", default=_DEFAULT_RECEIPT)
+    ap.add_argument("--summary", default=_DEFAULT_SUMMARY)
+    ap.add_argument("--sync-back", default=_DEFAULT_SYNC_BACK)
+    ap.add_argument("--completion-script", default=_DEFAULT_COMPLETION_SCRIPT)
     ap.add_argument("--completion", default=_DEFAULT_COMPLETION)
     ap.add_argument("--panel-report", default=_DEFAULT_PANEL_REPORT)
+    ap.add_argument("--decision-protocol", default=_DEFAULT_DECISION_PROTOCOL)
+    ap.add_argument("--decision-protocol-md", default=_DEFAULT_DECISION_PROTOCOL_MD)
+    ap.add_argument("--submit-ready", default=_DEFAULT_SUBMIT_READY)
+    ap.add_argument("--approval-packet", default=_DEFAULT_APPROVAL_PACKET)
     ap.add_argument("--target-alpha", type=float, default=0.2)
     ap.add_argument("--min-targets", type=int, default=4)
     ap.add_argument("--min-records-per-target", type=int, default=20)
@@ -305,8 +325,18 @@ def main(argv: Optional[List[str]] = None) -> int:
             args.emit_replay_script,
             render_replay_script(
                 manifest=args.manifest,
+                postsubmit=args.postsubmit_status,
+                job_states=args.job_states,
+                receipt=args.receipt,
+                summary=args.summary,
+                sync_back=args.sync_back,
                 panel_report=args.panel_report,
+                decision_protocol=args.decision_protocol,
+                decision_protocol_md=args.decision_protocol_md,
+                submit_ready=args.submit_ready,
+                approval_packet=args.approval_packet,
                 completion=args.completion,
+                completion_script=args.completion_script,
                 out_json=args.out_json,
                 out_md=args.out_md,
                 target_alpha=args.target_alpha,

@@ -142,9 +142,27 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
         self.assertTrue(rep["audit_ok"])
 
     def test_replay_script_requires_sync_ready_and_refreshes_decision_protocol(self):
-        script = render_replay_script(records=["a/records.jsonl", "b/records.jsonl"], min_targets=2)
+        script = render_replay_script(
+            manifest="custom/manifest.json",
+            receipt="custom/receipt.jsonl",
+            summary="custom/summary.json",
+            postsubmit="custom/postsubmit.json",
+            job_states="custom/job_states.json",
+            records=["a/records.jsonl", "b/records.jsonl"],
+            min_targets=2,
+        )
 
         self.assertIn("--require-sync-ready", script)
+        self.assertIn("MANIFEST=custom/manifest.json", script)
+        self.assertIn("RECEIPT=custom/receipt.jsonl", script)
+        self.assertIn("SUMMARY=custom/summary.json", script)
+        self.assertIn("POSTSUBMIT=custom/postsubmit.json", script)
+        self.assertIn("JOB_STATES=custom/job_states.json", script)
+        self.assertIn("--manifest \"$MANIFEST\"", script)
+        self.assertIn("--receipt \"$RECEIPT\"", script)
+        self.assertIn("--summary \"$SUMMARY\"", script)
+        self.assertIn("--job-states \"$JOB_STATES\"", script)
+        self.assertIn("--out-json \"$POSTSUBMIT\"", script)
         self.assertIn("complex_panel_report", script)
         self.assertIn("m6d_w2_panel_decision_protocol", script)
         self.assertIn("m6d_w2_panel_postsync_interpretation", script)
@@ -162,6 +180,9 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
             rc = main([
                 "--manifest", manifest,
                 "--postsubmit-status", postsubmit,
+                "--job-states", os.path.join(d, "job_states.json"),
+                "--receipt", os.path.join(d, "receipt.jsonl"),
+                "--summary", os.path.join(d, "summary.json"),
                 "--completion", os.path.join(d, "missing_completion.json"),
                 "--panel-report", os.path.join(d, "missing_panel.json"),
                 "--min-targets", "2",
@@ -174,12 +195,16 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
                 saved = json.load(fh)
             with open(out_md) as fh:
                 md = fh.read()
+            with open(replay) as fh:
+                replay_text = fh.read()
             replay_exists = os.path.exists(replay)
 
         self.assertEqual(rc, 0)
         self.assertEqual(saved["status"], "not_synced_not_interpretable")
         self.assertIn("Post-Sync Interpretation", md)
         self.assertTrue(replay_exists)
+        self.assertIn("--receipt \"$RECEIPT\"", replay_text)
+        self.assertIn("--summary \"$SUMMARY\"", replay_text)
 
 
 if __name__ == "__main__":

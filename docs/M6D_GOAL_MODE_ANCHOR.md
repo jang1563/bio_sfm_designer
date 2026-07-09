@@ -943,7 +943,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     post-sync interpretation gate
     `results/m6d_w2_target_family_redesign_v11_postsync_interpretation.{json,md}` currently records
     `not_synced_not_interpretable`, emits the guarded replay path for sync-back -> completion ->
-    `complex_panel_report` -> decision-protocol refresh, and keeps `can_claim_w2_generalization=false`.
+    `complex_panel_report` -> decision-protocol refresh, explicitly revalidates postsubmit status with the
+    manifest, submit receipt/summary, and job-state JSON before sync-back, and keeps
+    `can_claim_w2_generalization=false`.
     Do not reuse the earlier generated submit plan that pointed at
     `hpc_outputs/m6d_w2_fresh_discovery_records/...`.
     Cayuga default `python3` is Python 3.6.8 and fails on this repo; set `BIO_SFM_PYTHON`

@@ -299,7 +299,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > post-sync interpretation gate
 > (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsync_interpretation`) currently records
 > `not_synced_not_interpretable`, emits the guarded replay path for sync-back -> completion ->
-> `complex_panel_report` -> decision-protocol refresh, and keeps `can_claim_w2_generalization=false`.
+> `complex_panel_report` -> decision-protocol refresh, explicitly revalidates postsubmit status with the
+> manifest, submit receipt/summary, and job-state JSON before sync-back, and keeps
+> `can_claim_w2_generalization=false`.
 > The panel has not been submitted.
 > A separate source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2
 > generalization.
