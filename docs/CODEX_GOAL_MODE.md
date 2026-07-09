@@ -796,7 +796,7 @@ bash results/m6c_project_external_sync_back.sh
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 25 exact checks and 15 semantic
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 26 exact checks and 15 semantic
   checks, including v11 panel approval, remote-readiness, submission-decision, receipt monitor,
   post-submit status, job-state probe, and post-sync interpretation artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and

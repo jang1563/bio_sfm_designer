@@ -546,7 +546,7 @@ engine installs from GitHub):
 	  and `results/m6d_local_cayuga_mirror_audit.{json,md}` is the no-submit local/Cayuga mirror audit:
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
-	  currently `local_cayuga_mirror_agree` with 25 exact checks and 15 semantic checks,
+	  currently `local_cayuga_mirror_agree` with 26 exact checks and 15 semantic checks,
 	  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
 	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
 	  `panel_postsync_interpretation_predeclared_not_synced`, keeping the next action limited to explicit

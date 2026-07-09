@@ -35,6 +35,7 @@ _EXACT_SHA_PATHS = [
     "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
     "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
     "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
+    "src/bio_sfm_designer/experiments/public_surface_sanitize.py",
     "results/m6d_goal_mode_current_anchor.json",
     "results/m6c_cross_predictor.json",
     "results/m6c_cross_predictor_matches.jsonl",

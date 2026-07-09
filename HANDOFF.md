@@ -625,7 +625,7 @@ synced back, completed, and target-wise certified. It now also records
 `panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle preserves no-submit and
 claim-boundary checks.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 25 exact SHA checks plus 15 semantic JSON checks, including the v11
+and Cayuga artifacts agree across 26 exact SHA checks plus 15 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state
 probe, and post-sync interpretation artifacts; the next action stays limited to explicit panel submission
 approval, sync-back, completion, and target-wise certification.

@@ -45,6 +45,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
             "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
             "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
+            "src/bio_sfm_designer/experiments/public_surface_sanitize.py",
         }
 
         self.assertTrue(expected.issubset(set(_EXACT_SHA_PATHS)))

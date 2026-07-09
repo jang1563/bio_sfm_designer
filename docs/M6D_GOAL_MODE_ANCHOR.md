@@ -985,7 +985,7 @@ goal-mode requirement.
 remaining requirement. Its current W2 execution evidence includes the approved full-14 target-MSA path
 synced back locally with strict `--require-files` passing plus the v11 panel approval/decision/remote-readiness
 boundary; W2 remains incomplete until panel execution, sync-back, completion, and target-wise certification.
-`results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 25 exact SHA
+`results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 26 exact SHA
 checks and 15 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
 submission-decision, receipt monitor, post-submit status, job-state probe, and post-sync interpretation
 artifacts; the mirrored next action is explicit W2 v11 panel approval, then sync-back, completion, and
