@@ -34,6 +34,7 @@ _EXACT_SHA_PATHS = [
     "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
     "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
     "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
+    "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
     "results/m6d_goal_mode_current_anchor.json",
     "results/m6c_cross_predictor.json",
     "results/m6c_cross_predictor_matches.jsonl",
@@ -274,6 +275,19 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "target_alpha",
         "min_targets",
         "min_records_per_target",
+    ],
+    "results/m6d_goal_drift_audit.json": [
+        "status",
+        "audit_ok",
+        "major_direction_drift",
+        "can_mark_goal_complete",
+        "current_state.W2_panel_submission_decision.status",
+        "current_state.W2_panel_submission_decision.decision",
+        "current_state.W2_panel_submission_decision.submitted",
+        "current_state.completion_audit.status",
+        "current_state.completion_audit.can_mark_goal_complete",
+        "current_state.completion_audit.panel_public_approval_bundle_ready",
+        "drift_assessment.execution",
     ],
 }
 

@@ -239,6 +239,11 @@
       "complete": true,
       "status": "closed_loop_round_complete"
     },
+    "completion_audit": {
+      "can_mark_goal_complete": false,
+      "panel_public_approval_bundle_ready": true,
+      "status": "goal_active_w2_remaining"
+    },
     "project_status": "m6_complex_in_progress",
     "remaining": 1
   },

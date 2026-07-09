@@ -44,6 +44,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
             "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
+            "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
         }
 
         self.assertTrue(expected.issubset(set(_EXACT_SHA_PATHS)))
@@ -56,6 +57,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         decision_fields = _JSON_FIELD_SPECS[
             "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
         ]
+        drift_fields = _JSON_FIELD_SPECS["results/m6d_goal_drift_audit.json"]
 
         self.assertIn("postsubmit_status_before_sync", packet_fields)
         self.assertIn("job_state_probe_before_sync", packet_fields)
@@ -89,6 +91,11 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_ready",
             decision_fields,
         )
+        self.assertIn(
+            "current_state.completion_audit.panel_public_approval_bundle_ready",
+            drift_fields,
+        )
+        self.assertIn("drift_assessment.execution", drift_fields)
 
     def test_build_audit_accepts_matching_exact_and_semantic_fields(self):
         with tempfile.TemporaryDirectory() as d:
@@ -214,6 +221,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_receipt_monitor.json"), {"status": "s"})
                 _write_json(os.path.join(root, "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"), {"status": "s"})
+                _write_json(os.path.join(root, "results/m6d_goal_drift_audit.json"), {"status": "s"})
 
             rc = main([
                 "--local-root", local,

@@ -76,6 +76,9 @@ def _completion_audit():
         "audit_ok": True,
         "status": "goal_active_w2_remaining",
         "can_mark_goal_complete": False,
+        "w2_gate": {
+            "panel_public_approval_bundle_ready": True,
+        },
     }
 
 
@@ -564,6 +567,24 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("w2_gate_boundary_drift", kinds)
         self.assertIn("premature_goal_completion_drift", kinds)
+
+    def test_blocks_missing_public_approval_bundle_readiness(self):
+        completion = _completion_audit()
+        completion["w2_gate"].pop("panel_public_approval_bundle_ready")
+
+        rep = build_audit(
+            _project_status(),
+            completion,
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("completion_audit_public_bundle_not_ready", kinds)
 
     def test_blocks_panel_submission_boundary_drift(self):
         runbook = _runbook()

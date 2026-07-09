@@ -502,6 +502,20 @@ def build_audit(
             expected=False,
             observed=completion_audit.get("can_mark_goal_complete"),
         )
+    completion_w2_gate = (
+        completion_audit.get("w2_gate")
+        if isinstance(completion_audit.get("w2_gate"), dict)
+        else {}
+    )
+    if completion_w2_gate.get("panel_public_approval_bundle_ready") is not True:
+        _add_failure(
+            failures,
+            "completion_audit_public_bundle_not_ready",
+            "completion audit must verify the public approval bundle before the goal can remain approval-ready",
+            category="approval_boundary",
+            expected=True,
+            observed=completion_w2_gate.get("panel_public_approval_bundle_ready"),
+        )
 
     if runbook.get("audit_ok") is not True or runbook.get("status") != "explicit_approval_runbook_ready":
         _add_failure(
@@ -1127,6 +1141,13 @@ def build_audit(
             "W2_panel_remote_readiness": panel_remote,
             "W2_panel_submission_decision": panel_submission_decision,
             "W2_panel_postsync_interpretation": panel_postsync,
+            "completion_audit": {
+                "status": completion_audit.get("status"),
+                "can_mark_goal_complete": completion_audit.get("can_mark_goal_complete"),
+                "panel_public_approval_bundle_ready": completion_w2_gate.get(
+                    "panel_public_approval_bundle_ready"
+                ),
+            },
         },
         "drift_assessment": {
             "direction": "aligned" if not major_direction_drift else "drift_detected",
