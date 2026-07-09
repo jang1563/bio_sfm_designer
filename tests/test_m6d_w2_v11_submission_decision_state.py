@@ -20,6 +20,7 @@ def _write_json(path, obj):
 
 
 def _approval_packet():
+    target_ids = ["10XZ_EF", "10YB_GH", "12NP_AH", "10VB_IJ", "10ZO_AB", "1A2Y_BA", "1A6W_HL"]
     return {
         "_path": "/tmp/approval.json",
         "artifact": "m6d_w2_panel_approval_packet",
@@ -35,6 +36,28 @@ def _approval_packet():
         "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
         "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
         "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+        "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+        "target_alpha": 0.2,
+        "approval_scope": {
+            "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+            "target_ids": target_ids,
+            "n_targets": 7,
+            "n_ready_targets": 7,
+            "min_targets": 4,
+            "records_per_target_planned": 100,
+            "planned_design_records": 700,
+            "expected_job_pairs": 7,
+            "expected_slurm_jobs": 14,
+            "job_pair_model": "ProteinMPNN -> Boltz",
+            "target_alpha": 0.2,
+            "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+            "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+            "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+            "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+            "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+            "no_submit": True,
+            "can_claim_w2_generalization": False,
+        },
         "receipt_monitor_after_submit": (
             "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
             "bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
@@ -70,10 +93,12 @@ def _approval_packet():
         "checks": {
             "target_msa_strict_ready": True,
             "panel_preflight_ready": True,
+            "panel_submit_ready_targets": 7,
             "panel_dry_run_no_sbatch": True,
             "panel_guard_no_env_refuses": True,
             "submit_receipt_absent": True,
             "submit_summary_absent": True,
+            "approval_scope_ready": True,
         },
     }
 
@@ -244,6 +269,9 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertIn("W2 v11", rep["approval_disambiguation"]["approval_must_explicitly_name"])
         self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_sync_ready_gate_ok"])
         self.assertTrue(rep["prerequisites"]["approval_packet"]["postsubmit_bridge_ok"])
+        self.assertTrue(rep["prerequisites"]["approval_packet"]["approval_scope_ok"])
+        self.assertEqual(rep["approval_scope"]["planned_design_records"], 700)
+        self.assertEqual(rep["approval_scope"]["expected_slurm_jobs"], 14)
         self.assertTrue(rep["prerequisites"]["remote_submission_readiness"]["shell_syntax_checks_ok"])
         self.assertEqual(rep["prerequisites"]["remote_submission_readiness"]["n_shell_syntax_checks"], 4)
         self.assertEqual(rep["prerequisites"]["project_status"]["w2_panel_remote_shell_syntax_checks"], 4)
@@ -259,6 +287,7 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
             ]
         )
         self.assertIn("does not submit jobs", render_markdown(rep))
+        self.assertIn("Approval Scope", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
         self.assertIn("continuation phrases are approval: `False`", render_markdown(rep))
 
@@ -343,6 +372,19 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
 
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "submission_decision_blocked")
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("approval_packet_not_ready", kinds)
+
+    def test_missing_approval_scope_blocks_decision_state(self):
+        approval = _approval_packet()
+        approval.pop("approval_scope")
+        approval["checks"].pop("approval_scope_ready")
+
+        rep = _build(approval_packet=approval)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["approval_packet"]["approval_scope_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("approval_packet_not_ready", kinds)
 

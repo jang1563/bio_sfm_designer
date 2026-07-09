@@ -72,6 +72,10 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         self.assertIn("postsubmit_sync_ready_gate", fields)
         self.assertIn("postsubmit_status_command_before_sync", fields)
         self.assertIn("postsync_replay_after_sync", fields)
+        self.assertIn("checks.approval_scope_ready", fields)
+        self.assertIn("approval_scope.planned_design_records", fields)
+        self.assertIn("approval_scope.expected_slurm_jobs", fields)
+        self.assertIn("approval_scope.target_alpha", fields)
         self.assertIn("panel_contract.panel_label", decision_fields)
 
     def test_build_readiness_accepts_hash_match_and_semantic_path_drift(self):

@@ -178,7 +178,10 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
     def test_cli_generates_wrapper_guard_and_preflight_without_submit(self):
         with tempfile.TemporaryDirectory() as d:
             manifest = os.path.join(d, "targets.json")
-            _write_json(manifest, {"targets": [_write_target_files(d, "t0"), _write_target_files(d, "t1")]})
+            _write_json(manifest, {
+                "defaults": {"num_seq": 100, "objective": "binder", "seed": 37, "temp": 0.3},
+                "targets": [_write_target_files(d, "t0"), _write_target_files(d, "t1")],
+            })
             shared = os.path.join(d, "m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh")
             _write(shared, "#!/usr/bin/env bash\nset -euo pipefail\necho 'dry-run t0: ProteinMPNN -> c0; Boltz -> r0'\necho 'dry-run t1: ProteinMPNN -> c1; Boltz -> r1'\n")
             os.chmod(shared, 0o755)
@@ -306,6 +309,18 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertFalse(approval_packet["can_claim_w2_generalization"])
             self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
             self.assertEqual(approval_packet["manifest"], manifest)
+            self.assertTrue(approval_packet["checks"]["approval_scope_ready"])
+            self.assertEqual(approval_packet["approval_scope"]["target_ids"], ["t0", "t1"])
+            self.assertEqual(approval_packet["approval_scope"]["n_targets"], 2)
+            self.assertEqual(approval_packet["approval_scope"]["n_ready_targets"], 2)
+            self.assertEqual(approval_packet["approval_scope"]["min_targets"], 2)
+            self.assertEqual(approval_packet["approval_scope"]["records_per_target_planned"], 100)
+            self.assertEqual(approval_packet["approval_scope"]["planned_design_records"], 200)
+            self.assertEqual(approval_packet["approval_scope"]["expected_job_pairs"], 2)
+            self.assertEqual(approval_packet["approval_scope"]["expected_slurm_jobs"], 4)
+            self.assertEqual(approval_packet["approval_scope"]["job_pair_model"], "ProteinMPNN -> Boltz")
+            self.assertEqual(approval_packet["approval_scope"]["target_alpha"], 0.2)
+            self.assertFalse(approval_packet["approval_scope"]["can_claim_w2_generalization"])
             self.assertIn("receipt_monitor.sh", approval_packet["receipt_monitor_after_submit"])
             self.assertIn("postsubmit_driver.sh", approval_packet["postsubmit_driver_after_submit"])
             self.assertEqual(

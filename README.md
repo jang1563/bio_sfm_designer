@@ -348,6 +348,9 @@ engine installs from GitHub):
   locally before postsubmit status. Project status records those invariants as
   `panel_job_state_query_bridge_ok=true` and `panel_postsubmit_bridge_ok=true`.
   The same generator now emits `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.{json,md}`;
+  its approval scope binds the future explicit approval to exactly 7 representative targets,
+  100 planned ProteinMPNN designs per target, 700 planned design records total, 7
+  ProteinMPNN-to-Boltz job pairs, and 14 expected dependent Slurm jobs at target α=0.2.
   `results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.{json,md}` then records
   `post_panel_decision_protocol_ready`, `no_submit=true`, and `can_claim_w2_generalization_now=false`.
   For public handoff/release surfaces, use
@@ -375,7 +378,8 @@ engine installs from GitHub):
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
   `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
   `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-  readiness and 9-step post-approval workflow before the decision can stay approval-ready. Its approval-disambiguation block records that continuation phrases
+  readiness, 9-step post-approval workflow, and matching 7-target/700-design/14-job approval scope
+  before the decision can stay approval-ready. Its approval-disambiguation block records that continuation phrases
   such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job

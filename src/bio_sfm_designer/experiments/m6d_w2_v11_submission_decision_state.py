@@ -178,8 +178,51 @@ def _strict_postsubmit_command_ok(command: Any, approval_packet: Dict[str, Any])
     )
 
 
+def _int_or_none(value: Any) -> Optional[int]:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _approval_scope_ok(scope: Dict[str, Any], approval_packet: Dict[str, Any]) -> bool:
+    checks = approval_packet.get("checks") if isinstance(approval_packet.get("checks"), dict) else {}
+    n_ready = _int_or_none(scope.get("n_ready_targets"))
+    n_targets = _int_or_none(scope.get("n_targets"))
+    min_targets = _int_or_none(scope.get("min_targets"))
+    records_per_target = _int_or_none(scope.get("records_per_target_planned"))
+    planned_records = _int_or_none(scope.get("planned_design_records"))
+    expected_job_pairs = _int_or_none(scope.get("expected_job_pairs"))
+    expected_slurm_jobs = _int_or_none(scope.get("expected_slurm_jobs"))
+    target_ids = scope.get("target_ids")
+    return (
+        bool(scope.get("manifest"))
+        and isinstance(target_ids, list)
+        and n_ready is not None
+        and n_targets is not None
+        and min_targets is not None
+        and len(target_ids) == n_ready
+        and n_ready == checks.get("panel_submit_ready_targets")
+        and n_targets >= n_ready
+        and n_ready >= min_targets
+        and records_per_target is not None
+        and records_per_target > 0
+        and planned_records == n_ready * records_per_target
+        and expected_job_pairs == n_ready
+        and expected_slurm_jobs == n_ready * 2
+        and scope.get("job_pair_model") == "ProteinMPNN -> Boltz"
+        and scope.get("target_alpha") == approval_packet.get("target_alpha")
+        and bool(scope.get("panel_out"))
+        and bool(scope.get("completion_after_sync"))
+        and bool(scope.get("sync_back_after_jobs_finish"))
+        and scope.get("no_submit") is True
+        and scope.get("can_claim_w2_generalization") is False
+    )
+
+
 def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
     checks = approval_packet.get("checks") if isinstance(approval_packet.get("checks"), dict) else {}
+    approval_scope = approval_packet.get("approval_scope") if isinstance(approval_packet.get("approval_scope"), dict) else {}
     required_checks = [
         "target_msa_strict_ready",
         "panel_preflight_ready",
@@ -187,8 +230,10 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         "panel_guard_no_env_refuses",
         "submit_receipt_absent",
         "submit_summary_absent",
+        "approval_scope_ready",
     ]
     checks_ok = all(checks.get(key) is True for key in required_checks)
+    approval_scope_ok = _approval_scope_ok(approval_scope, approval_packet)
     postsubmit_sync_ready_gate_ok = (
         bool(approval_packet.get("postsubmit_status_before_sync"))
         and bool(approval_packet.get("job_state_probe_before_sync"))
@@ -218,6 +263,7 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         and approval_packet.get("can_submit_panel_if_user_explicitly_approves") is True
         and approval_packet.get("can_claim_w2_generalization") is False
         and checks_ok
+        and approval_scope_ok
         and postsubmit_sync_ready_gate_ok
         and postsubmit_bridge_ok
     )
@@ -241,6 +287,8 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         "job_state_query_after_receipt": approval_packet.get("job_state_query_after_receipt"),
         "job_state_probe_sync_after_query": approval_packet.get("job_state_probe_sync_after_query"),
         "job_state_query_bridge_ok": job_state_query_bridge_ok,
+        "approval_scope": approval_scope,
+        "approval_scope_ok": approval_scope_ok,
         "postsubmit_sync_ready_gate": approval_packet.get("postsubmit_sync_ready_gate"),
         "postsubmit_status_command_before_sync": approval_packet.get("postsubmit_status_command_before_sync"),
         "postsync_replay_after_sync": approval_packet.get("postsync_replay_after_sync"),
@@ -522,6 +570,7 @@ def build_decision_state(
             "submit_command_if_approved": approval.get("submit_command_if_approved"),
             "sync_back_command_after_jobs_finish": approval.get("sync_back_command_after_jobs_finish"),
         },
+        "approval_scope": approval.get("approval_scope"),
         "approval_disambiguation": {
             "continuation_phrases_are_approval": False,
             "non_approval_continuation_phrases": list(_NON_APPROVAL_CONTINUATIONS),
@@ -597,7 +646,19 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         lines.append("- direct remote receipt check: `False`")
 
     approval = rep.get("approval") if isinstance(rep.get("approval"), dict) else {}
+    scope = rep.get("approval_scope") if isinstance(rep.get("approval_scope"), dict) else {}
     lines.extend([
+        "",
+        "## Approval Scope",
+        "",
+        f"- manifest: `{scope.get('manifest')}`",
+        f"- targets: `{scope.get('n_ready_targets')}` ready of `{scope.get('n_targets')}` total",
+        f"- target ids: `{', '.join(scope.get('target_ids') or [])}`",
+        f"- planned designs: `{scope.get('planned_design_records')}` "
+        f"({scope.get('records_per_target_planned')} per target)",
+        f"- expected Slurm jobs: `{scope.get('expected_slurm_jobs')}` "
+        f"(`{scope.get('job_pair_model')}` pairs)",
+        f"- target alpha: `{scope.get('target_alpha')}`",
         "",
         "## Approval Boundary",
         "",

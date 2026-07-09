@@ -79,6 +79,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("postsubmit_sync_ready_gate", packet_fields)
         self.assertIn("postsubmit_status_command_before_sync", packet_fields)
         self.assertIn("postsync_replay_after_sync", packet_fields)
+        self.assertIn("approval_scope.planned_design_records", packet_fields)
+        self.assertIn("approval_scope.expected_slurm_jobs", packet_fields)
+        self.assertIn("approval_scope.target_alpha", packet_fields)
         self.assertIn(
             "workstreams.W2_multi_target_panel.panel_postsubmit_sync_ready_gate_ok",
             status_fields,
@@ -106,6 +109,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
+        self.assertIn("approval_scope.planned_design_records", decision_fields)
+        self.assertIn("approval_scope.expected_slurm_jobs", decision_fields)
+        self.assertIn("prerequisites.approval_packet.approval_scope_ok", decision_fields)
         self.assertIn(
             "prerequisites.remote_submission_readiness.n_shell_syntax_checks",
             decision_fields,
@@ -157,6 +163,9 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             completion_fields,
         )
         self.assertIn("prerequisites.remote_readiness.n_exact_checks", public_bundle_fields)
+        self.assertIn("approval_scope.planned_design_records", public_bundle_fields)
+        self.assertIn("approval_scope.expected_slurm_jobs", public_bundle_fields)
+        self.assertIn("approval_scope.target_alpha", public_bundle_fields)
         self.assertIn("prerequisites.remote_readiness.n_shell_syntax_checks", public_bundle_fields)
         self.assertIn("prerequisites.remote_readiness.shell_syntax_checks_ok", public_bundle_fields)
         self.assertIn("post_approval_workflow.manual_step_count", public_bundle_fields)

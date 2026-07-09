@@ -12,6 +12,15 @@ Can claim W2 generalization: `False`.
 - continuation phrases are approval: `False`
 - machine gate: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
 
+## Approval Scope
+
+- manifest: `configs/m6d_w2_target_family_redesign_v11_representative_targets.json`
+- targets: `7` ready of `7` total
+- target ids: `10XZ_EF, 10YB_GH, 12NP_AH, 10VB_IJ, 10ZO_AB, 1A2Y_BA, 1A6W_HL`
+- planned designs: `700` (100 per target)
+- expected Slurm jobs: `14` (`ProteinMPNN -> Boltz` pairs)
+- target alpha: `0.2`
+
 ## Portable Commands
 
 ### setup_environment

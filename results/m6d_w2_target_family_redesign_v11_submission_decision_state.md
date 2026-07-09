@@ -28,13 +28,22 @@ Can claim W2 generalization: `False`.
 - remote `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
 - remote `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
 
+## Approval Scope
+
+- manifest: `configs/m6d_w2_target_family_redesign_v11_representative_targets.json`
+- targets: `7` ready of `7` total
+- target ids: `10XZ_EF, 10YB_GH, 12NP_AH, 10VB_IJ, 10ZO_AB, 1A2Y_BA, 1A6W_HL`
+- planned designs: `700` (100 per target)
+- expected Slurm jobs: `14` (`ProteinMPNN -> Boltz` pairs)
+- target alpha: `0.2`
+
 ## Approval Boundary
 
 - required env: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
 - submit command if explicitly approved:
 
 ```bash
-ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'
+ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && BIO_SFM_PYTHON=${BIO_SFM_PYTHON:?set BIO_SFM_PYTHON} PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'
 ```
 
 Postsubmit sync-ready gate before record sync-back:

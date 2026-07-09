@@ -69,6 +69,7 @@ def _runbook():
 
 
 def _packet(command=STRICT_COMMAND):
+    target_ids = ["10XZ_EF", "10YB_GH", "12NP_AH", "10VB_IJ", "10ZO_AB", "1A2Y_BA", "1A6W_HL"]
     return {
         "_source_path": "results/packet.json",
         "status": "panel_approval_packet_ready",
@@ -85,6 +86,26 @@ def _packet(command=STRICT_COMMAND):
         "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
         "postsubmit_status_command_before_sync": command,
         "target_alpha": 0.2,
+        "approval_scope": {
+            "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+            "target_ids": target_ids,
+            "n_targets": 7,
+            "n_ready_targets": 7,
+            "min_targets": 4,
+            "records_per_target_planned": 100,
+            "planned_design_records": 700,
+            "expected_job_pairs": 7,
+            "expected_slurm_jobs": 14,
+            "job_pair_model": "ProteinMPNN -> Boltz",
+            "target_alpha": 0.2,
+            "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+            "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+            "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+            "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+            "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+            "no_submit": True,
+            "can_claim_w2_generalization": False,
+        },
     }
 
 
@@ -158,6 +179,9 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         )
         self.assertTrue(rep["postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
         self.assertEqual(rep["post_approval_workflow"]["manual_step_count"], 9)
+        self.assertEqual(rep["approval_scope"]["n_ready_targets"], 7)
+        self.assertEqual(rep["approval_scope"]["planned_design_records"], 700)
+        self.assertEqual(rep["approval_scope"]["expected_slurm_jobs"], 14)
         self.assertTrue(rep["post_approval_workflow"]["all_manual_commands_present"])
         self.assertTrue(rep["post_approval_workflow"]["requires_sync_ready_before_record_sync"])
         self.assertTrue(rep["post_approval_workflow"]["includes_receipt_monitor"])
@@ -171,8 +195,25 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertTrue(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
+        self.assertIn("Approval Scope", render_markdown(rep))
         self.assertIn("Post-Approval Workflow", render_markdown(rep))
         self.assertIn("remote shell syntax checks ok: `True`", render_markdown(rep))
+
+    def test_missing_approval_scope_blocks_bundle(self):
+        packet = _packet()
+        packet.pop("approval_scope")
+
+        rep = build_bundle(
+            runbook=_runbook(),
+            packet=packet,
+            preflight=_preflight(),
+            decision_state=_decision(),
+            remote_readiness=_remote(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertIn("approval_scope_not_ready", {f["kind"] for f in rep["failures"]})
 
     def test_non_strict_postsubmit_command_blocks_bundle(self):
         rep = build_bundle(

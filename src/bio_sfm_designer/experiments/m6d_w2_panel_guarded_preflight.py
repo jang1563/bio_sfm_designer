@@ -82,6 +82,127 @@ def _record_paths(manifest_path: str) -> List[str]:
     return paths
 
 
+def _manifest_target_ids(manifest: Optional[Dict[str, Any]]) -> List[str]:
+    if not isinstance(manifest, dict):
+        return []
+    ids = []
+    for index, target in enumerate(manifest.get("targets", [])):
+        if isinstance(target, dict):
+            ids.append(str(target.get("id", f"target_{index}")))
+    return ids
+
+
+def _int_or_none(value: Any) -> Optional[int]:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _build_approval_scope(
+    *,
+    preflight: Dict[str, Any],
+    runbook: Dict[str, Any],
+    manifest_report: Dict[str, Any],
+    manifest_obj: Optional[Dict[str, Any]],
+) -> Dict[str, Any]:
+    submit_ready = preflight.get("submit_ready") if isinstance(preflight.get("submit_ready"), dict) else {}
+    post_submit = runbook.get("post_submit") if isinstance(runbook.get("post_submit"), dict) else {}
+    submit_state = runbook.get("submit_state") if isinstance(runbook.get("submit_state"), dict) else {}
+    manifest_defaults = manifest_obj.get("defaults") if isinstance(manifest_obj, dict) else {}
+    if not isinstance(manifest_defaults, dict):
+        manifest_defaults = {}
+
+    target_ids = preflight.get("target_ids")
+    if not isinstance(target_ids, list) or not target_ids:
+        target_ids = runbook.get("target_ids")
+    if not isinstance(target_ids, list) or not target_ids:
+        target_ids = manifest_report.get("ready_targets")
+    if not isinstance(target_ids, list) or not target_ids:
+        target_ids = manifest_report.get("target_ids")
+    if not isinstance(target_ids, list) or not target_ids:
+        target_ids = _manifest_target_ids(manifest_obj)
+    target_ids = [str(target_id) for target_id in target_ids]
+
+    n_ready_targets = _int_or_none(submit_ready.get("n_ready_targets"))
+    if n_ready_targets is None:
+        n_ready_targets = _int_or_none(manifest_report.get("n_ready_targets"))
+    if n_ready_targets is None:
+        n_ready_targets = len(target_ids)
+
+    n_targets = _int_or_none(submit_ready.get("n_targets"))
+    if n_targets is None:
+        n_targets = _int_or_none(manifest_report.get("n_targets"))
+    if n_targets is None:
+        n_targets = len(target_ids)
+
+    min_targets = _int_or_none(post_submit.get("min_targets"))
+    if min_targets is None:
+        min_targets = _int_or_none(submit_ready.get("min_targets"))
+    if min_targets is None:
+        min_targets = _int_or_none(manifest_report.get("min_targets"))
+
+    records_per_target = _int_or_none(manifest_defaults.get("num_seq"))
+    planned_records = n_ready_targets * records_per_target if n_ready_targets is not None and records_per_target else None
+    expected_job_pairs = n_ready_targets
+    expected_slurm_jobs = expected_job_pairs * 2 if expected_job_pairs is not None else None
+
+    return {
+        "manifest": runbook.get("manifest") or preflight.get("manifest"),
+        "target_ids": target_ids,
+        "n_targets": n_targets,
+        "n_ready_targets": n_ready_targets,
+        "min_targets": min_targets,
+        "records_per_target_planned": records_per_target,
+        "planned_design_records": planned_records,
+        "expected_job_pairs": expected_job_pairs,
+        "expected_slurm_jobs": expected_slurm_jobs,
+        "job_pair_model": "ProteinMPNN -> Boltz",
+        "target_alpha": post_submit.get("target_alpha"),
+        "panel_out": post_submit.get("panel_out"),
+        "completion_after_sync": post_submit.get("completion_command_after_sync"),
+        "sync_back_after_jobs_finish": post_submit.get("sync_back_command_after_jobs_finish"),
+        "submit_receipt": submit_state.get("submit_receipt"),
+        "submit_summary": submit_state.get("submit_summary"),
+        "no_submit": True,
+        "can_claim_w2_generalization": False,
+    }
+
+
+def _approval_scope_ok(scope: Dict[str, Any], checks: Dict[str, Any]) -> bool:
+    n_ready = _int_or_none(scope.get("n_ready_targets"))
+    n_targets = _int_or_none(scope.get("n_targets"))
+    min_targets = _int_or_none(scope.get("min_targets"))
+    records_per_target = _int_or_none(scope.get("records_per_target_planned"))
+    planned_records = _int_or_none(scope.get("planned_design_records"))
+    expected_job_pairs = _int_or_none(scope.get("expected_job_pairs"))
+    expected_slurm_jobs = _int_or_none(scope.get("expected_slurm_jobs"))
+    target_ids = scope.get("target_ids")
+    return (
+        bool(scope.get("manifest"))
+        and isinstance(target_ids, list)
+        and n_ready is not None
+        and n_targets is not None
+        and min_targets is not None
+        and len(target_ids) == n_ready
+        and n_ready == checks.get("panel_submit_ready_targets")
+        and n_targets >= n_ready
+        and n_ready >= min_targets
+        and records_per_target is not None
+        and records_per_target > 0
+        and planned_records == n_ready * records_per_target
+        and expected_job_pairs == n_ready
+        and expected_slurm_jobs == n_ready * 2
+        and scope.get("job_pair_model") == "ProteinMPNN -> Boltz"
+        and scope.get("target_alpha") is not None
+        and bool(scope.get("panel_out"))
+        and bool(scope.get("completion_after_sync"))
+        and bool(scope.get("sync_back_after_jobs_finish"))
+        and scope.get("no_submit") is True
+        and scope.get("can_claim_w2_generalization") is False
+    )
+
+
 def _completion_command(
     *,
     manifest: str,
@@ -807,6 +928,7 @@ def build_approval_packet(
     manifest_report: Dict[str, Any],
     approval_env_var: str,
     approval_token: str,
+    manifest_obj: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     submit_state = runbook.get("submit_state") if isinstance(runbook.get("submit_state"), dict) else {}
     approval = runbook.get("approval") if isinstance(runbook.get("approval"), dict) else {}
@@ -834,6 +956,13 @@ def build_approval_packet(
         "submit_receipt_absent": submit_state.get("local_submit_receipt_exists") is False,
         "submit_summary_absent": submit_state.get("local_submit_summary_exists") is False,
     }
+    approval_scope = _build_approval_scope(
+        preflight=preflight,
+        runbook=runbook,
+        manifest_report=manifest_report,
+        manifest_obj=manifest_obj,
+    )
+    checks["approval_scope_ready"] = _approval_scope_ok(approval_scope, checks)
     failures = []
     for key in (
         "target_msa_strict_ready",
@@ -842,6 +971,7 @@ def build_approval_packet(
         "panel_guard_no_env_refuses",
         "submit_receipt_absent",
         "submit_summary_absent",
+        "approval_scope_ready",
     ):
         if checks.get(key) is not True:
             failures.append({
@@ -887,6 +1017,7 @@ def build_approval_packet(
         "postsync_replay_after_sync": post_submit.get("postsync_replay_command_after_sync_ready"),
         "panel_out": post_submit.get("panel_out"),
         "target_alpha": post_submit.get("target_alpha"),
+        "approval_scope": approval_scope,
         "checks": checks,
         "claim_boundary": {
             "panel_submission": "allowed only after explicit approval env is supplied",
@@ -905,6 +1036,7 @@ def build_approval_packet(
 
 
 def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
+    scope = rep.get("approval_scope") if isinstance(rep.get("approval_scope"), dict) else {}
     lines = [
         "# M6d W2 Panel Approval Packet",
         "",
@@ -912,6 +1044,17 @@ def render_approval_packet_markdown(rep: Dict[str, Any]) -> str:
         f"Approval packet ready: `{rep.get('approval_packet_ready')}`.",
         f"Can submit panel if explicitly approved: `{rep.get('can_submit_panel_if_user_explicitly_approves')}`.",
         f"Can claim W2 generalization: `{rep.get('can_claim_w2_generalization')}`.",
+        "",
+        "Approval scope:",
+        "",
+        f"- manifest: `{scope.get('manifest')}`",
+        f"- targets: `{scope.get('n_ready_targets')}` ready of `{scope.get('n_targets')}` total",
+        f"- target ids: `{', '.join(scope.get('target_ids') or [])}`",
+        f"- planned designs: `{scope.get('planned_design_records')}` "
+        f"({scope.get('records_per_target_planned')} per target)",
+        f"- expected Slurm jobs: `{scope.get('expected_slurm_jobs')}` "
+        f"(`{scope.get('job_pair_model')}` pairs)",
+        f"- target alpha: `{scope.get('target_alpha')}`",
         "",
         "Required approval environment:",
         "",
@@ -1224,6 +1367,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         manifest_report=manifest_report,
         approval_env_var=args.approval_env_var,
         approval_token=args.approval_token,
+        manifest_obj=_load_json(args.manifest),
     )
     _write_json(args.approval_packet_out_json, approval_packet)
     _write_text(args.approval_packet_out_md, render_approval_packet_markdown(approval_packet))

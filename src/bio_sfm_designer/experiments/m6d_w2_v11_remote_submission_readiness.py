@@ -101,6 +101,13 @@ _SEMANTIC_JSON_FIELDS = {
         "checks.panel_guard_no_env_refuses",
         "checks.submit_receipt_absent",
         "checks.submit_summary_absent",
+        "checks.approval_scope_ready",
+        "approval_scope.n_ready_targets",
+        "approval_scope.records_per_target_planned",
+        "approval_scope.planned_design_records",
+        "approval_scope.expected_job_pairs",
+        "approval_scope.expected_slurm_jobs",
+        "approval_scope.target_alpha",
     ],
     "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json": [
         "status",

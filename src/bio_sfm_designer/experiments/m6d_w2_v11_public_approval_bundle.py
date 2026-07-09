@@ -46,6 +46,26 @@ _MANUAL_WORKFLOW_COMMAND_KEYS = (
     "completion_after_sync",
     "postsync_replay",
 )
+_APPROVAL_SCOPE_KEYS = (
+    "manifest",
+    "target_ids",
+    "n_targets",
+    "n_ready_targets",
+    "min_targets",
+    "records_per_target_planned",
+    "planned_design_records",
+    "expected_job_pairs",
+    "expected_slurm_jobs",
+    "job_pair_model",
+    "target_alpha",
+    "panel_out",
+    "completion_after_sync",
+    "sync_back_after_jobs_finish",
+    "submit_receipt",
+    "submit_summary",
+    "no_submit",
+    "can_claim_w2_generalization",
+)
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -83,6 +103,51 @@ def _strict_postsubmit_command_ok(command: Any, packet: Dict[str, Any]) -> bool:
         "m6d_w2_panel_postsubmit_status" in text
         and all(flag in text for flag in _STRICT_POSTSUBMIT_FLAGS)
         and all(str(path) in text for path in required_paths if path)
+    )
+
+
+def _int_or_none(value: Any) -> Optional[int]:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _public_approval_scope(packet: Dict[str, Any]) -> Dict[str, Any]:
+    scope = packet.get("approval_scope") if isinstance(packet.get("approval_scope"), dict) else {}
+    return {key: scope.get(key) for key in _APPROVAL_SCOPE_KEYS}
+
+
+def _approval_scope_ok(scope: Dict[str, Any], packet: Dict[str, Any]) -> bool:
+    n_ready = _int_or_none(scope.get("n_ready_targets"))
+    n_targets = _int_or_none(scope.get("n_targets"))
+    min_targets = _int_or_none(scope.get("min_targets"))
+    records_per_target = _int_or_none(scope.get("records_per_target_planned"))
+    planned_records = _int_or_none(scope.get("planned_design_records"))
+    expected_job_pairs = _int_or_none(scope.get("expected_job_pairs"))
+    expected_slurm_jobs = _int_or_none(scope.get("expected_slurm_jobs"))
+    target_ids = scope.get("target_ids")
+    return (
+        bool(scope.get("manifest"))
+        and isinstance(target_ids, list)
+        and n_ready is not None
+        and n_targets is not None
+        and min_targets is not None
+        and len(target_ids) == n_ready
+        and n_targets >= n_ready
+        and n_ready >= min_targets
+        and records_per_target is not None
+        and records_per_target > 0
+        and planned_records == n_ready * records_per_target
+        and expected_job_pairs == n_ready
+        and expected_slurm_jobs == n_ready * 2
+        and scope.get("job_pair_model") == "ProteinMPNN -> Boltz"
+        and scope.get("target_alpha") == packet.get("target_alpha")
+        and bool(scope.get("panel_out"))
+        and bool(scope.get("completion_after_sync"))
+        and bool(scope.get("sync_back_after_jobs_finish"))
+        and scope.get("no_submit") is True
+        and scope.get("can_claim_w2_generalization") is False
     )
 
 
@@ -245,6 +310,7 @@ def build_bundle(
     if not isinstance(postsubmit_driver_polling, dict):
         postsubmit_driver_polling = {}
     post_approval_workflow = _post_approval_workflow(commands, postsubmit_driver_polling)
+    approval_scope = _public_approval_scope(packet)
     remote_shell_syntax_ok = _shell_syntax_checks_ok(remote_readiness)
     failures: List[Dict[str, Any]] = []
     if runbook.get("status") != "approval_runbook_ready_not_submitted":
@@ -259,6 +325,11 @@ def build_bundle(
         })
     if packet.get("can_claim_w2_generalization") is not False:
         failures.append({"kind": "approval_packet_claim_boundary_drift", "observed": packet.get("can_claim_w2_generalization")})
+    if not _approval_scope_ok(approval_scope, packet):
+        failures.append({
+            "kind": "approval_scope_not_ready",
+            "observed": approval_scope,
+        })
     if preflight.get("status") != "panel_preflight_dry_run_passed_not_submitted" or preflight.get("audit_ok") is not True:
         failures.append({
             "kind": "preflight_not_ready",
@@ -366,6 +437,7 @@ def build_bundle(
             "min_records_per_target": (runbook.get("post_submit") or {}).get("min_records_per_target")
             if isinstance(runbook.get("post_submit"), dict) else None,
         },
+        "approval_scope": approval_scope,
         "portable_commands": commands,
         "post_approval_workflow": post_approval_workflow,
         "postsubmit_driver_polling": postsubmit_driver_polling,
@@ -392,6 +464,7 @@ def build_bundle(
 def render_markdown(rep: Dict[str, Any]) -> str:
     commands = rep.get("portable_commands") if isinstance(rep.get("portable_commands"), dict) else {}
     workflow = rep.get("post_approval_workflow") if isinstance(rep.get("post_approval_workflow"), dict) else {}
+    scope = rep.get("approval_scope") if isinstance(rep.get("approval_scope"), dict) else {}
     lines = [
         "# W2 v11 Public Approval Bundle",
         "",
@@ -406,6 +479,17 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- approval must name: `{rep.get('approval_boundary', {}).get('approval_must_explicitly_name')}`",
         f"- continuation phrases are approval: `{rep.get('approval_boundary', {}).get('continuation_phrases_are_approval')}`",
         f"- machine gate: `{rep.get('approval_boundary', {}).get('machine_gate')}`",
+        "",
+        "## Approval Scope",
+        "",
+        f"- manifest: `{scope.get('manifest')}`",
+        f"- targets: `{scope.get('n_ready_targets')}` ready of `{scope.get('n_targets')}` total",
+        f"- target ids: `{', '.join(scope.get('target_ids') or [])}`",
+        f"- planned designs: `{scope.get('planned_design_records')}` "
+        f"({scope.get('records_per_target_planned')} per target)",
+        f"- expected Slurm jobs: `{scope.get('expected_slurm_jobs')}` "
+        f"(`{scope.get('job_pair_model')}` pairs)",
+        f"- target alpha: `{scope.get('target_alpha')}`",
         "",
         "## Portable Commands",
         "",
