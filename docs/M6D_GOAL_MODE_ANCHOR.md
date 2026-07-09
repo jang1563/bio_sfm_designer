@@ -1001,7 +1001,11 @@ target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` independently audits goal-boundary drift without submitting work:
 current status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`,
 direction aligned, claim boundaries preserved, and execution recorded as
-`panel_postsync_interpretation_predeclared_not_synced`.
+`panel_postsync_interpretation_predeclared_not_synced`. It also records
+`current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the operator
+checklist drifts. The submission-decision latch likewise re-consumes the completion audit's
+operator-checklist verdict, so a stale or incomplete checklist blocks approval-ready status instead of relying
+only on the raw submission-decision artifact.
 Runtime clarification checked on Cayuga: W2 production runs through the `boltz` env with Boltz-2 2.2.1;
 the completed W3 comparator uses the separate `chai1` env with `chai_lab`/`chai-lab` 0.6.1. These are
 separate predictor/protocol records and must not be pooled without the adjudication rule below.

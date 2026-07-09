@@ -303,7 +303,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
 > readiness before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
 > submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
-> 14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. Tracked result/status artifacts are public-safe and
+> 14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision latch
+> re-consumes the completion audit's operator-checklist verdict, so a stale or incomplete checklist blocks
+> approval-ready status instead of relying only on the raw submission-decision artifact. Tracked result/status artifacts are public-safe and
 > use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
 > in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
 > and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked
@@ -641,7 +643,9 @@ probe, and post-sync interpretation artifacts; the next action stays limited to 
 approval, sync-back, completion, and target-wise certification.
 `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit: current
 status is `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and
-execution is `panel_postsync_interpretation_predeclared_not_synced`; it keeps the next action limited to
+execution is `panel_postsync_interpretation_predeclared_not_synced`; it also records
+`current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the operator
+checklist drifts. It keeps the next action limited to
 explicit W2 v11 panel approval followed by sync-back, completion, target-wise reporting, and refreshed
 post-sync interpretation.
 It also understands the second-predictor contract report, so W3 can report

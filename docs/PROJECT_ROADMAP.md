@@ -445,8 +445,10 @@ Allowed decisions:
 	   no-submit submission-decision state records `awaiting_explicit_panel_submission_approval`,
 	   `submitted=false`, local/remote receipt absence, and `can_claim_w2_generalization=false`, with an
 	   `operator_approval_checklist` for the guarded submit entrypoint, postsubmit driver, post-sync replay,
-	   700 planned designs, 14 expected Slurm jobs, and explicit approval phrase. Goal drift
-   now records execution as `panel_postsync_interpretation_predeclared_not_synced`. Tracked result/status
+	   700 planned designs, 14 expected Slurm jobs, and explicit approval phrase. The decision latch
+	   re-consumes the completion audit's operator-checklist verdict, and goal drift now records
+	   `operator_checklist_ok=true` while execution remains
+	   `panel_postsync_interpretation_predeclared_not_synced`. Tracked result/status
    artifacts are public-safe placeholders; private executable Cayuga commands remain only in ignored local
    runbook/approval-packet artifacts. The
    next W2 decision is whether to explicitly approve the corrected 7-target v11 ProteinMPNN/Boltz panel;

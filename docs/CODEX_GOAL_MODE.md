@@ -198,12 +198,14 @@ Current state:
   checks, and 10 shell syntax checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches
   the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
-	  writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
-	  `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-	  `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-	  readiness before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
-	  submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
-	  14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. Tracked result/status artifacts are public-safe and
+  writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
+  `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
+  `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
+  readiness before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded
+  submit entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
+  14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision latch
+  re-consumes the completion audit's operator-checklist verdict, so a stale or incomplete checklist blocks
+  approval-ready status instead of relying only on the raw submission-decision artifact. Tracked result/status artifacts are public-safe and
   use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
   in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
   and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked
@@ -800,7 +802,9 @@ bash results/m6c_project_external_sync_back.sh
   v11 approval bundle passes its no-submit/claim-boundary checks.
 - `results/m6d_goal_drift_audit.{json,md}` is the standalone no-submit goal-boundary drift audit. The
   current honest state is `audit_ok=true`, `major_direction_drift=false`, direction aligned, claim
-  boundaries preserved, and execution `panel_postsync_interpretation_predeclared_not_synced`; next action is
+  boundaries preserved, and execution `panel_postsync_interpretation_predeclared_not_synced`; it also records
+  `current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the operator
+  checklist drifts. The next action is
   explicit W2 v11 panel approval only, followed by sync-back, completion, target-wise reporting, and refreshed
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares

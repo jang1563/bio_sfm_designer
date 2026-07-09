@@ -379,14 +379,16 @@ engine installs from GitHub):
   no longer matches the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
-	  `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
-	  `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
-	  readiness, 9-step post-approval workflow, and matching 7-target/700-design/14-job approval scope
-	  before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded submit
-	  entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
-	  14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. Its
-	  approval-disambiguation block records that continuation phrases
-  such as `resume goal`, `go ahead`, and `continue` are not approval. The post-submit status gate
+  `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt absence, and
+  `can_claim_w2_generalization=false`; it also requires the completion audit's public approval bundle
+  readiness, 9-step post-approval workflow, and matching 7-target/700-design/14-job approval scope
+  before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded submit
+  entrypoint, postsubmit driver, post-sync replay, local/remote receipt absence, 700 planned designs,
+  14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The decision
+  latch now re-consumes the completion audit's operator-checklist verdict, so a stale or incomplete
+  checklist blocks approval-ready status instead of relying only on the raw submission-decision artifact.
+  Its approval-disambiguation block records that continuation phrases such as `resume goal`, `go ahead`,
+  and `continue` are not approval. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
   `not_submitted`; after explicit approval it validates the submit receipt/summary plus optional Slurm job
   states before allowing sync-back. The no-submit receipt monitor
@@ -562,11 +564,12 @@ engine installs from GitHub):
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
 	  currently `local_cayuga_mirror_agree` with 30 exact checks and 16 semantic checks,
-	  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
-	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
-	  `panel_postsync_interpretation_predeclared_not_synced`, keeping the next action limited to explicit
-	  W2 v11 panel approval followed by sync-back, completion, target-wise reporting, and refreshed
-	  post-sync interpretation,
+		  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
+		  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
+		  `panel_postsync_interpretation_predeclared_not_synced`; it also records
+		  `current_state.W2_panel_submission_decision.operator_checklist_ok=true` and fails closed if the
+		  operator checklist drifts, keeping the next action limited to explicit W2 v11 panel approval followed
+		  by sync-back, completion, target-wise reporting, and refreshed post-sync interpretation,
 	  so the same dashboard refresh can be replayed exactly,
 	  `--predictor-sync-back-plan` preserves the W3 second-predictor sync/rerun script in status and replay artifacts,
   `--batch-sync-back-plan` preserves the W4 missing-batch sync/rerun script in status and replay artifacts,
