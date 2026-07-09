@@ -127,9 +127,31 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks_ok", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks_ok", completion_fields)
+        self.assertIn("w2_gate.panel_public_approval_bundle_workflow_step_count", completion_fields)
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_includes_postsync_interpretation",
+            completion_fields,
+        )
         self.assertIn("prerequisites.remote_readiness.n_exact_checks", public_bundle_fields)
         self.assertIn("prerequisites.remote_readiness.n_shell_syntax_checks", public_bundle_fields)
         self.assertIn("prerequisites.remote_readiness.shell_syntax_checks_ok", public_bundle_fields)
+        self.assertIn("post_approval_workflow.manual_step_count", public_bundle_fields)
+        self.assertIn("post_approval_workflow.all_manual_commands_present", public_bundle_fields)
+        self.assertIn(
+            "post_approval_workflow.requires_sync_ready_before_record_sync",
+            public_bundle_fields,
+        )
+        self.assertIn("post_approval_workflow.includes_sync_back", public_bundle_fields)
+        self.assertIn("post_approval_workflow.includes_completion", public_bundle_fields)
+        self.assertIn("post_approval_workflow.includes_postsync_interpretation", public_bundle_fields)
+        self.assertIn(
+            "post_approval_workflow.driver_proceeds_only_when_sync_ready",
+            public_bundle_fields,
+        )
         self.assertIn(
             "current_state.completion_audit.panel_public_approval_bundle_ready",
             drift_fields,

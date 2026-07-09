@@ -52,6 +52,9 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel public approval bundle ready: `True`
 - W2 panel public approval bundle remote shell syntax checks: `10`
 - W2 panel public approval bundle remote shell syntax checks ok: `True`
+- W2 panel public approval bundle workflow steps: `9`
+- W2 panel public approval bundle workflow sync-ready before record sync: `True`
+- W2 panel public approval bundle workflow includes post-sync interpretation: `True`
 - W3 standalone audit ok: `True`
 - W3 positive claim supported: `False`
 

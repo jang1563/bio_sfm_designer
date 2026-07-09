@@ -306,6 +306,17 @@ def _panel_public_approval_bundle():
                 "--require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
             )
         },
+        "post_approval_workflow": {
+            "manual_step_count": 9,
+            "all_manual_commands_present": True,
+            "requires_sync_ready_before_record_sync": True,
+            "includes_receipt_monitor": True,
+            "includes_job_state_query": True,
+            "includes_sync_back": True,
+            "includes_completion": True,
+            "includes_postsync_interpretation": True,
+            "driver_proceeds_only_when_sync_ready": True,
+        },
         "failures": [],
     }
 
@@ -643,8 +654,45 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_can_claim_w2_generalization"])
         self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks"], 4)
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks_ok"])
+        self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_workflow_step_count"], 9)
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_all_commands_present"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_sync_ready_before_record_sync"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_includes_postsync_interpretation"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_sync_ready_only"])
         self.assertIn("W2 panel public approval bundle ready: `True`", render_markdown(rep))
         self.assertIn("W2 panel public approval bundle remote shell syntax checks ok: `True`", render_markdown(rep))
+        self.assertIn("W2 panel public approval bundle workflow steps: `9`", render_markdown(rep))
+
+    def test_public_approval_bundle_missing_workflow_blocks_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            bundle = _panel_public_approval_bundle()
+            bundle.pop("post_approval_workflow")
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                bundle,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertIsNone(rep["w2_gate"]["panel_public_approval_bundle_workflow_step_count"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_public_approval_bundle_workflow_incomplete", kinds)
 
     def test_v11_public_approval_bundle_blocks_boundary_drift(self):
         with tempfile.TemporaryDirectory() as d:

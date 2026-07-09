@@ -35,6 +35,17 @@ _STRICT_POSTSUBMIT_FLAGS = (
     "--require-sync-ready",
     "--out-json",
 )
+_MANUAL_WORKFLOW_COMMAND_KEYS = (
+    "setup_environment",
+    "submit_if_explicitly_approved",
+    "receipt_monitor_after_submit",
+    "job_state_query_after_receipt",
+    "sync_job_state_probe_after_query",
+    "strict_postsubmit_status_before_sync",
+    "sync_back_after_sync_ready",
+    "completion_after_sync",
+    "postsync_replay",
+)
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -125,6 +136,68 @@ def _portable_commands(runbook: Dict[str, Any], packet: Dict[str, Any]) -> Dict[
     }
 
 
+def _command_present(commands: Dict[str, str], key: str) -> bool:
+    text = str(commands.get(key) or "").strip()
+    return bool(text) and text != "bash"
+
+
+def _post_approval_workflow(
+    commands: Dict[str, str],
+    postsubmit_driver_polling: Dict[str, Any],
+) -> Dict[str, Any]:
+    manual_steps: List[Dict[str, Any]] = []
+    for i, key in enumerate(_MANUAL_WORKFLOW_COMMAND_KEYS, start=1):
+        manual_steps.append({
+            "step": i,
+            "id": key,
+            "command_key": key,
+            "command_present": _command_present(commands, key),
+            "requires_explicit_approval": key == "submit_if_explicitly_approved",
+            "is_sync_ready_gate": key == "strict_postsubmit_status_before_sync",
+        })
+    manual_step_ids = [str(step["id"]) for step in manual_steps]
+    strict_i = manual_step_ids.index("strict_postsubmit_status_before_sync")
+    sync_i = manual_step_ids.index("sync_back_after_sync_ready")
+    return {
+        "manual_steps": manual_steps,
+        "manual_step_count": len(manual_steps),
+        "manual_step_ids": manual_step_ids,
+        "all_manual_commands_present": all(step["command_present"] is True for step in manual_steps),
+        "strict_sync_ready_gate_step": "strict_postsubmit_status_before_sync",
+        "requires_sync_ready_before_record_sync": (
+            strict_i < sync_i
+            and "--require-sync-ready" in str(commands.get("strict_postsubmit_status_before_sync") or "")
+        ),
+        "includes_receipt_monitor": "receipt_monitor_after_submit" in manual_step_ids,
+        "includes_job_state_query": "job_state_query_after_receipt" in manual_step_ids,
+        "includes_job_state_probe_sync": "sync_job_state_probe_after_query" in manual_step_ids,
+        "includes_sync_back": "sync_back_after_sync_ready" in manual_step_ids,
+        "includes_completion": "completion_after_sync" in manual_step_ids,
+        "includes_postsync_interpretation": "postsync_replay" in manual_step_ids,
+        "driver_command_key": "postsubmit_driver_after_submit",
+        "driver_command_present": _command_present(commands, "postsubmit_driver_after_submit"),
+        "driver_proceeds_only_when_sync_ready": (
+            postsubmit_driver_polling.get("proceeds_only_when_sync_ready") is True
+        ),
+    }
+
+
+def _post_approval_workflow_ok(workflow: Dict[str, Any]) -> bool:
+    return (
+        workflow.get("manual_step_count") == len(_MANUAL_WORKFLOW_COMMAND_KEYS)
+        and workflow.get("all_manual_commands_present") is True
+        and workflow.get("requires_sync_ready_before_record_sync") is True
+        and workflow.get("includes_receipt_monitor") is True
+        and workflow.get("includes_job_state_query") is True
+        and workflow.get("includes_job_state_probe_sync") is True
+        and workflow.get("includes_sync_back") is True
+        and workflow.get("includes_completion") is True
+        and workflow.get("includes_postsync_interpretation") is True
+        and workflow.get("driver_command_present") is True
+        and workflow.get("driver_proceeds_only_when_sync_ready") is True
+    )
+
+
 def _forbidden_public_snippets() -> List[str]:
     snippets = list(_BASE_FORBIDDEN_PUBLIC_SNIPPETS)
     for value in (
@@ -171,6 +244,7 @@ def build_bundle(
     postsubmit_driver_polling = post.get("postsubmit_driver_polling")
     if not isinstance(postsubmit_driver_polling, dict):
         postsubmit_driver_polling = {}
+    post_approval_workflow = _post_approval_workflow(commands, postsubmit_driver_polling)
     remote_shell_syntax_ok = _shell_syntax_checks_ok(remote_readiness)
     failures: List[Dict[str, Any]] = []
     if runbook.get("status") != "approval_runbook_ready_not_submitted":
@@ -221,6 +295,24 @@ def build_bundle(
         failures.append({
             "kind": "strict_postsubmit_command_not_portable_or_complete",
             "observed": commands.get("strict_postsubmit_status_before_sync"),
+        })
+    if not _post_approval_workflow_ok(post_approval_workflow):
+        failures.append({
+            "kind": "post_approval_workflow_not_complete",
+            "observed": {
+                "manual_step_count": post_approval_workflow.get("manual_step_count"),
+                "all_manual_commands_present": post_approval_workflow.get("all_manual_commands_present"),
+                "requires_sync_ready_before_record_sync": post_approval_workflow.get(
+                    "requires_sync_ready_before_record_sync"
+                ),
+                "includes_postsync_interpretation": post_approval_workflow.get(
+                    "includes_postsync_interpretation"
+                ),
+                "driver_command_present": post_approval_workflow.get("driver_command_present"),
+                "driver_proceeds_only_when_sync_ready": post_approval_workflow.get(
+                    "driver_proceeds_only_when_sync_ready"
+                ),
+            },
         })
 
     bundle: Dict[str, Any] = {
@@ -275,6 +367,7 @@ def build_bundle(
             if isinstance(runbook.get("post_submit"), dict) else None,
         },
         "portable_commands": commands,
+        "post_approval_workflow": post_approval_workflow,
         "postsubmit_driver_polling": postsubmit_driver_polling,
         "claim_boundary": (
             "not W2 evidence until explicit approval, successful submit receipt, completed jobs, "
@@ -298,6 +391,7 @@ def build_bundle(
 
 def render_markdown(rep: Dict[str, Any]) -> str:
     commands = rep.get("portable_commands") if isinstance(rep.get("portable_commands"), dict) else {}
+    workflow = rep.get("post_approval_workflow") if isinstance(rep.get("post_approval_workflow"), dict) else {}
     lines = [
         "# W2 v11 Public Approval Bundle",
         "",
@@ -329,6 +423,23 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "postsync_replay",
     ):
         lines.extend([f"### {key}", "", "```bash", str(commands.get(key) or ""), "```", ""])
+    lines.extend([
+        "## Post-Approval Workflow",
+        "",
+        f"- manual step count: `{workflow.get('manual_step_count')}`",
+        f"- all manual commands present: `{workflow.get('all_manual_commands_present')}`",
+        f"- sync-ready gate before record sync: `{workflow.get('requires_sync_ready_before_record_sync')}`",
+        f"- includes post-sync interpretation: `{workflow.get('includes_postsync_interpretation')}`",
+        f"- driver proceeds only when sync-ready: `{workflow.get('driver_proceeds_only_when_sync_ready')}`",
+        "",
+    ])
+    for step in workflow.get("manual_steps") or []:
+        if isinstance(step, dict):
+            lines.append(
+                f"- {step.get('step')}. `{step.get('id')}` "
+                f"(command present: `{step.get('command_present')}`)"
+            )
+    lines.append("")
     lines.extend([
         "## Postsubmit Driver Polling",
         "",

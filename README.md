@@ -354,8 +354,8 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_public_approval_bundle.{json,md}` instead of the raw
   environment-specific runbook; regenerate it with
   `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. It preserves the explicit
-  approval boundary and post-submit command order with portable placeholders, while keeping
-  `no_submit=true` and `can_claim_w2_generalization=false`. Tracked result/status artifacts are
+  approval boundary, post-submit command order, and structured post-approval workflow with portable
+  placeholders, while keeping `no_submit=true` and `can_claim_w2_generalization=false`. Tracked result/status artifacts are
   intentionally public-safe and may use `<hpc-login-host>`, `/home/fs01/<user>`, and `<repo-root>`
   placeholders; the executable Cayuga command bridge remains only in ignored local artifacts such as
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}` and

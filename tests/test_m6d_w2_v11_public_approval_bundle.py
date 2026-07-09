@@ -157,11 +157,21 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
             "M6D_W2_POSTSUBMIT_MAX_POLLS",
         )
         self.assertTrue(rep["postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
+        self.assertEqual(rep["post_approval_workflow"]["manual_step_count"], 9)
+        self.assertTrue(rep["post_approval_workflow"]["all_manual_commands_present"])
+        self.assertTrue(rep["post_approval_workflow"]["requires_sync_ready_before_record_sync"])
+        self.assertTrue(rep["post_approval_workflow"]["includes_receipt_monitor"])
+        self.assertTrue(rep["post_approval_workflow"]["includes_job_state_query"])
+        self.assertTrue(rep["post_approval_workflow"]["includes_sync_back"])
+        self.assertTrue(rep["post_approval_workflow"]["includes_completion"])
+        self.assertTrue(rep["post_approval_workflow"]["includes_postsync_interpretation"])
+        self.assertTrue(rep["post_approval_workflow"]["driver_proceeds_only_when_sync_ready"])
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_exact_checks"], 25)
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_shell_syntax_checks"], 4)
         self.assertTrue(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
+        self.assertIn("Post-Approval Workflow", render_markdown(rep))
         self.assertIn("remote shell syntax checks ok: `True`", render_markdown(rep))
 
     def test_non_strict_postsubmit_command_blocks_bundle(self):
@@ -176,6 +186,23 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "public_approval_bundle_blocked")
         self.assertIn("strict_postsubmit_command_not_portable_or_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_missing_postsync_workflow_step_blocks_bundle(self):
+        runbook = _runbook()
+        runbook["post_submit"].pop("postsync_replay_script")
+
+        rep = build_bundle(
+            runbook=runbook,
+            packet=_packet(),
+            preflight=_preflight(),
+            decision_state=_decision(),
+            remote_readiness=_remote(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertFalse(rep["post_approval_workflow"]["all_manual_commands_present"])
+        self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
 
     def test_missing_remote_shell_syntax_gate_blocks_bundle(self):
         remote = _remote()
@@ -230,6 +257,7 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertEqual(rc, 0)
         self.assertTrue(saved["audit_ok"])
         self.assertIn("Portable Commands", md)
+        self.assertIn("Post-Approval Workflow", md)
         self.assertIn("Postsubmit Driver Polling", md)
 
 

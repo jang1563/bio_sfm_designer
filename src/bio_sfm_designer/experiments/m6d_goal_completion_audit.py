@@ -380,6 +380,11 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         if isinstance(panel_public_approval_bundle.get("prerequisites"), dict)
         else {}
     )
+    workflow = (
+        panel_public_approval_bundle.get("post_approval_workflow")
+        if isinstance(panel_public_approval_bundle.get("post_approval_workflow"), dict)
+        else {}
+    )
     remote = (
         prereqs.get("remote_readiness")
         if isinstance(prereqs.get("remote_readiness"), dict)
@@ -405,6 +410,19 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         "remote_readiness_shell_syntax_checks": remote.get("n_shell_syntax_checks"),
         "remote_readiness_shell_syntax_checks_ok": remote.get("shell_syntax_checks_ok"),
         "remote_readiness_failures": remote.get("n_failures"),
+        "workflow_manual_step_count": workflow.get("manual_step_count"),
+        "workflow_all_manual_commands_present": workflow.get("all_manual_commands_present"),
+        "workflow_requires_sync_ready_before_record_sync": workflow.get(
+            "requires_sync_ready_before_record_sync"
+        ),
+        "workflow_includes_receipt_monitor": workflow.get("includes_receipt_monitor"),
+        "workflow_includes_job_state_query": workflow.get("includes_job_state_query"),
+        "workflow_includes_sync_back": workflow.get("includes_sync_back"),
+        "workflow_includes_completion": workflow.get("includes_completion"),
+        "workflow_includes_postsync_interpretation": workflow.get("includes_postsync_interpretation"),
+        "workflow_driver_proceeds_only_when_sync_ready": workflow.get(
+            "driver_proceeds_only_when_sync_ready"
+        ),
         "n_failures": len(panel_public_approval_bundle.get("failures") or []),
     }
 
@@ -1070,6 +1088,56 @@ def build_audit(project_status: Dict[str, Any],
                     "remote_readiness_failures": panel_public_bundle.get("remote_readiness_failures"),
                 },
             )
+        if (
+            panel_public_bundle.get("workflow_manual_step_count") != 9
+            or panel_public_bundle.get("workflow_all_manual_commands_present") is not True
+            or panel_public_bundle.get("workflow_requires_sync_ready_before_record_sync") is not True
+            or panel_public_bundle.get("workflow_includes_receipt_monitor") is not True
+            or panel_public_bundle.get("workflow_includes_job_state_query") is not True
+            or panel_public_bundle.get("workflow_includes_sync_back") is not True
+            or panel_public_bundle.get("workflow_includes_completion") is not True
+            or panel_public_bundle.get("workflow_includes_postsync_interpretation") is not True
+            or panel_public_bundle.get("workflow_driver_proceeds_only_when_sync_ready") is not True
+        ):
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_workflow_incomplete",
+                "W2 public approval bundle must preserve the full post-approval workflow through interpretation",
+                expected={
+                    "workflow_manual_step_count": 9,
+                    "workflow_all_manual_commands_present": True,
+                    "workflow_requires_sync_ready_before_record_sync": True,
+                    "workflow_includes_receipt_monitor": True,
+                    "workflow_includes_job_state_query": True,
+                    "workflow_includes_sync_back": True,
+                    "workflow_includes_completion": True,
+                    "workflow_includes_postsync_interpretation": True,
+                    "workflow_driver_proceeds_only_when_sync_ready": True,
+                },
+                observed={
+                    "workflow_manual_step_count": panel_public_bundle.get("workflow_manual_step_count"),
+                    "workflow_all_manual_commands_present": panel_public_bundle.get(
+                        "workflow_all_manual_commands_present"
+                    ),
+                    "workflow_requires_sync_ready_before_record_sync": panel_public_bundle.get(
+                        "workflow_requires_sync_ready_before_record_sync"
+                    ),
+                    "workflow_includes_receipt_monitor": panel_public_bundle.get(
+                        "workflow_includes_receipt_monitor"
+                    ),
+                    "workflow_includes_job_state_query": panel_public_bundle.get(
+                        "workflow_includes_job_state_query"
+                    ),
+                    "workflow_includes_sync_back": panel_public_bundle.get("workflow_includes_sync_back"),
+                    "workflow_includes_completion": panel_public_bundle.get("workflow_includes_completion"),
+                    "workflow_includes_postsync_interpretation": panel_public_bundle.get(
+                        "workflow_includes_postsync_interpretation"
+                    ),
+                    "workflow_driver_proceeds_only_when_sync_ready": panel_public_bundle.get(
+                        "workflow_driver_proceeds_only_when_sync_ready"
+                    ),
+                },
+            )
 
     if w3_adjudication_audit.get("audit_ok") is not True:
         _add_failure(failures, "w3_standalone_adjudication_audit_not_ok",
@@ -1309,6 +1377,21 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_remote_shell_syntax_checks_ok": panel_public_bundle.get(
                 "remote_readiness_shell_syntax_checks_ok"
             ),
+            "panel_public_approval_bundle_workflow_step_count": panel_public_bundle.get(
+                "workflow_manual_step_count"
+            ),
+            "panel_public_approval_bundle_workflow_all_commands_present": panel_public_bundle.get(
+                "workflow_all_manual_commands_present"
+            ),
+            "panel_public_approval_bundle_workflow_sync_ready_before_record_sync": panel_public_bundle.get(
+                "workflow_requires_sync_ready_before_record_sync"
+            ),
+            "panel_public_approval_bundle_workflow_includes_postsync_interpretation": panel_public_bundle.get(
+                "workflow_includes_postsync_interpretation"
+            ),
+            "panel_public_approval_bundle_workflow_driver_sync_ready_only": panel_public_bundle.get(
+                "workflow_driver_proceeds_only_when_sync_ready"
+            ),
             "panel_public_approval_bundle_explicit_approval_required": panel_public_bundle.get(
                 "explicit_approval_required"
             ),
@@ -1382,6 +1465,9 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel public approval bundle ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_ready')}`",
         f"- W2 panel public approval bundle remote shell syntax checks: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_remote_shell_syntax_checks')}`",
         f"- W2 panel public approval bundle remote shell syntax checks ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_remote_shell_syntax_checks_ok')}`",
+        f"- W2 panel public approval bundle workflow steps: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_step_count')}`",
+        f"- W2 panel public approval bundle workflow sync-ready before record sync: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_sync_ready_before_record_sync')}`",
+        f"- W2 panel public approval bundle workflow includes post-sync interpretation: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_includes_postsync_interpretation')}`",
         f"- W3 standalone audit ok: `{rep.get('w3_gate', {}).get('audit_ok')}`",
         f"- W3 positive claim supported: `{rep.get('w3_gate', {}).get('positive_claim_supported')}`",
         "",

@@ -77,6 +77,24 @@ bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh
 bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 ```
 
+## Post-Approval Workflow
+
+- manual step count: `9`
+- all manual commands present: `True`
+- sync-ready gate before record sync: `True`
+- includes post-sync interpretation: `True`
+- driver proceeds only when sync-ready: `True`
+
+- 1. `setup_environment` (command present: `True`)
+- 2. `submit_if_explicitly_approved` (command present: `True`)
+- 3. `receipt_monitor_after_submit` (command present: `True`)
+- 4. `job_state_query_after_receipt` (command present: `True`)
+- 5. `sync_job_state_probe_after_query` (command present: `True`)
+- 6. `strict_postsubmit_status_before_sync` (command present: `True`)
+- 7. `sync_back_after_sync_ready` (command present: `True`)
+- 8. `completion_after_sync` (command present: `True`)
+- 9. `postsync_replay` (command present: `True`)
+
 ## Postsubmit Driver Polling
 
 ```text

@@ -24,6 +24,106 @@
     "sync_back_after_sync_ready": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
     "sync_job_state_probe_after_query": "mkdir -p results && rsync -avP \"$CAYUGA_BIO_SFM_ROOT/results/m6d_w2_target_family_redesign_v11_job_state_probe.json\" results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP \"$CAYUGA_BIO_SFM_ROOT/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv\" results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
   },
+  "post_approval_workflow": {
+    "all_manual_commands_present": true,
+    "driver_command_key": "postsubmit_driver_after_submit",
+    "driver_command_present": true,
+    "driver_proceeds_only_when_sync_ready": true,
+    "includes_completion": true,
+    "includes_job_state_probe_sync": true,
+    "includes_job_state_query": true,
+    "includes_postsync_interpretation": true,
+    "includes_receipt_monitor": true,
+    "includes_sync_back": true,
+    "manual_step_count": 9,
+    "manual_step_ids": [
+      "setup_environment",
+      "submit_if_explicitly_approved",
+      "receipt_monitor_after_submit",
+      "job_state_query_after_receipt",
+      "sync_job_state_probe_after_query",
+      "strict_postsubmit_status_before_sync",
+      "sync_back_after_sync_ready",
+      "completion_after_sync",
+      "postsync_replay"
+    ],
+    "manual_steps": [
+      {
+        "command_key": "setup_environment",
+        "command_present": true,
+        "id": "setup_environment",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 1
+      },
+      {
+        "command_key": "submit_if_explicitly_approved",
+        "command_present": true,
+        "id": "submit_if_explicitly_approved",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": true,
+        "step": 2
+      },
+      {
+        "command_key": "receipt_monitor_after_submit",
+        "command_present": true,
+        "id": "receipt_monitor_after_submit",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 3
+      },
+      {
+        "command_key": "job_state_query_after_receipt",
+        "command_present": true,
+        "id": "job_state_query_after_receipt",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 4
+      },
+      {
+        "command_key": "sync_job_state_probe_after_query",
+        "command_present": true,
+        "id": "sync_job_state_probe_after_query",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 5
+      },
+      {
+        "command_key": "strict_postsubmit_status_before_sync",
+        "command_present": true,
+        "id": "strict_postsubmit_status_before_sync",
+        "is_sync_ready_gate": true,
+        "requires_explicit_approval": false,
+        "step": 6
+      },
+      {
+        "command_key": "sync_back_after_sync_ready",
+        "command_present": true,
+        "id": "sync_back_after_sync_ready",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 7
+      },
+      {
+        "command_key": "completion_after_sync",
+        "command_present": true,
+        "id": "completion_after_sync",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 8
+      },
+      {
+        "command_key": "postsync_replay",
+        "command_present": true,
+        "id": "postsync_replay",
+        "is_sync_ready_gate": false,
+        "requires_explicit_approval": false,
+        "step": 9
+      }
+    ],
+    "requires_sync_ready_before_record_sync": true,
+    "strict_sync_ready_gate_step": "strict_postsubmit_status_before_sync"
+  },
   "postsubmit_driver_polling": {
     "default_max_polls": 120,
     "default_poll_seconds": 300,
