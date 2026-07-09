@@ -236,6 +236,16 @@
         },
         {
           "blocked_by": "w2_panel_submit",
+          "command": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+          "label": "Run no-submit post-submit driver",
+          "next_action": "after explicit submit creates a receipt, run the no-submit driver to monitor receipt, query job states, require sync-ready status, sync records, complete, and replay interpretation",
+          "ready_to_execute_now": false,
+          "recommended": false,
+          "role": "w2_panel_postsubmit_driver",
+          "status": "blocked_until_w2_panel_submit_creates_receipt"
+        },
+        {
+          "blocked_by": "w2_panel_submit",
           "command": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
           "label": "Sync submit receipt and summary only",
           "next_action": "after explicit submit creates a receipt, sync receipt/summary before any records",
@@ -572,6 +582,16 @@
         "recommended": false,
         "role": "w2_panel_submit",
         "status": "waiting_for_explicit_approval"
+      },
+      {
+        "blocked_by": "w2_panel_submit",
+        "command": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
+        "label": "Run no-submit post-submit driver",
+        "next_action": "after explicit submit creates a receipt, run the no-submit driver to monitor receipt, query job states, require sync-ready status, sync records, complete, and replay interpretation",
+        "ready_to_execute_now": false,
+        "recommended": false,
+        "role": "w2_panel_postsubmit_driver",
+        "status": "blocked_until_w2_panel_submit_creates_receipt"
       },
       {
         "blocked_by": "w2_panel_submit",

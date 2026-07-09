@@ -6810,6 +6810,7 @@ class ComplexProjectStatusTests(unittest.TestCase):
             [step["role"] for step in ladder["steps"]],
             [
                 "w2_panel_submit",
+                "w2_panel_postsubmit_driver",
                 "w2_panel_receipt_monitor",
                 "w2_panel_job_state_query",
                 "w2_panel_postsubmit_status",
@@ -6820,12 +6821,14 @@ class ComplexProjectStatusTests(unittest.TestCase):
         )
         self.assertEqual(ladder["steps"][0]["status"], "waiting_for_explicit_approval")
         self.assertEqual(ladder["steps"][1]["blocked_by"], "w2_panel_submit")
-        self.assertIn("receipt_monitor", ladder["steps"][1]["command"])
-        self.assertIn("job_state_query", ladder["steps"][2]["command"])
-        self.assertIn("--require-sync-ready", ladder["steps"][3]["command"])
-        self.assertIn("sync_back", ladder["steps"][4]["command"])
-        self.assertIn("panel_completion", ladder["steps"][5]["command"])
-        self.assertIn("postsync_interpretation", ladder["steps"][6]["command"])
+        self.assertIn("postsubmit_driver", ladder["steps"][1]["command"])
+        self.assertEqual(ladder["steps"][2]["blocked_by"], "w2_panel_submit")
+        self.assertIn("receipt_monitor", ladder["steps"][2]["command"])
+        self.assertIn("job_state_query", ladder["steps"][3]["command"])
+        self.assertIn("--require-sync-ready", ladder["steps"][4]["command"])
+        self.assertIn("sync_back", ladder["steps"][5]["command"])
+        self.assertIn("panel_completion", ladder["steps"][6]["command"])
+        self.assertIn("postsync_interpretation", ladder["steps"][7]["command"])
 
     def test_w2_panel_submission_decision_state_blocks_if_already_submitted(self):
         with tempfile.TemporaryDirectory() as d:

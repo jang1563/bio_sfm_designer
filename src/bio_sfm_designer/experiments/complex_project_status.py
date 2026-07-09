@@ -8254,6 +8254,17 @@ def _attach_w2_panel_approval_ladder(rep: Dict[str, Any]) -> None:
             ),
         ),
         _w2_panel_approval_ladder_step(
+            role="w2_panel_postsubmit_driver",
+            command=w2.get("panel_postsubmit_driver_after_submit"),
+            label="Run no-submit post-submit driver",
+            status="blocked_until_w2_panel_submit_creates_receipt",
+            blocked_by="w2_panel_submit",
+            next_action=(
+                "after explicit submit creates a receipt, run the no-submit driver to monitor receipt, "
+                "query job states, require sync-ready status, sync records, complete, and replay interpretation"
+            ),
+        ),
+        _w2_panel_approval_ladder_step(
             role="w2_panel_receipt_monitor",
             command=w2.get("panel_receipt_monitor_after_submit"),
             label="Sync submit receipt and summary only",
