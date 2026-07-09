@@ -24,7 +24,7 @@ Can claim W2 generalization: `False`.
 
 - local `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
 - local `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
-- remote checked: `<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke`
+- remote checked: `:/home/fs01/<user>/bio_sfm_smoke`
 - remote `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
 - remote `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
 

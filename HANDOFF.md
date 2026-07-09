@@ -293,7 +293,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > tracked postsubmit driver, sync-back, completion, and post-sync replay scripts; the bundle fails closed
 > unless that ordered chain reaches strict postsubmit status, sync-back, completion, target-wise report
 > generation, decision refresh, and post-sync interpretation, while keeping `no_submit=true` and
-> `can_claim_w2_generalization=false`.
+> `can_claim_w2_generalization=false`. The bundle also requires the no-submit pre-submit
+> approval-intent audit command from the submission-decision checklist, so approval text is classified
+> before the guarded submit entrypoint can be used.
 > Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
 > `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
 > post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,

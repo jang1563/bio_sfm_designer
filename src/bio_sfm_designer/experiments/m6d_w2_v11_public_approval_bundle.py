@@ -79,6 +79,10 @@ _EXPECTED_POSTSYNC_REPLAY_COMMAND = "bash results/m6d_w2_target_family_redesign_
 _EXPECTED_SYNC_BACK_COMMAND = "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
 _EXPECTED_PANEL_REPORT = "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json"
 _EXPECTED_COMPLETION_REPORT = "results/m6d_w2_target_family_redesign_v11_panel_completion.json"
+_EXPECTED_APPROVAL_INTENT_AUDIT_COMMAND = (
+    "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit "
+    "--message-file <approval-message.txt> --require-accepted"
+)
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -449,6 +453,39 @@ def _post_approval_workflow_ok(workflow: Dict[str, Any]) -> bool:
     )
 
 
+def _pre_submit_approval_intent_audit(decision_state: Dict[str, Any]) -> Dict[str, Any]:
+    checklist = (
+        decision_state.get("operator_approval_checklist")
+        if isinstance(decision_state.get("operator_approval_checklist"), dict)
+        else {}
+    )
+    command = str(checklist.get("approval_intent_audit_command") or "")
+    return {
+        "command": command,
+        "expected_command": _EXPECTED_APPROVAL_INTENT_AUDIT_COMMAND,
+        "command_present": bool(command),
+        "command_expected": command == _EXPECTED_APPROVAL_INTENT_AUDIT_COMMAND,
+        "uses_approval_intent_audit": "m6d_w2_v11_approval_intent_audit" in command,
+        "requires_message_file": "--message-file" in command,
+        "requires_accepted": "--require-accepted" in command,
+        "no_submit": True,
+        "submitted": False,
+        "claim_boundary": "classifies operator text only; never submits jobs",
+    }
+
+
+def _pre_submit_approval_intent_audit_ok(audit: Dict[str, Any]) -> bool:
+    return (
+        audit.get("command_present") is True
+        and audit.get("command_expected") is True
+        and audit.get("uses_approval_intent_audit") is True
+        and audit.get("requires_message_file") is True
+        and audit.get("requires_accepted") is True
+        and audit.get("no_submit") is True
+        and audit.get("submitted") is False
+    )
+
+
 def _forbidden_public_snippets() -> List[str]:
     snippets = list(_BASE_FORBIDDEN_PUBLIC_SNIPPETS)
     for value in (
@@ -501,6 +538,7 @@ def build_bundle(
         postsubmit_driver_polling,
         script_chain_static,
     )
+    pre_submit_approval_intent = _pre_submit_approval_intent_audit(decision_state)
     approval_scope = _public_approval_scope(packet)
     remote_shell_syntax_ok = _shell_syntax_checks_ok(remote_readiness)
     failures: List[Dict[str, Any]] = []
@@ -598,6 +636,21 @@ def build_bundle(
                 "script_static_checks": post_approval_workflow.get("script_static_checks"),
             },
         })
+    if not _pre_submit_approval_intent_audit_ok(pre_submit_approval_intent):
+        failures.append({
+            "kind": "pre_submit_approval_intent_audit_not_ready",
+            "observed": {
+                "command_present": pre_submit_approval_intent.get("command_present"),
+                "command_expected": pre_submit_approval_intent.get("command_expected"),
+                "uses_approval_intent_audit": pre_submit_approval_intent.get(
+                    "uses_approval_intent_audit"
+                ),
+                "requires_message_file": pre_submit_approval_intent.get("requires_message_file"),
+                "requires_accepted": pre_submit_approval_intent.get("requires_accepted"),
+                "no_submit": pre_submit_approval_intent.get("no_submit"),
+                "submitted": pre_submit_approval_intent.get("submitted"),
+            },
+        })
 
     bundle: Dict[str, Any] = {
         "artifact": "m6d_w2_v11_public_approval_bundle",
@@ -651,6 +704,7 @@ def build_bundle(
             if isinstance(runbook.get("post_submit"), dict) else None,
         },
         "approval_scope": approval_scope,
+        "pre_submit_approval_intent_audit": pre_submit_approval_intent,
         "portable_commands": commands,
         "post_approval_workflow": post_approval_workflow,
         "postsubmit_driver_polling": postsubmit_driver_polling,
@@ -678,6 +732,11 @@ def build_bundle(
 def render_markdown(rep: Dict[str, Any]) -> str:
     commands = rep.get("portable_commands") if isinstance(rep.get("portable_commands"), dict) else {}
     workflow = rep.get("post_approval_workflow") if isinstance(rep.get("post_approval_workflow"), dict) else {}
+    intent = (
+        rep.get("pre_submit_approval_intent_audit")
+        if isinstance(rep.get("pre_submit_approval_intent_audit"), dict)
+        else {}
+    )
     scope = rep.get("approval_scope") if isinstance(rep.get("approval_scope"), dict) else {}
     lines = [
         "# W2 v11 Public Approval Bundle",
@@ -704,6 +763,18 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- expected Slurm jobs: `{scope.get('expected_slurm_jobs')}` "
         f"(`{scope.get('job_pair_model')}` pairs)",
         f"- target alpha: `{scope.get('target_alpha')}`",
+        "",
+        "## Pre-Submit Approval Intent Audit",
+        "",
+        f"- command present: `{intent.get('command_present')}`",
+        f"- command expected: `{intent.get('command_expected')}`",
+        f"- requires message file: `{intent.get('requires_message_file')}`",
+        f"- requires accepted intent: `{intent.get('requires_accepted')}`",
+        f"- no-submit: `{intent.get('no_submit')}`",
+        f"- submitted: `{intent.get('submitted')}`",
+        "```bash",
+        str(intent.get("command") or ""),
+        "```",
         "",
         "## Portable Commands",
         "",

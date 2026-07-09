@@ -211,9 +211,11 @@ Current state:
   message itself can be checked, without submitting jobs, by running
   `python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted`
   before any guarded submit command. The public approval
-  bundle also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
-  fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
-  target-wise report generation, decision refresh, and post-sync interpretation. Tracked result/status artifacts are public-safe and
+	  bundle also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
+	  fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
+	  target-wise report generation, decision refresh, and post-sync interpretation. It also requires the
+	  no-submit pre-submit approval-intent audit command from the submission-decision checklist before the
+	  guarded submit entrypoint can be used. Tracked result/status artifacts are public-safe and
   use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
   in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
   and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked

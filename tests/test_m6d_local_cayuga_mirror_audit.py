@@ -336,6 +336,22 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("w2_gate.panel_remote_shell_syntax_checks_ok", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_remote_shell_syntax_checks_ok", completion_fields)
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_pre_submit_approval_intent_audit_ok",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_pre_submit_approval_intent_requires_accepted",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_pre_submit_approval_intent_no_submit",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_pre_submit_approval_intent_submitted",
+            completion_fields,
+        )
         self.assertIn("w2_gate.panel_public_approval_bundle_workflow_step_count", completion_fields)
         self.assertIn(
             "w2_gate.panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
@@ -436,6 +452,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("approval_scope.target_alpha", public_bundle_fields)
         self.assertIn("prerequisites.remote_readiness.n_shell_syntax_checks", public_bundle_fields)
         self.assertIn("prerequisites.remote_readiness.shell_syntax_checks_ok", public_bundle_fields)
+        self.assertIn("pre_submit_approval_intent_audit.command_expected", public_bundle_fields)
+        self.assertIn("pre_submit_approval_intent_audit.requires_accepted", public_bundle_fields)
+        self.assertIn("pre_submit_approval_intent_audit.no_submit", public_bundle_fields)
+        self.assertIn("pre_submit_approval_intent_audit.submitted", public_bundle_fields)
         self.assertIn("post_approval_workflow.manual_step_count", public_bundle_fields)
         self.assertIn("post_approval_workflow.all_manual_commands_present", public_bundle_fields)
         self.assertIn(

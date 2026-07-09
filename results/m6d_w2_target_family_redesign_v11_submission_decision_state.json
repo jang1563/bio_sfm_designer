@@ -304,20 +304,20 @@
       {
         "exists": false,
         "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
-        "remote_host": "<hpc-login-host>",
+        "remote_host": "",
         "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
         "scope": "remote"
       },
       {
         "exists": false,
         "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
-        "remote_host": "<hpc-login-host>",
+        "remote_host": "",
         "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
         "scope": "remote"
       }
     ],
     "remote_checked": true,
-    "remote_host": "<hpc-login-host>",
+    "remote_host": "",
     "remote_root": "/home/fs01/<user>/bio_sfm_smoke"
   },
   "status": "awaiting_explicit_panel_submission_approval",

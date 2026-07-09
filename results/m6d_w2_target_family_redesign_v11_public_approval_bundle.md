@@ -21,6 +21,18 @@ Can claim W2 generalization: `False`.
 - expected Slurm jobs: `14` (`ProteinMPNN -> Boltz` pairs)
 - target alpha: `0.2`
 
+## Pre-Submit Approval Intent Audit
+
+- command present: `True`
+- command expected: `True`
+- requires message file: `True`
+- requires accepted intent: `True`
+- no-submit: `True`
+- submitted: `False`
+```bash
+python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted
+```
+
 ## Portable Commands
 
 ### setup_environment

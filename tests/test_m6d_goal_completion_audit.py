@@ -11,6 +11,11 @@ from bio_sfm_designer.experiments.m6d_goal_completion_audit import (
     render_markdown,
 )
 
+APPROVAL_INTENT_COMMAND = (
+    "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit "
+    "--message-file <approval-message.txt> --require-accepted"
+)
+
 
 def _write_json(path, obj):
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -349,6 +354,18 @@ def _panel_public_approval_bundle():
             "min_records_per_target": 20,
         },
         "approval_scope": _panel_approval_scope(),
+        "pre_submit_approval_intent_audit": {
+            "command": APPROVAL_INTENT_COMMAND,
+            "expected_command": APPROVAL_INTENT_COMMAND,
+            "command_present": True,
+            "command_expected": True,
+            "uses_approval_intent_audit": True,
+            "requires_message_file": True,
+            "requires_accepted": True,
+            "no_submit": True,
+            "submitted": False,
+            "claim_boundary": "classifies operator text only; never submits jobs",
+        },
         "prerequisites": {
             "remote_readiness": {
                 "status": "remote_submission_readiness_ok",
@@ -806,6 +823,16 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_can_claim_w2_generalization"])
         self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks"], 4)
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_remote_shell_syntax_checks_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_pre_submit_approval_intent_audit_ok"])
+        self.assertIn(
+            "m6d_w2_v11_approval_intent_audit",
+            rep["w2_gate"]["panel_public_approval_bundle_pre_submit_approval_intent_audit_command"],
+        )
+        self.assertTrue(
+            rep["w2_gate"]["panel_public_approval_bundle_pre_submit_approval_intent_requires_accepted"]
+        )
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_pre_submit_approval_intent_no_submit"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_pre_submit_approval_intent_submitted"])
         self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_workflow_step_count"], 9)
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_all_commands_present"])
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_sync_ready_before_record_sync"])
@@ -838,6 +865,10 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_scope_expected_slurm_jobs"], 14)
         md = render_markdown(rep)
         self.assertIn("W2 panel public approval bundle ready: `True`", md)
+        self.assertIn(
+            "W2 panel public approval bundle pre-submit approval-intent audit ok: `True`",
+            md,
+        )
         self.assertIn("W2 panel public approval bundle remote shell syntax checks ok: `True`", md)
         self.assertIn("W2 panel public approval bundle workflow steps: `9`", md)
         self.assertIn("W2 panel public approval bundle workflow driver command present: `True`", md)
@@ -1039,6 +1070,40 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_workflow_script_chain_static_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("w2_panel_public_approval_bundle_workflow_incomplete", kinds)
+
+    def test_public_bundle_missing_pre_submit_approval_intent_gate_blocks_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            bundle = _panel_public_approval_bundle()
+            bundle.pop("pre_submit_approval_intent_audit")
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                bundle,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_pre_submit_approval_intent_audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn(
+            "w2_panel_public_approval_bundle_pre_submit_approval_intent_audit_not_ready",
+            kinds,
+        )
 
     def test_public_approval_bundle_missing_workflow_blocks_audit(self):
         with tempfile.TemporaryDirectory() as d:

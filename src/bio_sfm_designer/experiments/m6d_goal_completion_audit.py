@@ -564,6 +564,11 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
             "submitted": None,
             "can_claim_w2_generalization": None,
             "explicit_approval_required": None,
+            "pre_submit_approval_intent_audit_ok": None,
+            "pre_submit_approval_intent_audit_command": None,
+            "pre_submit_approval_intent_audit_requires_accepted": None,
+            "pre_submit_approval_intent_audit_no_submit": None,
+            "pre_submit_approval_intent_audit_submitted": None,
         }
     approval = (
         panel_public_approval_bundle.get("approval_boundary")
@@ -595,6 +600,11 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         if isinstance(panel_public_approval_bundle.get("post_approval_workflow"), dict)
         else {}
     )
+    intent = (
+        panel_public_approval_bundle.get("pre_submit_approval_intent_audit")
+        if isinstance(panel_public_approval_bundle.get("pre_submit_approval_intent_audit"), dict)
+        else {}
+    )
     polling = (
         panel_public_approval_bundle.get("postsubmit_driver_polling")
         if isinstance(panel_public_approval_bundle.get("postsubmit_driver_polling"), dict)
@@ -620,6 +630,19 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         "target_alpha": target.get("target_alpha"),
         "approval_scope": approval_scope,
         "approval_scope_ok": _approval_scope_ok(approval_scope, target_alpha=target.get("target_alpha")),
+        "pre_submit_approval_intent_audit_ok": (
+            intent.get("command_present") is True
+            and intent.get("command_expected") is True
+            and intent.get("uses_approval_intent_audit") is True
+            and intent.get("requires_message_file") is True
+            and intent.get("requires_accepted") is True
+            and intent.get("no_submit") is True
+            and intent.get("submitted") is False
+        ),
+        "pre_submit_approval_intent_audit_command": intent.get("command"),
+        "pre_submit_approval_intent_audit_requires_accepted": intent.get("requires_accepted"),
+        "pre_submit_approval_intent_audit_no_submit": intent.get("no_submit"),
+        "pre_submit_approval_intent_audit_submitted": intent.get("submitted"),
         "strict_postsubmit_status_before_sync": commands.get("strict_postsubmit_status_before_sync"),
         "submit_if_explicitly_approved": commands.get("submit_if_explicitly_approved"),
         "remote_readiness_status": remote.get("status"),
@@ -1364,6 +1387,29 @@ def build_audit(project_status: Dict[str, Any],
                     "remote_readiness_failures": panel_public_bundle.get("remote_readiness_failures"),
                 },
             )
+        if panel_public_bundle.get("pre_submit_approval_intent_audit_ok") is not True:
+            _add_failure(
+                failures,
+                "w2_panel_public_approval_bundle_pre_submit_approval_intent_audit_not_ready",
+                "W2 public approval bundle must require the no-submit approval-intent audit before submit",
+                expected={
+                    "pre_submit_approval_intent_audit_ok": True,
+                    "requires_accepted": True,
+                    "no_submit": True,
+                    "submitted": False,
+                },
+                observed={
+                    "pre_submit_approval_intent_audit_ok": panel_public_bundle.get(
+                        "pre_submit_approval_intent_audit_ok"
+                    ),
+                    "command": panel_public_bundle.get("pre_submit_approval_intent_audit_command"),
+                    "requires_accepted": panel_public_bundle.get(
+                        "pre_submit_approval_intent_audit_requires_accepted"
+                    ),
+                    "no_submit": panel_public_bundle.get("pre_submit_approval_intent_audit_no_submit"),
+                    "submitted": panel_public_bundle.get("pre_submit_approval_intent_audit_submitted"),
+                },
+            )
         if (
             panel_public_bundle.get("workflow_manual_step_count") != 9
             or panel_public_bundle.get("workflow_all_manual_commands_present") is not True
@@ -1773,6 +1819,21 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_remote_shell_syntax_checks_ok": panel_public_bundle.get(
                 "remote_readiness_shell_syntax_checks_ok"
             ),
+            "panel_public_approval_bundle_pre_submit_approval_intent_audit_ok": (
+                panel_public_bundle.get("pre_submit_approval_intent_audit_ok")
+            ),
+            "panel_public_approval_bundle_pre_submit_approval_intent_audit_command": (
+                panel_public_bundle.get("pre_submit_approval_intent_audit_command")
+            ),
+            "panel_public_approval_bundle_pre_submit_approval_intent_requires_accepted": (
+                panel_public_bundle.get("pre_submit_approval_intent_audit_requires_accepted")
+            ),
+            "panel_public_approval_bundle_pre_submit_approval_intent_no_submit": (
+                panel_public_bundle.get("pre_submit_approval_intent_audit_no_submit")
+            ),
+            "panel_public_approval_bundle_pre_submit_approval_intent_submitted": (
+                panel_public_bundle.get("pre_submit_approval_intent_audit_submitted")
+            ),
             "panel_public_approval_bundle_workflow_step_count": panel_public_bundle.get(
                 "workflow_manual_step_count"
             ),
@@ -1921,6 +1982,9 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel public approval bundle ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_ready')}`",
         f"- W2 panel public approval bundle remote shell syntax checks: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_remote_shell_syntax_checks')}`",
         f"- W2 panel public approval bundle remote shell syntax checks ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_remote_shell_syntax_checks_ok')}`",
+        f"- W2 panel public approval bundle pre-submit approval-intent audit ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_pre_submit_approval_intent_audit_ok')}`",
+        f"- W2 panel public approval bundle pre-submit approval-intent requires accepted: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_pre_submit_approval_intent_requires_accepted')}`",
+        f"- W2 panel public approval bundle pre-submit approval-intent no-submit: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_pre_submit_approval_intent_no_submit')}`",
         f"- W2 panel public approval bundle workflow steps: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_step_count')}`",
         f"- W2 panel public approval bundle workflow sync-ready before record sync: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_sync_ready_before_record_sync')}`",
         f"- W2 panel public approval bundle workflow includes post-sync interpretation: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_includes_postsync_interpretation')}`",

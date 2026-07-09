@@ -917,7 +917,7 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     packet/runbook also records the full post-submit bridge: receipt-only monitor, one-command no-submit
     postsubmit driver, read-only job-state query, strict postsubmit status command, and post-sync replay.
     The public approval bundle, completion audit, submission-decision state, and local/Cayuga mirror audit
-    require the exact driver/replay command pair:
+    require the no-submit pre-submit approval-intent audit command plus the exact driver/replay command pair:
     `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` followed by
     `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`. The job-state query
     script discovers job IDs from the submit receipt at runtime, fail-closes if the receipt is absent, and

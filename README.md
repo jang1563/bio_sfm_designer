@@ -368,9 +368,11 @@ engine installs from GitHub):
   `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. It preserves the explicit
   approval boundary, post-submit command order, and structured post-approval workflow with portable
   placeholders; it also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay
-  scripts and fails closed unless their ordered chain reaches strict postsubmit status, sync-back,
-  completion, target-wise report generation, decision refresh, and post-sync interpretation, while keeping
-  `no_submit=true` and `can_claim_w2_generalization=false`. Tracked result/status artifacts are
+	  scripts and fails closed unless their ordered chain reaches strict postsubmit status, sync-back,
+	  completion, target-wise report generation, decision refresh, and post-sync interpretation, while keeping
+	  `no_submit=true` and `can_claim_w2_generalization=false`. The public bundle also requires the
+	  no-submit pre-submit approval-intent audit command from the submission-decision checklist, so approval
+	  text is classified before the guarded submit entrypoint can be used. Tracked result/status artifacts are
   intentionally public-safe and may use `<hpc-login-host>`, `/home/fs01/<user>`, and `<repo-root>`
   placeholders; the executable Cayuga command bridge remains only in ignored local artifacts such as
   `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}` and

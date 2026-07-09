@@ -195,6 +195,18 @@
     "proceeds_only_when_sync_ready": true,
     "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready"
   },
+  "pre_submit_approval_intent_audit": {
+    "claim_boundary": "classifies operator text only; never submits jobs",
+    "command": "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted",
+    "command_expected": true,
+    "command_present": true,
+    "expected_command": "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted",
+    "no_submit": true,
+    "requires_accepted": true,
+    "requires_message_file": true,
+    "submitted": false,
+    "uses_approval_intent_audit": true
+  },
   "prerequisites": {
     "remote_readiness": {
       "audit_ok": true,

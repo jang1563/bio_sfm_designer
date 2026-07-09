@@ -22,6 +22,10 @@ STRICT_COMMAND = (
     "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
     "--require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
 )
+APPROVAL_INTENT_COMMAND = (
+    "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit "
+    "--message-file <approval-message.txt> --require-accepted"
+)
 
 
 def _write_json(path, obj):
@@ -127,6 +131,9 @@ def _decision():
         "no_submit": True,
         "submitted": False,
         "can_claim_w2_generalization": False,
+        "operator_approval_checklist": {
+            "approval_intent_audit_command": APPROVAL_INTENT_COMMAND,
+        },
     }
 
 
@@ -170,6 +177,16 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertIn("exact manifest target-set", rep["claim_boundary"])
         self.assertIn("duplicate-free", rep["claim_boundary"])
         self.assertIn("matching report target counts", rep["claim_boundary"])
+        self.assertTrue(rep["pre_submit_approval_intent_audit"]["command_present"])
+        self.assertTrue(rep["pre_submit_approval_intent_audit"]["command_expected"])
+        self.assertTrue(rep["pre_submit_approval_intent_audit"]["requires_message_file"])
+        self.assertTrue(rep["pre_submit_approval_intent_audit"]["requires_accepted"])
+        self.assertTrue(rep["pre_submit_approval_intent_audit"]["no_submit"])
+        self.assertFalse(rep["pre_submit_approval_intent_audit"]["submitted"])
+        self.assertIn(
+            "m6d_w2_v11_approval_intent_audit",
+            rep["pre_submit_approval_intent_audit"]["command"],
+        )
         self.assertNotIn("/home/fs01", text)
         self.assertNotIn("private_user_123", text)
         self.assertNotIn("cayuga-login-private", text)
@@ -220,6 +237,8 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])
         self.assertIn("Approval Boundary", render_markdown(rep))
         self.assertIn("Approval Scope", render_markdown(rep))
+        self.assertIn("Pre-Submit Approval Intent Audit", render_markdown(rep))
+        self.assertIn("requires accepted intent: `True`", render_markdown(rep))
         self.assertIn("Post-Approval Workflow", render_markdown(rep))
         self.assertIn("driver command expected: `True`", render_markdown(rep))
         self.assertIn("post-sync replay command expected: `True`", render_markdown(rep))
@@ -243,6 +262,23 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "public_approval_bundle_blocked")
         self.assertIn("approval_scope_not_ready", {f["kind"] for f in rep["failures"]})
+
+    def test_missing_approval_intent_audit_blocks_bundle(self):
+        decision = _decision()
+        decision["operator_approval_checklist"].pop("approval_intent_audit_command")
+
+        rep = build_bundle(
+            runbook=_runbook(),
+            packet=_packet(),
+            preflight=_preflight(),
+            decision_state=decision,
+            remote_readiness=_remote(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertFalse(rep["pre_submit_approval_intent_audit"]["command_present"])
+        self.assertIn("pre_submit_approval_intent_audit_not_ready", {f["kind"] for f in rep["failures"]})
 
     def test_non_strict_postsubmit_command_blocks_bundle(self):
         rep = build_bundle(
