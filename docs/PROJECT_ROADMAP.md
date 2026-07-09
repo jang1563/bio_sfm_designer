@@ -436,7 +436,11 @@ Allowed decisions:
    refuses real execution without `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`; the generator is
    `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`, which also
    emits the approval runbook, sync-back script, panel-completion script, approval packet, and decision
-   protocol. Full project status reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval`, and the
+   protocol. After explicit approval and receipt creation, the postsubmit ladder is driven by
+   `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh`, and the public approval bundle
+   fail-closes unless that driver is paired with
+   `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`. Full project status reports
+   W2 as `panel_approval_packet_ready_awaiting_explicit_approval`, and the
    no-submit remote readiness audit reports `remote_submission_readiness_ok` for the Cayuga mirror. The
    no-submit submission-decision state records `awaiting_explicit_panel_submission_approval`,
    `submitted=false`, local/remote receipt absence, and `can_claim_w2_generalization=false`. Goal drift

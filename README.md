@@ -342,7 +342,10 @@ engine installs from GitHub):
   Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
   The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
   one-command no-submit postsubmit driver, read-only job-state query, strict postsubmit status command,
-  and post-sync replay;
+  and post-sync replay. The public approval bundle, completion audit, submission-decision state, and
+  local/Cayuga mirror audit now also require the exact driver/replay command pair:
+  `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` followed by
+  `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`;
   the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
   receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
   locally before postsubmit status. Project status records those invariants as
@@ -555,7 +558,7 @@ engine installs from GitHub):
 	  and `results/m6d_local_cayuga_mirror_audit.{json,md}` is the no-submit local/Cayuga mirror audit:
 	  exact SHA checks cover handoff/source artifacts and semantic JSON checks cover path-bearing generated
 	  audits, so stale remote artifacts are caught without false-failing on local-vs-Cayuga absolute paths,
-	  currently `local_cayuga_mirror_agree` with 26 exact checks and 15 semantic checks,
+	  currently `local_cayuga_mirror_agree` with 30 exact checks and 16 semantic checks,
 	  `results/m6d_goal_drift_audit.{json,md}` is the no-submit goal-boundary drift audit: current status is
 	  `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
 	  `panel_postsync_interpretation_predeclared_not_synced`, keeping the next action limited to explicit

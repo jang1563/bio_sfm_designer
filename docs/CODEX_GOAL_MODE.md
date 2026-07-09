@@ -173,8 +173,12 @@ Current state:
   with explicit `--manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json`
   before any record `rsync`; project status records
   this no-submit guard as `panel_postsubmit_sync_ready_gate_ok=true`. The approval packet/runbook also
-  records the full post-submit bridge: receipt-only monitor, read-only job-state query,
-  strict postsubmit status command, and post-sync replay. The job-state query script
+  records the full post-submit bridge: receipt-only monitor, one-command no-submit postsubmit driver,
+  read-only job-state query, strict postsubmit status command, and post-sync replay. The public approval
+  bundle, completion audit, submission-decision state, and local/Cayuga mirror audit require the exact
+  driver/replay command pair:
+  `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` followed by
+  `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`. The job-state query script
   discovers job IDs from the submit receipt at runtime, fail-closes if the receipt is absent, and the
   approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back locally before postsubmit
   status; project status records these invariants as `panel_job_state_query_bridge_ok=true` and
@@ -190,8 +194,8 @@ Current state:
   sync-back, completion, and post-sync interpretation, including the non-approval phrase list used by
   goal-mode resumes. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` with 23 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
-  checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches
+  `remote_submission_readiness_ok` with 25 exact SHA checks, 5 semantic JSON checks, 2 receipt-absence
+  checks, and 10 shell syntax checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches
   the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
   writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
@@ -419,7 +423,9 @@ Do not resume from the older instruction to "scale matched Chai records"; that s
 Do not resume from the older W2 v9 submit boundary either; v9 and v10 panel execution are now completed
 negative/evaluable evidence. Resume from the W2 v11 representative-panel boundary unless the user explicitly
 selects the W3 decision fork. The next W2 boundary is an explicit decision on whether to run the 7-target
-v11 ProteinMPNN/Boltz panel from `results/m6d_w2_target_family_redesign_v11_submit_panel.sh`; do not claim
+v11 ProteinMPNN/Boltz panel through the guarded
+`results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` entrypoint, followed after receipt
+creation by `results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh`; do not claim
 W2 generalization unless a future target-wise panel certificate passes. The W3
 next protocol is now predeclared: third independent predictor/protocol first, stronger Chai MSA/template
 as a protocol-variant branch. The current W3 Cayuga probe has executed but is runtime-blocked; repair
@@ -797,7 +803,7 @@ bash results/m6c_project_external_sync_back.sh
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 26 exact checks and 15 semantic
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 30 exact checks and 16 semantic
   checks, including v11 panel approval, remote-readiness, submission-decision, receipt monitor,
   post-submit status, job-state probe, and post-sync interpretation artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and

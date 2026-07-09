@@ -271,7 +271,10 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
 > The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
 > one-command no-submit postsubmit driver, read-only job-state query, strict postsubmit status command,
-> and post-sync replay;
+> and post-sync replay. The public approval bundle, completion audit, submission-decision state, and
+> local/Cayuga mirror audit now also require the exact driver/replay command pair:
+> `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh` followed by
+> `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`;
 > the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
 > receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
 > locally before postsubmit status. Project status records those invariants as
@@ -291,8 +294,8 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > sync-back, completion, and post-sync interpretation, and carries the non-approval phrase list used by
 > goal-mode resumes. The no-submit Cayuga mirror audit
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-> `remote_submission_readiness_ok` after 23 exact SHA checks, 5 semantic JSON checks, and 2
-> receipt-absence checks; project status also fail-closes if the stored exact-check local SHA evidence
+> `remote_submission_readiness_ok` after 25 exact SHA checks, 5 semantic JSON checks, 2
+> receipt-absence checks, and 10 shell syntax checks; project status also fail-closes if the stored exact-check local SHA evidence
 > no longer matches the current checkout. The final no-submit decision latch
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
 > writes `results/m6d_w2_target_family_redesign_v11_submission_decision_state.{json,md}` with
@@ -630,7 +633,7 @@ synced back, completed, and target-wise certified. It now also records
 `panel_public_approval_bundle_ready=true` when the public-safe v11 approval bundle preserves no-submit and
 claim-boundary checks.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 26 exact SHA checks plus 15 semantic JSON checks, including the v11
+and Cayuga artifacts agree across 30 exact SHA checks plus 16 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state
 probe, and post-sync interpretation artifacts; the next action stays limited to explicit panel submission
 approval, sync-back, completion, and target-wise certification.
