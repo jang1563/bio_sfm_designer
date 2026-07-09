@@ -529,6 +529,26 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_sync_ready_only",
     )
+    workflow_postsubmit_driver_static_chain_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok",
+    )
+    workflow_postsync_replay_static_chain_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok",
+    )
+    workflow_sync_back_static_chain_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_sync_back_static_chain_ok",
+    )
+    workflow_completion_static_chain_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_completion_static_chain_ok",
+    )
+    workflow_script_chain_static_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_script_chain_static_ok",
+    )
     operator_checklist_ok = _field(
         goal_completion_audit,
         "w2_gate.panel_submission_decision_operator_checklist_ok",
@@ -607,6 +627,11 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and workflow_driver_polling_default_poll_seconds == 300
         and workflow_driver_polling_sync_ready_gate == "m6d_w2_panel_postsubmit_status.sync_ready"
         and workflow_driver_sync_ready_only is True
+        and workflow_postsubmit_driver_static_chain_ok is True
+        and workflow_postsync_replay_static_chain_ok is True
+        and workflow_sync_back_static_chain_ok is True
+        and workflow_completion_static_chain_ok is True
+        and workflow_script_chain_static_ok is True
         and operator_checklist_ok is True
         and operator_submit_allowed is True
         and operator_submission_performed is False
@@ -673,6 +698,15 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
             workflow_driver_polling_sync_ready_gate
         ),
         "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": workflow_driver_sync_ready_only,
+        "w2_panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok": (
+            workflow_postsubmit_driver_static_chain_ok
+        ),
+        "w2_panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok": (
+            workflow_postsync_replay_static_chain_ok
+        ),
+        "w2_panel_public_approval_bundle_workflow_sync_back_static_chain_ok": workflow_sync_back_static_chain_ok,
+        "w2_panel_public_approval_bundle_workflow_completion_static_chain_ok": workflow_completion_static_chain_ok,
+        "w2_panel_public_approval_bundle_workflow_script_chain_static_ok": workflow_script_chain_static_ok,
         "w2_panel_submission_decision_operator_checklist_ok": operator_checklist_ok,
         "w2_panel_submission_decision_operator_submit_allowed": operator_submit_allowed,
         "w2_panel_submission_decision_operator_submission_performed": operator_submission_performed,

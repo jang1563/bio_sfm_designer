@@ -577,6 +577,15 @@ def build_audit(
             expected=True,
             observed=completion_w2_gate.get("panel_public_approval_bundle_ready"),
         )
+    if completion_w2_gate.get("panel_public_approval_bundle_workflow_script_chain_static_ok") is not True:
+        _add_failure(
+            failures,
+            "completion_audit_public_bundle_script_chain_not_verified",
+            "completion audit must verify the static post-approval script chain before the goal can remain approval-ready",
+            category="approval_boundary",
+            expected=True,
+            observed=completion_w2_gate.get("panel_public_approval_bundle_workflow_script_chain_static_ok"),
+        )
 
     if runbook.get("audit_ok") is not True or runbook.get("status") != "explicit_approval_runbook_ready":
         _add_failure(
@@ -1245,6 +1254,9 @@ def build_audit(
                 "can_mark_goal_complete": completion_audit.get("can_mark_goal_complete"),
                 "panel_public_approval_bundle_ready": completion_w2_gate.get(
                     "panel_public_approval_bundle_ready"
+                ),
+                "panel_public_approval_bundle_workflow_script_chain_static_ok": completion_w2_gate.get(
+                    "panel_public_approval_bundle_workflow_script_chain_static_ok"
                 ),
             },
         },

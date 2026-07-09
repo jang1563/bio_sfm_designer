@@ -76,6 +76,9 @@ _POSTSUBMIT_DRIVER_POLLING_CONTRACT: Dict[str, Any] = {
 }
 _EXPECTED_POSTSUBMIT_DRIVER_COMMAND = "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
 _EXPECTED_POSTSYNC_REPLAY_COMMAND = "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+_EXPECTED_SYNC_BACK_COMMAND = "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
+_EXPECTED_PANEL_REPORT = "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json"
+_EXPECTED_COMPLETION_REPORT = "results/m6d_w2_target_family_redesign_v11_panel_completion.json"
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -114,6 +117,145 @@ def _strict_postsubmit_command_ok(command: Any, packet: Dict[str, Any]) -> bool:
         and all(flag in text for flag in _STRICT_POSTSUBMIT_FLAGS)
         and all(str(path) in text for path in required_paths if path)
     )
+
+
+def _script_path_from_bash_command(command: Any) -> str:
+    text = str(command or "").strip()
+    if text.startswith("bash "):
+        return text.split(None, 1)[1].strip()
+    return text
+
+
+def _read_script_text(path: str) -> Optional[str]:
+    if not path:
+        return None
+    try:
+        with open(path) as fh:
+            return fh.read()
+    except OSError:
+        return None
+
+
+def _snippets_in_order(text: Optional[str], snippets: List[str]) -> bool:
+    if text is None:
+        return False
+    cursor = -1
+    for snippet in snippets:
+        cursor = text.find(snippet, cursor + 1)
+        if cursor < 0:
+            return False
+    return True
+
+
+def _script_check(path: str, required: List[str], ordered: List[str]) -> Dict[str, Any]:
+    text = _read_script_text(path)
+    missing = [] if text is not None else ["script_missing"]
+    if text is not None:
+        missing.extend(snippet for snippet in required if snippet not in text)
+        if not _snippets_in_order(text, ordered):
+            missing.append("ordered_chain_missing")
+    return {
+        "path": path,
+        "exists": text is not None,
+        "ok": not missing,
+        "missing": missing,
+    }
+
+
+def _script_chain_static_checks(commands: Dict[str, str]) -> Dict[str, Any]:
+    driver_path = _script_path_from_bash_command(commands.get("postsubmit_driver_after_submit"))
+    postsync_path = _script_path_from_bash_command(commands.get("postsync_replay"))
+    sync_back_path = _script_path_from_bash_command(commands.get("sync_back_after_sync_ready"))
+    completion_path = _script_path_from_bash_command(commands.get("completion_after_sync"))
+    checks = {
+        "postsubmit_driver": _script_check(
+            driver_path,
+            [
+                "RECEIPT_MONITOR=results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+                "JOB_STATE_QUERY=results/m6d_w2_target_family_redesign_v11_job_state_query.sh",
+                "POSTSYNC_REPLAY=results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+                "m6d_w2_panel_postsubmit_status",
+                "sync_ready",
+                "bash \"$POSTSYNC_REPLAY\"",
+            ],
+            [
+                "m6d_w2_panel_postsubmit_status",
+                "sync_ready",
+                "bash \"$POSTSYNC_REPLAY\"",
+            ],
+        ),
+        "postsync_replay": _script_check(
+            postsync_path,
+            [
+                "m6d_w2_panel_postsubmit_status",
+                "--require-sync-ready",
+                _EXPECTED_SYNC_BACK_COMMAND,
+                "bash \"$COMPLETION_SCRIPT\"",
+                "complex_panel_report",
+                _EXPECTED_PANEL_REPORT,
+                "m6d_w2_panel_decision_protocol",
+                "m6d_w2_panel_postsync_interpretation",
+                "--target-alpha 0.2",
+                "--min-targets 4",
+                "--min-records-per-target 20",
+            ],
+            [
+                "m6d_w2_panel_postsubmit_status",
+                "--require-sync-ready",
+                _EXPECTED_SYNC_BACK_COMMAND,
+                "bash \"$COMPLETION_SCRIPT\"",
+                "complex_panel_report",
+                "m6d_w2_panel_decision_protocol",
+                "m6d_w2_panel_postsync_interpretation",
+            ],
+        ),
+        "sync_back": _script_check(
+            sync_back_path,
+            [
+                "m6d_w2_panel_postsubmit_status",
+                "--require-sync-ready",
+                "record_paths",
+                "rsync -avP \"$REMOTE_ROOT/$relpath\"",
+                "bash \"$COMPLETION\"",
+            ],
+            [
+                "m6d_w2_panel_postsubmit_status",
+                "--require-sync-ready",
+                "record_paths",
+                "rsync -avP \"$REMOTE_ROOT/$relpath\"",
+                "bash \"$COMPLETION\"",
+            ],
+        ),
+        "completion": _script_check(
+            completion_path,
+            [
+                "complex_panel_completion",
+                "--target-alpha 0.2",
+                "--min-targets 4",
+                "--min-records-per-target 20",
+                f"--panel-out {_EXPECTED_PANEL_REPORT}",
+                f"--out {_EXPECTED_COMPLETION_REPORT}",
+            ],
+            [
+                "complex_panel_completion",
+                "--target-alpha 0.2",
+                f"--panel-out {_EXPECTED_PANEL_REPORT}",
+                f"--out {_EXPECTED_COMPLETION_REPORT}",
+            ],
+        ),
+    }
+    return {
+        "postsubmit_driver_script": driver_path,
+        "postsync_replay_script": postsync_path,
+        "sync_back_script": sync_back_path,
+        "completion_script": completion_path,
+        "postsubmit_driver_static_chain_ok": checks["postsubmit_driver"]["ok"],
+        "postsync_replay_static_chain_ok": checks["postsync_replay"]["ok"],
+        "sync_back_static_chain_ok": checks["sync_back"]["ok"],
+        "completion_static_chain_ok": checks["completion"]["ok"],
+        "script_chain_static_ok": all(check["ok"] for check in checks.values()),
+        "script_static_checks": checks,
+    }
 
 
 def _int_or_none(value: Any) -> Optional[int]:
@@ -219,6 +361,7 @@ def _command_present(commands: Dict[str, str], key: str) -> bool:
 def _post_approval_workflow(
     commands: Dict[str, str],
     postsubmit_driver_polling: Dict[str, Any],
+    script_chain_static: Dict[str, Any],
 ) -> Dict[str, Any]:
     manual_steps: List[Dict[str, Any]] = []
     for i, key in enumerate(_MANUAL_WORKFLOW_COMMAND_KEYS, start=1):
@@ -268,6 +411,12 @@ def _post_approval_workflow(
         "driver_proceeds_only_when_sync_ready": (
             postsubmit_driver_polling.get("proceeds_only_when_sync_ready") is True
         ),
+        "postsubmit_driver_static_chain_ok": script_chain_static.get("postsubmit_driver_static_chain_ok"),
+        "postsync_replay_static_chain_ok": script_chain_static.get("postsync_replay_static_chain_ok"),
+        "sync_back_static_chain_ok": script_chain_static.get("sync_back_static_chain_ok"),
+        "completion_static_chain_ok": script_chain_static.get("completion_static_chain_ok"),
+        "script_chain_static_ok": script_chain_static.get("script_chain_static_ok"),
+        "script_static_checks": script_chain_static.get("script_static_checks"),
     }
 
 
@@ -292,6 +441,11 @@ def _post_approval_workflow_ok(workflow: Dict[str, Any]) -> bool:
         and workflow.get("driver_replay_command_pair_ready") is True
         and workflow.get("driver_polling_contract_ok") is True
         and workflow.get("driver_proceeds_only_when_sync_ready") is True
+        and workflow.get("postsubmit_driver_static_chain_ok") is True
+        and workflow.get("postsync_replay_static_chain_ok") is True
+        and workflow.get("sync_back_static_chain_ok") is True
+        and workflow.get("completion_static_chain_ok") is True
+        and workflow.get("script_chain_static_ok") is True
     )
 
 
@@ -341,7 +495,12 @@ def build_bundle(
     postsubmit_driver_polling = post.get("postsubmit_driver_polling")
     if not isinstance(postsubmit_driver_polling, dict):
         postsubmit_driver_polling = {}
-    post_approval_workflow = _post_approval_workflow(commands, postsubmit_driver_polling)
+    script_chain_static = _script_chain_static_checks(commands)
+    post_approval_workflow = _post_approval_workflow(
+        commands,
+        postsubmit_driver_polling,
+        script_chain_static,
+    )
     approval_scope = _public_approval_scope(packet)
     remote_shell_syntax_ok = _shell_syntax_checks_ok(remote_readiness)
     failures: List[Dict[str, Any]] = []
@@ -427,6 +586,16 @@ def build_bundle(
                 "driver_proceeds_only_when_sync_ready": post_approval_workflow.get(
                     "driver_proceeds_only_when_sync_ready"
                 ),
+                "postsubmit_driver_static_chain_ok": post_approval_workflow.get(
+                    "postsubmit_driver_static_chain_ok"
+                ),
+                "postsync_replay_static_chain_ok": post_approval_workflow.get(
+                    "postsync_replay_static_chain_ok"
+                ),
+                "sync_back_static_chain_ok": post_approval_workflow.get("sync_back_static_chain_ok"),
+                "completion_static_chain_ok": post_approval_workflow.get("completion_static_chain_ok"),
+                "script_chain_static_ok": post_approval_workflow.get("script_chain_static_ok"),
+                "script_static_checks": post_approval_workflow.get("script_static_checks"),
             },
         })
 
@@ -563,6 +732,11 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- driver/replay command pair ready: `{workflow.get('driver_replay_command_pair_ready')}`",
         f"- driver polling contract ok: `{workflow.get('driver_polling_contract_ok')}`",
         f"- driver proceeds only when sync-ready: `{workflow.get('driver_proceeds_only_when_sync_ready')}`",
+        f"- postsubmit driver static chain ok: `{workflow.get('postsubmit_driver_static_chain_ok')}`",
+        f"- post-sync replay static chain ok: `{workflow.get('postsync_replay_static_chain_ok')}`",
+        f"- sync-back static chain ok: `{workflow.get('sync_back_static_chain_ok')}`",
+        f"- completion static chain ok: `{workflow.get('completion_static_chain_ok')}`",
+        f"- script chain static ok: `{workflow.get('script_chain_static_ok')}`",
         "",
     ])
     for step in workflow.get("manual_steps") or []:

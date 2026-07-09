@@ -240,6 +240,11 @@ def _goal_completion_audit():
                 "m6d_w2_panel_postsubmit_status.sync_ready"
             ),
             "panel_public_approval_bundle_workflow_driver_sync_ready_only": True,
+            "panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok": True,
+            "panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok": True,
+            "panel_public_approval_bundle_workflow_sync_back_static_chain_ok": True,
+            "panel_public_approval_bundle_workflow_completion_static_chain_ok": True,
+            "panel_public_approval_bundle_workflow_script_chain_static_ok": True,
             "panel_submission_decision_operator_checklist_ok": True,
             "panel_submission_decision_operator_submit_allowed": True,
             "panel_submission_decision_operator_submission_performed": False,
@@ -378,6 +383,11 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
                 "w2_panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds"
             ],
             300,
+        )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_script_chain_static_ok"
+            ]
         )
         self.assertTrue(
             rep["prerequisites"]["goal_completion_audit"][
@@ -547,6 +557,24 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "submission_decision_blocked")
         self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_missing_public_approval_static_script_chain_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"]["panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok"] = False
+        completion["w2_gate"]["panel_public_approval_bundle_workflow_script_chain_static_ok"] = False
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        self.assertFalse(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_script_chain_static_ok"
+            ]
+        )
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("goal_completion_audit_not_ready", kinds)
 

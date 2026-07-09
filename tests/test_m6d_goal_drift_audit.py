@@ -78,6 +78,7 @@ def _completion_audit():
         "can_mark_goal_complete": False,
         "w2_gate": {
             "panel_public_approval_bundle_ready": True,
+            "panel_public_approval_bundle_workflow_script_chain_static_ok": True,
         },
     }
 
@@ -678,6 +679,24 @@ class M6DGoalDriftAuditTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("completion_audit_public_bundle_not_ready", kinds)
+
+    def test_blocks_missing_public_approval_bundle_static_script_chain(self):
+        completion = _completion_audit()
+        completion["w2_gate"]["panel_public_approval_bundle_workflow_script_chain_static_ok"] = False
+
+        rep = build_audit(
+            _project_status(),
+            completion,
+            _runbook(),
+            _w3_audit(),
+            _execution_attempt(),
+            _goal_text(),
+            _anchor_text(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("completion_audit_public_bundle_script_chain_not_verified", kinds)
 
     def test_blocks_panel_submission_boundary_drift(self):
         runbook = _runbook()

@@ -4,7 +4,9 @@ import json
 import os
 import tempfile
 import unittest
+from unittest import mock
 
+from bio_sfm_designer.experiments import m6d_w2_v11_public_approval_bundle as bundle_mod
 from bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle import (
     build_bundle,
     main,
@@ -204,6 +206,11 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertTrue(rep["post_approval_workflow"]["driver_command_expected"])
         self.assertTrue(rep["post_approval_workflow"]["postsync_replay_command_expected"])
         self.assertTrue(rep["post_approval_workflow"]["driver_replay_command_pair_ready"])
+        self.assertTrue(rep["post_approval_workflow"]["postsubmit_driver_static_chain_ok"])
+        self.assertTrue(rep["post_approval_workflow"]["postsync_replay_static_chain_ok"])
+        self.assertTrue(rep["post_approval_workflow"]["sync_back_static_chain_ok"])
+        self.assertTrue(rep["post_approval_workflow"]["completion_static_chain_ok"])
+        self.assertTrue(rep["post_approval_workflow"]["script_chain_static_ok"])
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_exact_checks"], 25)
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_shell_syntax_checks"], 4)
         self.assertTrue(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
@@ -215,6 +222,7 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertIn("post-sync replay command expected: `True`", render_markdown(rep))
         self.assertIn("driver/replay command pair ready: `True`", render_markdown(rep))
         self.assertIn("driver polling contract ok: `True`", render_markdown(rep))
+        self.assertIn("script chain static ok: `True`", render_markdown(rep))
         self.assertIn("remote shell syntax checks ok: `True`", render_markdown(rep))
 
     def test_missing_approval_scope_blocks_bundle(self):
@@ -317,6 +325,61 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertTrue(rep["post_approval_workflow"]["driver_command_expected"])
         self.assertFalse(rep["post_approval_workflow"]["postsync_replay_command_expected"])
         self.assertFalse(rep["post_approval_workflow"]["driver_replay_command_pair_ready"])
+        self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_broken_postsubmit_driver_static_chain_blocks_bundle(self):
+        real_reader = bundle_mod._read_script_text
+
+        def fake_reader(path):
+            if path.endswith("m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"):
+                return "#!/usr/bin/env bash\nm6d_w2_panel_postsubmit_status\nsync_ready=true\n"
+            return real_reader(path)
+
+        with mock.patch.object(bundle_mod, "_read_script_text", side_effect=fake_reader):
+            rep = build_bundle(
+                runbook=_runbook(),
+                packet=_packet(),
+                preflight=_preflight(),
+                decision_state=_decision(),
+                remote_readiness=_remote(),
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertFalse(rep["post_approval_workflow"]["postsubmit_driver_static_chain_ok"])
+        self.assertFalse(rep["post_approval_workflow"]["script_chain_static_ok"])
+        self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_broken_postsync_replay_static_chain_blocks_bundle(self):
+        real_reader = bundle_mod._read_script_text
+
+        def fake_reader(path):
+            if path.endswith("m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"):
+                return (
+                    "#!/usr/bin/env bash\n"
+                    "m6d_w2_panel_postsubmit_status --require-sync-ready\n"
+                    "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh\n"
+                    "bash \"$COMPLETION_SCRIPT\"\n"
+                    "complex_panel_report --target-alpha 0.2 --min-targets 4 "
+                    "--min-records-per-target 20 --out "
+                    "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json\n"
+                    "m6d_w2_panel_postsync_interpretation\n"
+                )
+            return real_reader(path)
+
+        with mock.patch.object(bundle_mod, "_read_script_text", side_effect=fake_reader):
+            rep = build_bundle(
+                runbook=_runbook(),
+                packet=_packet(),
+                preflight=_preflight(),
+                decision_state=_decision(),
+                remote_readiness=_remote(),
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertFalse(rep["post_approval_workflow"]["postsync_replay_static_chain_ok"])
+        self.assertFalse(rep["post_approval_workflow"]["script_chain_static_ok"])
         self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
 
     def test_missing_remote_shell_syntax_gate_blocks_bundle(self):

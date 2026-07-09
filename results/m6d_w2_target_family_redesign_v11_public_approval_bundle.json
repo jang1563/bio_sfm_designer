@@ -54,6 +54,7 @@
   },
   "post_approval_workflow": {
     "all_manual_commands_present": true,
+    "completion_static_chain_ok": true,
     "driver_command_expected": true,
     "driver_command_key": "postsubmit_driver_after_submit",
     "driver_command_present": true,
@@ -152,9 +153,39 @@
         "step": 9
       }
     ],
+    "postsubmit_driver_static_chain_ok": true,
     "postsync_replay_command_expected": true,
+    "postsync_replay_static_chain_ok": true,
     "requires_sync_ready_before_record_sync": true,
-    "strict_sync_ready_gate_step": "strict_postsubmit_status_before_sync"
+    "script_chain_static_ok": true,
+    "script_static_checks": {
+      "completion": {
+        "exists": true,
+        "missing": [],
+        "ok": true,
+        "path": "results/m6d_w2_target_family_redesign_v11_panel_completion.sh"
+      },
+      "postsubmit_driver": {
+        "exists": true,
+        "missing": [],
+        "ok": true,
+        "path": "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+      },
+      "postsync_replay": {
+        "exists": true,
+        "missing": [],
+        "ok": true,
+        "path": "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+      },
+      "sync_back": {
+        "exists": true,
+        "missing": [],
+        "ok": true,
+        "path": "results/m6d_w2_target_family_redesign_v11_sync_back.sh"
+      }
+    },
+    "strict_sync_ready_gate_step": "strict_postsubmit_status_before_sync",
+    "sync_back_static_chain_ok": true
   },
   "postsubmit_driver_polling": {
     "default_max_polls": 120,

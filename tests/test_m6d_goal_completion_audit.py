@@ -378,6 +378,11 @@ def _panel_public_approval_bundle():
             "driver_replay_command_pair_ready": True,
             "driver_polling_contract_ok": True,
             "driver_proceeds_only_when_sync_ready": True,
+            "postsubmit_driver_static_chain_ok": True,
+            "postsync_replay_static_chain_ok": True,
+            "sync_back_static_chain_ok": True,
+            "completion_static_chain_ok": True,
+            "script_chain_static_ok": True,
         },
         "postsubmit_driver_polling": {
             "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
@@ -774,6 +779,11 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_postsync_replay_command_expected"])
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_replay_command_pair_ready"])
         self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_polling_contract_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_sync_back_static_chain_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_completion_static_chain_ok"])
+        self.assertTrue(rep["w2_gate"]["panel_public_approval_bundle_workflow_script_chain_static_ok"])
         self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_polling_default_max_polls"], 120)
         self.assertEqual(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds"], 300)
         self.assertEqual(
@@ -799,6 +809,7 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
         self.assertIn("W2 panel public approval bundle workflow post-sync replay command expected: `True`", md)
         self.assertIn("W2 panel public approval bundle workflow driver/replay command pair ready: `True`", md)
         self.assertIn("W2 panel public approval bundle workflow driver polling contract ok: `True`", md)
+        self.assertIn("W2 panel public approval bundle workflow script chain static ok: `True`", md)
         self.assertIn("W2 panel approval scope ready: `True`", md)
         self.assertIn("W2 project-status approval scope ready: `True`", md)
         self.assertIn("W2 panel public approval bundle scope ready: `True`", md)
@@ -957,6 +968,39 @@ class M6DGoalCompletionAuditTests(unittest.TestCase):
 
         self.assertFalse(rep["audit_ok"])
         self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_workflow_driver_polling_contract_ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("w2_panel_public_approval_bundle_workflow_incomplete", kinds)
+
+    def test_public_bundle_static_script_chain_drift_blocks_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            project_status = _project_status()
+            project_status["workstreams"]["W2_multi_target_panel"]["status"] = (
+                "panel_approval_packet_ready_awaiting_explicit_approval"
+            )
+            bundle = _panel_public_approval_bundle()
+            bundle["post_approval_workflow"]["postsync_replay_static_chain_ok"] = False
+            bundle["post_approval_workflow"]["script_chain_static_ok"] = False
+
+            rep = build_audit(
+                project_status,
+                _approval_packet(),
+                _approval_parity(),
+                _wrapper_guard(),
+                _w3_audit(),
+                _execution_attempt(),
+                _panel_approval_packet(),
+                _panel_decision_protocol(n_manifest_targets=7),
+                _panel_remote_readiness(),
+                _panel_submission_decision_state(),
+                _panel_postsync_interpretation(),
+                bundle,
+                v9_receipt=receipt,
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok"])
+        self.assertFalse(rep["w2_gate"]["panel_public_approval_bundle_workflow_script_chain_static_ok"])
         kinds = {failure["kind"] for failure in rep["failures"]}
         self.assertIn("w2_panel_public_approval_bundle_workflow_incomplete", kinds)
 

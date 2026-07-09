@@ -97,6 +97,11 @@ bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 - driver/replay command pair ready: `True`
 - driver polling contract ok: `True`
 - driver proceeds only when sync-ready: `True`
+- postsubmit driver static chain ok: `True`
+- post-sync replay static chain ok: `True`
+- sync-back static chain ok: `True`
+- completion static chain ok: `True`
+- script chain static ok: `True`
 
 - 1. `setup_environment` (command present: `True`)
 - 2. `submit_if_explicitly_approved` (command present: `True`)

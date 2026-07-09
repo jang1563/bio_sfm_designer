@@ -251,6 +251,26 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             decision_fields,
         )
         self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_sync_back_static_chain_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_completion_static_chain_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_script_chain_static_ok",
+            decision_fields,
+        )
+        self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_submission_decision_operator_checklist_ok",
             decision_fields,
         )
@@ -334,6 +354,26 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "w2_gate.panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_sync_back_static_chain_ok",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_completion_static_chain_ok",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_script_chain_static_ok",
             completion_fields,
         )
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_ready", completion_fields)

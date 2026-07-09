@@ -630,6 +630,15 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
             workflow.get("driver_polling_contract_ok") is True
             and _postsubmit_driver_polling_ok(polling)
         ),
+        "workflow_postsubmit_driver_static_chain_ok": workflow.get(
+            "postsubmit_driver_static_chain_ok"
+        ),
+        "workflow_postsync_replay_static_chain_ok": workflow.get(
+            "postsync_replay_static_chain_ok"
+        ),
+        "workflow_sync_back_static_chain_ok": workflow.get("sync_back_static_chain_ok"),
+        "workflow_completion_static_chain_ok": workflow.get("completion_static_chain_ok"),
+        "workflow_script_chain_static_ok": workflow.get("script_chain_static_ok"),
         "workflow_driver_polling_max_polls_env_var": polling.get("max_polls_env_var"),
         "workflow_driver_polling_default_max_polls": polling.get("default_max_polls"),
         "workflow_driver_polling_poll_seconds_env_var": polling.get("poll_seconds_env_var"),
@@ -1354,6 +1363,11 @@ def build_audit(project_status: Dict[str, Any],
             or panel_public_bundle.get("workflow_driver_replay_command_pair_ready") is not True
             or panel_public_bundle.get("workflow_driver_polling_contract_ok") is not True
             or panel_public_bundle.get("workflow_driver_proceeds_only_when_sync_ready") is not True
+            or panel_public_bundle.get("workflow_postsubmit_driver_static_chain_ok") is not True
+            or panel_public_bundle.get("workflow_postsync_replay_static_chain_ok") is not True
+            or panel_public_bundle.get("workflow_sync_back_static_chain_ok") is not True
+            or panel_public_bundle.get("workflow_completion_static_chain_ok") is not True
+            or panel_public_bundle.get("workflow_script_chain_static_ok") is not True
         ):
             _add_failure(
                 failures,
@@ -1374,6 +1388,11 @@ def build_audit(project_status: Dict[str, Any],
                     "workflow_driver_replay_command_pair_ready": True,
                     "workflow_driver_polling_contract_ok": True,
                     "workflow_driver_proceeds_only_when_sync_ready": True,
+                    "workflow_postsubmit_driver_static_chain_ok": True,
+                    "workflow_postsync_replay_static_chain_ok": True,
+                    "workflow_sync_back_static_chain_ok": True,
+                    "workflow_completion_static_chain_ok": True,
+                    "workflow_script_chain_static_ok": True,
                 },
                 observed={
                     "workflow_manual_step_count": panel_public_bundle.get("workflow_manual_step_count"),
@@ -1414,6 +1433,21 @@ def build_audit(project_status: Dict[str, Any],
                     ),
                     "workflow_driver_proceeds_only_when_sync_ready": panel_public_bundle.get(
                         "workflow_driver_proceeds_only_when_sync_ready"
+                    ),
+                    "workflow_postsubmit_driver_static_chain_ok": panel_public_bundle.get(
+                        "workflow_postsubmit_driver_static_chain_ok"
+                    ),
+                    "workflow_postsync_replay_static_chain_ok": panel_public_bundle.get(
+                        "workflow_postsync_replay_static_chain_ok"
+                    ),
+                    "workflow_sync_back_static_chain_ok": panel_public_bundle.get(
+                        "workflow_sync_back_static_chain_ok"
+                    ),
+                    "workflow_completion_static_chain_ok": panel_public_bundle.get(
+                        "workflow_completion_static_chain_ok"
+                    ),
+                    "workflow_script_chain_static_ok": panel_public_bundle.get(
+                        "workflow_script_chain_static_ok"
                     ),
                 },
             )
@@ -1747,6 +1781,21 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_workflow_driver_polling_contract_ok": panel_public_bundle.get(
                 "workflow_driver_polling_contract_ok"
             ),
+            "panel_public_approval_bundle_workflow_postsubmit_driver_static_chain_ok": panel_public_bundle.get(
+                "workflow_postsubmit_driver_static_chain_ok"
+            ),
+            "panel_public_approval_bundle_workflow_postsync_replay_static_chain_ok": panel_public_bundle.get(
+                "workflow_postsync_replay_static_chain_ok"
+            ),
+            "panel_public_approval_bundle_workflow_sync_back_static_chain_ok": panel_public_bundle.get(
+                "workflow_sync_back_static_chain_ok"
+            ),
+            "panel_public_approval_bundle_workflow_completion_static_chain_ok": panel_public_bundle.get(
+                "workflow_completion_static_chain_ok"
+            ),
+            "panel_public_approval_bundle_workflow_script_chain_static_ok": panel_public_bundle.get(
+                "workflow_script_chain_static_ok"
+            ),
             "panel_public_approval_bundle_workflow_driver_polling_default_max_polls": panel_public_bundle.get(
                 "workflow_driver_polling_default_max_polls"
             ),
@@ -1860,6 +1909,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel public approval bundle workflow post-sync replay command expected: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_postsync_replay_command_expected')}`",
         f"- W2 panel public approval bundle workflow driver/replay command pair ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_driver_replay_command_pair_ready')}`",
         f"- W2 panel public approval bundle workflow driver polling contract ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_driver_polling_contract_ok')}`",
+        f"- W2 panel public approval bundle workflow script chain static ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_script_chain_static_ok')}`",
         f"- W2 panel public approval bundle scope ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_ready')}`",
         f"- W2 panel public approval bundle scope planned designs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_planned_design_records')}`",
         f"- W2 panel public approval bundle scope expected Slurm jobs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_expected_slurm_jobs')}`",
