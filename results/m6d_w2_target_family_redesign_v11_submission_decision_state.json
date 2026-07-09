@@ -148,6 +148,7 @@
       "w2_panel_public_approval_bundle_scope_planned_design_records": 700,
       "w2_panel_public_approval_bundle_scope_ready": true,
       "w2_panel_public_approval_bundle_workflow_all_commands_present": true,
+      "w2_panel_public_approval_bundle_workflow_driver_command_present": true,
       "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": true,
       "w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation": true,
       "w2_panel_public_approval_bundle_workflow_step_count": 9,

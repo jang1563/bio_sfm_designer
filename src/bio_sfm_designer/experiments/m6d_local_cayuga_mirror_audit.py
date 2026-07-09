@@ -142,6 +142,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "w2_gate.panel_public_approval_bundle_workflow_step_count",
         "w2_gate.panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
         "w2_gate.panel_public_approval_bundle_workflow_includes_postsync_interpretation",
+        "w2_gate.panel_public_approval_bundle_workflow_driver_command_present",
         "w2_gate.panel_public_approval_bundle_scope_ready",
         "w2_gate.panel_public_approval_bundle_scope_planned_design_records",
         "w2_gate.panel_public_approval_bundle_scope_expected_slurm_jobs",
@@ -286,6 +287,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "post_approval_workflow.includes_sync_back",
         "post_approval_workflow.includes_completion",
         "post_approval_workflow.includes_postsync_interpretation",
+        "post_approval_workflow.driver_command_present",
         "post_approval_workflow.driver_proceeds_only_when_sync_ready",
     ],
     "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json": [
@@ -328,6 +330,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_all_commands_present",
         "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_sync_ready_before_record_sync",
         "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation",
+        "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_command_present",
         "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_sync_ready_only",
     ],
     "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json": [

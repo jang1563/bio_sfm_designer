@@ -503,6 +503,7 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         "workflow_includes_sync_back": workflow.get("includes_sync_back"),
         "workflow_includes_completion": workflow.get("includes_completion"),
         "workflow_includes_postsync_interpretation": workflow.get("includes_postsync_interpretation"),
+        "workflow_driver_command_present": workflow.get("driver_command_present"),
         "workflow_driver_proceeds_only_when_sync_ready": workflow.get(
             "driver_proceeds_only_when_sync_ready"
         ),
@@ -1197,6 +1198,7 @@ def build_audit(project_status: Dict[str, Any],
             or panel_public_bundle.get("workflow_includes_sync_back") is not True
             or panel_public_bundle.get("workflow_includes_completion") is not True
             or panel_public_bundle.get("workflow_includes_postsync_interpretation") is not True
+            or panel_public_bundle.get("workflow_driver_command_present") is not True
             or panel_public_bundle.get("workflow_driver_proceeds_only_when_sync_ready") is not True
         ):
             _add_failure(
@@ -1212,6 +1214,7 @@ def build_audit(project_status: Dict[str, Any],
                     "workflow_includes_sync_back": True,
                     "workflow_includes_completion": True,
                     "workflow_includes_postsync_interpretation": True,
+                    "workflow_driver_command_present": True,
                     "workflow_driver_proceeds_only_when_sync_ready": True,
                 },
                 observed={
@@ -1232,6 +1235,9 @@ def build_audit(project_status: Dict[str, Any],
                     "workflow_includes_completion": panel_public_bundle.get("workflow_includes_completion"),
                     "workflow_includes_postsync_interpretation": panel_public_bundle.get(
                         "workflow_includes_postsync_interpretation"
+                    ),
+                    "workflow_driver_command_present": panel_public_bundle.get(
+                        "workflow_driver_command_present"
                     ),
                     "workflow_driver_proceeds_only_when_sync_ready": panel_public_bundle.get(
                         "workflow_driver_proceeds_only_when_sync_ready"
@@ -1511,6 +1517,9 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_workflow_includes_postsync_interpretation": panel_public_bundle.get(
                 "workflow_includes_postsync_interpretation"
             ),
+            "panel_public_approval_bundle_workflow_driver_command_present": panel_public_bundle.get(
+                "workflow_driver_command_present"
+            ),
             "panel_public_approval_bundle_workflow_driver_sync_ready_only": panel_public_bundle.get(
                 "workflow_driver_proceeds_only_when_sync_ready"
             ),
@@ -1603,6 +1612,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel public approval bundle workflow steps: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_step_count')}`",
         f"- W2 panel public approval bundle workflow sync-ready before record sync: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_sync_ready_before_record_sync')}`",
         f"- W2 panel public approval bundle workflow includes post-sync interpretation: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_includes_postsync_interpretation')}`",
+        f"- W2 panel public approval bundle workflow driver command present: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_driver_command_present')}`",
         f"- W2 panel public approval bundle scope ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_ready')}`",
         f"- W2 panel public approval bundle scope planned designs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_planned_design_records')}`",
         f"- W2 panel public approval bundle scope expected Slurm jobs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_expected_slurm_jobs')}`",

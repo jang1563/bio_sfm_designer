@@ -485,6 +485,10 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_includes_postsync_interpretation",
     )
+    workflow_driver_command_present = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_command_present",
+    )
     workflow_driver_sync_ready_only = _field(
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_sync_ready_only",
@@ -510,6 +514,7 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and workflow_all_commands_present is True
         and workflow_sync_ready_before_record_sync is True
         and workflow_includes_postsync is True
+        and workflow_driver_command_present is True
         and workflow_driver_sync_ready_only is True
     )
     return {
@@ -544,6 +549,7 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
             workflow_sync_ready_before_record_sync
         ),
         "w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation": workflow_includes_postsync,
+        "w2_panel_public_approval_bundle_workflow_driver_command_present": workflow_driver_command_present,
         "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": workflow_driver_sync_ready_only,
     }
 

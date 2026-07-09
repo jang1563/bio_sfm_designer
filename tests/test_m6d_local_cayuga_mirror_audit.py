@@ -202,6 +202,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             decision_fields,
         )
         self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_command_present",
+            decision_fields,
+        )
+        self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_sync_ready_only",
             decision_fields,
         )
@@ -231,6 +235,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "w2_gate.panel_public_approval_bundle_workflow_includes_postsync_interpretation",
             completion_fields,
         )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_driver_command_present",
+            completion_fields,
+        )
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_ready", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_planned_design_records", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_expected_slurm_jobs", completion_fields)
@@ -249,6 +257,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("post_approval_workflow.includes_sync_back", public_bundle_fields)
         self.assertIn("post_approval_workflow.includes_completion", public_bundle_fields)
         self.assertIn("post_approval_workflow.includes_postsync_interpretation", public_bundle_fields)
+        self.assertIn("post_approval_workflow.driver_command_present", public_bundle_fields)
         self.assertIn(
             "post_approval_workflow.driver_proceeds_only_when_sync_ready",
             public_bundle_fields,
