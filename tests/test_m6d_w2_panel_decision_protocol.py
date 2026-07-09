@@ -166,6 +166,27 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
         self.assertEqual(result["target_set_check"]["unexpected_target_ids"], ["t_extra"])
         self.assertIn("targets do not match", result["claim"])
 
+    def test_duplicate_target_rows_block_w2_support_even_when_set_matches(self):
+        panel = _panel_report(
+            "multi_target_certified",
+            ok=True,
+            certified_ids=["t0", "t1", "t1"],
+        )
+
+        result = classify_panel_report(
+            panel,
+            target_alpha=0.2,
+            min_targets=2,
+            expected_target_ids=["t0", "t1"],
+        )
+
+        self.assertEqual(result["status"], "panel_report_target_set_mismatch")
+        self.assertFalse(result["w2_generalization_supported"])
+        self.assertEqual(result["target_set_check"]["duplicate_target_ids"], ["t1"])
+        self.assertEqual(result["target_set_check"]["n_observed_rows"], 3)
+        self.assertEqual(result["target_set_check"]["n_expected_targets"], 2)
+        self.assertFalse(result["target_set_check"]["reported_expected_count_ok"])
+
     def test_classifies_partial_target_certificates_as_target_specific_only(self):
         panel = _panel_report(
             "multi_target_evaluable_not_certified",

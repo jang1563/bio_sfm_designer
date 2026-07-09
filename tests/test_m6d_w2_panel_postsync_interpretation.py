@@ -178,6 +178,42 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
             ["t1"],
         )
 
+    def test_duplicate_panel_report_targets_block_claim_and_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "manifest.json")
+            postsubmit = os.path.join(d, "postsubmit.json")
+            completion = os.path.join(d, "completion.json")
+            panel = os.path.join(d, "panel.json")
+            obj = _manifest(d)
+            duplicate_panel = _panel_report()
+            duplicate_panel["targets"].append({"complex_target_id": "t1", "certified": True})
+            duplicate_panel["n_targets"] = len(duplicate_panel["targets"])
+            _write_json(manifest, obj)
+            _write_json(postsubmit, _postsubmit(True))
+            _write_json(completion, _completion_report())
+            _write_json(panel, duplicate_panel)
+            for target in obj["targets"]:
+                _write_jsonl(target["records"], [{"complex_target_id": target["id"]}])
+
+            rep = build_interpretation(
+                manifest_path=manifest,
+                postsubmit_path=postsubmit,
+                completion_path=completion,
+                panel_report_path=panel,
+                min_targets=2,
+            )
+
+        self.assertEqual(rep["status"], "panel_report_target_set_mismatch")
+        self.assertFalse(rep["can_claim_w2_generalization"])
+        self.assertFalse(rep["audit_ok"])
+        target_failure = next(
+            failure for failure in rep["failures"]
+            if failure["kind"] == "panel_report_target_set_mismatch"
+        )
+        self.assertEqual(target_failure["duplicate_target_ids"], ["t1"])
+        self.assertEqual(target_failure["n_observed_rows"], 3)
+        self.assertEqual(target_failure["n_expected_targets"], 2)
+
     def test_replay_script_requires_sync_ready_and_refreshes_decision_protocol(self):
         script = render_replay_script(
             manifest="custom/manifest.json",

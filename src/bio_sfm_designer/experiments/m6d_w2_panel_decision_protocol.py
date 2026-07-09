@@ -71,29 +71,62 @@ def _as_set(values: Iterable[Any]) -> Set[str]:
 
 
 def _target_set_check(targets: List[Dict[str, Any]],
+                      reported_n_targets: Any,
                       expected_target_ids: Optional[Iterable[str]]) -> Dict[str, Any]:
-    observed = sorted({
+    observed_rows = [
         str(row.get("complex_target_id")).strip()
         for row in targets
         if isinstance(row, dict) and str(row.get("complex_target_id") or "").strip()
+    ]
+    observed = sorted(set(observed_rows))
+    duplicate_ids = sorted({
+        target_id
+        for target_id in observed
+        if observed_rows.count(target_id) > 1
     })
+    reported_n_targets_ok = (
+        not isinstance(reported_n_targets, int)
+        or reported_n_targets == len(observed_rows)
+    )
     if expected_target_ids is None:
         return {
             "expected_target_ids": None,
             "observed_target_ids": observed,
+            "duplicate_target_ids": duplicate_ids,
             "missing_target_ids": [],
             "unexpected_target_ids": [],
+            "n_observed_rows": len(observed_rows),
+            "n_observed_unique": len(observed),
+            "reported_n_targets": reported_n_targets,
+            "reported_n_targets_ok": reported_n_targets_ok,
             "ok": True,
         }
     expected = sorted({str(target_id).strip() for target_id in expected_target_ids if str(target_id).strip()})
     expected_set = set(expected)
     observed_set = set(observed)
+    expected_count = len(expected)
+    observed_row_count_ok = len(observed_rows) == expected_count
+    reported_expected_count_ok = reported_n_targets == expected_count
     return {
         "expected_target_ids": expected,
         "observed_target_ids": observed,
+        "duplicate_target_ids": duplicate_ids,
         "missing_target_ids": sorted(expected_set - observed_set),
         "unexpected_target_ids": sorted(observed_set - expected_set),
-        "ok": expected_set == observed_set,
+        "n_expected_targets": expected_count,
+        "n_observed_rows": len(observed_rows),
+        "n_observed_unique": len(observed),
+        "reported_n_targets": reported_n_targets,
+        "observed_row_count_ok": observed_row_count_ok,
+        "reported_n_targets_ok": reported_n_targets_ok,
+        "reported_expected_count_ok": reported_expected_count_ok,
+        "ok": (
+            expected_set == observed_set
+            and not duplicate_ids
+            and observed_row_count_ok
+            and reported_n_targets_ok
+            and reported_expected_count_ok
+        ),
     }
 
 
@@ -149,7 +182,7 @@ def classify_panel_report(
         for row in targets
         if isinstance(row, dict) and row.get("certified") is not True and row.get("complex_target_id")
     ]
-    target_set_check = _target_set_check(targets, expected_target_ids)
+    target_set_check = _target_set_check(targets, panel_report.get("n_targets"), expected_target_ids)
     alpha_matches = panel_report.get("target_alpha") == target_alpha
     target_count_ok = isinstance(panel_report.get("n_targets"), int) and panel_report["n_targets"] >= min_targets
     all_targets_certified = bool(targets) and len(certified) == len(targets)

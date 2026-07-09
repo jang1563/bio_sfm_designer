@@ -227,8 +227,12 @@ def build_interpretation(*,
             failures.append({
                 "kind": "panel_report_target_set_mismatch",
                 "message": "panel report target IDs must exactly match the representative manifest",
+                "duplicate_target_ids": target_set_check.get("duplicate_target_ids") or [],
                 "missing_target_ids": target_set_check.get("missing_target_ids") or [],
                 "unexpected_target_ids": target_set_check.get("unexpected_target_ids") or [],
+                "n_expected_targets": target_set_check.get("n_expected_targets"),
+                "n_observed_rows": target_set_check.get("n_observed_rows"),
+                "reported_n_targets": target_set_check.get("reported_n_targets"),
             })
         status = panel_result["status"]
         can_claim = panel_result["w2_generalization_supported"] is True and not failures

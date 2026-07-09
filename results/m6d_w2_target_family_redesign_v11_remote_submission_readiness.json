@@ -124,20 +124,20 @@
       "remote_sha256": "1be1c23c00c0b75838ce30fa16db3bda64d4fe9a70298e42ef03369a641a9fd9"
     },
     {
-      "local_bytes": 18408,
-      "local_sha256": "60396b14cb607ccf598a1250225161da4795a85b7049adff5020e70cbf9303ac",
+      "local_bytes": 18740,
+      "local_sha256": "2b6cb9da4bb1f4335833e2c4a63f7c001cc7370ef5322859078d13c89e36b4d1",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
-      "remote_bytes": 18408,
-      "remote_sha256": "60396b14cb607ccf598a1250225161da4795a85b7049adff5020e70cbf9303ac"
+      "remote_bytes": 18740,
+      "remote_sha256": "2b6cb9da4bb1f4335833e2c4a63f7c001cc7370ef5322859078d13c89e36b4d1"
     },
     {
-      "local_bytes": 21576,
-      "local_sha256": "280ff120e0c69f61734d1f8d0cfc41429c05a3bd36bc8e673490652987340b1f",
+      "local_bytes": 22986,
+      "local_sha256": "219e5a388c519a127dda73c00b7aae49254696970b838b9a7bc5fa549a80cb5b",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_decision_protocol.py",
-      "remote_bytes": 21576,
-      "remote_sha256": "280ff120e0c69f61734d1f8d0cfc41429c05a3bd36bc8e673490652987340b1f"
+      "remote_bytes": 22986,
+      "remote_sha256": "219e5a388c519a127dda73c00b7aae49254696970b838b9a7bc5fa549a80cb5b"
     },
     {
       "local_bytes": 53431,
