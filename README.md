@@ -383,7 +383,7 @@ engine installs from GitHub):
   sync-back, completion, and post-sync interpretation, and carries the non-approval phrase list used by
   goal-mode resumes. The no-submit Cayuga mirror audit
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` after 25 exact SHA checks, 7 semantic JSON checks, 2
+  `remote_submission_readiness_ok` after 26 exact SHA checks, 7 semantic JSON checks, 2
   receipt-absence checks, and 10 shell-syntax checks; project status also fail-closes if the stored exact-check local SHA evidence
   no longer matches the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
@@ -398,6 +398,9 @@ engine installs from GitHub):
   operator-facing block. The decision latch now re-consumes the completion audit's operator-checklist and
   operator script-chain verdicts, so a stale or incomplete checklist blocks approval-ready status instead
   of relying only on the raw submission-decision artifact.
+  Before any future real submit command, operator text can be fail-closed audited with
+  `python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted`;
+  that audit only classifies the message and never submits jobs.
   Its approval-disambiguation block records that continuation phrases such as `resume goal`, `go ahead`,
   and `continue` are not approval. The post-submit status gate
   (`python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status`) currently reports
@@ -573,7 +576,7 @@ engine installs from GitHub):
   `panel_submission_decision_operator_script_chain_static_ok=true` when the public-safe v11 approval bundle
   and operator-facing checklist preserve the same no-submit script-chain gate. The no-submit local/Cayuga
   mirror audit, `results/m6d_local_cayuga_mirror_audit.{json,md}`, currently reports
-  `local_cayuga_mirror_agree` with 31 exact checks and 16 semantic checks. The no-submit goal-boundary drift
+  `local_cayuga_mirror_agree` with 32 exact checks and 16 semantic checks. The no-submit goal-boundary drift
   audit, `results/m6d_goal_drift_audit.{json,md}`, currently reports
   `no_major_direction_drift_w2_blocked`, `audit_ok=true`, `major_direction_drift=false`, and execution
   `panel_postsync_interpretation_predeclared_not_synced`; it also records

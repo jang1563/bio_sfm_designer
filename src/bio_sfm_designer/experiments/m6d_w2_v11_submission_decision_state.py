@@ -34,6 +34,10 @@ _PANEL_OPERATOR_POSTSUBMIT_DRIVER_COMMAND = (
 _PANEL_OPERATOR_POSTSYNC_REPLAY_COMMAND = (
     "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
 )
+_PANEL_OPERATOR_APPROVAL_INTENT_AUDIT_COMMAND = (
+    "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit "
+    "--message-file <approval-message.txt> --require-accepted"
+)
 _NON_APPROVAL_CONTINUATIONS = [
     "resume goal",
     "resume goal mode",
@@ -841,6 +845,7 @@ def _operator_approval_checklist(
         "guarded_submit_entrypoint": approval.get("submit_command_if_approved"),
         "postsubmit_driver_command": "bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh",
         "postsync_replay_command": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+        "approval_intent_audit_command": _PANEL_OPERATOR_APPROVAL_INTENT_AUDIT_COMMAND,
         "driver_replay_command_pair_ready": completion.get(
             "w2_panel_public_approval_bundle_workflow_driver_replay_command_pair_ready"
         ),
@@ -1087,6 +1092,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- approval phrase required: `{checklist.get('approval_phrase_required')}`",
         f"- continuation phrases are approval: `{checklist.get('continuation_phrases_are_approval')}`",
         f"- machine gate: `{checklist.get('machine_gate')}`",
+        f"- approval intent audit command: `{checklist.get('approval_intent_audit_command')}`",
         f"- driver/replay command pair ready: `{checklist.get('driver_replay_command_pair_ready')}`",
         f"- script chain static ok: `{checklist.get('script_chain_static_ok')}`",
         f"- local receipts absent: `{checklist.get('local_receipts_absent')}`",

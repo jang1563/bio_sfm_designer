@@ -140,28 +140,36 @@
       "remote_sha256": "6bc5b9e9f003bf50377a8d39b8c7efc0889423d064a255f9f9dc32c79f0981fa"
     },
     {
-      "local_bytes": 54993,
-      "local_sha256": "7f101e0a04a6171b019c113f239666a7b7cd58b0ce53473efcf3121207868159",
+      "local_bytes": 55371,
+      "local_sha256": "9c2b89b056a339239bb11989f87757b7828f47c9b57826cec9f2f074a7fc00f5",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
-      "remote_bytes": 54993,
-      "remote_sha256": "7f101e0a04a6171b019c113f239666a7b7cd58b0ce53473efcf3121207868159"
+      "remote_bytes": 55371,
+      "remote_sha256": "9c2b89b056a339239bb11989f87757b7828f47c9b57826cec9f2f074a7fc00f5"
     },
     {
-      "local_bytes": 22573,
-      "local_sha256": "579c98ee229f245975cfb2d77ba6d2190aa640a14a5341005c1122ac4e8b787c",
+      "local_bytes": 11260,
+      "local_sha256": "88787a9f9d86f2db93d47ea878764a5ffd200b7770a7b82a8371f4e674abd213",
+      "ok": true,
+      "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_approval_intent_audit.py",
+      "remote_bytes": 11260,
+      "remote_sha256": "88787a9f9d86f2db93d47ea878764a5ffd200b7770a7b82a8371f4e674abd213"
+    },
+    {
+      "local_bytes": 22649,
+      "local_sha256": "7923b2ea17524b8c8c99615d2cf20c803c225634b49772627eef7a1b85f84556",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 22573,
-      "remote_sha256": "579c98ee229f245975cfb2d77ba6d2190aa640a14a5341005c1122ac4e8b787c"
+      "remote_bytes": 22649,
+      "remote_sha256": "7923b2ea17524b8c8c99615d2cf20c803c225634b49772627eef7a1b85f84556"
     },
     {
-      "local_bytes": 36211,
-      "local_sha256": "76245017f95171e6a7c8b8445f12d19b9dde8ddfa9f99bc05b4bfe2d5bcfaf9b",
+      "local_bytes": 36356,
+      "local_sha256": "6673ded1d4919e47abe9f410e92fc6b356b191c991c578b2972492d403f71a2f",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
-      "remote_bytes": 36211,
-      "remote_sha256": "76245017f95171e6a7c8b8445f12d19b9dde8ddfa9f99bc05b4bfe2d5bcfaf9b"
+      "remote_bytes": 36356,
+      "remote_sha256": "6673ded1d4919e47abe9f410e92fc6b356b191c991c578b2972492d403f71a2f"
     },
     {
       "local_bytes": 530775,
@@ -223,7 +231,7 @@
   "failures": [],
   "local_root": "<repo-root>",
   "n_absence_checks": 2,
-  "n_exact_checks": 25,
+  "n_exact_checks": 26,
   "n_failures": 0,
   "n_semantic_checks": 7,
   "n_shell_syntax_checks": 10,

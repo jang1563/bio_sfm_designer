@@ -352,7 +352,7 @@ def _panel_public_approval_bundle():
         "prerequisites": {
             "remote_readiness": {
                 "status": "remote_submission_readiness_ok",
-                "n_exact_checks": 25,
+                "n_exact_checks": 26,
                 "n_shell_syntax_checks": 4,
                 "shell_syntax_checks_ok": True,
                 "n_failures": 0,

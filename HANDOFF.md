@@ -300,7 +300,7 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > sync-back, completion, and post-sync interpretation, and carries the non-approval phrase list used by
 > goal-mode resumes. The no-submit Cayuga mirror audit
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-> `remote_submission_readiness_ok` after 25 exact SHA checks, 5 semantic JSON checks, 2
+> `remote_submission_readiness_ok` after 26 exact SHA checks, 7 semantic JSON checks, 2
 > receipt-absence checks, and 10 shell syntax checks; project status also fail-closes if the stored exact-check local SHA evidence
 > no longer matches the current checkout. The final no-submit decision latch
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
@@ -313,7 +313,10 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > absence, 700 planned designs, 14 expected Slurm jobs, and the explicit approval phrase in one
 > operator-facing block. The decision latch re-consumes the completion audit's operator-checklist and
 > operator script-chain verdicts, so a stale or incomplete checklist blocks approval-ready status instead
-> of relying only on the raw submission-decision artifact. Tracked result/status artifacts are public-safe and
+> of relying only on the raw submission-decision artifact.
+> Before any future real submit command, operator text can be fail-closed audited with
+> `python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted`;
+> that audit only classifies the message and never submits jobs. Tracked result/status artifacts are public-safe and
 > use placeholders for host, user, and repo-root values; the executable Cayuga command bridge remains only
 > in ignored local artifacts such as `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`
 > and `results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json`. After regenerating tracked
@@ -648,7 +651,7 @@ bundle preserves no-submit, claim-boundary, and tracked postsubmit script-chain 
 `panel_submission_decision_operator_script_chain_static_ok=true` when the operator-facing checklist has the
 same script-chain gate closed.
 `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit: current local
-and Cayuga artifacts agree across 31 exact SHA checks plus 16 semantic JSON checks, including the v11
+and Cayuga artifacts agree across 32 exact SHA checks plus 16 semantic JSON checks, including the v11
 panel approval, remote-readiness, submission-decision, receipt monitor, post-submit status, job-state
 probe, and post-sync interpretation artifacts; the next action stays limited to explicit panel submission
 approval, sync-back, completion, and target-wise certification.

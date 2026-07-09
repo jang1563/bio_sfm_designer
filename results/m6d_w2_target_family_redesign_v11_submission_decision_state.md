@@ -62,6 +62,7 @@ This artifact does not submit jobs and does not create W2 evidence.
 - approval phrase required: `W2 v11 Cayuga ProteinMPNN/Boltz panel submission`
 - continuation phrases are approval: `False`
 - machine gate: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
+- approval intent audit command: `python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted`
 - driver/replay command pair ready: `True`
 - script chain static ok: `True`
 - local receipts absent: `True`

@@ -72,6 +72,7 @@
   "next_action": "await explicit user approval before running submit_command_if_approved",
   "no_submit": true,
   "operator_approval_checklist": {
+    "approval_intent_audit_command": "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted",
     "approval_packet_ok": true,
     "approval_phrase_required": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
     "can_claim_w2_generalization": false,
@@ -273,7 +274,7 @@
       "can_claim_w2_generalization": false,
       "can_submit_panel_if_user_explicitly_approves": true,
       "n_absence_checks": 2,
-      "n_exact_checks": 25,
+      "n_exact_checks": 26,
       "n_failures": 0,
       "n_semantic_checks": 7,
       "n_shell_syntax_checks": 10,

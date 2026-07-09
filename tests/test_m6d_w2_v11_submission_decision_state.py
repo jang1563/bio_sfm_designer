@@ -428,6 +428,8 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertEqual(checklist["approval_phrase_required"], "W2 v11 Cayuga ProteinMPNN/Boltz panel submission")
         self.assertFalse(checklist["continuation_phrases_are_approval"])
         self.assertEqual(checklist["machine_gate"], "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit")
+        self.assertIn("m6d_w2_v11_approval_intent_audit", checklist["approval_intent_audit_command"])
+        self.assertIn("--require-accepted", checklist["approval_intent_audit_command"])
         self.assertIn("BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit", checklist["guarded_submit_entrypoint"])
         self.assertEqual(
             checklist["postsubmit_driver_command"],
@@ -456,6 +458,7 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
         self.assertIn("driver/replay command pair ready: `True`", render_markdown(rep))
         self.assertIn("script chain static ok: `True`", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
+        self.assertIn("approval intent audit command", render_markdown(rep))
         self.assertIn("continuation phrases are approval: `False`", render_markdown(rep))
 
     def test_existing_local_receipt_blocks_pre_submit_decision_state(self):

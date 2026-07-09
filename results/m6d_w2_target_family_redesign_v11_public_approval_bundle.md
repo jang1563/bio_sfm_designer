@@ -122,7 +122,7 @@ bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 ## Prerequisites
 
 - remote readiness status: `remote_submission_readiness_ok`
-- remote exact checks: `25`
+- remote exact checks: `26`
 - remote shell syntax checks: `10`
 - remote shell syntax checks ok: `True`
 - remote failures: `0`

@@ -194,7 +194,7 @@ Current state:
   sync-back, completion, and post-sync interpretation, including the non-approval phrase list used by
   goal-mode resumes. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
-  `remote_submission_readiness_ok` with 25 exact SHA checks, 5 semantic JSON checks, 2 receipt-absence
+  `remote_submission_readiness_ok` with 26 exact SHA checks, 7 semantic JSON checks, 2 receipt-absence
   checks, and 10 shell syntax checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches
   the current checkout. The final no-submit decision latch
   (`python -m bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state --check-remote-receipts`)
@@ -208,6 +208,9 @@ Current state:
   operator-facing block. The decision latch re-consumes the completion audit's operator-checklist and
   operator script-chain verdicts, so a stale or incomplete checklist blocks approval-ready status instead
   of relying only on the raw submission-decision artifact. The public approval
+  message itself can be checked, without submitting jobs, by running
+  `python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted`
+  before any guarded submit command. The public approval
   bundle also reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
   fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
   target-wise report generation, decision refresh, and post-sync interpretation. Tracked result/status artifacts are public-safe and
@@ -817,7 +820,7 @@ bash results/m6c_project_external_sync_back.sh
   post-sync interpretation.
 - `results/m6d_local_cayuga_mirror_audit.{json,md}` is the standalone no-submit mirror audit. It compares
   exact SHA for stable handoff/source artifacts and semantic fields for generated JSONs that contain local
-  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 31 exact checks and 16 semantic
+  or Cayuga paths; current status is `local_cayuga_mirror_agree` with 32 exact checks and 16 semantic
   checks, including v11 panel approval, remote-readiness, submission-decision, receipt monitor,
   post-submit status, job-state probe, and post-sync interpretation artifacts.
 - Top-level `goal_progress`, `remaining`, `remaining_requirements`, `can_mark_goal_complete`, and

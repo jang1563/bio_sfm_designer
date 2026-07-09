@@ -137,7 +137,7 @@ def _remote():
         "audit_ok": True,
         "no_submit": True,
         "can_claim_w2_generalization": False,
-        "n_exact_checks": 25,
+        "n_exact_checks": 26,
         "n_semantic_checks": 7,
         "n_absence_checks": 2,
         "n_shell_syntax_checks": 4,
@@ -214,7 +214,7 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertTrue(rep["post_approval_workflow"]["sync_back_static_chain_ok"])
         self.assertTrue(rep["post_approval_workflow"]["completion_static_chain_ok"])
         self.assertTrue(rep["post_approval_workflow"]["script_chain_static_ok"])
-        self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_exact_checks"], 25)
+        self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_exact_checks"], 26)
         self.assertEqual(rep["prerequisites"]["remote_readiness"]["n_shell_syntax_checks"], 4)
         self.assertTrue(rep["prerequisites"]["remote_readiness"]["shell_syntax_checks_ok"])
         self.assertIn("--require-sync-ready", rep["portable_commands"]["strict_postsubmit_status_before_sync"])

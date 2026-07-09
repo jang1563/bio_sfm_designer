@@ -930,7 +930,7 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `resume_execution_ladder` from guarded submit through receipt monitor, job-state query, sync-ready
     status, sync-back, completion, and post-sync interpretation, including the non-approval phrase list used
     by goal-mode resumes. The no-submit remote readiness audit reports
-    `remote_submission_readiness_ok` after 25 exact SHA, 5 semantic JSON, 2 receipt-absence, and
+    `remote_submission_readiness_ok` after 26 exact SHA, 7 semantic JSON, 2 receipt-absence, and
     10 shell syntax checks against
     Cayuga; project status also fail-closes if stored exact-check local SHA evidence no longer matches
     the current checkout. The final no-submit decision latch
@@ -941,6 +941,9 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     approval scope before the decision can stay approval-ready. Its `operator_approval_checklist` binds the guarded submit
     entrypoint, postsubmit driver, post-sync replay, script-chain static sub-gates, local/remote receipt absence,
     700 planned designs, 14 expected Slurm jobs, and the explicit approval phrase in one operator-facing block. The public approval
+    message itself can be checked, without submitting jobs, by running
+    `python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted`
+    before any guarded submit command. The public approval
     bundle reads the tracked postsubmit driver, sync-back, completion, and post-sync replay scripts and
     fails closed unless their ordered chain reaches strict postsubmit status, sync-back, completion,
     target-wise report generation, decision refresh, and post-sync interpretation. Tracked result/status artifacts are public-safe and use
@@ -998,7 +1001,7 @@ goal-mode requirement.
 remaining requirement. Its current W2 execution evidence includes the approved full-14 target-MSA path
 synced back locally with strict `--require-files` passing plus the v11 panel approval/decision/remote-readiness
 boundary; W2 remains incomplete until panel execution, sync-back, completion, and target-wise certification.
-`results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 31 exact SHA
+`results/m6d_local_cayuga_mirror_audit.{json,md}` independently audits local/Cayuga drift: 32 exact SHA
 checks and 16 semantic JSON checks currently agree, including the v11 panel approval, remote-readiness,
 submission-decision, receipt monitor, post-submit status, job-state probe, and post-sync interpretation
 artifacts; the mirrored next action is explicit W2 v11 panel approval, then sync-back, completion, and

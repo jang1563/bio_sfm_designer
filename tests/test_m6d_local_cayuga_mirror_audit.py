@@ -50,6 +50,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "src/bio_sfm_designer/experiments/m6d_w2_v11_public_approval_bundle.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
             "src/bio_sfm_designer/experiments/m6d_w2_v11_submission_decision_state.py",
+            "src/bio_sfm_designer/experiments/m6d_w2_v11_approval_intent_audit.py",
             "src/bio_sfm_designer/experiments/m6d_local_cayuga_mirror_audit.py",
             "src/bio_sfm_designer/experiments/m6d_goal_completion_audit.py",
             "src/bio_sfm_designer/experiments/m6d_goal_drift_audit.py",
@@ -130,6 +131,7 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
         self.assertIn("can_submit_panel_if_user_explicitly_approves", decision_fields)
+        self.assertIn("operator_approval_checklist.approval_intent_audit_command", decision_fields)
         self.assertIn("approval_scope.planned_design_records", decision_fields)
         self.assertIn("approval_scope.expected_slurm_jobs", decision_fields)
         self.assertIn("prerequisites.approval_packet.approval_scope_ok", decision_fields)
