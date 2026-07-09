@@ -187,7 +187,8 @@ Current state:
   `python -m bio_sfm_designer.experiments.m6d_w2_v11_public_approval_bundle`. Full project status now
   reports W2 as `panel_approval_packet_ready_awaiting_explicit_approval` and exposes the post-approval
   `resume_execution_ladder` from guarded submit through receipt monitor, job-state query, sync-ready status,
-  sync-back, completion, and post-sync interpretation. The no-submit remote readiness
+  sync-back, completion, and post-sync interpretation, including the non-approval phrase list used by
+  goal-mode resumes. The no-submit remote readiness
   audit (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
   `remote_submission_readiness_ok` with 23 exact SHA checks, 5 semantic JSON checks, and 2 receipt-absence
   checks; project status also fail-closes if the stored exact-check local SHA evidence no longer matches

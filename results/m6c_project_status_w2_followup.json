@@ -209,7 +209,18 @@
       "approval_disambiguation": {
         "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
         "continuation_phrases_are_approval": false,
-        "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
+        "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+        "non_approval_continuation_phrases": [
+          "resume goal",
+          "resume goal mode",
+          "goal mode resume",
+          "go ahead",
+          "continue",
+          "continue working toward the active thread goal",
+          "keep going",
+          "\uc774\uc5b4\uc11c",
+          "\uacc4\uc18d"
+        ]
       },
       "next_command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
       "next_role": "w2_panel_submit",
@@ -537,7 +548,18 @@
     "approval_disambiguation": {
       "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
       "continuation_phrases_are_approval": false,
-      "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit"
+      "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
+      "non_approval_continuation_phrases": [
+        "resume goal",
+        "resume goal mode",
+        "goal mode resume",
+        "go ahead",
+        "continue",
+        "continue working toward the active thread goal",
+        "keep going",
+        "\uc774\uc5b4\uc11c",
+        "\uacc4\uc18d"
+      ]
     },
     "next_command": "ssh <hpc-login-host> 'cd /home/fs01/<user>/bio_sfm_smoke && BIO_SFM_PYTHON=/home/fs01/<user>/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
     "next_role": "w2_panel_submit",
@@ -1099,6 +1121,17 @@
       "panel_submission_decision_local_receipt_absence_ok": true,
       "panel_submission_decision_machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
       "panel_submission_decision_no_submit": true,
+      "panel_submission_decision_non_approval_continuation_phrases": [
+        "resume goal",
+        "resume goal mode",
+        "goal mode resume",
+        "go ahead",
+        "continue",
+        "continue working toward the active thread goal",
+        "keep going",
+        "\uc774\uc5b4\uc11c",
+        "\uacc4\uc18d"
+      ],
       "panel_submission_decision_ready": true,
       "panel_submission_decision_remote_checked": true,
       "panel_submission_decision_remote_receipt_absence_ok": true,

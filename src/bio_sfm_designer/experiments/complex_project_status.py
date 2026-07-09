@@ -1997,9 +1997,17 @@ def _attach_w2_panel_submission_decision_state(status: Dict[str, Any],
         if isinstance(panel_submission_decision_state.get("approval_disambiguation"), dict)
         else {}
     )
+    non_approval_continuations = approval_disambiguation.get("non_approval_continuation_phrases")
+    if not isinstance(non_approval_continuations, list):
+        non_approval_continuations = []
     if approval_disambiguation.get("continuation_phrases_are_approval") is not False:
         consistency_failures.append({
             "kind": "panel_submission_decision_approval_disambiguation_missing",
+            "observed": approval_disambiguation,
+        })
+    if "continue working toward the active thread goal" not in non_approval_continuations:
+        consistency_failures.append({
+            "kind": "panel_submission_decision_goal_continuation_boundary_missing",
             "observed": approval_disambiguation,
         })
     if panel_submission_decision_state.get("can_submit_if_explicitly_approved") is not True:
@@ -2040,6 +2048,7 @@ def _attach_w2_panel_submission_decision_state(status: Dict[str, Any],
         "panel_submission_decision_continuation_phrases_are_approval": approval_disambiguation.get(
             "continuation_phrases_are_approval"
         ),
+        "panel_submission_decision_non_approval_continuation_phrases": non_approval_continuations,
         "panel_submission_decision_approval_must_explicitly_name": approval_disambiguation.get(
             "approval_must_explicitly_name"
         ),
@@ -8295,6 +8304,9 @@ def _attach_w2_panel_approval_ladder(rep: Dict[str, Any]) -> None:
         "approval_disambiguation": {
             "continuation_phrases_are_approval": w2.get(
                 "panel_submission_decision_continuation_phrases_are_approval"
+            ),
+            "non_approval_continuation_phrases": w2.get(
+                "panel_submission_decision_non_approval_continuation_phrases"
             ),
             "approval_must_explicitly_name": w2.get("panel_submission_decision_approval_must_explicitly_name"),
             "machine_gate": w2.get("panel_submission_decision_machine_gate"),

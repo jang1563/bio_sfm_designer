@@ -80,6 +80,7 @@ _JSON_FIELD_SPECS: Dict[str, List[str]] = {
         "workstreams.W2_multi_target_panel.panel_job_state_query_bridge_ok",
         "resume_execution_ladder.next_role",
         "resume_execution_ladder.approval_disambiguation.continuation_phrases_are_approval",
+        "resume_execution_ladder.approval_disambiguation.non_approval_continuation_phrases",
         "resume_execution_ladder.approval_disambiguation.machine_gate",
         "workstreams.W3_independent_predictor.status",
         "workstreams.W3_independent_predictor.complete",

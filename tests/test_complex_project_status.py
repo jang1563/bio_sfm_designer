@@ -6701,6 +6701,17 @@ class ComplexProjectStatusTests(unittest.TestCase):
                 "can_claim_w2_generalization": False,
                 "approval_disambiguation": {
                     "continuation_phrases_are_approval": False,
+                    "non_approval_continuation_phrases": [
+                        "resume goal",
+                        "resume goal mode",
+                        "goal mode resume",
+                        "go ahead",
+                        "continue",
+                        "continue working toward the active thread goal",
+                        "keep going",
+                        "이어서",
+                        "계속",
+                    ],
                     "approval_must_explicitly_name": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
                     "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
                 },
@@ -6768,6 +6779,10 @@ class ComplexProjectStatusTests(unittest.TestCase):
         self.assertTrue(w2["panel_submission_decision_no_submit"])
         self.assertFalse(w2["panel_submission_decision_submitted"])
         self.assertFalse(w2["panel_submission_decision_can_claim_w2_generalization"])
+        self.assertIn(
+            "continue working toward the active thread goal",
+            w2["panel_submission_decision_non_approval_continuation_phrases"],
+        )
         self.assertTrue(w2["panel_postsync_interpretation_ready"])
         self.assertEqual(w2["panel_postsync_status"], "not_synced_not_interpretable")
         self.assertFalse(w2["panel_postsync_can_claim_w2_generalization"])
@@ -6781,6 +6796,10 @@ class ComplexProjectStatusTests(unittest.TestCase):
         ladder = rep["resume_execution_ladder"]
         self.assertEqual(ladder["next_role"], "w2_panel_submit")
         self.assertFalse(ladder["approval_disambiguation"]["continuation_phrases_are_approval"])
+        self.assertIn(
+            "continue working toward the active thread goal",
+            ladder["approval_disambiguation"]["non_approval_continuation_phrases"],
+        )
         self.assertEqual(
             [step["role"] for step in ladder["steps"]],
             [

@@ -284,7 +284,8 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > Full project status now consumes those artifacts plus the remote-readiness audit and reports W2 as
 > `panel_approval_packet_ready_awaiting_explicit_approval`; its `resume_execution_ladder` now records the
 > post-approval order from guarded submit through receipt monitor, job-state query, sync-ready status,
-> sync-back, completion, and post-sync interpretation. The no-submit Cayuga mirror audit
+> sync-back, completion, and post-sync interpretation, and carries the non-approval phrase list used by
+> goal-mode resumes. The no-submit Cayuga mirror audit
 > (`python -m bio_sfm_designer.experiments.m6d_w2_v11_remote_submission_readiness`) reports
 > `remote_submission_readiness_ok` after 23 exact SHA checks, 5 semantic JSON checks, and 2
 > receipt-absence checks; project status also fail-closes if the stored exact-check local SHA evidence

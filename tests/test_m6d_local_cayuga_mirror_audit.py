@@ -86,6 +86,10 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "resume_execution_ladder.approval_disambiguation.continuation_phrases_are_approval",
             status_fields,
         )
+        self.assertIn(
+            "resume_execution_ladder.approval_disambiguation.non_approval_continuation_phrases",
+            status_fields,
+        )
         self.assertIn("approval_disambiguation.continuation_phrases_are_approval", decision_fields)
         self.assertIn("approval_disambiguation.machine_gate", decision_fields)
         self.assertIn(
