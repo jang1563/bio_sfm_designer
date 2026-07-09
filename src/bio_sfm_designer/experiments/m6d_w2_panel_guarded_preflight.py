@@ -301,6 +301,25 @@ def _dry_run_command(wrapper_path: str, dry_run_env_var: str, python_bin: str) -
     )
 
 
+def _postsubmit_status_command(
+    *,
+    manifest: str,
+    submit_receipt: str,
+    submit_summary: str,
+    job_state_probe: str,
+    postsubmit_status: str,
+) -> str:
+    return shlex.join([
+        "python", "-m", "bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status",
+        "--manifest", manifest,
+        "--receipt", submit_receipt,
+        "--summary", submit_summary,
+        "--job-states", job_state_probe,
+        "--require-sync-ready",
+        "--out-json", postsubmit_status,
+    ])
+
+
 def _run_local_dry_run(
     *,
     wrapper_path: str,
@@ -518,11 +537,12 @@ def build_runbook(
         + shlex.quote(sacct_states)
     )
     job_state_query_bridge_command = job_state_query_command + " && " + job_state_probe_sync_command
-    postsubmit_status_command = (
-        "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
-        "--job-states "
-        + shlex.quote(job_state_probe)
-        + " --require-sync-ready"
+    postsubmit_status_command = _postsubmit_status_command(
+        manifest=manifest_path,
+        submit_receipt=submit_receipt,
+        submit_summary=submit_summary,
+        job_state_probe=job_state_probe,
+        postsubmit_status=postsubmit_status,
     )
     return {
         "artifact": f"{workstream}_approval_runbook",
@@ -557,10 +577,7 @@ def build_runbook(
             "postsubmit_status": postsubmit_status,
             "job_state_probe": job_state_probe,
             "sacct_states": sacct_states,
-            "postsubmit_sync_ready_gate": (
-                "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
-                "--require-sync-ready"
-            ),
+            "postsubmit_sync_ready_gate": postsubmit_status_command,
             "postsubmit_status_command_before_sync": postsubmit_status_command,
             "completion_script": completion_script,
             "completion_command_after_sync": "bash " + shlex.quote(completion_script),
@@ -729,6 +746,7 @@ def build_approval_packet(
             "wrapper_guard": wrapper_guard.get("artifact"),
             "manifest_report": manifest_report.get("manifest"),
         },
+        "manifest": runbook.get("manifest"),
         "submit_receipt": submit_state.get("submit_receipt"),
         "submit_summary": submit_state.get("submit_summary"),
         "submit_command_if_approved": approval.get("submit_command_if_explicitly_approved"),

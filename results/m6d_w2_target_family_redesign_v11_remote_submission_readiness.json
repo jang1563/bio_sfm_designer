@@ -84,12 +84,12 @@
       "remote_sha256": "0ed870f11f92727569e7bdc6dd37557c7d1eaad03c4dcf0d9c4e8a9940d2eaef"
     },
     {
-      "local_bytes": 44483,
-      "local_sha256": "358e4783a4d703c85b3e161126329cd46a4d774b8cbe541b4ee0f871aa6156b5",
+      "local_bytes": 44966,
+      "local_sha256": "d35f699d5b1e46cc444727165017c5e7ef3cd740413ec6f2f5d826e7227181ed",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_guarded_preflight.py",
-      "remote_bytes": 44483,
-      "remote_sha256": "358e4783a4d703c85b3e161126329cd46a4d774b8cbe541b4ee0f871aa6156b5"
+      "remote_bytes": 44966,
+      "remote_sha256": "d35f699d5b1e46cc444727165017c5e7ef3cd740413ec6f2f5d826e7227181ed"
     },
     {
       "local_bytes": 12560,
@@ -148,12 +148,12 @@
       "remote_sha256": "bb59c52b01008adf8dc1f7c128782fc5702c33adc624b24b232c92a1028d4c1b"
     },
     {
-      "local_bytes": 524012,
-      "local_sha256": "e766a44e461ee9cb856f174a76e67d7807719353797c6d72ecbfea572798438d",
+      "local_bytes": 524858,
+      "local_sha256": "2c76a5b85f6390b915330de8156904b6d029e0954560be65ef91dca78cfdbf1c",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/complex_project_status.py",
-      "remote_bytes": 524012,
-      "remote_sha256": "e766a44e461ee9cb856f174a76e67d7807719353797c6d72ecbfea572798438d"
+      "remote_bytes": 524858,
+      "remote_sha256": "2c76a5b85f6390b915330de8156904b6d029e0954560be65ef91dca78cfdbf1c"
     },
     {
       "local_bytes": 13348,
@@ -405,15 +405,15 @@
         },
         {
           "field": "postsubmit_sync_ready_gate",
-          "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready",
+          "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
           "ok": true,
-          "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
+          "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
         },
         {
           "field": "postsubmit_status_command_before_sync",
-          "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready",
+          "local": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
           "ok": true,
-          "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready"
+          "remote": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
         },
         {
           "field": "postsync_replay_after_sync",

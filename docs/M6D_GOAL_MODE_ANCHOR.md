@@ -911,10 +911,11 @@ Next W2 work should treat the unique-source pilot as completed negative evidence
     `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`; it also
     emits the no-submit approval runbook, sync-back script, and panel-completion script for the approved-run
     aftermath. The sync-back script now fail-closes before any record `rsync` unless local submit
-    receipt/summary, job-state probe output, and `m6d_w2_panel_postsubmit_status --require-sync-ready` all
-    pass; project status records this as `panel_postsubmit_sync_ready_gate_ok=true`. The approval
+    receipt/summary, job-state probe output, and strict `m6d_w2_panel_postsubmit_status` with explicit
+    `--manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json` all pass; project status
+    records this as `panel_postsubmit_sync_ready_gate_ok=true`. The approval
     packet/runbook also records the full post-submit bridge: receipt-only monitor, read-only job-state
-    query, `--require-sync-ready` postsubmit status command, and post-sync replay. The job-state query
+    query, strict postsubmit status command, and post-sync replay. The job-state query
     script discovers job IDs from the submit receipt at runtime, fail-closes if the receipt is absent, and
     the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back locally before
     postsubmit status; project status records those invariants as `panel_job_state_query_bridge_ok=true`

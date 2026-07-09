@@ -31,6 +31,9 @@ def _approval_packet():
         "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
         "panel_approval_env_value": "approve-v11-panel-submit",
         "submit_command_if_approved": "ssh cayuga-login1 'BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash wrapper.sh'",
+        "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+        "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
         "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
         "receipt_monitor_after_submit": (
             "CAYUGA_BIO_SFM_ROOT=cayuga-login1:/home/fs01/<user>/bio_sfm_smoke "
@@ -48,11 +51,20 @@ def _approval_packet():
         "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
         "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
         "postsubmit_sync_ready_gate": (
-            "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready"
+            "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
+            "--manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json "
+            "--receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl "
+            "--summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json "
+            "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
+            "--require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
         ),
         "postsubmit_status_command_before_sync": (
             "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
-            "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready"
+            "--manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json "
+            "--receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl "
+            "--summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json "
+            "--job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json "
+            "--require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
         ),
         "postsync_replay_after_sync": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
         "checks": {

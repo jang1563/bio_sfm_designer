@@ -193,6 +193,9 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
         "panel_approval_env_var": panel_approval_packet.get("panel_approval_env_var"),
         "panel_approval_env_value": panel_approval_packet.get("panel_approval_env_value"),
         "submit_command_if_approved": panel_approval_packet.get("submit_command_if_approved"),
+        "manifest": panel_approval_packet.get("manifest"),
+        "submit_receipt": panel_approval_packet.get("submit_receipt"),
+        "submit_summary": panel_approval_packet.get("submit_summary"),
         "sync_back_command_after_jobs_finish": panel_approval_packet.get("sync_back_command_after_jobs_finish"),
         "postsubmit_status_before_sync": panel_approval_packet.get("postsubmit_status_before_sync"),
         "job_state_probe_before_sync": panel_approval_packet.get("job_state_probe_before_sync"),
@@ -209,6 +212,30 @@ def _panel_approval_state(panel_approval_packet: Optional[Dict[str, Any]]) -> Di
         "submit_receipt_absent": checks.get("submit_receipt_absent"),
         "submit_summary_absent": checks.get("submit_summary_absent"),
     }
+
+
+def _strict_postsubmit_command_ok(command: Any, panel_approval: Dict[str, Any]) -> bool:
+    text = str(command or "")
+    required_flags = (
+        "--manifest",
+        "--receipt",
+        "--summary",
+        "--job-states",
+        "--require-sync-ready",
+        "--out-json",
+    )
+    required_paths = (
+        panel_approval.get("manifest"),
+        panel_approval.get("submit_receipt"),
+        panel_approval.get("submit_summary"),
+        panel_approval.get("postsubmit_status_before_sync"),
+        panel_approval.get("job_state_probe_before_sync"),
+    )
+    return (
+        "m6d_w2_panel_postsubmit_status" in text
+        and all(flag in text for flag in required_flags)
+        and all(str(path) in text for path in required_paths if path)
+    )
 
 
 def _panel_decision_state(panel_decision_protocol: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -690,25 +717,31 @@ def build_audit(
                 expected="job_state_probe_sync_after_query",
                 observed=panel_approval.get("job_state_probe_sync_after_query"),
             )
-        if v11_panel_sync and "--require-sync-ready" not in str(panel_approval.get("postsubmit_sync_ready_gate") or ""):
+        if v11_panel_sync and not _strict_postsubmit_command_ok(
+            panel_approval.get("postsubmit_sync_ready_gate"),
+            panel_approval,
+        ):
             _add_failure(
                 failures,
                 "panel_approval_missing_sync_ready_gate",
-                "panel sync-back must fail closed unless postsubmit status is sync-ready",
+                "panel sync-back must fail closed unless postsubmit status is sync-ready for the explicit manifest/receipt/job-state paths",
                 category="execution",
-                expected="--require-sync-ready",
+                expected="strict postsubmit command with --manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json",
                 observed=panel_approval.get("postsubmit_sync_ready_gate"),
             )
         if (
             v11_panel_sync
-            and "--require-sync-ready" not in str(panel_approval.get("postsubmit_status_command_before_sync") or "")
+            and not _strict_postsubmit_command_ok(
+                panel_approval.get("postsubmit_status_command_before_sync"),
+                panel_approval,
+            )
         ):
             _add_failure(
                 failures,
                 "panel_approval_missing_postsubmit_command_bridge",
-                "panel approval packet must name the postsubmit status command before record sync-back",
+                "panel approval packet must name the strict postsubmit status command before record sync-back",
                 category="execution",
-                expected="--require-sync-ready",
+                expected="strict postsubmit command with --manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json",
                 observed=panel_approval.get("postsubmit_status_command_before_sync"),
             )
         if v11_panel_sync and not panel_approval.get("postsync_replay_after_sync"):

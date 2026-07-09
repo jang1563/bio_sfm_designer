@@ -40,7 +40,7 @@ ssh cayuga-login1 'cd /home/fs01/jak4013/bio_sfm_smoke && BIO_SFM_PYTHON=/home/f
 Postsubmit sync-ready gate before record sync-back:
 
 ```bash
-python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --require-sync-ready
+python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json
 ```
 
 This artifact does not submit jobs and does not create W2 evidence.

@@ -263,10 +263,11 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
 > `results/m6d_w2_target_family_redesign_v11_panel_completion.sh` for the approved-run aftermath. The
 > sync-back script now fail-closes before any record `rsync` unless local submit receipt/summary,
-> job-state probe output, and `m6d_w2_panel_postsubmit_status --require-sync-ready` all pass.
+> job-state probe output, and strict `m6d_w2_panel_postsubmit_status` with explicit
+> `--manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json` all pass.
 > Project status records this as `panel_postsubmit_sync_ready_gate_ok=true` in the current no-submit state.
 > The approval packet/runbook also records the full post-submit bridge: receipt-only monitor,
-> read-only job-state query, `--require-sync-ready` postsubmit status command, and post-sync replay;
+> read-only job-state query, strict postsubmit status command, and post-sync replay;
 > the job-state query script discovers job IDs from the submit receipt at runtime, fail-closes if the
 > receipt is absent, and the approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back
 > locally before postsubmit status. Project status records those invariants as

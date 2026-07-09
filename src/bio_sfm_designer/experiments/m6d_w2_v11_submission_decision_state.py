@@ -152,6 +152,30 @@ def _remote_absence(
     return rows
 
 
+def _strict_postsubmit_command_ok(command: Any, approval_packet: Dict[str, Any]) -> bool:
+    text = str(command or "")
+    required_flags = (
+        "--manifest",
+        "--receipt",
+        "--summary",
+        "--job-states",
+        "--require-sync-ready",
+        "--out-json",
+    )
+    required_paths = (
+        approval_packet.get("manifest"),
+        approval_packet.get("submit_receipt"),
+        approval_packet.get("submit_summary"),
+        approval_packet.get("postsubmit_status_before_sync"),
+        approval_packet.get("job_state_probe_before_sync"),
+    )
+    return (
+        "m6d_w2_panel_postsubmit_status" in text
+        and all(flag in text for flag in required_flags)
+        and all(str(path) in text for path in required_paths if path)
+    )
+
+
 def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
     checks = approval_packet.get("checks") if isinstance(approval_packet.get("checks"), dict) else {}
     required_checks = [
@@ -166,7 +190,7 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
     postsubmit_sync_ready_gate_ok = (
         bool(approval_packet.get("postsubmit_status_before_sync"))
         and bool(approval_packet.get("job_state_probe_before_sync"))
-        and "--require-sync-ready" in str(approval_packet.get("postsubmit_sync_ready_gate") or "")
+        and _strict_postsubmit_command_ok(approval_packet.get("postsubmit_sync_ready_gate"), approval_packet)
     )
     job_state_sync = str(approval_packet.get("job_state_probe_sync_after_query") or "")
     job_state_query_bridge_ok = (
@@ -179,7 +203,10 @@ def _approval_state(approval_packet: Dict[str, Any]) -> Dict[str, Any]:
         bool(approval_packet.get("receipt_monitor_after_submit"))
         and job_state_query_bridge_ok
         and bool(approval_packet.get("postsubmit_status_command_before_sync"))
-        and "--require-sync-ready" in str(approval_packet.get("postsubmit_status_command_before_sync") or "")
+        and _strict_postsubmit_command_ok(
+            approval_packet.get("postsubmit_status_command_before_sync"),
+            approval_packet,
+        )
         and bool(approval_packet.get("postsync_replay_after_sync"))
     )
     ok = (

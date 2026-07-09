@@ -169,11 +169,12 @@ Current state:
   emits `results/m6d_w2_target_family_redesign_v11_approval_runbook.{json,md}`,
   `results/m6d_w2_target_family_redesign_v11_sync_back.sh`, and
   `results/m6d_w2_target_family_redesign_v11_panel_completion.sh`. The sync-back script now requires
-  local submit receipt/summary, job-state probe output, and
-  `m6d_w2_panel_postsubmit_status --require-sync-ready` before any record `rsync`; project status records
+  local submit receipt/summary, job-state probe output, and strict `m6d_w2_panel_postsubmit_status`
+  with explicit `--manifest/--receipt/--summary/--job-states/--require-sync-ready/--out-json`
+  before any record `rsync`; project status records
   this no-submit guard as `panel_postsubmit_sync_ready_gate_ok=true`. The approval packet/runbook also
   records the full post-submit bridge: receipt-only monitor, read-only job-state query,
-  `--require-sync-ready` postsubmit status command, and post-sync replay. The job-state query script
+  strict postsubmit status command, and post-sync replay. The job-state query script
   discovers job IDs from the submit receipt at runtime, fail-closes if the receipt is absent, and the
   approval bridge rsyncs the remote job-state probe JSON plus `sacct` TSV back locally before postsubmit
   status; project status records these invariants as `panel_job_state_query_bridge_ok=true` and

@@ -1571,11 +1571,34 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
                 "check": key,
                 "observed": checks.get(key),
             })
+    def _strict_postsubmit_command_ok(command: Any) -> bool:
+        text = str(command or "")
+        required_flags = (
+            "--manifest",
+            "--receipt",
+            "--summary",
+            "--job-states",
+            "--require-sync-ready",
+            "--out-json",
+        )
+        required_paths = (
+            panel_approval_packet.get("manifest"),
+            panel_approval_packet.get("submit_receipt"),
+            panel_approval_packet.get("submit_summary"),
+            panel_approval_packet.get("postsubmit_status_before_sync"),
+            panel_approval_packet.get("job_state_probe_before_sync"),
+        )
+        return (
+            "m6d_w2_panel_postsubmit_status" in text
+            and all(flag in text for flag in required_flags)
+            and all(str(path) in text for path in required_paths if path)
+        )
+
     v11_panel_sync = "v11" in str(panel_approval_packet.get("sync_back_command_after_jobs_finish") or "")
     postsubmit_sync_ready_gate_ok = (
         bool(panel_approval_packet.get("postsubmit_status_before_sync"))
         and bool(panel_approval_packet.get("job_state_probe_before_sync"))
-        and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_sync_ready_gate") or "")
+        and _strict_postsubmit_command_ok(panel_approval_packet.get("postsubmit_sync_ready_gate"))
     )
     job_state_sync = str(panel_approval_packet.get("job_state_probe_sync_after_query") or "")
     job_state_query_bridge_ok = (
@@ -1589,7 +1612,7 @@ def _attach_w2_panel_approval_packet(status: Dict[str, Any],
         and bool(panel_approval_packet.get("receipt_monitor_after_submit"))
         and job_state_query_bridge_ok
         and bool(panel_approval_packet.get("postsubmit_status_command_before_sync"))
-        and "--require-sync-ready" in str(panel_approval_packet.get("postsubmit_status_command_before_sync") or "")
+        and _strict_postsubmit_command_ok(panel_approval_packet.get("postsubmit_status_command_before_sync"))
         and bool(panel_approval_packet.get("postsync_replay_after_sync"))
     )
     if v11_panel_sync and not postsubmit_sync_ready_gate_ok:
