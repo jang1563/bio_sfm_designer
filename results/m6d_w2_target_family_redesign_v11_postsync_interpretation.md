@@ -8,6 +8,7 @@ Sync ready: `False`.
 Can claim W2 generalization: `False`.
 
 - target alpha: `0.2`
+- panel label: `W2 v11 Boltz-2 representative panel/protocol`
 - min targets: `4`
 - min records per target: `20`
 - replay script: `results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`

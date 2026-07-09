@@ -135,11 +135,14 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
                 completion_path=completion,
                 panel_report_path=panel,
                 min_targets=2,
+                panel_label="W2 v11 Boltz-2 representative panel/protocol",
             )
 
         self.assertEqual(rep["status"], "w2_generalization_supported_by_target_wise_panel")
         self.assertTrue(rep["can_claim_w2_generalization"])
         self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["panel_label"], "W2 v11 Boltz-2 representative panel/protocol")
+        self.assertIn("W2 v11 Boltz-2 representative panel/protocol", rep["current_panel_result"]["claim"])
 
     def test_replay_script_requires_sync_ready_and_refreshes_decision_protocol(self):
         script = render_replay_script(
@@ -150,6 +153,7 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
             job_states="custom/job_states.json",
             records=["a/records.jsonl", "b/records.jsonl"],
             min_targets=2,
+            panel_label="W2 v11 Boltz-2 representative panel/protocol",
         )
 
         self.assertIn("--require-sync-ready", script)
@@ -166,6 +170,7 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
         self.assertIn("complex_panel_report", script)
         self.assertIn("m6d_w2_panel_decision_protocol", script)
         self.assertIn("m6d_w2_panel_postsync_interpretation", script)
+        self.assertIn("--panel-label 'W2 v11 Boltz-2 representative panel/protocol'", script)
 
     def test_cli_writes_artifacts(self):
         with tempfile.TemporaryDirectory() as d:
@@ -186,6 +191,7 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
                 "--completion", os.path.join(d, "missing_completion.json"),
                 "--panel-report", os.path.join(d, "missing_panel.json"),
                 "--min-targets", "2",
+                "--panel-label", "W2 v11 Boltz-2 representative panel/protocol",
                 "--emit-replay-script", replay,
                 "--out-json", out_json,
                 "--out-md", out_md,
@@ -201,10 +207,13 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
 
         self.assertEqual(rc, 0)
         self.assertEqual(saved["status"], "not_synced_not_interpretable")
+        self.assertEqual(saved["panel_label"], "W2 v11 Boltz-2 representative panel/protocol")
         self.assertIn("Post-Sync Interpretation", md)
+        self.assertIn("W2 v11 Boltz-2 representative panel/protocol", md)
         self.assertTrue(replay_exists)
         self.assertIn("--receipt \"$RECEIPT\"", replay_text)
         self.assertIn("--summary \"$SUMMARY\"", replay_text)
+        self.assertIn("--panel-label 'W2 v11 Boltz-2 representative panel/protocol'", replay_text)
 
 
 if __name__ == "__main__":

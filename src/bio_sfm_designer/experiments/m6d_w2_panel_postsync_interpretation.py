@@ -33,6 +33,7 @@ _DEFAULT_DECISION_PROTOCOL = "results/m6d_w2_target_family_redesign_v11_panel_de
 _DEFAULT_DECISION_PROTOCOL_MD = "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.md"
 _DEFAULT_SUBMIT_READY = "results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json"
 _DEFAULT_APPROVAL_PACKET = "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
+_DEFAULT_PANEL_LABEL = "W2 v11 Boltz-2 representative panel/protocol"
 _DEFAULT_OUT_JSON = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"
 _DEFAULT_OUT_MD = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.md"
 _DEFAULT_REPLAY = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
@@ -105,6 +106,7 @@ def render_replay_script(*,
                          target_alpha: float = 0.2,
                          min_targets: int = 4,
                          min_records_per_target: int = 20,
+                         panel_label: str = _DEFAULT_PANEL_LABEL,
                          records: Optional[List[str]] = None) -> str:
     record_args = _quote_paths(records or [])
     return "\n".join([
@@ -149,6 +151,7 @@ def render_replay_script(*,
             f"--target-alpha {target_alpha} "
             f"--min-targets {min_targets} "
             f"--min-records-per-target {min_records_per_target} "
+            f"--panel-label {shlex.quote(panel_label)} "
             f"--completion-script {shlex.quote(completion_script)} "
             f"--sync-back-script {shlex.quote(sync_back)} "
             f"--out-json {shlex.quote(decision_protocol)} "
@@ -156,6 +159,7 @@ def render_replay_script(*,
         ),
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_postsync_interpretation "
+            f"--panel-label {shlex.quote(panel_label)} "
             f"--out-json {shlex.quote(out_json)} --out-md {shlex.quote(out_md)}"
         ),
         "",
@@ -170,7 +174,8 @@ def build_interpretation(*,
                          replay_script: str = _DEFAULT_REPLAY,
                          target_alpha: float = 0.2,
                          min_targets: int = 4,
-                         min_records_per_target: int = 20) -> Dict[str, Any]:
+                         min_records_per_target: int = 20,
+                         panel_label: str = _DEFAULT_PANEL_LABEL) -> Dict[str, Any]:
     manifest = _load_json(manifest_path)
     postsubmit = _load_json_optional(postsubmit_path)
     completion_report = _load_json_optional(completion_path)
@@ -186,7 +191,12 @@ def build_interpretation(*,
         panel_out=panel_report_path,
         out_path=completion_path,
     )
-    panel_result = classify_panel_report(panel_report, target_alpha=target_alpha, min_targets=min_targets)
+    panel_result = classify_panel_report(
+        panel_report,
+        target_alpha=target_alpha,
+        min_targets=min_targets,
+        panel_label=panel_label,
+    )
 
     if panel_report is not None:
         if completion_report is None or completion_report.get("ok") is not True:
@@ -221,6 +231,7 @@ def build_interpretation(*,
         "sync_ready": sync_ready,
         "can_claim_w2_generalization": can_claim,
         "target_alpha": target_alpha,
+        "panel_label": panel_label,
         "min_targets": min_targets,
         "min_records_per_target": min_records_per_target,
         "manifest": manifest_path,
@@ -255,6 +266,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"Can claim W2 generalization: `{rep.get('can_claim_w2_generalization')}`.",
         "",
         f"- target alpha: `{rep.get('target_alpha')}`",
+        f"- panel label: `{rep.get('panel_label')}`",
         f"- min targets: `{rep.get('min_targets')}`",
         f"- min records per target: `{rep.get('min_records_per_target')}`",
         f"- replay script: `{rep.get('replay_script')}`",
@@ -302,6 +314,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--target-alpha", type=float, default=0.2)
     ap.add_argument("--min-targets", type=int, default=4)
     ap.add_argument("--min-records-per-target", type=int, default=20)
+    ap.add_argument("--panel-label", default=_DEFAULT_PANEL_LABEL)
     ap.add_argument("--emit-replay-script", default=_DEFAULT_REPLAY)
     ap.add_argument("--out-json", default=_DEFAULT_OUT_JSON)
     ap.add_argument("--out-md", default=_DEFAULT_OUT_MD)
@@ -316,6 +329,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         target_alpha=args.target_alpha,
         min_targets=args.min_targets,
         min_records_per_target=args.min_records_per_target,
+        panel_label=args.panel_label,
     )
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))
@@ -342,6 +356,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 target_alpha=args.target_alpha,
                 min_targets=args.min_targets,
                 min_records_per_target=args.min_records_per_target,
+                panel_label=args.panel_label,
                 records=_records_from_manifest(manifest),
             ),
             executable=True,

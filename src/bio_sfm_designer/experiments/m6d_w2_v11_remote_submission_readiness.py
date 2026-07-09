@@ -99,6 +99,7 @@ _SEMANTIC_JSON_FIELDS = {
         "no_submit",
         "can_submit_panel_if_user_explicitly_approves",
         "can_claim_w2_generalization_now",
+        "panel_contract.panel_label",
         "current_panel_result.status",
         "current_panel_result.w2_generalization_supported",
     ],

@@ -101,6 +101,7 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
         self.assertTrue(rep["no_submit"])
         self.assertTrue(rep["can_submit_panel_if_user_explicitly_approves"])
         self.assertFalse(rep["can_claim_w2_generalization_now"])
+        self.assertEqual(rep["panel_contract"]["panel_label"], "predeclared W2 Boltz-2 panel/protocol")
         self.assertEqual(rep["panel_contract"]["n_manifest_targets"], 14)
         self.assertEqual(rep["current_panel_result"]["status"], "not_available_not_submitted")
         self.assertIn("target-wise panel certification", rep["claim_boundary"]["w2_multi_target_generalization"])
@@ -133,11 +134,17 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
             certified_ids=[f"t{i}" for i in range(14)],
         )
 
-        result = classify_panel_report(panel, target_alpha=0.2, min_targets=14)
+        result = classify_panel_report(
+            panel,
+            target_alpha=0.2,
+            min_targets=14,
+            panel_label="W2 v11 Boltz-2 representative panel/protocol",
+        )
 
         self.assertEqual(result["status"], "w2_generalization_supported_by_target_wise_panel")
         self.assertTrue(result["w2_generalization_supported"])
         self.assertEqual(len(result["certified_targets"]), 14)
+        self.assertIn("W2 v11 Boltz-2 representative panel/protocol", result["claim"])
 
     def test_classifies_partial_target_certificates_as_target_specific_only(self):
         panel = _panel_report(
@@ -171,6 +178,7 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
                 "--approval-packet", packet,
                 "--completion-report", os.path.join(d, "missing_completion.json"),
                 "--panel-report", os.path.join(d, "missing_panel.json"),
+                "--panel-label", "W2 v11 Boltz-2 representative panel/protocol",
                 "--out-json", out_json,
                 "--out-md", out_md,
             ])
@@ -182,7 +190,9 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
 
         self.assertEqual(rep["status"], "post_panel_decision_protocol_ready")
         self.assertEqual(saved["status"], "post_panel_decision_protocol_ready")
+        self.assertEqual(saved["panel_contract"]["panel_label"], "W2 v11 Boltz-2 representative panel/protocol")
         self.assertIn("M6d W2 Panel Decision Protocol", md)
+        self.assertIn("W2 v11 Boltz-2 representative panel/protocol", md)
 
 
 if __name__ == "__main__":

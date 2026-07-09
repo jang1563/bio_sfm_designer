@@ -18,6 +18,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set
 
 _APPROVAL_READY_STATUS = "panel_approval_packet_ready"
 _PROJECT_READY_STATUS = "post_panel_decision_protocol_ready"
+_DEFAULT_PANEL_LABEL = "predeclared W2 Boltz-2 panel/protocol"
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -99,6 +100,7 @@ def classify_panel_report(
     *,
     target_alpha: float,
     min_targets: int,
+    panel_label: str = _DEFAULT_PANEL_LABEL,
 ) -> Dict[str, Any]:
     if not isinstance(panel_report, dict):
         return {
@@ -136,7 +138,7 @@ def classify_panel_report(
             "w2_generalization_supported": True,
             "certified_targets": certified,
             "not_certified_targets": [],
-            "claim": "W2 multi-target generalization is supported for the predeclared panel/protocol",
+            "claim": f"W2 multi-target generalization is supported for the {panel_label}",
             "next_action": "preserve this as W2 evidence, then decide whether W3 robustness remains the limiting caveat",
         }
 
@@ -170,6 +172,7 @@ def build_protocol(
     target_alpha: float = 0.2,
     min_targets: int = 14,
     min_records_per_target: int = 20,
+    panel_label: str = _DEFAULT_PANEL_LABEL,
     completion_script: str = "results/m6d_w2_target_family_redesign_v9_completion.sh",
     sync_back_script: str = "results/m6d_w2_target_family_redesign_v9_sync_back.sh",
     completion_out: str = "results/m6d_w2_target_family_redesign_v9_completion.json",
@@ -251,7 +254,12 @@ def build_protocol(
         "status": completion_report.get("status") if isinstance(completion_report, dict) else "not_available_not_submitted",
         "ok": completion_report.get("ok") if isinstance(completion_report, dict) else False,
     }
-    panel_result = classify_panel_report(panel_report, target_alpha=target_alpha, min_targets=min_targets)
+    panel_result = classify_panel_report(
+        panel_report,
+        target_alpha=target_alpha,
+        min_targets=min_targets,
+        panel_label=panel_label,
+    )
     protocol_ready = not failures
     approval_env_var = approval_packet.get("panel_approval_env_var") or "panel approval env"
     approval_env_value = approval_packet.get("panel_approval_env_value") or "panel approval token"
@@ -281,6 +289,7 @@ def build_protocol(
             "panel_report": panel_report.get("_path") if isinstance(panel_report, dict) else None,
         },
         "panel_contract": {
+            "panel_label": panel_label,
             "target_alpha": target_alpha,
             "min_targets": min_targets,
             "min_records_per_target": min_records_per_target,
@@ -321,7 +330,7 @@ def build_protocol(
             },
             {
                 "if": "panel report is multi_target_certified at target_alpha with every target certified",
-                "then": "W2 generalization supported for the predeclared v9 Boltz-2 panel/protocol",
+                "then": f"W2 generalization supported for the {panel_label}",
             },
             {
                 "if": "panel report is evaluable but any target is not certified",
@@ -362,6 +371,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
     contract = rep["panel_contract"]
     lines.extend([
         f"- target_alpha: `{contract['target_alpha']}`",
+        f"- panel_label: `{contract.get('panel_label')}`",
         f"- targets: `{contract['n_manifest_targets']}`",
         f"- min_records_per_target: `{contract['min_records_per_target']}`",
         f"- predictor_scope: `{contract['predictor_scope']}`",
@@ -401,6 +411,7 @@ def main(argv=None) -> Dict[str, Any]:
     ap.add_argument("--target-alpha", type=float, default=0.2)
     ap.add_argument("--min-targets", type=int, default=14)
     ap.add_argument("--min-records-per-target", type=int, default=20)
+    ap.add_argument("--panel-label", default=_DEFAULT_PANEL_LABEL)
     ap.add_argument("--completion-script", default="results/m6d_w2_target_family_redesign_v9_completion.sh")
     ap.add_argument("--sync-back-script", default="results/m6d_w2_target_family_redesign_v9_sync_back.sh")
     ap.add_argument("--out-json", default="results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.json")
@@ -418,6 +429,7 @@ def main(argv=None) -> Dict[str, Any]:
         target_alpha=args.target_alpha,
         min_targets=args.min_targets,
         min_records_per_target=args.min_records_per_target,
+        panel_label=args.panel_label,
         completion_script=args.completion_script,
         sync_back_script=args.sync_back_script,
         completion_out=args.completion_report,

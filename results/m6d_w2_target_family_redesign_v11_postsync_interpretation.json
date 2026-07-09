@@ -23,6 +23,7 @@
   "min_targets": 4,
   "next_action": "await explicit approval, guarded submission, job completion, and sync-ready postsubmit status",
   "no_submit": true,
+  "panel_label": "W2 v11 Boltz-2 representative panel/protocol",
   "panel_report": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
   "postsubmit_status": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
   "records": [

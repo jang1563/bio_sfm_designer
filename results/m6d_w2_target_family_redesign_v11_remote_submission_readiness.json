@@ -68,12 +68,12 @@
       "remote_sha256": "9fe7e6e26631ffe3ecd0721fd1e6bcf0ecf34e3b85486c9634af458747986249"
     },
     {
-      "local_bytes": 3084,
-      "local_sha256": "c82aefe0537851a6c547a86b0952a8f0f45acd9386e6035930cc467d1aeabd22",
+      "local_bytes": 3206,
+      "local_sha256": "5dd058f3fcedc59348891e6ad487f16d3978e38096e427b285a8c5e39b3bc508",
       "ok": true,
       "path": "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
-      "remote_bytes": 3084,
-      "remote_sha256": "c82aefe0537851a6c547a86b0952a8f0f45acd9386e6035930cc467d1aeabd22"
+      "remote_bytes": 3206,
+      "remote_sha256": "5dd058f3fcedc59348891e6ad487f16d3978e38096e427b285a8c5e39b3bc508"
     },
     {
       "local_bytes": 11105,
@@ -116,28 +116,28 @@
       "remote_sha256": "1be1c23c00c0b75838ce30fa16db3bda64d4fe9a70298e42ef03369a641a9fd9"
     },
     {
-      "local_bytes": 16448,
-      "local_sha256": "0ce024f4d11cc39faf49b668263d686b4c0e8d7452f3772a7ab4cb90825d0eca",
+      "local_bytes": 17069,
+      "local_sha256": "0098f088b014cfbb709877e7be0e3f94e706bcbf082e46a0de3da892cc364d97",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_postsync_interpretation.py",
-      "remote_bytes": 16448,
-      "remote_sha256": "0ce024f4d11cc39faf49b668263d686b4c0e8d7452f3772a7ab4cb90825d0eca"
+      "remote_bytes": 17069,
+      "remote_sha256": "0098f088b014cfbb709877e7be0e3f94e706bcbf082e46a0de3da892cc364d97"
     },
     {
-      "local_bytes": 19302,
-      "local_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2",
+      "local_bytes": 19688,
+      "local_sha256": "72133952cbbe6ace5908fe0255585ee364050ea705f0bd58c5ce591e0313fb4a",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_panel_decision_protocol.py",
-      "remote_bytes": 19302,
-      "remote_sha256": "ea6c59ea5238c3c58b2c8e649351c2f60c129bb94da006943c77ada4c97d29f2"
+      "remote_bytes": 19688,
+      "remote_sha256": "72133952cbbe6ace5908fe0255585ee364050ea705f0bd58c5ce591e0313fb4a"
     },
     {
-      "local_bytes": 17725,
-      "local_sha256": "bbef6c76407483720e1a67d21574843e30cc55932ee0bec7d0e3a2f855a3c0e6",
+      "local_bytes": 17763,
+      "local_sha256": "8f0b6471195fccbf39f0737c8b12a4e293ee753fec2164da562767d1f4bf516c",
       "ok": true,
       "path": "src/bio_sfm_designer/experiments/m6d_w2_v11_remote_submission_readiness.py",
-      "remote_bytes": 17725,
-      "remote_sha256": "bbef6c76407483720e1a67d21574843e30cc55932ee0bec7d0e3a2f855a3c0e6"
+      "remote_bytes": 17763,
+      "remote_sha256": "8f0b6471195fccbf39f0737c8b12a4e293ee753fec2164da562767d1f4bf516c"
     },
     {
       "local_bytes": 21772,
@@ -492,6 +492,12 @@
           "local": false,
           "ok": true,
           "remote": false
+        },
+        {
+          "field": "panel_contract.panel_label",
+          "local": "W2 v11 Boltz-2 representative panel/protocol",
+          "ok": true,
+          "remote": "W2 v11 Boltz-2 representative panel/protocol"
         },
         {
           "field": "current_panel_result.status",

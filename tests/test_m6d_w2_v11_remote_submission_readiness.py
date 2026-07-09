@@ -54,6 +54,9 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         fields = _SEMANTIC_JSON_FIELDS[
             "results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
         ]
+        decision_fields = _SEMANTIC_JSON_FIELDS[
+            "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json"
+        ]
 
         self.assertIn("postsubmit_status_before_sync", fields)
         self.assertIn("job_state_probe_before_sync", fields)
@@ -64,6 +67,7 @@ class M6DW2V11RemoteSubmissionReadinessTests(unittest.TestCase):
         self.assertIn("postsubmit_sync_ready_gate", fields)
         self.assertIn("postsubmit_status_command_before_sync", fields)
         self.assertIn("postsync_replay_after_sync", fields)
+        self.assertIn("panel_contract.panel_label", decision_fields)
 
     def test_build_readiness_accepts_hash_match_and_semantic_path_drift(self):
         with tempfile.TemporaryDirectory() as d:
