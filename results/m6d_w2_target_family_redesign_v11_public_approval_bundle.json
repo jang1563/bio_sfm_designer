@@ -56,6 +56,7 @@
     "all_manual_commands_present": true,
     "driver_command_key": "postsubmit_driver_after_submit",
     "driver_command_present": true,
+    "driver_polling_contract_ok": true,
     "driver_proceeds_only_when_sync_ready": true,
     "includes_completion": true,
     "includes_job_state_probe_sync": true,

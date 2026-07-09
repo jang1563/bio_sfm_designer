@@ -66,6 +66,14 @@ _APPROVAL_SCOPE_KEYS = (
     "no_submit",
     "can_claim_w2_generalization",
 )
+_POSTSUBMIT_DRIVER_POLLING_CONTRACT: Dict[str, Any] = {
+    "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+    "default_max_polls": 120,
+    "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+    "default_poll_seconds": 300,
+    "proceeds_only_when_sync_ready": True,
+    "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready",
+}
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -241,10 +249,15 @@ def _post_approval_workflow(
         "includes_postsync_interpretation": "postsync_replay" in manual_step_ids,
         "driver_command_key": "postsubmit_driver_after_submit",
         "driver_command_present": _command_present(commands, "postsubmit_driver_after_submit"),
+        "driver_polling_contract_ok": _postsubmit_driver_polling_ok(postsubmit_driver_polling),
         "driver_proceeds_only_when_sync_ready": (
             postsubmit_driver_polling.get("proceeds_only_when_sync_ready") is True
         ),
     }
+
+
+def _postsubmit_driver_polling_ok(polling: Dict[str, Any]) -> bool:
+    return all(polling.get(key) == expected for key, expected in _POSTSUBMIT_DRIVER_POLLING_CONTRACT.items())
 
 
 def _post_approval_workflow_ok(workflow: Dict[str, Any]) -> bool:
@@ -259,6 +272,7 @@ def _post_approval_workflow_ok(workflow: Dict[str, Any]) -> bool:
         and workflow.get("includes_completion") is True
         and workflow.get("includes_postsync_interpretation") is True
         and workflow.get("driver_command_present") is True
+        and workflow.get("driver_polling_contract_ok") is True
         and workflow.get("driver_proceeds_only_when_sync_ready") is True
     )
 
@@ -380,6 +394,11 @@ def build_bundle(
                     "includes_postsync_interpretation"
                 ),
                 "driver_command_present": post_approval_workflow.get("driver_command_present"),
+                "driver_polling_contract_ok": post_approval_workflow.get("driver_polling_contract_ok"),
+                "postsubmit_driver_polling": {
+                    key: postsubmit_driver_polling.get(key)
+                    for key in _POSTSUBMIT_DRIVER_POLLING_CONTRACT
+                },
                 "driver_proceeds_only_when_sync_ready": post_approval_workflow.get(
                     "driver_proceeds_only_when_sync_ready"
                 ),
@@ -514,6 +533,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- all manual commands present: `{workflow.get('all_manual_commands_present')}`",
         f"- sync-ready gate before record sync: `{workflow.get('requires_sync_ready_before_record_sync')}`",
         f"- includes post-sync interpretation: `{workflow.get('includes_postsync_interpretation')}`",
+        f"- driver polling contract ok: `{workflow.get('driver_polling_contract_ok')}`",
         f"- driver proceeds only when sync-ready: `{workflow.get('driver_proceeds_only_when_sync_ready')}`",
         "",
     ])

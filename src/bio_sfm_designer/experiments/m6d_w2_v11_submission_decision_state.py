@@ -489,6 +489,22 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_command_present",
     )
+    workflow_driver_polling_contract_ok = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_polling_contract_ok",
+    )
+    workflow_driver_polling_default_max_polls = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_polling_default_max_polls",
+    )
+    workflow_driver_polling_default_poll_seconds = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds",
+    )
+    workflow_driver_polling_sync_ready_gate = _field(
+        goal_completion_audit,
+        "w2_gate.panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate",
+    )
     workflow_driver_sync_ready_only = _field(
         goal_completion_audit,
         "w2_gate.panel_public_approval_bundle_workflow_driver_sync_ready_only",
@@ -515,6 +531,10 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         and workflow_sync_ready_before_record_sync is True
         and workflow_includes_postsync is True
         and workflow_driver_command_present is True
+        and workflow_driver_polling_contract_ok is True
+        and workflow_driver_polling_default_max_polls == 120
+        and workflow_driver_polling_default_poll_seconds == 300
+        and workflow_driver_polling_sync_ready_gate == "m6d_w2_panel_postsubmit_status.sync_ready"
         and workflow_driver_sync_ready_only is True
     )
     return {
@@ -550,6 +570,18 @@ def _completion_audit_state(goal_completion_audit: Dict[str, Any]) -> Dict[str, 
         ),
         "w2_panel_public_approval_bundle_workflow_includes_postsync_interpretation": workflow_includes_postsync,
         "w2_panel_public_approval_bundle_workflow_driver_command_present": workflow_driver_command_present,
+        "w2_panel_public_approval_bundle_workflow_driver_polling_contract_ok": (
+            workflow_driver_polling_contract_ok
+        ),
+        "w2_panel_public_approval_bundle_workflow_driver_polling_default_max_polls": (
+            workflow_driver_polling_default_max_polls
+        ),
+        "w2_panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds": (
+            workflow_driver_polling_default_poll_seconds
+        ),
+        "w2_panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate": (
+            workflow_driver_polling_sync_ready_gate
+        ),
         "w2_panel_public_approval_bundle_workflow_driver_sync_ready_only": workflow_driver_sync_ready_only,
     }
 

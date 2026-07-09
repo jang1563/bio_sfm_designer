@@ -33,6 +33,14 @@ _PANEL_SUBMISSION_DECISION_READY_STATUS = "awaiting_explicit_panel_submission_ap
 _PANEL_POSTSYNC_NOT_SYNCED_STATUS = "not_synced_not_interpretable"
 _PANEL_POSTSYNC_SUPPORTED_STATUS = "w2_generalization_supported_by_target_wise_panel"
 _PANEL_PUBLIC_APPROVAL_BUNDLE_STATUS = "public_approval_bundle_ready_not_submitted"
+_POSTSUBMIT_DRIVER_POLLING_CONTRACT = {
+    "max_polls_env_var": "M6D_W2_POSTSUBMIT_MAX_POLLS",
+    "default_max_polls": 120,
+    "poll_seconds_env_var": "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+    "default_poll_seconds": 300,
+    "proceeds_only_when_sync_ready": True,
+    "sync_ready_gate": "m6d_w2_panel_postsubmit_status.sync_ready",
+}
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -272,6 +280,10 @@ def _project_status_approval_scope(project_status_w2: Dict[str, Any]) -> Dict[st
     }
 
 
+def _postsubmit_driver_polling_ok(polling: Dict[str, Any]) -> bool:
+    return all(polling.get(key) == expected for key, expected in _POSTSUBMIT_DRIVER_POLLING_CONTRACT.items())
+
+
 def _panel_decision_state(panel_decision_protocol: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     if not isinstance(panel_decision_protocol, dict):
         return {
@@ -466,6 +478,11 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         if isinstance(panel_public_approval_bundle.get("post_approval_workflow"), dict)
         else {}
     )
+    polling = (
+        panel_public_approval_bundle.get("postsubmit_driver_polling")
+        if isinstance(panel_public_approval_bundle.get("postsubmit_driver_polling"), dict)
+        else {}
+    )
     remote = (
         prereqs.get("remote_readiness")
         if isinstance(prereqs.get("remote_readiness"), dict)
@@ -504,6 +521,15 @@ def _panel_public_approval_bundle_state(panel_public_approval_bundle: Optional[D
         "workflow_includes_completion": workflow.get("includes_completion"),
         "workflow_includes_postsync_interpretation": workflow.get("includes_postsync_interpretation"),
         "workflow_driver_command_present": workflow.get("driver_command_present"),
+        "workflow_driver_polling_contract_ok": (
+            workflow.get("driver_polling_contract_ok") is True
+            and _postsubmit_driver_polling_ok(polling)
+        ),
+        "workflow_driver_polling_max_polls_env_var": polling.get("max_polls_env_var"),
+        "workflow_driver_polling_default_max_polls": polling.get("default_max_polls"),
+        "workflow_driver_polling_poll_seconds_env_var": polling.get("poll_seconds_env_var"),
+        "workflow_driver_polling_default_poll_seconds": polling.get("default_poll_seconds"),
+        "workflow_driver_polling_sync_ready_gate": polling.get("sync_ready_gate"),
         "workflow_driver_proceeds_only_when_sync_ready": workflow.get(
             "driver_proceeds_only_when_sync_ready"
         ),
@@ -1199,6 +1225,7 @@ def build_audit(project_status: Dict[str, Any],
             or panel_public_bundle.get("workflow_includes_completion") is not True
             or panel_public_bundle.get("workflow_includes_postsync_interpretation") is not True
             or panel_public_bundle.get("workflow_driver_command_present") is not True
+            or panel_public_bundle.get("workflow_driver_polling_contract_ok") is not True
             or panel_public_bundle.get("workflow_driver_proceeds_only_when_sync_ready") is not True
         ):
             _add_failure(
@@ -1215,6 +1242,7 @@ def build_audit(project_status: Dict[str, Any],
                     "workflow_includes_completion": True,
                     "workflow_includes_postsync_interpretation": True,
                     "workflow_driver_command_present": True,
+                    "workflow_driver_polling_contract_ok": True,
                     "workflow_driver_proceeds_only_when_sync_ready": True,
                 },
                 observed={
@@ -1238,6 +1266,12 @@ def build_audit(project_status: Dict[str, Any],
                     ),
                     "workflow_driver_command_present": panel_public_bundle.get(
                         "workflow_driver_command_present"
+                    ),
+                    "workflow_driver_polling_contract_ok": panel_public_bundle.get(
+                        "workflow_driver_polling_contract_ok"
+                    ),
+                    "workflow_driver_polling_sync_ready_gate": panel_public_bundle.get(
+                        "workflow_driver_polling_sync_ready_gate"
                     ),
                     "workflow_driver_proceeds_only_when_sync_ready": panel_public_bundle.get(
                         "workflow_driver_proceeds_only_when_sync_ready"
@@ -1520,6 +1554,18 @@ def build_audit(project_status: Dict[str, Any],
             "panel_public_approval_bundle_workflow_driver_command_present": panel_public_bundle.get(
                 "workflow_driver_command_present"
             ),
+            "panel_public_approval_bundle_workflow_driver_polling_contract_ok": panel_public_bundle.get(
+                "workflow_driver_polling_contract_ok"
+            ),
+            "panel_public_approval_bundle_workflow_driver_polling_default_max_polls": panel_public_bundle.get(
+                "workflow_driver_polling_default_max_polls"
+            ),
+            "panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds": (
+                panel_public_bundle.get("workflow_driver_polling_default_poll_seconds")
+            ),
+            "panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate": panel_public_bundle.get(
+                "workflow_driver_polling_sync_ready_gate"
+            ),
             "panel_public_approval_bundle_workflow_driver_sync_ready_only": panel_public_bundle.get(
                 "workflow_driver_proceeds_only_when_sync_ready"
             ),
@@ -1613,6 +1659,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"- W2 panel public approval bundle workflow sync-ready before record sync: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_sync_ready_before_record_sync')}`",
         f"- W2 panel public approval bundle workflow includes post-sync interpretation: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_includes_postsync_interpretation')}`",
         f"- W2 panel public approval bundle workflow driver command present: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_driver_command_present')}`",
+        f"- W2 panel public approval bundle workflow driver polling contract ok: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_workflow_driver_polling_contract_ok')}`",
         f"- W2 panel public approval bundle scope ready: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_ready')}`",
         f"- W2 panel public approval bundle scope planned designs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_planned_design_records')}`",
         f"- W2 panel public approval bundle scope expected Slurm jobs: `{rep.get('w2_gate', {}).get('panel_public_approval_bundle_scope_expected_slurm_jobs')}`",

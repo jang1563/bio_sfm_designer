@@ -92,6 +92,7 @@ bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 - all manual commands present: `True`
 - sync-ready gate before record sync: `True`
 - includes post-sync interpretation: `True`
+- driver polling contract ok: `True`
 - driver proceeds only when sync-ready: `True`
 
 - 1. `setup_environment` (command present: `True`)

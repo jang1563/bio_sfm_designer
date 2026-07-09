@@ -230,6 +230,12 @@ def _goal_completion_audit():
             "panel_public_approval_bundle_workflow_sync_ready_before_record_sync": True,
             "panel_public_approval_bundle_workflow_includes_postsync_interpretation": True,
             "panel_public_approval_bundle_workflow_driver_command_present": True,
+            "panel_public_approval_bundle_workflow_driver_polling_contract_ok": True,
+            "panel_public_approval_bundle_workflow_driver_polling_default_max_polls": 120,
+            "panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds": 300,
+            "panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate": (
+                "m6d_w2_panel_postsubmit_status.sync_ready"
+            ),
             "panel_public_approval_bundle_workflow_driver_sync_ready_only": True,
         },
     }
@@ -333,6 +339,23 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
                 "w2_panel_public_approval_bundle_workflow_driver_command_present"
             ]
         )
+        self.assertTrue(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_driver_polling_contract_ok"
+            ]
+        )
+        self.assertEqual(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_driver_polling_default_max_polls"
+            ],
+            120,
+        )
+        self.assertEqual(
+            rep["prerequisites"]["goal_completion_audit"][
+                "w2_panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds"
+            ],
+            300,
+        )
         self.assertIn("does not submit jobs", render_markdown(rep))
         self.assertIn("Approval Scope", render_markdown(rep))
         self.assertIn("Approval Disambiguation", render_markdown(rep))
@@ -415,6 +438,18 @@ class M6DW2V11SubmissionDecisionStateTests(unittest.TestCase):
     def test_missing_public_approval_driver_command_blocks_decision_state(self):
         completion = _goal_completion_audit()
         completion["w2_gate"].pop("panel_public_approval_bundle_workflow_driver_command_present")
+
+        rep = _build(goal_completion_audit=completion)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submission_decision_blocked")
+        self.assertFalse(rep["prerequisites"]["goal_completion_audit"]["ok"])
+        kinds = {failure["kind"] for failure in rep["failures"]}
+        self.assertIn("goal_completion_audit_not_ready", kinds)
+
+    def test_missing_public_approval_driver_polling_contract_blocks_decision_state(self):
+        completion = _goal_completion_audit()
+        completion["w2_gate"].pop("panel_public_approval_bundle_workflow_driver_polling_contract_ok")
 
         rep = _build(goal_completion_audit=completion)
 

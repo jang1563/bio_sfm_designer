@@ -206,6 +206,22 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             decision_fields,
         )
         self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_polling_contract_ok",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_polling_default_max_polls",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds",
+            decision_fields,
+        )
+        self.assertIn(
+            "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate",
+            decision_fields,
+        )
+        self.assertIn(
             "prerequisites.goal_completion_audit.w2_panel_public_approval_bundle_workflow_driver_sync_ready_only",
             decision_fields,
         )
@@ -239,6 +255,22 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
             "w2_gate.panel_public_approval_bundle_workflow_driver_command_present",
             completion_fields,
         )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_driver_polling_contract_ok",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_driver_polling_default_max_polls",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_driver_polling_default_poll_seconds",
+            completion_fields,
+        )
+        self.assertIn(
+            "w2_gate.panel_public_approval_bundle_workflow_driver_polling_sync_ready_gate",
+            completion_fields,
+        )
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_ready", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_planned_design_records", completion_fields)
         self.assertIn("w2_gate.panel_public_approval_bundle_scope_expected_slurm_jobs", completion_fields)
@@ -258,6 +290,13 @@ class M6DLocalCayugaMirrorAuditTests(unittest.TestCase):
         self.assertIn("post_approval_workflow.includes_completion", public_bundle_fields)
         self.assertIn("post_approval_workflow.includes_postsync_interpretation", public_bundle_fields)
         self.assertIn("post_approval_workflow.driver_command_present", public_bundle_fields)
+        self.assertIn("post_approval_workflow.driver_polling_contract_ok", public_bundle_fields)
+        self.assertIn("postsubmit_driver_polling.max_polls_env_var", public_bundle_fields)
+        self.assertIn("postsubmit_driver_polling.default_max_polls", public_bundle_fields)
+        self.assertIn("postsubmit_driver_polling.poll_seconds_env_var", public_bundle_fields)
+        self.assertIn("postsubmit_driver_polling.default_poll_seconds", public_bundle_fields)
+        self.assertIn("postsubmit_driver_polling.proceeds_only_when_sync_ready", public_bundle_fields)
+        self.assertIn("postsubmit_driver_polling.sync_ready_gate", public_bundle_fields)
         self.assertIn(
             "post_approval_workflow.driver_proceeds_only_when_sync_ready",
             public_bundle_fields,

@@ -177,6 +177,17 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
             rep["postsubmit_driver_polling"]["max_polls_env_var"],
             "M6D_W2_POSTSUBMIT_MAX_POLLS",
         )
+        self.assertEqual(rep["postsubmit_driver_polling"]["default_max_polls"], 120)
+        self.assertEqual(
+            rep["postsubmit_driver_polling"]["poll_seconds_env_var"],
+            "M6D_W2_POSTSUBMIT_POLL_SECONDS",
+        )
+        self.assertEqual(rep["postsubmit_driver_polling"]["default_poll_seconds"], 300)
+        self.assertEqual(
+            rep["postsubmit_driver_polling"]["sync_ready_gate"],
+            "m6d_w2_panel_postsubmit_status.sync_ready",
+        )
+        self.assertTrue(rep["post_approval_workflow"]["driver_polling_contract_ok"])
         self.assertTrue(rep["postsubmit_driver_polling"]["proceeds_only_when_sync_ready"])
         self.assertEqual(rep["post_approval_workflow"]["manual_step_count"], 9)
         self.assertEqual(rep["approval_scope"]["n_ready_targets"], 7)
@@ -197,6 +208,7 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertIn("Approval Boundary", render_markdown(rep))
         self.assertIn("Approval Scope", render_markdown(rep))
         self.assertIn("Post-Approval Workflow", render_markdown(rep))
+        self.assertIn("driver polling contract ok: `True`", render_markdown(rep))
         self.assertIn("remote shell syntax checks ok: `True`", render_markdown(rep))
 
     def test_missing_approval_scope_blocks_bundle(self):
@@ -243,6 +255,23 @@ class M6DW2V11PublicApprovalBundleTests(unittest.TestCase):
         self.assertFalse(rep["audit_ok"])
         self.assertEqual(rep["status"], "public_approval_bundle_blocked")
         self.assertFalse(rep["post_approval_workflow"]["all_manual_commands_present"])
+        self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
+
+    def test_polling_contract_drift_blocks_bundle(self):
+        runbook = _runbook()
+        runbook["post_submit"]["postsubmit_driver_polling"]["default_poll_seconds"] = 30
+
+        rep = build_bundle(
+            runbook=runbook,
+            packet=_packet(),
+            preflight=_preflight(),
+            decision_state=_decision(),
+            remote_readiness=_remote(),
+        )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertEqual(rep["status"], "public_approval_bundle_blocked")
+        self.assertFalse(rep["post_approval_workflow"]["driver_polling_contract_ok"])
         self.assertIn("post_approval_workflow_not_complete", {f["kind"] for f in rep["failures"]})
 
     def test_missing_remote_shell_syntax_gate_blocks_bundle(self):

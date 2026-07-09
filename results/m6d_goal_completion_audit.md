@@ -62,6 +62,7 @@ This is a no-submit completion-boundary audit. A passing audit preserves the cur
 - W2 panel public approval bundle workflow sync-ready before record sync: `True`
 - W2 panel public approval bundle workflow includes post-sync interpretation: `True`
 - W2 panel public approval bundle workflow driver command present: `True`
+- W2 panel public approval bundle workflow driver polling contract ok: `True`
 - W2 panel public approval bundle scope ready: `True`
 - W2 panel public approval bundle scope planned designs: `700`
 - W2 panel public approval bundle scope expected Slurm jobs: `14`
