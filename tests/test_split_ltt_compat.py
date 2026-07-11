@@ -3,7 +3,11 @@
 import unittest
 
 from bio_sfm_designer.trust._split_ltt_compat import split_ltt_threshold as compat
-from bio_sfm_trust import split_ltt_threshold as core
+
+try:
+    from bio_sfm_trust import split_ltt_threshold as core
+except ImportError:  # public v0.1.0 intentionally exercises the designer fallback
+    core = None
 
 
 class SplitLTTCompatTests(unittest.TestCase):
@@ -16,7 +20,12 @@ class SplitLTTCompatTests(unittest.TestCase):
             0.2,
             0.1,
         )
-        self.assertEqual(compat(*args), core(*args))
+        report = compat(*args)
+        if core is not None:
+            self.assertEqual(report, core(*args))
+        self.assertTrue(report["certified"])
+        self.assertEqual(report["method"], "split_learn_then_test_hoeffding")
+        self.assertEqual(report["certification"]["n_accepted"], 40)
 
     def test_compatibility_refusal_matches_trust_core(self):
         args = (
@@ -27,7 +36,12 @@ class SplitLTTCompatTests(unittest.TestCase):
             0.2,
             0.1,
         )
-        self.assertEqual(compat(*args), core(*args))
+        report = compat(*args)
+        if core is not None:
+            self.assertEqual(report, core(*args))
+        self.assertFalse(report["certified"])
+        self.assertIsNone(report["tau"])
+        self.assertEqual(report["reason"], "hoeffding_ucb_exceeds_alpha")
 
     def test_exact_compatibility_report_matches_trust_core(self):
         args = (
@@ -39,7 +53,12 @@ class SplitLTTCompatTests(unittest.TestCase):
             0.0125,
             "clopper_pearson",
         )
-        self.assertEqual(compat(*args), core(*args))
+        report = compat(*args)
+        if core is not None:
+            self.assertEqual(report, core(*args))
+        self.assertTrue(report["certified"])
+        self.assertEqual(report["method"], "split_learn_then_test_clopper_pearson")
+        self.assertLessEqual(report["certification"]["ucb"], 0.2)
 
 
 if __name__ == "__main__":
