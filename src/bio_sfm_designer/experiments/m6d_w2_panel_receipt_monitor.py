@@ -22,6 +22,11 @@ _DEFAULT_SUMMARY = "results/m6d_w2_target_family_redesign_v11_submit_receipt_sum
 _DEFAULT_OUT_JSON = "results/m6d_w2_target_family_redesign_v11_receipt_monitor.json"
 _DEFAULT_OUT_MD = "results/m6d_w2_target_family_redesign_v11_receipt_monitor.md"
 _DEFAULT_SYNC_PLAN = "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
+_DEFAULT_JOB_STATE_PROBE = "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+_DEFAULT_JOB_STATE_PROBE_MD = "results/m6d_w2_target_family_redesign_v11_job_state_probe.md"
+_DEFAULT_JOB_STATE_QUERY = "results/m6d_w2_target_family_redesign_v11_job_state_query.sh"
+_DEFAULT_SACCT_STATES = "results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
+_DEFAULT_EXPECTED_WORKSTREAM = "m6d_w2_target_family_redesign_v11"
 
 
 def _sha256(data: bytes) -> str:
@@ -209,7 +214,12 @@ def render_sync_plan(*,
                      receipt_path: str = _DEFAULT_RECEIPT,
                      summary_path: str = _DEFAULT_SUMMARY,
                      remote_root: str = "",
-                     local_root: str = "$(pwd)") -> str:
+                     local_root: str = "$(pwd)",
+                     expected_workstream: str = _DEFAULT_EXPECTED_WORKSTREAM,
+                     job_state_probe: str = _DEFAULT_JOB_STATE_PROBE,
+                     job_state_probe_md: str = _DEFAULT_JOB_STATE_PROBE_MD,
+                     job_state_query: str = _DEFAULT_JOB_STATE_QUERY,
+                     sacct_states: str = _DEFAULT_SACCT_STATES) -> str:
     remote_line = (
         f"REMOTE_ROOT=\"${{CAYUGA_BIO_SFM_ROOT:-{remote_root}}}\""
         if remote_root else
@@ -225,14 +235,30 @@ def render_sync_plan(*,
         "PYTHON_BIN=\"${BIO_SFM_PYTHON:-${ENV_PY:-python3}}\"",
         f"RECEIPT={receipt_path}",
         f"SUMMARY={summary_path}",
+        f"EXPECTED_WORKSTREAM={shlex.quote(expected_workstream)}",
+        f"JOB_STATE_PROBE={shlex.quote(job_state_probe)}",
+        f"JOB_STATE_PROBE_MD={shlex.quote(job_state_probe_md)}",
+        f"JOB_STATE_QUERY={shlex.quote(job_state_query)}",
+        f"SACCT_STATES={shlex.quote(sacct_states)}",
         "mkdir -p \"$LOCAL_ROOT/results\"",
         "for relpath in \"$RECEIPT\" \"$SUMMARY\"; do",
         "  rsync -avP \"$REMOTE_ROOT/$relpath\" \"$LOCAL_ROOT/$relpath\"",
         "  test -s \"$LOCAL_ROOT/$relpath\"",
         "done",
         "cd \"$LOCAL_ROOT\"",
-        "export PYTHONPATH=\"${PYTHONPATH:-src}\"",
-        "PYTHONNOUSERSITE=1 \"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe",
+        'BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-$LOCAL_ROOT/../bio-sfm-trust-core/src}"',
+        'if [ -d "$BIO_SFM_TRUST_CORE_SRC" ]; then',
+        '  export PYTHONPATH="$LOCAL_ROOT/src:$BIO_SFM_TRUST_CORE_SRC${PYTHONPATH:+:$PYTHONPATH}"',
+        'else',
+        '  export PYTHONPATH="$LOCAL_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"',
+        'fi',
+        (
+            "PYTHONNOUSERSITE=1 \"$PYTHON_BIN\" -m "
+            "bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe "
+            "--receipt \"$RECEIPT\" --expected-workstream \"$EXPECTED_WORKSTREAM\" "
+            "--sacct-output-path \"$SACCT_STATES\" --emit-query-plan \"$JOB_STATE_QUERY\" "
+            "--out-json \"$JOB_STATE_PROBE\" --out-md \"$JOB_STATE_PROBE_MD\""
+        ),
         "",
     ])
 
@@ -281,6 +307,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--summary", default=_DEFAULT_SUMMARY)
     ap.add_argument("--ssh-timeout", type=int, default=30)
     ap.add_argument("--emit-sync-plan", default=_DEFAULT_SYNC_PLAN)
+    ap.add_argument("--expected-workstream", default=_DEFAULT_EXPECTED_WORKSTREAM)
+    ap.add_argument("--job-state-probe", default=_DEFAULT_JOB_STATE_PROBE)
+    ap.add_argument("--job-state-probe-md", default=_DEFAULT_JOB_STATE_PROBE_MD)
+    ap.add_argument("--job-state-query", default=_DEFAULT_JOB_STATE_QUERY)
+    ap.add_argument("--sacct-states", default=_DEFAULT_SACCT_STATES)
     ap.add_argument("--out-json", default=_DEFAULT_OUT_JSON)
     ap.add_argument("--out-md", default=_DEFAULT_OUT_MD)
     args = ap.parse_args(argv)
@@ -299,7 +330,19 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.emit_sync_plan:
         _write_text(
             args.emit_sync_plan,
-            render_sync_plan(receipt_path=args.receipt, summary_path=args.summary),
+            render_sync_plan(
+                receipt_path=args.receipt,
+                summary_path=args.summary,
+                remote_root=(
+                    f"{args.remote_host}:{args.remote_root}"
+                    if args.remote_host and args.remote_root else args.remote_root
+                ),
+                expected_workstream=args.expected_workstream,
+                job_state_probe=args.job_state_probe,
+                job_state_probe_md=args.job_state_probe_md,
+                job_state_query=args.job_state_query,
+                sacct_states=args.sacct_states,
+            ),
             executable=True,
         )
     print(

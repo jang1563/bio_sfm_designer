@@ -14,6 +14,11 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from .complex_target_manifest import validate_manifest
+from .m6d_w2_historical_target_registry import audit_manifest as audit_historical_manifest
+from .m6d_w2_approval_scope import bind_scope, file_sha256, scope_is_bound
+from .m6d_w2_panel_job_state_probe import render_query_plan as render_job_state_query_plan
+from .m6d_w2_panel_postsync_interpretation import render_replay_script as render_postsync_replay_script
+from .m6d_w2_panel_receipt_monitor import render_sync_plan as render_receipt_monitor_script
 from .m6d_w2_panel_wrapper_guard_audit import build_audit, render_markdown as render_guard_markdown
 
 
@@ -24,15 +29,22 @@ _DEFAULT_RECEIPT = "results/m6d_w2_target_family_redesign_v11_submit_receipt.jso
 _DEFAULT_SUMMARY = "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json"
 _DEFAULT_POSTSUBMIT_STATUS = "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json"
 _DEFAULT_JOB_STATE_PROBE = "results/m6d_w2_target_family_redesign_v11_job_state_probe.json"
+_DEFAULT_JOB_STATE_PROBE_MD = "results/m6d_w2_target_family_redesign_v11_job_state_probe.md"
 _DEFAULT_RECEIPT_MONITOR = "results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh"
 _DEFAULT_JOB_STATE_QUERY = "results/m6d_w2_target_family_redesign_v11_job_state_query.sh"
 _DEFAULT_SACCT_STATES = "results/m6d_w2_target_family_redesign_v11_sacct_states.tsv"
 _DEFAULT_POSTSYNC_REPLAY = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
 _DEFAULT_POSTSUBMIT_DRIVER = "results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh"
+_DEFAULT_DECISION_PROTOCOL = "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json"
+_DEFAULT_DECISION_PROTOCOL_MD = "results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.md"
+_DEFAULT_POSTSYNC_OUT_JSON = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"
+_DEFAULT_POSTSYNC_OUT_MD = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.md"
+_DEFAULT_PANEL_LABEL = "W2 v11 Boltz-2 representative panel/protocol"
 _DEFAULT_APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V11_PANEL"
 _DEFAULT_APPROVAL_TOKEN = "approve-v11-panel-submit"
 _DEFAULT_DRY_RUN_ENV_VAR = "M6D_W2_V11_SUBMIT_DRY_RUN"
-_DEFAULT_SHARED_WRAPPER = "m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
+_DEFAULT_HISTORICAL_REGISTRY = "configs/m6d_w2_historical_target_registry.json"
+_DEFAULT_SHARED_WRAPPER = "../hpc/m6d_w2_submit_with_receipt.sh"
 _DEFAULT_CAYUGA_PYTHON = ""
 _PUBLIC_REMOTE_HOST = "${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}"
 _PUBLIC_REMOTE_ROOT = "${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}"
@@ -147,8 +159,10 @@ def _build_approval_scope(
     expected_job_pairs = n_ready_targets
     expected_slurm_jobs = expected_job_pairs * 2 if expected_job_pairs is not None else None
 
-    return {
-        "manifest": runbook.get("manifest") or preflight.get("manifest"),
+    manifest = runbook.get("manifest") or preflight.get("manifest")
+    scope = {
+        "manifest": manifest,
+        "manifest_sha256": file_sha256(manifest) if isinstance(manifest, str) and os.path.isfile(manifest) else None,
         "target_ids": target_ids,
         "n_targets": n_targets,
         "n_ready_targets": n_ready_targets,
@@ -167,6 +181,7 @@ def _build_approval_scope(
         "no_submit": True,
         "can_claim_w2_generalization": False,
     }
+    return bind_scope(scope)
 
 
 def _approval_scope_ok(scope: Dict[str, Any], checks: Dict[str, Any]) -> bool:
@@ -180,6 +195,9 @@ def _approval_scope_ok(scope: Dict[str, Any], checks: Dict[str, Any]) -> bool:
     target_ids = scope.get("target_ids")
     return (
         bool(scope.get("manifest"))
+        and isinstance(scope.get("manifest_sha256"), str)
+        and len(scope["manifest_sha256"]) == 64
+        and scope_is_bound(scope)
         and isinstance(target_ids, list)
         and n_ready is not None
         and n_targets is not None
@@ -249,7 +267,13 @@ def render_completion_script(
         "# Replay the v11 panel completion gate after records are synced back.",
         "set -euo pipefail",
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
-        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'REPO_ROOT="${BIO_SFM_REPO_ROOT:-$PWD}"',
+        'BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-$REPO_ROOT/../bio-sfm-trust-core/src}"',
+        'if [ -d "$BIO_SFM_TRUST_CORE_SRC" ]; then',
+        '  export PYTHONPATH="$REPO_ROOT/src:$BIO_SFM_TRUST_CORE_SRC${PYTHONPATH:+:$PYTHONPATH}"',
+        'else',
+        '  export PYTHONPATH="$REPO_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"',
+        'fi',
         'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         "",
         command.replace("python -m ", '"$PYTHON_BIN" -m ', 1),
@@ -266,6 +290,7 @@ def render_sync_back_script(
     postsubmit_status: str = _DEFAULT_POSTSUBMIT_STATUS,
     job_state_probe: str = _DEFAULT_JOB_STATE_PROBE,
     sacct_states: str = _DEFAULT_SACCT_STATES,
+    expected_workstream: str = _DEFAULT_WORKSTREAM,
     remote_spec: str,
 ) -> str:
     remote_root_line = (
@@ -282,7 +307,12 @@ def render_sync_back_script(
         remote_root_line,
         'LOCAL_ROOT="${LOCAL_BIO_SFM_ROOT:-$(pwd)}"',
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
-        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-$LOCAL_ROOT/../bio-sfm-trust-core/src}"',
+        'if [ -d "$BIO_SFM_TRUST_CORE_SRC" ]; then',
+        '  export PYTHONPATH="$LOCAL_ROOT/src:$BIO_SFM_TRUST_CORE_SRC${PYTHONPATH:+:$PYTHONPATH}"',
+        'else',
+        '  export PYTHONPATH="$LOCAL_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"',
+        'fi',
         'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         f"MANIFEST={shlex.quote(manifest)}",
         f"COMPLETION={shlex.quote(completion_script)}",
@@ -291,6 +321,7 @@ def render_sync_back_script(
         f"POSTSUBMIT={shlex.quote(postsubmit_status)}",
         f"JOB_STATES={shlex.quote(job_state_probe)}",
         f"SACCT_STATES={shlex.quote(sacct_states)}",
+        f"EXPECTED_WORKSTREAM={shlex.quote(expected_workstream)}",
         "export MANIFEST",
         "",
         'test -s "$MANIFEST" || { echo "manifest is missing or empty: $MANIFEST" >&2; exit 2; }',
@@ -309,7 +340,8 @@ def render_sync_back_script(
         (
             '"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status '
             '--manifest "$MANIFEST" --receipt "$RECEIPT" --summary "$SUMMARY" '
-            '--job-states "$JOB_STATES" --require-sync-ready '
+            '--job-states "$JOB_STATES" --expected-workstream "$EXPECTED_WORKSTREAM" '
+            '--require-sync-ready '
             '--out-json "$POSTSUBMIT"'
         ),
         "",
@@ -363,8 +395,10 @@ def render_postsubmit_driver_script(
     submit_receipt: str = _DEFAULT_RECEIPT,
     submit_summary: str = _DEFAULT_SUMMARY,
     postsubmit_status: str = _DEFAULT_POSTSUBMIT_STATUS,
+    expected_workstream: str = _DEFAULT_WORKSTREAM,
     remote_host: Optional[str] = None,
     remote_root: Optional[str] = None,
+    cayuga_python: Optional[str] = None,
 ) -> str:
     remote_host_line = (
         f'REMOTE_HOST="${{CAYUGA_BIO_SFM_HOST:-{remote_host}}}"'
@@ -376,6 +410,11 @@ def render_postsubmit_driver_script(
         if remote_root else
         'REMOTE_PATH="${CAYUGA_BIO_SFM_REMOTE_ROOT:?set CAYUGA_BIO_SFM_REMOTE_ROOT}"'
     )
+    remote_python_line = (
+        f'REMOTE_PYTHON="${{CAYUGA_BIO_SFM_PYTHON:-{cayuga_python}}}"'
+        if cayuga_python else
+        'REMOTE_PYTHON="${CAYUGA_BIO_SFM_PYTHON:?set CAYUGA_BIO_SFM_PYTHON}"'
+    )
     return "\n".join([
         "#!/usr/bin/env bash",
         "# Drive the W2 v11 post-submit ladder after an explicitly approved guarded submit.",
@@ -384,10 +423,16 @@ def render_postsubmit_driver_script(
         "",
         remote_host_line,
         remote_path_line,
+        remote_python_line,
         'REMOTE_ROOT="${CAYUGA_BIO_SFM_ROOT:-$REMOTE_HOST:$REMOTE_PATH}"',
         'LOCAL_ROOT="${LOCAL_BIO_SFM_ROOT:-$(pwd)}"',
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
-        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-$LOCAL_ROOT/../bio-sfm-trust-core/src}"',
+        'if [ -d "$BIO_SFM_TRUST_CORE_SRC" ]; then',
+        '  export PYTHONPATH="$LOCAL_ROOT/src:$BIO_SFM_TRUST_CORE_SRC${PYTHONPATH:+:$PYTHONPATH}"',
+        'else',
+        '  export PYTHONPATH="$LOCAL_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"',
+        'fi',
         'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         f"RECEIPT_MONITOR={shlex.quote(receipt_monitor_script)}",
         f"JOB_STATE_QUERY={shlex.quote(job_state_query_script)}",
@@ -398,6 +443,7 @@ def render_postsubmit_driver_script(
         f"POSTSUBMIT={shlex.quote(postsubmit_status)}",
         f"JOB_STATES={shlex.quote(job_state_probe)}",
         f"SACCT_STATES={shlex.quote(sacct_states)}",
+        f"EXPECTED_WORKSTREAM={shlex.quote(expected_workstream)}",
         'MAX_POLLS="${M6D_W2_POSTSUBMIT_MAX_POLLS:-120}"',
         'POLL_SECONDS="${M6D_W2_POSTSUBMIT_POLL_SECONDS:-300}"',
         "",
@@ -411,14 +457,14 @@ def render_postsubmit_driver_script(
         'while :; do',
         '  echo "W2 v11 postsubmit poll ${poll}/${MAX_POLLS}"',
         '  CAYUGA_BIO_SFM_ROOT="$REMOTE_ROOT" LOCAL_BIO_SFM_ROOT="$LOCAL_ROOT" BIO_SFM_PYTHON="$PYTHON_BIN" bash "$RECEIPT_MONITOR"',
-        '  remote_cmd="$(printf \'cd %q && bash %q\' "$REMOTE_PATH" "$JOB_STATE_QUERY")"',
+        '  remote_cmd="$(printf \'cd %q && BIO_SFM_PYTHON=%q PYTHONNOUSERSITE=1 bash %q\' "$REMOTE_PATH" "$REMOTE_PYTHON" "$JOB_STATE_QUERY")"',
         '  ssh "$REMOTE_HOST" "$remote_cmd"',
         '  mkdir -p "$LOCAL_ROOT/$(dirname "$JOB_STATES")" "$LOCAL_ROOT/$(dirname "$SACCT_STATES")"',
         '  rsync -avP "$REMOTE_ROOT/$JOB_STATES" "$LOCAL_ROOT/$JOB_STATES"',
         '  rsync -avP "$REMOTE_ROOT/$SACCT_STATES" "$LOCAL_ROOT/$SACCT_STATES"',
         '  test -s "$LOCAL_ROOT/$JOB_STATES"',
         '  test -s "$LOCAL_ROOT/$SACCT_STATES"',
-        '  "$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest "$MANIFEST" --receipt "$RECEIPT" --summary "$SUMMARY" --job-states "$JOB_STATES" --out-json "$POSTSUBMIT"',
+        '  "$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest "$MANIFEST" --receipt "$RECEIPT" --summary "$SUMMARY" --job-states "$JOB_STATES" --expected-workstream "$EXPECTED_WORKSTREAM" --out-json "$POSTSUBMIT"',
         '  sync_ready="$("$PYTHON_BIN" - "$POSTSUBMIT" <<\'PY\'',
         "import json, sys",
         "with open(sys.argv[1]) as handle:",
@@ -485,6 +531,8 @@ def render_guarded_wrapper(
     lines.extend([
         f"APPROVAL_ENV_VAR=\"{approval_env_var}\"",
         f"APPROVAL_TOKEN=\"{approval_token}\"",
+        f"APPROVAL_INTENT_AUDIT=\"${{M6D_W2_V11_APPROVAL_INTENT_AUDIT:-results/{workstream}_approval_intent_audit.json}}\"",
+        'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
         "",
         'if [ "${BIO_SFM_SUBMIT_DRY_RUN:-0}" = "1" ]; then',
         f"  exec \"$SCRIPT_DIR/{shared_wrapper}\"",
@@ -496,6 +544,48 @@ def render_guarded_wrapper(
         f"  echo \"dry-run remains available with {dry_run_env_var}=1 and does not touch the submit receipt\" >&2",
         "  exit 2",
         "fi",
+        "",
+        'test -s "$APPROVAL_INTENT_AUDIT" || {',
+        '  echo "refusing panel submission without accepted approval-intent audit JSON: $APPROVAL_INTENT_AUDIT" >&2',
+        '  echo "run: python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted" >&2',
+        "  exit 2",
+        "}",
+        "",
+        '"$PYTHON_BIN" - "$APPROVAL_INTENT_AUDIT" "$MANIFEST" <<\'PY\'',
+        "import hashlib, json, os, pathlib, sys",
+        "from datetime import date",
+        "path, manifest_path = sys.argv[1:3]",
+        "with open(path) as handle:",
+        "    rep = json.load(handle)",
+        "scope = rep.get('approval_scope') if isinstance(rep.get('approval_scope'), dict) else {}",
+        "scope_payload = {key: value for key, value in scope.items() if key != 'scope_sha256'}",
+        "scope_digest = hashlib.sha256(json.dumps(scope_payload, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('ascii')).hexdigest()",
+        "manifest_bytes = pathlib.Path(manifest_path).read_bytes()",
+        "manifest_digest = hashlib.sha256(manifest_bytes).hexdigest()",
+        "manifest = json.loads(manifest_bytes)",
+        "target_ids = [str(target.get('id', f'target_{index}')) for index, target in enumerate(manifest.get('targets', [])) if isinstance(target, dict)]",
+        "try:",
+        "    audit_age_days = (date.today() - date.fromisoformat(str(rep.get('date')))).days",
+        "except (TypeError, ValueError):",
+        "    audit_age_days = -1",
+        "ok = (",
+        "    rep.get('artifact') == 'm6d_w2_v11_approval_intent_audit'",
+        "    and rep.get('status') == 'approval_intent_accepted'",
+        "    and rep.get('audit_ok') is True",
+        "    and rep.get('approval_intent_accepted') is True",
+        "    and rep.get('no_submit') is True",
+        "    and rep.get('submitted') is False",
+        "    and 0 <= audit_age_days <= 1",
+        "    and os.path.realpath(str(scope.get('manifest') or '')) == os.path.realpath(manifest_path)",
+        "    and scope.get('manifest_sha256') == manifest_digest",
+        "    and rep.get('manifest_sha256') == manifest_digest",
+        "    and scope.get('target_ids') == target_ids",
+        "    and scope.get('scope_sha256') == scope_digest",
+        "    and rep.get('approval_scope_sha256') == scope_digest",
+        ")",
+        "if not ok:",
+        "    raise SystemExit(f'approval-intent audit is not accepted: {path}')",
+        "PY",
         "",
         f"exec \"$SCRIPT_DIR/{shared_wrapper}\"",
         "",
@@ -522,6 +612,7 @@ def _postsubmit_status_command(
     submit_summary: str,
     job_state_probe: str,
     postsubmit_status: str,
+    expected_workstream: str = _DEFAULT_WORKSTREAM,
 ) -> str:
     return shlex.join([
         "python", "-m", "bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status",
@@ -529,6 +620,7 @@ def _postsubmit_status_command(
         "--receipt", submit_receipt,
         "--summary", submit_summary,
         "--job-states", job_state_probe,
+        "--expected-workstream", expected_workstream,
         "--require-sync-ready",
         "--out-json", postsubmit_status,
     ])
@@ -606,6 +698,8 @@ def build_preflight(
     dry_run_env_var: str,
     manifest_report: Dict[str, Any],
     wrapper_guard: Dict[str, Any],
+    historical_registry_path: Optional[str] = None,
+    historical_overlap_audit: Optional[Dict[str, Any]] = None,
     local_dry_run: Optional[Dict[str, Any]] = None,
     remote_host: Optional[str] = None,
     remote_root: Optional[str] = None,
@@ -618,6 +712,13 @@ def build_preflight(
         failures.append({"kind": "manifest_not_ready", "message": "manifest require-files report is not ok"})
     if wrapper_guard.get("audit_ok") is not True:
         failures.append({"kind": "wrapper_guard_not_ok", "message": "wrapper guard audit is not ok"})
+    if historical_registry_path is not None:
+        if not isinstance(historical_overlap_audit, dict) or historical_overlap_audit.get("audit_ok") is not True:
+            failures.append({
+                "kind": "historical_target_overlap",
+                "message": "manifest reuses a previously evaluated W2 target/source or registry is not ready",
+                "details": historical_overlap_audit or {},
+            })
     if local_dry_run is not None:
         if local_dry_run.get("exit_code") != 0:
             failures.append({"kind": "local_dry_run_failed", "message": "local dry-run exited nonzero"})
@@ -672,6 +773,14 @@ def build_preflight(
             "no_env_non_dry_refuses_before_receipt": (
                 wrapper_guard.get("no_env_run", {}).get("ok") is True
                 and wrapper_guard.get("no_env_run", {}).get("receipt_exists_after") is False
+            ),
+        },
+        "historical_target_registry": {
+            "path": historical_registry_path,
+            "audit": historical_overlap_audit,
+            "new_target_only": (
+                isinstance(historical_overlap_audit, dict)
+                and historical_overlap_audit.get("audit_ok") is True
             ),
         },
         "claim_boundary": {
@@ -769,6 +878,7 @@ def build_runbook(
         submit_summary=submit_summary,
         job_state_probe=job_state_probe,
         postsubmit_status=postsubmit_status,
+        expected_workstream=workstream,
     )
     return {
         "artifact": f"{workstream}_approval_runbook",
@@ -935,6 +1045,22 @@ def build_approval_packet(
     post_submit = runbook.get("post_submit") if isinstance(runbook.get("post_submit"), dict) else {}
     local_dry_run = preflight.get("local_dry_run") if isinstance(preflight.get("local_dry_run"), dict) else {}
     no_env = wrapper_guard.get("no_env_run") if isinstance(wrapper_guard.get("no_env_run"), dict) else {}
+    post_submit_script_paths = {
+        "receipt_monitor": post_submit.get("receipt_monitor_script"),
+        "job_state_query": post_submit.get("job_state_query_plan_after_probe"),
+        "postsubmit_driver": post_submit.get("postsubmit_driver_script"),
+        "postsync_replay": post_submit.get("postsync_replay_script"),
+        "sync_back": post_submit.get("sync_back_script"),
+        "completion": post_submit.get("completion_script"),
+    }
+    post_submit_script_checks = {
+        name: (
+            isinstance(path, str)
+            and os.path.isfile(path)
+            and os.access(path, os.X_OK)
+        )
+        for name, path in post_submit_script_paths.items()
+    }
     checks = {
         "target_msa_strict_ready": manifest_report.get("ok") is True,
         "panel_preflight_ready": (
@@ -955,6 +1081,7 @@ def build_approval_packet(
         ),
         "submit_receipt_absent": submit_state.get("local_submit_receipt_exists") is False,
         "submit_summary_absent": submit_state.get("local_submit_summary_exists") is False,
+        "post_submit_scripts_ready": all(post_submit_script_checks.values()),
     }
     approval_scope = _build_approval_scope(
         preflight=preflight,
@@ -971,6 +1098,7 @@ def build_approval_packet(
         "panel_guard_no_env_refuses",
         "submit_receipt_absent",
         "submit_summary_absent",
+        "post_submit_scripts_ready",
         "approval_scope_ready",
     ):
         if checks.get(key) is not True:
@@ -1006,6 +1134,7 @@ def build_approval_packet(
         "postsubmit_driver_after_submit": post_submit.get("postsubmit_driver_command_after_submit"),
         "postsubmit_driver_script": post_submit.get("postsubmit_driver_script"),
         "postsubmit_driver_polling": post_submit.get("postsubmit_driver_polling"),
+        "post_submit_script_checks": post_submit_script_checks,
         "job_state_query_after_receipt": post_submit.get("job_state_query_command_after_probe"),
         "job_state_probe_sync_after_query": post_submit.get("job_state_probe_sync_after_query"),
         "postsubmit_status_before_sync": post_submit.get("postsubmit_status"),
@@ -1183,11 +1312,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--submit-summary", default=_DEFAULT_SUMMARY)
     ap.add_argument("--postsubmit-status", default=_DEFAULT_POSTSUBMIT_STATUS)
     ap.add_argument("--job-state-probe", default=_DEFAULT_JOB_STATE_PROBE)
+    ap.add_argument("--job-state-probe-md", default=_DEFAULT_JOB_STATE_PROBE_MD)
     ap.add_argument("--receipt-monitor-script", default=_DEFAULT_RECEIPT_MONITOR)
     ap.add_argument("--job-state-query-script", default=_DEFAULT_JOB_STATE_QUERY)
     ap.add_argument("--sacct-states", default=_DEFAULT_SACCT_STATES)
     ap.add_argument("--postsync-replay-script", default=_DEFAULT_POSTSYNC_REPLAY)
     ap.add_argument("--postsubmit-driver-script", default=_DEFAULT_POSTSUBMIT_DRIVER)
+    ap.add_argument("--decision-protocol", default=_DEFAULT_DECISION_PROTOCOL)
+    ap.add_argument("--decision-protocol-md", default=_DEFAULT_DECISION_PROTOCOL_MD)
+    ap.add_argument("--postsync-out-json", default=_DEFAULT_POSTSYNC_OUT_JSON)
+    ap.add_argument("--postsync-out-md", default=_DEFAULT_POSTSYNC_OUT_MD)
     ap.add_argument("--manifest-report", default="results/m6d_w2_target_family_redesign_v11_manifest_post_msa_require_files.json")
     ap.add_argument("--guard-out-json", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.json")
     ap.add_argument("--guard-out-md", default="results/m6d_w2_target_family_redesign_v11_panel_wrapper_guard_audit.md")
@@ -1204,11 +1338,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--approval-env-var", default=_DEFAULT_APPROVAL_ENV_VAR)
     ap.add_argument("--approval-token", default=_DEFAULT_APPROVAL_TOKEN)
     ap.add_argument("--dry-run-env-var", default=_DEFAULT_DRY_RUN_ENV_VAR)
+    ap.add_argument("--historical-registry", default=_DEFAULT_HISTORICAL_REGISTRY)
     ap.add_argument("--shared-wrapper", default=_DEFAULT_SHARED_WRAPPER)
     ap.add_argument("--min-targets", type=int, default=4)
     ap.add_argument("--min-contacts", type=int, default=20)
     ap.add_argument("--min-records-per-target", type=int, default=20)
     ap.add_argument("--target-alpha", type=float, default=0.2)
+    ap.add_argument("--panel-label", default=_DEFAULT_PANEL_LABEL)
     ap.add_argument("--local-python", default=sys.executable)
     ap.add_argument("--cayuga-python", default=os.environ.get("BIO_SFM_PYTHON", _DEFAULT_CAYUGA_PYTHON))
     ap.add_argument("--remote-host", default=None)
@@ -1256,10 +1392,65 @@ def main(argv: Optional[List[str]] = None) -> int:
             postsubmit_status=args.postsubmit_status,
             job_state_probe=args.job_state_probe,
             sacct_states=args.sacct_states,
+            expected_workstream=args.workstream,
             remote_spec=remote_spec,
         ),
     )
     _set_executable(args.sync_back_out)
+    _write_text(
+        args.receipt_monitor_script,
+        render_receipt_monitor_script(
+            receipt_path=args.submit_receipt,
+            summary_path=args.submit_summary,
+            remote_root=remote_spec,
+            expected_workstream=args.workstream,
+            job_state_probe=args.job_state_probe,
+            job_state_probe_md=args.job_state_probe_md,
+            job_state_query=args.job_state_query_script,
+            sacct_states=args.sacct_states,
+        ),
+    )
+    _set_executable(args.receipt_monitor_script)
+    _write_text(
+        args.job_state_query_script,
+        render_job_state_query_plan(
+            [],
+            out_tsv=args.sacct_states,
+            receipt_path=args.submit_receipt,
+            out_json=args.job_state_probe,
+            out_md=args.job_state_probe_md,
+            expected_workstream=args.workstream,
+        ),
+    )
+    _set_executable(args.job_state_query_script)
+    _write_text(
+        args.postsync_replay_script,
+        render_postsync_replay_script(
+            manifest=args.manifest,
+            postsubmit=args.postsubmit_status,
+            job_states=args.job_state_probe,
+            receipt=args.submit_receipt,
+            summary=args.submit_summary,
+            sync_back=args.sync_back_out,
+            panel_report=args.panel_out,
+            decision_protocol=args.decision_protocol,
+            decision_protocol_md=args.decision_protocol_md,
+            submit_ready=args.manifest_report,
+            approval_packet=args.approval_packet_out_json,
+            completion=args.completion_out,
+            completion_script=args.completion_script_out,
+            replay_script=args.postsync_replay_script,
+            expected_workstream=args.workstream,
+            out_json=args.postsync_out_json,
+            out_md=args.postsync_out_md,
+            target_alpha=args.target_alpha,
+            min_targets=args.min_targets,
+            min_records_per_target=args.min_records_per_target,
+            panel_label=args.panel_label,
+            records=_record_paths(args.manifest),
+        ),
+    )
+    _set_executable(args.postsync_replay_script)
     _write_text(
         args.postsubmit_driver_script,
         render_postsubmit_driver_script(
@@ -1272,8 +1463,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             submit_receipt=args.submit_receipt,
             submit_summary=args.submit_summary,
             postsubmit_status=args.postsubmit_status,
+            expected_workstream=args.workstream,
             remote_host=args.remote_host,
             remote_root=args.remote_root,
+            cayuga_python=args.cayuga_python,
         ),
     )
     _set_executable(args.postsubmit_driver_script)
@@ -1285,6 +1478,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         min_contacts=args.min_contacts,
     )
     _write_json(args.manifest_report, manifest_report)
+    historical_registry = _load_json(args.historical_registry)
+    historical_overlap = audit_historical_manifest(_load_json(args.manifest), historical_registry)
 
     guard = build_audit(
         args.wrapper_out,
@@ -1324,6 +1519,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         dry_run_env_var=args.dry_run_env_var,
         manifest_report=manifest_report,
         wrapper_guard=guard,
+        historical_registry_path=args.historical_registry,
+        historical_overlap_audit=historical_overlap,
         local_dry_run=local_dry_run,
         remote_host=args.remote_host,
         remote_root=args.remote_root,

@@ -81,19 +81,27 @@ def _receipt_jobs(rows: Iterable[Dict[str, Any]],
                   expected_workstream: Optional[str]) -> Tuple[List[Dict[str, str]], List[Dict[str, Any]]]:
     jobs: List[Dict[str, str]] = []
     failures: List[Dict[str, Any]] = []
+    by_target: Dict[str, List[Tuple[str, Dict[str, Any]]]] = {}
+    target_order: List[str] = []
     seen_job_ids = set()
     for row in rows:
         target_id = str(row.get("target_id") or "")
         if not target_id:
             _add_failure(failures, "receipt_missing_target_id", "receipt row has no target_id")
-        if row.get("status") != "submitted":
+            continue
+        status = str(row.get("status") or "")
+        stage = str(row.get("stage") or status)
+        if status == "submitted":
+            stage = "pair_submitted"
+        elif stage not in {"proteinmpnn_submitted", "pair_submitted"}:
             _add_failure(
                 failures,
                 "receipt_row_status_not_submitted",
-                "receipt row status must be submitted",
+                "receipt row must be a submitted legacy pair or append-only submit event",
                 target_id=target_id,
-                observed=row.get("status"),
+                observed={"status": row.get("status"), "stage": row.get("stage")},
             )
+            continue
         if expected_workstream is not None and row.get("workstream") != expected_workstream:
             _add_failure(
                 failures,
@@ -103,15 +111,47 @@ def _receipt_jobs(rows: Iterable[Dict[str, Any]],
                 expected=expected_workstream,
                 observed=row.get("workstream"),
             )
-        for role, field in (("proteinmpnn", "proteinmpnn_job_id"), ("boltz", "boltz_job_id")):
-            job_id = str(row.get(field) or "").strip()
+        if target_id not in by_target:
+            by_target[target_id] = []
+            target_order.append(target_id)
+        by_target[target_id].append((stage, row))
+
+    for target_id in target_order:
+        events = by_target[target_id]
+        pair_rows = [row for stage, row in events if stage == "pair_submitted"]
+        protein_rows = [row for stage, row in events if stage == "proteinmpnn_submitted"]
+        if len(pair_rows) > 1:
+            _add_failure(
+                failures,
+                "receipt_duplicate_pair_event",
+                "target has multiple final pair-submitted receipt events",
+                target_id=target_id,
+            )
+        selected = pair_rows[-1] if pair_rows else protein_rows[-1]
+        if pair_rows and protein_rows:
+            staged_job = str(protein_rows[-1].get("proteinmpnn_job_id") or "").strip()
+            paired_job = str(selected.get("proteinmpnn_job_id") or "").strip()
+            if staged_job != paired_job:
+                _add_failure(
+                    failures,
+                    "receipt_pair_job_mismatch",
+                    "pair-submitted event does not preserve the staged ProteinMPNN job id",
+                    target_id=target_id,
+                    staged_job_id=staged_job,
+                    paired_job_id=paired_job,
+                )
+        fields = [("proteinmpnn", "proteinmpnn_job_id")]
+        if pair_rows:
+            fields.append(("boltz", "boltz_job_id"))
+        for role, field in fields:
+            job_id = str(selected.get(field) or "").strip()
             if not _job_id_ok(job_id):
                 _add_failure(
                     failures,
                     "receipt_bad_job_id",
                     f"invalid {field}",
                     target_id=target_id,
-                    observed=row.get(field),
+                    observed=selected.get(field),
                 )
                 continue
             if job_id in seen_job_ids:
@@ -168,7 +208,8 @@ def render_query_plan(job_ids: List[str],
                       out_tsv: str,
                       receipt_path: str = _DEFAULT_RECEIPT,
                       out_json: str = _DEFAULT_OUT_JSON,
-                      out_md: str = _DEFAULT_OUT_MD) -> str:
+                      out_md: str = _DEFAULT_OUT_MD,
+                      expected_workstream: str = _DEFAULT_EXPECTED_WORKSTREAM) -> str:
     preview = ",".join(job_ids)
     return "\n".join([
         "#!/usr/bin/env bash",
@@ -177,18 +218,26 @@ def render_query_plan(job_ids: List[str],
         f"# Last rendered job-id preview: {preview or 'receipt not available yet'}",
         "set -euo pipefail",
         'PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"',
-        'export PYTHONPATH="${PYTHONPATH:-src}"',
+        'REPO_ROOT="${BIO_SFM_REPO_ROOT:-$PWD}"',
+        'BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-$REPO_ROOT/../bio-sfm-trust-core/src}"',
+        'if [ -d "$BIO_SFM_TRUST_CORE_SRC" ]; then',
+        '  export PYTHONPATH="$REPO_ROOT/src:$BIO_SFM_TRUST_CORE_SRC${PYTHONPATH:+:$PYTHONPATH}"',
+        'else',
+        '  export PYTHONPATH="$REPO_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"',
+        'fi',
         'export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"',
         f"RECEIPT={shlex.quote(receipt_path)}",
         f"OUT=${{1:-{out_tsv}}}",
         f"OUT_JSON={shlex.quote(out_json)}",
         f"OUT_MD={shlex.quote(out_md)}",
+        f"EXPECTED_WORKSTREAM={shlex.quote(expected_workstream)}",
         'test -s "$RECEIPT" || { echo "submit receipt is missing; run receipt monitor after guarded submit first: $RECEIPT" >&2; exit 2; }',
         "mkdir -p \"$(dirname \"$OUT\")\"",
         'mkdir -p "$(dirname "$OUT_JSON")" "$(dirname "$OUT_MD")"',
         (
             '"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe '
-            '--receipt "$RECEIPT" --emit-query-plan "" --out-json "$OUT_JSON" --out-md "$OUT_MD"'
+            '--receipt "$RECEIPT" --expected-workstream "$EXPECTED_WORKSTREAM" '
+            '--emit-query-plan "" --out-json "$OUT_JSON" --out-md "$OUT_MD"'
         ),
         'job_ids="$("$PYTHON_BIN" - "$OUT_JSON" <<\'PY\'',
         "import json",
@@ -205,7 +254,8 @@ def render_query_plan(job_ids: List[str],
         "test -s \"$OUT\"",
         (
             '"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w2_panel_job_state_probe '
-            '--receipt "$RECEIPT" --sacct-output "$OUT" --sacct-output-path "$OUT" '
+            '--receipt "$RECEIPT" --expected-workstream "$EXPECTED_WORKSTREAM" '
+            '--sacct-output "$OUT" --sacct-output-path "$OUT" '
             '--emit-query-plan "" --out-json "$OUT_JSON" --out-md "$OUT_MD"'
         ),
         "",
@@ -384,6 +434,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 receipt_path=args.receipt,
                 out_json=args.out_json,
                 out_md=args.out_md,
+                expected_workstream=args.expected_workstream,
             ),
             executable=True,
         )

@@ -64,7 +64,8 @@ def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.2, delta: float =
     gate = TrustGate(lam=0.5, conformal_alpha=alpha, conformal_delta=delta,
                      assume_validated=frozenset())
     gate.prevalidate(_REGIME, [_raw_risk(r) for r in cal], [_wrong(r) for r in cal])
-    tau = gate._regimes[_REGIME].tau
+    state = gate._regimes[_REGIME]
+    tau = state.tau
 
     def pred(rec):
         return Prediction(candidate_id=rec["target_id"], value=rec["mean_plddt"] / 100.0,
@@ -81,9 +82,13 @@ def run(records_path: str = _DEFAULT_FIXTURE, alpha: float = 0.2, delta: float =
 
     test_wrong = sum(_wrong(r) for r in test)
     return {
-        "n_cal": len(cal), "n_test": len(test), "alpha": alpha, "delta": delta,
+        "certification_schema": "split_ltt_v1",
+        "n_cal": len(cal), "n_fit": len(cal) // 2,
+        "n_certification": len(cal) - len(cal) // 2,
+        "n_test": len(test), "alpha": alpha, "delta": delta,
         "auroc_plddt": _auroc([r["mean_plddt"] for r in rows], [r["truth"]["correct"] for r in rows]),
         "tau": tau,
+        "certificate": state.certificate,
         "conformal": {"trusted": trusted, "false_accepts": trusted_wrong,
                       "false_accept_rate": (trusted_wrong / trusted) if trusted else None,
                       "actions": dict(actions)},
@@ -106,7 +111,7 @@ def main(argv=None) -> Dict[str, Any]:
           f"alpha={rep['alpha']}, delta={rep['delta']})")
     print(f"  signal: AUROC(ESMFold pLDDT -> self-consistency success) = {rep['auroc_plddt']:.3f}")
     if rep["tau"] is None:
-        print(f"  RCPS REFUSED to certify a tau at alpha={rep['alpha']} (signal/n insufficient) -> trust nothing.")
+        print(f"  SPLIT-LTT REFUSED to certify a tau at alpha={rep['alpha']} (signal/n insufficient) -> trust nothing.")
         return rep
     c, ta = rep["conformal"], rep["trust_all"]
     far = c["false_accept_rate"]

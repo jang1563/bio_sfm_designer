@@ -1,7 +1,7 @@
 # W2 v11 Public Approval Bundle
 
-Status: `public_approval_bundle_ready_not_submitted`.
-Audit ok: `True`.
+Status: `public_approval_bundle_blocked`.
+Audit ok: `False`.
 No submit: `True`.
 Can claim W2 generalization: `False`.
 
@@ -145,8 +145,10 @@ not W2 evidence until explicit approval, successful submit receipt, completed jo
 
 ## Failures
 
-- none
+- `approval_packet_not_ready`: {'kind': 'approval_packet_not_ready', 'observed': {'status': 'panel_approval_packet_blocked', 'audit_ok': False}}
+- `preflight_not_ready`: {'kind': 'preflight_not_ready', 'observed': {'status': 'panel_preflight_blocked', 'audit_ok': False}}
+- `decision_state_not_awaiting_approval`: {'kind': 'decision_state_not_awaiting_approval', 'observed': 'submission_decision_blocked'}
 
 ## Next Action
 
-await explicit approval before using submit_if_explicitly_approved; otherwise keep no-submit state
+repair the listed preflight and decision-state blockers before any panel submission

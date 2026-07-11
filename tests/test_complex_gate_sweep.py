@@ -23,10 +23,11 @@ class ComplexGateSweepTests(unittest.TestCase):
         self.assertTrue(rep["label_threshold_audit"]["ok"])
         self.assertEqual(rep["label_threshold_audit"]["record_thresholds"], [4.0])
         by_alpha = {row["alpha"]: row for row in rep["alphas"]}
-        self.assertTrue(by_alpha[0.3]["certified"])
+        self.assertFalse(by_alpha[0.3]["certified"])
+        self.assertEqual(by_alpha[0.3]["trusted"], 0)
         self.assertFalse(by_alpha[0.2]["certified"])
-        self.assertEqual(by_alpha[0.3]["trusted"], 25)
-        self.assertAlmostEqual(by_alpha[0.3]["false_accept_rate"], 0.12)
+        self.assertEqual(by_alpha[0.3]["trusted"], 0)
+        self.assertIsNone(by_alpha[0.3]["false_accept_rate"])
 
     def test_sweep_blocks_row_threshold_mismatch(self):
         rows = load_merged_records([FIXTURE])[:5]

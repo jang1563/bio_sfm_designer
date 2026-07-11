@@ -226,6 +226,8 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
             records=["a/records.jsonl", "b/records.jsonl"],
             min_targets=2,
             panel_label="W2 v11 Boltz-2 representative panel/protocol",
+            expected_workstream="custom_w2_panel",
+            replay_script="custom/postsync_replay.sh",
         )
 
         self.assertIn("--require-sync-ready", script)
@@ -241,6 +243,7 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
         self.assertIn("--summary \"$SUMMARY\"", script)
         self.assertIn("--job-states \"$JOB_STATES\"", script)
         self.assertIn("--out-json \"$POSTSUBMIT\"", script)
+        self.assertIn("--expected-workstream custom_w2_panel", script)
         self.assertLess(
             script.index("bash \"$COMPLETION_SCRIPT\""),
             script.index("complex_panel_report"),
@@ -250,8 +253,13 @@ class M6DW2PanelPostsyncInterpretationTests(unittest.TestCase):
             script.index("complex_panel_report"),
         )
         self.assertIn("complex_panel_report", script)
+        self.assertIn('PANEL_REPORT_TMP="${PANEL_REPORT}.tmp.$$"', script)
+        self.assertIn('PANEL_REPORT_RC=$?', script)
+        self.assertIn("multi_target_evaluable_not_certified", script)
+        self.assertIn('mv "$PANEL_REPORT_TMP" "$PANEL_REPORT"', script)
         self.assertIn("m6d_w2_panel_decision_protocol", script)
         self.assertIn("m6d_w2_panel_postsync_interpretation", script)
+        self.assertIn("--emit-replay-script custom/postsync_replay.sh", script)
         self.assertIn("--panel-label 'W2 v11 Boltz-2 representative panel/protocol'", script)
 
     def test_cli_writes_artifacts(self):

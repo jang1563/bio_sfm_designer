@@ -54,22 +54,44 @@ def _target_id(target: Dict[str, Any], index: int) -> str:
 
 
 def _coverage_identity(a: str, b: str) -> Dict[str, Any]:
+    """Global-alignment identity with coverage normalized by the longer sequence."""
     min_len = min(len(a), len(b))
     max_len = max(len(a), len(b))
-    matches = sum(1 for x, y in zip(a[:min_len], b[:min_len]) if x == y)
     if min_len == 0 or max_len == 0:
         return {
-            "matches": matches,
+            "matches": 0,
             "min_len": min_len,
             "max_len": max_len,
+            "aligned_length": max_len,
+            "alignment_identity": 0.0,
             "overlap_identity": 0.0,
             "length_ratio": 0.0,
             "coverage_identity": 0.0,
         }
+
+    # Each cell stores (alignment score, matches, aligned length). Ties prefer more
+    # matches and then the shorter alignment, making the result deterministic.
+    gap = -1
+    previous = [(j * gap, 0, j) for j in range(len(b) + 1)]
+    for i, residue_a in enumerate(a, 1):
+        current = [(i * gap, 0, i)]
+        for j, residue_b in enumerate(b, 1):
+            diagonal = (
+                previous[j - 1][0] + (1 if residue_a == residue_b else -1),
+                previous[j - 1][1] + (1 if residue_a == residue_b else 0),
+                previous[j - 1][2] + 1,
+            )
+            delete = (previous[j][0] + gap, previous[j][1], previous[j][2] + 1)
+            insert = (current[j - 1][0] + gap, current[j - 1][1], current[j - 1][2] + 1)
+            current.append(max((diagonal, delete, insert), key=lambda item: (item[0], item[1], -item[2])))
+        previous = current
+    _, matches, aligned_length = previous[-1]
     return {
         "matches": matches,
         "min_len": min_len,
         "max_len": max_len,
+        "aligned_length": aligned_length,
+        "alignment_identity": round(matches / aligned_length, 6),
         "overlap_identity": round(matches / min_len, 6),
         "length_ratio": round(min_len / max_len, 6),
         "coverage_identity": round(matches / max_len, 6),
@@ -233,7 +255,7 @@ def audit_sequence_diversity(
         "manifest": os.path.abspath(manifest_path),
         "ok": not failures,
         "ready_for_broad_w2_panel": ready,
-        "identity_metric": "matches / max(sequence lengths), no alignment",
+        "identity_metric": "Needleman-Wunsch global-alignment matches / max(sequence lengths)",
         "identity_threshold": identity_threshold,
         "min_clusters": min_clusters,
         "max_largest_cluster_fraction": max_largest_cluster_fraction,

@@ -208,6 +208,37 @@ class M6DW2PanelDecisionProtocolTests(unittest.TestCase):
         self.assertEqual(result["certified_targets"], ["t0"])
         self.assertIn("target-specific only", result["claim"])
 
+    def test_post_panel_receipts_are_required_provenance_not_blockers(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            summary = os.path.join(d, "summary.json")
+            _write_json(receipt, {"status": "pair_submitted"})
+            _write_json(summary, {"status": "submitted_on_cayuga"})
+            packet = _approval_packet()
+            packet["submit_receipt"] = receipt
+            packet["submit_summary"] = summary
+            panel = _panel_report(
+                "multi_target_evaluable_not_certified",
+                not_certified_ids=[f"t{i}" for i in range(14)],
+            )
+
+            rep = build_protocol(
+                target_manifest=_manifest(),
+                submit_ready=_submit_ready(),
+                approval_packet=packet,
+                completion_report={"ok": True, "status": "ready_for_panel_report"},
+                panel_report=panel,
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["execution_phase"], "post_panel_interpretation")
+        self.assertFalse(rep["can_submit_panel_if_user_explicitly_approves"])
+        self.assertEqual(
+            rep["current_panel_result"]["status"],
+            "w2_generalization_not_supported_target_wise",
+        )
+        self.assertIn("redesign", rep["next_action"])
+
     def test_main_writes_protocol_files(self):
         with tempfile.TemporaryDirectory() as d:
             manifest = os.path.join(d, "manifest.json")

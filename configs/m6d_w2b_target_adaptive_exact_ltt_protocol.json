@@ -1,0 +1,143 @@
+{
+  "artifact": "m6d_w2b_target_adaptive_exact_ltt_protocol",
+  "version": 1,
+  "status": "fresh_fit_manifest_selected_awaiting_target_msa_not_compute_authority",
+  "objective": "Test whether a target-adaptive external trust gate can independently certify controlled false-accept routing on multiple fresh protein-complex targets.",
+  "claim_scope": {
+    "supported_if_successful": "target-adaptive multi-target gate viability",
+    "never_supported_by_this_protocol": [
+      "one universal pAE threshold transfers to every target",
+      "zero-shot W2 generalization",
+      "recertification of any previously evaluated panel"
+    ],
+    "current_v11_panel_role": "hypothesis_formation_only"
+  },
+  "fresh_target_contract": {
+    "n_initial_targets": 8,
+    "exclude_all_historical_registry_targets": true,
+    "exclude_v11_new_representative_targets": [
+      "10OP_ST",
+      "10VB_IJ",
+      "10YA_AB",
+      "10ZO_AB",
+      "11HK_BC",
+      "11LT_HL",
+      "11OV_hl",
+      "11YO_vu",
+      "11ZV_BA",
+      "12RH_DC",
+      "1A00_BA"
+    ],
+    "require_unique_source_pdb": true,
+    "require_one_representative_per_sequence_cluster": true,
+    "require_manifest_and_msa_sha_validation": true
+  },
+  "generation_stages": {
+    "fit": {
+      "records_per_target": 60,
+      "seed_namespace": "w2b-fit-v1",
+      "run_for": "all_initial_targets"
+    },
+    "certification": {
+      "records_per_target": 60,
+      "seed_namespace": "w2b-cert-v1",
+      "run_for": "fit_eligible_targets_only"
+    },
+    "test": {
+      "records_per_target": 60,
+      "seed_namespace": "w2b-test-v1",
+      "run_for": "fit_eligible_targets_only"
+    },
+    "candidate_overlap_allowed": false
+  },
+  "fit_stage_rule": {
+    "target_alpha": 0.2,
+    "signal_orientation": "lower_pae_interaction_is_better",
+    "minimum_fit_accepts": 20,
+    "ordered_modes": [
+      {
+        "mode": "trust_all",
+        "condition": "fit empirical false-accept rate is at most target_alpha",
+        "signal_claim": false
+      },
+      {
+        "mode": "selective_pae",
+        "condition": "fit has both classes, AUROC(-pAE_interaction to success) is at least 0.65, and a frozen threshold accepts at least minimum_fit_accepts with empirical false-accept rate at most target_alpha",
+        "signal_claim": true
+      },
+      {
+        "mode": "refuse",
+        "condition": "neither prior mode qualifies",
+        "signal_claim": false
+      }
+    ],
+    "mode_order_is_locked": true
+  },
+  "certification_rule": {
+    "method": "one_sided_clopper_pearson_exact",
+    "target_alpha": 0.2,
+    "panel_delta": 0.1,
+    "multiplicity_correction": "bonferroni_over_all_8_initial_targets",
+    "per_target_delta": 0.0125,
+    "minimum_certification_accepts": 22,
+    "certified_when": "the frozen fit-stage rule accepts at least 22 certification rows and its one-sided exact upper confidence bound is at most 0.2",
+    "test_split_affects_certificate": false,
+    "implementation_required_before_compute": false
+  },
+  "panel_decision_rule": {
+    "success_status": "w2b_target_adaptive_viability_supported",
+    "minimum_certified_targets": 3,
+    "minimum_selective_pae_certified_targets": 1,
+    "require_all_qc_and_provenance_checks": true,
+    "failed_or_refused_targets_remain_in_denominator": true,
+    "universal_w2_generalization_claim_allowed": false
+  },
+  "compute_budget": {
+    "initial_fit_records": 480,
+    "maximum_total_records": 1440,
+    "staged_stop_after_fit": true,
+    "cayuga_submission_allowed": false
+  },
+  "current_execution_state": {
+    "fit_manifest": "configs/m6d_w2b_target_adaptive_fit_targets.json",
+    "fit_manifest_sha256": "1459d29181ff0d2c1b5fafbf57b4e3f11e1cd872749f17fe951ece96e550ef14",
+    "locked_scientific_protocol_sha256": "19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b",
+    "fit_target_ids": [
+      "1FXK_CA",
+      "1F93_DC",
+      "1F66_AB",
+      "1FJG_FR",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1F51_AE",
+      "1FVC_DC"
+    ],
+    "historical_overlap_audit_ok": true,
+    "sequence_clusters": 8,
+    "largest_cluster_fraction": 0.125,
+    "schema_ready_targets": 8,
+    "strict_ready_targets": 0,
+    "missing_target_msa_artifacts": 16,
+    "target_msa_plan_emitted_not_submitted": true
+  },
+  "completed_unlock_conditions": [
+    "exact one-sided binomial bound is implemented and unit-tested in trust-core and designer compatibility code",
+    "complex gate and panel reporting can consume an explicitly selected exact bound without fallback to Hoeffding",
+    "the W2b evaluator enforces fit-mode freezing, exact certification, reporting-only test data, and disjoint stage candidate IDs",
+    "eight label-blind fresh fit targets pass historical target/source exclusion, source diversity, eight-of-eight sequence clustering, and schema preflight"
+  ],
+  "remaining_unlock_conditions": [
+    "all eight target MSAs and MSA reports are generated, synced, and pass strict manifest checks",
+    "fit, certification, and test seed namespaces are enforced as disjoint",
+    "a dry-run packet binds the manifest SHA and this protocol SHA",
+    "explicit operator approval is recorded after all prior conditions pass"
+  ],
+  "post_hoc_changes_forbidden": [
+    "changing signal orientation",
+    "changing mode order",
+    "dropping failed or refused initial targets from the multiplicity denominator",
+    "changing alpha or delta",
+    "reusing v11 rows for certification",
+    "using the test split to choose a mode or threshold"
+  ]
+}

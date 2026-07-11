@@ -47,6 +47,30 @@ def _rows():
     ]
 
 
+def _journal_rows():
+    rows = []
+    for target_id, gen_job, pred_job in (("t0", "100", "101"), ("t1", "102", "103")):
+        rows.extend([
+            {
+                "stage": "proteinmpnn_submitted",
+                "status": "proteinmpnn_submitted",
+                "workstream": "custom_w2_panel",
+                "target_id": target_id,
+                "proteinmpnn_job_id": gen_job,
+                "boltz_job_id": None,
+            },
+            {
+                "stage": "pair_submitted",
+                "status": "pair_submitted",
+                "workstream": "custom_w2_panel",
+                "target_id": target_id,
+                "proteinmpnn_job_id": gen_job,
+                "boltz_job_id": pred_job,
+            },
+        ])
+    return rows
+
+
 class M6DW2PanelJobStateProbeTests(unittest.TestCase):
     def test_absent_receipt_is_not_submitted(self):
         rep = build_probe(receipt_path="/tmp/missing_w2_v11_receipt.jsonl")
@@ -70,10 +94,34 @@ class M6DW2PanelJobStateProbeTests(unittest.TestCase):
         self.assertEqual(rep["n_jobs"], 4)
         self.assertEqual(rep["job_ids"], ["100", "101", "102", "103"])
         self.assertIn("sacct -P -j 100,101,102,103", rep["sacct_query_command"])
-        plan = render_query_plan(rep["job_ids"], out_tsv="states.tsv", receipt_path=receipt)
+        plan = render_query_plan(
+            rep["job_ids"],
+            out_tsv="states.tsv",
+            receipt_path=receipt,
+            expected_workstream="custom_w2_panel",
+        )
         self.assertIn("Last rendered job-id preview: 100,101,102,103", plan)
         self.assertIn("m6d_w2_panel_job_state_probe", plan)
         self.assertIn('sacct -P -j "$job_ids"', plan)
+        self.assertIn("EXPECTED_WORKSTREAM=custom_w2_panel", plan)
+        self.assertIn('--expected-workstream "$EXPECTED_WORKSTREAM"', plan)
+
+    def test_append_only_submit_journal_uses_final_pair_event_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            _write_jsonl(receipt, _journal_rows())
+
+            rep = build_probe(
+                receipt_path=receipt,
+                expected_workstream="custom_w2_panel",
+                query_plan_path="query.sh",
+            )
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["status"], "receipt_ready_for_state_query")
+        self.assertEqual(rep["n_receipt_rows"], 4)
+        self.assertEqual(rep["n_jobs"], 4)
+        self.assertEqual(rep["job_ids"], ["100", "101", "102", "103"])
 
     def test_sacct_output_builds_postsubmit_compatible_states(self):
         with tempfile.TemporaryDirectory() as d:

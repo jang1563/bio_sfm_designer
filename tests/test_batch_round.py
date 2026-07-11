@@ -259,7 +259,7 @@ class BatchRoundCLITests(unittest.TestCase):
         self.assertTrue(preflight["strict_complex_records"])
         self.assertTrue(preflight["complex_records_qc"]["ok"])
 
-    def test_prevalidate_records_enable_conformal_complex_gate(self):
+    def test_prevalidate_records_refuse_uncertified_conformal_complex_gate(self):
         records = [dict(r) for r in load_structure_records(BARSTAR_FIXTURE)[:4]]
         for i, rec in enumerate(records):
             rec["target_id"] = f"new-complex-{i}"
@@ -280,19 +280,19 @@ class BatchRoundCLITests(unittest.TestCase):
                              allow_missing_verdicts=False,
                              prevalidate_records=[BARSTAR_FIXTURE],
                              conformal_alpha=0.3, conformal_delta=0.1, provider=None)
-            result = run(args)
+            with self.assertRaisesRegex(ValueError, "gate_prevalidation_blocked"):
+                run(args)
 
             with open(os.path.join(out, "preflight.json")) as fh:
                 preflight = json.load(fh)
-            with open(os.path.join(out, "summary.json")) as fh:
-                summary = json.load(fh)
 
-        self.assertTrue(result.allowed)
-        self.assertTrue(result.gate_calibrated)
-        self.assertTrue(summary["gate_calibrated"])
-        self.assertTrue(preflight["gate_prevalidation"]["ok"])
-        self.assertTrue(preflight["gate_prevalidation"]["regimes"]["complex"]["validated"])
-        self.assertIsNotNone(preflight["gate_prevalidation"]["regimes"]["complex"]["tau"])
+        self.assertFalse(preflight["ok"])
+        self.assertFalse(preflight["gate_prevalidation"]["ok"])
+        self.assertFalse(preflight["gate_prevalidation"]["regimes"]["complex"]["validated"])
+        self.assertIsNone(preflight["gate_prevalidation"]["regimes"]["complex"]["tau"])
+        self.assertFalse(
+            preflight["gate_prevalidation"]["regimes"]["complex"]["certificate"]["certified"]
+        )
         self.assertEqual(preflight["gate_prevalidation"]["conformal_alpha"], 0.3)
         contract = preflight["gate_prevalidation"]["batch_contract"]
         self.assertTrue(contract["checked"])
@@ -309,8 +309,6 @@ class BatchRoundCLITests(unittest.TestCase):
             contract["regimes"]["complex"]["fields"]["lrmsd_threshold"]["batch"]["values"],
             [4.0],
         )
-        self.assertEqual(summary["gate_prevalidation"], preflight["gate_prevalidation"])
-        self.assertTrue(summary["strict_complex_records"])
 
     def test_prevalidation_contract_blocks_batch_threshold_drift(self):
         records = [dict(r) for r in load_structure_records(BARSTAR_FIXTURE)[:4]]

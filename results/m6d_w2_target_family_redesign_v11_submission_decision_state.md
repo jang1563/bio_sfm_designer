@@ -1,19 +1,19 @@
 # M6d W2 v11 Submission Decision State
 
-Status: `awaiting_explicit_panel_submission_approval`.
-Decision: `awaiting_explicit_approval`.
-Audit ok: `True`.
+Status: `submission_decision_blocked`.
+Decision: `blocked`.
+Audit ok: `False`.
 No submit: `True`.
 Submitted: `False`.
 Explicit approval required: `True`.
-Can submit if explicitly approved: `True`.
+Can submit if explicitly approved: `False`.
 Can claim W2 generalization: `False`.
 
 ## Prerequisites
 
 | prerequisite | ok | status |
 |---|---:|---|
-| approval_packet | True | panel_approval_packet_ready |
+| approval_packet | False | panel_approval_packet_blocked |
 | panel_decision_protocol | True | post_panel_decision_protocol_ready |
 | remote_submission_readiness | True | remote_submission_readiness_ok |
 | project_status | True | m6_complex_in_progress |
@@ -24,9 +24,7 @@ Can claim W2 generalization: `False`.
 
 - local `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
 - local `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
-- remote checked: `:/home/fs01/<user>/bio_sfm_smoke`
-- remote `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists: `False`
-- remote `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists: `False`
+- direct remote receipt check: `False`
 
 ## Approval Scope
 
@@ -56,8 +54,8 @@ This artifact does not submit jobs and does not create W2 evidence.
 
 ## Operator Approval Checklist
 
-- pre-submit state ok: `True`
-- submit allowed by this artifact: `True`
+- pre-submit state ok: `False`
+- submit allowed by this artifact: `False`
 - submission performed by this artifact: `False`
 - approval phrase required: `W2 v11 Cayuga ProteinMPNN/Boltz panel submission`
 - continuation phrases are approval: `False`
@@ -66,8 +64,8 @@ This artifact does not submit jobs and does not create W2 evidence.
 - driver/replay command pair ready: `True`
 - script chain static ok: `True`
 - local receipts absent: `True`
-- remote receipts checked: `True`
-- remote receipts absent: `True`
+- remote receipts checked: `False`
+- remote receipts absent: `None`
 - planned designs: `700`
 - expected Slurm jobs: `14`
 - target alpha: `0.2`
@@ -97,6 +95,10 @@ bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh
 - machine gate: `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`
 - non-approval continuation phrases: `resume goal`, `resume goal mode`, `goal mode resume`, `go ahead`, `continue`, `continue working toward the active thread goal`, `keep going`, `이어서`, `계속`
 
+## Failures
+
+- `approval_packet_not_ready`: approval_packet does not satisfy the W2 v11 submission-decision boundary
+
 ## Next Action
 
-await explicit user approval before running submit_command_if_approved
+repair submission-decision blockers before any W2 v11 panel submission

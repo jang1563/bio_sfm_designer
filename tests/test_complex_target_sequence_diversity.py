@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from bio_sfm_designer.experiments.complex_target_sequence_diversity import (
+    _coverage_identity,
     audit_sequence_diversity,
     main,
     render_markdown,
@@ -39,6 +40,13 @@ def _write_manifest(root, sequences):
 
 
 class ComplexTargetSequenceDiversityTests(unittest.TestCase):
+    def test_global_alignment_recovers_identity_after_terminal_insertion(self):
+        metrics = _coverage_identity("ACDEFGHIK", "XACDEFGHIK")
+        self.assertEqual(metrics["matches"], 9)
+        self.assertEqual(metrics["aligned_length"], 10)
+        self.assertEqual(metrics["coverage_identity"], 0.9)
+        self.assertEqual(metrics["alignment_identity"], 0.9)
+
     def test_three_distinct_sequence_clusters_are_ready(self):
         with tempfile.TemporaryDirectory() as d:
             manifest = _write_manifest(d, [

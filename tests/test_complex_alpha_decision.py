@@ -32,14 +32,15 @@ class ComplexAlphaDecisionTests(unittest.TestCase):
         self.assertEqual(rep["next_batch"]["num_seq_per_temperature"], 260)
         self.assertEqual(rep["next_batch"]["recommended_total_candidates"], 260)
 
-    def test_current_fixture_stops_for_alpha_03(self):
+    def test_current_fixture_refuses_alpha_03_under_split_ltt(self):
         rep = run_decision([FIXTURE], target_alpha=0.3, seed=0)
         self.assertTrue(rep["ok"])
-        self.assertEqual(rep["decision"], "stop_certified")
-        self.assertIn(0.3, rep["certified_alphas"])
-        self.assertEqual(rep["estimated_additional_records"], 0)
-        self.assertEqual(rep["next_batch"]["action"], "none")
-        self.assertEqual(rep["next_batch"]["recommended_total_candidates"], 0)
+        self.assertEqual(rep["decision"], "no_feasible_threshold")
+        self.assertEqual(rep["certified_alphas"], [])
+        self.assertFalse(rep["target_sweep"]["certified"])
+        self.assertIsNone(rep["estimated_additional_records"])
+        self.assertEqual(rep["next_batch"]["action"], "change_axis_or_revise_metric")
+        self.assertIsNone(rep["next_batch"]["recommended_total_candidates"])
 
     def test_qc_failure_blocks_decision(self):
         with tempfile.TemporaryDirectory() as d:

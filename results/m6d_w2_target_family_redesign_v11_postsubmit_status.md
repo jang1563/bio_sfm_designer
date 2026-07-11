@@ -1,21 +1,28 @@
 # M6d W2 Panel Postsubmit Status
 
-Status: `not_submitted`.
+Status: `submitted_jobs_complete_ready_for_sync`.
 Audit ok: `True`.
 No submit: `True`.
-Submitted: `False`.
-Sync ready: `False`.
+Submitted: `True`.
+Sync ready: `True`.
 Can claim W2 generalization: `False`.
 
-- manifest targets: `7`
-- receipt rows: `0`
-- receipt: `results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl` exists=`False`
-- summary: `results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json` exists=`False`
+- manifest targets: `11`
+- receipt rows: `22`
+- receipt: `results/m6d_w2_target_family_redesign_v11_new_representative_panel_submit_receipt.jsonl` exists=`True`
+- summary: `results/m6d_w2_target_family_redesign_v11_new_representative_panel_submit_receipt_summary.json` exists=`True`
+
+## Job States
+
+- complete: `22`
+- active: `0`
+- failed: `0`
+- unknown: `0`
 
 ## Claim Boundary
 
-no-submit postsubmit status; no W2 evidence until synced records pass completion and panel report
+postsubmit status only; sync-ready is not W2 evidence
 
 ## Next Action
 
-await explicit approval and guarded panel submission before monitoring receipt job states
+run sync-back script, then completion and target-wise panel report

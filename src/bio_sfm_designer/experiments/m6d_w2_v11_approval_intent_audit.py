@@ -15,6 +15,8 @@ import sys
 from datetime import date
 from typing import Any, Dict, Iterable, List, Optional
 
+from .m6d_w2_approval_scope import scope_is_bound
+
 
 _DEFAULT_DECISION_STATE = "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
 _DEFAULT_OUT_JSON = "results/m6d_w2_target_family_redesign_v11_approval_intent_audit.json"
@@ -72,6 +74,7 @@ def _failure(failures: List[Dict[str, Any]], kind: str, message: str, **extra: A
 
 
 def _decision_ready(decision_state: Dict[str, Any]) -> bool:
+    scope = decision_state.get("approval_scope")
     return (
         decision_state.get("status") == "awaiting_explicit_panel_submission_approval"
         and decision_state.get("audit_ok") is True
@@ -80,6 +83,10 @@ def _decision_ready(decision_state: Dict[str, Any]) -> bool:
         and decision_state.get("submitted") is False
         and decision_state.get("can_submit_panel_if_user_explicitly_approves") is True
         and decision_state.get("can_claim_w2_generalization") is False
+        and isinstance(scope, dict)
+        and isinstance(scope.get("manifest_sha256"), str)
+        and len(scope["manifest_sha256"]) == 64
+        and scope_is_bound(scope)
     )
 
 
@@ -128,6 +135,11 @@ def audit_approval_intent(
     machine_gate = disambiguation.get("machine_gate") or checklist.get("machine_gate") or _REQUIRED_MACHINE_GATE
     non_approval = disambiguation.get("non_approval_continuation_phrases") or _NON_APPROVAL_CONTINUATIONS
     ack_checks = _acknowledgement_checks(message, machine_gate)
+    approval_scope = (
+        decision_state.get("approval_scope")
+        if isinstance(decision_state.get("approval_scope"), dict)
+        else {}
+    )
     failures: List[Dict[str, Any]] = []
     message_norm = _norm(message)
     exact_non_approval_matches = [phrase for phrase in non_approval if message_norm == _norm(phrase)]
@@ -186,6 +198,10 @@ def audit_approval_intent(
         "submitted": False,
         "decision_state_path": decision_state_path or "",
         "decision_state_status": decision_state.get("status"),
+        "approval_scope": approval_scope,
+        "approval_scope_sha256": approval_scope.get("scope_sha256"),
+        "manifest": approval_scope.get("manifest"),
+        "manifest_sha256": approval_scope.get("manifest_sha256"),
         "required_approval_phrase": required_phrase,
         "required_machine_gate": machine_gate,
         "approval_phrase_present": _contains(message, required_phrase),

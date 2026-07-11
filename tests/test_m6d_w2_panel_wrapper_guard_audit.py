@@ -33,13 +33,13 @@ export BIO_SFM_SUBMIT_DRY_RUN="${{{dry_run_env_var}:-${{BIO_SFM_SUBMIT_DRY_RUN:-
 APPROVAL_ENV_VAR="{approval_env_var}"
 APPROVAL_TOKEN="{approval_token}"
 if [ "${{BIO_SFM_SUBMIT_DRY_RUN:-0}}" = "1" ]; then
-  exec "$SCRIPT_DIR/m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
+  exec "$SCRIPT_DIR/../hpc/m6d_w2_submit_with_receipt.sh"
 fi
 if [ "${{{approval_env_var}:-}}" != "$APPROVAL_TOKEN" ]; then
   echo "{refusal_message}" >&2
   exit 2
 fi
-exec "$SCRIPT_DIR/m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
+exec "$SCRIPT_DIR/../hpc/m6d_w2_submit_with_receipt.sh"
 """
 
 
@@ -103,7 +103,7 @@ export SUBMIT_RECEIPT="${{SUBMIT_RECEIPT:-{receipt}}}"
 export BIO_SFM_SUBMIT_DRY_RUN="${{M6D_W2_V9_SUBMIT_DRY_RUN:-${{BIO_SFM_SUBMIT_DRY_RUN:-0}}}}"
 APPROVAL_ENV_VAR="BIO_SFM_APPROVE_V9_PANEL"
 APPROVAL_TOKEN="approve-v9-panel-submit"
-TARGET="m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"
+TARGET="m6d_w2_submit_with_receipt.sh"
 exec "$TARGET"
 if [ "${{BIO_SFM_APPROVE_V9_PANEL:-}}" != "$APPROVAL_TOKEN" ]; then
   echo "refusing v9 panel submission without explicit approval env:" >&2

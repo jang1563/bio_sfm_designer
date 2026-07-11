@@ -134,6 +134,25 @@ def _science_claims(rep: Dict[str, Any]) -> Dict[str, Any]:
             "trusted": target_row.get("trusted") if isinstance(target_row, dict) else None,
         },
     }
+    alpha_03_certified = bool(gate.get("tau") is not None and gate.get("alpha") == 0.3)
+    alpha_03_claim = {
+        "id": "alpha_0_3_split_ltt_certificate",
+        "status": "certified" if alpha_03_certified else "not_certified",
+        "scope": f"{scope_prefix} {target_label}, independent certification split",
+        "claim": (
+            "The split learn-then-test gate certifies alpha=0.3."
+            if alpha_03_certified else
+            "The split learn-then-test gate does not certify alpha=0.3."
+        ),
+        "evidence": {
+            "alpha": gate["alpha"],
+            "tau": gate["tau"],
+            "trusted": gate["trusted"],
+            "n_test": gate["n_test"],
+            "false_accept_rate": gate["false_accept_rate"],
+            "trust_all_false_accept_rate": gate["trust_all_false_accept_rate"],
+        },
+    }
     supported = [
         {
             "id": "complex_pae_interaction_signal",
@@ -149,24 +168,13 @@ def _science_claims(rep: Dict[str, Any]) -> Dict[str, Any]:
                 "well_folded_iptm_auroc": signal["well_folded_auroc_iptm"],
             },
         },
-        {
-            "id": "alpha_0_3_rcps_certificate",
-            "status": "certified",
-            "scope": f"{scope_prefix} {target_label}, held-out split",
-            "claim": "The calibrated gate certifies alpha=0.3 on the current complex/binder evidence.",
-            "evidence": {
-                "alpha": gate["alpha"],
-                "tau": gate["tau"],
-                "trusted": gate["trusted"],
-                "n_test": gate["n_test"],
-                "false_accept_rate": gate["false_accept_rate"],
-                "trust_all_false_accept_rate": gate["trust_all_false_accept_rate"],
-            },
-        },
     ]
+    if alpha_03_certified:
+        supported.append(alpha_03_claim)
     if target_certified:
         supported.append(target_claim)
     not_yet_supported = [
+        *([] if alpha_03_certified else [alpha_03_claim]),
         {
             "id": "multi_target_generalization",
             "status": "not_supported_yet",
@@ -289,9 +297,12 @@ def build_report(records_paths: Any = _BARSTAR, alphas: Iterable[float] = _DEFAU
         "design_regime_audit": regime_audit,
         "scale_projection": scale_projection,
         "gate": {
+            "certification_schema": gate.get("certification_schema"),
             "alpha": gate["alpha"],
             "delta": gate["delta"],
             "n_cal": gate["n_cal"],
+            "n_fit": gate.get("n_fit"),
+            "n_certification": gate.get("n_certification"),
             "n_test": gate["n_test"],
             "tau": gate["tau"],
             "trusted": gate["conformal"]["trusted"],
@@ -299,11 +310,12 @@ def build_report(records_paths: Any = _BARSTAR, alphas: Iterable[float] = _DEFAU
             "trust_all_false_accept_rate": gate["trust_all"]["false_accept_rate"],
             "base_rate_fail": gate["base_rate_fail"],
             "selective": gate["selective"],
+            "certificate": gate.get("certificate"),
         },
         "alpha_frontier": _alpha_rows(sweep),
         "alpha_seed_sensitivity": seed_sensitivity,
         "positioning": {
-            "claim": "The calibrated trust gate adds value in the complex/binder regime where pAE_interaction is informative but miscalibrated.",
+            "claim": "pAE_interaction is informative in the complex/binder regime, but the corrected split learn-then-test gate currently refuses certification.",
             "not_claiming": [
                 "No monomer fine-grained trust signal was found at fixed difficulty.",
                 "The current complex result is one target, not a multi-target proof.",

@@ -1272,25 +1272,14 @@ class ComplexReadinessTests(unittest.TestCase):
                 batch_sync_back_plan=sync_back,
             )
 
-        self.assertTrue(rep["ok"])
+        self.assertFalse(rep["ok"])
         checks = {c["name"]: c for c in rep["checks"]}
-        self.assertEqual(checks["closed_loop_batch"]["status"], "ready")
+        self.assertEqual(checks["closed_loop_batch"]["status"], "blocked")
         self.assertEqual(checks["closed_loop_batch"]["details"]["n_candidates"], 2)
-        self.assertTrue(checks["closed_loop_batch"]["details"]["gate_prevalidation"]["ok"])
-        self.assertTrue(
-            checks["closed_loop_batch"]["details"]["gate_prevalidation"]["batch_contract"]["ok"]
-        )
+        self.assertIn("gate_prevalidation_blocked", checks["closed_loop_batch"]["message"])
         self.assertEqual(checks["closed_loop_batch"]["details"]["sync_back_plan"], sync_back)
         steps = {step["id"]: step for step in rep["ordered_steps"]}
-        self.assertEqual(steps["closed_loop_batch"]["status"], "ready")
-        self.assertEqual(steps["closed_loop_batch"]["depends_on"], [])
-        self.assertEqual(steps["project_status_refresh"]["depends_on"], ["closed_loop_batch"])
-        self.assertIn("run_batch_round", rep["plan_text"])
-        self.assertIn("--strict-complex-records", rep["plan_text"])
-        self.assertIn("--prevalidate-records", rep["plan_text"])
-        self.assertIn("--conformal-alpha 0.3", rep["plan_text"])
-        self.assertIn("--emit-sync-back-plan", rep["plan_text"])
-        self.assertIn(sync_back, rep["plan_text"])
+        self.assertEqual(steps["closed_loop_batch"]["status"], "blocked")
 
     def test_closed_loop_batch_blocks_conformal_alpha_without_prevalidation_records(self):
         with tempfile.TemporaryDirectory() as d:

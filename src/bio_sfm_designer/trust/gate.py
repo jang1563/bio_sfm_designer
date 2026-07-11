@@ -33,10 +33,15 @@ hidden truth of candidates the gate is currently routing.
 
 from __future__ import annotations
 
+import random
 from typing import Dict, List, Optional
 
-from bio_sfm_trust import (auroc, confidence_to_risk, isotonic_calibrator, loo_calibrated_risks,
-                           rcps_threshold)
+from bio_sfm_trust import auroc, confidence_to_risk, isotonic_calibrator, loo_calibrated_risks
+
+try:
+    from bio_sfm_trust import split_ltt_threshold
+except ImportError:  # public designer installs remain compatible with trust-core v0.1.0
+    from ._split_ltt_compat import split_ltt_threshold
 
 from ..types import Prediction, Routing
 
@@ -45,13 +50,14 @@ _VALIDITY_AUROC_MIN = 0.70
 
 
 class _RegimeState:
-    __slots__ = ("buffer", "calibrator", "validated", "tau")
+    __slots__ = ("buffer", "calibrator", "validated", "tau", "certificate")
 
     def __init__(self) -> None:
         self.buffer: List[tuple] = []        # (raw_risk, wrong) from verified candidates
         self.calibrator = None               # Callable[[float], float] once fit
         self.validated = False               # cleared the offline-gate-style validity check
         self.tau = None                      # conformal/RCPS trust threshold (None until certified)
+        self.certificate = None              # split learn-then-test certificate metadata
 
 
 class TrustGate:
@@ -64,6 +70,7 @@ class TrustGate:
         assume_validated: frozenset = frozenset({"monomer"}),
         conformal_alpha: Optional[float] = None,
         conformal_delta: float = 0.1,
+        conformal_bound: str = "hoeffding",
     ) -> None:
         self.lam = lam
         # If conformal_alpha is set, trust uses a per-regime RCPS threshold tau (so the trusted set's
@@ -71,6 +78,9 @@ class TrustGate:
         # for any regime where a tau can be certified from calibration data; else it falls back to lambda.
         self.conformal_alpha = conformal_alpha
         self.conformal_delta = conformal_delta
+        if conformal_bound not in ("hoeffding", "clopper_pearson"):
+            raise ValueError("conformal_bound must be 'hoeffding' or 'clopper_pearson'")
+        self.conformal_bound = conformal_bound
         self.defer_threshold = defer_threshold
         self.disagreement_tol = disagreement_tol
         # Regimes trusted without online data. monomer pLDDT is offline-validated; every
@@ -94,9 +104,37 @@ class TrustGate:
         """Offline 'gate-before-spend': fit + validate a regime from held-out verified data
         (e.g. the M1 fixture) so deployment starts with that regime calibration-validated.
         Returns whether the regime is now trust-validated."""
+        if len(raw_risks) != len(wrong):
+            raise ValueError("raw_risks and wrong must have equal length")
         st = self._state(regime)
         st.buffer = [(float(x), int(w)) for x, w in zip(raw_risks, wrong)]
         return self._fit_and_validate(st)
+
+    def prevalidate_split(
+        self,
+        regime: str,
+        fit_raw_risks: List[float],
+        fit_wrong: List[int],
+        certification_raw_risks: List[float],
+        certification_wrong: List[int],
+    ) -> bool:
+        """Fit and select on one split, then certify the fixed rule on an independent split."""
+        if len(fit_raw_risks) != len(fit_wrong):
+            raise ValueError("fit_raw_risks and fit_wrong must have equal length")
+        if len(certification_raw_risks) != len(certification_wrong):
+            raise ValueError(
+                "certification_raw_risks and certification_wrong must have equal length"
+            )
+        st = self._state(regime)
+        fit = [(float(x), int(w)) for x, w in zip(fit_raw_risks, fit_wrong)]
+        certification = [
+            (float(x), int(w))
+            for x, w in zip(certification_raw_risks, certification_wrong)
+        ]
+        st.buffer = fit + certification
+        if self.conformal_alpha is None:
+            return self._fit_and_validate(st)
+        return self._fit_and_validate_conformal_split(st, fit, certification)
 
     def refit(self) -> Dict[str, bool]:
         """Refit each regime's calibrator from its verified buffer and re-check validity.
@@ -104,6 +142,26 @@ class TrustGate:
         return {regime: self._fit_and_validate(st) for regime, st in self._regimes.items()}
 
     def _fit_and_validate(self, st: _RegimeState) -> bool:
+        if self.conformal_alpha is not None:
+            if len(st.buffer) < 2 * _MIN_CALIBRATION_POINTS:
+                st.tau = None
+                st.certificate = {
+                    "method": f"split_learn_then_test_{self.conformal_bound}",
+                    "certified": False,
+                    "reason": "insufficient_data_for_fit_and_certification_splits",
+                    "n": len(st.buffer),
+                }
+                st.validated = False
+                return False
+            shuffled = list(st.buffer)
+            random.Random(0).shuffle(shuffled)
+            n_fit = len(shuffled) // 2
+            return self._fit_and_validate_conformal_split(
+                st,
+                shuffled[:n_fit],
+                shuffled[n_fit:],
+            )
+
         xs = [x for x, _ in st.buffer]
         ys = [w for _, w in st.buffer]
         if len(xs) < _MIN_CALIBRATION_POINTS:
@@ -118,14 +176,68 @@ class TrustGate:
             return False
         # honest check: leave-one-out calibrated-selective must beat just-trust-everything
         cal = loo_calibrated_risks(xs, ys)
-        if self.conformal_alpha is not None:
-            # conformal mode changes the objective from lambda-net ("selective beats trust-all") to
-            # "false-accept rate <= alpha": a regime is trust-eligible iff a tau can be certified
-            # (from the honest LOO calibrated risks + revealed wrongness).
-            st.tau = rcps_threshold(cal, ys, self.conformal_alpha, self.conformal_delta)
-            st.validated = st.tau is not None
-        else:
-            st.validated = self._policy_net(cal, ys, self.lam) > (len(ys) - npos) / len(ys)
+        st.validated = self._policy_net(cal, ys, self.lam) > (len(ys) - npos) / len(ys)
+        return st.validated
+
+    def _fit_and_validate_conformal_split(
+        self,
+        st: _RegimeState,
+        fit: List[tuple],
+        certification: List[tuple],
+    ) -> bool:
+        st.tau = None
+        st.certificate = None
+        st.validated = False
+        if len(fit) < _MIN_CALIBRATION_POINTS or not certification:
+            st.certificate = {
+                "method": f"split_learn_then_test_{self.conformal_bound}",
+                "certified": False,
+                "reason": "insufficient_fit_or_certification_data",
+                "n_fit": len(fit),
+                "n_certification": len(certification),
+            }
+            return False
+
+        fit_x = [x for x, _ in fit]
+        fit_y = [w for _, w in fit]
+        npos = sum(fit_y)
+        if npos == 0 or npos == len(fit_y):
+            st.certificate = {
+                "method": f"split_learn_then_test_{self.conformal_bound}",
+                "certified": False,
+                "reason": "fit_split_has_one_class",
+                "n_fit": len(fit),
+                "n_certification": len(certification),
+            }
+            return False
+        ranking = auroc(fit_x, fit_y)
+        if ranking is None or ranking < _VALIDITY_AUROC_MIN:
+            st.certificate = {
+                "method": f"split_learn_then_test_{self.conformal_bound}",
+                "certified": False,
+                "reason": "fit_split_signal_below_auroc_minimum",
+                "fit_auroc": ranking,
+                "n_fit": len(fit),
+                "n_certification": len(certification),
+            }
+            return False
+
+        st.calibrator = isotonic_calibrator(fit_x, [float(y) for y in fit_y])
+        fit_calibrated = [float(st.calibrator(x)) for x in fit_x]
+        certification_calibrated = [float(st.calibrator(x)) for x, _ in certification]
+        report = split_ltt_threshold(
+            fit_calibrated,
+            fit_y,
+            certification_calibrated,
+            [w for _, w in certification],
+            self.conformal_alpha,
+            self.conformal_delta,
+            self.conformal_bound,
+        )
+        report["fit_auroc"] = ranking
+        st.certificate = report
+        st.tau = report["tau"]
+        st.validated = bool(report["certified"])
         return st.validated
 
     @staticmethod

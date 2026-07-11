@@ -113,9 +113,13 @@ def _alpha_decision_ready_report(target_alpha=0.2, n_records=500, n_cal=320):
 def _panel_ready_report(n_targets=3, n_records_per_target=20, target_alpha=0.2):
     target_ids = [f"target_{i}" for i in range(n_targets)]
     return {
+        "certification_schema": "split_ltt_v1",
         "ok": True,
         "panel_status": "multi_target_certified",
         "target_alpha": target_alpha,
+        "panel_delta": 0.1,
+        "per_target_delta": 0.1 / n_targets,
+        "multiplicity_correction": "bonferroni_over_targets",
         "threshold": 4.0,
         "min_targets": 3,
         "min_records_per_target": n_records_per_target,
@@ -133,6 +137,14 @@ def _panel_ready_report(n_targets=3, n_records_per_target=20, target_alpha=0.2):
                 "n_records": n_records_per_target,
                 "min_records_per_target": n_records_per_target,
                 "tau": 0.08,
+                "certificate": {
+                    "method": "split_learn_then_test_hoeffding",
+                    "certified": True,
+                    "certification": {
+                        "certified": True,
+                        "ucb": target_alpha / 2,
+                    },
+                },
             }
             for target_id in target_ids
         ],

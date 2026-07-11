@@ -143,16 +143,20 @@ def _receipt_rows_by_target(rows: Iterable[Dict[str, Any]],
         if not target_id:
             _add_failure(failures, "receipt_missing_target_id", "receipt row has no target_id")
             continue
-        if target_id in by_target:
-            _add_failure(failures, "receipt_duplicate_target_id", "duplicate target_id in receipt", target_id=target_id)
-        by_target[target_id] = row
-        if row.get("status") != "submitted":
-            _add_failure(failures, "receipt_row_status_not_submitted", "receipt row status must be submitted",
-                         target_id=target_id, observed=row.get("status"))
+        stage = str(row.get("stage") or row.get("status") or "")
+        if stage not in {"proteinmpnn_submitted", "pair_submitted", "submitted"}:
+            _add_failure(failures, "receipt_row_stage_invalid", "receipt row has an unsupported stage",
+                         target_id=target_id, observed=stage)
+            continue
         if expected_workstream is not None and row.get("workstream") != expected_workstream:
             _add_failure(failures, "receipt_row_workstream_mismatch", "receipt row workstream mismatch",
                          target_id=target_id, expected=expected_workstream, observed=row.get("workstream"))
-        for field in ("proteinmpnn_job_id", "boltz_job_id"):
+        required_job_fields = (
+            ("proteinmpnn_job_id",)
+            if stage == "proteinmpnn_submitted"
+            else ("proteinmpnn_job_id", "boltz_job_id")
+        )
+        for field in required_job_fields:
             if not _job_id_ok(row.get(field)):
                 _add_failure(failures, "receipt_bad_job_id", f"invalid {field}", target_id=target_id, field=field,
                              observed=row.get(field))
@@ -164,6 +168,15 @@ def _receipt_rows_by_target(rows: Iterable[Dict[str, Any]],
             if expected and str(row.get(field) or "") != expected:
                 _add_failure(failures, "receipt_manifest_field_mismatch", "receipt field differs from manifest",
                              target_id=target_id, field=field, expected=expected, observed=row.get(field))
+        if stage in {"pair_submitted", "submitted"}:
+            previous = by_target.get(target_id)
+            if previous is not None and (
+                previous.get("proteinmpnn_job_id") != row.get("proteinmpnn_job_id")
+                or previous.get("boltz_job_id") != row.get("boltz_job_id")
+            ):
+                _add_failure(failures, "receipt_conflicting_pair", "target has conflicting submitted pairs",
+                             target_id=target_id)
+            by_target[target_id] = row
     missing = sorted(set(specs) - set(by_target))
     if missing:
         _add_failure(failures, "receipt_missing_targets", "receipt does not cover all manifest targets", targets=missing)

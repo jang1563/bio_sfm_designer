@@ -310,20 +310,49 @@ def build_protocol(
 
     submit_receipt = approval_packet.get("submit_receipt")
     submit_summary = approval_packet.get("submit_summary")
-    if isinstance(submit_receipt, str) and os.path.exists(submit_receipt):
-        _add_failure(
-            failures,
-            "panel_submit_receipt_exists",
-            "panel decision protocol is a pre-submit protocol; submit receipt already exists",
-            path=submit_receipt,
-        )
-    if isinstance(submit_summary, str) and os.path.exists(submit_summary):
-        _add_failure(
-            failures,
-            "panel_submit_summary_exists",
-            "panel decision protocol is a pre-submit protocol; submit summary already exists",
-            path=submit_summary,
-        )
+    post_panel_phase = isinstance(completion_report, dict) or isinstance(panel_report, dict)
+    if post_panel_phase:
+        if not isinstance(submit_receipt, str) or not os.path.isfile(submit_receipt):
+            _add_failure(
+                failures,
+                "panel_submit_receipt_missing_post_panel",
+                "post-panel interpretation requires the guarded submit receipt",
+                path=submit_receipt,
+            )
+        if not isinstance(submit_summary, str) or not os.path.isfile(submit_summary):
+            _add_failure(
+                failures,
+                "panel_submit_summary_missing_post_panel",
+                "post-panel interpretation requires the guarded submit summary",
+                path=submit_summary,
+            )
+        if not isinstance(completion_report, dict) or completion_report.get("ok") is not True:
+            _add_failure(
+                failures,
+                "panel_completion_not_ready_post_panel",
+                "post-panel interpretation requires completion ok=true",
+            )
+        if not isinstance(panel_report, dict):
+            _add_failure(
+                failures,
+                "panel_report_missing_post_panel",
+                "post-panel interpretation requires a target-wise panel report",
+            )
+    else:
+        if isinstance(submit_receipt, str) and os.path.exists(submit_receipt):
+            _add_failure(
+                failures,
+                "panel_submit_receipt_exists",
+                "pre-submit protocol requires the submit receipt to be absent",
+                path=submit_receipt,
+            )
+        if isinstance(submit_summary, str) and os.path.exists(submit_summary):
+            _add_failure(
+                failures,
+                "panel_submit_summary_exists",
+                "pre-submit protocol requires the submit summary to be absent",
+                path=submit_summary,
+            )
 
     completion_state = {
         "provided": isinstance(completion_report, dict),
@@ -337,6 +366,13 @@ def build_protocol(
         panel_label=panel_label,
         expected_target_ids=manifest_ids,
     )
+    if isinstance(panel_report, dict) and panel_result.get("status") == "panel_report_target_set_mismatch":
+        _add_failure(
+            failures,
+            "panel_report_target_set_mismatch",
+            "post-panel target set or row-count contract does not match the representative manifest",
+            target_set_check=panel_result.get("target_set_check"),
+        )
     protocol_ready = not failures
     approval_env_var = approval_packet.get("panel_approval_env_var") or "panel approval env"
     approval_env_value = approval_packet.get("panel_approval_env_value") or "panel approval token"
@@ -347,13 +383,19 @@ def build_protocol(
         "status": _PROJECT_READY_STATUS if protocol_ready else "post_panel_decision_protocol_blocked",
         "audit_ok": protocol_ready,
         "no_submit": True,
+        "execution_phase": "post_panel_interpretation" if post_panel_phase else "pre_submit",
         "can_submit_panel_if_user_explicitly_approves": (
-            approval_packet.get("can_submit_panel_if_user_explicitly_approves") if protocol_ready else False
+            approval_packet.get("can_submit_panel_if_user_explicitly_approves")
+            if protocol_ready and not post_panel_phase else False
         ),
         "can_claim_w2_generalization_now": False,
         "claim_boundary": {
             "panel_approval_packet": "not approval and not evidence",
-            "panel_submission": "requires explicit user approval env before any real submit",
+            "panel_submission": (
+                "completed with guarded receipt provenance"
+                if post_panel_phase else
+                "requires explicit user approval env before any real submit"
+            ),
             "panel_completion": "requires synced records for all manifest targets before report",
             "w2_multi_target_generalization": (
                 "not supported until target-wise panel certification passes with exact manifest target-set, "
@@ -436,6 +478,8 @@ def build_protocol(
         "current_completion_state": completion_state,
         "current_panel_result": panel_result,
         "next_action": (
+            str(panel_result.get("next_action") or "inspect target-wise panel result")
+            if post_panel_phase and protocol_ready else
             "await explicit user approval before guarded W2 panel submission"
             if protocol_ready
             else "repair protocol failures before any W2 panel approval"

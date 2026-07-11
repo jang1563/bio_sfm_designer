@@ -10,6 +10,7 @@ from bio_sfm_designer.experiments.m6d_w2_v11_submission_decision_state import (
     main,
     render_markdown,
 )
+from bio_sfm_designer.experiments.m6d_w2_approval_scope import bind_scope
 
 
 def _write_json(path, obj):
@@ -21,7 +22,7 @@ def _write_json(path, obj):
 
 def _approval_packet():
     target_ids = ["10XZ_EF", "10YB_GH", "12NP_AH", "10VB_IJ", "10ZO_AB", "1A2Y_BA", "1A6W_HL"]
-    return {
+    packet = {
         "_path": "/tmp/approval.json",
         "artifact": "m6d_w2_panel_approval_packet",
         "status": "panel_approval_packet_ready",
@@ -101,6 +102,9 @@ def _approval_packet():
             "approval_scope_ready": True,
         },
     }
+    packet["approval_scope"]["manifest_sha256"] = "a" * 64
+    packet["approval_scope"] = bind_scope(packet["approval_scope"])
+    return packet
 
 
 def _panel_decision_protocol():

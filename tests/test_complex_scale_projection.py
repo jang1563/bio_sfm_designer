@@ -13,10 +13,10 @@ FIXTURE = os.path.join(os.path.dirname(__file__), "fixtures", "barstar_interface
 
 
 class ComplexScaleProjectionTests(unittest.TestCase):
-    def test_planned_balanced_batch_makes_alpha_02_plausible(self):
+    def test_planned_balanced_batch_is_insufficient_under_split_ltt(self):
         rep = run_projection([FIXTURE], target_alpha=0.2, n_new=300, seeds=range(20))
         self.assertTrue(rep["ok"])
-        self.assertEqual(rep["decision"], "planned_batch_plausible")
+        self.assertEqual(rep["decision"], "planned_batch_insufficient")
         self.assertEqual(rep["n_current_records"], 192)
         self.assertEqual(rep["n_projected_records"], 492)
         self.assertEqual(rep["new_records_by_temperature"], {"0.3": 100, "0.5": 100, "0.7": 100})
@@ -27,17 +27,17 @@ class ComplexScaleProjectionTests(unittest.TestCase):
         self.assertIn("bootstrap", rep["projection_method"])
         self.assertTrue(any("do not certify" in item for item in rep["projection_limitations"]))
         self.assertEqual(rep["current_certified_count"], 0)
-        self.assertEqual(rep["projected_certified_count"], 15)
-        self.assertGreaterEqual(rep["projected_certified_fraction"], 0.7)
-        self.assertGreater(rep["projected_tau"]["median"], 0.0)
-        self.assertGreater(rep["projected_trusted"]["median"], 0)
-        self.assertLess(rep["projected_false_accept_rate"]["median"], 0.2)
+        self.assertEqual(rep["projected_certified_count"], 0)
+        self.assertEqual(rep["projected_certified_fraction"], 0.0)
+        self.assertIsNone(rep["projected_tau"]["median"])
+        self.assertEqual(rep["projected_trusted"]["median"], 0.0)
+        self.assertIsNone(rep["projected_false_accept_rate"]["median"])
 
-    def test_smaller_batch_is_split_sensitive(self):
+    def test_smaller_batch_is_also_insufficient(self):
         rep = run_projection([FIXTURE], target_alpha=0.2, n_new=180, seeds=range(20))
-        self.assertEqual(rep["decision"], "planned_batch_split_sensitive")
-        self.assertLess(rep["projected_certified_fraction"], 0.7)
-        self.assertGreater(rep["projected_certified_count"], 0)
+        self.assertEqual(rep["decision"], "planned_batch_insufficient")
+        self.assertEqual(rep["projected_certified_fraction"], 0.0)
+        self.assertEqual(rep["projected_certified_count"], 0)
 
     def test_cli_writes_json(self):
         with tempfile.TemporaryDirectory() as d:

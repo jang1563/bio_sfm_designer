@@ -726,6 +726,8 @@ def build_bundle(
         })
     bundle["audit_ok"] = not failures
     bundle["status"] = "public_approval_bundle_ready_not_submitted" if not failures else "public_approval_bundle_blocked"
+    if failures:
+        bundle["next_action"] = "repair the listed preflight and decision-state blockers before any panel submission"
     return bundle
 
 

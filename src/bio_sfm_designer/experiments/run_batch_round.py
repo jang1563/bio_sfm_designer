@@ -802,6 +802,7 @@ def _prevalidation_report_and_data(paths: Iterable[str],
             "n_wrong": sum(wrong),
             "validated": bool(validated),
             "tau": tau,
+            "certificate": getattr(state, "certificate", None),
         }
         if not validated:
             failures.append({

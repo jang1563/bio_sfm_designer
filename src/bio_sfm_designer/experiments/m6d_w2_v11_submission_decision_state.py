@@ -17,6 +17,8 @@ import subprocess
 from datetime import date
 from typing import Any, Dict, Iterable, List, Optional
 
+from .m6d_w2_approval_scope import scope_is_bound
+
 
 _DEFAULT_REMOTE_HOST = ""
 _DEFAULT_REMOTE_ROOT = ""
@@ -215,6 +217,9 @@ def _approval_scope_ok(scope: Dict[str, Any], approval_packet: Dict[str, Any]) -
     target_ids = scope.get("target_ids")
     return (
         bool(scope.get("manifest"))
+        and isinstance(scope.get("manifest_sha256"), str)
+        and len(scope["manifest_sha256"]) == 64
+        and scope_is_bound(scope)
         and isinstance(target_ids, list)
         and n_ready is not None
         and n_targets is not None
@@ -1188,6 +1193,18 @@ def main(argv: Optional[List[str]] = None) -> int:
         check_remote_receipts=args.check_remote_receipts,
         ssh_timeout=args.ssh_timeout,
     )
+    repo_root = os.path.abspath(os.getcwd())
+
+    def sanitize(value: Any) -> Any:
+        if isinstance(value, dict):
+            return {key: sanitize(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [sanitize(item) for item in value]
+        if isinstance(value, str) and value.startswith(repo_root + os.sep):
+            return "<repo-root>/" + os.path.relpath(value, repo_root)
+        return value
+
+    rep = sanitize(rep)
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))
     print(

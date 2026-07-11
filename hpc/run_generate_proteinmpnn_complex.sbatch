@@ -12,6 +12,7 @@
 # ProteinMPNN is CPU-capable; torch+numpy come from the bioguard env / ~/.local, so do NOT set
 # PYTHONNOUSERSITE here (unlike Boltz/DeBERTa).
 set -euo pipefail
+unset PYTHONNOUSERSITE
 
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
 ENV_PY="${ENV_PY:-$HOME/.conda/envs/bioguard/bin/python}"

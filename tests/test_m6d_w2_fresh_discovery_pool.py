@@ -97,6 +97,34 @@ class M6DW2FreshDiscoveryPoolTests(unittest.TestCase):
             self.assertEqual(rep["n_selected_for_manifest"], 1)
             self.assertEqual(rep["n_unique_selected_rcsb_ids"], 1)
 
+    def test_historical_registry_excludes_evaluated_target_and_source(self):
+        with tempfile.TemporaryDirectory() as d:
+            old_source = os.path.join(d, "source_OLD.pdb")
+            new_source = os.path.join(d, "source_NEW.pdb")
+            _write_source(old_source)
+            _write_source(new_source)
+            seed = {"seeds": [
+                {"rcsb_id": "OLD", "source_pdb": old_source},
+                {"rcsb_id": "NEW", "source_pdb": new_source},
+            ]}
+            registry = {
+                "evaluated_target_ids": ["OLD_AB"],
+                "evaluated_source_rcsb_ids": ["OLD"],
+            }
+
+            rep = build_discovery_pool(
+                seed,
+                out_dir=os.path.join(d, "out"),
+                max_candidates=3,
+                source_diverse=True,
+                historical_registry=registry,
+            )
+
+        self.assertTrue(rep["historical_registry_applied"])
+        self.assertGreaterEqual(rep["n_historical_evidence_excluded"], 1)
+        self.assertEqual(rep["n_selected_for_manifest"], 1)
+        self.assertEqual(rep["manifest"]["targets"][0]["rcsb_id"], "NEW")
+
     def test_cli_writes_report_and_manifest(self):
         with tempfile.TemporaryDirectory() as d:
             source = os.path.join(d, "source_TEST.pdb")

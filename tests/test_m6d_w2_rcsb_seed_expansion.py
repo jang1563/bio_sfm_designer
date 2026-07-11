@@ -87,6 +87,20 @@ class M6DW2RcsbSeedExpansionTests(unittest.TestCase):
         self.assertIn("RCSB", rep["excluded_source_ids"])
         self.assertIn("OLD1", rep["already_screened_seed_sources"])
 
+    def test_historical_registry_and_prior_report_sources_are_excluded(self):
+        rep, seed_config = build_seed_expansion(
+            _response(["HIST", "SCREENED", "NEW"]),
+            historical_registry={"evaluated_source_rcsb_ids": ["HIST"]},
+            previous_seed_configs=[{"selected_seed_ids": ["SCREENED"]}],
+            max_seeds=3,
+        )
+
+        self.assertTrue(rep["historical_registry_applied"])
+        self.assertEqual(rep["historical_evaluated_source_ids"], ["HIST"])
+        self.assertEqual(rep["already_screened_seed_sources"], ["SCREENED"])
+        self.assertEqual(rep["selected_seed_ids"], ["NEW"])
+        self.assertEqual(seed_config["seeds"], [{"rcsb_id": "NEW"}])
+
     def test_empty_after_filtering_is_fail_closed(self):
         rep, seed_config = build_seed_expansion(
             _response(["OLD1", "EXCL"]),

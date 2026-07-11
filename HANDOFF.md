@@ -3,6 +3,27 @@
 Self-contained context to continue this project in a fresh session (Codex or otherwise) with **no prior
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
+> **2026-07-11 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
+> replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
+> (`AUROC=0.938`) but refuses alpha=0.3 (`certification UCB=0.510`, `tau=null`). All older positive
+> certificate fields are legacy exploratory outputs until rerun under `split_ltt_v1`. The replacement
+> W2 v11 manifest excludes historical targets and contains 11 fresh sequence-cluster representatives.
+> Its Cayuga panel is complete: 22/22 jobs, 11/11 targets, 100 records per target, and 1,100 records total.
+> The target-wise result is `multi_target_evaluable_not_certified` at alpha=0.2, so W2 generalization is
+> not supported. Signal behavior is target-dependent: success rates span 0% to 100%, while defined pAE
+> AUROCs span approximately 0.24 to 1.00. A post-hoc power diagnostic also shows that the predeclared
+> 100-record split could not attain alpha=0.2 under Hoeffding plus Bonferroni even with zero errors:
+> certification n=33 gives UCB=0.2669, and the minimum best-case total is 176 records per target. This
+> diagnosis cannot recertify the panel. W2 remains negative. The separate W2b target-adaptive exact-LTT
+> protocol is now implemented in `configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json` and
+> `m6d_w2b_target_adaptive_report.py`, with 843 designer and 39 trust-core tests passing. Label-blind
+> discovery selected eight new targets (`1FXK_CA`, `1F93_DC`, `1F66_AB`, `1FJG_FR`, `1FDH_GA`,
+> `1FLT_WV`, `1F51_AE`, `1FVC_DC`); historical overlap is zero, sequence diversity is 8/8 clusters,
+> and schema preflight passes. Strict preflight is blocked only on eight target MSAs plus eight reports.
+> The manifest-bound MSA plan is emitted but not submitted, and ProteinMPNN/Boltz remains unauthorized.
+> Resume from target-MSA preparation. Start with
+> `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md` before using the historical narrative below.
+
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and
 `docs/PROJECT_ROADMAP.md`.
 
@@ -241,7 +262,8 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
 > `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`; Cayuga submission is blocked until
 > a no-spend replacement-target discovery or predeclared gate redesign passes the v11 unlock conditions.
-> That no-spend v11 fork has now advanced through input preparation but not panel submission:
+> Historical pre-submit trace, superseded by the 2026-07-11 W2 result above: at that stage, the no-spend
+> v11 fork had advanced through input preparation but not panel submission:
 > `results/m6d_w2_target_family_redesign_v11_seed_expansion.{json,md}` selected 160 new RCSB seeds,
 > `results/m6d_w2_target_family_redesign_v11_discovery_pool.{json,md}` screened 2958 chain pairs and
 > selected 20 source-diverse candidates, the full 20-target sequence audit was near-duplicate dominated
@@ -340,7 +362,7 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 > `complex_panel_report` -> decision-protocol refresh, explicitly revalidates postsubmit status with the
 > manifest, submit receipt/summary, and job-state JSON before sync-back, and keeps
 > `can_claim_w2_generalization=false`.
-> The panel has not been submitted.
+> At the time captured by this historical trace, the panel had not yet been submitted.
 > A separate source-redundancy audit plan exists, but it does not authorize Cayuga submission or W2
 > generalization.
 > W3 no-MSA Chai scale-up is now a

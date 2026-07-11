@@ -14,7 +14,7 @@ class ComplexAlphaSeedSensitivityTests(unittest.TestCase):
         rep = run_sensitivity([FIXTURE], target_alpha=0.2, baseline_alpha=0.3, seeds=range(5))
         self.assertEqual(rep["n_seeds"], 5)
         self.assertEqual(rep["target_certified_count"], 0)
-        self.assertEqual(rep["baseline_certified_count"], 5)
+        self.assertEqual(rep["baseline_certified_count"], 0)
         self.assertEqual(rep["decision"], "continue_scale_robust")
         self.assertGreater(rep["target_estimated_additional_records"]["median"], 0)
         self.assertEqual(len(rep["per_seed"]), 5)
@@ -33,7 +33,7 @@ class ComplexAlphaSeedSensitivityTests(unittest.TestCase):
             self.assertTrue(os.path.exists(out))
         self.assertEqual(rep["n_seeds"], 3)
         self.assertEqual(rep["target_certified_count"], 0)
-        self.assertEqual(rep["baseline_certified_count"], 3)
+        self.assertEqual(rep["baseline_certified_count"], 0)
 
 
 if __name__ == "__main__":

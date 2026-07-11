@@ -1,5 +1,19 @@
 # Project Roadmap
 
+> **Current statistical boundary (updated 2026-07-11):** positive certificates produced by the former
+> same-sample threshold search are legacy exploratory outputs. The canonical 192-design reanalysis under
+> `split_ltt_v1` retains the pAE signal but refuses alpha=0.3. The fresh 11-target W2 panel has now
+> completed on Cayuga with 1,100 records and is `multi_target_evaluable_not_certified` at alpha=0.2.
+> Its target-wise signal is heterogeneous, and the declared split is structurally underpowered:
+> 33 certification rows give a best-case Hoeffding UCB of 0.2669; at least 176 total records per target
+> are needed merely to make zero-error alpha=0.2 certification possible. This is a post-hoc diagnosis,
+> not a recertification. W2 therefore remains negative. The separate W2b target-adaptive exact-LTT
+> protocol is implemented and locally tested. Label-blind discovery selected eight fresh targets that pass
+> historical/source exclusion, 8/8 sequence clustering, and schema preflight. Strict file readiness is
+> blocked only on eight target MSAs and eight reports; the manifest-bound MSA plan is emitted but not
+> submitted. ProteinMPNN/Boltz remains blocked. See
+> `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md`.
+
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
 current goal is to make the system stronger, more reproducible, and harder to fool.
@@ -425,34 +439,22 @@ Allowed decisions:
    `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json` is
    `multi_target_evaluable_not_certified` at alpha=0.2 with 15 targets and 1500 records. The pooled
    diagnostic certifies alpha=0.2, but pooled-only evidence remains diagnostic; only `1DXU_DC` certifies
-   target-wise at alpha=0.2. Resume W2 from
-   `w2_target_family_redesign_v11_post_v10_decision`: use
-   `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
-   `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`. The v11 no-spend discovery and
-   target-MSA prep are complete: 20 candidates were structurally selected, a 7-target representative
-   manifest passes sequence diversity, jobs `3073871`-`3073877` completed target-MSA precompute, and
-   `results/m6d_w2_target_family_redesign_v11_readiness.json` is `ready`. The guarded
-   `results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh` passes local/Cayuga dry-runs and
-   refuses real execution without `BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit`; the generator is
-   `python -m bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight --run-local-dry-run`, which also
-   emits the approval runbook, sync-back script, panel-completion script, approval packet, and decision
-   protocol. After explicit approval and receipt creation, the postsubmit ladder is driven by
-   `bash results/m6d_w2_target_family_redesign_v11_postsubmit_driver.sh`, and the public approval bundle
-   fail-closes unless that driver is paired with
-   `bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh`. Full project status reports
-	   W2 as `panel_approval_packet_ready_awaiting_explicit_approval`, and the no-submit remote readiness
-	   audit reports `remote_submission_readiness_ok` for the Cayuga mirror. The no-submit submission-decision
-	   state records `awaiting_explicit_panel_submission_approval`, `submitted=false`, local/remote receipt
-	   absence, and `can_claim_w2_generalization=false`, with an `operator_approval_checklist` for the guarded
-	   submit entrypoint, postsubmit driver, post-sync replay, script-chain static sub-gates, 700 planned
-	   designs, 14 expected Slurm jobs, and explicit approval phrase. The decision latch re-consumes the
-	   completion audit's operator-checklist and operator script-chain verdicts, and goal drift now records
-	   `operator_checklist_ok=true` and `operator_script_chain_static_ok=true` while execution remains
-	   `panel_postsync_interpretation_predeclared_not_synced`. Tracked result/status
-   artifacts are public-safe placeholders; private executable Cayuga commands remain only in ignored local
-   runbook/approval-packet artifacts. The
-   next W2 decision is whether to explicitly approve the corrected 7-target v11 ProteinMPNN/Boltz panel;
-   no v11 panel records exist yet.
+   target-wise at alpha=0.2. W2 then moved to a historical-exclusion reset branch. Fresh discovery selected
+   20 structurally admissible candidates and 11 alignment-based sequence-cluster representatives in
+   `configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json`. After target-MSA prep and
+   explicit approval, all 11 ProteinMPNN jobs and 11 dependent Boltz jobs completed on Cayuga with exit
+   code `0:0`; the records were synced and validated at 100 per target. The final report
+   `results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json` is
+   `multi_target_evaluable_not_certified` with 11 targets and 1,100 records. The decision protocol and
+   post-sync interpretation both keep `can_claim_w2_generalization=false`.
+
+   This result has two distinct limits. First, target success rates span 0% to 100% and defined pAE AUROCs
+   span approximately 0.24 to 1.00, so a universal pAE rule is not supported. Second, the post-hoc power
+   diagnostic shows that the predeclared 100-record split was structurally unable to certify alpha=0.2:
+   with 33 certification rows and Bonferroni `delta=0.1/11`, the zero-error Hoeffding UCB floor is 0.2669.
+   At least 176 total records per target are needed for best-case zero-error feasibility under the same
+   split. This cannot recertify the completed panel. The next W2 action is protocol redesign and
+   predeclaration on new held-out targets, not automatic submission of 836 additional folds.
 7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract
    with 30 matched records, but `results/m6c_cross_predictor.json` reports Boltz-Chai label agreement
    of 0.600 against the required 0.800. Therefore independent-predictor robustness is not supported

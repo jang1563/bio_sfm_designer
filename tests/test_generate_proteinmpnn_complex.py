@@ -37,6 +37,7 @@ class GenerateComplexContractTests(unittest.TestCase):
         self.assertIn("ID_PREFIX", text)
         self.assertIn("--complex-id", text)
         self.assertIn("--id-prefix", text)
+        self.assertIn("unset PYTHONNOUSERSITE", text)
 
     def test_multichain_designs_become_candidates(self):
         mod = _load()

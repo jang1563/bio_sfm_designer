@@ -14,7 +14,7 @@ _APPROVAL_ENV_VAR = "BIO_SFM_APPROVE_V9_PANEL"
 _APPROVAL_TOKEN = "approve-v9-panel-submit"
 _DRY_RUN_ENV_VAR = "M6D_W2_V9_SUBMIT_DRY_RUN"
 _REFUSAL = "refusing v9 panel submission without explicit approval env"
-_SHARED_WRAPPER_MARKER = 'm6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh"'
+_SHARED_WRAPPER_MARKER = 'm6d_w2_submit_with_receipt.sh"'
 
 
 def _read_text(path: str) -> str:
@@ -94,7 +94,11 @@ def _static_audit(
                 "wrapper_missing_marker",
                 "panel wrapper is missing a required approval/receipt guard marker",
                 marker=name,
-                expected=markers[name],
+                    expected=(
+                        markers["shared_wrapper_exec"]
+                        if name == "final_shared_wrapper_exec"
+                        else markers[name]
+                    ),
             )
 
     dry = positions.get("dry_run_guard")

@@ -1060,6 +1060,21 @@ def _has_complete_posthoc_science_claim_sections(claims: Any) -> bool:
 
 def _w2_panel_report_audit_failures(panel_report: Dict[str, Any]) -> List[Dict[str, Any]]:
     failures: List[Dict[str, Any]] = []
+    target_alpha = panel_report.get("target_alpha")
+    if not isinstance(target_alpha, (int, float)) or isinstance(target_alpha, bool):
+        target_alpha = -1.0
+    if panel_report.get("certification_schema") != "split_ltt_v1":
+        failures.append({
+            "kind": "panel_report_legacy_certification_schema",
+            "field": "certification_schema",
+            "observed": panel_report.get("certification_schema"),
+        })
+    if panel_report.get("multiplicity_correction") != "bonferroni_over_targets":
+        failures.append({
+            "kind": "panel_report_multiplicity_control_missing",
+            "field": "multiplicity_correction",
+            "observed": panel_report.get("multiplicity_correction"),
+        })
     if panel_report.get("ok") is not True:
         failures.append({"kind": "panel_report_not_ok", "field": "ok"})
     if panel_report.get("panel_status") != "multi_target_certified":
@@ -1231,6 +1246,25 @@ def _w2_panel_report_audit_failures(panel_report: Dict[str, Any]) -> List[Dict[s
             failures.append({
                 "kind": "panel_report_target_tau_missing",
                 "field": "targets.tau",
+                "index": idx,
+                "complex_target_id": target_id,
+            })
+        certificate = target.get("certificate") if isinstance(target.get("certificate"), dict) else {}
+        certification = (
+            certificate.get("certification")
+            if isinstance(certificate.get("certification"), dict)
+            else {}
+        )
+        if (
+            certificate.get("method") != "split_learn_then_test_hoeffding"
+            or certificate.get("certified") is not True
+            or certification.get("certified") is not True
+            or certification.get("ucb") is None
+            or certification.get("ucb") > target_alpha
+        ):
+            failures.append({
+                "kind": "panel_report_target_split_certificate_invalid",
+                "field": "targets.certificate",
                 "index": idx,
                 "complex_target_id": target_id,
             })

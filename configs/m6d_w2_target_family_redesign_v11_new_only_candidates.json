@@ -1,0 +1,47 @@
+{
+  "_note": "New-target-only W2 panel; historical evaluated targets and sources were removed fail-closed.",
+  "defaults": {
+    "num_seq": 100,
+    "objective": "binder",
+    "seed": 37,
+    "temp": 0.3
+  },
+  "historical_registry": "configs/m6d_w2_historical_target_registry.json",
+  "representative_target_ids": [
+    "10VB_IJ",
+    "10ZO_AB"
+  ],
+  "source_manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+  "targets": [
+    {
+      "binder_chain": "J",
+      "id": "10VB_IJ",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10VB_IJ",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/prepared_10VB_IJ.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/prepared_10VB_IJ.pdb",
+      "rcsb_id": "10VB",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10VB_IJ/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_10VB.pdb",
+      "target_chain": "I",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10VB_IJ/10VB_IJ_I.a3m.report.json"
+    },
+    {
+      "binder_chain": "B",
+      "id": "10ZO_AB",
+      "out_prefix": "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10ZO_AB",
+      "prep_report": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/prepared_10ZO_AB.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/prepared_10ZO_AB.pdb",
+      "rcsb_id": "10ZO",
+      "records": "hpc_outputs/m6d_w2_target_family_redesign_v11_records/10ZO_AB/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2_target_family_redesign_v11_sources/source_10ZO.pdb",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2_target_family_redesign_v11_targets/10ZO_AB/10ZO_AB_A.a3m.report.json"
+    }
+  ]
+}

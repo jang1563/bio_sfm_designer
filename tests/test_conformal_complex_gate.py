@@ -23,14 +23,26 @@ class ConformalComplexGateTests(unittest.TestCase):
         self.assertLessEqual(fas[0], fas[-1])
 
     def test_conformal_certifies_and_bounds_false_accept(self):
-        # at n=192 (default n_cal=128, alpha=0.3) RCPS certifies a tau and the held-out trusted set's
-        # false-accept rate is within the bound AND beats trust-all -- the distribution-free guarantee.
+        # Any certificate must come from an independent certification split.
         r = run()
-        self.assertIsNotNone(r["tau"])
-        far = r["conformal"]["false_accept_rate"]
-        self.assertIsNotNone(far)
-        self.assertLessEqual(far, r["alpha"])
-        self.assertLess(far, r["trust_all"]["false_accept_rate"])
+        self.assertEqual(r["n_fit"] + r["n_certification"], r["n_cal"])
+        self.assertEqual(r["certificate"]["method"], "split_learn_then_test_hoeffding")
+        if r["tau"] is not None:
+            self.assertTrue(r["certificate"]["certified"])
+            far = r["conformal"]["false_accept_rate"]
+            self.assertIsNotNone(far)
+            self.assertLess(far, r["trust_all"]["false_accept_rate"])
+        else:
+            self.assertFalse(r["certificate"]["certified"])
+
+    def test_exact_bound_is_explicit_and_does_not_change_default(self):
+        exact = run(certification_bound="clopper_pearson")
+        self.assertEqual(exact["certification_schema"], "split_ltt_exact_v1")
+        self.assertEqual(exact["certification_bound"], "clopper_pearson")
+        self.assertEqual(
+            exact["certificate"]["method"],
+            "split_learn_then_test_clopper_pearson",
+        )
 
     def test_missing_pae_fails_fast(self):
         rows = [{

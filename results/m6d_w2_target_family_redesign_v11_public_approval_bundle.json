@@ -34,11 +34,30 @@
     ]
   },
   "artifact": "m6d_w2_v11_public_approval_bundle",
-  "audit_ok": true,
+  "audit_ok": false,
   "can_claim_w2_generalization": false,
   "claim_boundary": "not W2 evidence until explicit approval, successful submit receipt, completed jobs, sync-back, completion, target-wise report with exact manifest target-set, duplicate-free target rows, matching report target counts, and refreshed interpretation",
-  "failures": [],
-  "next_action": "await explicit approval before using submit_if_explicitly_approved; otherwise keep no-submit state",
+  "failures": [
+    {
+      "kind": "approval_packet_not_ready",
+      "observed": {
+        "audit_ok": false,
+        "status": "panel_approval_packet_blocked"
+      }
+    },
+    {
+      "kind": "preflight_not_ready",
+      "observed": {
+        "audit_ok": false,
+        "status": "panel_preflight_blocked"
+      }
+    },
+    {
+      "kind": "decision_state_not_awaiting_approval",
+      "observed": "submission_decision_blocked"
+    }
+  ],
+  "next_action": "repair the listed preflight and decision-state blockers before any panel submission",
   "no_submit": true,
   "portable_commands": {
     "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
@@ -221,10 +240,10 @@
       "status": "remote_submission_readiness_ok"
     },
     "submission_decision": {
-      "audit_ok": true,
+      "audit_ok": false,
       "can_claim_w2_generalization": false,
       "no_submit": true,
-      "status": "awaiting_explicit_panel_submission_approval",
+      "status": "submission_decision_blocked",
       "submitted": false
     }
   },
@@ -235,7 +254,7 @@
     "runbook": "results/m6d_w2_target_family_redesign_v11_approval_runbook.json",
     "submission_decision_state": "results/m6d_w2_target_family_redesign_v11_submission_decision_state.json"
   },
-  "status": "public_approval_bundle_ready_not_submitted",
+  "status": "public_approval_bundle_blocked",
   "submitted": false,
   "target_contract": {
     "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",

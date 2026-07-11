@@ -1,8 +1,11 @@
 import hashlib
 import json
 import os
+import subprocess
+import sys
 import tempfile
 import unittest
+from datetime import date
 
 from bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight import (
     build_approval_packet,
@@ -13,6 +16,7 @@ from bio_sfm_designer.experiments.m6d_w2_panel_guarded_preflight import (
     render_sync_back_script,
 )
 from bio_sfm_designer.experiments.m6d_w2_panel_wrapper_guard_audit import build_audit
+from bio_sfm_designer.experiments.m6d_w2_approval_scope import bind_scope
 
 
 def _write(path, text):
@@ -88,8 +92,158 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
         self.assertIn("BIO_SFM_APPROVE_V11_PANEL", text)
         self.assertIn("approve-v11-panel-submit", text)
         self.assertIn("M6D_W2_V11_SUBMIT_DRY_RUN", text)
-        self.assertIn("m6d_w2_target_family_redesign_v2_rcsb_submit_with_receipt.sh", text)
+        self.assertIn("M6D_W2_V11_APPROVAL_INTENT_AUDIT", text)
+        self.assertIn("m6d_w2_v11_approval_intent_audit", text)
+        self.assertIn("approval_intent_accepted", text)
+        self.assertIn("../hpc/m6d_w2_submit_with_receipt.sh", text)
         self.assertNotIn("sbatch", text)
+
+    def test_real_wrapper_refuses_without_accepted_approval_intent_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            shared_name = "shared_submit.sh"
+            shared = os.path.join(d, shared_name)
+            wrapper = os.path.join(d, "submit_with_receipt.sh")
+            _write(shared, "#!/usr/bin/env bash\nset -euo pipefail\necho delegated\n")
+            os.chmod(shared, 0o755)
+            _write(wrapper, render_guarded_wrapper(
+                manifest="configs/v11.json",
+                submit_receipt="results/v11_receipt.jsonl",
+                submit_summary="results/v11_summary.json",
+                workstream="m6d_w2_target_family_redesign_v11",
+                approval_env_var="BIO_SFM_APPROVE_V11_PANEL",
+                approval_token="approve-v11-panel-submit",
+                dry_run_env_var="M6D_W2_V11_SUBMIT_DRY_RUN",
+                shared_wrapper=shared_name,
+            ))
+            os.chmod(wrapper, 0o755)
+            env = os.environ.copy()
+            env["BIO_SFM_APPROVE_V11_PANEL"] = "approve-v11-panel-submit"
+            env["BIO_SFM_PYTHON"] = sys.executable
+            env.pop("M6D_W2_V11_SUBMIT_DRY_RUN", None)
+            env.pop("M6D_W2_V11_APPROVAL_INTENT_AUDIT", None)
+
+            proc = subprocess.run(
+                [wrapper],
+                cwd=d,
+                env=env,
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+
+        self.assertEqual(proc.returncode, 2)
+        self.assertNotIn("delegated", proc.stdout)
+        self.assertIn("approval-intent audit JSON", proc.stderr)
+
+    def test_real_wrapper_accepts_approval_intent_audit_before_delegating(self):
+        with tempfile.TemporaryDirectory() as d:
+            shared_name = "shared_submit.sh"
+            shared = os.path.join(d, shared_name)
+            wrapper = os.path.join(d, "submit_with_receipt.sh")
+            intent = os.path.join(d, "accepted_intent.json")
+            manifest = os.path.join(d, "v11.json")
+            _write_json(manifest, {"targets": [{"id": "t0"}]})
+            scope = bind_scope({
+                "manifest": manifest,
+                "manifest_sha256": _sha(manifest),
+                "target_ids": ["t0"],
+                "n_ready_targets": 1,
+                "planned_design_records": 100,
+            })
+            _write(shared, "#!/usr/bin/env bash\nset -euo pipefail\necho delegated\n")
+            os.chmod(shared, 0o755)
+            _write_json(intent, {
+                "artifact": "m6d_w2_v11_approval_intent_audit",
+                "status": "approval_intent_accepted",
+                "audit_ok": True,
+                "approval_intent_accepted": True,
+                "no_submit": True,
+                "submitted": False,
+                "date": date.today().isoformat(),
+                "approval_scope": scope,
+                "approval_scope_sha256": scope["scope_sha256"],
+                "manifest_sha256": scope["manifest_sha256"],
+            })
+            _write(wrapper, render_guarded_wrapper(
+                manifest=manifest,
+                submit_receipt="results/v11_receipt.jsonl",
+                submit_summary="results/v11_summary.json",
+                workstream="m6d_w2_target_family_redesign_v11",
+                approval_env_var="BIO_SFM_APPROVE_V11_PANEL",
+                approval_token="approve-v11-panel-submit",
+                dry_run_env_var="M6D_W2_V11_SUBMIT_DRY_RUN",
+                shared_wrapper=shared_name,
+            ))
+            os.chmod(wrapper, 0o755)
+            env = os.environ.copy()
+            env["BIO_SFM_APPROVE_V11_PANEL"] = "approve-v11-panel-submit"
+            env["BIO_SFM_PYTHON"] = sys.executable
+            env["M6D_W2_V11_APPROVAL_INTENT_AUDIT"] = intent
+            env.pop("M6D_W2_V11_SUBMIT_DRY_RUN", None)
+
+            proc = subprocess.run(
+                [wrapper],
+                cwd=d,
+                env=env,
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("delegated", proc.stdout)
+
+    def test_real_wrapper_rejects_manifest_changed_after_approval(self):
+        with tempfile.TemporaryDirectory() as d:
+            shared = os.path.join(d, "shared_submit.sh")
+            wrapper = os.path.join(d, "submit_with_receipt.sh")
+            intent = os.path.join(d, "accepted_intent.json")
+            manifest = os.path.join(d, "v11.json")
+            _write(shared, "#!/usr/bin/env bash\necho delegated\n")
+            os.chmod(shared, 0o755)
+            _write_json(manifest, {"targets": [{"id": "t0"}]})
+            scope = bind_scope({
+                "manifest": manifest,
+                "manifest_sha256": _sha(manifest),
+                "target_ids": ["t0"],
+            })
+            _write_json(intent, {
+                "artifact": "m6d_w2_v11_approval_intent_audit",
+                "status": "approval_intent_accepted",
+                "audit_ok": True,
+                "approval_intent_accepted": True,
+                "no_submit": True,
+                "submitted": False,
+                "date": date.today().isoformat(),
+                "approval_scope": scope,
+                "approval_scope_sha256": scope["scope_sha256"],
+                "manifest_sha256": scope["manifest_sha256"],
+            })
+            _write(wrapper, render_guarded_wrapper(
+                manifest=manifest,
+                submit_receipt=os.path.join(d, "receipt.jsonl"),
+                submit_summary=os.path.join(d, "summary.json"),
+                workstream="m6d_w2_target_family_redesign_v11",
+                approval_env_var="BIO_SFM_APPROVE_V11_PANEL",
+                approval_token="approve-v11-panel-submit",
+                dry_run_env_var="M6D_W2_V11_SUBMIT_DRY_RUN",
+                shared_wrapper=os.path.basename(shared),
+            ))
+            os.chmod(wrapper, 0o755)
+            _write_json(manifest, {"targets": [{"id": "t0"}, {"id": "t1"}]})
+            env = os.environ.copy()
+            env.update({
+                "BIO_SFM_APPROVE_V11_PANEL": "approve-v11-panel-submit",
+                "BIO_SFM_PYTHON": sys.executable,
+                "M6D_W2_V11_APPROVAL_INTENT_AUDIT": intent,
+            })
+            proc = subprocess.run([wrapper], cwd=d, env=env, text=True, capture_output=True, check=False)
+
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertNotIn("delegated", proc.stdout)
+        self.assertIn("approval-intent audit is not accepted", proc.stderr)
 
     def test_build_preflight_blocks_if_wrapper_guard_failed(self):
         with tempfile.TemporaryDirectory() as d:
@@ -119,6 +273,33 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
 
         self.assertFalse(rep["audit_ok"])
         self.assertIn("wrapper_guard_not_ok", {failure["kind"] for failure in rep["failures"]})
+
+    def test_build_preflight_blocks_historical_target_reuse(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest = os.path.join(d, "manifest.json")
+            _write_json(manifest, {"targets": [{"id": "old_A", "rcsb_id": "old"}]})
+            rep = build_preflight(
+                manifest_path=manifest,
+                manifest_report_path=os.path.join(d, "manifest_report.json"),
+                wrapper_path=os.path.join(d, "wrapper.sh"),
+                submit_receipt=os.path.join(d, "receipt.jsonl"),
+                submit_summary=os.path.join(d, "summary.json"),
+                workstream="w2_v11",
+                approval_env_var="APPROVE",
+                approval_token="yes",
+                dry_run_env_var="DRY_RUN",
+                manifest_report={"ok": True},
+                wrapper_guard={"audit_ok": True},
+                historical_registry_path="registry.json",
+                historical_overlap_audit={
+                    "audit_ok": False,
+                    "historical_target_overlap": ["old_A"],
+                    "failures": [{"kind": "historical_target_reuse"}],
+                },
+            )
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertIn("historical_target_overlap", {failure["kind"] for failure in rep["failures"]})
 
     def test_sync_back_script_requires_postsubmit_sync_ready_before_records(self):
         text = render_sync_back_script(
@@ -156,13 +337,16 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             postsubmit_status="results/postsubmit_status.json",
             remote_host="hpc-login",
             remote_root="/remote/root",
+            cayuga_python="/remote/boltz/bin/python",
         )
 
         self.assertIn("This script never submits jobs", text)
         self.assertIn('REMOTE_HOST="${CAYUGA_BIO_SFM_HOST:-hpc-login}"', text)
         self.assertIn('REMOTE_PATH="${CAYUGA_BIO_SFM_REMOTE_ROOT:-/remote/root}"', text)
+        self.assertIn('REMOTE_PYTHON="${CAYUGA_BIO_SFM_PYTHON:-/remote/boltz/bin/python}"', text)
         self.assertIn('bash "$RECEIPT_MONITOR"', text)
         self.assertIn('ssh "$REMOTE_HOST" "$remote_cmd"', text)
+        self.assertIn('BIO_SFM_PYTHON=%q PYTHONNOUSERSITE=1 bash %q', text)
         self.assertIn('MAX_POLLS="${M6D_W2_POSTSUBMIT_MAX_POLLS:-120}"', text)
         self.assertIn('POLL_SECONDS="${M6D_W2_POSTSUBMIT_POLL_SECONDS:-300}"', text)
         self.assertIn("W2 v11 postsubmit poll", text)
@@ -238,6 +422,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 "--approval-token", "approve-v11-panel-submit",
                 "--dry-run-env-var", "M6D_W2_V11_SUBMIT_DRY_RUN",
                 "--shared-wrapper", os.path.basename(shared),
+                "--cayuga-python", "/remote/boltz/bin/python",
                 "--min-targets", "2",
                 "--run-local-dry-run",
             ])
@@ -282,6 +467,9 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertTrue(os.path.exists(sync_back))
             self.assertTrue(os.path.exists(completion_script))
             self.assertTrue(os.path.exists(postsubmit_driver))
+            self.assertTrue(os.path.exists(receipt_monitor))
+            self.assertTrue(os.path.exists(job_state_query))
+            self.assertTrue(os.path.exists(postsync_replay))
             with open(postsubmit_driver) as fh:
                 postsubmit_driver_text = fh.read()
             self.assertIn("This script never submits jobs", postsubmit_driver_text)
@@ -293,7 +481,8 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             with open(completion_script) as fh:
                 completion_text = fh.read()
             self.assertIn('PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"', completion_text)
-            self.assertIn('export PYTHONPATH="${PYTHONPATH:-src}"', completion_text)
+            self.assertIn('BIO_SFM_TRUST_CORE_SRC=', completion_text)
+            self.assertIn('$REPO_ROOT/src:$BIO_SFM_TRUST_CORE_SRC', completion_text)
             self.assertIn('export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-1}"', completion_text)
             self.assertIn('"$PYTHON_BIN" -m bio_sfm_designer.experiments.complex_panel_completion', completion_text)
             with open(sync_back) as fh:
@@ -310,6 +499,8 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
             self.assertEqual(approval_packet["panel_approval_env_var"], "BIO_SFM_APPROVE_V11_PANEL")
             self.assertEqual(approval_packet["manifest"], manifest)
             self.assertTrue(approval_packet["checks"]["approval_scope_ready"])
+            self.assertTrue(approval_packet["checks"]["post_submit_scripts_ready"])
+            self.assertTrue(all(approval_packet["post_submit_script_checks"].values()))
             self.assertEqual(approval_packet["approval_scope"]["target_ids"], ["t0", "t1"])
             self.assertEqual(approval_packet["approval_scope"]["n_targets"], 2)
             self.assertEqual(approval_packet["approval_scope"]["n_ready_targets"], 2)
@@ -346,6 +537,7 @@ class M6DW2PanelGuardedPreflightTests(unittest.TestCase):
                 approval_token="approve-v11-panel-submit",
                 dry_run_env_var="M6D_W2_V11_SUBMIT_DRY_RUN",
                 refusal_message="refusing v11 panel submission without explicit approval env",
+                shared_wrapper_marker=f'{os.path.basename(shared)}"',
             )
             self.assertTrue(guard["audit_ok"])
 

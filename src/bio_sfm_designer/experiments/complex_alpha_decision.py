@@ -163,7 +163,11 @@ def run_decision(records: Iterable[str], *, target_alpha: float = 0.2,
         decision = "stop_certified"
         message = f"target alpha={target_alpha} is certified; stop scaling this target unless broadening scope."
         additional = 0
-    elif plan_row and plan_row.get("estimated_additional_records") is not None:
+    elif (
+        plan_row
+        and plan_row.get("estimated_additional_records") is not None
+        and plan_row["estimated_additional_records"] > 0
+    ):
         decision = "continue_scale"
         additional = plan_row["estimated_additional_records"]
         message = f"target alpha={target_alpha} is not certified; estimate about {additional} more records."

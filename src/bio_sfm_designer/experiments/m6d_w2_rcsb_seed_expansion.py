@@ -57,6 +57,7 @@ def _seed_ids(seed_config: Optional[Dict[str, Any]]) -> List[str]:
             out.append(row)
         elif isinstance(row, dict):
             out.append(row.get("rcsb_id"))
+    out.extend(seed_config.get("selected_seed_ids", []) or [])
     return _upper_ids(out)
 
 
@@ -158,6 +159,7 @@ def _response_ids(response: Dict[str, Any]) -> List[str]:
 
 def build_seed_expansion(response: Dict[str, Any], *,
                          rules: Optional[Dict[str, Any]] = None,
+                         historical_registry: Optional[Dict[str, Any]] = None,
                          previous_seed_configs: Optional[Sequence[Dict[str, Any]]] = None,
                          max_seeds: int = 80,
                          query: Optional[Dict[str, Any]] = None,
@@ -165,7 +167,10 @@ def build_seed_expansion(response: Dict[str, Any], *,
                          branch_id: str = "w2_target_family_redesign_v1",
                          min_sequence_clusters: int = 3,
                          max_largest_cluster_fraction: float = 0.5) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    excluded_sources = _rules_excluded_sources(rules)
+    registry_sources = _upper_ids(
+        (historical_registry or {}).get("evaluated_source_rcsb_ids", [])
+    )
+    excluded_sources = _upper_ids(_rules_excluded_sources(rules) + registry_sources)
     already_screened = _upper_ids(
         seed
         for config in previous_seed_configs or []
@@ -195,6 +200,8 @@ def build_seed_expansion(response: Dict[str, Any], *,
             "rcsb_search_endpoint": RCSB_SEARCH_ENDPOINT,
             "rcsb_search_docs": RCSB_SEARCH_DOCS,
             "excluded_current_protocol_sources": excluded_sources,
+            "historical_registry_applied": historical_registry is not None,
+            "historical_evaluated_sources": registry_sources,
             "already_screened_seed_sources": already_screened,
             "source_diverse_selection_required": True,
             "sequence_diversity_audit_required_before_msa": True,
@@ -228,6 +235,8 @@ def build_seed_expansion(response: Dict[str, Any], *,
             "max_largest_cluster_fraction": max_largest_cluster_fraction,
         },
         "excluded_source_ids": excluded_sources,
+        "historical_registry_applied": historical_registry is not None,
+        "historical_evaluated_source_ids": registry_sources,
         "already_screened_seed_sources": already_screened,
         "selected_seed_ids": selected,
         "dropped_preview": dropped[:50],
@@ -290,6 +299,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--candidate-rules", default="configs/m6d_w2_target_family_redesign_v1_candidate_rules.json")
     ap.add_argument("--previous-seed-config", action="append", dest="previous_seed_configs", default=None)
+    ap.add_argument("--historical-registry", default=None,
+                    help="exclude every source with prior evaluated target evidence")
     ap.add_argument("--search-response", default=None,
                     help="Replay a saved RCSB search response instead of making a live request")
     ap.add_argument("--rows", type=int, default=500)
@@ -320,6 +331,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     rep, seed_config = build_seed_expansion(
         response,
         rules=_load_json(args.candidate_rules) if args.candidate_rules else None,
+        historical_registry=(
+            _load_json(args.historical_registry) if args.historical_registry else None
+        ),
         previous_seed_configs=previous_seed_configs,
         max_seeds=args.max_seeds,
         query=query,

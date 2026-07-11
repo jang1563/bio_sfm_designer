@@ -7,6 +7,25 @@
 > Before making the repo public, run the no-publish release gate:
 > `python -m bio_sfm_designer.experiments.public_release_readiness`.
 
+> **Statistical validity reset (2026-07-10):** historical same-sample RCPS `certified` fields are now
+> treated as exploratory. The corrected split learn-then-test reanalysis retains a strong pAE signal
+> (AUROC `0.938`) but does **not** certify alpha=0.3. See
+> [docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md](docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md).
+
+> **Current W2 result (2026-07-11):** the fresh 11-target representative panel completed on Cayuga
+> (22/22 jobs, 1,100/1,100 records). It is target-wise evaluable but not certified at alpha=0.2, with
+> success rates from 0% to 100% and defined pAE AUROCs from about 0.24 to 1.00. A post-hoc power audit
+> shows that 100 records per target cannot attain the declared Hoeffding/Bonferroni bound: the current
+> 33-row certification split has a best-case UCB of 0.2669, while at least 176 total records per target
+> are required for zero-error feasibility. This does not recertify the panel. The next W2 protocol must
+> be predeclared before more compute. That next protocol is now frozen as the separate W2b target-adaptive
+> exact-LTT milestone in
+> [docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md](docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md); implementation is
+> complete. Label-blind discovery has selected eight entirely new targets with historical overlap 0 and
+> 8/8 sequence clusters. Schema preflight passes, while strict file preflight is blocked on the expected
+> eight target MSAs plus eight reports. The MSA plan is emitted but not submitted; ProteinMPNN/Boltz
+> compute remains unauthorized.
+
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
 protein/genome/single-cell); an **external calibrated trust gate** decides, per
@@ -38,16 +57,18 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-04)
+## Status (2026-07-11)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Public clone verified** (`118 passed, 4 skipped`; the pinned public `bio-sfm-trust-core` release tag
-engine installs from GitHub):
+**Current local source verified** (`843` integrated designer tests plus `39` trust-core tests on 2026-07-11).
+The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
+fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
-- **Conformal risk control** (RCPS / Hoeffding) so a `trust` carries a stated false-accept bound.
+- **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding
+  certification are separated; the current canonical fixture refuses certification and trusts nothing.
 - CPU alpha scale planner (`python -m bio_sfm_designer.experiments.complex_alpha_plan`) to turn the current
   alpha<=0.2 frontier into an explicit next-n estimate before HPC spend.
 - Alpha decision artifact (`python -m bio_sfm_designer.experiments.complex_alpha_decision`) to mark each
@@ -312,7 +333,8 @@ engine installs from GitHub):
   `results/m6d_w2_target_family_redesign_v11_followup_contract.{json,md}` and
   `configs/m6d_w2_target_family_redesign_v11_candidate_rules.json`; Cayuga submission is blocked until
   a no-spend replacement-target discovery or predeclared gate redesign passes the v11 unlock conditions.
-  That no-spend v11 fork has now advanced through input preparation but not panel submission:
+  Historical pre-submit trace, superseded by the 2026-07-11 W2 result above: at that stage, the no-spend
+  v11 fork had advanced through input preparation but not panel submission:
   `results/m6d_w2_target_family_redesign_v11_seed_expansion.{json,md}` selected 160 new RCSB seeds,
   `results/m6d_w2_target_family_redesign_v11_discovery_pool.{json,md}` screened 2958 chain pairs and
   selected 20 source-diverse candidates, the full 20-target sequence audit was near-duplicate dominated
@@ -420,7 +442,7 @@ engine installs from GitHub):
   `complex_panel_report` -> decision-protocol refresh, explicitly revalidates postsubmit status with the
   manifest, submit receipt/summary, and job-state JSON before sync-back, fail-closes on panel-report
   target-set drift, duplicate target rows, or target-count mismatch, and keeps `can_claim_w2_generalization=false`.
-  The panel has not been submitted.
+  At the time captured by this historical trace, the panel had not yet been submitted.
 - Input-prep completion checker (`python -m bio_sfm_designer.experiments.complex_input_prep_completion`)
   to verify that the manifest-listed source/prepared PDB, target FASTA/MSA, and companion report files
   are synced back and non-empty before rerunning the stricter `complex_target_manifest --require-files`

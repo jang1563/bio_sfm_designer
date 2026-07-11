@@ -37,6 +37,7 @@ _DEFAULT_PANEL_LABEL = "W2 v11 Boltz-2 representative panel/protocol"
 _DEFAULT_OUT_JSON = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json"
 _DEFAULT_OUT_MD = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.md"
 _DEFAULT_REPLAY = "results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh"
+_DEFAULT_EXPECTED_WORKSTREAM = "m6d_w2_target_family_redesign_v11"
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -112,6 +113,8 @@ def render_replay_script(*,
                          approval_packet: str = _DEFAULT_APPROVAL_PACKET,
                          completion: str = _DEFAULT_COMPLETION,
                          completion_script: str = _DEFAULT_COMPLETION_SCRIPT,
+                         replay_script: str = _DEFAULT_REPLAY,
+                         expected_workstream: str = _DEFAULT_EXPECTED_WORKSTREAM,
                          out_json: str = _DEFAULT_OUT_JSON,
                          out_md: str = _DEFAULT_OUT_MD,
                          target_alpha: float = 0.2,
@@ -126,7 +129,13 @@ def render_replay_script(*,
         "# This script does not submit jobs; it requires postsubmit sync-ready evidence first.",
         "set -euo pipefail",
         "PYTHON_BIN=\"${BIO_SFM_PYTHON:-${ENV_PY:-python3}}\"",
-        "export PYTHONPATH=\"${PYTHONPATH:-src}\"",
+        'REPO_ROOT="${BIO_SFM_REPO_ROOT:-$PWD}"',
+        'BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-$REPO_ROOT/../bio-sfm-trust-core/src}"',
+        'if [ -d "$BIO_SFM_TRUST_CORE_SRC" ]; then',
+        '  export PYTHONPATH="$REPO_ROOT/src:$BIO_SFM_TRUST_CORE_SRC${PYTHONPATH:+:$PYTHONPATH}"',
+        'else',
+        '  export PYTHONPATH="$REPO_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"',
+        'fi',
         "export PYTHONNOUSERSITE=\"${PYTHONNOUSERSITE:-1}\"",
         f"MANIFEST={shlex.quote(manifest)}",
         f"RECEIPT={shlex.quote(receipt)}",
@@ -135,6 +144,8 @@ def render_replay_script(*,
         f"JOB_STATES={shlex.quote(job_states)}",
         f"COMPLETION_SCRIPT={shlex.quote(completion_script)}",
         f"COMPLETION_REPORT={shlex.quote(completion)}",
+        f"PANEL_REPORT={shlex.quote(panel_report)}",
+        'PANEL_REPORT_TMP="${PANEL_REPORT}.tmp.$$"',
         "test -s \"$MANIFEST\"",
         "test -s \"$RECEIPT\"",
         "test -s \"$SUMMARY\"",
@@ -144,19 +155,40 @@ def render_replay_script(*,
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status "
             "--manifest \"$MANIFEST\" --receipt \"$RECEIPT\" --summary \"$SUMMARY\" "
-            "--job-states \"$JOB_STATES\" --require-sync-ready --out-json \"$POSTSUBMIT\""
+            f"--job-states \"$JOB_STATES\" --expected-workstream {shlex.quote(expected_workstream)} "
+            "--require-sync-ready --out-json \"$POSTSUBMIT\""
         ),
         f"bash {shlex.quote(sync_back)}",
         "BIO_SFM_PYTHON=\"$PYTHON_BIN\" PYTHONNOUSERSITE=1 bash \"$COMPLETION_SCRIPT\"",
         "test -s \"$COMPLETION_REPORT\"",
+        'rm -f "$PANEL_REPORT_TMP"',
+        "set +e",
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.complex_panel_report "
             f"--records {record_args} "
             f"--target-alpha {target_alpha} "
             f"--min-targets {min_targets} "
             f"--min-records-per-target {min_records_per_target} "
-            f"--out {shlex.quote(panel_report)}"
+            '--out "$PANEL_REPORT_TMP"'
         ),
+        "PANEL_REPORT_RC=$?",
+        "set -e",
+        'if [ "$PANEL_REPORT_RC" -ne 0 ] && [ "$PANEL_REPORT_RC" -ne 2 ]; then',
+        '  rm -f "$PANEL_REPORT_TMP"',
+        '  exit "$PANEL_REPORT_RC"',
+        "fi",
+        'test -s "$PANEL_REPORT_TMP"',
+        '"$PYTHON_BIN" - "$PANEL_REPORT_TMP" <<\'PY\'',
+        "import json, sys",
+        "with open(sys.argv[1]) as handle:",
+        "    report = json.load(handle)",
+        "allowed = {'multi_target_certified', 'multi_target_evaluable_not_certified'}",
+        "if report.get('panel_status') not in allowed:",
+        "    raise SystemExit(f\"panel report is not a valid evaluable result: {report.get('panel_status')!r}\")",
+        f"if int(report.get('n_targets') or 0) < {min_targets}:",
+        "    raise SystemExit('panel report target count is below the declared minimum')",
+        "PY",
+        'mv "$PANEL_REPORT_TMP" "$PANEL_REPORT"',
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_decision_protocol "
             f"--target-manifest {shlex.quote(manifest)} "
@@ -175,7 +207,24 @@ def render_replay_script(*,
         ),
         (
             "\"$PYTHON_BIN\" -m bio_sfm_designer.experiments.m6d_w2_panel_postsync_interpretation "
+            f"--manifest {shlex.quote(manifest)} "
+            f"--postsubmit-status {shlex.quote(postsubmit)} "
+            f"--job-states {shlex.quote(job_states)} "
+            f"--receipt {shlex.quote(receipt)} "
+            f"--summary {shlex.quote(summary)} "
+            f"--sync-back {shlex.quote(sync_back)} "
+            f"--completion-script {shlex.quote(completion_script)} "
+            f"--completion {shlex.quote(completion)} "
+            f"--panel-report {shlex.quote(panel_report)} "
+            f"--decision-protocol {shlex.quote(decision_protocol)} "
+            f"--decision-protocol-md {shlex.quote(decision_protocol_md)} "
+            f"--submit-ready {shlex.quote(submit_ready)} "
+            f"--approval-packet {shlex.quote(approval_packet)} "
+            f"--expected-workstream {shlex.quote(expected_workstream)} "
+            f"--target-alpha {target_alpha} --min-targets {min_targets} "
+            f"--min-records-per-target {min_records_per_target} "
             f"--panel-label {shlex.quote(panel_label)} "
+            f"--emit-replay-script {shlex.quote(replay_script)} "
             f"--out-json {shlex.quote(out_json)} --out-md {shlex.quote(out_md)}"
         ),
         "",
@@ -349,6 +398,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--min-targets", type=int, default=4)
     ap.add_argument("--min-records-per-target", type=int, default=20)
     ap.add_argument("--panel-label", default=_DEFAULT_PANEL_LABEL)
+    ap.add_argument("--expected-workstream", default=_DEFAULT_EXPECTED_WORKSTREAM)
     ap.add_argument("--emit-replay-script", default=_DEFAULT_REPLAY)
     ap.add_argument("--out-json", default=_DEFAULT_OUT_JSON)
     ap.add_argument("--out-md", default=_DEFAULT_OUT_MD)
@@ -385,6 +435,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                 approval_packet=args.approval_packet,
                 completion=args.completion,
                 completion_script=args.completion_script,
+                replay_script=args.emit_replay_script,
+                expected_workstream=args.expected_workstream,
                 out_json=args.out_json,
                 out_md=args.out_md,
                 target_alpha=args.target_alpha,

@@ -112,6 +112,48 @@ class M6DW2PanelPostsubmitStatusTests(unittest.TestCase):
         self.assertTrue(rep["submitted"])
         self.assertFalse(rep["sync_ready"])
 
+    def test_append_only_stage_journal_is_accepted_after_pair_completion(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            summary = os.path.join(d, "summary.json")
+            rows = []
+            for pair in _rows():
+                protein = dict(pair)
+                protein["stage"] = "proteinmpnn_submitted"
+                protein["status"] = "proteinmpnn_submitted"
+                protein["boltz_job_id"] = None
+                rows.append(protein)
+                complete = dict(pair)
+                complete["stage"] = "pair_submitted"
+                complete["status"] = "pair_submitted"
+                rows.append(complete)
+            _write_jsonl(receipt, rows)
+            journal_summary = _summary(receipt)
+            journal_summary["n_receipt_events"] = 4
+            journal_summary["receipt_format"] = "append_only_stage_journal_v1"
+            _write_json(summary, journal_summary)
+
+            rep = build_status(_manifest(), receipt_path=receipt, summary_path=summary)
+
+        self.assertTrue(rep["audit_ok"])
+        self.assertEqual(rep["status"], "submitted_jobs_unverified")
+
+    def test_partial_journal_target_blocks_submitted_status(self):
+        with tempfile.TemporaryDirectory() as d:
+            receipt = os.path.join(d, "receipt.jsonl")
+            summary = os.path.join(d, "summary.json")
+            rows = _rows()
+            rows[0]["stage"] = "proteinmpnn_submitted"
+            rows[0]["status"] = "proteinmpnn_submitted"
+            rows[0]["boltz_job_id"] = None
+            _write_jsonl(receipt, rows)
+            _write_json(summary, _summary(receipt))
+
+            rep = build_status(_manifest(), receipt_path=receipt, summary_path=summary)
+
+        self.assertFalse(rep["audit_ok"])
+        self.assertIn("receipt_missing_targets", {failure["kind"] for failure in rep["failures"]})
+
     def test_completed_states_are_sync_ready(self):
         with tempfile.TemporaryDirectory() as d:
             receipt = os.path.join(d, "receipt.jsonl")

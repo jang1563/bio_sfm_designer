@@ -33,6 +33,7 @@
     "expected_slurm_jobs": 14,
     "job_pair_model": "ProteinMPNN -> Boltz",
     "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+    "manifest_sha256": "df7bc48dd27f2d9f6927552621b5fe3d4da40dae7d30dd174014ea689b4ae052",
     "min_targets": 4,
     "n_ready_targets": 7,
     "n_targets": 7,
@@ -40,6 +41,7 @@
     "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
     "planned_design_records": 700,
     "records_per_target_planned": 100,
+    "scope_sha256": "36781c7bf078865dfc3126a39316420d331fa3050ecd6e7dd45c63ed59319810",
     "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
     "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
     "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
@@ -55,10 +57,10 @@
     ]
   },
   "artifact": "m6d_w2_v11_submission_decision_state",
-  "audit_ok": true,
+  "audit_ok": false,
   "can_claim_w2_generalization": false,
-  "can_submit_if_explicitly_approved": true,
-  "can_submit_panel_if_user_explicitly_approves": true,
+  "can_submit_if_explicitly_approved": false,
+  "can_submit_panel_if_user_explicitly_approves": false,
   "claim_boundary": {
     "decision_state": "records readiness for an explicit approval decision only",
     "job_launch": "not evidence; receipt and job IDs only prove execution started",
@@ -66,14 +68,84 @@
     "w2_generalization": "not supported until synced records pass completion and target-wise panel certification"
   },
   "date": "2026-07-10",
-  "decision": "awaiting_explicit_approval",
+  "decision": "blocked",
   "explicit_approval_required": true,
-  "failures": [],
-  "next_action": "await explicit user approval before running submit_command_if_approved",
+  "failures": [
+    {
+      "kind": "approval_packet_not_ready",
+      "message": "approval_packet does not satisfy the W2 v11 submission-decision boundary",
+      "observed": {
+        "approval_packet_ready": false,
+        "approval_scope": {
+          "can_claim_w2_generalization": false,
+          "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
+          "expected_job_pairs": 7,
+          "expected_slurm_jobs": 14,
+          "job_pair_model": "ProteinMPNN -> Boltz",
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "manifest_sha256": "df7bc48dd27f2d9f6927552621b5fe3d4da40dae7d30dd174014ea689b4ae052",
+          "min_targets": 4,
+          "n_ready_targets": 7,
+          "n_targets": 7,
+          "no_submit": true,
+          "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
+          "planned_design_records": 700,
+          "records_per_target_planned": 100,
+          "scope_sha256": "36781c7bf078865dfc3126a39316420d331fa3050ecd6e7dd45c63ed59319810",
+          "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
+          "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
+          "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
+          "target_alpha": 0.2,
+          "target_ids": [
+            "10XZ_EF",
+            "10YB_GH",
+            "12NP_AH",
+            "10VB_IJ",
+            "10ZO_AB",
+            "1A2Y_BA",
+            "1A6W_HL"
+          ]
+        },
+        "approval_scope_ok": true,
+        "audit_ok": false,
+        "can_claim_w2_generalization": false,
+        "can_submit_panel_if_user_explicitly_approves": false,
+        "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
+        "job_state_probe_sync_after_query": "mkdir -p results && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_job_state_probe.json' results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv' results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+        "job_state_query_after_receipt": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_job_state_probe.json' results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv' results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
+        "job_state_query_bridge_ok": true,
+        "ok": false,
+        "panel_approval_env_value": "approve-v11-panel-submit",
+        "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
+        "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
+        "postsubmit_bridge_ok": true,
+        "postsubmit_status_before_sync": "results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+        "postsubmit_status_command_before_sync": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+        "postsubmit_sync_ready_gate": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
+        "postsubmit_sync_ready_gate_ok": true,
+        "postsync_replay_after_sync": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
+        "receipt_monitor_after_submit": "CAYUGA_BIO_SFM_ROOT='${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}' bash results/m6d_w2_target_family_redesign_v11_receipt_monitor.sh",
+        "required_checks": {
+          "approval_scope_ready": true,
+          "panel_dry_run_no_sbatch": true,
+          "panel_guard_no_env_refuses": true,
+          "panel_preflight_ready": false,
+          "submit_receipt_absent": true,
+          "submit_summary_absent": true,
+          "target_msa_strict_ready": true
+        },
+        "status": "panel_approval_packet_blocked",
+        "submit_command_if_approved": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && BIO_SFM_PYTHON=${BIO_SFM_PYTHON:?set BIO_SFM_PYTHON} PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
+        "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
+      },
+      "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json"
+    }
+  ],
+  "next_action": "repair submission-decision blockers before any W2 v11 panel submission",
   "no_submit": true,
   "operator_approval_checklist": {
     "approval_intent_audit_command": "python -m bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit --message-file <approval-message.txt> --require-accepted",
-    "approval_packet_ok": true,
+    "approval_packet_ok": false,
     "approval_phrase_required": "W2 v11 Cayuga ProteinMPNN/Boltz panel submission",
     "can_claim_w2_generalization": false,
     "completion_static_chain_ok": true,
@@ -97,20 +169,20 @@
     "postsubmit_driver_static_chain_ok": true,
     "postsync_replay_command": "bash results/m6d_w2_target_family_redesign_v11_postsync_interpretation.sh",
     "postsync_replay_static_chain_ok": true,
-    "pre_submit_state_ok": true,
+    "pre_submit_state_ok": false,
     "remote_readiness_ok": true,
-    "remote_receipts_absent": true,
-    "remote_receipts_checked": true,
+    "remote_receipts_absent": null,
+    "remote_receipts_checked": false,
     "script_chain_static_ok": true,
     "submission_performed_by_this_artifact": false,
-    "submit_allowed_by_this_artifact": true,
+    "submit_allowed_by_this_artifact": false,
     "submitted": false,
     "sync_back_static_chain_ok": true,
     "target_alpha": 0.2
   },
   "prerequisites": {
     "approval_packet": {
-      "approval_packet_ready": true,
+      "approval_packet_ready": false,
       "approval_scope": {
         "can_claim_w2_generalization": false,
         "completion_after_sync": "bash results/m6d_w2_target_family_redesign_v11_panel_completion.sh",
@@ -118,6 +190,7 @@
         "expected_slurm_jobs": 14,
         "job_pair_model": "ProteinMPNN -> Boltz",
         "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "manifest_sha256": "df7bc48dd27f2d9f6927552621b5fe3d4da40dae7d30dd174014ea689b4ae052",
         "min_targets": 4,
         "n_ready_targets": 7,
         "n_targets": 7,
@@ -125,6 +198,7 @@
         "panel_out": "results/m6d_w2_target_family_redesign_v11_panel_report_alpha02.json",
         "planned_design_records": 700,
         "records_per_target_planned": 100,
+        "scope_sha256": "36781c7bf078865dfc3126a39316420d331fa3050ecd6e7dd45c63ed59319810",
         "submit_receipt": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
         "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
         "sync_back_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
@@ -140,14 +214,14 @@
         ]
       },
       "approval_scope_ok": true,
-      "audit_ok": true,
+      "audit_ok": false,
       "can_claim_w2_generalization": false,
-      "can_submit_panel_if_user_explicitly_approves": true,
+      "can_submit_panel_if_user_explicitly_approves": false,
       "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
       "job_state_probe_sync_after_query": "mkdir -p results && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_job_state_probe.json' results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv' results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
       "job_state_query_after_receipt": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_job_state_probe.json' results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv' results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
       "job_state_query_bridge_ok": true,
-      "ok": true,
+      "ok": false,
       "panel_approval_env_value": "approve-v11-panel-submit",
       "panel_approval_env_var": "BIO_SFM_APPROVE_V11_PANEL",
       "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
@@ -162,12 +236,12 @@
         "approval_scope_ready": true,
         "panel_dry_run_no_sbatch": true,
         "panel_guard_no_env_refuses": true,
-        "panel_preflight_ready": true,
+        "panel_preflight_ready": false,
         "submit_receipt_absent": true,
         "submit_summary_absent": true,
         "target_msa_strict_ready": true
       },
-      "status": "panel_approval_packet_ready",
+      "status": "panel_approval_packet_blocked",
       "submit_command_if_approved": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && BIO_SFM_PYTHON=${BIO_SFM_PYTHON:?set BIO_SFM_PYTHON} PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh'",
       "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh"
     },
@@ -300,26 +374,11 @@
         "scope": "local"
       }
     ],
-    "remote": [
-      {
-        "exists": false,
-        "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl",
-        "remote_host": "",
-        "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
-        "scope": "remote"
-      },
-      {
-        "exists": false,
-        "path": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
-        "remote_host": "",
-        "remote_root": "/home/fs01/<user>/bio_sfm_smoke",
-        "scope": "remote"
-      }
-    ],
-    "remote_checked": true,
+    "remote": [],
+    "remote_checked": false,
     "remote_host": "",
-    "remote_root": "/home/fs01/<user>/bio_sfm_smoke"
+    "remote_root": ""
   },
-  "status": "awaiting_explicit_panel_submission_approval",
+  "status": "submission_decision_blocked",
   "submitted": false
 }

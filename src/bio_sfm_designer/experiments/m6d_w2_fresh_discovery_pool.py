@@ -333,7 +333,8 @@ def build_discovery_pool(seed_config: Dict[str, Any], *,
                          max_target_residues: int = 220,
                          max_binder_residues: int = 180,
                          max_sequence_identity: float = 0.25,
-                         source_diverse: bool = False) -> Dict[str, Any]:
+                         source_diverse: bool = False,
+                         historical_registry: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     seeds = _seed_rows(seed_config)
     fetch_failures = []
     all_pairs = []
@@ -360,7 +361,17 @@ def build_discovery_pool(seed_config: Dict[str, Any], *,
             contact_cutoff=8.0,
         ))
 
-    admitted = [row for row in all_pairs if row["admitted_structural_candidate"]]
+    historical_targets = set((historical_registry or {}).get("evaluated_target_ids") or [])
+    historical_sources = set((historical_registry or {}).get("evaluated_source_rcsb_ids") or [])
+    structurally_admitted = [row for row in all_pairs if row["admitted_structural_candidate"]]
+    historical_excluded = [
+        row for row in structurally_admitted
+        if row["complex_target_id"] in historical_targets or row["rcsb_id"] in historical_sources
+    ]
+    admitted = [
+        row for row in structurally_admitted
+        if row["complex_target_id"] not in historical_targets and row["rcsb_id"] not in historical_sources
+    ]
     admitted.sort(key=lambda row: (
         abs(float(row["target_ca_residues"]) - 100.0),
         -int(row["ca_interface_contacts"]),
@@ -419,11 +430,16 @@ def build_discovery_pool(seed_config: Dict[str, Any], *,
         "n_seed_pdbs": len(seeds),
         "n_fetch_failures": len(fetch_failures),
         "n_chain_pairs_screened": len(all_pairs),
-        "n_structural_admitted": len(admitted),
+        "n_structural_admitted": len(structurally_admitted),
+        "n_historical_evidence_excluded": len(historical_excluded),
+        "n_new_structural_admitted": len(admitted),
         "n_selected_for_manifest": len(selected),
         "n_unique_selected_rcsb_ids": len(selected_source_ids),
         "unique_selected_rcsb_ids": selected_source_ids,
         "source_diverse_selection": source_diverse,
+        "historical_registry_applied": historical_registry is not None,
+        "historical_excluded_target_ids": sorted({row["complex_target_id"] for row in historical_excluded}),
+        "historical_excluded_source_ids": sorted({row["rcsb_id"] for row in historical_excluded}),
         "selected_source_redundancy_note": source_redundancy_note,
         "fetch_failures": fetch_failures,
         "screen_parameters": {
@@ -466,6 +482,8 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         f"| seed PDBs | {rep.get('n_seed_pdbs')} |",
         f"| chain pairs screened | {rep.get('n_chain_pairs_screened')} |",
         f"| structural admitted | {rep.get('n_structural_admitted')} |",
+        f"| excluded by historical evidence | {rep.get('n_historical_evidence_excluded', 0)} |",
+        f"| new structural admitted | {rep.get('n_new_structural_admitted', rep.get('n_structural_admitted'))} |",
         f"| selected for manifest | {rep.get('n_selected_for_manifest')} |",
         f"| unique selected source PDBs | {rep.get('n_unique_selected_rcsb_ids')} |",
         f"| source-diverse selection | {str(rep.get('source_diverse_selection', False)).lower()} |",
@@ -493,6 +511,7 @@ def render_markdown(rep: Dict[str, Any]) -> str:
         "## Claim Boundary",
         "",
         "- This is local structural intake, not W2 evidence.",
+        f"- Historical registry applied: {str(rep.get('historical_registry_applied', False)).lower()}.",
         "- The emitted manifest is pre-MSA and is not a ProteinMPNN/Boltz submit plan.",
         f"- Source redundancy: {rep.get('selected_source_redundancy_note')}.",
         "- Cayuga submission remains blocked until target MSA/report files exist and strict manifest checks pass.",
@@ -515,6 +534,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--max-candidates", type=int, default=6)
     ap.add_argument("--source-diverse", action="store_true",
                     help="select at most one structurally admitted chain-pair per source PDB")
+    ap.add_argument("--historical-registry", default=None,
+                    help="exclude every target/source with prior panel outcome evidence")
     ap.add_argument("--out-json", default="results/m6d_w2_fresh_discovery_pool.json")
     ap.add_argument("--out-md", default="results/m6d_w2_fresh_discovery_pool.md")
     ap.add_argument("--out-manifest", default="configs/m6d_w2_fresh_discovery_complex_targets.json")
@@ -528,6 +549,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         records_dir=args.records_dir,
         max_candidates=args.max_candidates,
         source_diverse=args.source_diverse,
+        historical_registry=_load_json(args.historical_registry) if args.historical_registry else None,
     )
     _write_json(args.out_json, rep)
     _write_text(args.out_md, render_markdown(rep))

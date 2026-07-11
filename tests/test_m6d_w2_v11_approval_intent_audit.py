@@ -10,6 +10,7 @@ from bio_sfm_designer.experiments.m6d_w2_v11_approval_intent_audit import (
     main,
     render_markdown,
 )
+from bio_sfm_designer.experiments.m6d_w2_approval_scope import bind_scope
 
 
 def _write_json(path, obj):
@@ -20,7 +21,7 @@ def _write_json(path, obj):
 
 
 def _ready_decision_state():
-    return {
+    state = {
         "status": "awaiting_explicit_panel_submission_approval",
         "audit_ok": True,
         "decision": "awaiting_explicit_approval",
@@ -43,6 +44,14 @@ def _ready_decision_state():
             "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
         },
     }
+    state["approval_scope"] = bind_scope({
+        "manifest": "configs/v11.json",
+        "manifest_sha256": "a" * 64,
+        "target_ids": ["t0", "t1"],
+        "n_ready_targets": 2,
+        "planned_design_records": 200,
+    })
+    return state
 
 
 def _accepted_message():
@@ -68,6 +77,8 @@ class M6DW2V11ApprovalIntentAuditTests(unittest.TestCase):
         self.assertTrue(rep["no_submit"])
         self.assertFalse(rep["submitted"])
         self.assertEqual(rep["failures"], [])
+        self.assertEqual(rep["approval_scope_sha256"], rep["approval_scope"]["scope_sha256"])
+        self.assertEqual(rep["manifest_sha256"], "a" * 64)
         self.assertIn("Approval intent accepted: `True`", render_markdown(rep))
 
     def test_continuation_phrase_is_rejected(self):

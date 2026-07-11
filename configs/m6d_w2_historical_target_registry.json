@@ -1,0 +1,4856 @@
+{
+  "artifact": "m6d_w2_historical_target_registry",
+  "audit_ok": true,
+  "claim_boundary": "Registry membership means the target has already contributed outcome evidence. It must not be presented as a new confirmatory W2 target under the same protocol.",
+  "date": "2026-07-11",
+  "evaluated_source_rcsb_ids": [
+    "10OP",
+    "10VB",
+    "10XZ",
+    "10YA",
+    "10YB",
+    "10ZO",
+    "11HK",
+    "11LT",
+    "11OV",
+    "11YO",
+    "11ZV",
+    "12NP",
+    "12RH",
+    "13IO",
+    "1A00",
+    "1A0O",
+    "1A0U",
+    "1A0Z",
+    "1A14",
+    "1A1R",
+    "1A2K",
+    "1A2Y",
+    "1A3N",
+    "1A3O",
+    "1A4F",
+    "1A6A",
+    "1A6U",
+    "1A6V",
+    "1A6W",
+    "1A7N",
+    "1A7P",
+    "1A7Q",
+    "1A7R",
+    "1A9N",
+    "1A9W",
+    "1AB9",
+    "1AFQ",
+    "1AJ9",
+    "1AK4",
+    "1AOI",
+    "1AP2",
+    "1APY",
+    "1AQD",
+    "1AR1",
+    "1AVO",
+    "1AY7",
+    "1AYY",
+    "1AZZ",
+    "1B27",
+    "1B2S",
+    "1B2U",
+    "1B3S",
+    "1B86",
+    "1BCP",
+    "1BE3",
+    "1BFV",
+    "1BGS",
+    "1BGY",
+    "1BHH",
+    "1BMQ",
+    "1BQH",
+    "1BQL",
+    "1BQQ",
+    "1BRS",
+    "1BUV",
+    "1BVK",
+    "1BVL",
+    "1BX2",
+    "1BXI",
+    "1BZ0",
+    "1BZQ",
+    "1C08",
+    "1C1Y",
+    "1C40",
+    "1C5F",
+    "1CA0",
+    "1CBW",
+    "1CF7",
+    "1CFV",
+    "1CG5",
+    "1CG8",
+    "1CGI",
+    "1CHO",
+    "1CL7",
+    "1CLS",
+    "1CMY",
+    "1COH",
+    "1CPB",
+    "1CVS",
+    "1CXZ",
+    "1D2Z",
+    "1D3B",
+    "1DGR",
+    "1DGW",
+    "1DJ7",
+    "1DKE",
+    "1DL7",
+    "1DLF",
+    "1DLH",
+    "1DQL",
+    "1DS6",
+    "1DSF",
+    "1DVF",
+    "1DXT",
+    "1DXU",
+    "1E44",
+    "1E50",
+    "1E96",
+    "1EAY",
+    "1EER",
+    "1EM8",
+    "1EMV",
+    "1EQZ",
+    "1FQJ",
+    "1GCQ",
+    "1HE1",
+    "1KAC",
+    "1KLU",
+    "1MEL",
+    "1MLC",
+    "1NMB",
+    "1QFW",
+    "1S1Q",
+    "1SYX",
+    "2IDO",
+    "2MTA",
+    "2SIC",
+    "3PC8"
+  ],
+  "evaluated_target_ids": [
+    "10OP_ST",
+    "10VB_IJ",
+    "10XZ_EF",
+    "10YA_AB",
+    "10YB_GH",
+    "10ZO_AB",
+    "11HK_BC",
+    "11LT_HL",
+    "11OV_hl",
+    "11YO_vu",
+    "11ZV_BA",
+    "12NP_AH",
+    "12RH_DC",
+    "13IO_HC",
+    "1A00_BA",
+    "1A0O_AB",
+    "1A0U_BA",
+    "1A0Z_BA",
+    "1A14_HL",
+    "1A1R_BA",
+    "1A2K_CB",
+    "1A2Y_BA",
+    "1A3N_BA",
+    "1A3O_BA",
+    "1A4F_BA",
+    "1A6A_BA",
+    "1A6U_HL",
+    "1A6V_HL",
+    "1A6W_HL",
+    "1A7N_HL",
+    "1A7P_HL",
+    "1A7Q_HL",
+    "1A7R_HL",
+    "1A9N_AB",
+    "1A9W_EA",
+    "1AB9_BC",
+    "1AFQ_BC",
+    "1AJ9_BA",
+    "1AK4_BC",
+    "1AOI_HB",
+    "1AP2_BA",
+    "1APY_CD",
+    "1AQD_ED",
+    "1AR1_CD",
+    "1AVO_DC",
+    "1AY7_AB",
+    "1AYY_BA",
+    "1AZZ_DC",
+    "1B27_CF",
+    "1B2S_BE",
+    "1B2U_CF",
+    "1B3S_CF",
+    "1B86_DC",
+    "1BCP_KL",
+    "1BE3_EJ",
+    "1BFV_HL",
+    "1BGS_BF",
+    "1BGY_EJ",
+    "1BHH_AB",
+    "1BMQ_AB",
+    "1BQH_KI",
+    "1BQL_LY",
+    "1BQQ_TM",
+    "1BRS_AD",
+    "1BRS_CF",
+    "1BUV_TM",
+    "1BVK_ED",
+    "1BVL_CD",
+    "1BX2_ED",
+    "1BXI_BA",
+    "1BZ0_DC",
+    "1BZQ_BN",
+    "1C08_BA",
+    "1C1Y_AB",
+    "1C40_BA",
+    "1C5F_CE",
+    "1CA0_HI",
+    "1CBW_CD",
+    "1CF7_BA",
+    "1CFV_HL",
+    "1CG5_AB",
+    "1CG8_AB",
+    "1CGI_EI",
+    "1CHO_GI",
+    "1CL7_HI",
+    "1CLS_BA",
+    "1CMY_DC",
+    "1COH_BA",
+    "1CPB_BA",
+    "1CVS_CA",
+    "1CXZ_AB",
+    "1D2Z_BA",
+    "1D3B_LK",
+    "1DGR_WV",
+    "1DGW_YX",
+    "1DJ7_AB",
+    "1DKE_BA",
+    "1DL7_HL",
+    "1DLF_HL",
+    "1DLH_BA",
+    "1DQL_HL",
+    "1DS6_AB",
+    "1DSF_HL",
+    "1DVF_BA",
+    "1DXT_DC",
+    "1DXU_DC",
+    "1E44_BA",
+    "1E50_CA",
+    "1E96_BA",
+    "1EAY_BD",
+    "1EER_BA",
+    "1EM8_AB",
+    "1EMV_BA",
+    "1EQZ_AB",
+    "1FQJ_EB",
+    "1GCQ_CB",
+    "1HE1_CA",
+    "1KAC_AB",
+    "1KLU_BA",
+    "1MEL_MB",
+    "1MLC_BE",
+    "1NMB_HL",
+    "1QFW_BA",
+    "1S1Q_CD",
+    "1SYX_AB",
+    "2IDO_CD",
+    "2MTA_CA",
+    "2SIC_EI",
+    "3PC8_AB"
+  ],
+  "manifest_sources": [
+    "configs/m6d_candidate_complex_targets.json",
+    "configs/m6d_followup_complex_targets.json",
+    "configs/m6d_redesign_complex_targets.json",
+    "configs/m6d_w2_expanded_discovery_complex_targets.json",
+    "configs/m6d_w2_expanded_next_branch_targets.json",
+    "configs/m6d_w2_fresh_discovery_complex_targets.json",
+    "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json",
+    "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v1_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+    "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v1_targets.json",
+    "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v4_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v5_targets.json",
+    "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+    "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+    "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+    "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+  ],
+  "n_evaluated_sources": 128,
+  "n_evaluated_targets": 129,
+  "panel_reports": [
+    "results/m6c_panel_report.json",
+    "results/m6d_followup_panel_report.json",
+    "results/m6d_redesign_panel_report.json",
+    "results/m6d_w2_expanded_next_branch_panel_report.json",
+    "results/m6d_w2_fresh_discovery_unique_source_pilot_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DQL_HL_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DSF_HL_alpha02.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DSF_HL_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DVF_BA_alpha02.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DVF_BA_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1E44_BA.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1E44_BA_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1EAY_BD_alpha02.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1EAY_BD_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_2targets_alpha02.json",
+    "results/m6d_w2_target_family_redesign_v10_panel_report_partial_2targets_alpha03.json",
+    "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json",
+    "results/m6d_w2_target_family_redesign_v1_rcsb_representative_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v3_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v4_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v5_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v7_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v8_panel_report.json",
+    "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+  ],
+  "status": "historical_registry_ready",
+  "targets": [
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "10OP"
+      ],
+      "target_id": "10OP_ST"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "10VB"
+      ],
+      "target_id": "10VB_IJ"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v1_rcsb_representative_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "10XZ"
+      ],
+      "target_id": "10XZ_EF"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "10YA"
+      ],
+      "target_id": "10YA_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v1_rcsb_representative_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "10YB"
+      ],
+      "target_id": "10YB_GH"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "10ZO"
+      ],
+      "target_id": "10ZO_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "11HK"
+      ],
+      "target_id": "11HK_BC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "11LT"
+      ],
+      "target_id": "11LT_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "11OV"
+      ],
+      "target_id": "11OV_hl"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "11YO"
+      ],
+      "target_id": "11YO_vu"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "11ZV"
+      ],
+      "target_id": "11ZV_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+        "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v1_rcsb_representative_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v1_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "12NP"
+      ],
+      "target_id": "12NP_AH"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "12RH"
+      ],
+      "target_id": "12RH_DC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "13IO"
+      ],
+      "target_id": "13IO_HC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A00"
+      ],
+      "target_id": "1A00_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A0O"
+      ],
+      "target_id": "1A0O_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A0U"
+      ],
+      "target_id": "1A0U_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A0Z"
+      ],
+      "target_id": "1A0Z_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A14"
+      ],
+      "target_id": "1A14_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A1R"
+      ],
+      "target_id": "1A1R_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_fresh_discovery_complex_targets.json",
+        "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_fresh_discovery_unique_source_pilot_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_fresh_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A2K"
+      ],
+      "target_id": "1A2K_CB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A2Y"
+      ],
+      "target_id": "1A2Y_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A3N"
+      ],
+      "target_id": "1A3N_BA"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A3O"
+      ],
+      "target_id": "1A3O_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A4F"
+      ],
+      "target_id": "1A4F_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A6A"
+      ],
+      "target_id": "1A6A_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A6U"
+      ],
+      "target_id": "1A6U_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A6V"
+      ],
+      "target_id": "1A6V_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A6W"
+      ],
+      "target_id": "1A6W_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A7N"
+      ],
+      "target_id": "1A7N_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A7P"
+      ],
+      "target_id": "1A7P_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A7Q"
+      ],
+      "target_id": "1A7Q_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v11_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A7R"
+      ],
+      "target_id": "1A7R_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A9N"
+      ],
+      "target_id": "1A9N_AB"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1A9W"
+      ],
+      "target_id": "1A9W_EA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v2_rcsb_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v2_rcsb_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AB9"
+      ],
+      "target_id": "1AB9_BC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AFQ"
+      ],
+      "target_id": "1AFQ_BC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AJ9"
+      ],
+      "target_id": "1AJ9_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_fresh_discovery_complex_targets.json",
+        "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_fresh_discovery_unique_source_pilot_panel_report.json",
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_fresh_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AK4"
+      ],
+      "target_id": "1AK4_BC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AOI"
+      ],
+      "target_id": "1AOI_HB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AP2"
+      ],
+      "target_id": "1AP2_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1APY"
+      ],
+      "target_id": "1APY_CD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AQD"
+      ],
+      "target_id": "1AQD_ED"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AR1"
+      ],
+      "target_id": "1AR1_CD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v3_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v3_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v3_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AVO"
+      ],
+      "target_id": "1AVO_DC"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v4_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v4_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AY7"
+      ],
+      "target_id": "1AY7_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v4_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v4_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AYY"
+      ],
+      "target_id": "1AYY_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v4_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v4_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1AZZ"
+      ],
+      "target_id": "1AZZ_DC"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v4_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v4_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1B27"
+      ],
+      "target_id": "1B27_CF"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v4_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v4_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1B2S"
+      ],
+      "target_id": "1B2S_BE"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1B2U"
+      ],
+      "target_id": "1B2U_CF"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v4_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1B3S"
+      ],
+      "target_id": "1B3S_CF"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1B86"
+      ],
+      "target_id": "1B86_DC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BCP"
+      ],
+      "target_id": "1BCP_KL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BE3"
+      ],
+      "target_id": "1BE3_EJ"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BFV"
+      ],
+      "target_id": "1BFV_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BGS"
+      ],
+      "target_id": "1BGS_BF"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BGY"
+      ],
+      "target_id": "1BGY_EJ"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BHH"
+      ],
+      "target_id": "1BHH_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BMQ"
+      ],
+      "target_id": "1BMQ_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BQH"
+      ],
+      "target_id": "1BQH_KI"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BQL"
+      ],
+      "target_id": "1BQL_LY"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+        "configs/m6d_w2_target_family_redesign_v5_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v5_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v5_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BQQ"
+      ],
+      "target_id": "1BQQ_TM"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_candidate_complex_targets.json",
+        "configs/m6d_followup_complex_targets.json",
+        "configs/m6d_redesign_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6c_panel_report.json",
+        "results/m6d_followup_panel_report.json",
+        "results/m6d_redesign_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_candidate_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_followup_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_redesign_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BRS"
+      ],
+      "target_id": "1BRS_AD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BRS"
+      ],
+      "target_id": "1BRS_CF"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BUV"
+      ],
+      "target_id": "1BUV_TM"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json",
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BVK"
+      ],
+      "target_id": "1BVK_ED"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BVL"
+      ],
+      "target_id": "1BVL_CD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BX2"
+      ],
+      "target_id": "1BX2_ED"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BXI"
+      ],
+      "target_id": "1BXI_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BZ0"
+      ],
+      "target_id": "1BZ0_DC"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1BZQ"
+      ],
+      "target_id": "1BZQ_BN"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1C08"
+      ],
+      "target_id": "1C08_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1C1Y"
+      ],
+      "target_id": "1C1Y_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1C40"
+      ],
+      "target_id": "1C40_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v7_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v7_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v7_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1C5F"
+      ],
+      "target_id": "1C5F_CE"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CA0"
+      ],
+      "target_id": "1CA0_HI"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CBW"
+      ],
+      "target_id": "1CBW_CD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CF7"
+      ],
+      "target_id": "1CF7_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CFV"
+      ],
+      "target_id": "1CFV_HL"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CG5"
+      ],
+      "target_id": "1CG5_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CG8"
+      ],
+      "target_id": "1CG8_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_candidate_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6c_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_candidate_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CGI"
+      ],
+      "target_id": "1CGI_EI"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json",
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CHO"
+      ],
+      "target_id": "1CHO_GI"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CL7"
+      ],
+      "target_id": "1CL7_HI"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CLS"
+      ],
+      "target_id": "1CLS_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CMY"
+      ],
+      "target_id": "1CMY_DC"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1COH"
+      ],
+      "target_id": "1COH_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v8_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v8_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v8_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CPB"
+      ],
+      "target_id": "1CPB_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CVS"
+      ],
+      "target_id": "1CVS_CA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1CXZ"
+      ],
+      "target_id": "1CXZ_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1D2Z"
+      ],
+      "target_id": "1D2Z_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1D3B"
+      ],
+      "target_id": "1D3B_LK"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DGR"
+      ],
+      "target_id": "1DGR_WV"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DGW"
+      ],
+      "target_id": "1DGW_YX"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DJ7"
+      ],
+      "target_id": "1DJ7_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_pilot_msa_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DKE"
+      ],
+      "target_id": "1DKE_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DL7"
+      ],
+      "target_id": "1DL7_HL"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DLF"
+      ],
+      "target_id": "1DLF_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v9_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v9_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v9_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DLH"
+      ],
+      "target_id": "1DLH_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DQL_HL_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DQL"
+      ],
+      "target_id": "1DQL_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DS6"
+      ],
+      "target_id": "1DS6_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DSF_HL_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DSF_HL_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DSF"
+      ],
+      "target_id": "1DSF_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DVF_BA_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1DVF_BA_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DVF"
+      ],
+      "target_id": "1DVF_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DXT"
+      ],
+      "target_id": "1DXT_DC"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1DXU"
+      ],
+      "target_id": "1DXU_DC"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified",
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1E44_BA.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1E44_BA_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_2targets_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_2targets_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1E44"
+      ],
+      "target_id": "1E44_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1E50"
+      ],
+      "target_id": "1E50_CA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1E96"
+      ],
+      "target_id": "1E96_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1EAY_BD_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_1EAY_BD_alpha03.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_2targets_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_partial_2targets_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1EAY"
+      ],
+      "target_id": "1EAY_BD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1EER"
+      ],
+      "target_id": "1EER_BA"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified",
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1EM8"
+      ],
+      "target_id": "1EM8_AB"
+    },
+    {
+      "ever_certified": true,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "certified",
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1EMV"
+      ],
+      "target_id": "1EMV_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+        "configs/m6d_w2_target_family_redesign_v10_representative_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json",
+        "results/m6d_w2_target_family_redesign_v10_panel_report_alpha03.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_discovery_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_target_family_redesign_v10_representative_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1EQZ"
+      ],
+      "target_id": "1EQZ_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_fresh_discovery_complex_targets.json",
+        "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_fresh_discovery_unique_source_pilot_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_fresh_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_fresh_discovery_unique_source_pilot_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1FQJ"
+      ],
+      "target_id": "1FQJ_EB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_followup_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_followup_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_followup_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1GCQ"
+      ],
+      "target_id": "1GCQ_CB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1HE1"
+      ],
+      "target_id": "1HE1_CA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1KAC"
+      ],
+      "target_id": "1KAC_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1KLU"
+      ],
+      "target_id": "1KLU_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_followup_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_followup_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_followup_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1MEL"
+      ],
+      "target_id": "1MEL_MB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1MLC"
+      ],
+      "target_id": "1MLC_BE"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1NMB"
+      ],
+      "target_id": "1NMB_HL"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1QFW"
+      ],
+      "target_id": "1QFW_BA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_redesign_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_redesign_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_redesign_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1S1Q"
+      ],
+      "target_id": "1S1Q_CD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_redesign_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_redesign_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_redesign_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "1SYX"
+      ],
+      "target_id": "1SYX_AB"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_followup_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_followup_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_followup_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "2IDO"
+      ],
+      "target_id": "2IDO_CD"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_w2_expanded_discovery_complex_targets.json",
+        "configs/m6d_w2_expanded_next_branch_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_w2_expanded_next_branch_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_w2_expanded_discovery_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_w2_expanded_next_branch_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "2MTA"
+      ],
+      "target_id": "2MTA_CA"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_candidate_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6c_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_candidate_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "2SIC"
+      ],
+      "target_id": "2SIC_EI"
+    },
+    {
+      "ever_certified": false,
+      "manifest_appearances": [
+        "configs/m6d_followup_complex_targets.json",
+        "configs/m6d_redesign_complex_targets.json"
+      ],
+      "observed_statuses": [
+        "not_certified"
+      ],
+      "panel_reports": [
+        "results/m6d_followup_panel_report.json",
+        "results/m6d_redesign_panel_report.json"
+      ],
+      "protocols": [
+        {
+          "manifest": "configs/m6d_followup_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        },
+        {
+          "manifest": "configs/m6d_redesign_complex_targets.json",
+          "num_seq": 100,
+          "objective": "binder",
+          "seed": 37,
+          "temp": 0.3
+        }
+      ],
+      "source_rcsb_ids": [
+        "3PC8"
+      ],
+      "target_id": "3PC8_AB"
+    }
+  ]
+}

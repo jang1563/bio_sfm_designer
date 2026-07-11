@@ -50,14 +50,16 @@ def _default_n_cal(n: int) -> int:
 
 def run_sweep(paths: Iterable[str], alphas: Iterable[float] = (0.3, 0.2, 0.1),
               *, n_cal: Optional[int] = None, delta: float = 0.1,
-              threshold: float = 4.0, seed: int = 0) -> Dict[str, Any]:
+              threshold: float = 4.0, seed: int = 0,
+              certification_bound: str = "hoeffding") -> Dict[str, Any]:
     rows = load_merged_records(paths)
     threshold_audit = require_label_threshold(rows, threshold=threshold)
     n_cal_eff = _default_n_cal(len(rows)) if n_cal is None else n_cal
     reports = []
     for alpha in alphas:
         rep = run_rows(rows, alpha=float(alpha), delta=delta, threshold=threshold,
-                       n_cal=n_cal_eff, seed=seed)
+                       n_cal=n_cal_eff, seed=seed,
+                       certification_bound=certification_bound)
         c = rep["conformal"]
         reports.append({
             "alpha": float(alpha),
@@ -74,6 +76,7 @@ def run_sweep(paths: Iterable[str], alphas: Iterable[float] = (0.3, 0.2, 0.1),
         "n_cal": n_cal_eff,
         "n_test": len(rows) - n_cal_eff,
         "delta": delta,
+        "certification_bound": certification_bound,
         "threshold": threshold,
         "label_threshold_audit": threshold_audit,
         "seed": seed,
@@ -95,11 +98,14 @@ def main(argv=None) -> Dict[str, Any]:
     ap.add_argument("--delta", type=float, default=0.1)
     ap.add_argument("--threshold", type=float, default=4.0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--certification-bound", choices=("hoeffding", "clopper_pearson"),
+                    default="hoeffding")
     ap.add_argument("--out", default=None, help="optional JSON report path")
     args = ap.parse_args(argv)
 
     rep = run_sweep(args.records, _parse_alphas(args.alphas), n_cal=args.ncal,
-                    delta=args.delta, threshold=args.threshold, seed=args.seed)
+                    delta=args.delta, threshold=args.threshold, seed=args.seed,
+                    certification_bound=args.certification_bound)
     print(f"# complex conformal alpha sweep  (n={rep['n_records']}, n_cal={rep['n_cal']}, "
           f"n_test={rep['n_test']}, delta={rep['delta']})")
     print(f"  {'alpha':>6}  {'cert':>5}  {'tau':>7}  {'trusted':>9}  {'false_acc':>9}  {'trust_all':>9}")

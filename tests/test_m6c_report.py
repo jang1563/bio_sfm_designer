@@ -18,11 +18,13 @@ class M6cReportTests(unittest.TestCase):
                            scale_projection_seeds=range(5))
         self.assertEqual(rep["dataset"]["n"], 192)
         self.assertEqual(rep["target_alpha"], 0.2)
-        self.assertEqual(rep["gate"]["trusted"], 25)
-        self.assertAlmostEqual(rep["gate"]["false_accept_rate"], 0.12)
+        self.assertEqual(rep["gate"]["trusted"], 0)
+        self.assertIsNone(rep["gate"]["false_accept_rate"])
+        self.assertEqual(rep["gate"]["certification_schema"], "split_ltt_v1")
+        self.assertFalse(rep["gate"]["certificate"]["certified"])
         self.assertAlmostEqual(rep["gate"]["trust_all_false_accept_rate"], 33 / 64)
         frontier = {row["alpha"]: row for row in rep["alpha_frontier"]}
-        self.assertTrue(frontier[0.3]["certified"])
+        self.assertFalse(frontier[0.3]["certified"])
         self.assertFalse(frontier[0.2]["certified"])
         self.assertFalse(frontier[0.1]["certified"])
         self.assertGreater(rep["signal"]["pae_stratified_auroc"], 0.9)
@@ -32,16 +34,17 @@ class M6cReportTests(unittest.TestCase):
         }
         self.assertEqual([regime_by_temp[t]["success"] for t in (0.3, 0.5, 0.7)], [44, 23, 9])
         self.assertEqual(rep["alpha_seed_sensitivity"]["target_certified_count"], 0)
-        self.assertEqual(rep["alpha_seed_sensitivity"]["baseline_certified_count"], 5)
+        self.assertEqual(rep["alpha_seed_sensitivity"]["baseline_certified_count"], 0)
         self.assertEqual(rep["scale_projection"]["n_projected_records"], 492)
         self.assertEqual(rep["scale_projection"]["n_new"], 300)
         self.assertFalse(rep["scale_projection"]["certifies_target_alpha"])
         self.assertEqual(rep["scale_projection"]["evidence_level"], "planning_diagnostic")
-        self.assertGreater(rep["scale_projection"]["projected_certified_count"], 0)
+        self.assertEqual(rep["scale_projection"]["projected_certified_count"], 0)
         supported_claims = {item["id"]: item for item in rep["science_claims"]["supported"]}
         self.assertIn("complex_pae_interaction_signal", supported_claims)
-        self.assertIn("alpha_0_3_rcps_certificate", supported_claims)
+        self.assertNotIn("alpha_0_3_split_ltt_certificate", supported_claims)
         blocked_claims = {item["id"]: item for item in rep["science_claims"]["not_yet_supported"]}
+        self.assertEqual(blocked_claims["alpha_0_3_split_ltt_certificate"]["status"], "not_certified")
         self.assertEqual(blocked_claims["target_alpha_0_2_certificate"]["status"], "not_certified")
         self.assertIn("multi_target_generalization", blocked_claims)
         planning = {item["id"]: item for item in rep["science_claims"]["planning_diagnostics"]}
@@ -124,11 +127,9 @@ class M6cReportTests(unittest.TestCase):
             scale_projection_seeds=range(3),
         )
         self.assertEqual(rep["target_alpha"], 0.3)
-        supported = {item["id"]: item for item in rep["science_claims"]["supported"]}
-        self.assertEqual(supported["target_alpha_0_3_certificate"]["status"], "certified")
-        self.assertIn("alpha=0.3", supported["target_alpha_0_3_certificate"]["claim"])
         blocked = {item["id"]: item for item in rep["science_claims"]["not_yet_supported"]}
-        self.assertNotIn("target_alpha_0_2_certificate", blocked)
+        self.assertEqual(blocked["target_alpha_0_3_certificate"]["status"], "not_certified")
+        self.assertIn("alpha=0.3", blocked["target_alpha_0_3_certificate"]["claim"])
         planning = {item["id"]: item for item in rep["science_claims"]["planning_diagnostics"]}
         self.assertIn("scale_projection_alpha_0_3", planning)
         text = render_markdown(rep)
@@ -156,9 +157,9 @@ class M6cReportTests(unittest.TestCase):
     def test_render_has_alpha_frontier_table(self):
         text = render_markdown(build_report(signal_boot=25, seed_sensitivity_seeds=range(3),
                                             scale_projection_seeds=range(3)))
-        self.assertIn("| 0.30 | True |", text)
+        self.assertIn("| 0.30 | False | none |", text)
         self.assertIn("| 0.20 | False | none |", text)
-        self.assertIn("alpha_0_3_rcps_certificate", text)
+        self.assertIn("alpha_0_3_split_ltt_certificate", text)
 
 
 if __name__ == "__main__":

@@ -60,9 +60,21 @@ class M6DW2PanelReceiptMonitorTests(unittest.TestCase):
         self.assertTrue(rep["submitted"])
         self.assertTrue(rep["can_sync_receipt"])
         self.assertFalse(rep["can_run_job_state_probe"])
-        plan = render_sync_plan(receipt_path=RECEIPT, summary_path=SUMMARY)
+        plan = render_sync_plan(
+            receipt_path=RECEIPT,
+            summary_path=SUMMARY,
+            expected_workstream="custom_w2_panel",
+            job_state_probe="results/custom_job_states.json",
+            job_state_probe_md="results/custom_job_states.md",
+            job_state_query="results/custom_job_query.sh",
+            sacct_states="results/custom_sacct.tsv",
+        )
         self.assertIn("rsync -avP", plan)
         self.assertIn("m6d_w2_panel_job_state_probe", plan)
+        self.assertIn("EXPECTED_WORKSTREAM=custom_w2_panel", plan)
+        self.assertIn('JOB_STATE_PROBE=results/custom_job_states.json', plan)
+        self.assertIn('--expected-workstream "$EXPECTED_WORKSTREAM"', plan)
+        self.assertIn('--emit-query-plan "$JOB_STATE_QUERY"', plan)
 
     def test_matching_local_and_remote_receipts_are_ready_for_job_state_probe(self):
         with tempfile.TemporaryDirectory() as d:

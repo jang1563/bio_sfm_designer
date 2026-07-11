@@ -25,7 +25,7 @@ class ComplexPosthocBundleTests(unittest.TestCase):
             with open(rep["paths"]["manifest"]) as fh:
                 manifest = json.load(fh)
             self.assertEqual(manifest["summary"]["n_records"], 192)
-            self.assertEqual(manifest["summary"]["certified_alphas"], [0.3])
+            self.assertEqual(manifest["summary"]["certified_alphas"], [])
             self.assertEqual(manifest["summary"]["alpha_decision"], "continue_scale")
             self.assertEqual(manifest["summary"]["estimated_additional_records"], 260)
             self.assertEqual(manifest["summary"]["seed_sensitivity_decision"], "continue_scale_robust")
@@ -35,20 +35,20 @@ class ComplexPosthocBundleTests(unittest.TestCase):
             self.assertAlmostEqual(manifest["summary"]["temperature_success_rates"]["0.3"], 44 / 64)
             self.assertAlmostEqual(manifest["summary"]["temperature_success_rates"]["0.7"], 9 / 64)
             self.assertEqual(manifest["summary"]["scale_projection_decision"],
-                             "planned_batch_strongly_supports_target")
+                             "planned_batch_insufficient")
             self.assertEqual(manifest["summary"]["scale_projection_evidence_level"],
                              "planning_diagnostic")
             self.assertEqual(manifest["summary"]["scale_projection_claim_scope"],
                              "single_target_bootstrap_projection")
             self.assertFalse(manifest["summary"]["scale_projection_certifies_target_alpha"])
-            self.assertEqual(manifest["summary"]["scale_projection_projected_certified_count"], 3)
+            self.assertEqual(manifest["summary"]["scale_projection_projected_certified_count"], 0)
             self.assertEqual(manifest["summary"]["scale_projection_n_new"], 300)
             self.assertEqual(manifest["summary"]["science_claims_supported"], [
                 "complex_pae_interaction_signal",
-                "alpha_0_3_rcps_certificate",
             ])
             self.assertEqual(manifest["summary"]["science_claims_not_yet_supported"], [
                 "target_alpha_0_2_certificate",
+                "alpha_0_3_split_ltt_certificate",
                 "multi_target_generalization",
                 "independent_predictor_robustness",
             ])

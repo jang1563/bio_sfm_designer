@@ -56,6 +56,9 @@ class ComplexPanelReportTests(unittest.TestCase):
         self.assertFalse(rep["ok"])
         self.assertEqual(rep["panel_status"], "multi_target_evaluable_not_certified")
         self.assertEqual(rep["n_targets"], 3)
+        self.assertAlmostEqual(rep["per_target_delta"], 0.1 / 3)
+        self.assertEqual(rep["multiplicity_correction"], "bonferroni_over_targets")
+        self.assertAlmostEqual(rep["simultaneous_confidence"], 0.9)
         self.assertEqual(rep["missing_complex_target_id"], 0)
         self.assertEqual(rep["predictors"], ["boltz2_complex"])
         self.assertEqual(rep["signal_sources"], ["boltz2_pae_interaction"])
@@ -79,6 +82,19 @@ class ComplexPanelReportTests(unittest.TestCase):
         self.assertEqual(target["not_certified_reason"], "one_class_all_success_no_rcps_tau")
         self.assertEqual(target["base_rate_fail"], 0.0)
         self.assertIsNone(target["auroc_pae"])
+
+    def test_exact_bound_is_propagated_to_target_and_pooled_reports(self):
+        rep = run_panel(
+            [FIXTURE],
+            min_targets=1,
+            min_records_per_target=5,
+            target_alpha=0.3,
+            certification_bound="clopper_pearson",
+        )
+        self.assertEqual(rep["certification_bound"], "clopper_pearson")
+        self.assertEqual(rep["targets"][0]["certification_bound"], "clopper_pearson")
+        self.assertEqual(rep["targets"][0]["certification_schema"], "split_ltt_exact_v1")
+        self.assertEqual(rep["pooled_diagnostic"]["certification_bound"], "clopper_pearson")
 
     def test_too_few_records_per_target_blocks_claim(self):
         with tempfile.TemporaryDirectory() as d:

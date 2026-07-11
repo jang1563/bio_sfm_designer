@@ -46,7 +46,8 @@ def _source_set(rows: Iterable[dict], field: str, *, fallback: Optional[str] = N
 
 def _target_report(target_id: str, rows: List[dict], *, target_alpha: float,
                    min_records_per_target: int, n_cal: Optional[int],
-                   delta: float, threshold: float, seed: int) -> Dict[str, Any]:
+                   delta: float, threshold: float, seed: int,
+                   certification_bound: str) -> Dict[str, Any]:
     n = len(rows)
     success = sum(1 for r in rows if r["lrmsd"] < threshold)
     base = {
@@ -56,6 +57,7 @@ def _target_report(target_id: str, rows: List[dict], *, target_alpha: float,
         "failure": n - success,
         "threshold": threshold,
         "min_records_per_target": min_records_per_target,
+        "delta": delta,
     }
     if n < min_records_per_target:
         return {**base, "status": "too_few_records", "certified": False,
@@ -63,7 +65,8 @@ def _target_report(target_id: str, rows: List[dict], *, target_alpha: float,
     try:
         n_cal_eff = _default_n_cal(n) if n_cal is None else n_cal
         rep = run_rows(rows, alpha=target_alpha, delta=delta, threshold=threshold,
-                       n_cal=n_cal_eff, seed=seed)
+                       n_cal=n_cal_eff, seed=seed,
+                       certification_bound=certification_bound)
     except ValueError as exc:
         return {**base, "status": "split_failed", "certified": False, "message": str(exc)}
     not_certified_reason = None
@@ -77,15 +80,20 @@ def _target_report(target_id: str, rows: List[dict], *, target_alpha: float,
         else:
             not_certified_reason = "no_rcps_tau"
     return {
+        "certification_schema": rep["certification_schema"],
+        "certification_bound": certification_bound,
         **base,
         "status": "certified" if rep["tau"] is not None else "not_certified",
         "certified": rep["tau"] is not None,
         "not_certified_reason": not_certified_reason,
         "n_cal": rep["n_cal"],
+        "n_fit": rep["n_fit"],
+        "n_certification": rep["n_certification"],
         "n_test": rep["n_test"],
         "auroc_pae": rep.get("auroc_pae"),
         "base_rate_fail": rep.get("base_rate_fail"),
         "tau": rep["tau"],
+        "certificate": rep.get("certificate"),
         "trusted": rep["conformal"]["trusted"],
         "false_accept_rate": rep["conformal"]["false_accept_rate"],
         "conformal_actions": rep["conformal"]["actions"],
@@ -96,7 +104,8 @@ def _target_report(target_id: str, rows: List[dict], *, target_alpha: float,
 def run_panel(records: Iterable[str], *, target_alpha: float = 0.2,
               min_targets: int = 3, min_records_per_target: int = 20,
               n_cal: Optional[int] = None, delta: float = 0.1,
-              threshold: float = 4.0, seed: int = 0) -> Dict[str, Any]:
+              threshold: float = 4.0, seed: int = 0,
+              certification_bound: str = "hoeffding") -> Dict[str, Any]:
     records = list(records)
     qc = run_qc(records)
     if not qc["ok"]:
@@ -114,15 +123,18 @@ def run_panel(records: Iterable[str], *, target_alpha: float = 0.2,
     label_sources = _source_set(rows, "label_source")
     label_threshold_audit = audit_label_threshold(rows, threshold=threshold)
     groups = _group_records(rows)
+    per_target_delta = delta / len(groups) if groups else delta
     target_reports = [
         _target_report(tid, groups[tid], target_alpha=target_alpha,
                        min_records_per_target=min_records_per_target,
-                       n_cal=n_cal, delta=delta, threshold=threshold, seed=seed)
+                       n_cal=n_cal, delta=per_target_delta, threshold=threshold, seed=seed,
+                       certification_bound=certification_bound)
         for tid in sorted(groups)
     ]
     if label_threshold_audit["ok"]:
         pooled = run_sweep(records, alphas=[target_alpha], n_cal=n_cal,
-                           delta=delta, threshold=threshold, seed=seed)
+                           delta=delta, threshold=threshold, seed=seed,
+                           certification_bound=certification_bound)
     else:
         pooled = {
             "ok": False,
@@ -173,6 +185,11 @@ def run_panel(records: Iterable[str], *, target_alpha: float = 0.2,
         "panel_status": panel_status,
         "records": records,
         "target_alpha": target_alpha,
+        "certification_bound": certification_bound,
+        "panel_delta": delta,
+        "per_target_delta": per_target_delta,
+        "simultaneous_confidence": 1.0 - delta,
+        "multiplicity_correction": "bonferroni_over_targets",
         "threshold": threshold,
         "min_targets": min_targets,
         "min_records_per_target": min_records_per_target,
@@ -204,6 +221,8 @@ def main(argv=None) -> Dict[str, Any]:
     ap.add_argument("--delta", type=float, default=0.1)
     ap.add_argument("--threshold", type=float, default=4.0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--certification-bound", choices=("hoeffding", "clopper_pearson"),
+                    default="hoeffding")
     ap.add_argument("--out", default=None)
     args = ap.parse_args(argv)
 
@@ -211,7 +230,8 @@ def main(argv=None) -> Dict[str, Any]:
                     min_targets=args.min_targets,
                     min_records_per_target=args.min_records_per_target,
                     n_cal=args.ncal, delta=args.delta,
-                    threshold=args.threshold, seed=args.seed)
+                    threshold=args.threshold, seed=args.seed,
+                    certification_bound=args.certification_bound)
     print(f"# complex panel report  status={rep['panel_status']} ok={rep['ok']}")
     print(f"  targets={rep.get('n_targets', 0)} records={rep.get('n_records', 0)} "
           f"missing_complex_target_id={rep.get('missing_complex_target_id', 'n/a')}")
