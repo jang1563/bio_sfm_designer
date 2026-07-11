@@ -46,7 +46,7 @@ denominator and report.
 The first stage costs 480 folds. The maximum is 1,440 folds if every target advances. This staged design
 avoids spending certification and test compute on targets that the locked fit rule already refuses.
 
-Cayuga submission is currently blocked. The exact bound, designer compatibility path, bound-aware complex
+Cayuga submission is approval-gated. The exact bound, designer compatibility path, bound-aware complex
 panel reporting, and staged W2b evaluator are implemented and covered by the full local test suite. The
 evaluator is `python -m bio_sfm_designer.experiments.m6d_w2b_target_adaptive_report`.
 
@@ -75,14 +75,21 @@ cluster fraction 0.125, and passes schema preflight 8/8. Its SHA-256 is
 digest is `19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b`. Mutable execution-status
 fields are intentionally excluded from this digest so recording progress cannot change target selection.
 
-Strict file preflight is intentionally blocked on exactly 16 missing files: one target MSA and one MSA
-report for each target. The manifest-bound plan is
-`results/m6d_w2b_target_adaptive_fit_target_msas.sh` with SHA-256
-`34f44d18ab784a321a948bcf1d0c3c0b4cb0c7e5d5bd3f77d3fa247a20a9ff5d`. Local and Cayuga dry-runs both
-passed with no receipt creation and no change in queued Slurm jobs (`0 -> 0`). The plan has not been
-submitted. A separate guarded wrapper requires
-`BIO_SFM_APPROVE_W2B_TARGET_MSA=approve-w2b-target-msa-precompute`; ordinary continuation language is not
-approval. ProteinMPNN and Boltz fit-stage compute remains unauthorized.
+Target-MSA input preparation is complete and strict file preflight passes 8/8 locally and on Cayuga. Two
+transient ColabFold API failures were recovered serially. Strict sync-back also caught and repaired an
+`1F93_DC` MSE handling defect before downstream compute; details are in
+`docs/M6D_W2B_TARGET_MSA_COMPLETION.md`.
+
+The fit execution bridge now propagates `w2b_stage`, `w2b_seed_namespace`, stage-specific candidate IDs,
+and binder sequences through ProteinMPNN and Boltz records. The evaluator rejects missing metadata, duplicate
+candidate IDs, and sequence overlap across fit/certification/test stages. Numeric ProteinMPNN seeds are frozen
+before fit labels as fit `37`, certification `1037`, and test `2037`.
+
+`configs/m6d_w2b_target_adaptive_fit_input_lock.json` binds 56 target artifacts. Scientific PDB, FASTA, and
+MSA inputs use byte SHA-256; JSON reports use portable canonical semantic hashes. Local and Cayuga fit-stage
+dry-runs each enumerated eight ProteinMPNN-to-Boltz pairs, wrote no receipts, and left Cayuga Slurm unchanged
+at `0 -> 0`. The fit-only packet is `docs/M6D_W2B_FIT_APPROVAL.md`. ProteinMPNN/Boltz fit compute remains
+unauthorized until the exact scope in that packet receives explicit approval.
 
 ## Claim Boundary
 

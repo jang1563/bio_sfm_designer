@@ -619,6 +619,31 @@ def render_hpc_plan(report: Dict[str, Any], manifest_path: str, *,
         temp = _target_setting(manifest, target, "temp", 0.3)
         seed = _target_setting(manifest, target, "seed", 37)
         objective = _target_setting(manifest, target, "objective", "binder")
+        w2b_stage = str(target.get("w2b_stage") or manifest.get("w2b_stage") or "")
+        w2b_namespace = str(
+            target.get("w2b_seed_namespace") or manifest.get("w2b_seed_namespace") or ""
+        )
+        id_prefix = str(
+            target.get("id_prefix")
+            or (f"{w2b_namespace}-{target_id}" if w2b_namespace else "")
+        )
+        generate_env = {
+            "PDB": target["prepared_pdb"],
+            "TARGET_CHAIN": target["target_chain"],
+            "DESIGN_CHAIN": target["binder_chain"],
+            "NUM_SEQ": num_seq,
+            "TEMP": temp,
+            "SEED": seed,
+            "OBJECTIVE": objective,
+            "COMPLEX_ID": str(target_id),
+            "OUT": candidates,
+        }
+        if w2b_stage or w2b_namespace:
+            generate_env.update({
+                "ID_PREFIX": id_prefix,
+                "W2B_STAGE": w2b_stage,
+                "W2B_SEED_NAMESPACE": w2b_namespace,
+            })
         missing_msa_msg = (
             f"Missing target MSA: {target['target_msa']} "
             f"(generate once: FASTA={target_fasta} OUT={target['target_msa']} "
@@ -633,17 +658,7 @@ def render_hpc_plan(report: Dict[str, Any], manifest_path: str, *,
             f"test -s {shlex.quote(target['target_msa'])} || "
             f"{{ echo {shlex.quote(missing_msa_msg)} >&2; exit 2; }}",
             f"{generate_job_var}=$("
-            + _env_assign(
-                PDB=target["prepared_pdb"],
-                TARGET_CHAIN=target["target_chain"],
-                DESIGN_CHAIN=target["binder_chain"],
-                NUM_SEQ=num_seq,
-                TEMP=temp,
-                SEED=seed,
-                OBJECTIVE=objective,
-                COMPLEX_ID=str(target_id),
-                OUT=candidates,
-            )
+            + _env_assign(**generate_env)
             + " sbatch --parsable hpc/run_generate_proteinmpnn_complex.sbatch)",
             f"echo {shlex.quote('submitted ProteinMPNN job for ' + str(target_id) + ': ')}\"${{{generate_job_var}}}\"",
             f"{predict_job_var}=$("

@@ -1,7 +1,7 @@
 {
   "artifact": "m6d_w2b_target_adaptive_exact_ltt_protocol",
   "version": 1,
-  "status": "target_msa_dryrun_passed_awaiting_explicit_approval_not_compute_authority",
+  "status": "fit_input_lock_ready_awaiting_explicit_fit_approval_not_compute_authority",
   "objective": "Test whether a target-adaptive external trust gate can independently certify controlled false-accept routing on multiple fresh protein-complex targets.",
   "claim_scope": {
     "supported_if_successful": "target-adaptive multi-target gate viability",
@@ -116,8 +116,8 @@
     "sequence_clusters": 8,
     "largest_cluster_fraction": 0.125,
     "schema_ready_targets": 8,
-    "strict_ready_targets": 0,
-    "missing_target_msa_artifacts": 16,
+    "strict_ready_targets": 8,
+    "missing_target_msa_artifacts": 0,
     "target_msa_plan": "results/m6d_w2b_target_adaptive_fit_target_msas.sh",
     "target_msa_plan_sha256": "34f44d18ab784a321a948bcf1d0c3c0b4cb0c7e5d5bd3f77d3fa247a20a9ff5d",
     "target_msa_guarded_wrapper": "hpc/run_w2b_target_msa_guarded.sh",
@@ -127,19 +127,34 @@
     "remote_target_msa_dry_run_ok": true,
     "remote_slurm_jobs_before": 0,
     "remote_slurm_jobs_after": 0,
-    "target_msa_receipt_absent": true,
-    "target_msa_plan_emitted_not_submitted": true
+    "target_msa_receipt_absent": false,
+    "target_msa_plan_emitted_not_submitted": false,
+    "target_msa_input_prep_complete": true,
+    "target_msa_completion": "docs/M6D_W2B_TARGET_MSA_COMPLETION.md",
+    "strict_manifest_result": "results/m6d_w2b_target_adaptive_fit_manifest_require_files.json",
+    "stage_proteinmpnn_seeds": {
+      "fit": 37,
+      "certification": 1037,
+      "test": 2037
+    },
+    "stage_seed_map_locked_before_fit_labels": true,
+    "fit_input_lock": "configs/m6d_w2b_target_adaptive_fit_input_lock.json",
+    "fit_input_lock_audit_ok": true,
+    "fit_guarded_wrapper": "hpc/run_w2b_fit_guarded.sh",
+    "fit_submission_allowed": false
   },
   "completed_unlock_conditions": [
     "exact one-sided binomial bound is implemented and unit-tested in trust-core and designer compatibility code",
     "complex gate and panel reporting can consume an explicitly selected exact bound without fallback to Hoeffding",
     "the W2b evaluator enforces fit-mode freezing, exact certification, reporting-only test data, and disjoint stage candidate IDs",
-    "eight label-blind fresh fit targets pass historical target/source exclusion, source diversity, eight-of-eight sequence clustering, and schema preflight"
+    "eight label-blind fresh fit targets pass historical target/source exclusion, source diversity, eight-of-eight sequence clustering, and schema preflight",
+    "all eight target MSAs and reports are synced and pass strict local and Cayuga manifest validation",
+    "fit, certification, and test stage namespaces plus numeric ProteinMPNN seeds are locked before fit labels",
+    "ProteinMPNN-to-Boltz records preserve W2b stage, seed namespace, candidate ID namespace, and binder sequence provenance",
+    "the fit input lock binds all eight targets and their source, prepared, FASTA, MSA, and report byte hashes"
   ],
   "remaining_unlock_conditions": [
-    "all eight target MSAs and MSA reports are generated, synced, and pass strict manifest checks",
-    "fit, certification, and test seed namespaces are enforced as disjoint",
-    "the guarded wrapper and approval packet bind the final protocol file SHA after this execution-state update",
+    "the guarded fit wrapper and approval packet bind the final protocol file SHA, manifest SHA, and fit input-lock digest and pass local and Cayuga dry-runs",
     "explicit operator approval is recorded after all prior conditions pass"
   ],
   "post_hoc_changes_forbidden": [

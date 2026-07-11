@@ -164,6 +164,13 @@ def main() -> None:
     ref_binder = _ca_coords_from_pdb(args.backbone, args.binder_chain)
     with open(args.candidates) as fh:
         cands = [json.loads(line) for line in fh if line.strip()]
+    incomplete_w2b = [
+        str(cand.get("id") or f"candidate_{index}")
+        for index, cand in enumerate(cands)
+        if bool(cand.get("w2b_stage")) != bool(cand.get("w2b_seed_namespace"))
+    ]
+    if incomplete_w2b:
+        ap.error("candidate W2b stage metadata is incomplete; first mismatch=" + incomplete_w2b[0])
     if args.target_msa:
         msa_seq = _read_first_fasta_sequence(args.target_msa)
         if not msa_seq:
@@ -233,6 +240,7 @@ def main() -> None:
             rec = {
                 "target_id": c["id"],
                 "complex_target_id": _complex_id(args, c),
+                "representation": str(c["representation"]),
                 "mean_plddt": round(100.0 * plddt, 3),          # complex pLDDT
                 "regime": "complex",
                 "predictor_id": "boltz2_complex",
@@ -250,6 +258,9 @@ def main() -> None:
                 "binder_chain": args.binder_chain,
                 "refolder": "boltz2_complex",
             }
+            if c.get("w2b_stage"):
+                rec["w2b_stage"] = c["w2b_stage"]
+                rec["w2b_seed_namespace"] = c["w2b_seed_namespace"]
             out.write(json.dumps(rec, sort_keys=True) + "\n")
             n_ok += 1
             pae_msg = "n/a" if pae_interaction is None else f"{pae_interaction:.2f}"

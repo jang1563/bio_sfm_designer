@@ -52,6 +52,8 @@ class GenerateComplexContractTests(unittest.TestCase):
         self.assertIn("NUM_SEQ", text)
         self.assertIn("COMPLEX_ID", text)
         self.assertIn("ID_PREFIX", text)
+        self.assertIn("W2B_STAGE", text)
+        self.assertIn("W2B_SEED_NAMESPACE", text)
         self.assertIn("--complex-id", text)
         self.assertIn("--id-prefix", text)
         self.assertIn("unset PYTHONNOUSERSITE", text)
@@ -248,6 +250,7 @@ class GenerateComplexContractTests(unittest.TestCase):
             sys.argv = ["generate_proteinmpnn_complex.py", "--mpnn-dir", d, "--pdb", pdb,
                         "--target-chain", "A", "--design-chain", "C",
                         "--complex-id", "toy_complex", "--id-prefix", "binder-toy-t030",
+                        "--w2b-stage", "fit", "--w2b-seed-namespace", "w2b-fit-v1",
                         "--out", out, "--python", sys.executable]
             try:
                 mod.main()
@@ -259,6 +262,9 @@ class GenerateComplexContractTests(unittest.TestCase):
 
         self.assertEqual(rows[0]["id"], "binder-toy-t030-0")
         self.assertEqual(rows[0]["meta"]["id_prefix"], "binder-toy-t030")
+        self.assertEqual(rows[0]["w2b_stage"], "fit")
+        self.assertEqual(rows[0]["w2b_seed_namespace"], "w2b-fit-v1")
+        self.assertEqual(rows[0]["meta"]["w2b_stage"], "fit")
 
 
 if __name__ == "__main__":

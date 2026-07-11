@@ -128,9 +128,15 @@ def main() -> None:
                     help="heterodimer target id to carry through candidate metadata")
     ap.add_argument("--id-prefix", default=None,
                     help="optional candidate-id prefix; use temp/batch-specific values for scale batches")
+    ap.add_argument("--w2b-stage", choices=("fit", "certification", "test"), default=None)
+    ap.add_argument("--w2b-seed-namespace", default=None)
     ap.add_argument("--out", required=True)
     ap.add_argument("--python", default=sys.executable, help="python that imports torch+numpy")
     args = ap.parse_args()
+    if bool(args.w2b_stage) != bool(args.w2b_seed_namespace):
+        ap.error("--w2b-stage and --w2b-seed-namespace must be provided together")
+    if args.w2b_stage and not args.id_prefix:
+        ap.error("W2b generation requires --id-prefix to keep candidate IDs disjoint across stages")
 
     pdb_id = os.path.splitext(os.path.basename(args.pdb))[0]
     outdir = os.path.dirname(os.path.abspath(args.out)) or "."
@@ -188,6 +194,11 @@ def main() -> None:
             row_id = f"{args.id_prefix}-{i}" if args.id_prefix else f"{args.objective}-mpnnX-{id_token}-{i}"
             row = {"id": row_id, "representation": clean,
                    "target_seq": target_seq, "regime": "complex", "parent_id": None, "meta": meta}
+            if args.w2b_stage:
+                row["w2b_stage"] = args.w2b_stage
+                row["w2b_seed_namespace"] = args.w2b_seed_namespace
+                meta["w2b_stage"] = args.w2b_stage
+                meta["w2b_seed_namespace"] = args.w2b_seed_namespace
             out.write(json.dumps(row, sort_keys=True) + "\n")
             n += 1
     blen = len(designs[0][1]) if designs else 0

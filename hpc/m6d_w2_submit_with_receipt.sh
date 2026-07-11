@@ -87,7 +87,18 @@ journal_append() {
 submit_pair() {
   local target_id="$1" prepared_pdb="$2" target_chain="$3" binder_chain="$4"
   local target_msa="$5" candidates="$6" records="$7" num_seq="$8" temp="$9"
-  local seed="${10}" objective="${11}"
+  local seed="${10}" objective="${11}" w2b_stage="${12}" w2b_namespace="${13}"
+  local id_prefix="${14}"
+
+  if [ "$w2b_stage" = "__BIO_SFM_EMPTY__" ]; then w2b_stage=""; fi
+  if [ "$w2b_namespace" = "__BIO_SFM_EMPTY__" ]; then w2b_namespace=""; fi
+  if [ "$id_prefix" = "__BIO_SFM_EMPTY__" ]; then id_prefix=""; fi
+  if [ -n "$w2b_stage" ] || [ -n "$w2b_namespace" ]; then
+    [ -n "$w2b_stage" ] && [ -n "$w2b_namespace" ] && [ -n "$id_prefix" ] || {
+      echo "incomplete W2b stage metadata for ${target_id}" >&2
+      exit 2
+    }
+  fi
 
   test -s "$prepared_pdb" || { echo "missing prepared PDB for ${target_id}: $prepared_pdb" >&2; exit 2; }
   test -s "$target_msa" || { echo "missing target MSA for ${target_id}: $target_msa" >&2; exit 2; }
@@ -110,7 +121,8 @@ submit_pair() {
   if [ "$state" != "proteinmpnn_submitted" ]; then
     gen_job=$(PROJECT_ROOT="$REPO_ROOT" PDB="$prepared_pdb" TARGET_CHAIN="$target_chain" \
       DESIGN_CHAIN="$binder_chain" NUM_SEQ="$num_seq" TEMP="$temp" SEED="$seed" \
-      OBJECTIVE="$objective" COMPLEX_ID="$target_id" OUT="$candidates" \
+      OBJECTIVE="$objective" COMPLEX_ID="$target_id" ID_PREFIX="$id_prefix" \
+      W2B_STAGE="$w2b_stage" W2B_SEED_NAMESPACE="$w2b_namespace" OUT="$candidates" \
       "$SBATCH_BIN" --parsable hpc/run_generate_proteinmpnn_complex.sbatch)
     require_job_id "ProteinMPNN" "$target_id" "$gen_job"
     journal_append proteinmpnn_submitted "$target_id" "$gen_job" "" \
@@ -129,7 +141,7 @@ submit_pair() {
   echo "${target_id}: ProteinMPNN ${gen_job} -> Boltz ${pred_job}"
 }
 
-"$PYTHON_BIN" - "$MANIFEST" <<'PY' | while IFS=$'\t' read -r target_id prepared_pdb target_chain binder_chain target_msa candidates records num_seq temp seed objective; do
+"$PYTHON_BIN" - "$MANIFEST" <<'PY' | while IFS=$'\t' read -r target_id prepared_pdb target_chain binder_chain target_msa candidates records num_seq temp seed objective w2b_stage w2b_namespace id_prefix; do
 import json, sys
 from pathlib import Path
 
@@ -140,6 +152,12 @@ for target in manifest.get("targets", []):
         continue
     target_id = str(target["id"])
     out_prefix = str(target.get("out_prefix") or f"hpc_outputs/{target_id}")
+    w2b_stage = str(target.get("w2b_stage") or manifest.get("w2b_stage") or "")
+    w2b_namespace = str(target.get("w2b_seed_namespace") or manifest.get("w2b_seed_namespace") or "")
+    if bool(w2b_stage) != bool(w2b_namespace):
+        raise SystemExit(f"incomplete W2b stage metadata for {target_id}")
+    id_prefix = str(target.get("id_prefix") or (f"{w2b_namespace}-{target_id}" if w2b_namespace else ""))
+    empty = "__BIO_SFM_EMPTY__"
     print("\t".join([
         target_id,
         str(target["prepared_pdb"]),
@@ -152,10 +170,14 @@ for target in manifest.get("targets", []):
         str(target.get("temp", defaults.get("temp", 0.3))),
         str(target.get("seed", defaults.get("seed", 37))),
         str(target.get("objective", defaults.get("objective", "binder"))),
+        w2b_stage or empty,
+        w2b_namespace or empty,
+        id_prefix or empty,
     ]))
 PY
   submit_pair "$target_id" "$prepared_pdb" "$target_chain" "$binder_chain" "$target_msa" \
-    "$candidates" "$records" "$num_seq" "$temp" "$seed" "$objective"
+    "$candidates" "$records" "$num_seq" "$temp" "$seed" "$objective" \
+    "$w2b_stage" "$w2b_namespace" "$id_prefix"
 done
 
 if [ "$DRY_RUN" = "1" ]; then

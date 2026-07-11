@@ -46,6 +46,7 @@ def _row(stage, target, index, success, pae):
         "complex_target_id": target,
         "w2b_stage": stage,
         "w2b_seed_namespace": {"fit": "fit", "certification": "cert", "test": "test"}[stage],
+        "representation": f"{stage}-{target}-sequence-{index}",
         "lrmsd": 1.0 if success else 5.0,
         "pae_interaction": pae,
     }
@@ -99,6 +100,22 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
         self.assertFalse(report["audit_ok"])
         self.assertEqual(report["status"], "w2b_audit_failed")
         self.assertIn("candidate_overlap_across_stages", {row["kind"] for row in report["failures"]})
+
+    def test_candidate_sequence_overlap_across_stages_fails_closed(self):
+        certification = _stage("certification", include_refused=False)
+        certification[0]["representation"] = _stage("fit")[0]["representation"]
+        report = evaluate(
+            _protocol(),
+            _stage("fit"),
+            certification,
+            _stage("test", include_refused=False),
+        )
+
+        self.assertFalse(report["audit_ok"])
+        self.assertIn(
+            "candidate_sequence_overlap_across_stages",
+            {row["kind"] for row in report["failures"]},
+        )
 
     def test_excluded_target_reuse_fails_closed(self):
         fit = _stage("fit")

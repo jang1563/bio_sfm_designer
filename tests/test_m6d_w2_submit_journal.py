@@ -35,6 +35,15 @@ def _event(stage, *, gen="100", pred=None):
 
 
 class M6DW2SubmitJournalTests(unittest.TestCase):
+    def test_submit_script_propagates_w2b_stage_contract(self):
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        script = os.path.join(repo_root, "hpc", "m6d_w2_submit_with_receipt.sh")
+        with open(script) as handle:
+            text = handle.read()
+        self.assertIn("W2B_STAGE", text)
+        self.assertIn("W2B_SEED_NAMESPACE", text)
+        self.assertIn("ID_PREFIX", text)
+
     def test_partial_stage_is_immediately_recoverable(self):
         with tempfile.TemporaryDirectory() as directory:
             receipt = os.path.join(directory, "receipt.jsonl")

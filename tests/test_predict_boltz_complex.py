@@ -62,7 +62,8 @@ class PredictBoltzComplexContractTests(unittest.TestCase):
             cands = os.path.join(d, "cands.jsonl")
             with open(cands, "w") as fh:
                 fh.write(json.dumps({"id": "cx-0", "representation": "AAA", "target_seq": "AAA",
-                                     "regime": "complex"}) + "\n")
+                                     "regime": "complex", "w2b_stage": "fit",
+                                     "w2b_seed_namespace": "w2b-fit-v1"}) + "\n")
             target_msa = os.path.join(d, "wrong_target.a3m")
             with open(target_msa, "w") as fh:
                 fh.write(">wrong\nAAK\n")
@@ -183,7 +184,8 @@ class PredictBoltzComplexContractTests(unittest.TestCase):
             cands = os.path.join(d, "cands.jsonl")
             with open(cands, "w") as fh:
                 fh.write(json.dumps({"id": "cx-0", "representation": "AAA", "target_seq": "AAA",
-                                     "regime": "complex"}) + "\n")
+                                     "regime": "complex", "w2b_stage": "fit",
+                                     "w2b_seed_namespace": "w2b-fit-v1"}) + "\n")
             target_msa = os.path.join(d, "target.a3m")
             with open(target_msa, "w") as fh:
                 fh.write(">target\nAAA\n")
@@ -206,6 +208,9 @@ class PredictBoltzComplexContractTests(unittest.TestCase):
             self.assertEqual(rec["label_source"], "boltz2_lrmsd_to_reference")
             self.assertEqual(rec["regime"], "complex")
             self.assertEqual(rec["complex_target_id"], "toy_complex")
+            self.assertEqual(rec["representation"], "AAA")
+            self.assertEqual(rec["w2b_stage"], "fit")
+            self.assertEqual(rec["w2b_seed_namespace"], "w2b-fit-v1")
             self.assertEqual(rec["target_chain"], "A")
             self.assertEqual(rec["binder_chain"], "C")
             self.assertTrue(rec["interface_aligned"])

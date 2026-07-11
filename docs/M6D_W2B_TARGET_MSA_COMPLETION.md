@@ -41,6 +41,7 @@ Raw submission and recovery provenance is retained in ignored artifacts:
 
 ## Boundary
 
-The next scientific stage requires a new, explicit approval boundary. Do not interpret completed target-MSA
-input preparation as permission to run ProteinMPNN or Boltz, and do not report a fitted threshold or W2b
-certificate until the predeclared fit/certification/test workflow has actually completed.
+The next scientific stage requires a new, explicit approval boundary. The no-submit fit packet is now
+`docs/M6D_W2B_FIT_APPROVAL.md`. Do not interpret completed target-MSA input preparation or packet readiness
+as permission to run ProteinMPNN or Boltz, and do not report a fitted threshold or W2b certificate until the
+predeclared fit/certification/test workflow has actually completed.

@@ -16,7 +16,7 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > certification n=33 gives UCB=0.2669, and the minimum best-case total is 176 records per target. This
 > diagnosis cannot recertify the panel. W2 remains negative. The separate W2b target-adaptive exact-LTT
 > protocol is now implemented in `configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json` and
-> `m6d_w2b_target_adaptive_report.py`, with 848 designer tests passing after the target-input integrity
+> `m6d_w2b_target_adaptive_report.py`, with 857 designer tests passing after the target-input integrity
 > repair. Label-blind
 > discovery selected eight new targets (`1FXK_CA`, `1F93_DC`, `1F66_AB`, `1FJG_FR`, `1FDH_GA`,
 > `1FLT_WV`, `1F51_AE`, `1FVC_DC`); historical overlap is zero, sequence diversity is 8/8 clusters,
@@ -26,7 +26,11 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > validated but dropped from the prepared PDB. The preparation and ProteinMPNN strip paths now normalize
 > supported modified amino acids, the corrected `1F93_DC` MSA was regenerated, and strict local and Cayuga
 > validation passes 8/8 with zero failures. See `docs/M6D_W2B_TARGET_MSA_COMPLETION.md`. ProteinMPNN/Boltz
-> fit-stage execution remains unauthorized; resume from a new downstream approval packet. Start with
+> fit-stage execution remains unauthorized. A portable 56-artifact input lock now binds all eight targets;
+> stage/seed metadata, stage-specific candidate IDs, and binder sequences propagate through the full record
+> bridge; local and Cayuga fit dry-runs each enumerate eight job pairs with no receipt and Slurm `0 -> 0`.
+> The no-submit packet `docs/M6D_W2B_FIT_APPROVAL.md` limits the next scope to fit only: 480 records,
+> 16 Slurm jobs, and at most 48 A40 GPU-hours. Ordinary continuation language is not approval. Start with
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md` before using the historical narrative below.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

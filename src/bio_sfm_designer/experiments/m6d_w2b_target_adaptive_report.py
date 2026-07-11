@@ -147,6 +147,18 @@ def _stage_failures(
             "count": len(bad_metadata),
             "examples": bad_metadata[:5],
         })
+    missing_representation = [
+        str(row.get("target_id") or "")
+        for row in rows
+        if not isinstance(row.get("representation"), str) or not row["representation"]
+    ]
+    if missing_representation:
+        failures.append({
+            "kind": "missing_candidate_representation",
+            "stage": stage,
+            "count": len(missing_representation),
+            "examples": missing_representation[:5],
+        })
     candidate_ids = [str(row.get("target_id") or "") for row in rows]
     if "" in candidate_ids or len(candidate_ids) != len(set(candidate_ids)):
         failures.append({"kind": "missing_or_duplicate_candidate_id", "stage": stage})
@@ -202,6 +214,11 @@ def evaluate(
         "certification": {str(row.get("target_id") or "") for row in certification_rows},
         "test": {str(row.get("target_id") or "") for row in test_rows},
     }
+    stage_rows = {
+        "fit": fit_rows,
+        "certification": certification_rows,
+        "test": test_rows,
+    }
     for left, right in (("fit", "certification"), ("fit", "test"), ("certification", "test")):
         overlap = sorted((stage_ids[left] & stage_ids[right]) - {""})
         if overlap:
@@ -210,6 +227,24 @@ def evaluate(
                 "stages": [left, right],
                 "count": len(overlap),
                 "examples": overlap[:5],
+            })
+        left_sequences = {
+            (str(row.get("complex_target_id") or ""), str(row.get("representation") or ""))
+            for row in stage_rows[left]
+            if row.get("complex_target_id") and row.get("representation")
+        }
+        right_sequences = {
+            (str(row.get("complex_target_id") or ""), str(row.get("representation") or ""))
+            for row in stage_rows[right]
+            if row.get("complex_target_id") and row.get("representation")
+        }
+        sequence_overlap = sorted(left_sequences & right_sequences)
+        if sequence_overlap:
+            failures.append({
+                "kind": "candidate_sequence_overlap_across_stages",
+                "stages": [left, right],
+                "count": len(sequence_overlap),
+                "examples": [f"{target}:{sequence}" for target, sequence in sequence_overlap[:5]],
             })
 
     cert_groups = _group(certification_rows)
