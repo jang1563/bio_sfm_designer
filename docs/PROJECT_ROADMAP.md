@@ -11,7 +11,8 @@
 > stage is now complete on eight fresh targets with 480 H100 records and strict QC failures=0. Five targets
 > are fit-eligible: `1F51_AE` freezes a selective pAE rule at tau 5.7365 with AUROC 0.8421, while four use
 > `trust_all`; three targets refuse. This is `w2b_fit_complete_awaiting_certification`, not W2b support.
-> Certification-only compute for the five eligible targets is the next approval-gated experiment. See
+> Its five-target, 300-record certification packet now passes local and Cayuga no-submit dry-runs and awaits
+> explicit execution approval. Certification-only compute remains the next approval-gated experiment. See
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md`.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.

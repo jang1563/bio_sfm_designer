@@ -10,8 +10,9 @@ Latest local harness refresh: 2026-07-05.
 Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. The separate
 W2b target-adaptive fit stage is complete on eight fresh targets with 480 H100-generated records and strict
 QC failures=0. Five targets are fit-eligible, including one frozen `selective_pae` rule; no target is yet
-certified. The authoritative restart artifact is `docs/M6D_W2B_FIT_COMPLETION.md`. The next action is a
-no-submit certification-only manifest, input lock, and approval packet for the five eligible targets.
+certified. The authoritative result artifact is `docs/M6D_W2B_FIT_COMPLETION.md`. The five-target
+certification-only manifest, input lock, H100 guard, and approval packet are now ready; local and Cayuga
+dry-runs passed without submission. The execution boundary is `docs/M6D_W2B_CERTIFICATION_APPROVAL.md`.
 
 ## Active Objective
 

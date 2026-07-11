@@ -91,6 +91,62 @@ class W2BInputLockTests(unittest.TestCase):
         }))
         return protocol, manifest, msa
 
+    def _certification_fixture(self, directory):
+        protocol, manifest, msa = self._fixture(directory)
+        with open(manifest) as handle:
+            manifest_value = json.load(handle)
+        target = manifest_value["targets"][0]
+        manifest_value.update({
+            "w2b_stage": "certification",
+            "w2b_seed_namespace": "cert-ns",
+            "fit_eligible_target_ids": ["toy_AB"],
+            "output_root": os.path.join(directory, "certification-records"),
+            "source_fit_manifest_sha256": "fit-manifest",
+            "source_fit_report_sha256": "fit-report",
+            "source_fit_fixture_sha256": "fit-fixture",
+        })
+        manifest_value["defaults"].update({"num_seq": 3, "seed": 1037})
+        target.update({
+            "w2b_stage": "certification",
+            "w2b_seed_namespace": "cert-ns",
+            "id_prefix": "cert-ns-toy_AB",
+            "frozen_fit_rule": {"mode": "selective_pae", "tau": 5.5},
+            "out_prefix": os.path.join(directory, "certification-records", "toy_AB"),
+            "candidates": os.path.join(
+                directory,
+                "certification-records",
+                "toy_AB",
+                "candidates_proteinmpnn_complex.jsonl",
+            ),
+            "records": os.path.join(
+                directory,
+                "certification-records",
+                "toy_AB",
+                "records_boltz_complex.jsonl",
+            ),
+        })
+        _write(manifest, json.dumps(manifest_value))
+        with open(protocol) as handle:
+            protocol_value = json.load(handle)
+        protocol_value["fresh_target_contract"]["n_initial_targets"] = 8
+        protocol_value["generation_stages"]["certification"] = {
+            "records_per_target": 3,
+            "seed_namespace": "cert-ns",
+        }
+        protocol_value["current_execution_state"].update({
+            "certification_manifest_sha256": _sha(manifest),
+            "fit_eligible_target_ids": ["toy_AB"],
+            "fit_frozen_rules": {
+                "toy_AB": {"mode": "selective_pae", "tau": 5.5},
+            },
+            "fit_manifest_sha256": "fit-manifest",
+            "fit_report_sha256": "fit-report",
+            "fit_fixture_sha256": "fit-fixture",
+        })
+        protocol_value["current_execution_state"]["stage_proteinmpnn_seeds"]["certification"] = 1037
+        _write(protocol, json.dumps(protocol_value))
+        return protocol, manifest, msa
+
     def test_build_and_verify_lock(self):
         with tempfile.TemporaryDirectory() as directory:
             protocol, manifest, _msa = self._fixture(directory)
@@ -143,6 +199,36 @@ class W2BInputLockTests(unittest.TestCase):
             verification = verify_lock(lock_path, protocol, manifest)
 
         self.assertTrue(verification["verified"])
+
+    def test_certification_lock_binds_fit_rules_and_exact_target_set(self):
+        with tempfile.TemporaryDirectory() as directory:
+            protocol, manifest, _msa = self._certification_fixture(directory)
+            lock = build_lock(protocol, manifest)
+
+        self.assertTrue(lock["audit_ok"], lock["failures"])
+        self.assertEqual(lock["n_targets"], 1)
+        self.assertEqual(
+            lock["binding"]["targets"][0]["frozen_fit_rule"],
+            {"mode": "selective_pae", "tau": 5.5},
+        )
+        self.assertEqual(lock["binding"]["fit_evidence"]["fit_report_sha256"], "fit-report")
+
+    def test_certification_lock_rejects_changed_fit_rule(self):
+        with tempfile.TemporaryDirectory() as directory:
+            protocol, manifest, _msa = self._certification_fixture(directory)
+            with open(manifest) as handle:
+                manifest_value = json.load(handle)
+            manifest_value["targets"][0]["frozen_fit_rule"]["tau"] = 6.0
+            _write(manifest, json.dumps(manifest_value))
+            with open(protocol) as handle:
+                protocol_value = json.load(handle)
+            protocol_value["current_execution_state"]["certification_manifest_sha256"] = _sha(manifest)
+            _write(protocol, json.dumps(protocol_value))
+
+            lock = build_lock(protocol, manifest)
+
+        self.assertFalse(lock["audit_ok"])
+        self.assertIn("frozen_fit_rule_mismatch", {row["kind"] for row in lock["failures"]})
 
 
 if __name__ == "__main__":

@@ -25,8 +25,11 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `w2b_fit_complete_awaiting_certification`: `1F51_AE` freezes `selective_pae` at tau 5.7365 with AUROC
 > 0.8421, `1F93_DC`, `1FDH_GA`, `1FLT_WV`, and `1FVC_DC` are also eligible under `trust_all`, and
 > `1F66_AB`, `1FJG_FR`, and `1FXK_CA` refuse. This is not certification or W2b support. The replay fixture,
-> hashes, exact-bound bottleneck, and next approval boundary are in `docs/M6D_W2B_FIT_COMPLETION.md`.
-> Certification and test compute remain unauthorized. Start with
+> hashes and exact-bound bottleneck are in `docs/M6D_W2B_FIT_COMPLETION.md`. The five-target,
+> 300-record certification-only manifest, 35-artifact input lock, and Cayuga H100 guard are now prepared.
+> Local and Cayuga dry-runs each passed with no receipt, output, or Slurm change (`0 -> 0`). No
+> certification job has been submitted; exact execution scope is in
+> `docs/M6D_W2B_CERTIFICATION_APPROVAL.md`. Certification and test compute remain unauthorized. Start with
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md` before using the historical narrative below.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

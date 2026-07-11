@@ -1,0 +1,155 @@
+{
+  "_note": "W2b certification-only panel frozen from the completed fit report. This manifest is not Cayuga submission authority.",
+  "defaults": {
+    "num_seq": 60,
+    "objective": "binder",
+    "seed": 1037,
+    "temp": 0.3
+  },
+  "fit_eligible_target_ids": [
+    "1F51_AE",
+    "1F93_DC",
+    "1FDH_GA",
+    "1FLT_WV",
+    "1FVC_DC"
+  ],
+  "output_root": "hpc_outputs/m6d_w2b_target_adaptive_certification_records",
+  "protocol_digest_fields": [
+    "objective",
+    "claim_scope",
+    "fresh_target_contract",
+    "generation_stages",
+    "fit_stage_rule",
+    "certification_rule",
+    "panel_decision_rule",
+    "compute_budget",
+    "post_hoc_changes_forbidden"
+  ],
+  "protocol_sha256": "19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b",
+  "selection_rule": "exact fit-eligible target IDs and frozen rules from the locked W2b fit report",
+  "source_fit_fixture": "tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl",
+  "source_fit_fixture_sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe",
+  "source_fit_manifest": "configs/m6d_w2b_target_adaptive_fit_targets.json",
+  "source_fit_manifest_sha256": "1459d29181ff0d2c1b5fafbf57b4e3f11e1cd872749f17fe951ece96e550ef14",
+  "source_fit_report": "results/m6d_w2b_target_adaptive_fit_report.json",
+  "source_fit_report_sha256": "6aac81be46805ad983e770af49f15e38cac140d469e4541e40788a21129ef3c1",
+  "targets": [
+    {
+      "binder_chain": "E",
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F51_AE/candidates_proteinmpnn_complex.jsonl",
+      "frozen_fit_rule": {
+        "mode": "selective_pae",
+        "tau": 5.7365
+      },
+      "id": "1F51_AE",
+      "id_prefix": "w2b-cert-v1-1F51_AE",
+      "out_prefix": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F51_AE",
+      "prep_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/prepared_1F51_AE.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/prepared_1F51_AE.pdb",
+      "rcsb_id": "1F51",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F51_AE/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F51.pdb",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.a3m.report.json",
+      "w2b_seed_namespace": "w2b-cert-v1",
+      "w2b_stage": "certification"
+    },
+    {
+      "binder_chain": "C",
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F93_DC/candidates_proteinmpnn_complex.jsonl",
+      "frozen_fit_rule": {
+        "mode": "trust_all",
+        "tau": null
+      },
+      "id": "1F93_DC",
+      "id_prefix": "w2b-cert-v1-1F93_DC",
+      "out_prefix": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F93_DC",
+      "prep_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/prepared_1F93_DC.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/prepared_1F93_DC.pdb",
+      "rcsb_id": "1F93",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F93_DC/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F93.pdb",
+      "target_chain": "D",
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.a3m.report.json",
+      "w2b_seed_namespace": "w2b-cert-v1",
+      "w2b_stage": "certification"
+    },
+    {
+      "binder_chain": "A",
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FDH_GA/candidates_proteinmpnn_complex.jsonl",
+      "frozen_fit_rule": {
+        "mode": "trust_all",
+        "tau": null
+      },
+      "id": "1FDH_GA",
+      "id_prefix": "w2b-cert-v1-1FDH_GA",
+      "out_prefix": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FDH_GA",
+      "prep_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/prepared_1FDH_GA.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/prepared_1FDH_GA.pdb",
+      "rcsb_id": "1FDH",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FDH_GA/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FDH.pdb",
+      "target_chain": "G",
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.a3m.report.json",
+      "w2b_seed_namespace": "w2b-cert-v1",
+      "w2b_stage": "certification"
+    },
+    {
+      "binder_chain": "V",
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FLT_WV/candidates_proteinmpnn_complex.jsonl",
+      "frozen_fit_rule": {
+        "mode": "trust_all",
+        "tau": null
+      },
+      "id": "1FLT_WV",
+      "id_prefix": "w2b-cert-v1-1FLT_WV",
+      "out_prefix": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FLT_WV",
+      "prep_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/prepared_1FLT_WV.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/prepared_1FLT_WV.pdb",
+      "rcsb_id": "1FLT",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FLT_WV/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FLT.pdb",
+      "target_chain": "W",
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.a3m.report.json",
+      "w2b_seed_namespace": "w2b-cert-v1",
+      "w2b_stage": "certification"
+    },
+    {
+      "binder_chain": "C",
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FVC_DC/candidates_proteinmpnn_complex.jsonl",
+      "frozen_fit_rule": {
+        "mode": "trust_all",
+        "tau": null
+      },
+      "id": "1FVC_DC",
+      "id_prefix": "w2b-cert-v1-1FVC_DC",
+      "out_prefix": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FVC_DC",
+      "prep_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/prepared_1FVC_DC.report.json",
+      "prepared_pdb": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/prepared_1FVC_DC.pdb",
+      "rcsb_id": "1FVC",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FVC_DC/records_boltz_complex.jsonl",
+      "source_pdb": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FVC.pdb",
+      "target_chain": "D",
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.fasta",
+      "target_fasta_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.fasta.report.json",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.a3m.report.json",
+      "w2b_seed_namespace": "w2b-cert-v1",
+      "w2b_stage": "certification"
+    }
+  ],
+  "w2b_seed_namespace": "w2b-cert-v1",
+  "w2b_stage": "certification"
+}

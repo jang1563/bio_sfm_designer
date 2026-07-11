@@ -1,0 +1,294 @@
+{
+  "artifact": "m6d_w2b_stage_input_lock",
+  "audit_ok": true,
+  "binding": {
+    "fit_evidence": {
+      "fit_fixture_sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe",
+      "fit_manifest_sha256": "1459d29181ff0d2c1b5fafbf57b4e3f11e1cd872749f17fe951ece96e550ef14",
+      "fit_report_sha256": "6aac81be46805ad983e770af49f15e38cac140d469e4541e40788a21129ef3c1"
+    },
+    "manifest_sha256": "502b2d91e29c9f9c1199e79b075051c83b0a634277283a6c97ee4b6d83ae8d99",
+    "proteinmpnn_seed": 1037,
+    "protocol_file_sha256": "dcef5d1b080791b54bafb485f815e08b536bcd68a44ee4ab458b34ebb3d5567c",
+    "records_per_target": 60,
+    "scientific_protocol_sha256": "19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b",
+    "seed_namespace": "w2b-cert-v1",
+    "stage": "certification",
+    "targets": [
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/prepared_1F51_AE.report.json",
+            "sha256": "7ac75c47d2ac1761fd279876d11edd322605d403f0b49aa667480215e9bb3411"
+          },
+          "prepared_pdb": {
+            "bytes": 196753,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/prepared_1F51_AE.pdb",
+            "sha256": "4e28ad95cfeef2365795d0716942466a99801352902b9ce577d588d0825fc884"
+          },
+          "source_pdb": {
+            "bytes": 851553,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F51.pdb",
+            "sha256": "e77c54f2dcfd384e7c9804be612c2fa3df89722dd6c0c90f1eb1e7e67e7bc706"
+          },
+          "target_fasta": {
+            "bytes": 195,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.fasta",
+            "sha256": "303a30ed29511410233577be527d7a54b6802a7ff796f4a626665d9f0b2a9af8"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.fasta.report.json",
+            "sha256": "e96705c859f1bc2401e0b7c1826e5e08f75c7141df0422c735d5e905405b21ff"
+          },
+          "target_msa": {
+            "bytes": 85910,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.a3m",
+            "sha256": "9c647ab6015c2f2477f65d02176030fad2860f3987de3351402b18cb5f8b3874"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F51_AE/1F51_AE_A.a3m.report.json",
+            "sha256": "d826b4c36716987bce29dd236962a29d76b9b7c82f955a838353a7d868237cf8"
+          }
+        },
+        "frozen_fit_rule": {
+          "mode": "selective_pae",
+          "tau": 5.7365
+        },
+        "id_prefix": "w2b-cert-v1-1F51_AE",
+        "proteinmpnn_seed": 1037,
+        "records_planned": 60,
+        "seed_namespace": "w2b-cert-v1",
+        "stage": "certification",
+        "target_id": "1F51_AE"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/prepared_1F93_DC.report.json",
+            "sha256": "a19ae25bce3c6f46cba45aeb9328fcfed04926c41e9d83859c2ce5507b25ea61"
+          },
+          "prepared_pdb": {
+            "bytes": 129847,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/prepared_1F93_DC.pdb",
+            "sha256": "ac456f24a7879f74505c084b983c7ad64f444b09145155e9e81110b009190dab"
+          },
+          "source_pdb": {
+            "bytes": 383049,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F93.pdb",
+            "sha256": "aa44f920337ca8de3d0ff0d904a6b1edb9c7724a8c9707b879cd6a762de68eec"
+          },
+          "target_fasta": {
+            "bytes": 113,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.fasta",
+            "sha256": "fb07cfe21230c00799dfbfaf71cf8214feba80cb9e229c2c9158e8cde8846247"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.fasta.report.json",
+            "sha256": "55a18604be5a788a94b98f9ff4be3b9817d0d5baa9211df31e04f83d12b0c4f9"
+          },
+          "target_msa": {
+            "bytes": 1067036,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.a3m",
+            "sha256": "d30aa0b3836fa7e263d07037293dd593785f1dd19477d5c6cee9dca59400d30e"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F93_DC/1F93_DC_D.a3m.report.json",
+            "sha256": "ac9bf244ecd38dd84433cea0a0e5914c05e75b70f51add68bf3eedb6f29fbb39"
+          }
+        },
+        "frozen_fit_rule": {
+          "mode": "trust_all",
+          "tau": null
+        },
+        "id_prefix": "w2b-cert-v1-1F93_DC",
+        "proteinmpnn_seed": 1037,
+        "records_planned": 60,
+        "seed_namespace": "w2b-cert-v1",
+        "stage": "certification",
+        "target_id": "1F93_DC"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/prepared_1FDH_GA.report.json",
+            "sha256": "f388f3590aee8b34a42cbce7a6b4fa6b02fdc507508fd76fd580ae66bbf3d3f5"
+          },
+          "prepared_pdb": {
+            "bytes": 178123,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/prepared_1FDH_GA.pdb",
+            "sha256": "adcbf9682a3e7b3b52e6ac9f4e1a7995864552cb15f0594bfea9900c91b570a8"
+          },
+          "source_pdb": {
+            "bytes": 423063,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FDH.pdb",
+            "sha256": "641768e5396084ce12352d99ad032e000040b9de80acc116aac4f3cd08b136bf"
+          },
+          "target_fasta": {
+            "bytes": 159,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.fasta",
+            "sha256": "ff1909286f4f04f75e417ea56fb3282f0c8482981cacf2acc8d516124c1dca4d"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.fasta.report.json",
+            "sha256": "732764402a57ced83d3f53c17826902fab2a7c834634c2b25f797e4be296c008"
+          },
+          "target_msa": {
+            "bytes": 231188,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.a3m",
+            "sha256": "79b4b427c139caf3d4a61e71297ea55ea6fd9503a6f6c133880e99e2d2c8f6ff"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FDH_GA/1FDH_GA_G.a3m.report.json",
+            "sha256": "67200f07ad68187e90a1e910873526c372683c2c4acb45a784981ef96677cf50"
+          }
+        },
+        "frozen_fit_rule": {
+          "mode": "trust_all",
+          "tau": null
+        },
+        "id_prefix": "w2b-cert-v1-1FDH_GA",
+        "proteinmpnn_seed": 1037,
+        "records_planned": 60,
+        "seed_namespace": "w2b-cert-v1",
+        "stage": "certification",
+        "target_id": "1FDH_GA"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/prepared_1FLT_WV.report.json",
+            "sha256": "caab0ec1e05a6a6c921ba0ad959fcb88dd26c3a984233ba6dc432c563ad54eba"
+          },
+          "prepared_pdb": {
+            "bytes": 126931,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/prepared_1FLT_WV.pdb",
+            "sha256": "454525434dd0bcbdb6d186fd2a15a5a1fc240c79302ab82de4713ce660711475"
+          },
+          "source_pdb": {
+            "bytes": 325134,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FLT.pdb",
+            "sha256": "04c59e7cc91a745b953f4c48b304d2a0cdbb552c19d33e7bde83a56113b1be4a"
+          },
+          "target_fasta": {
+            "bytes": 111,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.fasta",
+            "sha256": "236f62a58a6c696afa71f2260aec1c7e8e04e2fe04165d3371f3720534891cc0"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.fasta.report.json",
+            "sha256": "b1e0d3399c7f8f97efbc48244d8f102e717a4a14ac72d8a90c0a87da58dac5a2"
+          },
+          "target_msa": {
+            "bytes": 177923,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.a3m",
+            "sha256": "4b9b054f2acbe2af8e93314b3d2eadf28ac34ddaed481271a2b802f7bc02926c"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FLT_WV/1FLT_WV_W.a3m.report.json",
+            "sha256": "3fc61553e8cadfb8b8f3e678318c157b74f8aff7c9c8374dec114f3cb1b3be76"
+          }
+        },
+        "frozen_fit_rule": {
+          "mode": "trust_all",
+          "tau": null
+        },
+        "id_prefix": "w2b-cert-v1-1FLT_WV",
+        "proteinmpnn_seed": 1037,
+        "records_planned": 60,
+        "seed_namespace": "w2b-cert-v1",
+        "stage": "certification",
+        "target_id": "1FLT_WV"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/prepared_1FVC_DC.report.json",
+            "sha256": "44d221dedd912e102b27d878fbacdeaf1bed315f438fb0adfacd7ba2cf90270d"
+          },
+          "prepared_pdb": {
+            "bytes": 142321,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/prepared_1FVC_DC.pdb",
+            "sha256": "0da3e204562ea58f1786b440e0d70e2233dc52e2b93f0cf21fa1ea8b8cfb7439"
+          },
+          "source_pdb": {
+            "bytes": 343359,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FVC.pdb",
+            "sha256": "e8caa952e5ac39f92078fc5bf63eb3165d9092ea3cd0c9021e90ba54b4c4b550"
+          },
+          "target_fasta": {
+            "bytes": 133,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.fasta",
+            "sha256": "683371e68bf72a65ae8e157546e9244e9e461b2f9d264827e41b6d4bf18b8123"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.fasta.report.json",
+            "sha256": "5def48e67f32bf92d32a4a99ee6c7c34141f4baf8bf628f9ca2e0c4fca4df16b"
+          },
+          "target_msa": {
+            "bytes": 278313,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.a3m",
+            "sha256": "f89662886358f0b75eb1cfa9a67940f157155c2a920209e9bb97e1f173ab04c8"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FVC_DC/1FVC_DC_D.a3m.report.json",
+            "sha256": "474c5e59b2955de2348edda02b4e38074c1213f9627388be89d1015a52991033"
+          }
+        },
+        "frozen_fit_rule": {
+          "mode": "trust_all",
+          "tau": null
+        },
+        "id_prefix": "w2b-cert-v1-1FVC_DC",
+        "proteinmpnn_seed": 1037,
+        "records_planned": 60,
+        "seed_namespace": "w2b-cert-v1",
+        "stage": "certification",
+        "target_id": "1FVC_DC"
+      }
+    ]
+  },
+  "claim_boundary": "Input and execution-provenance lock only. This does not authorize Cayuga jobs or support a W2b scientific claim.",
+  "failures": [],
+  "lock_digest_sha256": "2153bf715745813730e2f41b340329adb21dc7415f293980cf8519320b5deaae",
+  "manifest": "configs/m6d_w2b_target_adaptive_certification_targets.json",
+  "n_artifacts": 35,
+  "n_targets": 5,
+  "protocol": "configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json",
+  "status": "w2b_stage_input_locked",
+  "version": 1
+}

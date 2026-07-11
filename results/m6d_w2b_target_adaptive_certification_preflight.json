@@ -1,0 +1,80 @@
+{
+  "artifact": "m6d_w2b_target_adaptive_certification_preflight",
+  "audit_ok": true,
+  "claim_boundary": "No certification or scientific claim. This is a no-submit execution-readiness audit.",
+  "dry_run": {
+    "cayuga": {
+      "audit_ok": true,
+      "job_pairs_enumerated": 5,
+      "output_files_created": 0,
+      "queue_after": 0,
+      "queue_before": 0,
+      "receipt_created": false,
+      "sbatch_calls": 0,
+      "summary_created": false
+    },
+    "local": {
+      "audit_ok": true,
+      "job_pairs_enumerated": 5,
+      "output_files_created": 0,
+      "receipt_created": false,
+      "sbatch_calls": 0,
+      "summary_created": false
+    }
+  },
+  "fit_evidence": {
+    "fixture_sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe",
+    "manifest_sha256": "1459d29181ff0d2c1b5fafbf57b4e3f11e1cd872749f17fe951ece96e550ef14",
+    "report_sha256": "6aac81be46805ad983e770af49f15e38cac140d469e4541e40788a21129ef3c1"
+  },
+  "guard": {
+    "approval_env_var": "BIO_SFM_APPROVE_W2B_CERTIFICATION",
+    "approval_token": "approve-w2b-certification-stage-300-h100",
+    "path": "hpc/run_w2b_certification_guarded.sh",
+    "sha256": "d03eba2e60105fd4401d5dcd65aaf001d6e30eb2e9870b2e073a8c7a9a8a7fdf"
+  },
+  "input_lock": {
+    "audit_ok": true,
+    "digest_sha256": "2153bf715745813730e2f41b340329adb21dc7415f293980cf8519320b5deaae",
+    "n_artifacts": 35,
+    "path": "configs/m6d_w2b_target_adaptive_certification_input_lock.json",
+    "sha256": "41279f144bcbe09fe61aedd838e413900200a814b73f64b2616a64430fdcdd23"
+  },
+  "manifest": {
+    "path": "configs/m6d_w2b_target_adaptive_certification_targets.json",
+    "sha256": "502b2d91e29c9f9c1199e79b075051c83b0a634277283a6c97ee4b6d83ae8d99"
+  },
+  "next_action": "Obtain explicit execution approval for docs/M6D_W2B_CERTIFICATION_APPROVAL.md before any certification submission.",
+  "protocol": {
+    "file_sha256": "dcef5d1b080791b54bafb485f815e08b536bcd68a44ee4ab458b34ebb3d5567c",
+    "path": "configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json",
+    "scientific_digest_sha256": "19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b"
+  },
+  "scope": {
+    "boltz_jobs": 5,
+    "boltz_resources": {
+      "gres": "gpu:h100:1",
+      "maximum_gpu_hours": 30,
+      "partition": "preempt_gpu",
+      "qos": "low"
+    },
+    "certification_authorized": false,
+    "namespace": "w2b-cert-v1",
+    "proteinmpnn_jobs": 5,
+    "proteinmpnn_seed": 1037,
+    "records_per_target": 60,
+    "stage": "certification",
+    "target_ids": [
+      "1F51_AE",
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "test_authorized": false,
+    "total_records": 300,
+    "total_slurm_jobs": 10
+  },
+  "status": "certification_packet_ready_awaiting_explicit_execution_approval",
+  "validated_on": "2026-07-11"
+}

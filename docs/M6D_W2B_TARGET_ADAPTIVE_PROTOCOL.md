@@ -92,7 +92,9 @@ explicitly approved and completed with 480 H100 records after an approved all-jo
 Strict QC passes with zero failures. The locked evaluator selects five eligible targets: four `trust_all`
 and `1F51_AE` as `selective_pae` with tau 5.7365; the other three targets refuse. The result is
 `w2b_fit_complete_awaiting_certification`, not a certificate. Full details and CPU-replay artifacts are in
-`docs/M6D_W2B_FIT_COMPLETION.md`. Certification and test compute remain unauthorized.
+`docs/M6D_W2B_FIT_COMPLETION.md`. A five-target certification-only manifest, 35-artifact input lock, and
+Cayuga H100 guard now pass local and remote dry-runs with no submission. The exact execution boundary is
+`docs/M6D_W2B_CERTIFICATION_APPROVAL.md`; certification and test compute remain unauthorized.
 
 ## Claim Boundary
 

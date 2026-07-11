@@ -68,7 +68,23 @@ def _canonical_report_binding(field: str, path: str, target: Dict[str, Any]) -> 
 def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
     protocol = _load_object(protocol_path)
     manifest = _load_object(manifest_path)
-    expected_targets = int(protocol["fresh_target_contract"]["n_initial_targets"])
+    state = protocol.get("current_execution_state")
+    state_ok = isinstance(state, dict)
+    if not state_ok:
+        state = {}
+    stage = str(manifest.get("w2b_stage") or "")
+    namespace = str(manifest.get("w2b_seed_namespace") or "")
+    expected_target_ids = None
+    if stage == "fit":
+        expected_target_ids = state.get("fit_target_ids")
+    elif stage in {"certification", "test"}:
+        expected_target_ids = state.get("fit_eligible_target_ids")
+    if isinstance(expected_target_ids, list):
+        expected_target_ids = [str(value) for value in expected_target_ids]
+        expected_targets = len(expected_target_ids)
+    else:
+        expected_target_ids = None
+        expected_targets = int(protocol["fresh_target_contract"]["n_initial_targets"])
     strict = validate_manifest(
         manifest_path,
         require_files=True,
@@ -76,13 +92,11 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
         min_contacts=20,
     )
     failures = [] if strict.get("ok") else list(strict.get("failures") or [])
-    state = protocol.get("current_execution_state")
-    if not isinstance(state, dict):
-        state = {}
+    if not state_ok:
         failures.append({"kind": "missing_current_execution_state"})
 
     manifest_sha256 = _sha256_file(manifest_path)
-    expected_manifest_sha256 = state.get("fit_manifest_sha256")
+    expected_manifest_sha256 = state.get(f"{stage}_manifest_sha256")
     if expected_manifest_sha256 != manifest_sha256:
         failures.append({
             "kind": "manifest_sha256_mismatch",
@@ -93,8 +107,6 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
     if protocol_digest != state.get("locked_scientific_protocol_sha256"):
         failures.append({"kind": "scientific_protocol_digest_mismatch"})
 
-    stage = str(manifest.get("w2b_stage") or "")
-    namespace = str(manifest.get("w2b_seed_namespace") or "")
     stage_spec = protocol.get("generation_stages", {}).get(stage)
     if not isinstance(stage_spec, dict):
         failures.append({"kind": "unknown_w2b_stage", "stage": stage})
@@ -113,6 +125,37 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
 
     defaults = manifest.get("defaults") if isinstance(manifest.get("defaults"), dict) else {}
     expected_records = int(stage_spec.get("records_per_target") or 0)
+    manifest_target_ids = [
+        str(target.get("id") or "")
+        for target in manifest.get("targets", [])
+        if isinstance(target, dict)
+    ]
+    if expected_target_ids is not None and manifest_target_ids != expected_target_ids:
+        failures.append({
+            "kind": "stage_target_ids_mismatch",
+            "stage": stage,
+            "expected": expected_target_ids,
+            "actual": manifest_target_ids,
+        })
+    expected_fit_rules = state.get("fit_frozen_rules")
+    if not isinstance(expected_fit_rules, dict):
+        expected_fit_rules = {}
+    if stage in {"certification", "test"}:
+        for manifest_field, state_field in (
+            ("source_fit_manifest_sha256", "fit_manifest_sha256"),
+            ("source_fit_report_sha256", "fit_report_sha256"),
+            ("source_fit_fixture_sha256", "fit_fixture_sha256"),
+        ):
+            actual = manifest.get(manifest_field)
+            expected = state.get(state_field)
+            if not expected or actual != expected:
+                failures.append({
+                    "kind": "fit_evidence_sha256_mismatch",
+                    "field": manifest_field,
+                    "expected": expected,
+                    "actual": actual,
+                })
+    output_root = manifest.get("output_root")
     locked_targets = []
     for target in manifest.get("targets", []):
         if not isinstance(target, dict):
@@ -138,6 +181,42 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
                 "expected": expected_seed,
                 "actual": seed,
             })
+        frozen_fit_rule = target.get("frozen_fit_rule")
+        if stage in {"certification", "test"}:
+            expected_rule = expected_fit_rules.get(target_id)
+            if not isinstance(expected_rule, dict) or frozen_fit_rule != expected_rule:
+                failures.append({
+                    "kind": "frozen_fit_rule_mismatch",
+                    "target_id": target_id,
+                    "expected": expected_rule,
+                    "actual": frozen_fit_rule,
+                })
+            expected_out_prefix = f"{output_root}/{target_id}" if isinstance(output_root, str) else None
+            expected_candidates = (
+                f"{expected_out_prefix}/candidates_proteinmpnn_complex.jsonl"
+                if expected_out_prefix else None
+            )
+            expected_records_path = (
+                f"{expected_out_prefix}/records_boltz_complex.jsonl"
+                if expected_out_prefix else None
+            )
+            actual_outputs = {
+                "out_prefix": target.get("out_prefix"),
+                "candidates": target.get("candidates"),
+                "records": target.get("records"),
+            }
+            expected_outputs = {
+                "out_prefix": expected_out_prefix,
+                "candidates": expected_candidates,
+                "records": expected_records_path,
+            }
+            if not output_root or actual_outputs != expected_outputs:
+                failures.append({
+                    "kind": "stage_output_path_mismatch",
+                    "target_id": target_id,
+                    "expected": expected_outputs,
+                    "actual": actual_outputs,
+                })
         artifacts = {}
         for field in _ARTIFACT_FIELDS:
             value = target.get(field)
@@ -161,7 +240,7 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
                     "bytes": os.path.getsize(value),
                     "sha256": _sha256_file(value),
                 }
-        locked_targets.append({
+        locked_target = {
             "target_id": target_id,
             "stage": target_stage,
             "seed_namespace": target_namespace,
@@ -169,7 +248,10 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
             "records_planned": num_seq,
             "id_prefix": str(target.get("id_prefix") or f"{target_namespace}-{target_id}"),
             "artifacts": artifacts,
-        })
+        }
+        if stage in {"certification", "test"}:
+            locked_target["frozen_fit_rule"] = frozen_fit_rule
+        locked_targets.append(locked_target)
 
     binding = {
         "protocol_file_sha256": _sha256_file(protocol_path),
@@ -181,6 +263,12 @@ def build_lock(protocol_path: str, manifest_path: str) -> Dict[str, Any]:
         "records_per_target": expected_records,
         "targets": locked_targets,
     }
+    if stage in {"certification", "test"}:
+        binding["fit_evidence"] = {
+            "fit_manifest_sha256": manifest.get("source_fit_manifest_sha256"),
+            "fit_report_sha256": manifest.get("source_fit_report_sha256"),
+            "fit_fixture_sha256": manifest.get("source_fit_fixture_sha256"),
+        }
     return {
         "artifact": "m6d_w2b_stage_input_lock",
         "version": 1,

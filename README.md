@@ -23,8 +23,10 @@
 > are fit-eligible. `1F51_AE` freezes the signal-bearing `selective_pae` rule at tau 5.7365 with AUROC
 > 0.8421; four targets use `trust_all`, and three refuse. This is fit selection, not certification or W2b
 > support. See [docs/M6D_W2B_FIT_COMPLETION.md](docs/M6D_W2B_FIT_COMPLETION.md) and the locked protocol in
-> [docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md](docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md). Certification-only
-> compute for the five eligible targets requires a fresh input lock and separate explicit approval.
+> [docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md](docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md). The certification-only
+> manifest, 35-artifact input lock, and H100 guard are now ready; local and Cayuga dry-runs passed with
+> Slurm `0 -> 0`. No certification job was submitted. Execution requires explicit approval of
+> [docs/M6D_W2B_CERTIFICATION_APPROVAL.md](docs/M6D_W2B_CERTIFICATION_APPROVAL.md).
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —

@@ -43,6 +43,8 @@ class M6DW2SubmitJournalTests(unittest.TestCase):
         self.assertIn("W2B_STAGE", text)
         self.assertIn("W2B_SEED_NAMESPACE", text)
         self.assertIn("ID_PREFIX", text)
+        self.assertIn("BIO_SFM_PREDICT_SBATCH_PARTITION", text)
+        self.assertIn("submit_predictor_job", text)
 
     def test_partial_stage_is_immediately_recoverable(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -187,12 +189,15 @@ class M6DW2SubmitJournalTests(unittest.TestCase):
                 }, handle)
 
             counter = os.path.join(directory, "sbatch-count")
+            args_log = os.path.join(directory, "sbatch-args.log")
             mock_sbatch = os.path.join(directory, "sbatch")
             with open(mock_sbatch, "w") as handle:
                 handle.write(
                     "#!/usr/bin/env bash\n"
                     "set -euo pipefail\n"
                     f"COUNT_FILE={counter!r}\n"
+                    f"ARGS_FILE={args_log!r}\n"
+                    "printf '%s\\n' \"$*\" >> \"$ARGS_FILE\"\n"
                     "count=0\n"
                     "if [ -s \"$COUNT_FILE\" ]; then count=$(cat \"$COUNT_FILE\"); fi\n"
                     "count=$((count + 1))\n"
@@ -211,6 +216,9 @@ class M6DW2SubmitJournalTests(unittest.TestCase):
                 "SUBMIT_SUMMARY": summary,
                 "WORKSTREAM": "w2",
                 "BIO_SFM_SUBMIT_DRY_RUN": "0",
+                "BIO_SFM_PREDICT_SBATCH_PARTITION": "preempt_gpu",
+                "BIO_SFM_PREDICT_SBATCH_QOS": "low",
+                "BIO_SFM_PREDICT_SBATCH_GRES": "gpu:h100:1",
                 "PYTHONPATH": os.pathsep.join([
                     os.path.join(repo_root, "src"),
                     os.path.join(repo_root, "..", "bio-sfm-trust-core", "src"),
@@ -223,6 +231,8 @@ class M6DW2SubmitJournalTests(unittest.TestCase):
             final_events = load_events(receipt)
             with open(summary) as handle:
                 final_summary = json.load(handle)
+            with open(args_log) as handle:
+                submitted_args = handle.read().splitlines()
 
         self.assertNotEqual(first.returncode, 0)
         self.assertEqual(len(first_events), 1)
@@ -236,6 +246,13 @@ class M6DW2SubmitJournalTests(unittest.TestCase):
         self.assertEqual(len(t0_gen_events), 1)
         self.assertEqual(final_summary["status"], "submitted_on_cayuga")
         self.assertEqual(final_summary["n_targets"], 4)
+        predictor_calls = [line for line in submitted_args if "run_predict_boltz_complex.sbatch" in line]
+        generator_calls = [line for line in submitted_args if "run_generate_proteinmpnn_complex.sbatch" in line]
+        h100_flags = "--partition=preempt_gpu --qos=low --gres=gpu:h100:1"
+        self.assertTrue(predictor_calls)
+        self.assertTrue(generator_calls)
+        self.assertTrue(all(h100_flags in line for line in predictor_calls))
+        self.assertTrue(all(h100_flags not in line for line in generator_calls))
 
 
 if __name__ == "__main__":

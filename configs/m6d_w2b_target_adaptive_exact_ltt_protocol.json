@@ -1,7 +1,7 @@
 {
   "artifact": "m6d_w2b_target_adaptive_exact_ltt_protocol",
   "version": 1,
-  "status": "fit_complete_5_eligible_awaiting_explicit_certification_approval",
+  "status": "certification_packet_ready_awaiting_explicit_execution_approval",
   "objective": "Test whether a target-adaptive external trust gate can independently certify controlled false-accept routing on multiple fresh protein-complex targets.",
   "claim_scope": {
     "supported_if_successful": "target-adaptive multi-target gate viability",
@@ -195,7 +195,34 @@
       "1FLT_WV": {"mode": "trust_all", "tau": null},
       "1FVC_DC": {"mode": "trust_all", "tau": null}
     },
+    "certification_manifest": "configs/m6d_w2b_target_adaptive_certification_targets.json",
+    "certification_manifest_sha256": "502b2d91e29c9f9c1199e79b075051c83b0a634277283a6c97ee4b6d83ae8d99",
+    "certification_target_ids": [
+      "1F51_AE",
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "certification_records_per_target": 60,
+    "certification_records_total": 300,
+    "certification_seed_namespace": "w2b-cert-v1",
+    "certification_proteinmpnn_seed": 1037,
+    "certification_input_lock": "configs/m6d_w2b_target_adaptive_certification_input_lock.json",
+    "certification_input_lock_audit_ok": true,
+    "certification_guarded_wrapper": "hpc/run_w2b_certification_guarded.sh",
+    "certification_hardware": {
+      "cluster": "cayuga",
+      "boltz_partition": "preempt_gpu",
+      "boltz_qos": "low",
+      "boltz_gres": "gpu:h100:1",
+      "maximum_h100_gpu_hours": 30,
+      "proteinmpnn_jobs": 5,
+      "boltz_jobs": 5,
+      "total_slurm_jobs": 10
+    },
     "certification_submission_allowed": false,
+    "certification_submission_status": "not_submitted_awaiting_explicit_execution_approval",
     "test_submission_allowed": false
   },
   "completed_unlock_conditions": [
@@ -209,11 +236,13 @@
     "the fit input lock binds all eight targets and their source, prepared, FASTA, MSA, and report byte hashes",
     "the guarded fit wrapper and approval packet bound the submitted protocol file, manifest, and fit input lock and passed local and Cayuga dry-runs",
     "explicit operator approval was recorded before the fit-only submission",
-    "all eight fit targets completed with 480 unique H100-generated records, strict provenance QC passed, and the locked evaluator froze five eligible target rules"
+    "all eight fit targets completed with 480 unique H100-generated records, strict provenance QC passed, and the locked evaluator froze five eligible target rules",
+    "the certification-only manifest binds the five eligible target IDs, frozen fit rules, fit evidence hashes, seed 1037, namespace w2b-cert-v1, and disjoint output paths",
+    "the certification input lock and guarded H100 entrypoint pass strict local validation and create no receipt during dry-run"
   ],
   "remaining_unlock_conditions": [
-    "build and validate a certification-only manifest and input lock for the five fit-eligible targets using the frozen fit rules, certification namespace, and ProteinMPNN seed 1037",
-    "record separate explicit operator approval for certification-only compute; test-stage compute remains separately unauthorized"
+    "record separate explicit operator approval for the exact certification-only packet after local and Cayuga dry-run evidence is reviewed; test-stage compute remains separately unauthorized",
+    "after certification jobs complete, sync and validate all 300 fresh records before running the locked evaluator; do not generate test rows without another approval"
   ],
   "post_hoc_changes_forbidden": [
     "changing signal orientation",

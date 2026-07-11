@@ -16,6 +16,15 @@ SUBMIT_SUMMARY_ARTIFACT="${SUBMIT_SUMMARY_ARTIFACT:-${WORKSTREAM}_submit_receipt
 PYTHON_BIN="${BIO_SFM_PYTHON:-${SUBMIT_PYTHON:-python3}}"
 SBATCH_BIN="${SBATCH_BIN:-sbatch}"
 HISTORICAL_REGISTRY="${HISTORICAL_REGISTRY:-configs/m6d_w2_historical_target_registry.json}"
+PREDICT_SBATCH_PARTITION="${BIO_SFM_PREDICT_SBATCH_PARTITION:-}"
+PREDICT_SBATCH_QOS="${BIO_SFM_PREDICT_SBATCH_QOS:-}"
+PREDICT_SBATCH_GRES="${BIO_SFM_PREDICT_SBATCH_GRES:-}"
+if [ -n "$PREDICT_SBATCH_PARTITION$PREDICT_SBATCH_QOS$PREDICT_SBATCH_GRES" ]; then
+  [ -n "$PREDICT_SBATCH_PARTITION" ] && [ -n "$PREDICT_SBATCH_QOS" ] && [ -n "$PREDICT_SBATCH_GRES" ] || {
+    echo "predictor Slurm resource override requires partition, QOS, and GRES together" >&2
+    exit 2
+  }
+fi
 
 BIO_SFM_TRUST_CORE_SRC="${BIO_SFM_TRUST_CORE_SRC:-${REPO_ROOT%/}/../bio-sfm-trust-core/src}"
 BIO_SFM_PYTHONPATH="${REPO_ROOT%/}/src"
@@ -68,6 +77,18 @@ require_job_id() {
   fi
 }
 
+submit_predictor_job() {
+  if [ -n "$PREDICT_SBATCH_PARTITION" ]; then
+    "$SBATCH_BIN" \
+      "--partition=$PREDICT_SBATCH_PARTITION" \
+      "--qos=$PREDICT_SBATCH_QOS" \
+      "--gres=$PREDICT_SBATCH_GRES" \
+      "$@"
+  else
+    "$SBATCH_BIN" "$@"
+  fi
+}
+
 journal_append() {
   local stage="$1" target_id="$2" gen_job="$3" pred_job="$4"
   local candidates="$5" records="$6" target_msa="$7" prepared_pdb="$8"
@@ -104,7 +125,7 @@ submit_pair() {
   test -s "$target_msa" || { echo "missing target MSA for ${target_id}: $target_msa" >&2; exit 2; }
   mkdir -p "$(dirname "$candidates")" "$(dirname "$records")"
   if [ "$DRY_RUN" = "1" ]; then
-    echo "dry-run ${target_id}: ProteinMPNN -> ${candidates}; Boltz -> ${records}"
+    echo "dry-run ${target_id}: ProteinMPNN -> ${candidates}; Boltz resources=${PREDICT_SBATCH_PARTITION:-wrapper-default}/${PREDICT_SBATCH_QOS:-wrapper-default}/${PREDICT_SBATCH_GRES:-wrapper-default} -> ${records}"
     return 0
   fi
 
@@ -134,7 +155,8 @@ submit_pair() {
   pred_job=$(PROJECT_ROOT="$REPO_ROOT" CANDIDATES="$candidates" BACKBONE="$prepared_pdb" \
     TARGET_CHAIN="$target_chain" BINDER_CHAIN="$binder_chain" COMPLEX_ID="$target_id" \
     TARGET_MSA="$target_msa" OUT="$records" \
-    "$SBATCH_BIN" --dependency="afterok:${gen_job}" --parsable hpc/run_predict_boltz_complex.sbatch)
+    submit_predictor_job --dependency="afterok:${gen_job}" --parsable \
+      hpc/run_predict_boltz_complex.sbatch)
   require_job_id "Boltz" "$target_id" "$pred_job"
   journal_append pair_submitted "$target_id" "$gen_job" "$pred_job" \
     "$candidates" "$records" "$target_msa" "$prepared_pdb"

@@ -89,5 +89,6 @@ The next evidence-bearing stage is certification only for the five fit-eligible 
 - the five frozen rules above, including `1F51_AE` tau 5.7365;
 - no test-stage generation or folding.
 
-A certification manifest, fresh input lock, guarded H100 command, and separate explicit operator approval
-are required before submission. Test-stage compute remains separately unauthorized.
+The certification manifest, fresh input lock, and guarded H100 command are now prepared and have passed
+local plus Cayuga dry-runs without submission. Exact scope is in `docs/M6D_W2B_CERTIFICATION_APPROVAL.md`;
+separate explicit execution approval is still required. Test-stage compute remains separately unauthorized.
