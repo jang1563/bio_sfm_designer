@@ -1,6 +1,7 @@
 """Static and refusal tests for the guarded W2b fit-stage entrypoint."""
 
 import hashlib
+import json
 import os
 import pathlib
 import re
@@ -11,6 +12,7 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "hpc" / "run_w2b_fit_guarded.sh"
 APPROVAL_PACKET = ROOT / "docs" / "M6D_W2B_FIT_APPROVAL.md"
+OPERATOR_APPROVAL = ROOT / "results" / "m6d_w2b_target_adaptive_fit_operator_approval.json"
 
 
 def _sha256(path):
@@ -48,7 +50,9 @@ class W2BFitGuardedTests(unittest.TestCase):
 
     def test_approval_packet_binds_guard_and_scope(self):
         text = APPROVAL_PACKET.read_text()
-        self.assertIn(_sha256(WRAPPER), text)
+        approval = json.loads(OPERATOR_APPROVAL.read_text())
+        self.assertEqual(approval["approval_packet_sha256"], _sha256(APPROVAL_PACKET))
+        self.assertIn(approval["guarded_wrapper_sha256"], text)
         self.assertIn("approve-w2b-fit-stage-480", text)
         self.assertIn("480 total", text)
         self.assertIn("16 total", text)

@@ -1,7 +1,7 @@
 {
   "artifact": "m6d_w2b_target_adaptive_exact_ltt_protocol",
   "version": 1,
-  "status": "fit_input_lock_ready_awaiting_explicit_fit_approval_not_compute_authority",
+  "status": "fit_complete_5_eligible_awaiting_explicit_certification_approval",
   "objective": "Test whether a target-adaptive external trust gate can independently certify controlled false-accept routing on multiple fresh protein-complex targets.",
   "claim_scope": {
     "supported_if_successful": "target-adaptive multi-target gate viability",
@@ -141,7 +141,62 @@
     "fit_input_lock": "configs/m6d_w2b_target_adaptive_fit_input_lock.json",
     "fit_input_lock_audit_ok": true,
     "fit_guarded_wrapper": "hpc/run_w2b_fit_guarded.sh",
-    "fit_submission_allowed": false
+    "fit_submission_allowed": false,
+    "fit_submission_status": "completed_do_not_resubmit",
+    "fit_operator_approval_recorded": true,
+    "fit_submission_receipt": "results/m6d_w2b_target_adaptive_fit_submit_receipt.jsonl",
+    "fit_submission_receipt_sha256": "142f1c9d9bfa12cf9ec831967368926374ef478266654313e4b8b5537beef6a0",
+    "fit_hardware_migration": {
+      "approved": true,
+      "from": "cayuga_scu_gpu_a40_normal",
+      "to": "cayuga_preempt_gpu_h100_low",
+      "receipt": "results/m6d_w2b_target_adaptive_fit_h100_migration_receipt.jsonl",
+      "receipt_sha256": "53a5c0e51d2d29e4c0bff423faf36649b0c6d6777ba23ca2091c9ed15165321f",
+      "summary": "results/m6d_w2b_target_adaptive_fit_h100_migration_summary.json",
+      "summary_sha256": "cb75bf8ba4aca2d3b8e38eb13b7110d53c16771dc5622befc677736aeb8a6659"
+    },
+    "fit_boltz_job_ids": [
+      "3079709",
+      "3079711",
+      "3079713",
+      "3079715",
+      "3079717",
+      "3079719",
+      "3079721",
+      "3079723"
+    ],
+    "fit_records_total": 480,
+    "fit_records_qc": "results/m6d_w2b_target_adaptive_fit_fixture_qc.json",
+    "fit_records_qc_sha256": "8f7b86e0bc7dcd63b9bbb87b722e541afff464b1efdc0dc9e01433eabd32595d",
+    "fit_fixture": "tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl",
+    "fit_fixture_sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe",
+    "fit_report": "results/m6d_w2b_target_adaptive_fit_report.json",
+    "fit_report_sha256": "6aac81be46805ad983e770af49f15e38cac140d469e4541e40788a21129ef3c1",
+    "fit_output_manifest": "results/m6d_w2b_target_adaptive_fit_output_manifest.json",
+    "fit_output_manifest_sha256": "6f71eab1dc123d292e779763e2c03897d44a30a297245c39a942ba0000c271b9",
+    "fit_report_status": "w2b_fit_complete_awaiting_certification",
+    "fit_audit_ok": true,
+    "fit_eligible_target_ids": [
+      "1F51_AE",
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "fit_refused_target_ids": [
+      "1F66_AB",
+      "1FJG_FR",
+      "1FXK_CA"
+    ],
+    "fit_frozen_rules": {
+      "1F51_AE": {"mode": "selective_pae", "tau": 5.7365},
+      "1F93_DC": {"mode": "trust_all", "tau": null},
+      "1FDH_GA": {"mode": "trust_all", "tau": null},
+      "1FLT_WV": {"mode": "trust_all", "tau": null},
+      "1FVC_DC": {"mode": "trust_all", "tau": null}
+    },
+    "certification_submission_allowed": false,
+    "test_submission_allowed": false
   },
   "completed_unlock_conditions": [
     "exact one-sided binomial bound is implemented and unit-tested in trust-core and designer compatibility code",
@@ -151,11 +206,14 @@
     "all eight target MSAs and reports are synced and pass strict local and Cayuga manifest validation",
     "fit, certification, and test stage namespaces plus numeric ProteinMPNN seeds are locked before fit labels",
     "ProteinMPNN-to-Boltz records preserve W2b stage, seed namespace, candidate ID namespace, and binder sequence provenance",
-    "the fit input lock binds all eight targets and their source, prepared, FASTA, MSA, and report byte hashes"
+    "the fit input lock binds all eight targets and their source, prepared, FASTA, MSA, and report byte hashes",
+    "the guarded fit wrapper and approval packet bound the submitted protocol file, manifest, and fit input lock and passed local and Cayuga dry-runs",
+    "explicit operator approval was recorded before the fit-only submission",
+    "all eight fit targets completed with 480 unique H100-generated records, strict provenance QC passed, and the locked evaluator froze five eligible target rules"
   ],
   "remaining_unlock_conditions": [
-    "the guarded fit wrapper and approval packet bind the final protocol file SHA, manifest SHA, and fit input-lock digest and pass local and Cayuga dry-runs",
-    "explicit operator approval is recorded after all prior conditions pass"
+    "build and validate a certification-only manifest and input lock for the five fit-eligible targets using the frozen fit rules, certification namespace, and ProteinMPNN seed 1037",
+    "record separate explicit operator approval for certification-only compute; test-stage compute remains separately unauthorized"
   ],
   "post_hoc_changes_forbidden": [
     "changing signal orientation",

@@ -1,0 +1,25 @@
+{
+  "artifact": "m6d_w2b_fit_operator_approval",
+  "status": "explicit_scope_approved",
+  "recorded_at": "2026-07-11T20:24:49+09:00",
+  "operator_message": "제안대로 진행하자",
+  "interpreted_scope": {
+    "stage": "fit",
+    "n_targets": 8,
+    "records_per_target": 60,
+    "total_records": 480,
+    "proteinmpnn_jobs": 8,
+    "boltz_jobs": 8,
+    "total_slurm_jobs": 16,
+    "maximum_a40_gpu_hours": 48,
+    "certification_authorized": false,
+    "test_authorized": false
+  },
+  "approval_packet": "docs/M6D_W2B_FIT_APPROVAL.md",
+  "approval_packet_sha256": "6d5a50cfedcd3c9c54c3033fca639870130be395e5733d1f317a54f474d852fe",
+  "protocol_sha256": "def9cfa9989e91c83923d798b9ae1db07dd7e0cd9aea73424513e33c32a60ed5",
+  "manifest_sha256": "1459d29181ff0d2c1b5fafbf57b4e3f11e1cd872749f17fe951ece96e550ef14",
+  "input_lock_sha256": "938003752b3ab8fb62dcd5114678738b0373ec399dafb64fab9c6fe389d94ec4",
+  "guarded_wrapper_sha256": "980aac2a6cd20ead41fadd873858a06f7c51c3090acefb09988a3efa0a0dd7d9",
+  "git_commit": "876844f46a1c0539c068c08493fc22bcd3be777f"
+}

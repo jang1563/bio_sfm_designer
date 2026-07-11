@@ -19,6 +19,11 @@ all status artifacts, tests, and local/Cayuga handoff anchors honest and reprodu
 
 ## Current Resume Anchor
 
+Current W2b science-result anchor: `docs/M6D_W2B_FIT_COMPLETION.md`. The eight-target fit stage is complete
+with 480 strict-QC records, five fit-eligible targets, and no certificate. Resume by preparing the
+certification-only manifest and approval packet for those five frozen rules; do not submit certification or
+test compute without a new explicit approval.
+
 Current durable anchor: `docs/M6D_GOAL_MODE_ANCHOR.md`.
 
 Current machine-readable decision artifact:

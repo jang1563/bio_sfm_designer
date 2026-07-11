@@ -8,6 +8,9 @@ import unittest
 from bio_sfm_designer.experiments.m6d_w2b_target_adaptive_report import evaluate, run
 
 
+_ROOT = os.path.dirname(os.path.dirname(__file__))
+
+
 def _protocol():
     return {
         "fresh_target_contract": {
@@ -80,6 +83,26 @@ def _stage(stage, *, include_refused=True):
 
 
 class W2BTargetAdaptiveReportTests(unittest.TestCase):
+    def test_committed_fit_fixture_replays_frozen_rules(self):
+        report = run(
+            os.path.join(_ROOT, "configs", "m6d_w2b_target_adaptive_exact_ltt_protocol.json"),
+            [os.path.join(_ROOT, "tests", "fixtures", "m6d_w2b_target_adaptive_fit_records.jsonl")],
+        )
+
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(report["status"], "w2b_fit_complete_awaiting_certification")
+        self.assertEqual(
+            report["fit_eligible_targets"],
+            ["1F51_AE", "1F93_DC", "1FDH_GA", "1FLT_WV", "1FVC_DC"],
+        )
+        self.assertEqual(report["fit_refused_targets"], ["1F66_AB", "1FJG_FR", "1FXK_CA"])
+        fit = {row["target_id"]: row["fit"] for row in report["targets"]}
+        self.assertEqual(fit["1F51_AE"]["mode"], "selective_pae")
+        self.assertEqual(fit["1F51_AE"]["tau"], 5.7365)
+        self.assertEqual(fit["1F51_AE"]["fit_auroc_pae"], 0.8421052631578947)
+        self.assertEqual(fit["1F93_DC"]["mode"], "trust_all")
+        self.assertEqual(fit["1F66_AB"]["mode"], "refuse")
+
     def test_predeclared_modes_and_exact_certification_support_w2b_only(self):
         report = evaluate(
             _protocol(),

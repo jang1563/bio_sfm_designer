@@ -80,16 +80,19 @@ transient ColabFold API failures were recovered serially. Strict sync-back also 
 `1F93_DC` MSE handling defect before downstream compute; details are in
 `docs/M6D_W2B_TARGET_MSA_COMPLETION.md`.
 
-The fit execution bridge now propagates `w2b_stage`, `w2b_seed_namespace`, stage-specific candidate IDs,
-and binder sequences through ProteinMPNN and Boltz records. The evaluator rejects missing metadata, duplicate
-candidate IDs, and sequence overlap across fit/certification/test stages. Numeric ProteinMPNN seeds are frozen
-before fit labels as fit `37`, certification `1037`, and test `2037`.
+The fit execution bridge propagates `w2b_stage`, `w2b_seed_namespace`, stage-specific candidate IDs, and
+binder sequences through ProteinMPNN and Boltz records. The evaluator rejects missing or incorrect Boltz
+provenance, chain IDs, L-RMSD thresholds, locked target identities, candidate-ID namespaces, duplicate IDs,
+and sequence overlap across fit/certification/test stages. Numeric ProteinMPNN seeds were frozen before fit
+labels as fit `37`, certification `1037`, and test `2037`.
 
 `configs/m6d_w2b_target_adaptive_fit_input_lock.json` binds 56 target artifacts. Scientific PDB, FASTA, and
-MSA inputs use byte SHA-256; JSON reports use portable canonical semantic hashes. Local and Cayuga fit-stage
-dry-runs each enumerated eight ProteinMPNN-to-Boltz pairs, wrote no receipts, and left Cayuga Slurm unchanged
-at `0 -> 0`. The fit-only packet is `docs/M6D_W2B_FIT_APPROVAL.md`. ProteinMPNN/Boltz fit compute remains
-unauthorized until the exact scope in that packet receives explicit approval.
+MSA inputs use byte SHA-256; JSON reports use portable canonical semantic hashes. The fit-only scope was
+explicitly approved and completed with 480 H100 records after an approved all-job hardware migration.
+Strict QC passes with zero failures. The locked evaluator selects five eligible targets: four `trust_all`
+and `1F51_AE` as `selective_pae` with tau 5.7365; the other three targets refuse. The result is
+`w2b_fit_complete_awaiting_certification`, not a certificate. Full details and CPU-replay artifacts are in
+`docs/M6D_W2B_FIT_COMPLETION.md`. Certification and test compute remain unauthorized.
 
 ## Claim Boundary
 

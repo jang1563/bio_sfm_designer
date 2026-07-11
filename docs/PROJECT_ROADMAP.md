@@ -7,11 +7,11 @@
 > Its target-wise signal is heterogeneous, and the declared split is structurally underpowered:
 > 33 certification rows give a best-case Hoeffding UCB of 0.2669; at least 176 total records per target
 > are needed merely to make zero-error alpha=0.2 certification possible. This is a post-hoc diagnosis,
-> not a recertification. W2 therefore remains negative. The separate W2b target-adaptive exact-LTT
-> protocol is implemented and locally tested. Label-blind discovery selected eight fresh targets that pass
-> historical/source exclusion, 8/8 sequence clustering, and schema preflight. Strict file readiness is
-> blocked only on eight target MSAs and eight reports; the manifest-bound MSA plan is emitted but not
-> submitted. ProteinMPNN/Boltz remains blocked. See
+> not a recertification. W2 therefore remains negative. The separate W2b target-adaptive exact-LTT fit
+> stage is now complete on eight fresh targets with 480 H100 records and strict QC failures=0. Five targets
+> are fit-eligible: `1F51_AE` freezes a selective pAE rule at tau 5.7365 with AUROC 0.8421, while four use
+> `trust_all`; three targets refuse. This is `w2b_fit_complete_awaiting_certification`, not W2b support.
+> Certification-only compute for the five eligible targets is the next approval-gated experiment. See
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md`.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
@@ -36,7 +36,12 @@ The project succeeds when a new protein-design regime can be added with:
 
 ## Current Anchor
 
-M6c is the live frontier. The complex/binder regime has the first positive
+2026-07-11 W2b fit update: the current evidence frontier is the independently generated eight-target fit
+panel summarized in `docs/M6D_W2B_FIT_COMPLETION.md`. The panel preserves the negative universal-W2 result
+while identifying one target-specific pAE branch worth exact certification. No certification or test rows
+have been generated.
+
+M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
 
 - target: barnase-barstar, 1BRS target chain A / binder chain D, with the known RCSB chain-D D64-D65

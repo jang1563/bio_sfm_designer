@@ -15,22 +15,18 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > 100-record split could not attain alpha=0.2 under Hoeffding plus Bonferroni even with zero errors:
 > certification n=33 gives UCB=0.2669, and the minimum best-case total is 176 records per target. This
 > diagnosis cannot recertify the panel. W2 remains negative. The separate W2b target-adaptive exact-LTT
-> protocol is now implemented in `configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json` and
-> `m6d_w2b_target_adaptive_report.py`, with 857 designer tests passing after the target-input integrity
-> repair. Label-blind
-> discovery selected eight new targets (`1FXK_CA`, `1F93_DC`, `1F66_AB`, `1FJG_FR`, `1FDH_GA`,
-> `1FLT_WV`, `1F51_AE`, `1FVC_DC`); historical overlap is zero, sequence diversity is 8/8 clusters,
-> and schema preflight passes. Target-MSA input preparation is now complete: the eight approved initial jobs
-> produced six first-attempt completions and two transient ColabFold API failures, repaired serially. Strict
-> sync-back then caught a `1F93_DC` 98-aa/100-aa mismatch caused by modified-residue `HETATM` records being
-> validated but dropped from the prepared PDB. The preparation and ProteinMPNN strip paths now normalize
-> supported modified amino acids, the corrected `1F93_DC` MSA was regenerated, and strict local and Cayuga
-> validation passes 8/8 with zero failures. See `docs/M6D_W2B_TARGET_MSA_COMPLETION.md`. ProteinMPNN/Boltz
-> fit-stage execution remains unauthorized. A portable 56-artifact input lock now binds all eight targets;
-> stage/seed metadata, stage-specific candidate IDs, and binder sequences propagate through the full record
-> bridge; local and Cayuga fit dry-runs each enumerate eight job pairs with no receipt and Slurm `0 -> 0`.
-> The no-submit packet `docs/M6D_W2B_FIT_APPROVAL.md` limits the next scope to fit only: 480 records,
-> 16 Slurm jobs, and at most 48 A40 GPU-hours. Ordinary continuation language is not approval. Start with
+> protocol is implemented in `configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json` and
+> `m6d_w2b_target_adaptive_report.py`. Label-blind discovery selected eight new, source-diverse,
+> sequence-diverse targets, and target-MSA preparation plus the 56-artifact fit input lock passed strict
+> local and Cayuga validation. The explicitly approved fit-only stage is now complete: 480 unique
+> ProteinMPNN candidates and 480 Boltz records, strict provenance QC failures=0. Before any Boltz result
+> existed, all eight pending jobs were explicitly approved for migration from A40 to Cayuga H100; the same
+> job IDs completed on `g0004` in 3:20 to 4:54 each. The locked fit report is
+> `w2b_fit_complete_awaiting_certification`: `1F51_AE` freezes `selective_pae` at tau 5.7365 with AUROC
+> 0.8421, `1F93_DC`, `1FDH_GA`, `1FLT_WV`, and `1FVC_DC` are also eligible under `trust_all`, and
+> `1F66_AB`, `1FJG_FR`, and `1FXK_CA` refuse. This is not certification or W2b support. The replay fixture,
+> hashes, exact-bound bottleneck, and next approval boundary are in `docs/M6D_W2B_FIT_COMPLETION.md`.
+> Certification and test compute remain unauthorized. Start with
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md` before using the historical narrative below.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

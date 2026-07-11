@@ -1,0 +1,96 @@
+{
+  "artifact": "m6d_w2b_target_adaptive_fit_output_manifest",
+  "candidates_total": 480,
+  "claim_boundary": "Fit selects and freezes target modes only. No target is certified until fresh certification data pass the exact bound.",
+  "fit_report": "results/m6d_w2b_target_adaptive_fit_report.json",
+  "fit_report_sha256": "6aac81be46805ad983e770af49f15e38cac140d469e4541e40788a21129ef3c1",
+  "fixture": "tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl",
+  "fixture_qc": "results/m6d_w2b_target_adaptive_fit_fixture_qc.json",
+  "fixture_qc_sha256": "8f7b86e0bc7dcd63b9bbb87b722e541afff464b1efdc0dc9e01433eabd32595d",
+  "fixture_records": 480,
+  "fixture_sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe",
+  "migration_receipt": "results/m6d_w2b_target_adaptive_fit_h100_migration_receipt.jsonl",
+  "migration_receipt_sha256": "53a5c0e51d2d29e4c0bff423faf36649b0c6d6777ba23ca2091c9ed15165321f",
+  "migration_summary": "results/m6d_w2b_target_adaptive_fit_h100_migration_summary.json",
+  "migration_summary_sha256": "cb75bf8ba4aca2d3b8e38eb13b7110d53c16771dc5622befc677736aeb8a6659",
+  "n_targets": 8,
+  "records_total": 480,
+  "scientific_protocol_sha256": "19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b",
+  "status": "fit_complete_480_records_qc_passed_awaiting_certification_approval",
+  "submission_receipt": "results/m6d_w2b_target_adaptive_fit_submit_receipt.jsonl",
+  "submission_receipt_sha256": "142f1c9d9bfa12cf9ec831967368926374ef478266654313e4b8b5537beef6a0",
+  "targets": [
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1FXK_CA/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "f9e3475d14571c3e8a614d21159eb10ae667a396e8a5f227c12dfad7fcaa66a8",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FXK_CA/records_boltz_complex.jsonl",
+      "records_sha256": "cbbb49e9e1236d5c90352aaa262ee56dfb8c5a3474479dcfdb3b97af3fc594d3",
+      "target_id": "1FXK_CA"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1F93_DC/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "e1a8389d32b0350df3717efd0aedc3c27ed44c4cefa545508397d53b6edf9c76",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1F93_DC/records_boltz_complex.jsonl",
+      "records_sha256": "65cdad39fd4a1e91656f64b62d641a870ad7d87cdc4e83e81a9355871f741bb0",
+      "target_id": "1F93_DC"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1F66_AB/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "c5ed825e267f42e9f7deafe725f112cfd448a50542740b5fd26af653a01daf34",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1F66_AB/records_boltz_complex.jsonl",
+      "records_sha256": "c15a0ce44daa3913cdb19d7b87131d44638ca4f04e7a5be903e35bb9cda7b270",
+      "target_id": "1F66_AB"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1FJG_FR/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "8db7d71e0da3af9b0532560dcfb2d613076dc20decf8750815a06434836c6d05",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FJG_FR/records_boltz_complex.jsonl",
+      "records_sha256": "fdccfb5ed7e383d0b289a7ae8bcbb79fc11502e8932c42618822ad34af208c99",
+      "target_id": "1FJG_FR"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1FDH_GA/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "ce139eeff43f9c31904ae445c049a14384c1d61c33ec31a4a045d4d320415a37",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FDH_GA/records_boltz_complex.jsonl",
+      "records_sha256": "78ce1ea455b5c12da9bf565b6afb681419403537128e7291c836a99b57f97255",
+      "target_id": "1FDH_GA"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1FLT_WV/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "49ed88554e24d715d3ec221198c103900bb0af208d8861b79027ed49ab0b3eab",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FLT_WV/records_boltz_complex.jsonl",
+      "records_sha256": "604e6d13e8f303e7a947cc84cf1ea970283ee6fc58b998dc4b9d74b38ad62fa0",
+      "target_id": "1FLT_WV"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1F51_AE/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "8614df288a252e331e736d213e5df8c305358bcf9bb9bf4b3953e4cd524138a1",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1F51_AE/records_boltz_complex.jsonl",
+      "records_sha256": "7a5b36328ebe6f4c890a8c303f5dad3100ef384d05509e362ac4efb8530d09f8",
+      "target_id": "1F51_AE"
+    },
+    {
+      "candidate_count": 60,
+      "candidates": "hpc_outputs/m6d_w2b_target_adaptive_records/1FVC_DC/candidates_proteinmpnn_complex.jsonl",
+      "candidates_sha256": "cd00c0f0c9fbc689dde72587c9506f3b44f10eb00d0b4ccf1d86f70f2eef5cc7",
+      "record_count": 60,
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FVC_DC/records_boltz_complex.jsonl",
+      "records_sha256": "ae0c86732650d6d573266a64358fd06b1953116cf3964351febbcfac1ffdd90d",
+      "target_id": "1FVC_DC"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "artifact": "m6d_w2b_fit_submit_receipt_summary",
+  "claim_boundary": "job submission is not W2 evidence",
+  "manifest": "configs/m6d_w2b_target_adaptive_fit_targets.json",
+  "n_receipt_events": 16,
+  "n_records": 8,
+  "n_targets": 8,
+  "next_action": "wait for jobs, sync records, then run completion and panel reports",
+  "receipt": "results/m6d_w2b_target_adaptive_fit_submit_receipt.jsonl",
+  "receipt_format": "append_only_stage_journal_v1",
+  "status": "submitted_on_cayuga",
+  "targets": [
+    {
+      "boltz_job_id": "3079721",
+      "proteinmpnn_job_id": "3079720",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1F51_AE/records_boltz_complex.jsonl",
+      "target_id": "1F51_AE"
+    },
+    {
+      "boltz_job_id": "3079713",
+      "proteinmpnn_job_id": "3079712",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1F66_AB/records_boltz_complex.jsonl",
+      "target_id": "1F66_AB"
+    },
+    {
+      "boltz_job_id": "3079711",
+      "proteinmpnn_job_id": "3079710",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1F93_DC/records_boltz_complex.jsonl",
+      "target_id": "1F93_DC"
+    },
+    {
+      "boltz_job_id": "3079717",
+      "proteinmpnn_job_id": "3079716",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FDH_GA/records_boltz_complex.jsonl",
+      "target_id": "1FDH_GA"
+    },
+    {
+      "boltz_job_id": "3079715",
+      "proteinmpnn_job_id": "3079714",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FJG_FR/records_boltz_complex.jsonl",
+      "target_id": "1FJG_FR"
+    },
+    {
+      "boltz_job_id": "3079719",
+      "proteinmpnn_job_id": "3079718",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FLT_WV/records_boltz_complex.jsonl",
+      "target_id": "1FLT_WV"
+    },
+    {
+      "boltz_job_id": "3079723",
+      "proteinmpnn_job_id": "3079722",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FVC_DC/records_boltz_complex.jsonl",
+      "target_id": "1FVC_DC"
+    },
+    {
+      "boltz_job_id": "3079709",
+      "proteinmpnn_job_id": "3079708",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_records/1FXK_CA/records_boltz_complex.jsonl",
+      "target_id": "1FXK_CA"
+    }
+  ],
+  "workstream": "m6d_w2b_target_adaptive_fit"
+}

@@ -18,13 +18,13 @@
 > shows that 100 records per target cannot attain the declared Hoeffding/Bonferroni bound: the current
 > 33-row certification split has a best-case UCB of 0.2669, while at least 176 total records per target
 > are required for zero-error feasibility. This does not recertify the panel. The next W2 protocol must
-> be predeclared before more compute. That next protocol is now frozen as the separate W2b target-adaptive
-> exact-LTT milestone in
-> [docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md](docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md); implementation is
-> complete. Label-blind discovery has selected eight entirely new targets with historical overlap 0 and
-> 8/8 sequence clusters. Schema preflight passes, while strict file preflight is blocked on the expected
-> eight target MSAs plus eight reports. The MSA plan is emitted but not submitted; ProteinMPNN/Boltz
-> compute remains unauthorized.
+> be predeclared before more compute. The separate W2b target-adaptive exact-LTT fit stage is now complete:
+> eight entirely new targets, 480 H100-generated records, and strict provenance QC failures=0. Five targets
+> are fit-eligible. `1F51_AE` freezes the signal-bearing `selective_pae` rule at tau 5.7365 with AUROC
+> 0.8421; four targets use `trust_all`, and three refuse. This is fit selection, not certification or W2b
+> support. See [docs/M6D_W2B_FIT_COMPLETION.md](docs/M6D_W2B_FIT_COMPLETION.md) and the locked protocol in
+> [docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md](docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md). Certification-only
+> compute for the five eligible targets requires a fresh input lock and separate explicit approval.
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
