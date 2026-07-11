@@ -13,7 +13,11 @@ import math
 import os
 from typing import Dict, Iterable, List, Optional, Tuple
 
-_MODIFIED_AA = {"MSE", "SEC", "PYL", "MLY", "CSO", "SEP", "TPO", "PTR", "HYP", "KCX", "LLP", "CME"}
+_MODIFIED_AA_TO_STANDARD = {
+    "MSE": "MET", "SEC": "CYS", "PYL": "LYS", "MLY": "LYS",
+    "CSO": "CYS", "SEP": "SER", "TPO": "THR", "PTR": "TYR",
+    "HYP": "PRO", "KCX": "LYS", "LLP": "LYS", "CME": "CYS",
+}
 ResidueCA = Tuple[Tuple[str, str, str], Tuple[float, float, float]]
 
 
@@ -24,7 +28,7 @@ def _is_atom(line: str) -> bool:
 def _is_supported_ca(line: str) -> bool:
     if not _is_atom(line) or line[12:16].strip() != "CA":
         return False
-    if line[:6].strip() == "HETATM" and line[17:20].strip() not in _MODIFIED_AA:
+    if line[:6].strip() == "HETATM" and line[17:20].strip() not in _MODIFIED_AA_TO_STANDARD:
         return False
     return line[16] in (" ", "A")
 
@@ -92,18 +96,43 @@ def _interface(cas_a: List[ResidueCA],
     return contacts, min_dist
 
 
-def _write_selected_atoms(src_pdb: str, dst_pdb: str, chains: Iterable[str]) -> int:
+def _normalized_protein_atom(line: str) -> Tuple[Optional[str], bool]:
+    record = line[:6].strip()
+    if record == "ATOM":
+        return line, False
+    if record != "HETATM":
+        return None, False
+    resname = line[17:20].strip()
+    standard = _MODIFIED_AA_TO_STANDARD.get(resname)
+    if standard is None:
+        return None, False
+    normalized = "ATOM  " + line[6:17] + f"{standard:>3}" + line[20:]
+    if resname == "MSE" and normalized[12:16].strip() == "SE":
+        normalized = normalized[:12] + f"{'SD':>4}" + normalized[16:]
+        if len(normalized) >= 78:
+            normalized = normalized[:76] + " S" + normalized[78:]
+    return normalized, True
+
+
+def _write_selected_atoms(src_pdb: str, dst_pdb: str,
+                          chains: Iterable[str]) -> Tuple[int, int]:
     keep = set(chains)
     n = 0
+    normalized_modified = 0
     with open(src_pdb) as fh, open(dst_pdb, "w") as out:
         for line in fh:
             if line.startswith("ENDMDL"):
                 break
-            if line.startswith("ATOM") and _chain(line) in keep:
-                out.write(line)
-                n += 1
+            if not _is_atom(line) or _chain(line) not in keep:
+                continue
+            selected, was_modified = _normalized_protein_atom(line)
+            if selected is None:
+                continue
+            out.write(selected)
+            n += 1
+            normalized_modified += int(was_modified)
         out.write("END\n")
-    return n
+    return n, normalized_modified
 
 
 def prepare_hetdimer(src_pdb: str, target_chain: str, binder_chain: str, out_pdb: str,
@@ -138,7 +167,9 @@ def prepare_hetdimer(src_pdb: str, target_chain: str, binder_chain: str, out_pdb
                          f"(cutoff={contact_cutoff}, min_ca_distance={md})")
 
     os.makedirs(os.path.dirname(os.path.abspath(out_pdb)) or ".", exist_ok=True)
-    atom_records = _write_selected_atoms(src_pdb, out_pdb, [target_chain, binder_chain])
+    atom_records, modified_records = _write_selected_atoms(
+        src_pdb, out_pdb, [target_chain, binder_chain]
+    )
     return {
         "source_pdb": os.path.abspath(src_pdb),
         "output_pdb": os.path.abspath(out_pdb),
@@ -153,6 +184,7 @@ def prepare_hetdimer(src_pdb: str, target_chain: str, binder_chain: str, out_pdb
         "ca_interface_contacts": contacts,
         "min_ca_distance": None if min_dist is None else round(min_dist, 3),
         "atom_records_written": atom_records,
+        "modified_atom_records_normalized": modified_records,
     }
 
 

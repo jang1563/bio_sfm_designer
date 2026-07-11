@@ -21,9 +21,9 @@ def _load():
     return mod
 
 
-def _ca(serial, chain, resseq, x, y, z):
-    return ("ATOM  %5d  CA  ALA %s%4d    %8.3f%8.3f%8.3f  1.00 50.00           C\n"
-            % (serial, chain, resseq, x, y, z))
+def _ca(serial, chain, resseq, x, y, z, *, record="ATOM  ", resname="ALA"):
+    return ("%s%5d  CA  %3s %s%4d    %8.3f%8.3f%8.3f  1.00 50.00           C\n"
+            % (record, serial, resname, chain, resseq, x, y, z))
 
 
 class PrepHetdimerTests(unittest.TestCase):
@@ -102,6 +102,30 @@ class PrepHetdimerTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "out_pdb must be different"):
                 mod.prepare_hetdimer(src, "A", "B", src, min_residues=2)
+
+    def test_preserves_modified_amino_acid_as_standard_atom_record(self):
+        mod = _load()
+        pdb_text = (
+            _ca(1, "A", 1, 0.0, 0.0, 0.0) +
+            _ca(2, "A", 2, 3.8, 0.0, 0.0, record="HETATM", resname="MSE") +
+            _ca(3, "B", 1, 0.0, 5.0, 0.0) +
+            _ca(4, "B", 2, 3.8, 5.0, 0.0)
+        )
+        with tempfile.TemporaryDirectory() as d:
+            src = os.path.join(d, "source.pdb")
+            out = os.path.join(d, "prepared.pdb")
+            with open(src, "w") as fh:
+                fh.write(pdb_text)
+
+            rep = mod.prepare_hetdimer(src, "A", "B", out, min_residues=2)
+
+            with open(out) as fh:
+                prepared = fh.read()
+            self.assertEqual(rep["target_ca_residues"], 2)
+            self.assertEqual(rep["modified_atom_records_normalized"], 1)
+            self.assertIn("ATOM      2  CA  MET A   2", prepared)
+            self.assertNotIn("HETATM", prepared)
+            self.assertNotIn("MSE", prepared)
 
 
 if __name__ == "__main__":

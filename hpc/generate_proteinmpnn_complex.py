@@ -34,6 +34,11 @@ _AA3_TO_1 = {
     "SEP": "S", "TPO": "T", "PTR": "Y", "HYP": "P", "KCX": "K",
     "LLP": "K", "CME": "C",
 }
+_MODIFIED_AA_TO_STANDARD = {
+    "MSE": "MET", "SEC": "CYS", "PYL": "LYS", "MLY": "LYS",
+    "CSO": "CYS", "SEP": "SER", "TPO": "THR", "PTR": "TYR",
+    "HYP": "PRO", "KCX": "LYS", "LLP": "LYS", "CME": "CYS",
+}
 
 
 def _safe_token(text):
@@ -69,15 +74,29 @@ def _strip_chains(src_pdb, chains, dst_pdb):
     keep = set(chains)
     with open(src_pdb) as fh, open(dst_pdb, "w") as out:
         for ln in fh:
-            if ln[:4] == "ATOM" and ln[21] in keep:
+            if ln[:6].strip() == "ATOM" and ln[21] in keep:
                 out.write(ln)
+                continue
+            if (ln[:6].strip() == "HETATM" and ln[21] in keep
+                    and ln[17:20].strip() in _MODIFIED_AA_TO_STANDARD):
+                resname = ln[17:20].strip()
+                standard = _MODIFIED_AA_TO_STANDARD[resname]
+                normalized = "ATOM  " + ln[6:17] + f"{standard:>3}" + ln[20:]
+                if resname == "MSE" and normalized[12:16].strip() == "SE":
+                    normalized = normalized[:12] + f"{'SD':>4}" + normalized[16:]
+                    if len(normalized) >= 78:
+                        normalized = normalized[:76] + " S" + normalized[78:]
+                out.write(normalized)
 
 
 def _target_ca_sequence(pdb, chain):
     residues, seen = [], set()
     with open(pdb) as fh:
         for ln in fh:
-            if not ln.startswith("ATOM"):
+            record = ln[:6].strip()
+            if record not in ("ATOM", "HETATM"):
+                continue
+            if record == "HETATM" and ln[17:20].strip() not in _MODIFIED_AA_TO_STANDARD:
                 continue
             if ln[21] != chain or ln[12:16].strip() != "CA" or ln[16] not in (" ", "A"):
                 continue

@@ -25,6 +25,23 @@ def _load():
 
 
 class GenerateComplexContractTests(unittest.TestCase):
+    def test_strip_chains_normalizes_modified_amino_acid(self):
+        mod = _load()
+        with tempfile.TemporaryDirectory() as d:
+            src = os.path.join(d, "source.pdb")
+            out = os.path.join(d, "stripped.pdb")
+            with open(src, "w") as fh:
+                fh.write("HETATM    1  CA  MSE A   1       0.000   0.000   0.000  1.00 0.00          SE\n")
+                fh.write("ATOM      2  CA  ALA C   1       0.000  10.000   0.000  1.00 0.00           C\n")
+
+            mod._strip_chains(src, ["A", "C"], out)
+
+            with open(out) as fh:
+                stripped = fh.read()
+            self.assertIn("ATOM      1  CA  MET A   1", stripped)
+            self.assertNotIn("HETATM", stripped)
+            self.assertEqual(mod._target_ca_sequence(out, "A"), "M")
+
     def test_complex_sbatch_wrapper_targets_the_complex_runner(self):
         wrapper = os.path.join(_HPC, "run_generate_proteinmpnn_complex.sbatch")
         with open(wrapper) as fh:

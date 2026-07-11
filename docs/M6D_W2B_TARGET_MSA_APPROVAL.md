@@ -1,9 +1,13 @@
 # W2b Target-MSA Approval Packet
 
-Status: `awaiting_explicit_target_msa_approval`.
+Status: `approved_scope_executed_target_msa_complete`.
 
 This packet authorizes nothing by itself. Ordinary continuation phrases such as `continue`, `go ahead`,
 or `resume` are not approval.
+
+The exact target-MSA-only scope was subsequently approved and executed. Final strict validation passes
+8/8 after two transient API retries and one corrected `1F93_DC` MSE-integrity rerun. See
+`docs/M6D_W2B_TARGET_MSA_COMPLETION.md`. This completed approval does not extend to downstream work.
 
 ## Scope
 
@@ -37,5 +41,5 @@ ssh <hpc-login-host> 'cd <repo-root> && \
   bash hpc/run_w2b_target_msa_guarded.sh'
 ```
 
-After completion, sync only the eight `.a3m` files, eight MSA reports, receipt, and receipt summary back
-locally. Then rerun strict manifest validation. Fit-stage ProteinMPNN/Boltz remains separately blocked.
+After completion, the eight `.a3m` files and reports were synced back and strict manifest validation passed
+locally and on Cayuga. Fit-stage ProteinMPNN/Boltz remains separately blocked.
