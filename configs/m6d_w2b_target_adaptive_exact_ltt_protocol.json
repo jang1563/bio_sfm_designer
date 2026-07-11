@@ -1,7 +1,7 @@
 {
   "artifact": "m6d_w2b_target_adaptive_exact_ltt_protocol",
   "version": 1,
-  "status": "fresh_fit_manifest_selected_awaiting_target_msa_not_compute_authority",
+  "status": "target_msa_dryrun_passed_awaiting_explicit_approval_not_compute_authority",
   "objective": "Test whether a target-adaptive external trust gate can independently certify controlled false-accept routing on multiple fresh protein-complex targets.",
   "claim_scope": {
     "supported_if_successful": "target-adaptive multi-target gate viability",
@@ -118,6 +118,16 @@
     "schema_ready_targets": 8,
     "strict_ready_targets": 0,
     "missing_target_msa_artifacts": 16,
+    "target_msa_plan": "results/m6d_w2b_target_adaptive_fit_target_msas.sh",
+    "target_msa_plan_sha256": "34f44d18ab784a321a948bcf1d0c3c0b4cb0c7e5d5bd3f77d3fa247a20a9ff5d",
+    "target_msa_guarded_wrapper": "hpc/run_w2b_target_msa_guarded.sh",
+    "target_msa_approval_env_var": "BIO_SFM_APPROVE_W2B_TARGET_MSA",
+    "target_msa_approval_token": "approve-w2b-target-msa-precompute",
+    "local_target_msa_dry_run_ok": true,
+    "remote_target_msa_dry_run_ok": true,
+    "remote_slurm_jobs_before": 0,
+    "remote_slurm_jobs_after": 0,
+    "target_msa_receipt_absent": true,
     "target_msa_plan_emitted_not_submitted": true
   },
   "completed_unlock_conditions": [
@@ -129,7 +139,7 @@
   "remaining_unlock_conditions": [
     "all eight target MSAs and MSA reports are generated, synced, and pass strict manifest checks",
     "fit, certification, and test seed namespaces are enforced as disjoint",
-    "a dry-run packet binds the manifest SHA and this protocol SHA",
+    "the guarded wrapper and approval packet bind the final protocol file SHA after this execution-state update",
     "explicit operator approval is recorded after all prior conditions pass"
   ],
   "post_hoc_changes_forbidden": [

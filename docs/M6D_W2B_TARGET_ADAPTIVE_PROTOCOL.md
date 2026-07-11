@@ -77,8 +77,12 @@ fields are intentionally excluded from this digest so recording progress cannot 
 
 Strict file preflight is intentionally blocked on exactly 16 missing files: one target MSA and one MSA
 report for each target. The manifest-bound plan is
-`results/m6d_w2b_target_adaptive_fit_target_msas.sh`; it has been emitted but not submitted. ProteinMPNN
-and Boltz fit-stage compute remains unauthorized.
+`results/m6d_w2b_target_adaptive_fit_target_msas.sh` with SHA-256
+`34f44d18ab784a321a948bcf1d0c3c0b4cb0c7e5d5bd3f77d3fa247a20a9ff5d`. Local and Cayuga dry-runs both
+passed with no receipt creation and no change in queued Slurm jobs (`0 -> 0`). The plan has not been
+submitted. A separate guarded wrapper requires
+`BIO_SFM_APPROVE_W2B_TARGET_MSA=approve-w2b-target-msa-precompute`; ordinary continuation language is not
+approval. ProteinMPNN and Boltz fit-stage compute remains unauthorized.
 
 ## Claim Boundary
 
