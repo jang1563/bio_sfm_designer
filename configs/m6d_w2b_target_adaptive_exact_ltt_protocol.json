@@ -1,7 +1,7 @@
 {
   "artifact": "m6d_w2b_target_adaptive_exact_ltt_protocol",
   "version": 1,
-  "status": "certification_packet_ready_awaiting_explicit_execution_approval",
+  "status": "w2b_certification_terminal_not_supported_test_compute_stopped",
   "objective": "Test whether a target-adaptive external trust gate can independently certify controlled false-accept routing on multiple fresh protein-complex targets.",
   "claim_scope": {
     "supported_if_successful": "target-adaptive multi-target gate viability",
@@ -222,8 +222,51 @@
       "total_slurm_jobs": 10
     },
     "certification_submission_allowed": false,
-    "certification_submission_status": "not_submitted_awaiting_explicit_execution_approval",
-    "test_submission_allowed": false
+    "certification_submission_status": "completed_do_not_resubmit",
+    "certification_operator_approval_recorded": true,
+    "certification_operator_approval": "results/m6d_w2b_target_adaptive_certification_operator_approval.json",
+    "certification_operator_approval_sha256": "a599b860970f32744237c88e8aab0ebc5b5d49a22628172352eb81b348181ae7",
+    "certification_submission_receipt": "results/m6d_w2b_target_adaptive_certification_submit_receipt.jsonl",
+    "certification_submission_receipt_sha256": "e3a365135dadbf4a9d561ed8112ce58921f6d349a5f7ce84191e20069c9476c6",
+    "certification_submission_summary": "results/m6d_w2b_target_adaptive_certification_submit_receipt_summary.json",
+    "certification_submission_summary_sha256": "355dc2bc64a6cf53bda021c83879c454fccd6984473c52e24204aeb5ff50843b",
+    "certification_proteinmpnn_job_ids": [
+      "3079899",
+      "3079901",
+      "3079903",
+      "3079905",
+      "3079907"
+    ],
+    "certification_boltz_job_ids": [
+      "3079900",
+      "3079902",
+      "3079904",
+      "3079906",
+      "3079908"
+    ],
+    "certification_fixture": "tests/fixtures/m6d_w2b_target_adaptive_certification_records.jsonl",
+    "certification_fixture_sha256": "4ebc9156f839eea1fefaaa274310cb28b73ffcfdb898b7b0a8dbc5d4aeebaa70",
+    "certification_fixture_qc": "results/m6d_w2b_target_adaptive_certification_fixture_qc.json",
+    "certification_fixture_qc_sha256": "ed846c877ce531516417942d2cc8c4945afd8052fd4fb1923ed7b5fbcd53bf37",
+    "certification_report": "results/m6d_w2b_target_adaptive_certification_report.json",
+    "certification_report_sha256": "87760fadffb46848bb027bc214710286ec5d057ec8ecb83030b0f361c2639d36",
+    "certification_report_status": "w2b_certification_terminal_not_supported",
+    "certification_audit_ok": true,
+    "certification_certified_target_ids": [
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "certification_selective_pae_certified_target_ids": [],
+    "certification_failed_target_ids": [
+      "1F51_AE"
+    ],
+    "certification_panel_gate_passed": false,
+    "certification_terminal_after_certification": true,
+    "certification_terminal_reason": "the sole selective_pae target failed exact certification, so the locked panel requirement of one selective certificate is unattainable",
+    "test_submission_allowed": false,
+    "test_submission_status": "not_authorized_terminal_futility_stop"
   },
   "completed_unlock_conditions": [
     "exact one-sided binomial bound is implemented and unit-tested in trust-core and designer compatibility code",
@@ -238,12 +281,11 @@
     "explicit operator approval was recorded before the fit-only submission",
     "all eight fit targets completed with 480 unique H100-generated records, strict provenance QC passed, and the locked evaluator froze five eligible target rules",
     "the certification-only manifest binds the five eligible target IDs, frozen fit rules, fit evidence hashes, seed 1037, namespace w2b-cert-v1, and disjoint output paths",
-    "the certification input lock and guarded H100 entrypoint pass strict local validation and create no receipt during dry-run"
+    "the certification input lock and guarded H100 entrypoint pass strict local validation and create no receipt during dry-run",
+    "all ten approved certification jobs completed successfully and produced 300 unique fresh records with strict QC failures=0 and zero fit-stage sequence overlap",
+    "four trust_all targets certified, while the sole selective_pae target failed exact certification and made the locked panel success condition unattainable"
   ],
-  "remaining_unlock_conditions": [
-    "record separate explicit operator approval for the exact certification-only packet after local and Cayuga dry-run evidence is reviewed; test-stage compute remains separately unauthorized",
-    "after certification jobs complete, sync and validate all 300 fresh records before running the locked evaluator; do not generate test rows without another approval"
-  ],
+  "remaining_unlock_conditions": [],
   "post_hoc_changes_forbidden": [
     "changing signal orientation",
     "changing mode order",

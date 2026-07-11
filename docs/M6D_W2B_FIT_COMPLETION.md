@@ -79,9 +79,9 @@ already close to an exact certificate. Fresh certification data, not fit optimis
 - H100 migration receipt: `results/m6d_w2b_target_adaptive_fit_h100_migration_receipt.jsonl`
   (`53a5c0e51d2d29e4c0bff423faf36649b0c6d6777ba23ca2091c9ed15165321f`).
 
-## Next Approval Gate
+## Certification Outcome
 
-The next evidence-bearing stage is certification only for the five fit-eligible targets:
+The approved certification stage subsequently ran for the five fit-eligible targets:
 
 - 60 fresh records per target, 300 total;
 - ProteinMPNN seed `1037`;
@@ -89,6 +89,7 @@ The next evidence-bearing stage is certification only for the five fit-eligible 
 - the five frozen rules above, including `1F51_AE` tau 5.7365;
 - no test-stage generation or folding.
 
-The certification manifest, fresh input lock, and guarded H100 command are now prepared and have passed
-local plus Cayuga dry-runs without submission. Exact scope is in `docs/M6D_W2B_CERTIFICATION_APPROVAL.md`;
-separate explicit execution approval is still required. Test-stage compute remains separately unauthorized.
+All 300 fresh records passed strict QC. Four `trust_all` targets certified, while `1F51_AE`, the sole
+`selective_pae` target, failed with 31 accepts, 6 false accepts, and exact UCB 0.4002. W2b v1 is terminally
+not supported because the panel requires one selective certificate. See
+`docs/M6D_W2B_CERTIFICATION_COMPLETION.md`. No test compute was submitted.

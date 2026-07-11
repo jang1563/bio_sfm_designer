@@ -7,12 +7,11 @@ It is a project-development anchor, not a publication plan.
 
 Latest local harness refresh: 2026-07-05.
 
-Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. The separate
-W2b target-adaptive fit stage is complete on eight fresh targets with 480 H100-generated records and strict
-QC failures=0. Five targets are fit-eligible, including one frozen `selective_pae` rule; no target is yet
-certified. The authoritative result artifact is `docs/M6D_W2B_FIT_COMPLETION.md`. The five-target
-certification-only manifest, input lock, H100 guard, and approval packet are now ready; local and Cayuga
-dry-runs passed without submission. The execution boundary is `docs/M6D_W2B_CERTIFICATION_APPROVAL.md`.
+Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. W2b
+certification completed on five fit-eligible targets with 300 fresh H100 records and strict QC failures=0.
+Four `trust_all` targets certified, but the sole `selective_pae` target failed exact certification. The
+locked panel requires one selective certificate, so W2b v1 is terminally not supported and no test compute
+was submitted. The authoritative result artifact is `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`.
 
 ## Active Objective
 
@@ -27,8 +26,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 ## Current Evidence Boundary
 
 - W1: certified as target-specific complex evidence.
-- W2: not certified as universal multi-target generalization. W2b fit is complete with five target-adaptive
-  rules eligible for fresh exact certification; this is not yet W2b support.
+- W2: not certified as universal multi-target generalization. W2b v1 is also terminally not supported:
+  four `trust_all` targets certified, but zero selective-pAE targets certified against a requirement of one.
 - W3: independent-predictor robustness is not supported under the current Boltz-vs-Chai readout.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
@@ -42,6 +41,10 @@ from Chai records alone.
 - W2b fit completion: `docs/M6D_W2B_FIT_COMPLETION.md`
 - W2b CPU-replay fixture: `tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl`
 - W2b fit report: `results/m6d_w2b_target_adaptive_fit_report.json`
+- W2b certification completion: `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`
+- W2b certification replay fixture: `tests/fixtures/m6d_w2b_target_adaptive_certification_records.jsonl`
+- W2b terminal certification report: `results/m6d_w2b_target_adaptive_certification_report.json`
+- W2b certification output manifest: `results/m6d_w2b_target_adaptive_certification_output_manifest.json`
 - Science-action anchor: `results/m6d_followup_next_science_actions.{json,md}`
 - Machine-readable goal anchor: `results/m6d_goal_mode_current_anchor.json`
 - Current W2/W3 decision protocol: `results/m6d_w2_w3_decision_protocol.{json,md}`

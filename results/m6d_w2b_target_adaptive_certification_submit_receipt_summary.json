@@ -1,0 +1,45 @@
+{
+  "artifact": "m6d_w2b_certification_submit_receipt_summary",
+  "claim_boundary": "job submission is not W2 evidence",
+  "manifest": "configs/m6d_w2b_target_adaptive_certification_targets.json",
+  "n_receipt_events": 10,
+  "n_records": 5,
+  "n_targets": 5,
+  "next_action": "wait for jobs, sync records, then run completion and panel reports",
+  "receipt": "results/m6d_w2b_target_adaptive_certification_submit_receipt.jsonl",
+  "receipt_format": "append_only_stage_journal_v1",
+  "status": "submitted_on_cayuga",
+  "targets": [
+    {
+      "boltz_job_id": "3079900",
+      "proteinmpnn_job_id": "3079899",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F51_AE/records_boltz_complex.jsonl",
+      "target_id": "1F51_AE"
+    },
+    {
+      "boltz_job_id": "3079902",
+      "proteinmpnn_job_id": "3079901",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F93_DC/records_boltz_complex.jsonl",
+      "target_id": "1F93_DC"
+    },
+    {
+      "boltz_job_id": "3079904",
+      "proteinmpnn_job_id": "3079903",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FDH_GA/records_boltz_complex.jsonl",
+      "target_id": "1FDH_GA"
+    },
+    {
+      "boltz_job_id": "3079906",
+      "proteinmpnn_job_id": "3079905",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FLT_WV/records_boltz_complex.jsonl",
+      "target_id": "1FLT_WV"
+    },
+    {
+      "boltz_job_id": "3079908",
+      "proteinmpnn_job_id": "3079907",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FVC_DC/records_boltz_complex.jsonl",
+      "target_id": "1FVC_DC"
+    }
+  ],
+  "workstream": "m6d_w2b_target_adaptive_certification"
+}

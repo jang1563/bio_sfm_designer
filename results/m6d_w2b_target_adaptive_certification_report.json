@@ -1,0 +1,270 @@
+{
+  "artifact": "m6d_w2b_target_adaptive_report",
+  "audit_ok": true,
+  "can_claim_universal_w2_generalization": false,
+  "can_claim_w2b_target_adaptive_viability": false,
+  "certified_targets": [
+    "1F93_DC",
+    "1FDH_GA",
+    "1FLT_WV",
+    "1FVC_DC"
+  ],
+  "claim_boundary": "W2b tests target-adaptive viability only. It cannot recertify v11 or support a universal zero-shot pAE threshold.",
+  "failures": [],
+  "fit_eligible_targets": [
+    "1F51_AE",
+    "1F93_DC",
+    "1FDH_GA",
+    "1FLT_WV",
+    "1FVC_DC"
+  ],
+  "fit_refused_targets": [
+    "1F66_AB",
+    "1FJG_FR",
+    "1FXK_CA"
+  ],
+  "initial_target_ids": [
+    "1F51_AE",
+    "1F66_AB",
+    "1F93_DC",
+    "1FDH_GA",
+    "1FJG_FR",
+    "1FLT_WV",
+    "1FVC_DC",
+    "1FXK_CA"
+  ],
+  "locked_initial_target_ids": [
+    "1F51_AE",
+    "1F66_AB",
+    "1F93_DC",
+    "1FDH_GA",
+    "1FJG_FR",
+    "1FLT_WV",
+    "1FVC_DC",
+    "1FXK_CA"
+  ],
+  "lrmsd_threshold": 4.0,
+  "n_initial_targets": 8,
+  "panel_certification_gate": {
+    "minimum_certified_targets": 3,
+    "minimum_selective_pae_certified_targets": 1,
+    "observed_certified_targets": 4,
+    "observed_selective_pae_certified_targets": 0,
+    "passed": false
+  },
+  "panel_delta": 0.1,
+  "per_target_delta": 0.0125,
+  "protocol": "configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json",
+  "qc": {
+    "expect_label_source": "boltz2_lrmsd_to_reference",
+    "expect_predictor_id": "boltz2_complex",
+    "expect_signal_source": "boltz2_pae_interaction",
+    "failures": [],
+    "failures_by_kind": {},
+    "forbid_predictor_ids": [],
+    "n_blank": 0,
+    "n_exact_duplicates": 0,
+    "n_failures": 0,
+    "n_rows": 780,
+    "n_unique_record_keys": 780,
+    "n_unique_target_ids": 780,
+    "ok": true,
+    "require_chain_ids": true,
+    "require_complex_target_id": true,
+    "require_provenance": true
+  },
+  "records": {
+    "certification": [
+      "tests/fixtures/m6d_w2b_target_adaptive_certification_records.jsonl"
+    ],
+    "fit": [
+      "tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl"
+    ],
+    "test": []
+  },
+  "selective_pae_certified_targets": [],
+  "status": "w2b_certification_terminal_not_supported",
+  "target_alpha": 0.2,
+  "targets": [
+    {
+      "certification": {
+        "accepted": 31,
+        "alpha": 0.2,
+        "certified": false,
+        "delta": 0.0125,
+        "diagnostic_affects_certificate": false,
+        "diagnostic_auroc_pae": 0.7839366515837104,
+        "false_accept_rate": 0.1935483870967742,
+        "false_accepts": 6,
+        "method": "one_sided_clopper_pearson_exact",
+        "n": 60,
+        "reason": "clopper_pearson_ucb_exceeds_alpha",
+        "ucb": 0.4002058003899586
+      },
+      "fit": {
+        "eligible": true,
+        "fit_accepts": 40,
+        "fit_auroc_pae": 0.8421052631578947,
+        "fit_false_accept_rate": 0.2,
+        "fit_false_accepts": 8,
+        "mode": "selective_pae",
+        "tau": 5.7365
+      },
+      "target_id": "1F51_AE",
+      "test": null
+    },
+    {
+      "certification": null,
+      "fit": {
+        "eligible": false,
+        "fit_accepts": 0,
+        "fit_auroc_pae": 0.5216907675194661,
+        "fit_false_accept_rate": null,
+        "fit_false_accepts": 0,
+        "mode": "refuse",
+        "tau": null
+      },
+      "target_id": "1F66_AB",
+      "test": null
+    },
+    {
+      "certification": {
+        "accepted": 60,
+        "alpha": 0.2,
+        "certified": true,
+        "delta": 0.0125,
+        "diagnostic_affects_certificate": false,
+        "diagnostic_auroc_pae": null,
+        "false_accept_rate": 0.0,
+        "false_accepts": 0,
+        "method": "one_sided_clopper_pearson_exact",
+        "n": 60,
+        "reason": "certified",
+        "ucb": 0.0704305687985048
+      },
+      "fit": {
+        "eligible": true,
+        "fit_accepts": 60,
+        "fit_auroc_pae": null,
+        "fit_false_accept_rate": 0.0,
+        "fit_false_accepts": 0,
+        "mode": "trust_all",
+        "tau": null
+      },
+      "target_id": "1F93_DC",
+      "test": null
+    },
+    {
+      "certification": {
+        "accepted": 60,
+        "alpha": 0.2,
+        "certified": true,
+        "delta": 0.0125,
+        "diagnostic_affects_certificate": false,
+        "diagnostic_auroc_pae": 1.0,
+        "false_accept_rate": 0.03333333333333333,
+        "false_accepts": 2,
+        "method": "one_sided_clopper_pearson_exact",
+        "n": 60,
+        "reason": "certified",
+        "ucb": 0.12864463317479244
+      },
+      "fit": {
+        "eligible": true,
+        "fit_accepts": 60,
+        "fit_auroc_pae": 0.9444444444444444,
+        "fit_false_accept_rate": 0.1,
+        "fit_false_accepts": 6,
+        "mode": "trust_all",
+        "tau": null
+      },
+      "target_id": "1FDH_GA",
+      "test": null
+    },
+    {
+      "certification": null,
+      "fit": {
+        "eligible": false,
+        "fit_accepts": 0,
+        "fit_auroc_pae": null,
+        "fit_false_accept_rate": null,
+        "fit_false_accepts": 0,
+        "mode": "refuse",
+        "tau": null
+      },
+      "target_id": "1FJG_FR",
+      "test": null
+    },
+    {
+      "certification": {
+        "accepted": 60,
+        "alpha": 0.2,
+        "certified": true,
+        "delta": 0.0125,
+        "diagnostic_affects_certificate": false,
+        "diagnostic_auroc_pae": null,
+        "false_accept_rate": 0.0,
+        "false_accepts": 0,
+        "method": "one_sided_clopper_pearson_exact",
+        "n": 60,
+        "reason": "certified",
+        "ucb": 0.0704305687985048
+      },
+      "fit": {
+        "eligible": true,
+        "fit_accepts": 60,
+        "fit_auroc_pae": null,
+        "fit_false_accept_rate": 0.0,
+        "fit_false_accepts": 0,
+        "mode": "trust_all",
+        "tau": null
+      },
+      "target_id": "1FLT_WV",
+      "test": null
+    },
+    {
+      "certification": {
+        "accepted": 60,
+        "alpha": 0.2,
+        "certified": true,
+        "delta": 0.0125,
+        "diagnostic_affects_certificate": false,
+        "diagnostic_auroc_pae": null,
+        "false_accept_rate": 0.0,
+        "false_accepts": 0,
+        "method": "one_sided_clopper_pearson_exact",
+        "n": 60,
+        "reason": "certified",
+        "ucb": 0.0704305687985048
+      },
+      "fit": {
+        "eligible": true,
+        "fit_accepts": 60,
+        "fit_auroc_pae": null,
+        "fit_false_accept_rate": 0.0,
+        "fit_false_accepts": 0,
+        "mode": "trust_all",
+        "tau": null
+      },
+      "target_id": "1FVC_DC",
+      "test": null
+    },
+    {
+      "certification": null,
+      "fit": {
+        "eligible": false,
+        "fit_accepts": 0,
+        "fit_auroc_pae": 0.711864406779661,
+        "fit_false_accept_rate": null,
+        "fit_false_accepts": 0,
+        "mode": "refuse",
+        "tau": null
+      },
+      "target_id": "1FXK_CA",
+      "test": null
+    }
+  ],
+  "terminal_after_certification": true,
+  "test_can_change_certificate": false,
+  "test_required_for_final_reporting": false
+}

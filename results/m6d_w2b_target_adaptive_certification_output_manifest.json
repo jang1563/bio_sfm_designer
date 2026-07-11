@@ -1,0 +1,150 @@
+{
+  "analysis": {
+    "audit_ok": true,
+    "certified_target_ids": [
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "panel_certification_gate_passed": false,
+    "report": "results/m6d_w2b_target_adaptive_certification_report.json",
+    "report_sha256": "87760fadffb46848bb027bc214710286ec5d057ec8ecb83030b0f361c2639d36",
+    "selective_pae_certified_target_ids": [],
+    "selective_target": {
+      "accepted": 31,
+      "certified": false,
+      "diagnostic_affects_certificate": false,
+      "diagnostic_auroc_pae": 0.7839366515837104,
+      "false_accept_rate": 0.1935483870967742,
+      "false_accepts": 6,
+      "target_id": "1F51_AE",
+      "ucb": 0.4002058003899586
+    },
+    "status": "w2b_certification_terminal_not_supported",
+    "terminal_after_certification": true
+  },
+  "approved_execution": {
+    "approval_packet": "docs/M6D_W2B_CERTIFICATION_APPROVAL.md",
+    "approval_packet_sha256": "a7265726fcc87479646dc51ad418452a0d5b9cf0f3a7a3a0a152606283881c3f",
+    "guard": "hpc/run_w2b_certification_guarded.sh",
+    "guard_sha256": "d03eba2e60105fd4401d5dcd65aaf001d6e30eb2e9870b2e073a8c7a9a8a7fdf",
+    "input_lock": "configs/m6d_w2b_target_adaptive_certification_input_lock.json",
+    "input_lock_digest_sha256": "2153bf715745813730e2f41b340329adb21dc7415f293980cf8519320b5deaae",
+    "input_lock_sha256": "41279f144bcbe09fe61aedd838e413900200a814b73f64b2616a64430fdcdd23",
+    "manifest": "configs/m6d_w2b_target_adaptive_certification_targets.json",
+    "manifest_sha256": "502b2d91e29c9f9c1199e79b075051c83b0a634277283a6c97ee4b6d83ae8d99",
+    "operator_approval": "results/m6d_w2b_target_adaptive_certification_operator_approval.json",
+    "operator_approval_sha256": "a599b860970f32744237c88e8aab0ebc5b5d49a22628172352eb81b348181ae7",
+    "protocol_sha256": "dcef5d1b080791b54bafb485f815e08b536bcd68a44ee4ab458b34ebb3d5567c"
+  },
+  "artifact": "m6d_w2b_target_adaptive_certification_output_manifest",
+  "claim_boundary": "Four trust_all target certificates do not establish selective pAE gate viability. The sole selective_pae rule failed exact certification, so W2b v1 is terminally not supported and test compute cannot change the panel decision.",
+  "completion_protocol": {
+    "file_sha256": "3747ae72ac1f271ed808db98894139520d6d4fb2b44b93ac5abd814cfda54c99",
+    "path": "configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json",
+    "scientific_digest_sha256": "19bad978cdbccfeb5cfe3ec0f7c7455bb8d2f7e10697091c15ec6b40c7341b0b"
+  },
+  "job_accounting": {
+    "all_exit_code_zero": true,
+    "boltz_hardware": "NVIDIA H100 NVL",
+    "boltz_node": "g0004",
+    "jobs": [
+      {
+        "boltz_elapsed": "00:04:54",
+        "boltz_job_id": "3079900",
+        "proteinmpnn_elapsed": "00:01:39",
+        "proteinmpnn_job_id": "3079899",
+        "target_id": "1F51_AE"
+      },
+      {
+        "boltz_elapsed": "00:03:40",
+        "boltz_job_id": "3079902",
+        "proteinmpnn_elapsed": "00:01:08",
+        "proteinmpnn_job_id": "3079901",
+        "target_id": "1F93_DC"
+      },
+      {
+        "boltz_elapsed": "00:04:43",
+        "boltz_job_id": "3079904",
+        "proteinmpnn_elapsed": "00:01:33",
+        "proteinmpnn_job_id": "3079903",
+        "target_id": "1FDH_GA"
+      },
+      {
+        "boltz_elapsed": "00:03:22",
+        "boltz_job_id": "3079906",
+        "proteinmpnn_elapsed": "00:01:04",
+        "proteinmpnn_job_id": "3079905",
+        "target_id": "1FLT_WV"
+      },
+      {
+        "boltz_elapsed": "00:03:44",
+        "boltz_job_id": "3079908",
+        "proteinmpnn_elapsed": "00:01:15",
+        "proteinmpnn_job_id": "3079907",
+        "target_id": "1FVC_DC"
+      }
+    ],
+    "resource_scope": "preempt_gpu/low/gpu:h100:1",
+    "total_slurm_jobs": 10
+  },
+  "outputs": [
+    {
+      "candidates_sha256": "6f9b9b7c5e6bb81a93b62defaef6d5944bef6d0b002251d3283b01398899d4df",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F51_AE/records_boltz_complex.jsonl",
+      "records_sha256": "d03c5070bfa9f9ebb311b6931a3c34a5fd2640f860a2b3b662eed4e2654a7207",
+      "rows": 60,
+      "target_id": "1F51_AE"
+    },
+    {
+      "candidates_sha256": "c5f0687af0d5d31b25fc910de1c0ff5825d831a53967db5ae00a2e3ac200e9d5",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1F93_DC/records_boltz_complex.jsonl",
+      "records_sha256": "82ae64f693abc764020bda52fcde34611f3a0b80cc08d87af63bca740241fb51",
+      "rows": 60,
+      "target_id": "1F93_DC"
+    },
+    {
+      "candidates_sha256": "8d3029edcf2f055b86c14937096f7876607caff09807ae71422f4276866988fd",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FDH_GA/records_boltz_complex.jsonl",
+      "records_sha256": "d472e3eb70178930519edfec770e88397d0e509a35580c8c53f0ea0e0a133661",
+      "rows": 60,
+      "target_id": "1FDH_GA"
+    },
+    {
+      "candidates_sha256": "723446f02b6a83f47bbea66a5e8806517403b00f23295528d749cf6c2a5d3a78",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FLT_WV/records_boltz_complex.jsonl",
+      "records_sha256": "2ba5a6c9327d2389ef61333682af6ce89c28f7d5b37797025b0d0c15a0e953be",
+      "rows": 60,
+      "target_id": "1FLT_WV"
+    },
+    {
+      "candidates_sha256": "b120fb420a0876ea476d96231359b014de87f77a15707f0d2e16dfa278a2edb5",
+      "records": "hpc_outputs/m6d_w2b_target_adaptive_certification_records/1FVC_DC/records_boltz_complex.jsonl",
+      "records_sha256": "90e29a36fb8a14d15ad0d3d7c1fc8d7672c34a01cfe26fb5945fc15ab734b332",
+      "rows": 60,
+      "target_id": "1FVC_DC"
+    }
+  ],
+  "replay": {
+    "certification_fixture": "tests/fixtures/m6d_w2b_target_adaptive_certification_records.jsonl",
+    "certification_fixture_sha256": "4ebc9156f839eea1fefaaa274310cb28b73ffcfdb898b7b0a8dbc5d4aeebaa70",
+    "evaluator": "src/bio_sfm_designer/experiments/m6d_w2b_target_adaptive_report.py",
+    "evaluator_sha256": "1cf47b430098e1e73aa2b41d0c8cd474c3266811f933268317ceff4ccbbd4455",
+    "fit_fixture": "tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl",
+    "fit_fixture_sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe",
+    "fixture_qc": "results/m6d_w2b_target_adaptive_certification_fixture_qc.json",
+    "fixture_qc_sha256": "ed846c877ce531516417942d2cc8c4945afd8052fd4fb1923ed7b5fbcd53bf37",
+    "trust_core_commit": "b2d7df9a8b3f99ede1edd8725e2eb731f431d1a3",
+    "trust_core_conformal_sha256": "f37ba0c08eea5ce75a26eb8c2225d2fa4000b4869470109151fd26c714669a1e"
+  },
+  "submission": {
+    "receipt": "results/m6d_w2b_target_adaptive_certification_submit_receipt.jsonl",
+    "receipt_sha256": "e3a365135dadbf4a9d561ed8112ce58921f6d349a5f7ce84191e20069c9476c6",
+    "summary": "results/m6d_w2b_target_adaptive_certification_submit_receipt_summary.json",
+    "summary_sha256": "355dc2bc64a6cf53bda021c83879c454fccd6984473c52e24204aeb5ff50843b"
+  },
+  "status": "w2b_certification_terminal_not_supported",
+  "test_compute_submitted": false,
+  "validated_on": "2026-07-11"
+}

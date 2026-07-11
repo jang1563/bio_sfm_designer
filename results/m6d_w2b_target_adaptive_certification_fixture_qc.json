@@ -1,0 +1,18 @@
+{
+  "expect_label_source": "boltz2_lrmsd_to_reference",
+  "expect_predictor_id": "boltz2_complex",
+  "expect_signal_source": "boltz2_pae_interaction",
+  "failures": [],
+  "failures_by_kind": {},
+  "forbid_predictor_ids": [],
+  "n_blank": 0,
+  "n_exact_duplicates": 0,
+  "n_failures": 0,
+  "n_rows": 300,
+  "n_unique_record_keys": 300,
+  "n_unique_target_ids": 300,
+  "ok": true,
+  "require_chain_ids": true,
+  "require_complex_target_id": true,
+  "require_provenance": true
+}

@@ -91,10 +91,12 @@ MSA inputs use byte SHA-256; JSON reports use portable canonical semantic hashes
 explicitly approved and completed with 480 H100 records after an approved all-job hardware migration.
 Strict QC passes with zero failures. The locked evaluator selects five eligible targets: four `trust_all`
 and `1F51_AE` as `selective_pae` with tau 5.7365; the other three targets refuse. The result is
-`w2b_fit_complete_awaiting_certification`, not a certificate. Full details and CPU-replay artifacts are in
-`docs/M6D_W2B_FIT_COMPLETION.md`. A five-target certification-only manifest, 35-artifact input lock, and
-Cayuga H100 guard now pass local and remote dry-runs with no submission. The exact execution boundary is
-`docs/M6D_W2B_CERTIFICATION_APPROVAL.md`; certification and test compute remain unauthorized.
+`w2b_fit_complete_awaiting_certification`, not a certificate. The separately approved certification stage
+then produced 300 fresh H100 records with strict QC failures=0. Four `trust_all` targets certified, but the
+sole `selective_pae` target failed exact certification with 31 accepts, 6 false accepts, and UCB 0.4002.
+The locked panel requires one selective certificate. W2b v1 is therefore terminally not supported, and no
+test compute was submitted because test rows cannot affect certificates. See
+`docs/M6D_W2B_CERTIFICATION_COMPLETION.md`.
 
 ## Claim Boundary
 

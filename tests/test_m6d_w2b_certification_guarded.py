@@ -1,4 +1,4 @@
-"""Static, refusal, and dry-run tests for guarded W2b certification."""
+"""Snapshot and retirement tests for the completed W2b certification guard."""
 
 import hashlib
 import json
@@ -6,7 +6,6 @@ import os
 import pathlib
 import re
 import subprocess
-import sys
 import tempfile
 import unittest
 
@@ -14,29 +13,24 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "hpc" / "run_w2b_certification_guarded.sh"
 APPROVAL_PACKET = ROOT / "docs" / "M6D_W2B_CERTIFICATION_APPROVAL.md"
-INPUT_LOCK = ROOT / "configs" / "m6d_w2b_target_adaptive_certification_input_lock.json"
+OPERATOR_APPROVAL = ROOT / "results" / "m6d_w2b_target_adaptive_certification_operator_approval.json"
 
 
 def _sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _locked_target_inputs_available():
-    lock = json.loads(INPUT_LOCK.read_text())
-    paths = [
-        ROOT / artifact["path"]
-        for target in lock["binding"]["targets"]
-        for artifact in target["artifacts"].values()
-    ]
-    return all(path.is_file() and path.stat().st_size > 0 for path in paths)
-
-
 class W2BCertificationGuardedTests(unittest.TestCase):
-    def test_embedded_hashes_match_current_artifacts(self):
+    def test_execution_snapshot_matches_operator_approval(self):
         text = WRAPPER.read_text()
+        approval = json.loads(OPERATOR_APPROVAL.read_text())
+        self.assertEqual(_sha256(WRAPPER), approval["guarded_wrapper_sha256"])
+        self.assertEqual(_sha256(APPROVAL_PACKET), approval["approval_packet_sha256"])
+        protocol_match = re.search(r'EXPECTED_PROTOCOL_SHA256="([0-9a-f]{64})"', text)
+        self.assertIsNotNone(protocol_match)
+        self.assertEqual(protocol_match.group(1), approval["protocol_sha256"])
         expected = {
             "MANIFEST": ROOT / "configs" / "m6d_w2b_target_adaptive_certification_targets.json",
-            "PROTOCOL": ROOT / "configs" / "m6d_w2b_target_adaptive_exact_ltt_protocol.json",
             "INPUT_LOCK": ROOT / "configs" / "m6d_w2b_target_adaptive_certification_input_lock.json",
             "FIT_REPORT": ROOT / "results" / "m6d_w2b_target_adaptive_fit_report.json",
             "FIT_FIXTURE": ROOT / "tests" / "fixtures" / "m6d_w2b_target_adaptive_fit_records.jsonl",
@@ -55,15 +49,16 @@ class W2BCertificationGuardedTests(unittest.TestCase):
             self.assertIsNotNone(match)
             self.assertEqual(match.group(1), _sha256(path))
 
-    def test_approval_packet_binds_current_guard_and_exact_scope(self):
+    def test_approval_packet_binds_approved_guard_and_exact_scope(self):
         text = APPROVAL_PACKET.read_text()
-        self.assertIn(_sha256(WRAPPER), text)
+        approval = json.loads(OPERATOR_APPROVAL.read_text())
+        self.assertIn(approval["guarded_wrapper_sha256"], text)
         self.assertIn("approve-w2b-certification-stage-300-h100", text)
         self.assertIn("300 total", text)
         self.assertIn("10 total", text)
         self.assertIn("does not authorize test-stage compute", text)
 
-    def test_unapproved_execution_refuses_before_receipt_creation(self):
+    def test_completed_guard_is_retired_before_new_receipt_creation(self):
         with tempfile.TemporaryDirectory() as directory:
             receipt = pathlib.Path(directory) / "receipt.jsonl"
             summary = pathlib.Path(directory) / "summary.json"
@@ -83,18 +78,16 @@ class W2BCertificationGuardedTests(unittest.TestCase):
             )
 
             self.assertEqual(completed.returncode, 2)
-            self.assertIn("refusing W2b certification-stage submission", completed.stderr)
+            self.assertIn("stale W2b certification artifact", completed.stderr)
             self.assertFalse(receipt.exists())
             self.assertFalse(summary.exists())
 
-    def test_dry_run_enumerates_pairs_or_missing_inputs_fail_closed(self):
+    def test_completed_guard_dry_run_also_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
             receipt = pathlib.Path(directory) / "receipt.jsonl"
             summary = pathlib.Path(directory) / "summary.json"
             env = os.environ.copy()
             env.update({
-                "BIO_SFM_PYTHON": sys.executable,
-                "BIO_SFM_TRUST_CORE_SRC": str(ROOT.parent / "bio-sfm-trust-core" / "src"),
                 "BIO_SFM_SUBMIT_DRY_RUN": "1",
                 "W2B_CERTIFICATION_RECEIPT": str(receipt),
                 "W2B_CERTIFICATION_SUMMARY": str(summary),
@@ -108,14 +101,8 @@ class W2BCertificationGuardedTests(unittest.TestCase):
                 check=False,
             )
 
-            if _locked_target_inputs_available():
-                self.assertEqual(completed.returncode, 0, completed.stderr)
-                self.assertEqual(completed.stdout.count("dry-run 1F"), 5)
-                self.assertEqual(completed.stdout.count("resources=preempt_gpu/low/gpu:h100:1"), 5)
-                self.assertIn("5 frozen rules, no prior outputs", completed.stdout)
-            else:
-                self.assertEqual(completed.returncode, 2)
-                self.assertIn("w2b_stage_input_lock_verification_failed", completed.stdout)
+            self.assertEqual(completed.returncode, 2)
+            self.assertIn("stale W2b certification artifact", completed.stderr)
             self.assertFalse(receipt.exists())
             self.assertFalse(summary.exists())
 

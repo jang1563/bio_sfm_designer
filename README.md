@@ -22,11 +22,12 @@
 > eight entirely new targets, 480 H100-generated records, and strict provenance QC failures=0. Five targets
 > are fit-eligible. `1F51_AE` freezes the signal-bearing `selective_pae` rule at tau 5.7365 with AUROC
 > 0.8421; four targets use `trust_all`, and three refuse. This is fit selection, not certification or W2b
-> support. See [docs/M6D_W2B_FIT_COMPLETION.md](docs/M6D_W2B_FIT_COMPLETION.md) and the locked protocol in
-> [docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md](docs/M6D_W2B_TARGET_ADAPTIVE_PROTOCOL.md). The certification-only
-> manifest, 35-artifact input lock, and H100 guard are now ready; local and Cayuga dry-runs passed with
-> Slurm `0 -> 0`. No certification job was submitted. Execution requires explicit approval of
-> [docs/M6D_W2B_CERTIFICATION_APPROVAL.md](docs/M6D_W2B_CERTIFICATION_APPROVAL.md).
+> support. The separately approved five-target certification stage then completed with 300 fresh H100
+> records and strict QC failures=0. Four `trust_all` targets certified, but `1F51_AE`, the sole
+> `selective_pae` target, failed exact certification: 31 accepts, 6 false accepts, UCB 0.4002. The locked
+> panel requires one selective certificate, so W2b v1 is `w2b_certification_terminal_not_supported`.
+> Test data cannot change certificates and no test compute was submitted. See
+> [docs/M6D_W2B_CERTIFICATION_COMPLETION.md](docs/M6D_W2B_CERTIFICATION_COMPLETION.md).
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —

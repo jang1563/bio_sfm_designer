@@ -307,8 +307,13 @@ def evaluate(
         fit = fit_reports[target_id]
         target: Dict[str, Any] = {"target_id": target_id, "fit": fit}
         if fit["eligible"] and certification_rows:
-            accepted = _accepted(cert_groups.get(target_id, []), fit)
+            target_cert_rows = cert_groups.get(target_id, [])
+            accepted = _accepted(target_cert_rows, fit)
             false_accepts = sum(_wrong(row, threshold) for row in accepted)
+            cert_auroc = _auroc(
+                [-float(row["pae_interaction"]) for row in target_cert_rows],
+                [int(not _wrong(row, threshold)) for row in target_cert_rows],
+            )
             ucb = (
                 clopper_pearson_upper_bound(false_accepts, len(accepted), delta)
                 if accepted else None
@@ -323,10 +328,15 @@ def evaluate(
                 "n": len(cert_groups.get(target_id, [])),
                 "accepted": len(accepted),
                 "false_accepts": false_accepts,
+                "false_accept_rate": (
+                    false_accepts / len(accepted) if accepted else None
+                ),
                 "ucb": ucb,
                 "alpha": alpha,
                 "delta": delta,
                 "certified": certified,
+                "diagnostic_auroc_pae": cert_auroc,
+                "diagnostic_affects_certificate": False,
                 "reason": (
                     "certified" if certified else
                     "too_few_accepted" if len(accepted) < minimum_cert_accepts else
@@ -359,13 +369,26 @@ def evaluate(
         row["target_id"] for row in targets
         if row["target_id"] in certified_targets and row["fit"]["mode"] == "selective_pae"
     ]
-    final_complete = bool(eligible) and bool(certification_rows) and bool(test_rows)
     decision = protocol["panel_decision_rule"]
-    success = (
+    minimum_certified = int(decision["minimum_certified_targets"])
+    minimum_selective = int(decision["minimum_selective_pae_certified_targets"])
+    certification_panel_gate_passed = (
         not failures
-        and final_complete
-        and len(certified_targets) >= int(decision["minimum_certified_targets"])
-        and len(selective_certified) >= int(decision["minimum_selective_pae_certified_targets"])
+        and bool(certification_rows)
+        and len(certified_targets) >= minimum_certified
+        and len(selective_certified) >= minimum_selective
+    )
+    test_can_change_certificate = bool(cert_rule.get("test_split_affects_certificate", False))
+    terminal_after_certification = (
+        not failures
+        and bool(certification_rows)
+        and not certification_panel_gate_passed
+        and not test_can_change_certificate
+    )
+    final_complete = certification_panel_gate_passed and bool(test_rows)
+    success = (
+        final_complete
+        and not failures
     )
     if failures:
         status = "w2b_audit_failed"
@@ -373,6 +396,8 @@ def evaluate(
         status = "w2b_fit_complete_no_eligible_targets"
     elif not certification_rows:
         status = "w2b_fit_complete_awaiting_certification"
+    elif terminal_after_certification:
+        status = "w2b_certification_terminal_not_supported"
     elif not test_rows:
         status = "w2b_certification_complete_awaiting_test"
     elif success:
@@ -396,6 +421,18 @@ def evaluate(
         "fit_refused_targets": refused,
         "certified_targets": certified_targets,
         "selective_pae_certified_targets": selective_certified,
+        "panel_certification_gate": {
+            "minimum_certified_targets": minimum_certified,
+            "observed_certified_targets": len(certified_targets),
+            "minimum_selective_pae_certified_targets": minimum_selective,
+            "observed_selective_pae_certified_targets": len(selective_certified),
+            "passed": certification_panel_gate_passed,
+        },
+        "terminal_after_certification": terminal_after_certification,
+        "test_can_change_certificate": test_can_change_certificate,
+        "test_required_for_final_reporting": (
+            certification_panel_gate_passed and not bool(test_rows)
+        ),
         "targets": targets,
         "failures": failures,
         "claim_boundary": (

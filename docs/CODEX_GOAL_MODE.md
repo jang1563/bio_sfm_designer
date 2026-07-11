@@ -19,10 +19,10 @@ all status artifacts, tests, and local/Cayuga handoff anchors honest and reprodu
 
 ## Current Resume Anchor
 
-Current W2b science-result anchor: `docs/M6D_W2B_FIT_COMPLETION.md`. The eight-target fit stage is complete
-with 480 strict-QC records, five fit-eligible targets, and no certificate. The certification-only packet in
-`docs/M6D_W2B_CERTIFICATION_APPROVAL.md` is ready and passed local plus Cayuga dry-runs without submission.
-Do not submit certification without explicit approval of that exact packet, and do not submit test compute.
+Current W2b science-result anchor: `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`. Certification completed with
+300 fresh strict-QC records. Four `trust_all` targets certified, but the only `selective_pae` target failed;
+the locked panel can no longer pass. W2b v1 is terminally not supported. Do not submit test compute because
+test rows cannot change the certificate or panel decision.
 
 Current durable anchor: `docs/M6D_GOAL_MODE_ANCHOR.md`.
 

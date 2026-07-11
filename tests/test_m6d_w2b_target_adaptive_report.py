@@ -103,6 +103,40 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
         self.assertEqual(fit["1F93_DC"]["mode"], "trust_all")
         self.assertEqual(fit["1F66_AB"]["mode"], "refuse")
 
+    def test_committed_certification_fixture_replays_terminal_result(self):
+        report = run(
+            os.path.join(_ROOT, "configs", "m6d_w2b_target_adaptive_exact_ltt_protocol.json"),
+            [os.path.join(_ROOT, "tests", "fixtures", "m6d_w2b_target_adaptive_fit_records.jsonl")],
+            [
+                os.path.join(
+                    _ROOT,
+                    "tests",
+                    "fixtures",
+                    "m6d_w2b_target_adaptive_certification_records.jsonl",
+                )
+            ],
+        )
+
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(report["status"], "w2b_certification_terminal_not_supported")
+        self.assertEqual(
+            report["certified_targets"],
+            ["1F93_DC", "1FDH_GA", "1FLT_WV", "1FVC_DC"],
+        )
+        self.assertEqual(report["selective_pae_certified_targets"], [])
+        self.assertTrue(report["terminal_after_certification"])
+        self.assertFalse(report["test_required_for_final_reporting"])
+        target = {row["target_id"]: row for row in report["targets"]}["1F51_AE"]
+        self.assertEqual(target["certification"]["accepted"], 31)
+        self.assertEqual(target["certification"]["false_accepts"], 6)
+        self.assertEqual(target["certification"]["false_accept_rate"], 6 / 31)
+        self.assertEqual(target["certification"]["ucb"], 0.4002058003899586)
+        self.assertEqual(
+            target["certification"]["diagnostic_auroc_pae"],
+            0.7839366515837104,
+        )
+        self.assertFalse(target["certification"]["diagnostic_affects_certificate"])
+
     def test_predeclared_modes_and_exact_certification_support_w2b_only(self):
         report = evaluate(
             _protocol(),
@@ -127,6 +161,34 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
         self.assertEqual(report["status"], "w2b_fit_complete_awaiting_certification")
         self.assertFalse(report["can_claim_w2b_target_adaptive_viability"])
         self.assertEqual(report["lrmsd_threshold"], 4.0)
+
+    def test_passing_certification_gate_awaits_reporting_test(self):
+        report = evaluate(
+            _protocol(),
+            _stage("fit"),
+            _stage("certification", include_refused=False),
+        )
+
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(report["status"], "w2b_certification_complete_awaiting_test")
+        self.assertTrue(report["panel_certification_gate"]["passed"])
+        self.assertFalse(report["terminal_after_certification"])
+        self.assertTrue(report["test_required_for_final_reporting"])
+
+    def test_failed_certification_gate_stops_before_non_decisive_test(self):
+        certification = _stage("certification", include_refused=False)
+        for row in certification:
+            if row["complex_target_id"] == "selective" and not row["truth"]["correct"]:
+                row["pae_interaction"] = 1.0
+        report = evaluate(_protocol(), _stage("fit"), certification)
+
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(report["status"], "w2b_certification_terminal_not_supported")
+        self.assertFalse(report["panel_certification_gate"]["passed"])
+        self.assertTrue(report["terminal_after_certification"])
+        self.assertFalse(report["test_can_change_certificate"])
+        self.assertFalse(report["test_required_for_final_reporting"])
+        self.assertFalse(report["can_claim_w2b_target_adaptive_viability"])
 
     def test_record_label_threshold_mismatch_fails_closed(self):
         fit = _stage("fit")

@@ -10,9 +10,10 @@
 > not a recertification. W2 therefore remains negative. The separate W2b target-adaptive exact-LTT fit
 > stage is now complete on eight fresh targets with 480 H100 records and strict QC failures=0. Five targets
 > are fit-eligible: `1F51_AE` freezes a selective pAE rule at tau 5.7365 with AUROC 0.8421, while four use
-> `trust_all`; three targets refuse. This is `w2b_fit_complete_awaiting_certification`, not W2b support.
-> Its five-target, 300-record certification packet now passes local and Cayuga no-submit dry-runs and awaits
-> explicit execution approval. Certification-only compute remains the next approval-gated experiment. See
+> `trust_all`; three targets refuse. Certification then completed on the five eligible targets with 300
+> fresh H100 records. Four `trust_all` targets certified, but `1F51_AE`, the sole selective target, failed
+> exact certification at 31 accepts, 6 false accepts, UCB 0.4002. The locked requirement of one selective
+> certificate is unattainable, so W2b v1 is terminally not supported and test compute was stopped. See
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md`.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
@@ -37,10 +38,10 @@ The project succeeds when a new protein-design regime can be added with:
 
 ## Current Anchor
 
-2026-07-11 W2b fit update: the current evidence frontier is the independently generated eight-target fit
-panel summarized in `docs/M6D_W2B_FIT_COMPLETION.md`. The panel preserves the negative universal-W2 result
-while identifying one target-specific pAE branch worth exact certification. No certification or test rows
-have been generated.
+2026-07-11 W2b certification update: the current evidence frontier is the terminal result summarized in
+`docs/M6D_W2B_CERTIFICATION_COMPLETION.md`. Fresh data preserve diagnostic pAE ranking on `1F51_AE`
+(AUROC 0.7839), but its frozen threshold fails exact risk certification. Four easy `trust_all` targets
+certify; zero selective targets certify. No test rows were generated because they cannot change this result.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
