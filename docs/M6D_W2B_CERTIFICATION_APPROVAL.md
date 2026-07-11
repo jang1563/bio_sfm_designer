@@ -75,6 +75,10 @@ Local and Cayuga dry-runs passed and each enumerated exactly five ProteinMPNN-to
 `preempt_gpu/low/gpu:h100:1`. Neither made an `sbatch` call or created a receipt, summary, or output file.
 The Cayuga Slurm queue remained unchanged at `0 -> 0`.
 
+The 35 target-input artifacts are runtime files and are not committed to the public repository. Public CI
+therefore validates the bound packet hashes and verifies that a checkout without those inputs fails closed;
+the complete input-backed dry-run evidence comes from the local and Cayuga environments above.
+
 ## Explicitly Excluded
 
 - test-stage generation or folding;

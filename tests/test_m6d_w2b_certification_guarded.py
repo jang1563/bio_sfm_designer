@@ -1,6 +1,7 @@
 """Static, refusal, and dry-run tests for guarded W2b certification."""
 
 import hashlib
+import json
 import os
 import pathlib
 import re
@@ -13,10 +14,21 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "hpc" / "run_w2b_certification_guarded.sh"
 APPROVAL_PACKET = ROOT / "docs" / "M6D_W2B_CERTIFICATION_APPROVAL.md"
+INPUT_LOCK = ROOT / "configs" / "m6d_w2b_target_adaptive_certification_input_lock.json"
 
 
 def _sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _locked_target_inputs_available():
+    lock = json.loads(INPUT_LOCK.read_text())
+    paths = [
+        ROOT / artifact["path"]
+        for target in lock["binding"]["targets"]
+        for artifact in target["artifacts"].values()
+    ]
+    return all(path.is_file() and path.stat().st_size > 0 for path in paths)
 
 
 class W2BCertificationGuardedTests(unittest.TestCase):
@@ -75,7 +87,7 @@ class W2BCertificationGuardedTests(unittest.TestCase):
             self.assertFalse(receipt.exists())
             self.assertFalse(summary.exists())
 
-    def test_dry_run_enumerates_five_h100_pairs_without_receipt(self):
+    def test_dry_run_enumerates_pairs_or_missing_inputs_fail_closed(self):
         with tempfile.TemporaryDirectory() as directory:
             receipt = pathlib.Path(directory) / "receipt.jsonl"
             summary = pathlib.Path(directory) / "summary.json"
@@ -96,10 +108,14 @@ class W2BCertificationGuardedTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertEqual(completed.returncode, 0, completed.stderr)
-            self.assertEqual(completed.stdout.count("dry-run 1F"), 5)
-            self.assertEqual(completed.stdout.count("resources=preempt_gpu/low/gpu:h100:1"), 5)
-            self.assertIn("5 frozen rules, no prior outputs", completed.stdout)
+            if _locked_target_inputs_available():
+                self.assertEqual(completed.returncode, 0, completed.stderr)
+                self.assertEqual(completed.stdout.count("dry-run 1F"), 5)
+                self.assertEqual(completed.stdout.count("resources=preempt_gpu/low/gpu:h100:1"), 5)
+                self.assertIn("5 frozen rules, no prior outputs", completed.stdout)
+            else:
+                self.assertEqual(completed.returncode, 2)
+                self.assertIn("w2b_stage_input_lock_verification_failed", completed.stdout)
             self.assertFalse(receipt.exists())
             self.assertFalse(summary.exists())
 
