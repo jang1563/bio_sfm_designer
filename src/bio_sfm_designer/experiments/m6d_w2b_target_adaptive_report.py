@@ -155,6 +155,20 @@ def _stage_failures(
             "count": len(bad_metadata),
             "examples": bad_metadata[:5],
         })
+    bad_id_namespaces = [
+        str(row.get("target_id") or "")
+        for row in rows
+        if not str(row.get("target_id") or "").startswith(
+            f"{expected_namespace}-{str(row.get('complex_target_id') or '')}-"
+        )
+    ]
+    if bad_id_namespaces:
+        failures.append({
+            "kind": "stage_candidate_id_namespace_mismatch",
+            "stage": stage,
+            "count": len(bad_id_namespaces),
+            "examples": bad_id_namespaces[:5],
+        })
     bad_thresholds = [
         str(row.get("target_id") or "")
         for row in rows
@@ -202,6 +216,10 @@ def evaluate(
     test_rows = list(test_rows)
     fit_groups = _group(fit_rows)
     target_ids = sorted(set(fit_groups) - {""})
+    locked_target_ids = sorted(
+        str(value)
+        for value in protocol.get("current_execution_state", {}).get("fit_target_ids", [])
+    )
     expected_initial = int(protocol["fresh_target_contract"]["n_initial_targets"])
     failures: List[Dict[str, Any]] = []
     if not qc_ok:
@@ -211,6 +229,14 @@ def evaluate(
             "kind": "initial_target_count_mismatch",
             "observed": len(target_ids),
             "expected": expected_initial,
+        })
+    if locked_target_ids and target_ids != locked_target_ids:
+        failures.append({
+            "kind": "locked_initial_target_identity_mismatch",
+            "observed": target_ids,
+            "expected": locked_target_ids,
+            "missing": sorted(set(locked_target_ids) - set(target_ids)),
+            "unexpected": sorted(set(target_ids) - set(locked_target_ids)),
         })
     excluded = set(protocol["fresh_target_contract"].get("exclude_v11_new_representative_targets", []))
     reused = sorted(set(target_ids) & excluded)
@@ -364,6 +390,8 @@ def evaluate(
         "panel_delta": float(cert_rule["panel_delta"]),
         "per_target_delta": delta,
         "n_initial_targets": len(target_ids),
+        "initial_target_ids": target_ids,
+        "locked_initial_target_ids": locked_target_ids,
         "fit_eligible_targets": eligible,
         "fit_refused_targets": refused,
         "certified_targets": certified_targets,

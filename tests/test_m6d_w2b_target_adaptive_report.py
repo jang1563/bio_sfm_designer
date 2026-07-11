@@ -14,6 +14,9 @@ def _protocol():
             "n_initial_targets": 3,
             "exclude_v11_new_representative_targets": ["old"],
         },
+        "current_execution_state": {
+            "fit_target_ids": ["easy", "selective", "refuse"],
+        },
         "generation_stages": {
             "fit": {"records_per_target": 20, "seed_namespace": "fit"},
             "certification": {"records_per_target": 20, "seed_namespace": "cert"},
@@ -44,11 +47,12 @@ def _protocol():
 
 
 def _row(stage, target, index, success, pae):
+    namespace = {"fit": "fit", "certification": "cert", "test": "test"}[stage]
     return {
-        "target_id": f"{stage}-{target}-{index}",
+        "target_id": f"{namespace}-{target}-{index}",
         "complex_target_id": target,
         "w2b_stage": stage,
-        "w2b_seed_namespace": {"fit": "fit", "certification": "cert", "test": "test"}[stage],
+        "w2b_seed_namespace": namespace,
         "representation": f"{stage}-{target}-sequence-{index}",
         "lrmsd": 1.0 if success else 5.0,
         "lrmsd_threshold": 4.0,
@@ -143,6 +147,35 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
         self.assertEqual(
             report["qc"]["failures_by_kind"],
             {"missing_provenance": 1, "unexpected_predictor_id": 1},
+        )
+
+    def test_locked_initial_target_identity_mismatch_fails_closed(self):
+        fit = _stage("fit")
+        for row in fit:
+            if row["complex_target_id"] == "easy":
+                row["complex_target_id"] = "replacement"
+                row["target_id"] = row["target_id"].replace("-easy-", "-replacement-")
+
+        report = evaluate(_protocol(), fit)
+
+        self.assertFalse(report["audit_ok"])
+        mismatch = next(
+            row for row in report["failures"]
+            if row["kind"] == "locked_initial_target_identity_mismatch"
+        )
+        self.assertEqual(mismatch["missing"], ["easy"])
+        self.assertEqual(mismatch["unexpected"], ["replacement"])
+
+    def test_candidate_id_namespace_mismatch_fails_closed(self):
+        fit = _stage("fit")
+        fit[0]["target_id"] = "wrong-namespace-easy-0"
+
+        report = evaluate(_protocol(), fit)
+
+        self.assertFalse(report["audit_ok"])
+        self.assertIn(
+            "stage_candidate_id_namespace_mismatch",
+            {row["kind"] for row in report["failures"]},
         )
 
     def test_candidate_overlap_across_stages_fails_closed(self):
