@@ -48,6 +48,7 @@ def _row(stage, target, index, success, pae):
         "w2b_seed_namespace": {"fit": "fit", "certification": "cert", "test": "test"}[stage],
         "representation": f"{stage}-{target}-sequence-{index}",
         "lrmsd": 1.0 if success else 5.0,
+        "lrmsd_threshold": 4.0,
         "pae_interaction": pae,
     }
 
@@ -86,6 +87,26 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
         self.assertTrue(report["audit_ok"])
         self.assertEqual(report["status"], "w2b_fit_complete_awaiting_certification")
         self.assertFalse(report["can_claim_w2b_target_adaptive_viability"])
+        self.assertEqual(report["lrmsd_threshold"], 4.0)
+
+    def test_record_label_threshold_mismatch_fails_closed(self):
+        fit = _stage("fit")
+        fit[0]["lrmsd_threshold"] = 5.0
+        fit[1]["lrmsd_threshold"] = "invalid"
+
+        report = evaluate(_protocol(), fit, threshold=4.0)
+
+        self.assertFalse(report["audit_ok"])
+        self.assertEqual(report["status"], "w2b_audit_failed")
+        self.assertIn(
+            "stage_lrmsd_threshold_mismatch",
+            {row["kind"] for row in report["failures"]},
+        )
+        mismatch = next(
+            row for row in report["failures"]
+            if row["kind"] == "stage_lrmsd_threshold_mismatch"
+        )
+        self.assertEqual(mismatch["count"], 2)
 
     def test_candidate_overlap_across_stages_fails_closed(self):
         certification = _stage("certification", include_refused=False)

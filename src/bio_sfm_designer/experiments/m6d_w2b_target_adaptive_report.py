@@ -109,11 +109,19 @@ def _accepted(rows: List[dict], fit: Dict[str, Any]) -> List[dict]:
     return []
 
 
+def _threshold_matches(row: dict, expected: float) -> bool:
+    try:
+        return float(row["lrmsd_threshold"]) == expected
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
 def _stage_failures(
     protocol: Dict[str, Any],
     stage: str,
     rows: List[dict],
     expected_targets: Sequence[str],
+    threshold: float,
 ) -> List[Dict[str, Any]]:
     failures: List[Dict[str, Any]] = []
     expected_namespace = protocol["generation_stages"][stage]["seed_namespace"]
@@ -146,6 +154,19 @@ def _stage_failures(
             "stage": stage,
             "count": len(bad_metadata),
             "examples": bad_metadata[:5],
+        })
+    bad_thresholds = [
+        str(row.get("target_id") or "")
+        for row in rows
+        if not _threshold_matches(row, threshold)
+    ]
+    if bad_thresholds:
+        failures.append({
+            "kind": "stage_lrmsd_threshold_mismatch",
+            "stage": stage,
+            "expected": threshold,
+            "count": len(bad_thresholds),
+            "examples": bad_thresholds[:5],
         })
     missing_representation = [
         str(row.get("target_id") or "")
@@ -195,7 +216,7 @@ def evaluate(
     reused = sorted(set(target_ids) & excluded)
     if reused:
         failures.append({"kind": "excluded_target_reuse", "targets": reused})
-    failures.extend(_stage_failures(protocol, "fit", fit_rows, target_ids))
+    failures.extend(_stage_failures(protocol, "fit", fit_rows, target_ids, threshold))
 
     fit_reports = {
         target_id: _fit_mode(fit_groups[target_id], protocol, threshold)
@@ -205,9 +226,11 @@ def evaluate(
     eligible = sorted(target_id for target_id, row in fit_reports.items() if row["eligible"])
     refused = sorted(set(target_ids) - set(eligible))
     if certification_rows:
-        failures.extend(_stage_failures(protocol, "certification", certification_rows, eligible))
+        failures.extend(
+            _stage_failures(protocol, "certification", certification_rows, eligible, threshold)
+        )
     if test_rows:
-        failures.extend(_stage_failures(protocol, "test", test_rows, eligible))
+        failures.extend(_stage_failures(protocol, "test", test_rows, eligible, threshold))
 
     stage_ids = {
         "fit": {str(row.get("target_id") or "") for row in fit_rows},
@@ -336,6 +359,7 @@ def evaluate(
         "audit_ok": not failures,
         "can_claim_w2b_target_adaptive_viability": success,
         "can_claim_universal_w2_generalization": False,
+        "lrmsd_threshold": threshold,
         "target_alpha": alpha,
         "panel_delta": float(cert_rule["panel_delta"]),
         "per_target_delta": delta,
