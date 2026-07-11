@@ -1,8 +1,11 @@
 """Tests for the predeclared W2b target-adaptive evaluator."""
 
+import json
+import os
+import tempfile
 import unittest
 
-from bio_sfm_designer.experiments.m6d_w2b_target_adaptive_report import evaluate
+from bio_sfm_designer.experiments.m6d_w2b_target_adaptive_report import evaluate, run
 
 
 def _protocol():
@@ -50,6 +53,15 @@ def _row(stage, target, index, success, pae):
         "lrmsd": 1.0 if success else 5.0,
         "lrmsd_threshold": 4.0,
         "pae_interaction": pae,
+        "regime": "complex",
+        "mean_plddt": 90.0,
+        "truth": {"correct": success, "quality": 1.0 if success else 0.5},
+        "interface_aligned": True,
+        "predictor_id": "boltz2_complex",
+        "signal_source": "boltz2_pae_interaction",
+        "label_source": "boltz2_lrmsd_to_reference",
+        "target_chain": "A",
+        "binder_chain": "B",
     }
 
 
@@ -107,6 +119,31 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
             if row["kind"] == "stage_lrmsd_threshold_mismatch"
         )
         self.assertEqual(mismatch["count"], 2)
+
+    def test_run_enforces_strict_boltz_provenance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            protocol_path = os.path.join(tmp, "protocol.json")
+            records_path = os.path.join(tmp, "fit.jsonl")
+            with open(protocol_path, "w") as handle:
+                json.dump(_protocol(), handle)
+            rows = _stage("fit")
+            del rows[0]["predictor_id"]
+            with open(records_path, "w") as handle:
+                for row in rows:
+                    handle.write(json.dumps(row) + "\n")
+
+            report = run(protocol_path, [records_path])
+
+        self.assertFalse(report["audit_ok"])
+        self.assertEqual(report["status"], "w2b_audit_failed")
+        self.assertTrue(report["qc"]["require_complex_target_id"])
+        self.assertTrue(report["qc"]["require_provenance"])
+        self.assertTrue(report["qc"]["require_chain_ids"])
+        self.assertEqual(report["qc"]["expect_predictor_id"], "boltz2_complex")
+        self.assertEqual(
+            report["qc"]["failures_by_kind"],
+            {"missing_provenance": 1, "unexpected_predictor_id": 1},
+        )
 
     def test_candidate_overlap_across_stages_fails_closed(self):
         certification = _stage("certification", include_refused=False)

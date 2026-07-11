@@ -397,7 +397,15 @@ def run(
     certification_paths = list(certification_paths)
     test_paths = list(test_paths)
     all_paths = fit_paths + certification_paths + test_paths
-    qc = run_qc(all_paths)
+    qc = run_qc(
+        all_paths,
+        require_complex_target_id=True,
+        require_provenance=True,
+        require_chain_ids=True,
+        expect_predictor_id="boltz2_complex",
+        expect_signal_source="boltz2_pae_interaction",
+        expect_label_source="boltz2_lrmsd_to_reference",
+    )
     report = evaluate(
         _load_json(protocol_path),
         load_merged_records(fit_paths),
