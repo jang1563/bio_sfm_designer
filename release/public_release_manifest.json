@@ -3,13 +3,13 @@
   "project": "bio_sfm_designer",
   "version": "0.1.0",
   "release_profile": "curated_research_snapshot",
-  "status": "validated_release_candidate",
+  "status": "public_verified",
   "last_updated": "2026-07-12",
   "visibility": {
     "github": {
       "repo": "jang1563/bio_sfm_designer",
       "target": "public",
-      "status": "external_live_check_required"
+      "status": "public_verified_2026-07-12"
     },
     "hugging_face": {
       "status": "not_published",
