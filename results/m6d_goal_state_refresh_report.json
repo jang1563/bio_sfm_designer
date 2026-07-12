@@ -1,0 +1,147 @@
+{
+  "artifact": "m6d_goal_state_refresh_report",
+  "audit_ok": true,
+  "cayuga_submission_allowed": false,
+  "historical_detail_retained": true,
+  "next_action": "Wait for explicit user approval naming W2c target-MSA precompute. Do not infer approval from generic continuation or goal-mode resume; ProteinMPNN/Boltz record generation remains separately blocked.",
+  "no_submit": true,
+  "obsolete_current_routes_removed": [
+    "v9/v11 panel approval wait",
+    "W2b test submission",
+    "W2b recertification or row extension"
+  ],
+  "output_sha256": {
+    "results/m6d_followup_next_science_actions.json": "54963cca851ff993dc0e93987d6d7cd3be70fa2cfeabd9178db159bc5712e356",
+    "results/m6d_followup_next_science_actions.md": "a076164a3b893dbedb83d724fcb5bc18ad731655a0a0e47ebb87b8b0a1b60527",
+    "results/m6d_goal_completion_audit.json": "50111f9b204718a0f880a2eb0e2122045e08f182293a06510f0195491b902ffc",
+    "results/m6d_goal_completion_audit.md": "789d43cbb051e3a4e3c584f09c7cc219f7c2835d821cfdf04e1ba8748faa49ea",
+    "results/m6d_goal_drift_audit.json": "58b44400b852d9c413dc435f3f5b816b9b3b8ba1802159bea4ebc36ba4e1645b",
+    "results/m6d_goal_drift_audit.md": "ec89e23b28a3a3785ead589191c73f1f3af64a09bb8627d2badd43f4200b9570",
+    "results/m6d_goal_mode_current_anchor.json": "35d93564b3a6341684ede51317abdfd1800a4fb9056bedb15f570afc110a245c",
+    "results/m6d_goal_mode_local_harness_status.json": "0729ba5ff0d241345dec98cd4d5689d15a19da70cd52686a8035ef2a1a5f42b1",
+    "results/m6d_goal_mode_local_harness_status.md": "4bf50efd3073b08e2ed1b62ad0d0b326583131960d641ce272c94dd4a9ef3504"
+  },
+  "runtime_goal_active": false,
+  "status": "goal_state_refreshed_w2b_terminal_w2c_no_submit",
+  "updated_artifacts": [
+    "results/m6d_goal_mode_current_anchor.json",
+    "results/m6d_goal_completion_audit.json",
+    "results/m6d_goal_completion_audit.md",
+    "results/m6d_goal_drift_audit.json",
+    "results/m6d_goal_drift_audit.md",
+    "results/m6d_followup_next_science_actions.json",
+    "results/m6d_followup_next_science_actions.md",
+    "results/m6d_goal_mode_local_harness_status.json",
+    "results/m6d_goal_mode_local_harness_status.md"
+  ],
+  "updated_at": "2026-07-12T09:10:53+09:00",
+  "w2b": {
+    "audit_ok": true,
+    "can_claim_w2b_target_adaptive_viability": false,
+    "certified_targets": [
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "checks": {
+      "audit_ok": true,
+      "panel_gate_failed": true,
+      "positive_claim_false": true,
+      "status_terminal": true,
+      "terminal_after_certification": true,
+      "test_cannot_change_certificate": true,
+      "test_not_required": true,
+      "test_rows_absent": true
+    },
+    "panel_certification_gate": {
+      "minimum_certified_targets": 3,
+      "minimum_selective_pae_certified_targets": 1,
+      "observed_certified_targets": 4,
+      "observed_selective_pae_certified_targets": 0,
+      "passed": false
+    },
+    "selective_pae_certified_targets": [],
+    "status": "w2b_certification_terminal_not_supported",
+    "terminal_after_certification": true,
+    "test_can_change_certificate": false,
+    "test_compute_submitted": false
+  },
+  "w2c": {
+    "audit_ok": true,
+    "can_claim_w2c": false,
+    "cayuga_submission_allowed": false,
+    "checks": {
+      "audit_ok": true,
+      "cayuga_submission_blocked": true,
+      "design_power_qualified": true,
+      "execution_not_ready": true,
+      "no_submit": true,
+      "positive_claim_false": true,
+      "status_ready": true
+    },
+    "conditional_certification_power": 0.8178602810841593,
+    "design_power_qualified": true,
+    "design_true_risk": 0.08,
+    "evaluator_implemented": true,
+    "evaluator_module": "bio_sfm_designer.experiments.m6d_w2c_one_shot_report",
+    "execution_ready": false,
+    "locked_scientific_digest": "c2d9757ce77a9afbf02d0ce30e2e609607ece430539d6378e3eeef3ba77071f5",
+    "minimum_accepted": 90,
+    "minimum_conditional_power": 0.8,
+    "no_submit": true,
+    "remaining_unlock_conditions": [
+      "precompute and hash-lock target MSAs for all eight selected targets",
+      "materialize and hash-lock the target manifest, prepared structures, FASTAs, MSAs, and reports",
+      "pass local and Cayuga no-submit dry-runs with no receipt creation",
+      "prepare a bounded compute packet and obtain explicit operator approval"
+    ],
+    "status": "w2c_design_power_qualified_no_submit",
+    "target_manifest_ids": [
+      "1EZV_XY",
+      "1F80_BC",
+      "1F99_BA",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FR2_BA",
+      "1FYR_CD"
+    ],
+    "target_manifest_integrity_ok": true,
+    "target_manifest_present": true,
+    "target_msa_ready": false
+  },
+  "w2c_target_msa_approval": {
+    "audit_ok": true,
+    "authorizes_record_generation": false,
+    "checks": {
+      "audit_ok": true,
+      "cayuga_dry_run_passed": true,
+      "explicit_approval_required": true,
+      "input_parity_passed": true,
+      "local_dry_run_passed": true,
+      "no_slurm_delta": true,
+      "receipt_absent": true,
+      "status_ready": true,
+      "submission_not_performed": true
+    },
+    "expected_slurm_jobs": 8,
+    "explicit_user_approval_required": true,
+    "input_sha_matches": 40,
+    "input_sha_mismatches": 0,
+    "n_targets": 8,
+    "required_user_phrase": "approve W2c target-MSA precompute",
+    "status": "ready_for_explicit_target_msa_approval_not_submitted",
+    "submission_performed": false,
+    "target_ids": [
+      "1FR2_BA",
+      "1F80_BC",
+      "1EZV_XY",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FYR_CD",
+      "1F99_BA"
+    ]
+  }
+}

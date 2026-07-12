@@ -6,19 +6,21 @@
   "can_mark_goal_complete": false,
   "claim_boundary": {
     "w1": "target-specific certified evidence preserved",
-    "w2": "not complete; explicit panel-submission decision state is awaiting approval and post-sync interpretation is predeclared as not yet interpretable; W2 still needs explicit panel submission, sync-back, completion, target-wise reporting, and alpha-gate interpretation",
+    "w2": "universal multi-target generalization not supported",
+    "w2b": "terminally not supported; no test compute and no extension",
+    "w2c": "power-qualified design only; no targets, compute, certificate, or claim",
     "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
-    "w4": "closed-loop plumbing evidence preserved"
+    "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "wait for explicit user approval before running the guarded W2 panel submit command; after jobs finish, use the post-sync replay to sync back, run completion, generate the target-wise panel report, and refresh interpretation",
+  "next_action": "Wait for explicit user approval naming W2c target-MSA precompute. Do not infer approval from generic continuation or goal-mode resume; ProteinMPNN/Boltz record generation remains separately blocked.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W2_multi_target_panel"
+    "W2c_target_MSA_completion_and_fit_packet_gate"
   ],
-  "status": "goal_active_w2_remaining",
+  "status": "goal_active_w2b_terminal_w2c_precompute",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -26,6 +28,7 @@
   "w2_execution_attempt": {
     "approval_scope": "W2 v9 full 14-target target-MSA input prep only",
     "approved_but_blocked_before_submission": false,
+    "historical": true,
     "job_ids": [
       "3059563",
       "3059564",
@@ -70,6 +73,7 @@
     "status": "target_msa_outputs_synced_strict_require_files_passed",
     "submission_started": true,
     "submitted_at": "2026-07-05T08:57:40+09:00",
+    "superseded_by": "w2b_certification_terminal_not_supported",
     "sync_back": {
       "checked_at": "2026-07-05T09:08:12+09:00",
       "completed": true,
@@ -87,12 +91,13 @@
   "w2_gate": {
     "approval_packet_ready": true,
     "approval_parity_ok": true,
+    "historical": true,
     "panel_approval_packet_ready": true,
     "panel_approval_scope_expected_slurm_jobs": 14,
     "panel_approval_scope_planned_design_records": 700,
     "panel_approval_scope_ready": true,
     "panel_can_claim_w2_generalization": false,
-    "panel_can_submit_if_explicitly_approved": true,
+    "panel_can_submit_if_explicitly_approved": false,
     "panel_decision_can_claim_w2_now": false,
     "panel_decision_current_result_status": "not_available_not_submitted",
     "panel_decision_no_submit": true,
@@ -178,11 +183,13 @@
     "project_status_panel_approval_scope_expected_slurm_jobs": 14,
     "project_status_panel_approval_scope_planned_design_records": 700,
     "project_status_panel_approval_scope_ready": true,
+    "status": "historical_pre_w2b_panel_path_superseded",
+    "superseded_by": "w2b_certification_terminal_not_supported",
     "target_msa_approved_but_blocked_before_submission": false,
     "target_msa_execution_status": "target_msa_outputs_synced_strict_require_files_passed",
     "target_msa_jobs_submitted_waiting_on_completion": false,
     "target_msa_outputs_synced_strict_require_files_passed": true,
-    "target_msa_ready_if_explicitly_approved": true,
+    "target_msa_ready_if_explicitly_approved": false,
     "wrapper_guard_ok": true
   },
   "w2_panel_approval": {
@@ -228,6 +235,7 @@
       "submit_summary_absent": true,
       "target_msa_strict_ready": true
     },
+    "historical": true,
     "job_state_probe_before_sync": "results/m6d_w2_target_family_redesign_v11_job_state_probe.json",
     "job_state_probe_sync_after_query": "mkdir -p results && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_job_state_probe.json' results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv' results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
     "job_state_query_after_receipt": "ssh ${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST} 'cd ${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT} && bash results/m6d_w2_target_family_redesign_v11_job_state_query.sh' && mkdir -p results && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_job_state_probe.json' results/m6d_w2_target_family_redesign_v11_job_state_probe.json && rsync -avP '${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}:${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}/results/m6d_w2_target_family_redesign_v11_sacct_states.tsv' results/m6d_w2_target_family_redesign_v11_sacct_states.tsv",
@@ -248,6 +256,7 @@
     "submit_receipt_absent": true,
     "submit_summary": "results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json",
     "submit_summary_absent": true,
+    "superseded_by": "w2b_certification_terminal_not_supported",
     "sync_back_command_after_jobs_finish": "bash results/m6d_w2_target_family_redesign_v11_sync_back.sh",
     "target_msa_strict_ready": true
   },
@@ -256,6 +265,7 @@
     "can_claim_w2_generalization_now": false,
     "current_result_status": "not_available_not_submitted",
     "current_result_w2_supported": false,
+    "historical": true,
     "min_records_per_target": 20,
     "min_targets": 4,
     "n_manifest_targets": 7,
@@ -263,12 +273,14 @@
     "no_submit": true,
     "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_decision_protocol.json",
     "status": "post_panel_decision_protocol_ready",
+    "superseded_by": "w2b_certification_terminal_not_supported",
     "target_alpha": 0.2
   },
   "w2_panel_postsync_interpretation": {
     "audit_ok": true,
     "can_claim_w2_generalization": false,
     "current_result_status": "not_available_not_submitted",
+    "historical": true,
     "min_records_per_target": 20,
     "min_targets": 4,
     "n_failures": 0,
@@ -277,6 +289,7 @@
     "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
     "status": "not_synced_not_interpretable",
     "submitted": false,
+    "superseded_by": "w2b_certification_terminal_not_supported",
     "sync_ready": false,
     "target_alpha": 0.2
   },
@@ -315,6 +328,7 @@
     "can_claim_w2_generalization": false,
     "continuation_phrases_are_approval": false,
     "explicit_approval_required": true,
+    "historical": true,
     "machine_gate": "BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit",
     "manifest": "configs/m6d_w2_target_family_redesign_v11_representative_targets.json",
     "n_failures": 0,
@@ -334,6 +348,7 @@
     "strict_postsubmit_status_before_sync": "python -m bio_sfm_designer.experiments.m6d_w2_panel_postsubmit_status --manifest configs/m6d_w2_target_family_redesign_v11_representative_targets.json --receipt results/m6d_w2_target_family_redesign_v11_submit_receipt.jsonl --summary results/m6d_w2_target_family_redesign_v11_submit_receipt_summary.json --job-states results/m6d_w2_target_family_redesign_v11_job_state_probe.json --require-sync-ready --out-json results/m6d_w2_target_family_redesign_v11_postsubmit_status.json",
     "submit_if_explicitly_approved": "ssh \"$CAYUGA_BIO_SFM_HOST\" \"cd \\\"$CAYUGA_BIO_SFM_REMOTE_ROOT\\\" && BIO_SFM_PYTHON=\\\"$BIO_SFM_PYTHON\\\" PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_V11_PANEL=approve-v11-panel-submit bash results/m6d_w2_target_family_redesign_v11_submit_with_receipt.sh\"",
     "submitted": false,
+    "superseded_by": "w2b_certification_terminal_not_supported",
     "target_alpha": 0.2,
     "workflow_all_manual_commands_present": true,
     "workflow_completion_static_chain_ok": true,
@@ -364,6 +379,7 @@
     "audit_ok": true,
     "can_claim_w2_generalization": false,
     "can_submit_panel_if_user_explicitly_approves": true,
+    "historical": true,
     "n_absence_checks": 2,
     "n_exact_checks": 26,
     "n_failures": 0,
@@ -373,7 +389,8 @@
     "no_submit": true,
     "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
     "shell_syntax_checks_ok": true,
-    "status": "remote_submission_readiness_ok"
+    "status": "remote_submission_readiness_ok",
+    "superseded_by": "w2b_certification_terminal_not_supported"
   },
   "w2_panel_submission_decision": {
     "audit_ok": true,
@@ -381,6 +398,7 @@
     "can_submit_if_explicitly_approved": true,
     "decision": "awaiting_explicit_approval",
     "explicit_approval_required": true,
+    "historical": true,
     "local_receipt_absence_ok": true,
     "n_failures": 0,
     "next_action": "await explicit user approval before running submit_command_if_approved",
@@ -440,7 +458,117 @@
     "remote_checked": true,
     "remote_receipt_absence_ok": true,
     "status": "awaiting_explicit_panel_submission_approval",
-    "submitted": false
+    "submitted": false,
+    "superseded_by": "w2b_certification_terminal_not_supported"
+  },
+  "w2b_terminal_result": {
+    "audit_ok": true,
+    "can_claim_w2b_target_adaptive_viability": false,
+    "certified_targets": [
+      "1F93_DC",
+      "1FDH_GA",
+      "1FLT_WV",
+      "1FVC_DC"
+    ],
+    "checks": {
+      "audit_ok": true,
+      "panel_gate_failed": true,
+      "positive_claim_false": true,
+      "status_terminal": true,
+      "terminal_after_certification": true,
+      "test_cannot_change_certificate": true,
+      "test_not_required": true,
+      "test_rows_absent": true
+    },
+    "panel_certification_gate": {
+      "minimum_certified_targets": 3,
+      "minimum_selective_pae_certified_targets": 1,
+      "observed_certified_targets": 4,
+      "observed_selective_pae_certified_targets": 0,
+      "passed": false
+    },
+    "selective_pae_certified_targets": [],
+    "status": "w2b_certification_terminal_not_supported",
+    "terminal_after_certification": true,
+    "test_can_change_certificate": false,
+    "test_compute_submitted": false
+  },
+  "w2c_successor": {
+    "audit_ok": true,
+    "can_claim_w2c": false,
+    "cayuga_submission_allowed": false,
+    "checks": {
+      "audit_ok": true,
+      "cayuga_submission_blocked": true,
+      "design_power_qualified": true,
+      "execution_not_ready": true,
+      "no_submit": true,
+      "positive_claim_false": true,
+      "status_ready": true
+    },
+    "conditional_certification_power": 0.8178602810841593,
+    "design_power_qualified": true,
+    "design_true_risk": 0.08,
+    "evaluator_implemented": true,
+    "evaluator_module": "bio_sfm_designer.experiments.m6d_w2c_one_shot_report",
+    "execution_ready": false,
+    "locked_scientific_digest": "c2d9757ce77a9afbf02d0ce30e2e609607ece430539d6378e3eeef3ba77071f5",
+    "minimum_accepted": 90,
+    "minimum_conditional_power": 0.8,
+    "no_submit": true,
+    "remaining_unlock_conditions": [
+      "precompute and hash-lock target MSAs for all eight selected targets",
+      "materialize and hash-lock the target manifest, prepared structures, FASTAs, MSAs, and reports",
+      "pass local and Cayuga no-submit dry-runs with no receipt creation",
+      "prepare a bounded compute packet and obtain explicit operator approval"
+    ],
+    "status": "w2c_design_power_qualified_no_submit",
+    "target_manifest_ids": [
+      "1EZV_XY",
+      "1F80_BC",
+      "1F99_BA",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FR2_BA",
+      "1FYR_CD"
+    ],
+    "target_manifest_integrity_ok": true,
+    "target_manifest_present": true,
+    "target_msa_ready": false
+  },
+  "w2c_target_msa_approval": {
+    "audit_ok": true,
+    "authorizes_record_generation": false,
+    "checks": {
+      "audit_ok": true,
+      "cayuga_dry_run_passed": true,
+      "explicit_approval_required": true,
+      "input_parity_passed": true,
+      "local_dry_run_passed": true,
+      "no_slurm_delta": true,
+      "receipt_absent": true,
+      "status_ready": true,
+      "submission_not_performed": true
+    },
+    "expected_slurm_jobs": 8,
+    "explicit_user_approval_required": true,
+    "input_sha_matches": 40,
+    "input_sha_mismatches": 0,
+    "n_targets": 8,
+    "required_user_phrase": "approve W2c target-MSA precompute",
+    "status": "ready_for_explicit_target_msa_approval_not_submitted",
+    "submission_performed": false,
+    "target_ids": [
+      "1FR2_BA",
+      "1F80_BC",
+      "1EZV_XY",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FYR_CD",
+      "1F99_BA"
+    ]
   },
   "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json",
   "w3_gate": {
@@ -456,8 +584,10 @@
       "status": "certified"
     },
     "W2_multi_target_panel": {
-      "complete": false,
-      "status": "panel_approval_packet_ready_awaiting_explicit_approval"
+      "complete": true,
+      "scientific_success": false,
+      "status": "w2b_certification_terminal_not_supported",
+      "successor": "w2c_design_power_qualified_no_submit"
     },
     "W3_independent_predictor": {
       "complete": true,

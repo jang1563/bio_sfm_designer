@@ -1,11 +1,11 @@
 # M6d Goal-Mode Current Anchor
 
-Date: 2026-06-30
+Date: 2026-07-12
 
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
 
-Latest local harness refresh: 2026-07-05.
+Latest local harness refresh: 2026-07-12.
 
 Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. W2b
 certification completed on five fit-eligible targets with 300 fresh H100 records and strict QC failures=0.
@@ -13,11 +13,21 @@ Four `trust_all` targets certified, but the sole `selective_pae` target failed e
 locked panel requires one selective certificate, so W2b v1 is terminally not supported and no test compute
 was submitted. The authoritative result artifact is `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`.
 
+Latest successor override: 2026-07-12. W2c is a new selective-pAE-only one-shot
+experiment with an exact prospective power gate. Its design qualifies at 90 certification
+accepts with conditional power 0.817860 under design risk 0.08. Its locked evaluator is
+implemented, and eight label-blind fresh targets are now selected with zero historical/W2b target,
+source, or sequence overlap. All eight still need target MSAs, so W2c remains `no_submit`. The authoritative design artifacts are
+`docs/M6D_W2C_ONE_SHOT_PROTOCOL.md`, `configs/m6d_w2c_one_shot_protocol.json`, and
+`results/m6d_w2c_design_gate.{json,md}`. All W2 v1-v11 execution entries later in this
+chronological ledger are historical even where their original labels say `current`.
+
 ## Active Objective
 
 Continue the M6d science-result program in Cayuga-first goal mode:
 
-- redesign W2 multi-target generalization after the current evaluable-not-certified panel;
+- implement and prospectively qualify the one-shot W2c selective-pAE successor without
+  reusing W2b rows or authorizing compute early;
 - resolve W3 Boltz-Chai predictor disagreement through an explicit robustness protocol;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
@@ -28,6 +38,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W1: certified as target-specific complex evidence.
 - W2: not certified as universal multi-target generalization. W2b v1 is also terminally not supported:
   four `trust_all` targets certified, but zero selective-pAE targets certified against a requirement of one.
+- W2c: design and power gate qualified, but no fresh targets, records, certificate, or claim exist;
+  Cayuga submission remains blocked.
 - W3: independent-predictor robustness is not supported under the current Boltz-vs-Chai readout.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
@@ -45,8 +57,19 @@ from Chai records alone.
 - W2b certification replay fixture: `tests/fixtures/m6d_w2b_target_adaptive_certification_records.jsonl`
 - W2b terminal certification report: `results/m6d_w2b_target_adaptive_certification_report.json`
 - W2b certification output manifest: `results/m6d_w2b_target_adaptive_certification_output_manifest.json`
+- W2c one-shot protocol: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md` and
+  `configs/m6d_w2c_one_shot_protocol.json`
+- W2c no-submit design gate: `results/m6d_w2c_design_gate.{json,md}`
+- W2c fresh target manifest and label-blind selection:
+  `configs/m6d_w2c_fresh_targets.json` and `results/m6d_w2c_target_selection.json`
+- W2c target-MSA readiness packet, not submitted:
+  `docs/M6D_W2C_TARGET_MSA_APPROVAL.md` and
+  `results/m6d_w2c_target_msa_approval_packet.json`
+- Current goal-state refresh audit: `results/m6d_goal_state_refresh_report.{json,md}`
 - Science-action anchor: `results/m6d_followup_next_science_actions.{json,md}`
-- Machine-readable goal anchor: `results/m6d_goal_mode_current_anchor.json`
+- Compact tracked machine-readable goal state: `results/m6d_goal_state_refresh_report.json`
+- Local extended machine-readable goal anchor, when present:
+  `results/m6d_goal_mode_current_anchor.json`
 - Current W2/W3 decision protocol: `results/m6d_w2_w3_decision_protocol.{json,md}`
 - Current W3 next-protocol contract: `results/m6d_w3_next_protocol.{json,md}`
 - Current W3 challenge manifest: `results/m6d_w3_challenge_manifest.{json,md}`

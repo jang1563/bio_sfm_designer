@@ -1,0 +1,124 @@
+{
+  "artifact": "m6d_w2c_design_gate",
+  "audit_ok": true,
+  "can_claim_w2c": false,
+  "cayuga_submission_allowed": false,
+  "certification_design": {
+    "accepted_rows": 90,
+    "conditional_certification_power": 0.8178602810841593,
+    "design_true_risk": 0.08,
+    "maximum_certifiable_empirical_risk": 0.1,
+    "maximum_certifiable_false_accepts": 9,
+    "minimum_accepted": 90,
+    "minimum_conditional_power": 0.8,
+    "panel_delta": 0.1,
+    "per_target_delta": 0.0125,
+    "records_per_target": 180,
+    "target_alpha": 0.2
+  },
+  "claim_boundary": "This is a planning and power artifact only. It does not reuse W2b rows, select W2c targets, authorize compute, certify a gate, or support W2/W2c generalization.",
+  "compute_budget": {
+    "fit_records_per_initial_target": 180,
+    "maximum_certification_records": 1440,
+    "maximum_initial_fit_records": 1440,
+    "maximum_total_records": 2880,
+    "no_adaptive_top_up": true,
+    "staged_stop_after_fit_screen": true
+  },
+  "design_power_qualified": true,
+  "execution_controls": {
+    "cayuga_submission_allowed": true,
+    "command_wrapper_emitted": true,
+    "operator_approval_absent": true
+  },
+  "execution_readiness": {
+    "command_wrapper_emitted": false,
+    "evaluator_implemented": true,
+    "evaluator_module": "bio_sfm_designer.experiments.m6d_w2c_one_shot_report",
+    "operator_approval_recorded": false,
+    "target_manifest_ids": [
+      "1EZV_XY",
+      "1F80_BC",
+      "1F99_BA",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FR2_BA",
+      "1FYR_CD"
+    ],
+    "target_manifest_integrity_ok": true,
+    "target_manifest_present": true,
+    "target_msa_ready": false
+  },
+  "execution_ready": false,
+  "failures": [],
+  "fit_design": {
+    "eligible_mode": "selective_pae_only",
+    "independent_screen_records_per_target": 120,
+    "maximum_screen_false_accepts_at_minimum": 6,
+    "minimum_screen_accepts": 75,
+    "screen_acceptance_rate_lcb_at_minimum": 0.5191046044229298,
+    "screen_acceptance_rate_lcb_floor": 0.5,
+    "screen_risk_ucb_at_minimum": 0.13619627220661895,
+    "screen_risk_ucb_cap": 0.15,
+    "threshold_learning_records_per_target": 60,
+    "trust_all_counts_toward_panel_success": false
+  },
+  "fresh_target_contract": {
+    "excludes_predecessor_targets": true,
+    "n_initial_targets": 8,
+    "target_manifest": "configs/m6d_w2c_fresh_targets.json"
+  },
+  "inputs": {
+    "predecessor_protocol": "configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json",
+    "predecessor_protocol_sha256": "3747ae72ac1f271ed808db98894139520d6d4fb2b44b93ac5abd814cfda54c99",
+    "predecessor_report": "results/m6d_w2b_target_adaptive_certification_report.json",
+    "predecessor_report_sha256": "87760fadffb46848bb027bc214710286ec5d057ec8ecb83030b0f361c2639d36",
+    "protocol": "configs/m6d_w2c_one_shot_protocol.json",
+    "protocol_sha256": "d7ae7d23f64f957357a6fb9fe1659beb3c4caeea82d2c87bb3e18c73139dfc96"
+  },
+  "locked_scientific_digest": "c2d9757ce77a9afbf02d0ce30e2e609607ece430539d6378e3eeef3ba77071f5",
+  "next_action": "Implement the locked W2c evaluator and build an eight-target fresh manifest with complete historical/sequence/source exclusion before any execution packet or approval request.",
+  "no_submit": true,
+  "panel_decision_rule": {
+    "minimum_certified_targets": 3,
+    "minimum_selective_pae_certified_targets": 3,
+    "trust_all_certificates_count": false
+  },
+  "predecessor": {
+    "checks": {
+      "audit_ok": true,
+      "panel_gate_failed": true,
+      "positive_w2b_claim_false": true,
+      "terminal_after_certification": true,
+      "test_cannot_change_certificate": true,
+      "test_rows_absent": true,
+      "universal_w2_claim_false": true
+    },
+    "evidence_role": "design_diagnostic_only",
+    "initial_target_ids": [
+      "1F51_AE",
+      "1F66_AB",
+      "1F93_DC",
+      "1FDH_GA",
+      "1FJG_FR",
+      "1FLT_WV",
+      "1FVC_DC",
+      "1FXK_CA"
+    ],
+    "rows_reused": false,
+    "stage_namespaces": [
+      "w2b-cert-v1",
+      "w2b-fit-v1",
+      "w2b-test-v1"
+    ],
+    "status": "w2b_certification_terminal_not_supported"
+  },
+  "remaining_unlock_conditions": [
+    "precompute and hash-lock target MSAs for all eight selected targets",
+    "materialize and hash-lock the target manifest, prepared structures, FASTAs, MSAs, and reports",
+    "pass local and Cayuga no-submit dry-runs with no receipt creation",
+    "prepare a bounded compute packet and obtain explicit operator approval"
+  ],
+  "status": "w2c_design_power_qualified_no_submit"
+}

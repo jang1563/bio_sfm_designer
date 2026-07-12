@@ -1,58 +1,23 @@
 {
   "active_risks": [
     {
-      "control": "keep W2 staged through target-MSA sync, no-submit panel approval, explicit panel approval, then target-wise certification",
-      "id": "w2_branch_explosion",
+      "control": "W2b is terminal and its rows are planning-only for W2c",
+      "id": "w2b_result_reinterpretation",
       "status": "managed"
     },
     {
-      "control": "target-MSA and panel approvals are separately guarded; continuation still does not authorize panel work",
-      "id": "approval_inference_from_continue_prompt",
+      "control": "W2c permits selective_pae only and trust_all cannot satisfy panel success",
+      "id": "trust_all_overclaim",
       "status": "managed"
     },
     {
-      "control": "fallback login2 reached and the audited target-MSA wrapper submitted jobs; future reruns must still use audited target-MSA-only wrappers",
-      "id": "ssh_pre_submission_blocker",
-      "status": "resolved"
-    },
-    {
-      "control": "wait for target-MSA jobs to leave the queue before running sync-back and strict require-files",
-      "id": "target_msa_job_completion_pending",
-      "status": "resolved"
-    },
-    {
-      "control": "post-MSA strict gate and panel approval packet readiness still must not be converted into a W2 claim until target-wise certification passes",
-      "id": "panel_step_boundary",
-      "status": "active"
-    },
-    {
-      "control": "panel approval packet is no-submit readiness only; explicit approval and target-wise certification remain required",
-      "id": "panel_approval_packet_boundary",
+      "control": "exact power floor, fixed sample sizes, and no adaptive top-up are locked before compute",
+      "id": "underpowered_or_adaptive_w2c",
       "status": "managed"
     },
     {
-      "control": "post-panel decision protocol is no-submit interpretation only; it cannot authorize execution or claims",
-      "id": "panel_decision_protocol_boundary",
-      "status": "managed"
-    },
-    {
-      "control": "remote readiness is no-submit mirror evidence only; explicit approval and target-wise certification remain required",
-      "id": "panel_remote_readiness_boundary",
-      "status": "managed"
-    },
-    {
-      "control": "submission-decision state records approval wait only; it cannot authorize execution or claims",
-      "id": "panel_submission_decision_boundary",
-      "status": "managed"
-    },
-    {
-      "control": "post-sync interpretation is no-submit and refuses W2 claims until target-wise evidence exists",
-      "id": "panel_postsync_interpretation_boundary",
-      "status": "managed"
-    },
-    {
-      "control": "require target-wise certificates for W2 generalization",
-      "id": "pooled_only_w2_claim",
+      "control": "next work is evaluator plus fresh-target qualification; no further W2b validation is allowed",
+      "id": "verification_instead_of_science",
       "status": "managed"
     }
   ],
@@ -62,8 +27,10 @@
   "claim_boundary": {
     "publication": "not_current_goal",
     "w1": "preserved_target_specific_certificate",
-    "w2": "open_after_panel_postsync_interpretation_predeclared; explicit guarded panel submission, sync-back, completion, target-wise report, and alpha-gate interpretation are still required",
-    "w3": "negative_robustness_adjudicated; no positive independent-predictor claim",
+    "w2": "generalization_not_supported",
+    "w2b": "terminal_not_supported_no_extension",
+    "w2c": "design_only_no_submit_no_claim",
+    "w3": "negative_robustness_adjudicated_no_positive_claim",
     "w4": "closed_loop_plumbing_only"
   },
   "current_state": {
@@ -72,8 +39,9 @@
       "status": "certified"
     },
     "W2_multi_target_panel": {
-      "complete": false,
-      "status": "panel_approval_packet_ready_awaiting_explicit_approval"
+      "complete": true,
+      "scientific_success": false,
+      "status": "w2b_certification_terminal_not_supported"
     },
     "W2_panel_approval": {
       "approval_packet_ready": true,
@@ -88,6 +56,7 @@
         "submit_summary_absent": true,
         "target_msa_strict_ready": true
       },
+      "historical": true,
       "job_state_probe_before_sync": null,
       "job_state_probe_sync_after_query": null,
       "job_state_query_after_receipt": null,
@@ -108,6 +77,7 @@
       "submit_receipt_absent": true,
       "submit_summary": "results/m6d_w2_target_family_redesign_v9_submit_receipt_summary.json",
       "submit_summary_absent": true,
+      "superseded_by": "w2b_certification_terminal_not_supported",
       "sync_back_command_after_jobs_finish": "CAYUGA_BIO_SFM_ROOT=<hpc-login-host>:/home/fs01/<user>/bio_sfm_smoke BIO_SFM_PYTHON=/tmp/bio_sfm_science_venv/bin/python PYTHONPATH=src:../bio-sfm-trust-core/src bash results/m6d_w2_target_family_redesign_v9_sync_back.sh",
       "target_msa_strict_ready": true
     },
@@ -116,6 +86,7 @@
       "can_claim_w2_generalization_now": false,
       "current_result_status": "not_available_not_submitted",
       "current_result_w2_supported": false,
+      "historical": true,
       "min_records_per_target": 20,
       "min_targets": 14,
       "n_manifest_targets": 14,
@@ -123,12 +94,14 @@
       "no_submit": true,
       "path": "<repo-root>/results/m6d_w2_target_family_redesign_v9_panel_decision_protocol.json",
       "status": "post_panel_decision_protocol_ready",
+      "superseded_by": "w2b_certification_terminal_not_supported",
       "target_alpha": 0.2
     },
     "W2_panel_postsync_interpretation": {
       "audit_ok": true,
       "can_claim_w2_generalization": false,
       "current_result_status": "not_available_not_submitted",
+      "historical": true,
       "min_records_per_target": 20,
       "min_targets": 4,
       "n_failures": 0,
@@ -137,6 +110,7 @@
       "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_postsync_interpretation.json",
       "status": "not_synced_not_interpretable",
       "submitted": false,
+      "superseded_by": "w2b_certification_terminal_not_supported",
       "sync_ready": false,
       "target_alpha": 0.2
     },
@@ -144,6 +118,7 @@
       "audit_ok": true,
       "can_claim_w2_generalization": false,
       "can_submit_panel_if_user_explicitly_approves": true,
+      "historical": true,
       "n_absence_checks": 2,
       "n_exact_checks": 26,
       "n_failures": 0,
@@ -153,7 +128,8 @@
       "no_submit": true,
       "path": "<repo-root>/results/m6d_w2_target_family_redesign_v11_remote_submission_readiness.json",
       "shell_syntax_checks_ok": true,
-      "status": "remote_submission_readiness_ok"
+      "status": "remote_submission_readiness_ok",
+      "superseded_by": "w2b_certification_terminal_not_supported"
     },
     "W2_panel_submission_decision": {
       "audit_ok": true,
@@ -161,6 +137,7 @@
       "can_submit_if_explicitly_approved": true,
       "decision": "awaiting_explicit_approval",
       "explicit_approval_required": true,
+      "historical": true,
       "local_receipt_absence_ok": true,
       "n_failures": 0,
       "next_action": "await explicit user approval before running submit_command_if_approved",
@@ -177,11 +154,13 @@
       "remote_checked": true,
       "remote_receipt_absence_ok": true,
       "status": "awaiting_explicit_panel_submission_approval",
-      "submitted": false
+      "submitted": false,
+      "superseded_by": "w2b_certification_terminal_not_supported"
     },
     "W2_target_msa_execution": {
       "approval_scope": "W2 v9 full 14-target target-MSA input prep only",
       "approved_but_blocked_before_submission": false,
+      "historical": true,
       "job_ids": [
         "3059563",
         "3059564",
@@ -226,6 +205,7 @@
       "status": "target_msa_outputs_synced_strict_require_files_passed",
       "submission_started": true,
       "submitted_at": "2026-07-05T08:57:40+09:00",
+      "superseded_by": "w2b_certification_terminal_not_supported",
       "sync_back": {
         "checked_at": "2026-07-05T09:08:12+09:00",
         "completed": true,
@@ -240,6 +220,115 @@
       "target_msa_jobs_submitted_waiting_on_completion": false,
       "target_msa_outputs_synced_strict_require_files_passed": true
     },
+    "W2b_terminal_result": {
+      "audit_ok": true,
+      "can_claim_w2b_target_adaptive_viability": false,
+      "certified_targets": [
+        "1F93_DC",
+        "1FDH_GA",
+        "1FLT_WV",
+        "1FVC_DC"
+      ],
+      "checks": {
+        "audit_ok": true,
+        "panel_gate_failed": true,
+        "positive_claim_false": true,
+        "status_terminal": true,
+        "terminal_after_certification": true,
+        "test_cannot_change_certificate": true,
+        "test_not_required": true,
+        "test_rows_absent": true
+      },
+      "panel_certification_gate": {
+        "minimum_certified_targets": 3,
+        "minimum_selective_pae_certified_targets": 1,
+        "observed_certified_targets": 4,
+        "observed_selective_pae_certified_targets": 0,
+        "passed": false
+      },
+      "selective_pae_certified_targets": [],
+      "status": "w2b_certification_terminal_not_supported",
+      "terminal_after_certification": true,
+      "test_can_change_certificate": false,
+      "test_compute_submitted": false
+    },
+    "W2c_successor": {
+      "audit_ok": true,
+      "can_claim_w2c": false,
+      "cayuga_submission_allowed": false,
+      "checks": {
+        "audit_ok": true,
+        "cayuga_submission_blocked": true,
+        "design_power_qualified": true,
+        "execution_not_ready": true,
+        "no_submit": true,
+        "positive_claim_false": true,
+        "status_ready": true
+      },
+      "conditional_certification_power": 0.8178602810841593,
+      "design_power_qualified": true,
+      "design_true_risk": 0.08,
+      "evaluator_implemented": true,
+      "evaluator_module": "bio_sfm_designer.experiments.m6d_w2c_one_shot_report",
+      "execution_ready": false,
+      "locked_scientific_digest": "c2d9757ce77a9afbf02d0ce30e2e609607ece430539d6378e3eeef3ba77071f5",
+      "minimum_accepted": 90,
+      "minimum_conditional_power": 0.8,
+      "no_submit": true,
+      "remaining_unlock_conditions": [
+        "precompute and hash-lock target MSAs for all eight selected targets",
+        "materialize and hash-lock the target manifest, prepared structures, FASTAs, MSAs, and reports",
+        "pass local and Cayuga no-submit dry-runs with no receipt creation",
+        "prepare a bounded compute packet and obtain explicit operator approval"
+      ],
+      "status": "w2c_design_power_qualified_no_submit",
+      "target_manifest_ids": [
+        "1EZV_XY",
+        "1F80_BC",
+        "1F99_BA",
+        "1FFG_CD",
+        "1FFK_HR",
+        "1FQ9_CA",
+        "1FR2_BA",
+        "1FYR_CD"
+      ],
+      "target_manifest_integrity_ok": true,
+      "target_manifest_present": true,
+      "target_msa_ready": false
+    },
+    "W2c_target_msa_approval": {
+      "audit_ok": true,
+      "authorizes_record_generation": false,
+      "checks": {
+        "audit_ok": true,
+        "cayuga_dry_run_passed": true,
+        "explicit_approval_required": true,
+        "input_parity_passed": true,
+        "local_dry_run_passed": true,
+        "no_slurm_delta": true,
+        "receipt_absent": true,
+        "status_ready": true,
+        "submission_not_performed": true
+      },
+      "expected_slurm_jobs": 8,
+      "explicit_user_approval_required": true,
+      "input_sha_matches": 40,
+      "input_sha_mismatches": 0,
+      "n_targets": 8,
+      "required_user_phrase": "approve W2c target-MSA precompute",
+      "status": "ready_for_explicit_target_msa_approval_not_submitted",
+      "submission_performed": false,
+      "target_ids": [
+        "1FR2_BA",
+        "1F80_BC",
+        "1EZV_XY",
+        "1FFG_CD",
+        "1FFK_HR",
+        "1FQ9_CA",
+        "1FYR_CD",
+        "1F99_BA"
+      ]
+    },
     "W3_independent_predictor": {
       "complete": true,
       "positive_claim_supported": false,
@@ -251,17 +340,21 @@
     },
     "completion_audit": {
       "can_mark_goal_complete": false,
+      "historical_panel_fields_retained": true,
       "panel_public_approval_bundle_ready": true,
       "panel_public_approval_bundle_workflow_script_chain_static_ok": true,
-      "status": "goal_active_w2_remaining"
+      "status": "goal_active_w2b_terminal_w2c_precompute"
     },
     "project_status": "m6_complex_in_progress",
     "remaining": 1
   },
   "drift_assessment": {
-    "claim_boundary": "preserved",
-    "direction": "aligned",
-    "execution": "panel_postsync_interpretation_predeclared_not_synced"
+    "claims": "no_drift_negative_boundaries_preserved",
+    "execution": "w2b_closed_without_nondecisive_test_compute_w2c_no_submit",
+    "major_direction_drift": false,
+    "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
+    "operational_status": "stale_current_surfaces_replaced_historical_detail_retained",
+    "protocol": "no_drift_w2b_lock_preserved_w2c_declared_as_new_experiment"
   },
   "failures": [],
   "inputs": {
@@ -277,6 +370,6 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "wait for explicit user approval before running the guarded W2 panel submit command; then use post-sync replay to sync back, run completion, generate target-wise report, and refresh interpretation",
-  "status": "no_major_direction_drift_w2_blocked"
+  "next_action": "Wait for explicit user approval naming W2c target-MSA precompute. Do not infer approval from generic continuation or goal-mode resume; ProteinMPNN/Boltz record generation remains separately blocked.",
+  "status": "no_major_direction_drift_w2b_terminal_w2c_precompute"
 }

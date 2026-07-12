@@ -1,0 +1,83 @@
+{
+  "artifact": "m6d_w2c_target_msa_approval_packet",
+  "status": "ready_for_explicit_target_msa_approval_not_submitted",
+  "audit_ok": true,
+  "created_at": "2026-07-12T08:58:08+09:00",
+  "scope": {
+    "workstream": "m6d_w2c_target_msa_input_prep_only",
+    "n_targets": 8,
+    "target_ids": [
+      "1FR2_BA",
+      "1F80_BC",
+      "1EZV_XY",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FYR_CD",
+      "1F99_BA"
+    ],
+    "expected_slurm_jobs": 8,
+    "scheduler_resource": "scu-gpu/gpu:a40:1",
+    "maximum_gpu_hours": 8,
+    "authorizes_target_msa_only": true,
+    "authorizes_proteinmpnn": false,
+    "authorizes_boltz_record_generation": false
+  },
+  "bound_artifacts": {
+    "manifest": {
+      "path": "configs/m6d_w2c_fresh_targets.json",
+      "sha256": "94cae2712270ca3ef7d85357ce61ccf0ac9d0d8437077d543c20e3ac61d2eda2"
+    },
+    "protocol": {
+      "path": "configs/m6d_w2c_one_shot_protocol.json",
+      "sha256": "d7ae7d23f64f957357a6fb9fe1659beb3c4caeea82d2c87bb3e18c73139dfc96"
+    },
+    "selection": {
+      "path": "results/m6d_w2c_target_selection.json",
+      "sha256": "0d6e166e8823cf9d62603592b41b3865836a55c9d200e06ca353ccdde420c1c4"
+    },
+    "design_gate": {
+      "path": "results/m6d_w2c_design_gate.json",
+      "sha256": "2fe726335575239baaf6f41a10680750e0277e82e4a9e04d21e0c23aad099667"
+    },
+    "pre_msa_manifest_audit": {
+      "path": "results/m6d_w2c_manifest_pre_msa.json",
+      "sha256": "b1adf5f5592bff1e8a3cdfdfbdf6ff8ff5c37998756b7c4ab63bb30299fb19d1"
+    },
+    "plan": {
+      "path": "results/m6d_w2c_target_msas.sh",
+      "sha256": "7d73c4fb250ff4984adb7f876ad7ef0b345e0e422d7682bc7fba72fb648d91eb"
+    },
+    "guard": {
+      "path": "hpc/run_w2c_target_msa_guarded.sh",
+      "sha256": "9e65c9d59ea1f188d7312d274ccf26b9bfe92dac02a9e3cbda7b1f3c5ec1793f"
+    }
+  },
+  "checks": {
+    "local_manifest_schema_ok": true,
+    "local_ready_targets_before_msa": 8,
+    "local_guard_dry_run_passed": true,
+    "local_guard_no_approval_refuses_before_receipt": true,
+    "cayuga_packet_mirrored": true,
+    "cayuga_required_inputs_present": 40,
+    "cayuga_required_inputs_expected": 40,
+    "local_cayuga_input_sha_matches": 40,
+    "local_cayuga_input_sha_mismatches": 0,
+    "cayuga_guard_dry_run_passed": true,
+    "cayuga_slurm_jobs_before": 0,
+    "cayuga_slurm_jobs_after": 0,
+    "cayuga_receipt_absent": true,
+    "cayuga_summary_absent": true
+  },
+  "approval": {
+    "explicit_user_approval_required": true,
+    "required_user_phrase": "approve W2c target-MSA precompute",
+    "environment_variable": "BIO_SFM_APPROVE_W2C_TARGET_MSA",
+    "environment_value": "approve-w2c-target-msa-precompute",
+    "submission_performed": false,
+    "can_submit_if_explicitly_approved": true,
+    "command_if_approved": "ssh \"${CAYUGA_BIO_SFM_HOST:?set CAYUGA_BIO_SFM_HOST}\" \"cd '${CAYUGA_BIO_SFM_ROOT:?set CAYUGA_BIO_SFM_ROOT}' && BIO_SFM_PYTHON=python3 PYTHONNOUSERSITE=1 BIO_SFM_APPROVE_W2C_TARGET_MSA=approve-w2c-target-msa-precompute bash hpc/run_w2c_target_msa_guarded.sh\""
+  },
+  "claim_boundary": "This packet is readiness evidence only. No job was submitted, no W2c record exists, and no W2c or W2 generalization claim is supported.",
+  "next_action": "Wait for explicit user approval naming W2c target-MSA precompute; do not infer approval from continue, go ahead, or goal-mode resume."
+}

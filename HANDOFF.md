@@ -3,7 +3,7 @@
 Self-contained context to continue this project in a fresh session (Codex or otherwise) with **no prior
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
-> **2026-07-11 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
+> **2026-07-12 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
 > (`AUROC=0.938`) but refuses alpha=0.3 (`certification UCB=0.510`, `tau=null`). All older positive
 > certificate fields are legacy exploratory outputs until rerun under `split_ltt_v1`. The replacement
@@ -33,6 +33,15 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > certificate and test data cannot alter certificates, W2b v1 is terminally not supported and no test job
 > was submitted. See `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`. Start with
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md` before using the historical narrative below.
+> The current successor is the separate W2c selective-pAE-only one-shot protocol in
+> `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md` and `configs/m6d_w2c_one_shot_protocol.json`. Its exact prospective
+> power gate passes at 90 accepts (`power=0.817860` for design risk 0.08), and the locked evaluator is
+> implemented. Deterministic label-blind selection then chose eight fresh targets in
+> `configs/m6d_w2c_fresh_targets.json` with zero historical/W2b target, source, or sequence overlap.
+> All eight still need target MSAs. `results/m6d_w2c_design_gate.{json,md}` remains no-submit and not a
+> W2c claim. All W2 v1-v11 execution routes later in this handoff are historical.
+> The guarded target-MSA packet now passes local/Cayuga dry-run and 40/40 input SHA parity checks,
+> but remains `ready_for_explicit_target_msa_approval_not_submitted`; generic continuation is not approval.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and
 `docs/PROJECT_ROADMAP.md`.

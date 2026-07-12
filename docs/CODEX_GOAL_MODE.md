@@ -11,10 +11,10 @@ Use this objective when creating or resuming the Codex goal:
 
 ```text
 Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
-redesign W2 multi-target generalization after the current evaluable-not-certified panel,
-resolve W3 Boltz-Chai predictor disagreement through a chosen robustness protocol, preserve
-W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence, and keep
-all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
+preserve terminal W2b v1, implement and prospectively qualify the one-shot W2c selective-pAE
+successor without reusing W2b rows or authorizing compute early, move to W3 if W2c cannot
+qualify under its locked rules, preserve W1 as target-specific certified evidence and W4 as
+closed-loop plumbing evidence, and keep all status artifacts honest and reproducible.
 ```
 
 ## Current Resume Anchor
@@ -24,9 +24,34 @@ Current W2b science-result anchor: `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`. C
 the locked panel can no longer pass. W2b v1 is terminally not supported. Do not submit test compute because
 test rows cannot change the certificate or panel decision.
 
+Current W2c successor anchor: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md`. The exact design
+power gate passes, the locked evaluator is implemented, and eight label-blind fresh targets
+are selected. Their target MSAs are not ready. Therefore `execution_ready=false`, no
+record-generation wrapper exists, and Cayuga ProteinMPNN/Boltz submission remains blocked.
+
+Current W2c machine artifacts:
+`configs/m6d_w2c_one_shot_protocol.json` and `results/m6d_w2c_design_gate.{json,md}`.
+
+Current W2c target selection:
+`configs/m6d_w2c_fresh_targets.json` and `results/m6d_w2c_target_selection.json`.
+
+Current W2c target-MSA approval boundary:
+`docs/M6D_W2C_TARGET_MSA_APPROVAL.md` and
+`results/m6d_w2c_target_msa_approval_packet.json`. It is ready but not submitted; generic
+continuation or goal-mode resume is not approval.
+
+Current goal-state refresh audit:
+`results/m6d_goal_state_refresh_report.{json,md}`.
+
+All W2 v1-v11 artifacts listed later in this document are historical and must not be used
+as current submission routes.
+
 Current durable anchor: `docs/M6D_GOAL_MODE_ANCHOR.md`.
 
-Current machine-readable decision artifact:
+Current compact machine-readable decision artifact:
+`results/m6d_goal_state_refresh_report.json`.
+
+Local extended machine-readable anchor, when present:
 `results/m6d_goal_mode_current_anchor.json`.
 
 Current W2/W3 decision protocol:

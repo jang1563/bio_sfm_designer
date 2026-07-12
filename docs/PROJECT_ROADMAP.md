@@ -1,6 +1,6 @@
 # Project Roadmap
 
-> **Current statistical boundary (updated 2026-07-11):** positive certificates produced by the former
+> **Current statistical boundary (updated 2026-07-12):** positive certificates produced by the former
 > same-sample threshold search are legacy exploratory outputs. The canonical 192-design reanalysis under
 > `split_ltt_v1` retains the pAE signal but refuses alpha=0.3. The fresh 11-target W2 panel has now
 > completed on Cayuga with 1,100 records and is `multi_target_evaluable_not_certified` at alpha=0.2.
@@ -15,6 +15,10 @@
 > exact certification at 31 accepts, 6 false accepts, UCB 0.4002. The locked requirement of one selective
 > certificate is unattainable, so W2b v1 is terminally not supported and test compute was stopped. See
 > `docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md`.
+> W2c is now declared as a separate selective-pAE-only one-shot successor. Its prospective exact-binomial
+> design gate qualifies at 90 certification accepts with conditional power 0.817860 under design risk 0.08,
+> the evaluator is implemented and eight label-blind fresh targets are selected, but all eight still need target MSAs and
+> record-generation submission remains blocked. W2c does not alter W2b.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -42,6 +46,14 @@ The project succeeds when a new protein-design regime can be added with:
 `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`. Fresh data preserve diagnostic pAE ranking on `1F51_AE`
 (AUROC 0.7839), but its frozen threshold fails exact risk certification. Four easy `trust_all` targets
 certify; zero selective targets certify. No test rows were generated because they cannot change this result.
+
+2026-07-12 W2c design update: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md` and
+`results/m6d_w2c_design_gate.{json,md}` define the current forward path. W2c counts only selective-pAE
+certificates, separates threshold learning from an independent fit screen, requires prospective exact
+power, forbids adaptive top-up, and remains no-submit. The fresh manifest now locks `1FR2_BA`, `1F80_BC`,
+`1EZV_XY`, `1FFG_CD`, `1FFK_HR`, `1FQ9_CA`, `1FYR_CD`, and `1F99_BA`; all eight await target-MSA precompute.
+The guarded local/Cayuga target-MSA packet passes dry-run with Slurm `0 -> 0` and 40/40 input SHA parity,
+but is not submitted and requires separate explicit approval.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

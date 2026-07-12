@@ -12,7 +12,7 @@
 > (AUROC `0.938`) but does **not** certify alpha=0.3. See
 > [docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md](docs/STATISTICAL_VALIDITY_RESET_2026-07-10.md).
 
-> **Current W2 result (2026-07-11):** the fresh 11-target representative panel completed on Cayuga
+> **Current W2 result (2026-07-12):** the fresh 11-target representative panel completed on Cayuga
 > (22/22 jobs, 1,100/1,100 records). It is target-wise evaluable but not certified at alpha=0.2, with
 > success rates from 0% to 100% and defined pAE AUROCs from about 0.24 to 1.00. A post-hoc power audit
 > shows that 100 records per target cannot attain the declared Hoeffding/Bonferroni bound: the current
@@ -28,6 +28,17 @@
 > panel requires one selective certificate, so W2b v1 is `w2b_certification_terminal_not_supported`.
 > Test data cannot change certificates and no test compute was submitted. See
 > [docs/M6D_W2B_CERTIFICATION_COMPLETION.md](docs/M6D_W2B_CERTIFICATION_COMPLETION.md).
+
+> **Current forward path:** W2c is a separate selective-pAE-only one-shot successor; it does not alter
+> W2b or reuse its rows. The prospective exact design has conditional certification power 0.817860 at
+> 90 accepts under design risk 0.08 and requires three selective certificates. The power gate passes,
+> and its locked evaluator is implemented. Eight label-blind fresh targets are selected with zero historical/W2b
+> target, source, or sequence overlap, but all eight need target MSAs, so `execution_ready=false` and
+> record-generation submission is blocked. See [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md) and
+> `results/m6d_w2c_design_gate.{json,md}`.
+> The guarded local/Cayuga target-MSA packet passes dry-run and input parity checks but is not submitted;
+> it requires separate explicit approval documented in
+> [docs/M6D_W2C_TARGET_MSA_APPROVAL.md](docs/M6D_W2C_TARGET_MSA_APPROVAL.md).
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
@@ -60,11 +71,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-11)
+## Status (2026-07-12)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`843` integrated designer tests plus `39` trust-core tests on 2026-07-11).
+**Current local source verified** (`900` designer tests on 2026-07-12).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
