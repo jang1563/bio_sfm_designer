@@ -1,0 +1,81 @@
+{
+  "manifest_version": "1.0",
+  "project": "bio_sfm_designer",
+  "version": "0.1.0",
+  "release_profile": "curated_research_snapshot",
+  "status": "validated_release_candidate",
+  "last_updated": "2026-07-12",
+  "visibility": {
+    "github": {
+      "repo": "jang1563/bio_sfm_designer",
+      "target": "public",
+      "status": "external_live_check_required"
+    },
+    "hugging_face": {
+      "status": "not_published",
+      "reason": "No distinct model or dataset artifact is included in this release."
+    }
+  },
+  "claim_boundaries": [
+    "W2b is terminally not supported under the locked panel rule.",
+    "W2c is prospective and has zero generated model records in this release.",
+    "Pooled diagnostics do not replace target-wise certification.",
+    "Independent-predictor robustness is not supported."
+  ],
+  "included_surface": [
+    "DBTL controller, trust adapter, safety policy, and scoring code",
+    "reusable scientific evaluators and public CPU tests",
+    "W2b exact-LTT protocol, replay fixtures, and compact terminal report",
+    "W2c locked scientific protocol and label-blind target selection"
+  ],
+  "excluded_surface": [
+    "private development history and session handoffs",
+    "scheduler identifiers, submission receipts, and cluster logs",
+    "raw model state, caches, and ignored HPC outputs",
+    "operator approval and job-monitoring ledgers"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/RESULTS.md",
+      "role": "human-readable result and claim boundary",
+      "sha256": "400ff694d48ab40f1151a6bb1b977b7c096b32ac7bbbdf14582a9098d527775f"
+    },
+    {
+      "path": "configs/m6d_w2b_target_adaptive_exact_ltt_protocol.json",
+      "role": "W2b locked scientific protocol",
+      "sha256": "0bed7a1b315182e18e5b5bf6d91c6e30bb5737c35d9acb18840787b0b4d97be0"
+    },
+    {
+      "path": "results/m6d_w2b_target_adaptive_certification_report.json",
+      "role": "W2b terminal aggregate report",
+      "sha256": "87760fadffb46848bb027bc214710286ec5d057ec8ecb83030b0f361c2639d36"
+    },
+    {
+      "path": "tests/fixtures/m6d_w2b_target_adaptive_fit_records.jsonl",
+      "role": "W2b fit replay fixture",
+      "records": 480,
+      "sha256": "3187ba56a3eb39e4820d17c42e6a8ffd8ce28add05d858645a1e92427c6d4dbe"
+    },
+    {
+      "path": "tests/fixtures/m6d_w2b_target_adaptive_certification_records.jsonl",
+      "role": "W2b certification replay fixture",
+      "records": 300,
+      "sha256": "4ebc9156f839eea1fefaaa274310cb28b73ffcfdb898b7b0a8dbc5d4aeebaa70"
+    },
+    {
+      "path": "configs/m6d_w2c_one_shot_protocol.json",
+      "role": "W2c locked prospective scientific protocol",
+      "sha256": "c8f48e7e2d12b25247e43bc80b0bded10e800db130ec8573aef7203769489979"
+    },
+    {
+      "path": "configs/m6d_w2c_fresh_targets.json",
+      "role": "W2c fresh target manifest",
+      "sha256": "2ee8e43a0fa02f7fceb424210b3103f63aa8bfc97767479452b116035de2a1fb"
+    },
+    {
+      "path": "results/m6d_w2c_target_selection.json",
+      "role": "W2c label-blind target-selection report",
+      "sha256": "e657559cebcf91887409ad78886300964bc65eba161b2a3fce1454a526c44e82"
+    }
+  ]
+}

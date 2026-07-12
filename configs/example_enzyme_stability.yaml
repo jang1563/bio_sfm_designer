@@ -1,0 +1,9 @@
+# Example ObjectiveSpec. Load with ObjectiveSpec.from_yaml(path) (needs the [yaml] extra).
+target: "thermostable variant of green fluorescent protein (GFP), a benign reporter"
+objective: "thermostability"
+lam: 0.5                 # verification price λ in net = benefit − λ·assays
+rounds: 3
+candidates_per_round: 8
+assay_budget: 10
+seed: 0
+allowlist: []            # if non-empty, the target must match one of these tags

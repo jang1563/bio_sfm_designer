@@ -1,0 +1,54 @@
+{
+  "_note": "M6d/W2 candidate heterodimer panel. These targets have source/prepared PDB and target FASTA paths; target .a3m/report files still need external HPC precompute before --require-files can pass.",
+  "defaults": {
+    "num_seq": 100,
+    "temp": 0.3,
+    "seed": 37,
+    "objective": "binder"
+  },
+  "targets": [
+    {
+      "id": "1BRS_AD",
+      "rcsb_id": "1BRS",
+      "source_pdb": "hpc_outputs/targets/source_1BRS.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1BRS_AD.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1BRS_AD.report.json",
+      "allow_numbering_gaps": true,
+      "target_chain": "A",
+      "binder_chain": "D",
+      "target_fasta": "hpc_outputs/targets/1BRS_A.fasta",
+      "target_msa": "hpc_outputs/targets/1BRS_A.a3m",
+      "target_msa_report": "hpc_outputs/targets/1BRS_A.a3m.report.json",
+      "records": "hpc_outputs/m6c_targets/1BRS_AD/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6c_targets/1BRS_AD"
+    },
+    {
+      "id": "2SIC_EI",
+      "rcsb_id": "2SIC",
+      "source_pdb": "hpc_outputs/targets/source_2SIC.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_2SIC_EI.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_2SIC_EI.report.json",
+      "target_chain": "E",
+      "binder_chain": "I",
+      "target_fasta": "hpc_outputs/targets/2SIC_E.fasta",
+      "target_msa": "hpc_outputs/targets/2SIC_E.a3m",
+      "target_msa_report": "hpc_outputs/targets/2SIC_E.a3m.report.json",
+      "records": "hpc_outputs/m6d_targets/2SIC_EI/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_targets/2SIC_EI"
+    },
+    {
+      "id": "1CGI_EI",
+      "rcsb_id": "1CGI",
+      "source_pdb": "hpc_outputs/targets/source_1CGI.pdb",
+      "prepared_pdb": "hpc_outputs/targets/prepared_1CGI_EI.pdb",
+      "prep_report": "hpc_outputs/targets/prepared_1CGI_EI.report.json",
+      "target_chain": "E",
+      "binder_chain": "I",
+      "target_fasta": "hpc_outputs/targets/1CGI_E.fasta",
+      "target_msa": "hpc_outputs/targets/1CGI_E.a3m",
+      "target_msa_report": "hpc_outputs/targets/1CGI_E.a3m.report.json",
+      "records": "hpc_outputs/m6d_targets/1CGI_EI/records_boltz_complex.jsonl",
+      "out_prefix": "hpc_outputs/m6d_targets/1CGI_EI"
+    }
+  ]
+}

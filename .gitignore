@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+results/*
+!results/README.md
+!results/m6d_w2b_target_adaptive_certification_report.json
+!results/m6d_w2c_target_selection.json
+hpc_outputs/
+*.jsonl
+!configs/*.yaml
+!tests/fixtures/*.jsonl
+
+# never commit credentials
+**/API_key/**
+*.key
+.env
