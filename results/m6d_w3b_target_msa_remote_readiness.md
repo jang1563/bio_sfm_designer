@@ -8,7 +8,7 @@ Explicit approval still required: `True`.
 Live Cayuga mirror/runtime and guarded dry-run evidence only. No scheduler job, GPU compute, candidate generation, candidate-level prediction, or W3b claim is authorized or produced.
 
 - remote: `<hpc-login-host>:$HOME/bio_sfm_smoke`
-- exact SHA checks: `11`
+- exact SHA checks: `15`
 - receipt untouched: `True`
 - dry-run return code: `0`
 - failures: `0`

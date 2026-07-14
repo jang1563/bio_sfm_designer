@@ -1,0 +1,78 @@
+{
+  "artifact": "m6d_w3b_target_msa_lifecycle",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_run_post_msa_design_gate": false,
+  "can_submit_candidate_generation_or_candidate_level_prediction": false,
+  "claim_boundary": "Target-MSA lifecycle provenance only. This tool never submits work and cannot authorize candidate generation, candidate-level prediction, a gate certificate, or a W3b claim.",
+  "completion_ok": false,
+  "explicit_approval_still_required": true,
+  "failures": [],
+  "gpu_allocation_hours": 0.0,
+  "gpu_allocation_seconds": 0,
+  "job_states": [],
+  "jobs_terminal_success": false,
+  "manifest": "configs/m6d_w3b_fresh_targets.json",
+  "manifest_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
+  "maximum_a40_gpu_hours": 8.0,
+  "msa_presence": {
+    "1F2U_CD": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1F3V_BA": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1FHJ_BA": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1FL7_DC": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1FN3_DC": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1FSK_LJ": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1FSX_BA": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    },
+    "1FV1_BA": {
+      "target_msa_exists": false,
+      "target_msa_report_exists": false
+    }
+  },
+  "n_failures": 0,
+  "n_targets": 8,
+  "next_action": "exact W3b target-MSA approval and guarded submission",
+  "no_submit": true,
+  "receipt_present": false,
+  "receipt_status_counts": {},
+  "requirements": [
+    "exact W3b target-MSA approval and guarded submission"
+  ],
+  "status": "target_msa_not_submitted_awaiting_explicit_approval",
+  "strict_manifest": null,
+  "submitted": false,
+  "submitted_jobs": [],
+  "summary_present": false,
+  "target_artifacts": [],
+  "target_ids": [
+    "1FSK_LJ",
+    "1FSX_BA",
+    "1FL7_DC",
+    "1F2U_CD",
+    "1FV1_BA",
+    "1FN3_DC",
+    "1FHJ_BA",
+    "1F3V_BA"
+  ],
+  "within_gpu_budget": true
+}

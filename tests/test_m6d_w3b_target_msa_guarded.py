@@ -39,13 +39,17 @@ class M6DW3BTargetMSAGuardedTests(unittest.TestCase):
             {
                 "design_gate",
                 "extract_chain_fasta",
+                "job_state_query",
+                "lifecycle",
                 "manifest",
+                "manifest_validator",
                 "plan",
                 "precompute_python",
                 "precompute_sbatch",
                 "prep_heterodimer",
                 "protocol",
                 "selection",
+                "sync_back",
             },
         )
 
@@ -78,6 +82,10 @@ class M6DW3BTargetMSAGuardedTests(unittest.TestCase):
         self.assertIn('require_sha256 "$PRECOMPUTE_PYTHON" "$EXPECTED_PRECOMPUTE_PYTHON_SHA256"', text)
         self.assertIn('require_sha256 "$PREP_HETERODIMER" "$EXPECTED_PREP_HETERODIMER_SHA256"', text)
         self.assertIn('require_sha256 "$EXTRACT_CHAIN_FASTA" "$EXPECTED_EXTRACT_CHAIN_FASTA_SHA256"', text)
+        self.assertIn('require_sha256 "$LIFECYCLE" "$EXPECTED_LIFECYCLE_SHA256"', text)
+        self.assertIn('require_sha256 "$MANIFEST_VALIDATOR" "$EXPECTED_MANIFEST_VALIDATOR_SHA256"', text)
+        self.assertIn('require_sha256 "$JOB_STATE_QUERY" "$EXPECTED_JOB_STATE_QUERY_SHA256"', text)
+        self.assertIn('require_sha256 "$SYNC_BACK" "$EXPECTED_SYNC_BACK_SHA256"', text)
 
     def test_dry_run_submits_nothing_and_creates_no_receipt(self):
         with tempfile.TemporaryDirectory() as tmp:

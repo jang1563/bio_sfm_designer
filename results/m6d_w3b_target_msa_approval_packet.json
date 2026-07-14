@@ -10,9 +10,21 @@
       "path": "hpc/extract_chain_fasta.py",
       "sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b"
     },
+    "job_state_query": {
+      "path": "results/m6d_w3b_target_msa_job_state_query.sh",
+      "sha256": "bb941cb48639ce4b3663c90d552a78bf47de9e929c7fa279a6f0db9c402c8da5"
+    },
+    "lifecycle": {
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_target_msa_lifecycle.py",
+      "sha256": "9c3ecf8ba3d63194d6927c2307e6251e736234496e44d555ba8ba74cbf79db40"
+    },
     "manifest": {
       "path": "configs/m6d_w3b_fresh_targets.json",
       "sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc"
+    },
+    "manifest_validator": {
+      "path": "src/bio_sfm_designer/experiments/complex_target_manifest.py",
+      "sha256": "1acd87200bf745ca670eac69b2f27959a7d51fbdf1397daeeea2b6936e4af9e0"
     },
     "plan": {
       "path": "results/m6d_w3b_target_msas.sh",
@@ -37,6 +49,10 @@
     "selection": {
       "path": "results/m6d_w3b_target_selection.json",
       "sha256": "9349357a35986982bc05867e81e4a345040f444c1685c2e7059f96d4d8e47902"
+    },
+    "sync_back": {
+      "path": "results/m6d_w3b_target_msa_sync_back.sh",
+      "sha256": "9db801ac3746b368c15542565ee5a51f0d33a1a7d29ed8f6b736520b5f07c393"
     }
   },
   "can_submit_candidate_generation_or_candidate_level_prediction": false,
@@ -73,6 +89,6 @@
   "target_msa_approval_env_var": "BIO_SFM_APPROVE_W3B_TARGET_MSA",
   "wrapper": {
     "path": "hpc/run_w3b_target_msa_guarded.sh",
-    "sha256": "e1c32e324f6d8e8e95eb8503f81e157b94869af2e29b7f20f23b5be43d1b773b"
+    "sha256": "303d1fbd7a18f4edeed66af9c46a12c0a1d880b9fc0900371e9d83eb0bf864fb"
   }
 }

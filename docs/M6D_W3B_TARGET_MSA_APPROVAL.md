@@ -20,16 +20,18 @@ MSA plan are complete and hash-bound. This packet does not record approval and d
 
 The machine-readable packet is `results/m6d_w3b_target_msa_approval_packet.json`. It binds the protocol,
 target manifest, target-selection report, design audit, and generated MSA plan by SHA-256. The guarded
-wrapper is `hpc/run_w3b_target_msa_guarded.sh`. The packet and wrapper also bind the four execution
-dependencies used by that plan: the target-MSA Slurm script, Boltz MSA helper, heterodimer preparation
-helper, and chain-FASTA extractor. Any drift in those files fails closed before dry-run or submission.
+wrapper is `hpc/run_w3b_target_msa_guarded.sh`. The packet and wrapper also bind all eight execution and
+replay dependencies: the target-MSA Slurm script, Boltz MSA helper, heterodimer preparation helper,
+chain-FASTA extractor, strict manifest validator, lifecycle auditor, read-only Slurm query, and scoped
+sync-back replay. Any drift in those files fails closed before dry-run or submission.
 
 ## Cayuga no-submit readiness
 
 The exact packet and wrapper are staged at the logical mirror path `$HOME/bio_sfm_smoke`. The live audit
-in `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 11 exact SHA checks, three shell-syntax
-checks, Boltz Python/CLI and `sbatch` checks, receipt absence before and after, and the exact eight-target
-dry-run. This proves staging and runtime readiness only; it records no approval and submits no scheduler job.
+in `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 15 exact SHA checks, five shell-syntax
+checks, Boltz Python/CLI and `sbatch` checks, lifecycle import, receipt absence before and after, the
+expected receiptless-query refusal, and the exact eight-target dry-run. This proves staging and runtime
+readiness only; it records no approval and submits no scheduler job.
 
 ## Safe dry-run
 
@@ -56,6 +58,9 @@ before creating a receipt.
 
 ## After completion
 
-After all jobs finish, sync the eight `.a3m` and report files, validate file and manifest hashes, update
-the target manifest lock, and rerun the W3b design audit. Stop again before candidate generation or either
-predictor. Those later stages require distinct immutable packets and explicit approvals.
+After an approved submission, run `results/m6d_w3b_target_msa_job_state_query.sh` on Cayuga. It reads the
+receipt, queries `sacct`, and updates the lifecycle report without submitting work. Only after all eight
+jobs are terminal-success, run `results/m6d_w3b_target_msa_sync_back.sh` locally. It pulls only the receipt,
+job state, and target input-prep artifacts; then it replays strict manifest, sequence, report-hash, frozen-
+sequence, allocation, and 8/8 completion checks and reruns the design gate. Stop again before candidate
+generation or either predictor. Those later stages require distinct immutable packets and explicit approvals.

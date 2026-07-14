@@ -22,6 +22,7 @@ def _observed():
         "runtime": {
             "boltz_python_executable": True,
             "boltz_cli_executable": True,
+            "lifecycle_module_importable": True,
             "sbatch_available": True,
         },
         "receipt_state": {
@@ -35,6 +36,13 @@ def _observed():
             "no_scheduler_message_seen": True,
             "exact_target_line_seen": True,
             "stdout_sha256": "c" * 64,
+            "stderr_tail": "",
+        },
+        "postsubmit_query_refusal": {
+            "returncode": 2,
+            "receipt_absence_message_seen": True,
+            "sacct_before": False,
+            "sacct_after": False,
             "stderr_tail": "",
         },
     }

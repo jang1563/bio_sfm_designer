@@ -15,10 +15,13 @@ from typing import Any, Dict, Iterable, List, Optional
 _APPROVAL_ENV = "BIO_SFM_APPROVE_W3B_TARGET_MSA"
 _RECEIPT = "results/m6d_w3b_target_msa_receipt.jsonl"
 _SUMMARY = "results/m6d_w3b_target_msa_receipt_summary.json"
+_SACCT = "results/m6d_w3b_target_msa_sacct.tsv"
 _SHELL_PATHS = (
     "hpc/run_w3b_target_msa_guarded.sh",
     "results/m6d_w3b_target_msas.sh",
     "hpc/run_precompute_boltz_target_msa.sbatch",
+    "results/m6d_w3b_target_msa_job_state_query.sh",
+    "results/m6d_w3b_target_msa_sync_back.sh",
 )
 
 
@@ -73,6 +76,23 @@ def _runtime_check(host: str, home_relative_path: str, *, timeout: int) -> bool:
     if not home_relative_path or home_relative_path.startswith("/") or ".." in home_relative_path.split("/"):
         raise ValueError("runtime paths must be safe paths relative to $HOME")
     command = f'test -x "$HOME/{home_relative_path}"'
+    return _ssh(host, command, timeout=timeout).returncode == 0
+
+
+def _lifecycle_import_check(
+    host: str,
+    remote_root: str,
+    runtime_python: str,
+    *,
+    timeout: int,
+) -> bool:
+    root = shlex.quote(remote_root)
+    module = "bio_sfm_designer.experiments.m6d_w3b_target_msa_lifecycle"
+    command = (
+        f"cd {root} && "
+        f'PYTHONNOUSERSITE=1 PYTHONPATH="$PWD/src:$PWD/../bio-sfm-trust-core/src" '
+        f'"$HOME/{runtime_python}" -c {shlex.quote(f"import {module}")}'
+    )
     return _ssh(host, command, timeout=timeout).returncode == 0
 
 
@@ -137,6 +157,18 @@ def observe_remote(
     dry_stderr = dry_proc.stderr.decode("utf-8", errors="replace")
     receipt_after = _remote_exists(host, remote_root, _RECEIPT, timeout=timeout)
     summary_after = _remote_exists(host, remote_root, _SUMMARY, timeout=timeout)
+    sacct_before = _remote_exists(host, remote_root, _SACCT, timeout=timeout)
+    query_command = "\n".join(
+        [
+            f"cd {root}",
+            f"unset {_APPROVAL_ENV}",
+            f'BIO_SFM_PYTHON="$HOME/{runtime_python}" PYTHONNOUSERSITE=1 '
+            "bash results/m6d_w3b_target_msa_job_state_query.sh",
+        ]
+    )
+    query_proc = _ssh(host, query_command, timeout=timeout)
+    query_stderr = query_proc.stderr.decode("utf-8", errors="replace")
+    sacct_after = _remote_exists(host, remote_root, _SACCT, timeout=timeout)
 
     return {
         "exact": exact,
@@ -144,6 +176,12 @@ def observe_remote(
         "runtime": {
             "boltz_python_executable": _runtime_check(host, runtime_python, timeout=timeout),
             "boltz_cli_executable": _runtime_check(host, runtime_boltz, timeout=timeout),
+            "lifecycle_module_importable": _lifecycle_import_check(
+                host,
+                remote_root,
+                runtime_python,
+                timeout=timeout,
+            ),
             "sbatch_available": _ssh(host, "command -v sbatch >/dev/null 2>&1", timeout=timeout).returncode == 0,
         },
         "receipt_state": {
@@ -158,6 +196,13 @@ def observe_remote(
             "exact_target_line_seen": target_line in dry_stdout.splitlines(),
             "stdout_sha256": _sha256_bytes(dry_proc.stdout),
             "stderr_tail": dry_stderr[-1000:],
+        },
+        "postsubmit_query_refusal": {
+            "returncode": query_proc.returncode,
+            "receipt_absence_message_seen": "receipt is absent; no approved submission to query" in query_stderr,
+            "sacct_before": sacct_before,
+            "sacct_after": sacct_after,
+            "stderr_tail": query_stderr[-1000:],
         },
     }
 
@@ -202,7 +247,12 @@ def evaluate_readiness(
             failures.append({"kind": "remote_shell_syntax_failed", "path": row["path"]})
 
     runtime = dict(observed.get("runtime", {}))
-    for name in ("boltz_python_executable", "boltz_cli_executable", "sbatch_available"):
+    for name in (
+        "boltz_python_executable",
+        "boltz_cli_executable",
+        "lifecycle_module_importable",
+        "sbatch_available",
+    ):
         if runtime.get(name) is not True:
             failures.append({"kind": "remote_runtime_missing", "check": name})
 
@@ -222,6 +272,16 @@ def evaluate_readiness(
     )
     if not dry_run_ok:
         failures.append({"kind": "remote_guarded_dry_run_failed"})
+
+    query_refusal = dict(observed.get("postsubmit_query_refusal", {}))
+    query_refusal_ok = (
+        query_refusal.get("returncode") == 2
+        and query_refusal.get("receipt_absence_message_seen") is True
+        and query_refusal.get("sacct_before") is False
+        and query_refusal.get("sacct_after") is False
+    )
+    if not query_refusal_ok:
+        failures.append({"kind": "remote_postsubmit_query_refusal_failed"})
 
     packet_ready = (
         packet.get("approval_packet_ready") is True
@@ -251,6 +311,7 @@ def evaluate_readiness(
         "receipt_state": receipt_state,
         "receipt_untouched": receipt_untouched,
         "dry_run": dry_run,
+        "postsubmit_query_refusal": query_refusal,
         "n_exact_checks": len(exact_checks),
         "n_failures": len(failures),
         "failures": failures,

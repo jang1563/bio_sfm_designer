@@ -62,9 +62,11 @@
 > delta 0.05/(3 targets x 2 predictors). The design is no-submit: target-MSA readiness is 0/8 and no
 > query, candidate generation, candidate-level predictor run, scheduler submission, API request, or GPU spend is
 > authorized. The hash-bound MSA-only packet awaits separate explicit approval with an 8 A40 GPU-hour
-> ceiling. The packet now hash-locks all four execution helpers as well as the scientific artifacts.
-> Its no-submit Cayuga readiness audit passes 11/11 exact SHA checks, 3/3 shell syntax checks, runtime
-> checks, receipt absence, and the exact eight-target dry-run; no scheduler job was submitted. See
+> ceiling. The packet now hash-locks all execution and post-submit replay helpers as well as the
+> scientific artifacts. Its no-submit Cayuga readiness audit passes 15/15 exact SHA checks, 5/5 shell
+> syntax checks, runtime and lifecycle-import checks, receipt absence, the expected receiptless-query
+> refusal, and the exact eight-target dry-run; no scheduler job was submitted. The current lifecycle
+> state is recorded in `results/m6d_w3b_target_msa_lifecycle.{json,md}`. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
 > [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
@@ -105,7 +107,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`957` designer tests and `65` subtests on 2026-07-14).
+**Current local source verified** (`962` designer tests and `69` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

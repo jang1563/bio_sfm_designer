@@ -179,6 +179,16 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument("--precompute-python", default="hpc/precompute_boltz_target_msa.py")
     parser.add_argument("--prep-heterodimer", default="hpc/prep_hetdimer.py")
     parser.add_argument("--extract-chain-fasta", default="hpc/extract_chain_fasta.py")
+    parser.add_argument(
+        "--lifecycle",
+        default="src/bio_sfm_designer/experiments/m6d_w3b_target_msa_lifecycle.py",
+    )
+    parser.add_argument(
+        "--manifest-validator",
+        default="src/bio_sfm_designer/experiments/complex_target_manifest.py",
+    )
+    parser.add_argument("--job-state-query", default="results/m6d_w3b_target_msa_job_state_query.sh")
+    parser.add_argument("--sync-back", default="results/m6d_w3b_target_msa_sync_back.sh")
     parser.add_argument("--wrapper", default="hpc/run_w3b_target_msa_guarded.sh")
     parser.add_argument("--out-json", default="results/m6d_w3b_target_msa_approval_packet.json")
     parser.add_argument("--out-md", default="results/m6d_w3b_target_msa_approval_packet.md")
@@ -193,6 +203,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "precompute_python": args.precompute_python,
         "prep_heterodimer": args.prep_heterodimer,
         "extract_chain_fasta": args.extract_chain_fasta,
+        "lifecycle": args.lifecycle,
+        "manifest_validator": args.manifest_validator,
+        "job_state_query": args.job_state_query,
+        "sync_back": args.sync_back,
     }
     report = build_packet(
         _load_json(args.protocol),

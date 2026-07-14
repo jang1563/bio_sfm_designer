@@ -83,10 +83,12 @@ target-level split, exact multiplicity correction, held-out decision rule, stage
 24 H100 GPU-hour ceiling. `configs/m6d_w3b_fresh_targets.json` locks the eight label-blind targets and roles.
 The evaluator and design auditor are implemented. Target MSAs are missing 8/8. The hash-bound MSA-only
 packet in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` awaits exact approval; candidate and predictor execution
-remain forbidden. The packet now binds every runtime helper used by the plan. Its staged Cayuga mirror
-passes `results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 11 exact SHA checks, three shell-syntax
-checks, runtime checks, untouched receipts, and a no-submit eight-target dry-run. This is readiness evidence,
-not approval or scientific evidence.
+remain forbidden. The packet now binds every runtime and post-submit replay helper used by the plan. Its
+staged Cayuga mirror passes `results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 15 exact SHA
+checks, five shell-syntax checks, runtime and lifecycle-import checks, untouched receipts, the expected
+receiptless-query refusal, and a no-submit eight-target dry-run. The lifecycle report is coherently
+`target_msa_not_submitted_awaiting_explicit_approval`. This is readiness evidence, not approval or
+scientific evidence.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

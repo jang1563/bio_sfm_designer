@@ -288,6 +288,9 @@ def evaluate(
             "certify a gate, establish biological binder success, or rescue W2c."
         ),
         "next_action": (
+            "Prepare a separately hash-bound candidate-generation packet and stop for explicit approval; "
+            "do not run ProteinMPNN or either predictor."
+            if inputs_ready else
             "Precompute and hash-lock exactly the eight target MSAs under a separate approval boundary; "
             "do not generate candidates or run either predictor."
         ),
