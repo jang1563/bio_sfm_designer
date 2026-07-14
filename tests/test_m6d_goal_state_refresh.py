@@ -105,6 +105,57 @@ def _target_msa_completion():
     }
 
 
+def _fit_learn_packet():
+    return {
+        "status": "ready_for_explicit_w2c_fit_learn_approval_not_submitted",
+        "audit_ok": True,
+        "input_lock_digest_sha256": "c" * 64,
+        "packet_preparation_approval": {
+            "record_generation_approved": False,
+        },
+        "approval": {
+            "submission_performed": False,
+            "explicit_user_approval_required": True,
+            "required_user_phrase": (
+                "approve W2c threshold-learning 480-record generation on H100"
+            ),
+            "environment_value": "approve-w2c-fit-learn-480-h100",
+        },
+        "scope": {
+            "stage": "threshold_learning",
+            "seed_namespace": "w2c-fit-learn-v1",
+            "n_targets": 8,
+            "target_ids": [f"fresh-{index}" for index in range(8)],
+            "records_per_target": 60,
+            "total_records": 480,
+            "proteinmpnn_jobs": 8,
+            "total_slurm_jobs": 16,
+            "scheduler_resource": "preempt_gpu/low/gpu:h100:1",
+            "authorizes_record_generation": False,
+            "authorizes_independent_screen": False,
+            "authorizes_certification": False,
+        },
+        "checks": {
+            "local_input_lock_verified": True,
+            "cayuga_input_lock_verified": True,
+            "local_guard_dry_run_passed": True,
+            "cayuga_guard_dry_run_passed": True,
+            "local_guard_no_approval_refused": True,
+            "cayuga_guard_no_approval_refused": True,
+            "cayuga_bound_artifact_hash_matches": 19,
+            "cayuga_bound_artifact_hash_mismatches": 0,
+            "local_initial_outputs_absent": 16,
+            "cayuga_initial_outputs_absent": 16,
+            "cayuga_slurm_jobs_before": 0,
+            "cayuga_slurm_jobs_after": 0,
+            "local_receipt_absent": True,
+            "cayuga_receipt_absent": True,
+            "local_summary_absent": True,
+            "cayuga_summary_absent": True,
+        },
+    }
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -279,6 +330,75 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 test_result="passed",
             )
 
+    def test_fit_learn_packet_advances_to_separate_approval_wait(self):
+        gate = _w2c()
+        gate["execution_readiness"] = {
+            "target_manifest_present": True,
+            "target_manifest_integrity_ok": True,
+            "target_manifest_ids": [f"fresh-{index}" for index in range(8)],
+            "target_msa_ready": False,
+            "evaluator_implemented": True,
+        }
+        bundle = refresh_bundle(
+            *_legacy_bundle(),
+            _w2b(),
+            gate,
+            _target_msa_packet(),
+            _target_msa_completion(),
+            _fit_learn_packet(),
+            updated_at="2026-07-14T13:30:00+09:00",
+            test_command="pytest",
+            test_result="passed",
+        )
+
+        self.assertEqual(
+            bundle["completion"]["remaining_requirements"],
+            ["W2c_threshold_learning_explicit_approval"],
+        )
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w2b_terminal_w2c_fit_packet_ready_approval_wait",
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["w2c_fit_learn_packet_status"],
+            "ready_for_explicit_w2c_fit_learn_approval_not_submitted",
+        )
+        self.assertFalse(bundle["anchor"]["current_status"]["w2c_record_generation_approved"])
+        self.assertFalse(bundle["harness"]["hpc_status"]["w2c_submission_allowed"])
+        self.assertFalse(bundle["harness"]["hpc_status"]["w2c_record_generation_approved"])
+        self.assertIn("480-record generation on H100", bundle["completion"]["next_action"])
+        self.assertIn("W2c fit-learn packet", render_completion_markdown(bundle["completion"]))
+
+    def test_fit_learn_packet_with_submission_or_scope_drift_is_rejected(self):
+        gate = _w2c()
+        gate["execution_readiness"] = {
+            "target_manifest_present": True,
+            "target_manifest_integrity_ok": True,
+            "target_manifest_ids": [f"fresh-{index}" for index in range(8)],
+            "target_msa_ready": False,
+            "evaluator_implemented": True,
+        }
+        for field, value, failure in (
+            (("approval", "submission_performed"), True, "submission_not_performed"),
+            (("scope", "total_records"), 479, "total_records"),
+            (("checks", "cayuga_slurm_jobs_after"), 1, "slurm_zero"),
+        ):
+            with self.subTest(field=field):
+                packet = _fit_learn_packet()
+                packet[field[0]][field[1]] = value
+                with self.assertRaisesRegex(ValueError, failure):
+                    refresh_bundle(
+                        *_legacy_bundle(),
+                        _w2b(),
+                        gate,
+                        _target_msa_packet(),
+                        _target_msa_completion(),
+                        packet,
+                        updated_at="2026-07-14T13:30:00+09:00",
+                        test_command="pytest",
+                        test_result="passed",
+                    )
+
     def test_executable_w2c_is_rejected(self):
         gate = _w2c()
         gate["cayuga_submission_allowed"] = True
@@ -315,6 +435,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "report_md": os.path.join(root, "refresh.md"),
                 "target_msa_packet": os.path.join(root, "missing-target-msa-packet.json"),
                 "target_msa_completion": os.path.join(root, "missing-target-msa-completion.json"),
+                "fit_learn_packet": os.path.join(root, "missing-fit-learn-packet.json"),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -330,6 +451,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w2c-gate", w2c_path,
                 "--w2c-target-msa-packet", paths["target_msa_packet"],
                 "--w2c-target-msa-completion", paths["target_msa_completion"],
+                "--w2c-fit-learn-packet", paths["fit_learn_packet"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -339,7 +461,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
 
             self.assertEqual(main(argv), 0)
             for key, path in paths.items():
-                if key in {"target_msa_packet", "target_msa_completion"}:
+                if key in {"target_msa_packet", "target_msa_completion", "fit_learn_packet"}:
                     continue
                 self.assertTrue(os.path.exists(path), path)
             with open(paths["anchor"]) as handle:

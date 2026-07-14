@@ -22,10 +22,11 @@ validation passes 8/8, and total A40 allocation was 0.144722 GPU-hours. No desig
 so W2c remains `no_submit`. The authoritative design artifacts are
 `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md`, `configs/m6d_w2c_one_shot_protocol.json`, and
 `results/m6d_w2c_design_gate.{json,md}`; the input-preparation completion is
-`results/m6d_w2c_target_msa_completion.json`. The next boundary is a no-submit threshold-learning
-packet for exactly 60 fresh rows per target under `w2c-fit-learn-v1`, with separate explicit approval
-required before record generation. All W2 v1-v11 execution entries later in this chronological ledger
-are historical even where their original labels say `current`.
+`results/m6d_w2c_target_msa_completion.json`. The no-submit threshold-learning packet is now ready for
+exactly 60 fresh rows per target under `w2c-fit-learn-v1`: its input lock and execution bindings pass local
+and Cayuga dry-runs, Slurm remained at zero, and no records were generated. The next boundary is separate
+explicit approval naming **W2c threshold-learning 480-record generation on H100**. All W2 v1-v11 execution
+entries later in this chronological ledger are historical even where their original labels say `current`.
 
 ## Active Objective
 
@@ -43,8 +44,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W1: certified as target-specific complex evidence.
 - W2: not certified as universal multi-target generalization. W2b v1 is also terminally not supported:
   four `trust_all` targets certified, but zero selective-pAE targets certified against a requirement of one.
-- W2c: design and power gate qualified; eight fresh targets and their MSA inputs are ready, but no model
-  records, certificate, or claim exist. ProteinMPNN/Boltz record-generation submission remains blocked.
+- W2c: design and power gate qualified; eight fresh targets and their MSA inputs are ready. The guarded
+  8x60 threshold-learning packet passes no-submit validation, but no model records, certificate, or claim
+  exist. ProteinMPNN/Boltz record generation remains unapproved and blocked.
 - W3: independent-predictor robustness is not supported under the current Boltz-vs-Chai readout.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
@@ -71,6 +73,11 @@ from Chai records alone.
   `docs/M6D_W2C_TARGET_MSA_APPROVAL.md` and
   `results/m6d_w2c_target_msa_approval_packet.json`
 - W2c target-MSA completion: `results/m6d_w2c_target_msa_completion.json`
+- W2c threshold-learning stage manifest and input lock:
+  `configs/m6d_w2c_fit_learn_targets.json` and `configs/m6d_w2c_fit_learn_input_lock.json`
+- Current W2c no-submit threshold-learning approval boundary:
+  `docs/M6D_W2C_FIT_LEARN_APPROVAL.md` and the ignored local operational packet
+  `results/m6d_w2c_fit_learn_approval_packet.json`, when present
 - Current goal-state refresh audit: `results/m6d_goal_state_refresh_report.{json,md}`
 - Science-action anchor: `results/m6d_followup_next_science_actions.{json,md}`
 - Compact tracked machine-readable goal state: `results/m6d_goal_state_refresh_report.json`

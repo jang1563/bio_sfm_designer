@@ -44,7 +44,13 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > and this input-preparation result is not a W2c certificate or claim. The design gate and guarded approval
 > packet remain immutable historical pre-submit snapshots. The next boundary is a hash-bound no-submit
 > threshold-learning packet for exactly 60 fresh rows per target, 480 total, under namespace
-> `w2c-fit-learn-v1`; record generation requires separate explicit approval. All W2 v1-v11 execution routes
+> `w2c-fit-learn-v1`. That packet is now complete: its 56-input lock and 19-artifact execution binding pass,
+> local and Cayuga dry-runs enumerate eight ProteinMPNN plus eight dependent H100 Boltz jobs, Slurm remains
+> `0 -> 0`, and no receipt, summary, candidate, or record exists. The authoritative boundary is
+> `docs/M6D_W2C_FIT_LEARN_APPROVAL.md` plus
+> the ignored local operational packet `results/m6d_w2c_fit_learn_approval_packet.json` when present.
+> The tracked goal-state report retains its non-sensitive summary. Actual generation still requires separate explicit
+> approval naming **W2c threshold-learning 480-record generation on H100**. All W2 v1-v11 execution routes
 > later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

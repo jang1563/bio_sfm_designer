@@ -1,0 +1,459 @@
+{
+  "artifact": "m6d_w2c_fit_learn_input_lock",
+  "audit_ok": true,
+  "binding": {
+    "protocol_file_sha256": "d7ae7d23f64f957357a6fb9fe1659beb3c4caeea82d2c87bb3e18c73139dfc96",
+    "records_per_target": 60,
+    "seed_namespace": "w2c-fit-learn-v1",
+    "source_manifest_sha256": "94cae2712270ca3ef7d85357ce61ccf0ac9d0d8437077d543c20e3ac61d2eda2",
+    "stage": "threshold_learning",
+    "stage_manifest_sha256": "c60e1d001f187724bb00a49484158efad0997ca418a0589e5446819fca59daa8",
+    "target_msa_completion_sha256": "90fee9bba886233e095e9fdcc757fb95cafc7257f2a1f58e0508fee95bc6f344",
+    "targets": [
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FR2_BA/prepared_1FR2_BA.report.json",
+            "sha256": "162622b274dbcdda6f8502658d4d09cdd63e519a3151bb22a38cea96a3198ef6"
+          },
+          "prepared_pdb": {
+            "bytes": 136813,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FR2_BA/prepared_1FR2_BA.pdb",
+            "sha256": "4f28b593861a937f5be13eaad6f401500deb43ab0ec1d53bc926612914837208"
+          },
+          "source_pdb": {
+            "bytes": 183789,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FR2.pdb",
+            "sha256": "3a9fddcec3db8ba2e726c090e23c5d5e9e6b0b5da844854a004fa2acaf49e236"
+          },
+          "target_fasta": {
+            "bytes": 144,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FR2_BA/1FR2_BA_B.fasta",
+            "sha256": "ba08975c5bb536197547b886ec3cb30b52c883f977fbcd0a2536d891fea5dfca"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FR2_BA/1FR2_BA_B.fasta.report.json",
+            "sha256": "f6644d72301fff5b2a8cd23b33d380d7a17b12d67bedc9b2bb20cbd5a27f9887"
+          },
+          "target_msa": {
+            "bytes": 167172,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FR2_BA/1FR2_BA_B.a3m",
+            "sha256": "2f9b189a4ccc8cb5a4dd2ff0ad6bf87b9758ac3a0fcc771088263ae6c6c1b370"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FR2_BA/1FR2_BA_B.a3m.report.json",
+            "sha256": "d4ce95be297ad44505194a5cb75c39156fc5e170483679a679866195f816a9af"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1FR2_BA",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1FR2_BA/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1FR2_BA",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FR2_BA/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 1123427146,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1FR2_BA"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F80_BC/prepared_1F80_BC.report.json",
+            "sha256": "cb362fec7b1848735f999c15cc0a672d78de8e3329f55e24cd60d57853fa0b5f"
+          },
+          "prepared_pdb": {
+            "bytes": 143455,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F80_BC/prepared_1F80_BC.pdb",
+            "sha256": "2cf32bdc9a0064dbb809c9e32af7edb8d258bc323de79e3f85a393fa1529ade0"
+          },
+          "source_pdb": {
+            "bytes": 424926,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F80.pdb",
+            "sha256": "5db9381930305d17941d354dc241deefc8792cc9a82109bf8bae1e4953bee1c3"
+          },
+          "target_fasta": {
+            "bytes": 131,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F80_BC/1F80_BC_B.fasta",
+            "sha256": "4aa202f08b828327ae309d90d8dc83936fbc886c8705ebf32349409f0e89ebae"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F80_BC/1F80_BC_B.fasta.report.json",
+            "sha256": "7c9c426026d037c029a017c0031d2389bdd145fe7b334a42c4564b106208fb23"
+          },
+          "target_msa": {
+            "bytes": 1136486,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F80_BC/1F80_BC_B.a3m",
+            "sha256": "ec884f9f221096af0adea11bce9ef120749db20a6d2536686f08d6c998c210f5"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F80_BC/1F80_BC_B.a3m.report.json",
+            "sha256": "e37a8d7a73bbd745a16b1f9a86284115570d12606e4af3d60d0c7673e74b977c"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1F80_BC",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1F80_BC/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1F80_BC",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1F80_BC/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 102159084,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1F80_BC"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1EZV_XY/prepared_1EZV_XY.report.json",
+            "sha256": "58646214ba3f73aa47eb2a2f2bc5fc090e3a3aeb1bf8f42e44da5e9108749ca0"
+          },
+          "prepared_pdb": {
+            "bytes": 150421,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1EZV_XY/prepared_1EZV_XY.pdb",
+            "sha256": "be36307c893d511426c48664a991b3d55089b957250d0ca2094c5a9f9e075ac4"
+          },
+          "source_pdb": {
+            "bytes": 1542483,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1EZV.pdb",
+            "sha256": "3afe2d9e300b24e45945cd25d9254a82b4c9a90213076e83c14b7862d2b22d7a"
+          },
+          "target_fasta": {
+            "bytes": 140,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1EZV_XY/1EZV_XY_X.fasta",
+            "sha256": "a28ae92c73032715e0c657c54f427a9064e5a96300cd49dad5babf723afda72a"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1EZV_XY/1EZV_XY_X.fasta.report.json",
+            "sha256": "bef8de8d647ff435621c6aae21b738a11f46e9c4f2cb5348cce8c0ea15a4fe74"
+          },
+          "target_msa": {
+            "bytes": 232330,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1EZV_XY/1EZV_XY_X.a3m",
+            "sha256": "e2ad58734e4f2fe16f71317c89ae2ae59594cd204e4c8915825bd25647a302a1"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1EZV_XY/1EZV_XY_X.a3m.report.json",
+            "sha256": "a178169a34de69df353a6546b5c4e22a18ecb08bcf89b58445b4d51dc9cccf24"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1EZV_XY",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1EZV_XY/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1EZV_XY",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1EZV_XY/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 933512481,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1EZV_XY"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFG_CD/prepared_1FFG_CD.report.json",
+            "sha256": "b055289d6b2f76e94fe762b0f7d4b843d3df9a2b801c4a346c27da3a9b6a17fa"
+          },
+          "prepared_pdb": {
+            "bytes": 120775,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFG_CD/prepared_1FFG_CD.pdb",
+            "sha256": "ef90055c3d2475d33803bdc7a40eb3c9e674b940ef1adb52768cc4af374e1ee5"
+          },
+          "source_pdb": {
+            "bytes": 311202,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FFG.pdb",
+            "sha256": "df6b13ddaffc36a3318f2e5117c0e894222b3684396d07a746f5881c31634afc"
+          },
+          "target_fasta": {
+            "bytes": 141,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFG_CD/1FFG_CD_C.fasta",
+            "sha256": "171ed7e333efa0afe9e22cf64b8376ee3128f5f066451dda9776601ec032bfe2"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFG_CD/1FFG_CD_C.fasta.report.json",
+            "sha256": "f5a265785b8dda1750b89f68f2f86f568c4543bacc8a99f0f8ff73d39e74f78e"
+          },
+          "target_msa": {
+            "bytes": 1065052,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFG_CD/1FFG_CD_C.a3m",
+            "sha256": "8f644fe469a3d9de27a61f8e7bcd08034e419fd41adfd4056f61a24e411854a0"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFG_CD/1FFG_CD_C.a3m.report.json",
+            "sha256": "5ad47e234251765552a13f69288083cb3683084272750c5398dabdc2a94dcc9e"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1FFG_CD",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1FFG_CD/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1FFG_CD",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FFG_CD/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 723987465,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1FFG_CD"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFK_HR/prepared_1FFK_HR.report.json",
+            "sha256": "e43b64973c8f58ecd1212739935306073ec9a634c60d3badb535c7091d076f67"
+          },
+          "prepared_pdb": {
+            "bytes": 14989,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFK_HR/prepared_1FFK_HR.pdb",
+            "sha256": "236c14e044e9a46b691b74db94a6e024adb2b6df90b2f636fcf79cbce218723d"
+          },
+          "source_pdb": {
+            "bytes": 5343975,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FFK.pdb",
+            "sha256": "49d9f722d42451808792500ec4ca6cf9cf19d92f58fa4c7cc19fccd4a3356d92"
+          },
+          "target_fasta": {
+            "bytes": 145,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFK_HR/1FFK_HR_H.fasta",
+            "sha256": "368ca9e5a2e6eb184c4a4033491a99c1d5103aa4ab393800e648e3777e8fa80b"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFK_HR/1FFK_HR_H.fasta.report.json",
+            "sha256": "1499f4bdc8028a20cfe7a9cd8a979cd416adcc594f6122598db4f23c25205885"
+          },
+          "target_msa": {
+            "bytes": 1172911,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFK_HR/1FFK_HR_H.a3m",
+            "sha256": "bcce9d9fa254573bf4e68b98e7703b732d88da20851cff8dec6115ff32a7bd36"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FFK_HR/1FFK_HR_H.a3m.report.json",
+            "sha256": "78e7c4dfae00ac660d9762c5859f5961b18774b9eb75308d067de8527e03a892"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1FFK_HR",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1FFK_HR/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1FFK_HR",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FFK_HR/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 2026749666,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1FFK_HR"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FQ9_CA/prepared_1FQ9_CA.report.json",
+            "sha256": "27fe01b46f245cacaac25d2d761e217e0b4c3e439f98b20f91e0ac1adfd8475a"
+          },
+          "prepared_pdb": {
+            "bytes": 216922,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FQ9_CA/prepared_1FQ9_CA.pdb",
+            "sha256": "18060f925668bb50e800a2a782569a6458e45f2bd9c7dfeeeda234b94d24e348"
+          },
+          "source_pdb": {
+            "bytes": 515241,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FQ9.pdb",
+            "sha256": "797e50f19a790d8aef24ae647d507c3f4eb6b35000a5f0e64442d014d97e8916"
+          },
+          "target_fasta": {
+            "bytes": 225,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FQ9_CA/1FQ9_CA_C.fasta",
+            "sha256": "8742eb5b3626663ecf7b30b235d93467fddc399c1e33c4f5c15401e95c8eb69e"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FQ9_CA/1FQ9_CA_C.fasta.report.json",
+            "sha256": "e4e55c1d14ef4627eef572eb38c224d296a05b4d10e19ab4ea6c4d6bd98afb9c"
+          },
+          "target_msa": {
+            "bytes": 649561,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FQ9_CA/1FQ9_CA_C.a3m",
+            "sha256": "cfc70a996e57c02164f0aad9f753e94c0720aad9d146c784913bf005cf45614d"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FQ9_CA/1FQ9_CA_C.a3m.report.json",
+            "sha256": "15b31d1ebf17341ecaa95a8ed2b453634bedaea0eeec94d7246f0068875eed9e"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1FQ9_CA",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1FQ9_CA/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1FQ9_CA",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FQ9_CA/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 395316023,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1FQ9_CA"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FYR_CD/prepared_1FYR_CD.report.json",
+            "sha256": "ff2144ac122b9e345bb71c517580762832f95421980f87b6a0834b387312ede9"
+          },
+          "prepared_pdb": {
+            "bytes": 129118,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FYR_CD/prepared_1FYR_CD.pdb",
+            "sha256": "8fbc7e186160895bfa7426e2dba0c08ec23db338bba96a4aba41d29f14075d02"
+          },
+          "source_pdb": {
+            "bytes": 343521,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FYR.pdb",
+            "sha256": "9a3ce1158b0099cff4a93e8f1ea12ff9669beaaa8949308b3c032f18a1d82c19"
+          },
+          "target_fasta": {
+            "bytes": 111,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FYR_CD/1FYR_CD_C.fasta",
+            "sha256": "a9b0d786e3a2db5e8ac64b7576ef43501157520f7db813a1f24851c4c46a0a0d"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FYR_CD/1FYR_CD_C.fasta.report.json",
+            "sha256": "ce5d07697adf261fae991e61fdc11da62cd852e3ec896ba7a3b26eb38159b419"
+          },
+          "target_msa": {
+            "bytes": 629735,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FYR_CD/1FYR_CD_C.a3m",
+            "sha256": "07404b19fb932bc8282c1d8d20b677f2233e71c5974cd065069d19313919f4d7"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FYR_CD/1FYR_CD_C.a3m.report.json",
+            "sha256": "7beb877758b8cedeb074ff59e7a6f4d798cb0fa3f3325e36bf4a1f91734cf53e"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1FYR_CD",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1FYR_CD/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1FYR_CD",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FYR_CD/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 1781011422,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1FYR_CD"
+      },
+      {
+        "artifacts": {
+          "prep_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F99_BA/prepared_1F99_BA.report.json",
+            "sha256": "fb8de8f9573875e9551b98e3a9b7ec71a762d5dc712f3fb87944afa3634c9825"
+          },
+          "prepared_pdb": {
+            "bytes": 202018,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F99_BA/prepared_1F99_BA.pdb",
+            "sha256": "898811d4394948147248f568f4723aa399ab37278d8f2f54b3551df7c280e781"
+          },
+          "source_pdb": {
+            "bytes": 749169,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F99.pdb",
+            "sha256": "88404777288af12dd4468210fdce0fa4a728557ae022ac9e32c815d9d9fad8ef"
+          },
+          "target_fasta": {
+            "bytes": 186,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F99_BA/1F99_BA_B.fasta",
+            "sha256": "fa1ffc2b4956dcc5beaab62503db3f6e13649e27fdc0c219e57daa42b39bff65"
+          },
+          "target_fasta_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F99_BA/1F99_BA_B.fasta.report.json",
+            "sha256": "8ccece6d518d2f131b88621fc0af7933dc2c46d1da06696359f57270581aa0e8"
+          },
+          "target_msa": {
+            "bytes": 131350,
+            "hash_mode": "raw_bytes_sha256",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F99_BA/1F99_BA_B.a3m",
+            "sha256": "b0da976c8d45385c62e31b1b0072421188b776811ada11b03fe9b860254105df"
+          },
+          "target_msa_report": {
+            "hash_mode": "canonical_report_json_v1",
+            "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F99_BA/1F99_BA_B.a3m.report.json",
+            "sha256": "f2eb0b8306635dc8f326d93273e819bba3f3f7ea5c1339affae65ce6a1bbc5a5"
+          }
+        },
+        "id_prefix": "w2c-fit-learn-v1-1F99_BA",
+        "outputs": {
+          "candidates": "hpc_outputs/m6d_w2c_fit_learn_records/1F99_BA/candidates_proteinmpnn_complex.jsonl",
+          "out_prefix": "hpc_outputs/m6d_w2c_fit_learn_records/1F99_BA",
+          "records": "hpc_outputs/m6d_w2c_fit_learn_records/1F99_BA/records_boltz_complex.jsonl"
+        },
+        "proteinmpnn_seed": 1391729674,
+        "records_planned": 60,
+        "seed_namespace": "w2c-fit-learn-v1",
+        "stage": "threshold_learning",
+        "target_id": "1F99_BA"
+      }
+    ],
+    "total_records": 480
+  },
+  "claim_boundary": "Input and execution-provenance lock only. This does not authorize Cayuga jobs or support a W2c scientific claim.",
+  "failures": [],
+  "lock_digest_sha256": "8d36af1b46e61d42bdd41532d37845beb06a58a45f87be93e8be97a8fe3bf877",
+  "n_artifacts": 56,
+  "n_targets": 8,
+  "protocol": "configs/m6d_w2c_one_shot_protocol.json",
+  "source_manifest": "configs/m6d_w2c_fresh_targets.json",
+  "stage_manifest": "configs/m6d_w2c_fit_learn_targets.json",
+  "status": "w2c_fit_learn_input_locked",
+  "target_msa_completion": "results/m6d_w2c_target_msa_completion.json",
+  "version": 1
+}

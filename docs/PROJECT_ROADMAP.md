@@ -19,7 +19,8 @@
 > design gate qualifies at 90 certification accepts with conditional power 0.817860 under design risk 0.08,
 > the evaluator is implemented, eight label-blind fresh targets are selected, and all eight target-MSA/report
 > pairs now pass strict validation. This consumed 0.144722 A40 GPU-hours and generated zero design records.
-> Record-generation submission remains blocked. W2c does not alter W2b.
+> The hash-bound 8x60 threshold-learning packet is now complete and passes local/Cayuga no-submit
+> validation with Slurm `0 -> 0`; record generation is still unapproved and blocked. W2c does not alter W2b.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -55,8 +56,11 @@ power, forbids adaptive top-up, and remains no-submit. The fresh manifest now lo
 `1EZV_XY`, `1FFG_CD`, `1FFK_HR`, `1FQ9_CA`, `1FYR_CD`, and `1F99_BA`. Target-MSA preparation is complete:
 8/8 MSA/report pairs pass strict manifest validation, with 0.144722 A40 GPU-hours consumed and zero design
 records generated. The approval packet is an immutable historical pre-submit snapshot. The next milestone
-is a hash-bound no-submit threshold-learning packet for exactly 60 rows per target under
-`w2c-fit-learn-v1`; a separate explicit approval is required before any record generation.
+was a hash-bound no-submit threshold-learning packet for exactly 60 rows per target under
+`w2c-fit-learn-v1`. It is now ready: `docs/M6D_W2C_FIT_LEARN_APPROVAL.md` records the 56-input lock,
+19 bound execution artifacts, local/Cayuga dry-runs, and zero Slurm delta. The current milestone is
+separate explicit approval naming **W2c threshold-learning 480-record generation on H100**; no approval
+has been granted for ProteinMPNN/Boltz generation, independent screening, or certification.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

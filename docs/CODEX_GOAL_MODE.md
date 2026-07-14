@@ -44,9 +44,16 @@ must not be rewritten after completion.
 Current W2c target-MSA completion:
 `results/m6d_w2c_target_msa_completion.json`.
 
-Current next action: prepare a hash-bound no-submit threshold-learning packet for exactly 60 fresh
-records per target, 480 total, under `w2c-fit-learn-v1`. Target-MSA approval does not authorize this
-record-generation stage; separate explicit approval is required.
+Current W2c threshold-learning packet:
+`docs/M6D_W2C_FIT_LEARN_APPROVAL.md`, `configs/m6d_w2c_fit_learn_targets.json`,
+`configs/m6d_w2c_fit_learn_input_lock.json`, and
+the ignored local operational packet `results/m6d_w2c_fit_learn_approval_packet.json`, when present.
+The 8x60 no-submit packet passes local and Cayuga
+dry-runs with Slurm `0 -> 0`; no candidate, record, receipt, or summary exists.
+
+Current next action: wait for separate explicit approval naming **W2c threshold-learning 480-record
+generation on H100**. Packet-preparation approval, target-MSA approval, generic continuation, and
+goal-mode resume do not authorize ProteinMPNN/Boltz generation.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.

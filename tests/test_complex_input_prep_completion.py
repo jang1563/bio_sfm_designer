@@ -2,6 +2,7 @@
 
 import json
 import os
+import shlex
 import tempfile
 import unittest
 
@@ -130,7 +131,13 @@ class ComplexInputPrepCompletionTests(unittest.TestCase):
         self.assertEqual(rep["n_artifacts"], 1)
         self.assertIn("--target-id t0", rep["shell_plan"])
         self.assertIn("--target-id t0", rep["manifest_command"])
-        self.assertNotIn("t1", rep["manifest_command"])
+        arguments = shlex.split(rep["manifest_command"])
+        target_ids = [
+            arguments[index + 1]
+            for index, argument in enumerate(arguments[:-1])
+            if argument == "--target-id"
+        ]
+        self.assertEqual(target_ids, ["t0"])
 
     def test_missing_input_prep_list_is_schema_error(self):
         with tempfile.TemporaryDirectory() as d:

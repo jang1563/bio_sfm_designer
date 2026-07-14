@@ -16,7 +16,7 @@
       "status": "managed"
     },
     {
-      "control": "next work is a bounded threshold-learning packet; no further W2b validation is allowed",
+      "control": "next boundary is explicit approval for the fixed fit packet; no further W2b validation is allowed",
       "id": "verification_instead_of_science",
       "status": "managed"
     }
@@ -29,7 +29,7 @@
     "w1": "preserved_target_specific_certificate",
     "w2": "generalization_not_supported",
     "w2b": "terminal_not_supported_no_extension",
-    "w2c": "inputs_ready_no_records_no_claim",
+    "w2c": "fit_packet_ready_no_records_no_claim",
     "w3": "negative_robustness_adjudicated_no_positive_claim",
     "w4": "closed_loop_plumbing_only"
   },
@@ -252,6 +252,64 @@
       "test_can_change_certificate": false,
       "test_compute_submitted": false
     },
+    "W2c_fit_learn_approval": {
+      "audit_ok": true,
+      "authorizes_certification": false,
+      "authorizes_independent_screen": false,
+      "checks": {
+        "approval_phrase_exact": true,
+        "approval_token_exact": true,
+        "audit_ok": true,
+        "bound_hashes_match": true,
+        "cayuga_dry_run_passed": true,
+        "cayuga_input_lock_verified": true,
+        "cayuga_no_approval_refused": true,
+        "certification_not_authorized": true,
+        "explicit_approval_required": true,
+        "independent_screen_not_authorized": true,
+        "initial_outputs_absent": true,
+        "job_count": true,
+        "local_dry_run_passed": true,
+        "local_input_lock_verified": true,
+        "local_no_approval_refused": true,
+        "namespace_exact": true,
+        "packet_preparation_only": true,
+        "receipts_absent": true,
+        "record_generation_not_authorized": true,
+        "records_per_target": true,
+        "resource_exact": true,
+        "slurm_zero": true,
+        "stage_exact": true,
+        "status_ready": true,
+        "submission_not_performed": true,
+        "target_count": true,
+        "target_rows_unique": true,
+        "total_records": true
+      },
+      "explicit_user_approval_required": true,
+      "input_lock_digest_sha256": "8d36af1b46e61d42bdd41532d37845beb06a58a45f87be93e8be97a8fe3bf877",
+      "n_targets": 8,
+      "record_generation_approved": false,
+      "records_per_target": 60,
+      "required_user_phrase": "approve W2c threshold-learning 480-record generation on H100",
+      "scheduler_resource": "preempt_gpu/low/gpu:h100:1",
+      "seed_namespace": "w2c-fit-learn-v1",
+      "stage": "threshold_learning",
+      "status": "ready_for_explicit_w2c_fit_learn_approval_not_submitted",
+      "submission_performed": false,
+      "target_ids": [
+        "1EZV_XY",
+        "1F80_BC",
+        "1F99_BA",
+        "1FFG_CD",
+        "1FFK_HR",
+        "1FQ9_CA",
+        "1FR2_BA",
+        "1FYR_CD"
+      ],
+      "total_records": 480,
+      "total_slurm_jobs": 16
+    },
     "W2c_successor": {
       "audit_ok": true,
       "can_claim_w2c": false,
@@ -425,14 +483,14 @@
       "historical_panel_fields_retained": true,
       "panel_public_approval_bundle_ready": true,
       "panel_public_approval_bundle_workflow_script_chain_static_ok": true,
-      "status": "goal_active_w2b_terminal_w2c_threshold_learning_packet"
+      "status": "goal_active_w2b_terminal_w2c_fit_learn_approval_wait"
     },
     "project_status": "m6_complex_in_progress",
     "remaining": 1
   },
   "drift_assessment": {
     "claims": "no_drift_negative_boundaries_preserved",
-    "execution": "w2b_closed_w2c_target_msa_complete_record_generation_no_submit",
+    "execution": "w2b_closed_w2c_fit_packet_ready_record_generation_not_approved",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
     "operational_status": "stale_current_surfaces_replaced_historical_detail_retained",
@@ -452,6 +510,6 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Prepare a hash-bound, no-submit W2c threshold-learning packet for exactly 60 fresh records per target under seed namespace w2c-fit-learn-v1. Require a separate explicit approval before any ProteinMPNN/Boltz record generation; target-MSA approval does not transfer to this stage.",
-  "status": "no_major_direction_drift_w2b_terminal_w2c_msa_complete_fit_packet"
+  "next_action": "Wait for explicit user approval naming W2c threshold-learning 480-record generation on H100. Packet-preparation approval, generic continuation, and target-MSA approval do not transfer; no independent-screen or certification compute is authorized.",
+  "status": "no_major_direction_drift_w2b_terminal_w2c_fit_packet_ready_approval_wait"
 }

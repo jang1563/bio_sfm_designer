@@ -61,7 +61,10 @@ Panel success requires at least three certified targets and all three must be
 - target MSAs ready: true (8/8 MSA/report pairs pass strict manifest validation);
 - target-MSA allocation consumed: 0.144722 A40 GPU-hours, below the approved 8 GPU-hour ceiling;
 - evaluator implemented: true (`m6d_w2c_one_shot_report.py`, with fail-closed regression tests);
-- command wrapper emitted: false;
+- threshold-learning stage manifest and 56-artifact input lock: ready;
+- guarded command wrappers: ready and hash-bound across 19 execution artifacts;
+- local/Cayuga threshold-learning dry-run: passed, with Slurm `0 -> 0` and no receipt or summary;
+- threshold-learning record generation approved: false;
 - Cayuga submission allowed: false.
 
 The current design gate is `results/m6d_w2c_design_gate.{json,md}`. Passing it only shows
@@ -76,7 +79,9 @@ This input-preparation result does not authorize ProteinMPNN/Boltz record genera
 `results/m6d_w2c_design_gate.{json,md}` and
 `results/m6d_w2c_target_msa_approval_packet.json` remain immutable pre-submit snapshots.
 
-The next boundary is a hash-bound no-submit threshold-learning packet for exactly 60 fresh rows
-per target, 480 total, under `w2c-fit-learn-v1`. It requires separate explicit approval. If that
-packet or the later prospective fit screen cannot pass without changing locked rules, close W2c
-before broader GPU spend and move the science frontier to W3 independent-predictor robustness.
+The hash-bound no-submit threshold-learning packet for exactly 60 fresh rows per target, 480 total,
+under `w2c-fit-learn-v1` is complete and documented in `docs/M6D_W2C_FIT_LEARN_APPROVAL.md`.
+It authorizes nothing by itself. The next boundary is separate explicit approval naming **W2c
+threshold-learning 480-record generation on H100**. If this stage or the later prospective fit screen
+cannot pass without changing locked rules, close W2c before broader GPU spend and move the science
+frontier to W3 independent-predictor robustness.

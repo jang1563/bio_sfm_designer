@@ -43,6 +43,11 @@ _FIT_PACKET_NEXT_ACTION = (
     "target under seed namespace w2c-fit-learn-v1. Require a separate explicit approval before any "
     "ProteinMPNN/Boltz record generation; target-MSA approval does not transfer to this stage."
 )
+_FIT_APPROVAL_NEXT_ACTION = (
+    "Wait for explicit user approval naming W2c threshold-learning 480-record generation on H100. "
+    "Packet-preparation approval, generic continuation, and target-MSA approval do not transfer; no "
+    "independent-screen or certification compute is authorized."
+)
 
 
 def _is_sha256(value: Any) -> bool:
@@ -238,6 +243,92 @@ def _target_msa_completion_summary(completion: Optional[Dict[str, Any]]) -> Opti
     }
 
 
+def _fit_learn_packet_summary(packet: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    if not isinstance(packet, dict):
+        return None
+    approval = packet.get("approval", {})
+    preparation = packet.get("packet_preparation_approval", {})
+    scope = packet.get("scope", {})
+    checks = packet.get("checks", {})
+    target_ids = scope.get("target_ids") if isinstance(scope.get("target_ids"), list) else []
+    required = {
+        "status_ready": (
+            packet.get("status") == "ready_for_explicit_w2c_fit_learn_approval_not_submitted"
+        ),
+        "audit_ok": packet.get("audit_ok") is True,
+        "packet_preparation_only": preparation.get("record_generation_approved") is False,
+        "submission_not_performed": approval.get("submission_performed") is False,
+        "explicit_approval_required": approval.get("explicit_user_approval_required") is True,
+        "approval_phrase_exact": approval.get("required_user_phrase") == (
+            "approve W2c threshold-learning 480-record generation on H100"
+        ),
+        "approval_token_exact": approval.get("environment_value") == (
+            "approve-w2c-fit-learn-480-h100"
+        ),
+        "target_count": scope.get("n_targets") == 8,
+        "target_rows_unique": len(target_ids) == 8 and len(set(target_ids)) == 8 and all(target_ids),
+        "stage_exact": scope.get("stage") == "threshold_learning",
+        "namespace_exact": scope.get("seed_namespace") == "w2c-fit-learn-v1",
+        "records_per_target": scope.get("records_per_target") == 60,
+        "total_records": scope.get("total_records") == 480,
+        "job_count": (
+            scope.get("proteinmpnn_jobs") == 8
+            and scope.get("total_slurm_jobs") == 16
+        ),
+        "resource_exact": scope.get("scheduler_resource") == "preempt_gpu/low/gpu:h100:1",
+        "record_generation_not_authorized": scope.get("authorizes_record_generation") is False,
+        "independent_screen_not_authorized": scope.get("authorizes_independent_screen") is False,
+        "certification_not_authorized": scope.get("authorizes_certification") is False,
+        "local_input_lock_verified": checks.get("local_input_lock_verified") is True,
+        "cayuga_input_lock_verified": checks.get("cayuga_input_lock_verified") is True,
+        "local_dry_run_passed": checks.get("local_guard_dry_run_passed") is True,
+        "cayuga_dry_run_passed": checks.get("cayuga_guard_dry_run_passed") is True,
+        "local_no_approval_refused": checks.get("local_guard_no_approval_refused") is True,
+        "cayuga_no_approval_refused": checks.get("cayuga_guard_no_approval_refused") is True,
+        "bound_hashes_match": (
+            checks.get("cayuga_bound_artifact_hash_matches") == 19
+            and checks.get("cayuga_bound_artifact_hash_mismatches") == 0
+        ),
+        "initial_outputs_absent": (
+            checks.get("local_initial_outputs_absent") == 16
+            and checks.get("cayuga_initial_outputs_absent") == 16
+        ),
+        "slurm_zero": (
+            checks.get("cayuga_slurm_jobs_before") == 0
+            and checks.get("cayuga_slurm_jobs_after") == 0
+        ),
+        "receipts_absent": (
+            checks.get("local_receipt_absent") is True
+            and checks.get("cayuga_receipt_absent") is True
+            and checks.get("local_summary_absent") is True
+            and checks.get("cayuga_summary_absent") is True
+        ),
+    }
+    failed = [name for name, passed in required.items() if not passed]
+    if failed:
+        raise ValueError(f"W2c fit-learn packet invariants failed: {', '.join(failed)}")
+    return {
+        "status": packet.get("status"),
+        "audit_ok": True,
+        "stage": "threshold_learning",
+        "seed_namespace": "w2c-fit-learn-v1",
+        "n_targets": 8,
+        "target_ids": sorted(str(target_id) for target_id in target_ids),
+        "records_per_target": 60,
+        "total_records": 480,
+        "total_slurm_jobs": 16,
+        "scheduler_resource": scope.get("scheduler_resource"),
+        "input_lock_digest_sha256": packet.get("input_lock_digest_sha256"),
+        "submission_performed": False,
+        "record_generation_approved": False,
+        "explicit_user_approval_required": True,
+        "required_user_phrase": approval.get("required_user_phrase"),
+        "authorizes_independent_screen": False,
+        "authorizes_certification": False,
+        "checks": required,
+    }
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -248,6 +339,7 @@ def refresh_bundle(
     w2c_gate: Dict[str, Any],
     w2c_target_msa_packet: Optional[Dict[str, Any]] = None,
     w2c_target_msa_completion: Optional[Dict[str, Any]] = None,
+    w2c_fit_learn_packet: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -258,33 +350,58 @@ def refresh_bundle(
     w2c = _w2c_summary(w2c_gate)
     w2c_target_msa = _target_msa_packet_summary(w2c_target_msa_packet)
     w2c_target_msa_complete = _target_msa_completion_summary(w2c_target_msa_completion)
+    w2c_fit_learn = _fit_learn_packet_summary(w2c_fit_learn_packet)
+    if w2c_fit_learn is not None and w2c_target_msa_complete is None:
+        raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
             raise ValueError("W2c target-MSA completion targets do not match the locked W2c manifest")
+        if w2c_fit_learn is not None and w2c_fit_learn["target_ids"] != expected_ids:
+            raise ValueError("W2c fit-learn packet targets do not match the locked W2c manifest")
         w2c["target_msa_ready"] = True
         w2c["target_msa_completion_status"] = w2c_target_msa_complete["status"]
         if w2c_target_msa is not None:
             w2c_target_msa["historical_after_completion"] = True
             w2c_target_msa["superseded_by"] = w2c_target_msa_complete["status"]
-        next_action = _FIT_PACKET_NEXT_ACTION
-        remaining_requirement = "W2c_threshold_learning_packet_gate"
-        resume_steps = [
-            "read docs/M6D_W2B_CERTIFICATION_COMPLETION.md and preserve W2b as terminal",
-            "read results/m6d_w2c_target_msa_completion.json and preserve the 8/8 MSA hash lock",
-            "prepare a no-submit threshold-learning packet for exactly 60 fresh rows per target",
-            "bind the w2c-fit-learn-v1 namespace, manifest, MSA, evaluator, and wrapper hashes",
-            "require a separate explicit approval; target-MSA approval does not authorize record generation",
-            "do not generate independent-screen or certification rows from the learning-stage approval",
-            "move to W3 if W2c cannot pass its locked prospective gates",
-        ]
-        ranked_actions = [
-            "Prepare and dry-run the hash-bound W2c threshold-learning packet with zero submissions.",
-            "Obtain separate explicit approval for exactly 480 learning-stage records before compute.",
-            "Freeze target-wise selective-pAE thresholds from learning rows only.",
-            "Generate independent-screen rows only after the learning artifact is locked and reviewed.",
-            "Move to W3 if the prospective W2c protocol cannot qualify without changing locked rules.",
-        ]
+        if w2c_fit_learn is not None:
+            next_action = _FIT_APPROVAL_NEXT_ACTION
+            remaining_requirement = "W2c_threshold_learning_explicit_approval"
+            resume_steps = [
+                "read docs/M6D_W2B_CERTIFICATION_COMPLETION.md and preserve W2b as terminal",
+                "read docs/M6D_W2C_FIT_LEARN_APPROVAL.md and the hash-bound approval packet",
+                "preserve the 8/8 target-MSA lock and w2c-fit-learn-v1 8x60 scope",
+                "do not infer generation approval from packet preparation, continue, or goal-mode resume",
+                "if explicitly approved, submit only the 8 ProteinMPNN plus 8 dependent Boltz H100 jobs",
+                "do not generate independent-screen or certification rows from learning-stage approval",
+                "move to W3 if W2c cannot pass its locked prospective gates",
+            ]
+            ranked_actions = [
+                "Wait for explicit approval naming W2c threshold-learning 480-record generation on H100.",
+                "After approval, preserve the guarded receipt and generate exactly 60 learning rows per target.",
+                "Freeze target-wise selective-pAE thresholds from learning rows only.",
+                "Generate independent-screen rows only after the learning artifact is locked and reviewed.",
+                "Move to W3 if the prospective W2c protocol cannot qualify without changing locked rules.",
+            ]
+        else:
+            next_action = _FIT_PACKET_NEXT_ACTION
+            remaining_requirement = "W2c_threshold_learning_packet_gate"
+            resume_steps = [
+                "read docs/M6D_W2B_CERTIFICATION_COMPLETION.md and preserve W2b as terminal",
+                "read results/m6d_w2c_target_msa_completion.json and preserve the 8/8 MSA hash lock",
+                "prepare a no-submit threshold-learning packet for exactly 60 fresh rows per target",
+                "bind the w2c-fit-learn-v1 namespace, manifest, MSA, evaluator, and wrapper hashes",
+                "require a separate explicit approval; target-MSA approval does not authorize record generation",
+                "do not generate independent-screen or certification rows from the learning-stage approval",
+                "move to W3 if W2c cannot pass its locked prospective gates",
+            ]
+            ranked_actions = [
+                "Prepare and dry-run the hash-bound W2c threshold-learning packet with zero submissions.",
+                "Obtain separate explicit approval for exactly 480 learning-stage records before compute.",
+                "Freeze target-wise selective-pAE thresholds from learning rows only.",
+                "Generate independent-screen rows only after the learning artifact is locked and reviewed.",
+                "Move to W3 if the prospective W2c protocol cannot qualify without changing locked rules.",
+            ]
     elif w2c_target_msa is not None:
         next_action = _APPROVAL_NEXT_ACTION
         remaining_requirement = "W2c_target_MSA_completion_and_fit_packet_gate"
@@ -347,21 +464,27 @@ def refresh_bundle(
         ]
     date = updated_at.split("T", 1)[0]
     post_msa = w2c_target_msa_complete is not None
-    goal_status = (
-        "goal_active_w2b_terminal_w2c_threshold_learning_packet"
-        if post_msa else _GOAL_STATUS
-    )
-    current_status = (
-        "m6_complex_in_progress_w2b_terminal_w2c_msa_complete_record_generation_blocked"
-        if post_msa else "m6_complex_in_progress_w2b_terminal_w2c_design_no_submit"
-    )
-    goal_progress = (
-        "local_w2c_threshold_learning_packet_work_required"
-        if post_msa else "local_w2c_precompute_work_required"
-    )
+    fit_packet_ready = w2c_fit_learn is not None
+    if fit_packet_ready:
+        goal_status = "goal_active_w2b_terminal_w2c_fit_learn_approval_wait"
+        current_status = (
+            "m6_complex_in_progress_w2b_terminal_w2c_fit_learn_packet_ready_generation_not_approved"
+        )
+        goal_progress = "w2c_fit_learn_packet_ready_awaiting_explicit_generation_approval"
+    elif post_msa:
+        goal_status = "goal_active_w2b_terminal_w2c_threshold_learning_packet"
+        current_status = "m6_complex_in_progress_w2b_terminal_w2c_msa_complete_record_generation_blocked"
+        goal_progress = "local_w2c_threshold_learning_packet_work_required"
+    else:
+        goal_status = _GOAL_STATUS
+        current_status = "m6_complex_in_progress_w2b_terminal_w2c_design_no_submit"
+        goal_progress = "local_w2c_precompute_work_required"
     w2c_claim_boundary = (
-        "power-qualified design with target inputs ready; no model records, certificate, or claim"
-        if post_msa else "power-qualified design only; no targets, compute, certificate, or claim"
+        "power-qualified design with hash-bound fit packet ready; no model records, certificate, or claim"
+        if fit_packet_ready else (
+            "power-qualified design with target inputs ready; no model records, certificate, or claim"
+            if post_msa else "power-qualified design only; no targets, compute, certificate, or claim"
+        )
     )
 
     refreshed_anchor = copy.deepcopy(anchor)
@@ -378,7 +501,9 @@ def refresh_bundle(
         "w2_multi_target_generalization": "not_supported",
         "w2b_target_adaptive_viability": "terminal_not_supported",
         "w2c_selective_target_adaptive_viability": (
-            "not_tested_inputs_ready" if post_msa else "not_tested_design_only"
+            "not_tested_fit_packet_ready" if fit_packet_ready else (
+                "not_tested_inputs_ready" if post_msa else "not_tested_design_only"
+            )
         ),
     })
     refreshed_anchor.setdefault("current_artifacts", {}).update({
@@ -391,6 +516,10 @@ def refresh_bundle(
         "w2c_target_selection": "results/m6d_w2c_target_selection.json",
         "w2c_target_msa_approval_packet": "results/m6d_w2c_target_msa_approval_packet.json",
         "w2c_target_msa_completion": "results/m6d_w2c_target_msa_completion.json",
+        "w2c_fit_learn_stage_manifest": "configs/m6d_w2c_fit_learn_targets.json",
+        "w2c_fit_learn_input_lock": "configs/m6d_w2c_fit_learn_input_lock.json",
+        "w2c_fit_learn_approval_packet": "results/m6d_w2c_fit_learn_approval_packet.json",
+        "w2c_fit_learn_approval_doc": "docs/M6D_W2C_FIT_LEARN_APPROVAL.md",
         "goal_state_refresh": "results/m6d_goal_state_refresh_report.json",
     })
     refreshed_anchor["current_status"] = {
@@ -410,6 +539,8 @@ def refresh_bundle(
         "w2c_target_msa_completion_status": (
             w2c_target_msa_complete["status"] if w2c_target_msa_complete else None
         ),
+        "w2c_fit_learn_packet_status": w2c_fit_learn["status"] if w2c_fit_learn else None,
+        "w2c_record_generation_approved": False,
         "w3": "negative_robustness_result_adjudicated",
         "w4": "closed_loop_plumbing_supported_fail_closed_only",
         "local_harness_status": "results/m6d_goal_mode_local_harness_status.json",
@@ -422,6 +553,7 @@ def refresh_bundle(
     refreshed_anchor["w2c_successor"] = w2c
     refreshed_anchor["w2c_target_msa_approval"] = w2c_target_msa
     refreshed_anchor["w2c_target_msa_completion"] = w2c_target_msa_complete
+    refreshed_anchor["w2c_fit_learn_approval"] = w2c_fit_learn
     refreshed_anchor["next_resume_steps"] = resume_steps
     refreshed_anchor["latest_goal_mode_refresh"] = {
         "updated_at": updated_at,
@@ -437,6 +569,8 @@ def refresh_bundle(
         "w2c_target_msa_completion_status": (
             w2c_target_msa_complete["status"] if w2c_target_msa_complete else None
         ),
+        "w2c_fit_learn_packet_status": w2c_fit_learn["status"] if w2c_fit_learn else None,
+        "w2c_record_generation_approved": False,
         "remaining_requirement": remaining_requirement,
     }
 
@@ -453,6 +587,7 @@ def refresh_bundle(
         "w2c_successor": w2c,
         "w2c_target_msa_approval": w2c_target_msa,
         "w2c_target_msa_completion": w2c_target_msa_complete,
+        "w2c_fit_learn_approval": w2c_fit_learn,
     })
     refreshed_completion["claim_boundary"] = {
         "w1": "target-specific certified evidence preserved",
@@ -491,8 +626,11 @@ def refresh_bundle(
     refreshed_drift = copy.deepcopy(drift)
     refreshed_drift.update({
         "status": (
-            "no_major_direction_drift_w2b_terminal_w2c_msa_complete_fit_packet"
-            if post_msa else "no_major_direction_drift_w2b_terminal_w2c_precompute"
+            "no_major_direction_drift_w2b_terminal_w2c_fit_packet_ready_approval_wait"
+            if fit_packet_ready else (
+                "no_major_direction_drift_w2b_terminal_w2c_msa_complete_fit_packet"
+                if post_msa else "no_major_direction_drift_w2b_terminal_w2c_precompute"
+            )
         ),
         "audit_ok": True,
         "major_direction_drift": False,
@@ -505,7 +643,11 @@ def refresh_bundle(
         "w1": "preserved_target_specific_certificate",
         "w2": "generalization_not_supported",
         "w2b": "terminal_not_supported_no_extension",
-        "w2c": "inputs_ready_no_records_no_claim" if post_msa else "design_only_no_submit_no_claim",
+        "w2c": (
+            "fit_packet_ready_no_records_no_claim" if fit_packet_ready else (
+                "inputs_ready_no_records_no_claim" if post_msa else "design_only_no_submit_no_claim"
+            )
+        ),
         "w3": "negative_robustness_adjudicated_no_positive_claim",
         "w4": "closed_loop_plumbing_only",
     }
@@ -529,9 +671,12 @@ def refresh_bundle(
             "id": "verification_instead_of_science",
             "status": "managed",
             "control": (
-                "next work is a bounded threshold-learning packet; no further W2b validation is allowed"
-                if post_msa else
-                "next work is evaluator plus fresh-target qualification; no further W2b validation is allowed"
+                "next boundary is explicit approval for the fixed fit packet; no further W2b validation is allowed"
+                if fit_packet_ready else (
+                    "next work is a bounded threshold-learning packet; no further W2b validation is allowed"
+                    if post_msa else
+                    "next work is evaluator plus fresh-target qualification; no further W2b validation is allowed"
+                )
             ),
         },
     ]
@@ -540,8 +685,11 @@ def refresh_bundle(
         "protocol": "no_drift_w2b_lock_preserved_w2c_declared_as_new_experiment",
         "claims": "no_drift_negative_boundaries_preserved",
         "execution": (
-            "w2b_closed_w2c_target_msa_complete_record_generation_no_submit"
-            if post_msa else "w2b_closed_without_nondecisive_test_compute_w2c_no_submit"
+            "w2b_closed_w2c_fit_packet_ready_record_generation_not_approved"
+            if fit_packet_ready else (
+                "w2b_closed_w2c_target_msa_complete_record_generation_no_submit"
+                if post_msa else "w2b_closed_without_nondecisive_test_compute_w2c_no_submit"
+            )
         ),
         "operational_status": "stale_current_surfaces_replaced_historical_detail_retained",
         "major_direction_drift": False,
@@ -556,6 +704,7 @@ def refresh_bundle(
     current_state["W2c_successor"] = w2c
     current_state["W2c_target_msa_approval"] = w2c_target_msa
     current_state["W2c_target_msa_completion"] = w2c_target_msa_complete
+    current_state["W2c_fit_learn_approval"] = w2c_fit_learn
     current_state.setdefault("completion_audit", {}).update({
         "status": goal_status,
         "can_mark_goal_complete": False,
@@ -569,8 +718,11 @@ def refresh_bundle(
         "artifact": "m6d_followup_next_science_actions",
         "date": date,
         "status": (
-            "w2b_terminal_w2c_msa_complete_threshold_learning_packet_no_submit"
-            if post_msa else "w2b_terminal_w2c_design_gate_no_submit"
+            "w2b_terminal_w2c_fit_packet_ready_awaiting_explicit_approval"
+            if fit_packet_ready else (
+                "w2b_terminal_w2c_msa_complete_threshold_learning_packet_no_submit"
+                if post_msa else "w2b_terminal_w2c_design_gate_no_submit"
+            )
         ),
         "target_alpha": 0.2,
         "claim_boundary": {
@@ -578,7 +730,9 @@ def refresh_bundle(
             "w2_multi_target_generalization": "not_supported",
             "w2b_target_adaptive_viability": "terminal_not_supported",
             "w2c_selective_target_adaptive_viability": (
-                "not_tested_inputs_ready" if post_msa else "not_tested_design_only"
+                "not_tested_fit_packet_ready" if fit_packet_ready else (
+                    "not_tested_inputs_ready" if post_msa else "not_tested_design_only"
+                )
             ),
             "w3_independent_predictor_robustness": "not_supported_predictor_disagreement",
             "w4_closed_loop": "fail_closed_plumbing_only",
@@ -587,6 +741,7 @@ def refresh_bundle(
         "w2c_successor": w2c,
         "w2c_target_msa_approval": w2c_target_msa,
         "w2c_target_msa_completion": w2c_target_msa_complete,
+        "w2c_fit_learn_approval": w2c_fit_learn,
         "next_actions_ranked": ranked_actions,
         "next_action": next_action,
         "no_submit": True,
@@ -598,14 +753,20 @@ def refresh_bundle(
         "updated_at": updated_at,
         "goal_mode_status": (
             (
-                "active_w2c_threshold_learning_packet"
-                if post_msa else "active_w2c_precompute"
+                "active_w2c_fit_learn_approval_wait"
+                if fit_packet_ready else (
+                    "active_w2c_threshold_learning_packet"
+                    if post_msa else "active_w2c_precompute"
+                )
             ) if runtime_goal_active else "contract_ready_runtime_goal_inactive"
         ),
         "science_focus": (
-            "W2b terminal preservation plus W2c threshold-learning packet qualification"
-            if post_msa else
-            "W2b terminal preservation plus W2c selective one-shot precompute qualification"
+            "W2b terminal preservation plus guarded W2c fit-learn approval boundary"
+            if fit_packet_ready else (
+                "W2b terminal preservation plus W2c threshold-learning packet qualification"
+                if post_msa else
+                "W2b terminal preservation plus W2c selective one-shot precompute qualification"
+            )
         ),
         "local_verification": {
             "command": test_command,
@@ -625,11 +786,17 @@ def refresh_bundle(
             "w2c_target_msa_completion_status": (
                 w2c_target_msa_complete["status"] if w2c_target_msa_complete else None
             ),
+            "w2c_fit_learn_packet_status": w2c_fit_learn["status"] if w2c_fit_learn else None,
+            "w2c_record_generation_approved": False,
             "next_action": next_action,
         },
         "claim_boundary": {
             "w2b": "terminal_not_supported",
-            "w2c": "inputs_ready_no_records_no_claim" if post_msa else "design_only_no_submit_no_claim",
+            "w2c": (
+                "fit_packet_ready_no_records_no_claim" if fit_packet_ready else (
+                    "inputs_ready_no_records_no_claim" if post_msa else "design_only_no_submit_no_claim"
+                )
+            ),
             "w3": "negative_robustness_result_preserved",
         },
         "w3_runtime_provision": harness.get("w3_runtime_provision", {}),
@@ -638,8 +805,11 @@ def refresh_bundle(
     report = {
         "artifact": "m6d_goal_state_refresh_report",
         "status": (
-            "goal_state_refreshed_w2b_terminal_w2c_msa_complete_fit_packet_no_submit"
-            if post_msa else "goal_state_refreshed_w2b_terminal_w2c_no_submit"
+            "goal_state_refreshed_w2b_terminal_w2c_fit_packet_ready_approval_wait"
+            if fit_packet_ready else (
+                "goal_state_refreshed_w2b_terminal_w2c_msa_complete_fit_packet_no_submit"
+                if post_msa else "goal_state_refreshed_w2b_terminal_w2c_no_submit"
+            )
         ),
         "audit_ok": True,
         "updated_at": updated_at,
@@ -648,6 +818,7 @@ def refresh_bundle(
         "w2c": w2c,
         "w2c_target_msa_approval": w2c_target_msa,
         "w2c_target_msa_completion": w2c_target_msa_complete,
+        "w2c_fit_learn_approval": w2c_fit_learn,
         "updated_artifacts": [
             "results/m6d_goal_mode_current_anchor.json",
             "results/m6d_goal_completion_audit.json",
@@ -689,6 +860,7 @@ def _target_msa_packet_status_label(status: Any, historical: bool) -> str:
 def render_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
     target_msa_completion = report.get("w2c_target_msa_completion") or {}
+    fit_learn = report.get("w2c_fit_learn_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -703,6 +875,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W2c: `{report['w2c']['status']}`.",
         f"W2c target-MSA packet: `{target_msa_status}`.",
         f"W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`.",
+        f"W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -719,6 +892,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
 def render_completion_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
     target_msa_completion = report.get("w2c_target_msa_completion") or {}
+    fit_learn = report.get("w2c_fit_learn_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -738,6 +912,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W2c Cayuga submission allowed: `{report['w2c_successor']['cayuga_submission_allowed']}`",
         f"- W2c target-MSA packet: `{target_msa_status}`",
         f"- W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`",
+        f"- W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -780,6 +955,7 @@ def render_drift_markdown(report: Dict[str, Any]) -> str:
 def render_actions_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
     target_msa_completion = report.get("w2c_target_msa_completion") or {}
+    fit_learn = report.get("w2c_fit_learn_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -792,6 +968,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         f"W2c target-MSA packet: `{target_msa_status}`.",
         f"W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`.",
+        f"W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`.",
         "",
         "## Ranked Actions",
         "",
@@ -827,6 +1004,8 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W2c submission allowed: `{hpc['w2c_submission_allowed']}`",
         f"- W2c target-MSA packet: `{target_msa_status}`",
         f"- W2c target-MSA completion: `{hpc.get('w2c_target_msa_completion_status', 'not_complete')}`",
+        f"- W2c fit-learn packet: `{hpc.get('w2c_fit_learn_packet_status', 'not_ready')}`",
+        f"- W2c record generation approved: `{hpc.get('w2c_record_generation_approved', False)}`",
         "",
         "## Next Action",
         "",
@@ -890,6 +1069,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w2c-target-msa-completion",
         default="results/m6d_w2c_target_msa_completion.json",
     )
+    parser.add_argument(
+        "--w2c-fit-learn-packet",
+        default="results/m6d_w2c_fit_learn_approval_packet.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -923,6 +1106,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w2c_target_msa_completion)
             if os.path.exists(args.w2c_target_msa_completion)
+            else None
+        ),
+        (
+            _load_json(args.w2c_fit_learn_packet)
+            if os.path.exists(args.w2c_fit_learn_packet)
             else None
         ),
         updated_at=args.updated_at,

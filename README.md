@@ -35,11 +35,16 @@
 > and its locked evaluator is implemented. Eight label-blind fresh targets are selected with zero historical/W2b
 > target, source, or sequence overlap. All eight target-MSA/report pairs now pass strict manifest validation;
 > input preparation consumed 0.144722 A40 GPU-hours and generated zero design records. Record-generation
-> submission remains blocked. See [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md) and
+> submission remains blocked. The dedicated `w2c-fit-learn-v1` threshold-learning packet is now prepared
+> for exactly 60 records per target, 480 total. Its 56-input lock and 19-artifact execution binding passed
+> local and Cayuga dry-runs; Cayuga Slurm remained `0 -> 0`, and no receipt, summary, candidate, or record
+> was created. See [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md),
+> [docs/M6D_W2C_FIT_LEARN_APPROVAL.md](docs/M6D_W2C_FIT_LEARN_APPROVAL.md), and
 > `results/m6d_w2c_design_gate.{json,md}`.
 > The target-MSA approval packet is now an immutable historical pre-submit snapshot. The next boundary is
-> a hash-bound no-submit threshold-learning packet for exactly 60 fresh rows per target under
-> `w2c-fit-learn-v1`; record generation requires separate explicit approval.
+> separate explicit approval naming **W2c threshold-learning 480-record generation on H100**. Packet
+> preparation approval does not authorize ProteinMPNN/Boltz generation, independent screening, or
+> certification.
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
@@ -72,11 +77,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-12)
+## Status (2026-07-14)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`900` designer tests on 2026-07-12).
+**Current local source verified** (`913` designer tests and `53` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
