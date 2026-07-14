@@ -1,14 +1,14 @@
 # Codex Goal Mode
 
-> **Current anchor (2026-07-14):** W2c is terminal and must not be rescued or retuned. The distinct
+> **Current anchor (2026-07-15):** W2c is terminal and must not be rescued or retuned. The distinct
 > 58-case W3 AF2-Multimer mechanism panel is also complete. Frozen adjudication supports Chai on 3PC8,
 > finds mixed Boltz agreement on W2c, and returns `context_dependent_or_unresolved`. Resume from
 > `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The next frontier is a new, prospectively locked
 > predictor-disagreement-aware gate on fresh matched-protocol targets. That W3b protocol, target-level
 > 3/3/2 split, power gate, and evaluator are now frozen in
 > `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. Target-MSA readiness is 0/8. The hash-bound wrapper is
-> staged and passes the Cayuga no-submit readiness audit with a fail-closed post-submit lifecycle, but no
-> new compute is approved.
+> staged and passes the Cayuga no-submit readiness audit with a fail-closed post-submit lifecycle. Exact
+> Boltz/AF2 runtime identities are also frozen and audit-clean, but no new compute is approved.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -87,7 +87,11 @@ The evaluator rejects pairwise-matching records whose MSA hash is not the manife
 The downstream CPU assembler `m6d_w3b_matched_records` is also implemented and requires exact candidate
 sets, per-predictor runtime receipts, seed `0`, templates/network off, and candidate/MSA/runtime/output hashes;
 its current `results/m6d_w3b_matched_record_contract.{json,md}` is audit-clean but correctly waits on the
-execution lock.
+execution lock. `configs/m6d_w3b_runtime_lock.json` now binds Boltz `2.2.1` to its installed package
+manifest and local checkpoint hashes, and binds AF2 to the verified W3 ColabFold container plus all five
+Multimer-v3 weight hashes. `results/m6d_w3b_runtime_lock_readiness.{json,md}` is audit-clean,
+`runtime_identity_ready=true`, and still no-submit; matched receipts must equal its exact predictor identity
+and lock digests.
 Stop for separate exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
 consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
 
@@ -693,8 +697,8 @@ Use this order unless the user gives a newer instruction:
 3. W2 - Redesign multi-target generalization. Treat the current panels as completed negative
    evidence, then select or design more 3PC8-like targets before any broad panel spend.
 4. W3b - Preserve the preregistered disagreement-aware gate and label-blind 3/3/2 target roles.
-   The MSA-only packet, Cayuga no-submit readiness audit, read-only job query, and scoped post-submit
-   replay are ready; stop for exact approval before any MSA query or compute.
+   The exact dual-predictor runtime lock, MSA-only packet, Cayuga no-submit readiness audit, read-only job
+   query, and scoped post-submit replay are ready; stop for exact approval before any MSA query or compute.
 5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

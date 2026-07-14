@@ -10,6 +10,11 @@ import os
 from collections import Counter
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+from bio_sfm_designer.experiments.m6d_w3b_runtime_lock import (
+    runtime_identity as locked_runtime_identity,
+    validate_runtime_lock,
+)
+
 
 _PREDICTORS = ("boltz2_complex", "af2_multimer_colabfold_v1")
 _ROLES = ("fit", "certification", "held_out_test")
@@ -160,30 +165,21 @@ def _receipt_path(target: Dict[str, Any], predictor_id: str) -> str:
     return os.path.join(str(target["out_prefix"]), _RECEIPT_NAMES[predictor_id])
 
 
-def _runtime_identity_ok(predictor_id: str, runtime: Any) -> bool:
-    if not isinstance(runtime, dict):
-        return False
-    if predictor_id == "boltz2_complex":
-        return runtime.get("model") == "boltz2" and bool(runtime.get("boltz_version"))
-    return (
-        runtime.get("colabfold_version") == "1.6.1"
-        and runtime.get("model_type") == "alphafold2_multimer_v3"
-    )
-
-
 def build_runtime_receipt(
     protocol_path: str,
     execution_manifest_path: str,
     input_lock_path: str,
+    runtime_lock_path: str,
     predictor_id: str,
     target_id: str,
-    runtime_identity: Dict[str, Any],
+    observed_runtime_identity: Dict[str, Any],
 ) -> Dict[str, Any]:
     if predictor_id not in _PREDICTORS:
         raise ValueError(f"unsupported W3b predictor: {predictor_id}")
     protocol = _load_object(protocol_path)
     manifest = _load_object(execution_manifest_path)
     lock = _load_object(input_lock_path)
+    runtime_lock = _load_object(runtime_lock_path)
     failures: List[Dict[str, Any]] = []
     _validate_execution_contract(
         protocol_path,
@@ -194,6 +190,9 @@ def build_runtime_receipt(
         lock,
         failures,
     )
+    runtime_failures = validate_runtime_lock(runtime_lock, protocol_path)
+    if runtime_failures:
+        raise ValueError(f"W3b runtime lock is invalid: {runtime_failures[0]['kind']}")
     targets = {
         str(row.get("id") or ""): row
         for row in manifest.get("targets", [])
@@ -202,8 +201,9 @@ def build_runtime_receipt(
     target = targets.get(target_id)
     if not isinstance(target, dict):
         raise ValueError(f"target is absent from W3b execution manifest: {target_id}")
-    if not _runtime_identity_ok(predictor_id, runtime_identity):
-        raise ValueError(f"runtime identity does not satisfy the frozen {predictor_id} contract")
+    runtime_identity = locked_runtime_identity(runtime_lock, predictor_id, protocol_path)
+    if observed_runtime_identity != runtime_identity:
+        raise ValueError(f"observed runtime identity differs from the frozen {predictor_id} identity")
     candidates_path = str(target["candidates"])
     target_msa_path = str(target["target_msa"])
     records_path = str(target[_RECORD_PATH_FIELDS[predictor_id]])
@@ -246,6 +246,9 @@ def build_runtime_receipt(
         "records": records_path,
         "records_sha256": _sha256_file(records_path),
         "n_records": expected_count,
+        "runtime_lock": runtime_lock_path,
+        "runtime_lock_sha256": _sha256_file(runtime_lock_path),
+        "runtime_lock_digest_sha256": runtime_lock["runtime_lock_digest_sha256"],
         "runtime_identity": runtime_identity,
         "runtime_identity_sha256": _canonical_sha256(runtime_identity),
         "claim_boundary": (
@@ -260,6 +263,9 @@ def _validate_receipt(
     *,
     receipt_path: str,
     predictor_id: str,
+    protocol_path: str,
+    runtime_lock_path: str,
+    runtime_lock: Dict[str, Any],
     target: Dict[str, Any],
     candidates_path: str,
     records_path: str,
@@ -269,14 +275,18 @@ def _validate_receipt(
     target_id = str(target["id"])
     runtime = receipt.get("runtime_identity")
     runtime_digest = receipt.get("runtime_identity_sha256")
+    expected_runtime = locked_runtime_identity(runtime_lock, predictor_id, protocol_path)
+    expected_runtime_digest = runtime_lock["predictor_runtime_identity_sha256"][predictor_id]
     runtime_ok = (
-        _runtime_identity_ok(predictor_id, runtime)
+        runtime == expected_runtime
+        and runtime_digest == expected_runtime_digest
         and runtime_digest == _canonical_sha256(runtime)
     )
     expected = {
         "artifact": "m6d_w3b_predictor_runtime_receipt",
         "status": "w3b_predictor_records_complete",
         "audit_ok": True,
+        "no_submit": True,
         "predictor_id": predictor_id,
         "target_id": target_id,
         "experimental_role": target["experimental_role"],
@@ -291,6 +301,9 @@ def _validate_receipt(
         "records": records_path,
         "records_sha256": _sha256_file(records_path),
         "n_records": expected_count,
+        "runtime_lock": runtime_lock_path,
+        "runtime_lock_sha256": _sha256_file(runtime_lock_path),
+        "runtime_lock_digest_sha256": runtime_lock["runtime_lock_digest_sha256"],
     }
     mismatches = [key for key, value in expected.items() if receipt.get(key) != value]
     if mismatches or not runtime_ok or not _is_sha256(runtime_digest):
@@ -302,6 +315,8 @@ def _validate_receipt(
             receipt=receipt_path,
             mismatches=mismatches,
             runtime_identity_ok=bool(runtime_ok),
+            expected_runtime_identity_sha256=expected_runtime_digest,
+            observed_runtime_identity_sha256=runtime_digest,
         )
         return None
     return str(runtime_digest)
@@ -405,6 +420,9 @@ def _validate_raw_record(
 def _assemble_target(
     target: Dict[str, Any],
     *,
+    protocol_path: str,
+    runtime_lock_path: str,
+    runtime_lock: Dict[str, Any],
     expected_count: int,
     failures: List[Dict[str, Any]],
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
@@ -478,6 +496,9 @@ def _assemble_target(
             receipt,
             receipt_path=receipt_path,
             predictor_id=predictor_id,
+            protocol_path=protocol_path,
+            runtime_lock_path=runtime_lock_path,
+            runtime_lock=runtime_lock,
             target=target,
             candidates_path=candidates_path,
             records_path=paths[predictor_id],
@@ -558,11 +579,13 @@ def assemble_stage(
     protocol_path: str,
     execution_manifest_path: str,
     input_lock_path: str,
+    runtime_lock_path: str,
     stage: str,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     protocol = _load_object(protocol_path)
     manifest = _load_object(execution_manifest_path)
     lock = _load_object(input_lock_path)
+    runtime_lock = _load_object(runtime_lock_path)
     failures: List[Dict[str, Any]] = []
     _validate_execution_contract(
         protocol_path,
@@ -573,6 +596,8 @@ def assemble_stage(
         lock,
         failures,
     )
+    runtime_failures = validate_runtime_lock(runtime_lock, protocol_path)
+    failures.extend(runtime_failures)
     contract = _stage_contract(protocol, stage)
     expected_per_target = int(contract["records_per_target"])
     targets = [
@@ -615,8 +640,19 @@ def assemble_stage(
             }
         ):
             _failure(failures, "target_execution_lock_mismatch", target_id=target_id)
+        if runtime_failures:
+            target_reports.append({
+                "target_id": target_id,
+                "expected_records": expected_per_target,
+                "n_matched_records": 0,
+                "blocked_by": "runtime_lock_invalid",
+            })
+            continue
         rows, target_report = _assemble_target(
             target,
+            protocol_path=protocol_path,
+            runtime_lock_path=runtime_lock_path,
+            runtime_lock=runtime_lock,
             expected_count=expected_per_target,
             failures=failures,
         )
@@ -656,6 +692,9 @@ def assemble_stage(
         "execution_manifest_sha256": _sha256_file(execution_manifest_path),
         "input_lock": input_lock_path,
         "input_lock_sha256": _sha256_file(input_lock_path),
+        "runtime_lock": runtime_lock_path,
+        "runtime_lock_sha256": _sha256_file(runtime_lock_path),
+        "runtime_lock_digest_sha256": runtime_lock.get("runtime_lock_digest_sha256"),
         "target_ids": [str(row["id"]) for row in targets],
         "records_per_target": expected_per_target,
         "expected_records": expected_records,
@@ -673,15 +712,41 @@ def assemble_stage(
     }
 
 
-def build_readiness(protocol_path: str, execution_readiness_path: str) -> Dict[str, Any]:
+def build_readiness(
+    protocol_path: str,
+    execution_readiness_path: str,
+    runtime_readiness_path: str = "results/m6d_w3b_runtime_lock_readiness.json",
+) -> Dict[str, Any]:
     protocol = _load_object(protocol_path)
     execution = _load_object(execution_readiness_path)
+    runtime = _load_object(runtime_readiness_path)
     failures: List[Dict[str, Any]] = []
     for stage in _ROLES:
         _stage_contract(protocol, stage)
     if execution.get("audit_ok") is not True or execution.get("no_submit") is not True:
         _failure(failures, "execution_lock_readiness_invalid")
-    ready = execution.get("execution_lock_ready") is True and not failures
+    if not (
+        runtime.get("artifact") == "m6d_w3b_runtime_lock_readiness"
+        and runtime.get("audit_ok") is True
+        and runtime.get("runtime_identity_ready") is True
+        and runtime.get("no_submit") is True
+        and runtime.get("can_submit_fit_stage") is False
+    ):
+        _failure(failures, "runtime_lock_readiness_invalid")
+    runtime_lock_path = runtime.get("runtime_lock")
+    runtime_lock_current = False
+    if isinstance(runtime_lock_path, str) and os.path.isfile(runtime_lock_path):
+        current_lock = _load_object(runtime_lock_path)
+        runtime_lock_current = (
+            _sha256_file(runtime_lock_path) == runtime.get("runtime_lock_sha256")
+            and current_lock.get("runtime_lock_digest_sha256") == runtime.get("runtime_lock_digest_sha256")
+            and not validate_runtime_lock(current_lock, protocol_path)
+        )
+    if not runtime_lock_current:
+        _failure(failures, "runtime_lock_readiness_binding_stale_or_invalid")
+    execution_ready = execution.get("execution_lock_ready") is True
+    runtime_ready = runtime.get("runtime_identity_ready") is True and runtime_lock_current
+    ready = execution_ready and runtime_ready and not failures
     if failures:
         status = "w3b_matched_record_contract_blocked"
     elif ready:
@@ -693,6 +758,8 @@ def build_readiness(protocol_path: str, execution_readiness_path: str) -> Dict[s
         "status": status,
         "audit_ok": not failures,
         "assembly_ready": ready,
+        "execution_lock_ready": execution_ready,
+        "runtime_identity_ready": runtime_ready,
         "no_submit": True,
         "can_run_candidate_generation_or_prediction": False,
         "can_claim_w3b": False,
@@ -700,11 +767,18 @@ def build_readiness(protocol_path: str, execution_readiness_path: str) -> Dict[s
         "protocol_sha256": _sha256_file(protocol_path),
         "execution_lock_readiness": execution_readiness_path,
         "execution_lock_readiness_sha256": _sha256_file(execution_readiness_path),
+        "runtime_lock_readiness": runtime_readiness_path,
+        "runtime_lock_readiness_sha256": _sha256_file(runtime_readiness_path),
+        "runtime_lock": runtime.get("runtime_lock"),
+        "runtime_lock_sha256": runtime.get("runtime_lock_sha256"),
+        "runtime_lock_digest_sha256": runtime.get("runtime_lock_digest_sha256"),
         "required_predictors": list(_PREDICTORS),
         "required_runtime_receipt": {
             "seed": 0,
             "templates_used": False,
             "prediction_time_network_used": False,
+            "runtime_lock_sha256": "exact_file_sha256_required",
+            "runtime_lock_digest_sha256": "exact_lock_digest_required",
             "runtime_identity_sha256": "canonical_sha256_required",
         },
         "required_record_provenance": [
@@ -727,6 +801,8 @@ def build_readiness(protocol_path: str, execution_readiness_path: str) -> Dict[s
             "prepare a separately approval-gated fit-stage runtime packet using the frozen execution lock"
             if ready else
             "complete the target-MSA lifecycle and materialize the frozen execution manifest/input lock"
+            if runtime_ready else
+            "repair the W3b runtime lock before any candidate or predictor stage"
         ),
     }
 
@@ -738,6 +814,8 @@ def render_readiness_markdown(report: Dict[str, Any]) -> str:
         f"Status: `{report['status']}`.",
         f"Audit ok: `{report['audit_ok']}`.",
         f"Assembly ready: `{report['assembly_ready']}`.",
+        f"Runtime identity ready: `{report['runtime_identity_ready']}`.",
+        f"Execution lock ready: `{report['execution_lock_ready']}`.",
         f"No submit: `{report['no_submit']}`.",
         "",
         report["claim_boundary"],
@@ -774,6 +852,8 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument("--execution-readiness", default="results/m6d_w3b_execution_lock_readiness.json")
     parser.add_argument("--execution-manifest", default="configs/m6d_w3b_execution_targets.json")
     parser.add_argument("--input-lock", default="configs/m6d_w3b_execution_input_lock.json")
+    parser.add_argument("--runtime-lock", default="configs/m6d_w3b_runtime_lock.json")
+    parser.add_argument("--runtime-readiness", default="results/m6d_w3b_runtime_lock_readiness.json")
     parser.add_argument("--stage", choices=_ROLES, default=None)
     parser.add_argument("--out-records", default="results/m6d_w3b_matched_records.jsonl")
     parser.add_argument("--out-report", default="results/m6d_w3b_matched_record_assembly.json")
@@ -792,6 +872,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
             args.protocol,
             args.execution_manifest,
             args.input_lock,
+            args.runtime_lock,
             args.receipt_predictor,
             args.receipt_target,
             runtime,
@@ -806,7 +887,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         )
         return 0
     if args.stage is None:
-        report = build_readiness(args.protocol, args.execution_readiness)
+        report = build_readiness(args.protocol, args.execution_readiness, args.runtime_readiness)
         _write_json(args.out_readiness, report)
         os.makedirs(os.path.dirname(args.out_readiness_md) or ".", exist_ok=True)
         with open(args.out_readiness_md, "w") as handle:
@@ -820,6 +901,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         args.protocol,
         args.execution_manifest,
         args.input_lock,
+        args.runtime_lock,
         args.stage,
     )
     _write_jsonl(args.out_records, records if report["audit_ok"] else [])

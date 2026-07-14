@@ -1,0 +1,137 @@
+{
+  "artifact": "m6d_w3b_runtime_lock",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_generate_candidates_or_run_predictors": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "Runtime identity and execution-parameter provenance only. This lock submits no work, authorizes no compute, and supports no W3b or biological-success claim.",
+  "failures": [],
+  "locked_scientific_digest": "435eadc78fa850d4a67d6eeef463b5a805727cc46e714739d709fec7c28257cb",
+  "n_failures": 0,
+  "no_api_spend": true,
+  "no_gpu_compute": true,
+  "no_submit": true,
+  "prediction_executed": false,
+  "predictor_runtime_identities": {
+    "af2_multimer_colabfold_v1": {
+      "colabfold_version": "1.6.1",
+      "container_image_uri": "docker://ghcr.io/sokrypton/colabfold:1.6.1-cuda12",
+      "container_sha256": "e26689bc357e8aaf5210ed43499e565d2a440ea6efde5a8a42cbdc4f6a83e566",
+      "execution_parameters": {
+        "binder_msa": "single_sequence",
+        "models": 5,
+        "num_seeds": 1,
+        "prediction_time_network_used": false,
+        "random_seed": 0,
+        "rank_by": "multimer",
+        "recycles": 20,
+        "relax_models": 0,
+        "target_msa": "reuse_same_hash_locked_target_msa",
+        "templates": false
+      },
+      "model_type": "alphafold2_multimer_v3",
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "runtime_family": "colabfold_af2_multimer",
+      "weights": [
+        {
+          "name": "params_model_1_multimer_v3.npz",
+          "sha256": "611da8fc7478928f68de12e8b226260ef1f4ce62bcc29b008572e52f4f212959",
+          "size_bytes": 373043148
+        },
+        {
+          "name": "params_model_2_multimer_v3.npz",
+          "sha256": "51362b0844382ae0f5720c59b81dd13a43eea40fbf9995dd2573bdab88865378",
+          "size_bytes": 373043148
+        },
+        {
+          "name": "params_model_3_multimer_v3.npz",
+          "sha256": "46d9bcad288edc7ad5a6362ee8e5f84307a69712e00e6c36b1ef9daf96ebc9ce",
+          "size_bytes": 373043148
+        },
+        {
+          "name": "params_model_4_multimer_v3.npz",
+          "sha256": "59bdabd2d69c07fe26b37882d544acbd1b9f89f196828f4220da49e0610b572c",
+          "size_bytes": 373043148
+        },
+        {
+          "name": "params_model_5_multimer_v3.npz",
+          "sha256": "917742be5a105d6b80f13f1f13f20459f27ec3fdcd34ea088b359f4502d6177f",
+          "size_bytes": 373043148
+        }
+      ],
+      "weights_manifest_sha256": "2e0fb58c94a04975715d3a97f459224ff37a966d5672b3aeceec4f652935eb64",
+      "weights_verified_from_runtime_receipt": "m6d_w3_mechanism_runtime_receipt"
+    },
+    "boltz2_complex": {
+      "boltz_version": "2.2.1",
+      "cache_checkpoints": [
+        {
+          "active_for_structure_prediction": true,
+          "bytes": 2286561469,
+          "name": "boltz2_conf.ckpt",
+          "role": "structure_confidence_model",
+          "sha256": "090e82ac8c92f5e943fa1b39e7410a44027bea7243c0bbb3caa67a77fc1428e1"
+        },
+        {
+          "active_for_structure_prediction": false,
+          "bytes": 2062139170,
+          "name": "boltz2_aff.ckpt",
+          "role": "required_local_cache_affinity_model",
+          "sha256": "dcc5cd3722b1c9eaa34267e4ae32f55cbbf1963f4c19319381ccfa30fdd2ca9e"
+        }
+      ],
+      "distribution_file_count": 116,
+      "distribution_manifest_sha256": "8e101bde6e7faaff1b143efdd15f29362eef2fd9e099093906ade6fe83dd034a",
+      "execution_parameters": {
+        "accelerator": "gpu",
+        "binder_msa": "single_sequence",
+        "devices": 1,
+        "diffusion_samples": 1,
+        "model": "boltz2",
+        "no_kernels": true,
+        "output_format": "pdb",
+        "prediction_time_network_used": false,
+        "python_no_user_site": true,
+        "recycling_steps": 3,
+        "sampling_steps": 100,
+        "seed": 0,
+        "target_msa": "reuse_hash_locked_target_msa",
+        "templates": false,
+        "use_msa_server": false,
+        "write_full_pae": true
+      },
+      "model": "boltz2",
+      "predictor_id": "boltz2_complex",
+      "runtime_family": "boltz"
+    }
+  },
+  "predictor_runtime_identity_sha256": {
+    "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+    "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+  },
+  "protocol": "configs/m6d_w3b_disagreement_gate_protocol.json",
+  "protocol_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96",
+  "runtime_identity_ready": true,
+  "runtime_lock_digest_sha256": "89ef3ccd7f7c361b186170c14ec21e715633fc6e94b48126bef6879058eb27c0",
+  "source_bindings": {
+    "af2_provision_receipt": {
+      "path": "results/m6d_w3_runtime_provision_receipt.json",
+      "sha256": "8e3e67bc179a012f24c37de8e3d7e7952263dcfcc928d3c7df039fd287cfcefa"
+    },
+    "af2_runtime_receipt": {
+      "path": "results/m6d_w3_mechanism_runtime_receipt.json",
+      "sha256": "f2e14c98f658374a904fcb858038dc6eef613c4a1eb06be4bee9ed6567ea5bc6"
+    },
+    "boltz_runtime_observation": {
+      "path": "results/m6d_w3b_boltz_runtime_observation.json",
+      "sha256": "31510010ef0d1252614530cdbe8049eed6a9aee86dc8e4be0fc78aaede87d928"
+    },
+    "protocol": {
+      "path": "configs/m6d_w3b_disagreement_gate_protocol.json",
+      "sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96"
+    }
+  },
+  "status": "w3b_dual_predictor_runtime_locked_no_submit",
+  "submitted_jobs": 0,
+  "version": 1
+}

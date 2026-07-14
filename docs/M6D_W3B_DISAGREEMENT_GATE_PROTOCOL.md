@@ -51,6 +51,16 @@ must both be off. A near-total numeric copy of pAE and L-RMSD across predictors 
 
 These are two structural-proxy endpoints, not wet-lab truth.
 
+The runtime itself is frozen before any W3b predictor output. Boltz is `2.2.1`, bound to a canonical
+116-file installed-distribution manifest and the SHA-256/byte counts of `boltz2_conf.ckpt` and the locally
+required `boltz2_aff.ckpt` cache file. Structure prediction explicitly uses model `boltz2`, seed `0`,
+100 sampling steps, 3 recycles, 1 diffusion sample, `--no_kernels`, local target MSA, binder single sequence,
+and no prediction-time network. AF2 reuses the W3-verified ColabFold 1.6.1 container SHA, all five
+Multimer-v3 parameter hashes, seed `0`, 5 models, 20 recycles, no relaxation, no templates, and no network.
+The machine lock is `configs/m6d_w3b_runtime_lock.json`; its no-submit readiness report is
+`results/m6d_w3b_runtime_lock_readiness.{json,md}`. A receipt must match the lock file SHA, lock digest,
+and predictor-specific canonical identity digest. A different but internally self-consistent runtime fails.
+
 ## Frozen gate
 
 The primary gate uses only predictor-visible interface uncertainty:
@@ -97,6 +107,11 @@ The maximum design is 870 candidate sequences and 1,740 matched predictor evalua
 24 H100 GPU-hour ceiling. Fit failure stops before certification; certification failure stops before
 held-out test; adaptive top-up is forbidden.
 
+The existing shared `hpc/predict_boltz_complex.py` and its Slurm wrapper remain hash-bound historical
+inputs to consumed W2b/W2c approval packets and are not W3b execution authority. A later fit-stage packet
+must emit and hash-bind a W3b-specific runner that passes every explicit runtime-lock parameter, including
+Boltz seed `0`; historical approval snapshots must not be rewritten to retrofit this contract.
+
 Current target-MSA readiness is 0/8. No target-MSA query, candidate generation, predictor run,
 scheduler submission, API request, or GPU spend is authorized. The hash-bound MSA-only packet is ready
 in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval.
@@ -110,6 +125,8 @@ in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval.
   `bio_sfm_designer.experiments.m6d_w3b_execution_lock`;
 - provenance-bound matched-record assembler:
   `bio_sfm_designer.experiments.m6d_w3b_matched_records`;
+- exact dual-predictor runtime lock:
+  `bio_sfm_designer.experiments.m6d_w3b_runtime_lock`;
 - frozen evaluator: `bio_sfm_designer.experiments.m6d_w3b_disagreement_gate`;
 - focused tests: `tests/test_m6d_w3b_target_selector.py` and
   `tests/test_m6d_w3b_disagreement_gate.py`; execution-lock tests are in
@@ -128,10 +145,12 @@ captured runtime identity, then assemble the stage and run the frozen evaluator:
 ```bash
 python -m bio_sfm_designer.experiments.m6d_w3b_matched_records \
   --receipt-predictor boltz2_complex --receipt-target <target-id> \
-  --runtime-identity <boltz-runtime-identity.json>
+  --runtime-lock configs/m6d_w3b_runtime_lock.json \
+  --runtime-identity <captured-boltz-runtime-identity.json>
 python -m bio_sfm_designer.experiments.m6d_w3b_matched_records \
   --receipt-predictor af2_multimer_colabfold_v1 --receipt-target <target-id> \
-  --runtime-identity <af2-runtime-identity.json>
+  --runtime-lock configs/m6d_w3b_runtime_lock.json \
+  --runtime-identity <captured-af2-runtime-identity.json>
 python -m bio_sfm_designer.experiments.m6d_w3b_matched_records \
   --stage fit --out-records results/m6d_w3b_fit_matched_records.jsonl \
   --out-report results/m6d_w3b_fit_matched_record_assembly.json

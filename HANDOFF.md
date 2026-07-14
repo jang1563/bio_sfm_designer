@@ -84,6 +84,12 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > candidate sets, target-MSA/candidate/runtime/model-output hashes, seed `0`, templates off, and no prediction-
 > time network. It also rejects near-total numeric copying across predictors. Current contract evidence is
 > `results/m6d_w3b_matched_record_contract.{json,md}` with `assembly_ready=false` until the execution lock exists.
+> W3b runtime identity is no longer operator-supplied: `configs/m6d_w3b_runtime_lock.json` freezes Boltz
+> `2.2.1`, its 116-file installed-distribution manifest, both required local cache checkpoints, the W3
+> ColabFold container, all five AF2-Multimer-v3 parameter hashes, and exact predictor settings. The lock and
+> `results/m6d_w3b_runtime_lock_readiness.{json,md}` are audit-clean and no-submit. Matched-record receipts
+> must bind the exact runtime-lock file SHA, lock digest, and predictor identity digest; recomputing internally
+> consistent hashes for an alternate runtime does not pass. No W3b MSA or predictor compute is approved.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

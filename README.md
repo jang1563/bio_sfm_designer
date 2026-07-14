@@ -76,7 +76,13 @@
 > execution input lock, per-predictor runtime receipts, seed `0`, templates off, prediction-time network
 > off, candidate/MSA/runtime/model-output hashes, and non-copied predictor values before producing evaluator
 > input. Its current no-submit contract is audit-clean and waits on the execution lock at
-> `results/m6d_w3b_matched_record_contract.{json,md}`. See
+> `results/m6d_w3b_matched_record_contract.{json,md}`. The dual-predictor runtime is now separately
+> frozen in `configs/m6d_w3b_runtime_lock.json`: Boltz `2.2.1` is bound to its installed-distribution
+> manifest and local checkpoint hashes, while AF2 is bound to the W3 ColabFold container and all five
+> Multimer-v3 weight hashes. Both identities include explicit execution parameters. Runtime-lock readiness
+> is audit-clean, no-submit, and correctly waits on the target-MSA-derived execution lock in
+> `results/m6d_w3b_runtime_lock_readiness.{json,md}`. Runtime receipts must match the frozen per-predictor
+> identity and runtime-lock file/digest exactly; a self-consistent alternate runtime fails closed. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
 > [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and

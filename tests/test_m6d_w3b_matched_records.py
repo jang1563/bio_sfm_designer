@@ -7,6 +7,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 from bio_sfm_designer.experiments.m6d_w3b_disagreement_gate import evaluate
 from bio_sfm_designer.experiments.m6d_w3b_matched_records import (
     assemble_stage,
@@ -42,9 +44,8 @@ def _write_jsonl(path: Path, rows) -> None:
 
 
 def _runtime(predictor_id: str):
-    if predictor_id == "boltz2_complex":
-        return {"model": "boltz2", "boltz_version": "2.2.1"}
-    return {"colabfold_version": "1.6.1", "model_type": "alphafold2_multimer_v3"}
+    lock = _load("configs/m6d_w3b_runtime_lock.json")
+    return lock["predictor_runtime_identities"][predictor_id]
 
 
 def _fixture(tmp_path: Path):
@@ -52,8 +53,28 @@ def _fixture(tmp_path: Path):
     protocol_path = tmp_path / "protocol.json"
     manifest_path = tmp_path / "execution.json"
     lock_path = tmp_path / "lock.json"
+    runtime_lock_path = tmp_path / "runtime_lock.json"
     _write_json(protocol_path, protocol)
     scientific_digest = _canonical_sha(protocol["locked_scientific_protocol"])
+    runtime_lock = _load("configs/m6d_w3b_runtime_lock.json")
+    runtime_lock["protocol"] = str(protocol_path)
+    runtime_lock["protocol_sha256"] = _sha(protocol_path)
+    runtime_lock["locked_scientific_digest"] = scientific_digest
+    runtime_lock["source_bindings"]["protocol"] = {
+        "path": str(protocol_path),
+        "sha256": _sha(protocol_path),
+    }
+    runtime_lock["runtime_lock_digest_sha256"] = _canonical_sha({
+        "protocol_sha256": _sha(protocol_path),
+        "locked_scientific_digest": scientific_digest,
+        "predictor_runtime_identities": runtime_lock["predictor_runtime_identities"],
+        "predictor_runtime_identity_sha256": runtime_lock["predictor_runtime_identity_sha256"],
+        "source_sha256": {
+            key: value["sha256"]
+            for key, value in runtime_lock["source_bindings"].items()
+        },
+    })
+    _write_json(runtime_lock_path, runtime_lock)
     targets = []
     lock_targets = []
     for index, target_id in enumerate(("FIT_A", "FIT_B", "FIT_C")):
@@ -139,6 +160,7 @@ def _fixture(tmp_path: Path):
                 "artifact": "m6d_w3b_predictor_runtime_receipt",
                 "status": "w3b_predictor_records_complete",
                 "audit_ok": True,
+                "no_submit": True,
                 "predictor_id": predictor_id,
                 "target_id": target_id,
                 "experimental_role": "fit",
@@ -153,6 +175,9 @@ def _fixture(tmp_path: Path):
                 "records": str(record_path),
                 "records_sha256": _sha(record_path),
                 "n_records": 60,
+                "runtime_lock": str(runtime_lock_path),
+                "runtime_lock_sha256": _sha(runtime_lock_path),
+                "runtime_lock_digest_sha256": runtime_lock["runtime_lock_digest_sha256"],
                 "runtime_identity": runtime,
                 "runtime_identity_sha256": _canonical_sha(runtime),
             })
@@ -196,7 +221,7 @@ def _fixture(tmp_path: Path):
         },
     }
     _write_json(lock_path, lock)
-    return protocol_path, manifest_path, lock_path
+    return protocol_path, manifest_path, lock_path, runtime_lock_path
 
 
 def test_current_matched_record_contract_is_coherent_and_waiting():
@@ -211,9 +236,29 @@ def test_current_matched_record_contract_is_coherent_and_waiting():
     assert report["required_runtime_receipt"]["seed"] == 0
 
 
+def test_matched_readiness_rejects_stale_runtime_lock_binding(tmp_path):
+    runtime_readiness = _load("results/m6d_w3b_runtime_lock_readiness.json")
+    runtime_readiness["runtime_lock_sha256"] = "f" * 64
+    runtime_readiness_path = tmp_path / "runtime_readiness.json"
+    _write_json(runtime_readiness_path, runtime_readiness)
+
+    report = build_readiness(
+        str(ROOT / "configs/m6d_w3b_disagreement_gate_protocol.json"),
+        str(ROOT / "results/m6d_w3b_execution_lock_readiness.json"),
+        str(runtime_readiness_path),
+    )
+
+    assert report["audit_ok"] is False
+    assert "runtime_lock_readiness_binding_stale_or_invalid" in {
+        row["kind"] for row in report["failures"]
+    }
+
+
 def test_full_fit_assembly_is_evaluator_ready(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
-    records, report = assemble_stage(str(protocol_path), str(manifest_path), str(lock_path), "fit")
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
+    records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
 
     assert report["audit_ok"] is True
     assert report["n_matched_records"] == 180
@@ -224,13 +269,14 @@ def test_full_fit_assembly_is_evaluator_ready(tmp_path):
 
 
 def test_runtime_receipt_builder_binds_exact_target_files(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text())
     target = manifest["targets"][0]
     receipt = build_runtime_receipt(
         str(protocol_path),
         str(manifest_path),
         str(lock_path),
+        str(runtime_lock_path),
         "boltz2_complex",
         target["id"],
         _runtime("boltz2_complex"),
@@ -244,8 +290,43 @@ def test_runtime_receipt_builder_binds_exact_target_files(tmp_path):
     assert receipt["records_sha256"] == _sha(Path(target["boltz_records"]))
 
 
+def test_runtime_receipt_builder_rejects_observed_runtime_drift(tmp_path):
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text())
+    observed = copy.deepcopy(_runtime("boltz2_complex"))
+    observed["boltz_version"] = "2.2.2"
+
+    with pytest.raises(ValueError, match="differs from the frozen"):
+        build_runtime_receipt(
+            str(protocol_path),
+            str(manifest_path),
+            str(lock_path),
+            str(runtime_lock_path),
+            "boltz2_complex",
+            manifest["targets"][0]["id"],
+            observed,
+        )
+
+
+def test_self_consistent_wrong_receipt_runtime_fails_closed(tmp_path):
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text())
+    receipt_path = Path(manifest["targets"][0]["out_prefix"]) / "boltz2_runtime_receipt.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["runtime_identity"]["execution_parameters"]["sampling_steps"] = 200
+    receipt["runtime_identity_sha256"] = _canonical_sha(receipt["runtime_identity"])
+    _write_json(receipt_path, receipt)
+
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
+
+    assert report["audit_ok"] is False
+    assert "predictor_runtime_receipt_invalid" in {row["kind"] for row in report["failures"]}
+
+
 def test_same_wrong_msa_in_both_predictors_fails(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text())
     target = manifest["targets"][0]
     for field in ("boltz_records", "af2_records"):
@@ -262,48 +343,56 @@ def test_same_wrong_msa_in_both_predictors_fails(tmp_path):
     lock = json.loads(lock_path.read_text())
     lock["binding"]["execution_manifest_sha256"] = _sha(manifest_path)
     _write_json(lock_path, lock)
-    _records, report = assemble_stage(str(protocol_path), str(manifest_path), str(lock_path), "fit")
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
 
     assert report["audit_ok"] is False
     assert "predictor_record_contract_invalid" in {row["kind"] for row in report["failures"]}
 
 
 def test_missing_af2_output_fails_closed(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text())
     af2_path = Path(manifest["targets"][1]["af2_records"])
     af2_path.unlink()
-    _records, report = assemble_stage(str(protocol_path), str(manifest_path), str(lock_path), "fit")
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
 
     assert report["audit_ok"] is False
     assert "target_input_file_missing" in {row["kind"] for row in report["failures"]}
 
 
 def test_unseeded_runtime_receipt_fails_closed(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text())
     receipt_path = Path(manifest["targets"][2]["out_prefix"]) / "boltz2_runtime_receipt.json"
     receipt = json.loads(receipt_path.read_text())
     receipt["seed"] = None
     _write_json(receipt_path, receipt)
-    _records, report = assemble_stage(str(protocol_path), str(manifest_path), str(lock_path), "fit")
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
 
     assert report["audit_ok"] is False
     assert "predictor_runtime_receipt_invalid" in {row["kind"] for row in report["failures"]}
 
 
 def test_target_msa_drift_after_lock_fails_closed(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text())
     Path(manifest["targets"][0]["target_msa"]).write_text(">drift\nCCCCCCCCC\n")
-    _records, report = assemble_stage(str(protocol_path), str(manifest_path), str(lock_path), "fit")
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
 
     assert report["audit_ok"] is False
     assert "target_msa_file_hash_mismatch" in {row["kind"] for row in report["failures"]}
 
 
 def test_numeric_copy_across_predictors_fails_closed(tmp_path):
-    protocol_path, manifest_path, lock_path = _fixture(tmp_path)
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text())
     for target in manifest["targets"]:
         boltz_rows = [json.loads(line) for line in Path(target["boltz_records"]).read_text().splitlines()]
@@ -321,7 +410,9 @@ def test_numeric_copy_across_predictors_fails_closed(tmp_path):
     lock = json.loads(lock_path.read_text())
     lock["binding"]["execution_manifest_sha256"] = _sha(manifest_path)
     _write_json(lock_path, lock)
-    _records, report = assemble_stage(str(protocol_path), str(manifest_path), str(lock_path), "fit")
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
 
     assert report["audit_ok"] is False
     assert "predictor_numeric_copy_suspected" in {row["kind"] for row in report["failures"]}

@@ -1,6 +1,6 @@
 # Project Roadmap
 
-> **Current statistical boundary (updated 2026-07-14):** positive certificates produced by the former
+> **Current statistical boundary (updated 2026-07-15):** positive certificates produced by the former
 > same-sample threshold search are legacy exploratory outputs. The canonical 192-design reanalysis under
 > `split_ltt_v1` retains the pAE signal but refuses alpha=0.3. The fresh 11-target W2 panel has now
 > completed on Cayuga with 1,100 records and is `multi_target_evaluable_not_certified` at alpha=0.2.
@@ -28,7 +28,8 @@
 > `context_dependent_or_unresolved`, so population-level robustness and W2c rescue remain unsupported.
 > W3b now prospectively locks the successor: eight unused source/sequence-unique targets, a label-blind
 > 3 fit / 3 certification / 2 held-out-test split, matched Boltz-2/AF2 inputs, and an exact endpoint-power
-> gate. The design passes at power 0.824333 but remains input-incomplete and no-submit with 0/8 target MSAs.
+> gate. The design passes at power 0.824333. Its exact Boltz/AF2 runtime identities are now hash-locked and
+> audit-clean, but the experiment remains input-incomplete and no-submit with 0/8 target MSAs.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -103,6 +104,14 @@ manifest-bound MSAs, per-predictor runtime identities, seed `0`, templates/netwo
 and predictor-specific pAE/L-RMSD provenance before emitting evaluator input. It also blocks missing pairs
 and near-total numeric copies. `results/m6d_w3b_matched_record_contract.{json,md}` is currently audit-clean
 but `assembly_ready=false`, as expected before MSA completion and execution-lock materialization.
+
+2026-07-15 W3b runtime lock: `m6d_w3b_runtime_lock` freezes Boltz `2.2.1`, a canonical 116-file
+installed-distribution manifest, both required local cache checkpoints, the verified W3 ColabFold 1.6.1
+container, all five AF2-Multimer-v3 weight hashes, and exact predictor parameters. The tracked lock is
+`configs/m6d_w3b_runtime_lock.json`; `results/m6d_w3b_runtime_lock_readiness.{json,md}` reports
+`runtime_identity_ready=true` and `fit_packet_prerequisites_ready=false`. The matched-record path now
+requires receipts to bind the exact runtime-lock SHA, lock digest, and predictor identity digest. This
+closes runtime substitution but does not authorize the still-unapproved target-MSA or predictor stages.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -527,8 +536,9 @@ Allowed decisions:
    resolves the old third-predictor fork but not the robustness claim: 3PC8 supports Chai, W2c is mixed,
    and the joint result is context-dependent or unresolved.
 8. For W3b, preserve the now-preregistered matched-protocol disagreement gate and 3/3/2 target roles.
-   The eight-target MSA-only packet is ready and awaits exact approval. Do not generate candidates, run
-   predictors, tune on the completed 58 cases, or spend beyond the exact approved stage.
+   The exact predictor runtime lock and eight-target MSA-only packet are ready; the MSA packet awaits exact
+   approval. Do not generate candidates, run predictors, tune on the completed 58 cases, or spend beyond
+   the exact approved stage.
 9. Keep W4 in fail-closed mode until the screen head is replaced or trained. The current W4 artifact proves
    strict closed-loop plumbing and conservative safety behavior, but all candidate verdicts were non-finite
    DeBERTa outputs and therefore deferred; do not use it as a productive route-to-build policy.

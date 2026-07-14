@@ -1,19 +1,20 @@
 # M6d Goal-Mode Current Anchor
 
-> **2026-07-14 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
+> **2026-07-15 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
 > AF2-Multimer mechanism panel is complete. Corrected job `3084977` completed 58/58 after job `3084976`
 > was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
 > finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
 > `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes. The
 > W3b successor is now prospectively locked with eight label-blind fresh target roles, exact endpoint
-> power 0.824333, and a frozen matched-predictor evaluator. Target-MSA readiness is 0/8 and no compute is approved.
+> power 0.824333, a frozen matched-predictor evaluator, and an exact dual-predictor runtime lock. Target-MSA
+> readiness is 0/8 and no compute is approved.
 
-Date: 2026-07-14
+Date: 2026-07-15
 
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
 
-Latest local harness refresh: 2026-07-14.
+Latest local harness refresh: 2026-07-15.
 
 Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. W2b
 certification completed on five fit-eligible targets with 300 fresh H100 records and strict QC failures=0.
@@ -67,7 +68,10 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   All execution and post-submit replay helpers are hash-bound, and the staged Cayuga mirror passes 16
   exact SHA checks, five shell-syntax checks, runtime and lifecycle-import checks, receipt absence, the
   expected receiptless-query refusal, and the exact eight-target no-submit dry-run. The current lifecycle
-  state is `target_msa_not_submitted_awaiting_explicit_approval`. This supports no gate or predictor-
+  state is `target_msa_not_submitted_awaiting_explicit_approval`. Boltz `2.2.1` and AF2-Multimer/ColabFold
+  `1.6.1` are now frozen by package/container/checkpoint/weight hashes and exact execution parameters in
+  `configs/m6d_w3b_runtime_lock.json`; runtime readiness is audit-clean but cannot authorize execution.
+  This supports no gate or predictor-
   robustness claim and authorizes no compute.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
@@ -122,6 +126,9 @@ from Chai records alone.
 - W3b lifecycle-derived execution-lock readiness:
   `results/m6d_w3b_execution_lock_readiness.{json,md}` and
   `bio_sfm_designer.experiments.m6d_w3b_execution_lock`
+- W3b exact dual-predictor runtime lock:
+  `configs/m6d_w3b_runtime_lock.json`, `results/m6d_w3b_runtime_lock_readiness.{json,md}`, and
+  `bio_sfm_designer.experiments.m6d_w3b_runtime_lock`
 - W3b provenance-bound matched-record contract:
   `results/m6d_w3b_matched_record_contract.{json,md}` and
   `bio_sfm_designer.experiments.m6d_w3b_matched_records`

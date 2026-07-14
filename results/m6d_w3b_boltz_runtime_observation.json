@@ -1,0 +1,57 @@
+{
+  "artifact": "m6d_w3b_boltz_runtime_observation",
+  "audit_ok": true,
+  "claim_boundary": "Read-only runtime identity evidence only. No scheduler job, prediction, MSA query, API request, or GPU computation was executed.",
+  "gpu_compute_executed": false,
+  "network_fetch_executed": false,
+  "no_submit": true,
+  "observation_date": "2026-07-15",
+  "observation_surface": "cayuga_login_read_only",
+  "prediction_executed": false,
+  "raw_cayuga_paths_published": false,
+  "runtime_identity": {
+    "boltz_version": "2.2.1",
+    "cache_checkpoints": [
+      {
+        "active_for_structure_prediction": true,
+        "bytes": 2286561469,
+        "name": "boltz2_conf.ckpt",
+        "role": "structure_confidence_model",
+        "sha256": "090e82ac8c92f5e943fa1b39e7410a44027bea7243c0bbb3caa67a77fc1428e1"
+      },
+      {
+        "active_for_structure_prediction": false,
+        "bytes": 2062139170,
+        "name": "boltz2_aff.ckpt",
+        "role": "required_local_cache_affinity_model",
+        "sha256": "dcc5cd3722b1c9eaa34267e4ae32f55cbbf1963f4c19319381ccfa30fdd2ca9e"
+      }
+    ],
+    "distribution_file_count": 116,
+    "distribution_manifest_method": "canonical JSON over sorted non-pyc distribution files with relative path, byte count, and SHA-256",
+    "distribution_manifest_sha256": "8e101bde6e7faaff1b143efdd15f29362eef2fd9e099093906ade6fe83dd034a",
+    "model": "boltz2"
+  },
+  "runtime_interface": {
+    "accelerator_default": "gpu",
+    "checkpoint_flag_available": true,
+    "devices_default": 1,
+    "diffusion_samples_default": 1,
+    "model_default": "boltz2",
+    "recycling_steps_default": 3,
+    "sampling_steps_default": 200,
+    "seed_default": null,
+    "seed_flag_available": true,
+    "use_msa_server_default": false,
+    "write_full_pae_default": true
+  },
+  "status": "w3b_boltz_runtime_observed_read_only_no_prediction",
+  "submitted_jobs": 0,
+  "verification_methods": [
+    "pip distribution metadata inspection",
+    "canonical installed-distribution file hashing",
+    "local checkpoint SHA-256 and byte-count inspection",
+    "boltz predict --help option/default inspection",
+    "installed source inspection for checkpoint selection"
+  ]
+}
