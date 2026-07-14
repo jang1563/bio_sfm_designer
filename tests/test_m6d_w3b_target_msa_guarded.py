@@ -34,6 +34,20 @@ class M6DW3BTargetMSAGuardedTests(unittest.TestCase):
         self.assertEqual(len(packet["missing_target_msa_targets"]), 8)
         self.assertEqual(packet["maximum_a40_gpu_hours"], 8.0)
         self.assertEqual(packet["failures"], [])
+        self.assertEqual(
+            set(packet["bound_artifacts"]),
+            {
+                "design_gate",
+                "extract_chain_fasta",
+                "manifest",
+                "plan",
+                "precompute_python",
+                "precompute_sbatch",
+                "prep_heterodimer",
+                "protocol",
+                "selection",
+            },
+        )
 
     def test_packet_and_wrapper_hashes_match_all_bound_artifacts(self):
         packet = json.loads(PACKET.read_text())
@@ -60,6 +74,10 @@ class M6DW3BTargetMSAGuardedTests(unittest.TestCase):
         self.assertNotIn("generate_proteinmpnn", text)
         self.assertNotIn("run_predict_boltz", text)
         self.assertNotIn("colabfold_batch", text)
+        self.assertIn('require_sha256 "$PRECOMPUTE_SBATCH" "$EXPECTED_PRECOMPUTE_SBATCH_SHA256"', text)
+        self.assertIn('require_sha256 "$PRECOMPUTE_PYTHON" "$EXPECTED_PRECOMPUTE_PYTHON_SHA256"', text)
+        self.assertIn('require_sha256 "$PREP_HETERODIMER" "$EXPECTED_PREP_HETERODIMER_SHA256"', text)
+        self.assertIn('require_sha256 "$EXTRACT_CHAIN_FASTA" "$EXPECTED_EXTRACT_CHAIN_FASTA_SHA256"', text)
 
     def test_dry_run_submits_nothing_and_creates_no_receipt(self):
         with tempfile.TemporaryDirectory() as tmp:

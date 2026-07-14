@@ -6,7 +6,8 @@
 > `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The next frontier is a new, prospectively locked
 > predictor-disagreement-aware gate on fresh matched-protocol targets. That W3b protocol, target-level
 > 3/3/2 split, power gate, and evaluator are now frozen in
-> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. Target-MSA readiness is 0/8 and no new compute is approved.
+> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. Target-MSA readiness is 0/8. The hash-bound wrapper is
+> staged and passes the Cayuga no-submit readiness audit, but no new compute is approved.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -74,8 +75,10 @@ Current W3b protocol: `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`,
 The design/power audit passes at conditional power 0.824333, but all eight target MSAs are absent.
 
 Current next action: the hash-bound eight-target MSA-only packet is complete in
-`docs/M6D_W3B_TARGET_MSA_APPROVAL.md`; stop for separate exact approval. Do not generate candidates, run
-Boltz or AF2, reuse consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
+`docs/M6D_W3B_TARGET_MSA_APPROVAL.md`; its staged remote mirror passes
+`results/m6d_w3b_target_msa_remote_readiness.{json,md}` with no submission or receipt. Stop for separate
+exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse consumed approvals,
+relax frozen criteria, or tune W3b on the completed W3 panel.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -679,7 +682,8 @@ Use this order unless the user gives a newer instruction:
 3. W2 - Redesign multi-target generalization. Treat the current panels as completed negative
    evidence, then select or design more 3PC8-like targets before any broad panel spend.
 4. W3b - Preserve the preregistered disagreement-aware gate and label-blind 3/3/2 target roles.
-   The MSA-only packet is ready; stop for exact approval before any query or compute.
+   The MSA-only packet and Cayuga no-submit readiness audit are ready; stop for exact approval before any
+   MSA query or compute.
 5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

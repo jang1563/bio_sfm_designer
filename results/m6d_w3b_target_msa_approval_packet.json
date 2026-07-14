@@ -6,6 +6,10 @@
       "path": "results/m6d_w3b_disagreement_design_gate.json",
       "sha256": "bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea"
     },
+    "extract_chain_fasta": {
+      "path": "hpc/extract_chain_fasta.py",
+      "sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b"
+    },
     "manifest": {
       "path": "configs/m6d_w3b_fresh_targets.json",
       "sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc"
@@ -13,6 +17,18 @@
     "plan": {
       "path": "results/m6d_w3b_target_msas.sh",
       "sha256": "ecb815347161d7b1f4ed0f9e7889749a9eb086c590eae6c9fc13137f9f075ca1"
+    },
+    "precompute_python": {
+      "path": "hpc/precompute_boltz_target_msa.py",
+      "sha256": "c1acecd1a67c9253df17a02e16f402296056892e1fe3b878d172f72dd8e369ff"
+    },
+    "precompute_sbatch": {
+      "path": "hpc/run_precompute_boltz_target_msa.sbatch",
+      "sha256": "14080cbbb791a1db2fe1bcd4ca8bcba36d5f4d47ba9ae22f6f27042c59e2f82f"
+    },
+    "prep_heterodimer": {
+      "path": "hpc/prep_hetdimer.py",
+      "sha256": "ca9c6ebb7156bcd401a7c4de981f89985123fe8bbcf0c55b344b58d0cf1b7356"
     },
     "protocol": {
       "path": "configs/m6d_w3b_disagreement_gate_protocol.json",
@@ -57,6 +73,6 @@
   "target_msa_approval_env_var": "BIO_SFM_APPROVE_W3B_TARGET_MSA",
   "wrapper": {
     "path": "hpc/run_w3b_target_msa_guarded.sh",
-    "sha256": "3d756c1b95247eaf3d900595759c725ecfd4342bde3243294580064a2f29b227"
+    "sha256": "e1c32e324f6d8e8e95eb8503f81e157b94869af2e29b7f20f23b5be43d1b773b"
   }
 }

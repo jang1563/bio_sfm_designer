@@ -1,0 +1,143 @@
+{
+  "artifact": "m6d_w3b_target_msa_remote_readiness",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_submit_candidate_generation_or_candidate_level_prediction": false,
+  "can_submit_target_msa_if_explicitly_approved": true,
+  "claim_boundary": "Live Cayuga mirror/runtime and guarded dry-run evidence only. No scheduler job, GPU compute, candidate generation, candidate-level prediction, or W3b claim is authorized or produced.",
+  "dry_run": {
+    "exact_target_line_seen": true,
+    "no_scheduler_message_seen": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_sha256": "0341515447a28cd549ef097a5c4899c7bc15ca50bf49dffb665715bb6cb4db4e"
+  },
+  "exact_checks": [
+    {
+      "expected_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96",
+      "ok": true,
+      "path": "configs/m6d_w3b_disagreement_gate_protocol.json",
+      "remote_bytes": 8672,
+      "remote_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96"
+    },
+    {
+      "expected_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
+      "ok": true,
+      "path": "configs/m6d_w3b_fresh_targets.json",
+      "remote_bytes": 12722,
+      "remote_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc"
+    },
+    {
+      "expected_sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b",
+      "ok": true,
+      "path": "hpc/extract_chain_fasta.py",
+      "remote_bytes": 4762,
+      "remote_sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b"
+    },
+    {
+      "expected_sha256": "c1acecd1a67c9253df17a02e16f402296056892e1fe3b878d172f72dd8e369ff",
+      "ok": true,
+      "path": "hpc/precompute_boltz_target_msa.py",
+      "remote_bytes": 11266,
+      "remote_sha256": "c1acecd1a67c9253df17a02e16f402296056892e1fe3b878d172f72dd8e369ff"
+    },
+    {
+      "expected_sha256": "ca9c6ebb7156bcd401a7c4de981f89985123fe8bbcf0c55b344b58d0cf1b7356",
+      "ok": true,
+      "path": "hpc/prep_hetdimer.py",
+      "remote_bytes": 8527,
+      "remote_sha256": "ca9c6ebb7156bcd401a7c4de981f89985123fe8bbcf0c55b344b58d0cf1b7356"
+    },
+    {
+      "expected_sha256": "14080cbbb791a1db2fe1bcd4ca8bcba36d5f4d47ba9ae22f6f27042c59e2f82f",
+      "ok": true,
+      "path": "hpc/run_precompute_boltz_target_msa.sbatch",
+      "remote_bytes": 1776,
+      "remote_sha256": "14080cbbb791a1db2fe1bcd4ca8bcba36d5f4d47ba9ae22f6f27042c59e2f82f"
+    },
+    {
+      "expected_sha256": "e1c32e324f6d8e8e95eb8503f81e157b94869af2e29b7f20f23b5be43d1b773b",
+      "ok": true,
+      "path": "hpc/run_w3b_target_msa_guarded.sh",
+      "remote_bytes": 6030,
+      "remote_sha256": "e1c32e324f6d8e8e95eb8503f81e157b94869af2e29b7f20f23b5be43d1b773b"
+    },
+    {
+      "expected_sha256": "bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea",
+      "ok": true,
+      "path": "results/m6d_w3b_disagreement_design_gate.json",
+      "remote_bytes": 1913,
+      "remote_sha256": "bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea"
+    },
+    {
+      "expected_sha256": "df12debf8f0ccefa3d4b2851b16cbb650dae48a39e33f1b040ebb2b17f5b8410",
+      "ok": true,
+      "path": "results/m6d_w3b_target_msa_approval_packet.json",
+      "remote_bytes": 2852,
+      "remote_sha256": "df12debf8f0ccefa3d4b2851b16cbb650dae48a39e33f1b040ebb2b17f5b8410"
+    },
+    {
+      "expected_sha256": "ecb815347161d7b1f4ed0f9e7889749a9eb086c590eae6c9fc13137f9f075ca1",
+      "ok": true,
+      "path": "results/m6d_w3b_target_msas.sh",
+      "remote_bytes": 39864,
+      "remote_sha256": "ecb815347161d7b1f4ed0f9e7889749a9eb086c590eae6c9fc13137f9f075ca1"
+    },
+    {
+      "expected_sha256": "9349357a35986982bc05867e81e4a345040f444c1685c2e7059f96d4d8e47902",
+      "ok": true,
+      "path": "results/m6d_w3b_target_selection.json",
+      "remote_bytes": 7181,
+      "remote_sha256": "9349357a35986982bc05867e81e4a345040f444c1685c2e7059f96d4d8e47902"
+    }
+  ],
+  "explicit_approval_still_required": true,
+  "failures": [],
+  "n_exact_checks": 11,
+  "n_failures": 0,
+  "next_action": "wait for exact W3b target-MSA approval, then run the already staged guarded wrapper",
+  "no_submit": true,
+  "observed_at_utc": "2026-07-14T12:59:38Z",
+  "receipt_state": {
+    "receipt_after": false,
+    "receipt_before": false,
+    "summary_after": false,
+    "summary_before": false
+  },
+  "receipt_untouched": true,
+  "remote_host": "<hpc-login-host>",
+  "remote_root": "$HOME/bio_sfm_smoke",
+  "runtime": {
+    "boltz_cli_executable": true,
+    "boltz_python_executable": true,
+    "sbatch_available": true
+  },
+  "shell_syntax_checks": [
+    {
+      "ok": true,
+      "path": "hpc/run_precompute_boltz_target_msa.sbatch",
+      "returncode": 0
+    },
+    {
+      "ok": true,
+      "path": "hpc/run_w3b_target_msa_guarded.sh",
+      "returncode": 0
+    },
+    {
+      "ok": true,
+      "path": "results/m6d_w3b_target_msas.sh",
+      "returncode": 0
+    }
+  ],
+  "status": "w3b_target_msa_remote_ready_awaiting_explicit_approval",
+  "target_ids": [
+    "1FSK_LJ",
+    "1FSX_BA",
+    "1FL7_DC",
+    "1F2U_CD",
+    "1FV1_BA",
+    "1FN3_DC",
+    "1FHJ_BA",
+    "1F3V_BA"
+  ]
+}

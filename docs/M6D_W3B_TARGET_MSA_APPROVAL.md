@@ -20,7 +20,16 @@ MSA plan are complete and hash-bound. This packet does not record approval and d
 
 The machine-readable packet is `results/m6d_w3b_target_msa_approval_packet.json`. It binds the protocol,
 target manifest, target-selection report, design audit, and generated MSA plan by SHA-256. The guarded
-wrapper is `hpc/run_w3b_target_msa_guarded.sh`.
+wrapper is `hpc/run_w3b_target_msa_guarded.sh`. The packet and wrapper also bind the four execution
+dependencies used by that plan: the target-MSA Slurm script, Boltz MSA helper, heterodimer preparation
+helper, and chain-FASTA extractor. Any drift in those files fails closed before dry-run or submission.
+
+## Cayuga no-submit readiness
+
+The exact packet and wrapper are staged at the logical mirror path `$HOME/bio_sfm_smoke`. The live audit
+in `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 11 exact SHA checks, three shell-syntax
+checks, Boltz Python/CLI and `sbatch` checks, receipt absence before and after, and the exact eight-target
+dry-run. This proves staging and runtime readiness only; it records no approval and submits no scheduler job.
 
 ## Safe dry-run
 

@@ -69,8 +69,12 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `configs/m6d_w3b_fresh_targets.json`. The primary matched Boltz-2/AF2 gate uses maximum interface pAE
 > plus the pAE gap; a Boltz-pAE-only gate is the frozen comparator. Exact endpoint power is 0.824333 at
 > 100 accepts. The design auditor passes but target-MSA readiness is 0/8. The hash-bound MSA-only packet
-> is ready in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md`, capped at 8 A40 GPU-hours. No W3b compute is
-> approved; resume by waiting for the separate exact MSA approval.
+> is ready in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md`, capped at 8 A40 GPU-hours. It now binds all four
+> runtime helpers. The packet and wrapper are staged on Cayuga; the no-submit readiness report at
+> `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 11 exact SHA checks, three shell-syntax
+> checks, Boltz/runtime checks, receipt absence, and the exact eight-target dry-run with zero failures.
+> No scheduler job was submitted and no W3b compute is approved; resume by waiting for the separate exact
+> MSA approval.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

@@ -175,6 +175,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument("--selection", default="results/m6d_w3b_target_selection.json")
     parser.add_argument("--design-gate", default="results/m6d_w3b_disagreement_design_gate.json")
     parser.add_argument("--plan", default="results/m6d_w3b_target_msas.sh")
+    parser.add_argument("--precompute-sbatch", default="hpc/run_precompute_boltz_target_msa.sbatch")
+    parser.add_argument("--precompute-python", default="hpc/precompute_boltz_target_msa.py")
+    parser.add_argument("--prep-heterodimer", default="hpc/prep_hetdimer.py")
+    parser.add_argument("--extract-chain-fasta", default="hpc/extract_chain_fasta.py")
     parser.add_argument("--wrapper", default="hpc/run_w3b_target_msa_guarded.sh")
     parser.add_argument("--out-json", default="results/m6d_w3b_target_msa_approval_packet.json")
     parser.add_argument("--out-md", default="results/m6d_w3b_target_msa_approval_packet.md")
@@ -185,6 +189,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "selection": args.selection,
         "design_gate": args.design_gate,
         "plan": args.plan,
+        "precompute_sbatch": args.precompute_sbatch,
+        "precompute_python": args.precompute_python,
+        "prep_heterodimer": args.prep_heterodimer,
+        "extract_chain_fasta": args.extract_chain_fasta,
     }
     report = build_packet(
         _load_json(args.protocol),

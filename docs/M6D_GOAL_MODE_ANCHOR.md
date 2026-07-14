@@ -64,7 +64,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   Population-level independent-predictor robustness remains unsupported.
 - W3b: the fresh matched-predictor gate is preregistered and power-qualified, but input readiness is 0/8
   target MSAs. Its hash-bound MSA-only packet awaits exact approval with an 8 A40 GPU-hour ceiling.
-  It supports no gate or predictor-robustness claim and authorizes no compute.
+  All runtime helpers are hash-bound, and the staged Cayuga mirror passes 11 exact SHA checks, three
+  shell-syntax checks, runtime checks, receipt absence, and the exact eight-target no-submit dry-run.
+  This supports no gate or predictor-robustness claim and authorizes no compute.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -109,6 +111,8 @@ from Chai records alone.
 - W3b target-MSA approval boundary:
   `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and
   `results/m6d_w3b_target_msa_approval_packet.json`
+- W3b Cayuga no-submit readiness evidence:
+  `results/m6d_w3b_target_msa_remote_readiness.{json,md}`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
