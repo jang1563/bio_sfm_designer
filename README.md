@@ -42,6 +42,18 @@
 > [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md). The next science frontier is a
 > distinct W3 predictor-robustness or failure-mechanism experiment, not another W2c rescue iteration.
 
+> **Current W3 packet (2026-07-14):** that distinct experiment is now selected and preregistered as one
+> bounded 58-case AF2-Multimer mechanism panel. It preserves the frozen 3PC8 challenge (12 Boltz-Chai
+> discordances plus 6 concordant-success controls) and adds five outcome-blind pAE order statistics
+> (`1,15,30,45,60`) from each of the eight W2c targets. The public protocol contains IDs, source metrics,
+> hashes, and frozen decision rules only; 58 sequence-bearing annotated A3Ms are local and gitignored.
+> ColabFold 1.6.1, `alphafold2_multimer_v3`, target-MSA reuse, binder single-sequence input, no templates,
+> and no prediction-time network access are locked. The bundle dry-run passes, but runtime readiness is
+> false and no AF2/GPU/HPC job is approved or submitted. A separate exact approval is required after the
+> runtime and local weights receive a hash-bound no-prediction receipt. See
+> [docs/M6D_W3_MECHANISM_PANEL.md](docs/M6D_W3_MECHANISM_PANEL.md) and
+> [configs/m6d_w3_mechanism_panel_protocol.json](configs/m6d_w3_mechanism_panel_protocol.json).
+
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
 protein/genome/single-cell); an **external calibrated trust gate** decides, per
@@ -77,7 +89,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`920` designer tests and `53` subtests on 2026-07-14).
+**Current local source verified** (`936` designer tests and `53` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

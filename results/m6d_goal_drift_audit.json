@@ -16,7 +16,7 @@
       "status": "managed"
     },
     {
-      "control": "W2c is closed under its frozen learning rule; next work must be a distinct W3 experiment",
+      "control": "W3 is frozen to one 58-case panel; next work is runtime validation then a separate approval",
       "id": "verification_instead_of_science",
       "status": "managed"
     }
@@ -30,7 +30,7 @@
     "w2": "generalization_not_supported",
     "w2b": "terminal_not_supported_no_extension",
     "w2c": "threshold_learning_terminal_no_viability_claim",
-    "w3": "negative_robustness_adjudicated_no_positive_claim",
+    "w3": "mechanism_panel_preregistered_no_compute_no_positive_claim",
     "w4": "closed_loop_plumbing_only"
   },
   "current_state": {
@@ -730,6 +730,37 @@
       "positive_claim_supported": false,
       "status": "negative_robustness_result_adjudicated"
     },
+    "W3_mechanism_panel": {
+      "approval_consumed": false,
+      "approval_recorded": false,
+      "audit_ok": true,
+      "blocks": {
+        "boltz_chai_3pc8_challenge": 18,
+        "w2c_pae_order_statistics": 40
+      },
+      "can_claim_independent_predictor_robustness_now": false,
+      "checks": {
+        "approval_unrecorded": true,
+        "artifact_exact": true,
+        "audit_ok": true,
+        "block_counts_exact": true,
+        "case_count_exact": true,
+        "claims_blocked": true,
+        "input_hash_lock": true,
+        "no_submit_boundary": true,
+        "public_rows_redacted": true,
+        "runtime_and_execution_blocked": true,
+        "selection_outcome_blind": true,
+        "status_exact": true
+      },
+      "claim_boundary": "Preregistered no-submit mechanism panel only. No AF2 prediction has run, W2c remains terminal, and no positive independent-predictor robustness claim is supported.",
+      "execution_ready": false,
+      "n_cases": 58,
+      "no_submit": true,
+      "predictor_or_protocol_id": "af2_multimer_colabfold_v1",
+      "runtime_ready": false,
+      "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
+    },
     "W4_closed_loop_DBTL": {
       "complete": true,
       "status": "closed_loop_round_complete"
@@ -739,18 +770,18 @@
       "historical_panel_fields_retained": true,
       "panel_public_approval_bundle_ready": true,
       "panel_public_approval_bundle_workflow_script_chain_static_ok": true,
-      "status": "goal_active_w2b_terminal_w2c_threshold_learning_terminal"
+      "status": "goal_active_w3_mechanism_runtime_gate"
     },
     "project_status": "m6_complex_in_progress",
     "remaining": 1
   },
   "drift_assessment": {
     "claims": "no_drift_negative_boundaries_preserved",
-    "execution": "w2b_closed_w2c_threshold_learning_terminal_no_later_stage_submit",
+    "execution": "w3_inputs_ready_runtime_blocked_compute_not_approved_no_submit",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
     "operational_status": "stale_current_surfaces_replaced_historical_detail_retained",
-    "protocol": "no_drift_w2b_lock_preserved_w2c_declared_as_new_experiment"
+    "protocol": "no_drift_terminal_w2_locks_preserved_w3_mechanism_panel_preregistered"
   },
   "failures": [],
   "inputs": {
@@ -766,6 +797,6 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Close W2c without independent-screen or certification compute: all 480 threshold-learning records passed strict QC, but the frozen learning decisions retained fewer than three selective-pAE target candidates. Preserve this negative result and select the next W3 scientific experiment.",
-  "status": "no_major_direction_drift_w2b_terminal_w2c_threshold_learning_terminal"
+  "next_action": "Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before executing the frozen 58-case W3 mechanism panel.",
+  "status": "no_major_direction_drift_w3_mechanism_preregistered_runtime_gate"
 }

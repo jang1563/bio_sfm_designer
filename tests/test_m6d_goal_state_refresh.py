@@ -234,6 +234,50 @@ def _threshold_learning_result():
     }
 
 
+def _w3_mechanism_packet():
+    rows = [
+        {"case_id": f"w3m-{index + 1:03d}", "panel_block": "boltz_chai_3pc8_challenge"}
+        for index in range(18)
+    ]
+    rows.extend(
+        {
+            "case_id": f"w3m-{index + 19:03d}",
+            "panel_block": "w2c_pae_order_statistics",
+        }
+        for index in range(40)
+    )
+    return {
+        "artifact": "m6d_w3_decisive_mechanism_panel_protocol",
+        "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit",
+        "audit_ok": True,
+        "failures": [],
+        "selection_lock": {
+            "n_total_cases": 58,
+            "selection_uses_outcome_labels": False,
+        },
+        "execution_packet": {
+            "n_inputs": 58,
+            "inputs_emitted": True,
+            "private_manifest_sha256": "e" * 64,
+            "no_submit": True,
+            "no_gpu_compute": True,
+            "no_api_spend": True,
+            "no_network_fetch": True,
+            "approval_recorded": False,
+            "approval_consumed": False,
+            "runtime_ready": False,
+            "execution_ready": False,
+        },
+        "predictor_protocol": {
+            "predictor_or_protocol_id": "af2_multimer_colabfold_v1",
+        },
+        "can_claim_independent_predictor_robustness_now": False,
+        "can_claim_w2c_rescue_now": False,
+        "claim_boundary": "preregistered no-submit mechanism panel only",
+        "rows": rows,
+    }
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -590,6 +634,65 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         )
         self.assertIn("Close W2c", bundle["completion"]["next_action"])
         self.assertIn("distinct W3 experiment", bundle["drift"]["active_risks"][-1]["control"])
+
+    def test_w3_mechanism_packet_advances_to_runtime_gate_without_compute(self):
+        gate = _w2c()
+        gate["execution_readiness"] = {
+            "target_manifest_present": True,
+            "target_manifest_integrity_ok": True,
+            "target_manifest_ids": [f"fresh-{index}" for index in range(8)],
+            "target_msa_ready": False,
+            "evaluator_implemented": True,
+        }
+        bundle = refresh_bundle(
+            *_legacy_bundle(),
+            _w2b(),
+            gate,
+            _target_msa_packet(),
+            _target_msa_completion(),
+            _fit_learn_packet(),
+            _fit_learn_submission(),
+            _threshold_learning_result(),
+            _w3_mechanism_packet(),
+            updated_at="2026-07-14T15:00:00+09:00",
+            test_command="pytest",
+            test_result="passed",
+            runtime_goal_active=True,
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3_mechanism_preregistered_runtime_gate_no_submit",
+        )
+        self.assertEqual(bundle["report"]["w3_mechanism_panel"]["n_cases"], 58)
+        self.assertTrue(bundle["report"]["no_submit"])
+        self.assertFalse(bundle["report"]["submission_performed"])
+        self.assertTrue(bundle["report"]["historical_w2c_submission_performed"])
+        self.assertEqual(
+            bundle["completion"]["remaining_requirements"],
+            ["W3_colabfold_runtime_receipt_then_separate_compute_approval"],
+        )
+        self.assertFalse(bundle["anchor"]["current_status"]["w3_runtime_ready"])
+        self.assertFalse(bundle["anchor"]["current_status"]["w3_execution_ready"])
+        self.assertFalse(
+            bundle["anchor"]["current_status"]["w3_compute_approval_recorded"]
+        )
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3_jobs_submitted"], 0)
+        self.assertIn("ColabFold 1.6.1", bundle["completion"]["next_action"])
+
+    def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
+        packet = _w3_mechanism_packet()
+        packet["rows"].pop()
+        with self.assertRaisesRegex(ValueError, "case_count_exact"):
+            refresh_bundle(
+                *_legacy_bundle(),
+                _w2b(),
+                _w2c(),
+                w3_mechanism_packet=packet,
+                updated_at="2026-07-14T15:00:00+09:00",
+                test_command="pytest",
+                test_result="passed",
+            )
 
     def test_threshold_learning_result_fails_closed_on_incomplete_qc(self):
         gate = _w2c()

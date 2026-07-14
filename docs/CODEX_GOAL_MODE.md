@@ -1,5 +1,12 @@
 # Codex Goal Mode
 
+> **Current anchor (2026-07-14):** W2c is terminal and must not be rescued or retuned. W3 now has one
+> selected, preregistered 58-case AF2-Multimer mechanism panel in
+> `configs/m6d_w3_mechanism_panel_protocol.json`, with the detailed rationale in
+> `docs/M6D_W3_MECHANISM_PANEL.md`. The 58 local A3M inputs and dry-run bundle validation are complete.
+> ColabFold runtime readiness and compute approval are both false. Resume by validating/provisioning the
+> exact ColabFold 1.6.1 runtime without prediction; do not run or submit AF2 until a separate exact approval.
+
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
 developing the project as a research engine: stronger, more reproducible, more
@@ -12,9 +19,10 @@ Use this objective when creating or resuming the Codex goal:
 ```text
 Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
 preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
-post-hoc rescue, select and pre-register the next W3 predictor-robustness experiment before new
-compute, preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence,
-and keep all status artifacts honest and reproducible.
+post-hoc rescue; preserve the preregistered 58-case W3 AF2-Multimer mechanism-panel input,
+runtime, approval, and adjudication locks; execute no W3 compute without a separate exact approval;
+preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep
+all status artifacts honest and reproducible.
 ```
 
 ## Current Resume Anchor
@@ -54,9 +62,10 @@ Current W2c completion:
 `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; local detailed evidence is
 `results/m6d_w2c_threshold_learning_report.json` and `results/m6d_w2c_fit_learn_completion.json`.
 
-Current next action: select and pre-register a distinct W3 predictor-robustness or failure-mechanism
-experiment. Do not generate W2c independent-screen or certification records, reuse the consumed approval,
-or relax the frozen W2c criteria.
+Current next action: validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3
+weights without prediction, then stop for a separate explicit compute approval. Do not generate W2c
+independent-screen or certification records, reuse the consumed approval, relax the frozen W2c criteria,
+or alter the 58-case W3 selection/adjudication after seeing AF2 output.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -74,6 +83,12 @@ Local extended machine-readable anchor, when present:
 
 Current W2/W3 decision protocol:
 `results/m6d_w2_w3_decision_protocol.{json,md}`.
+
+Current decisive W3 mechanism-panel protocol and rationale:
+`configs/m6d_w3_mechanism_panel_protocol.json` and `docs/M6D_W3_MECHANISM_PANEL.md`.
+The ignored sequence-bearing input manifest is `results/m6d_w3_mechanism_panel_inputs.jsonl`; the guarded
+execution and runtime-validation entry points are `hpc/run_w3_mechanism_panel_guarded.sh` and
+`hpc/validate_w3_mechanism_runtime.sh`. No compute approval is recorded.
 
 Current W3 next-protocol contract:
 `results/m6d_w3_next_protocol.{json,md}`.

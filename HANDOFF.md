@@ -52,6 +52,15 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; the ignored local operational evidence is
 > `results/m6d_w2c_fit_learn_completion.json`. Do not reuse the consumed approval, retune W2c, or rescue it
 > post hoc. The next project decision is a distinct W3 predictor-robustness or failure-mechanism experiment.
+> That decision is now made. `configs/m6d_w3_mechanism_panel_protocol.json` preregisters one 58-case
+> AF2-Multimer/ColabFold 1.6.1 mechanism panel: the unchanged 18-case 3PC8 Boltz-Chai challenge plus five
+> fixed pAE order statistics from each of the eight W2c targets. The W2c selection uses only
+> `(pae_interaction, target_id)` ordering, never the outcome label. The packet freezes the 3PC8 `10/12`
+> alignment plus `5/6` control rule and a W2c `32/40` global plus `6/8` target-breadth rule. Its 58 local
+> annotated A3Ms pass hash validation but remain gitignored. `hpc/run_w3_mechanism_panel_guarded.sh`
+> defaults to dry-run and refuses compute without a separate exact W3 approval, a ColabFold 1.6.1 runtime
+> receipt, and pre-staged AF2-Multimer weights. Runtime readiness is currently false; no AF2 prediction,
+> API request, scheduler submission, or GPU spend occurred. Read `docs/M6D_W3_MECHANISM_PANEL.md` next.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

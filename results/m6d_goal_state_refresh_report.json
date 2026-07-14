@@ -3,27 +3,28 @@
   "audit_ok": true,
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
-  "next_action": "Close W2c without independent-screen or certification compute: all 480 threshold-learning records passed strict QC, but the frozen learning decisions retained fewer than three selective-pAE target candidates. Preserve this negative result and select the next W3 scientific experiment.",
-  "no_submit": false,
+  "historical_w2c_submission_performed": true,
+  "next_action": "Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before executing the frozen 58-case W3 mechanism panel.",
+  "no_submit": true,
   "obsolete_current_routes_removed": [
     "v9/v11 panel approval wait",
     "W2b test submission",
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "285193a3895f1acb07e08f710c8024c78bd8557d1a476f7263a5ac9cce7428cd",
-    "results/m6d_followup_next_science_actions.md": "d8801aca230f258bd038b1cc00559ff5b7e826528a236060a41f4316867e2c91",
-    "results/m6d_goal_completion_audit.json": "8383384a310e2319b28c7be9f2025dda94dda56697e3bd066db1d714ca1f3e90",
-    "results/m6d_goal_completion_audit.md": "bdc2246c7897a575b7502025700e2f285c43e582b871d2841e7a2d83c25913e6",
-    "results/m6d_goal_drift_audit.json": "4d8fe40e3d4edf1d8f9be2bbb3f9c33ff7a8b2adb503a15b0d2ea3b1e81b804a",
-    "results/m6d_goal_drift_audit.md": "bb19ce40fff78b354db2f70b5c779fc91d17eaf14fa25bdb9ff33cc0199ae10b",
-    "results/m6d_goal_mode_current_anchor.json": "814046b628b296f534117ef26b100dea0662800766e78fa85d8d0c83fff59a4b",
-    "results/m6d_goal_mode_local_harness_status.json": "72bd147d4e060d7edb79641ee67d4cafab75359d1d0e9c38d9d4c8f171515e52",
-    "results/m6d_goal_mode_local_harness_status.md": "c27e1dd94d3091cc10e6c562df025c0c7e6d44554ce7cf9ae4ec08174d03e6e6"
+    "results/m6d_followup_next_science_actions.json": "bf2ad4a6258f8f12e130bc89927453e50be1e51897f6a71c602b5ee8159cb32c",
+    "results/m6d_followup_next_science_actions.md": "0dc1fee1d310e6edb547d961c0b9c33919aacafc3e03b9cbb495ee86f017a664",
+    "results/m6d_goal_completion_audit.json": "d22f2db0666dd2a7ca79dda44f858bd96f81d313c2f6b624d06e5f879c8e91b0",
+    "results/m6d_goal_completion_audit.md": "dbc02039943de64a1f7d432b67e92438b53979f6be41d8184009c3a45c0a4a46",
+    "results/m6d_goal_drift_audit.json": "26014e6acd922f047808802ec2d68656cc40b2ad30fe125365809ca0469cf31d",
+    "results/m6d_goal_drift_audit.md": "4b38bcaa6a249ad55cbc0e365383e60323ce95fcd9f38bcd89df8f7b419ee979",
+    "results/m6d_goal_mode_current_anchor.json": "67178df27dba65c83b8d5e3b6a76d9c16fe9534aaf940f1c998deba4193d7bdc",
+    "results/m6d_goal_mode_local_harness_status.json": "900e1dc896702cf9e51fcc758d2dda20b44d1a001d02a92fca0dc5f425ec183d",
+    "results/m6d_goal_mode_local_harness_status.md": "dbe29b0e83375506bfe9a920a44e2fc7bde30dff7f79a43f44c26a7cf206710b"
   },
   "runtime_goal_active": true,
-  "status": "goal_state_refreshed_w2b_terminal_w2c_threshold_learning_terminal",
-  "submission_performed": true,
+  "status": "goal_state_refreshed_w3_mechanism_preregistered_runtime_gate_no_submit",
+  "submission_performed": false,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
     "results/m6d_goal_completion_audit.json",
@@ -35,7 +36,7 @@
     "results/m6d_goal_mode_local_harness_status.json",
     "results/m6d_goal_mode_local_harness_status.md"
   ],
-  "updated_at": "2026-07-14T15:06:02+09:00",
+  "updated_at": "2026-07-14T15:55:41+09:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -540,5 +541,36 @@
     "terminal_after_threshold_learning": true,
     "threshold_candidate_targets": [],
     "threshold_decisions_frozen": true
+  },
+  "w3_mechanism_panel": {
+    "approval_consumed": false,
+    "approval_recorded": false,
+    "audit_ok": true,
+    "blocks": {
+      "boltz_chai_3pc8_challenge": 18,
+      "w2c_pae_order_statistics": 40
+    },
+    "can_claim_independent_predictor_robustness_now": false,
+    "checks": {
+      "approval_unrecorded": true,
+      "artifact_exact": true,
+      "audit_ok": true,
+      "block_counts_exact": true,
+      "case_count_exact": true,
+      "claims_blocked": true,
+      "input_hash_lock": true,
+      "no_submit_boundary": true,
+      "public_rows_redacted": true,
+      "runtime_and_execution_blocked": true,
+      "selection_outcome_blind": true,
+      "status_exact": true
+    },
+    "claim_boundary": "Preregistered no-submit mechanism panel only. No AF2 prediction has run, W2c remains terminal, and no positive independent-predictor robustness claim is supported.",
+    "execution_ready": false,
+    "n_cases": 58,
+    "no_submit": true,
+    "predictor_or_protocol_id": "af2_multimer_colabfold_v1",
+    "runtime_ready": false,
+    "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
   }
 }

@@ -9,18 +9,18 @@
     "w2": "universal multi-target generalization not supported",
     "w2b": "terminally not supported; no test compute and no extension",
     "w2c": "threshold learning terminally retained zero eligible targets; no W2c viability claim or later-stage compute",
-    "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
+    "w3": "58-case mechanism panel preregistered; runtime and compute approval absent; no positive claim",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Close W2c without independent-screen or certification compute: all 480 threshold-learning records passed strict QC, but the frozen learning decisions retained fewer than three selective-pAE target candidates. Preserve this negative result and select the next W3 scientific experiment.",
+  "next_action": "Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before executing the frozen 58-case W3 mechanism panel.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3_next_experiment_selection"
+    "W3_colabfold_runtime_receipt_then_separate_compute_approval"
   ],
-  "status": "goal_active_w2b_terminal_w2c_threshold_learning_terminal",
+  "status": "goal_active_w3_mechanism_runtime_gate",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -973,6 +973,37 @@
     "audit_ok": true,
     "positive_claim_supported": false,
     "status": "negative_robustness_result_adjudicated"
+  },
+  "w3_mechanism_panel": {
+    "approval_consumed": false,
+    "approval_recorded": false,
+    "audit_ok": true,
+    "blocks": {
+      "boltz_chai_3pc8_challenge": 18,
+      "w2c_pae_order_statistics": 40
+    },
+    "can_claim_independent_predictor_robustness_now": false,
+    "checks": {
+      "approval_unrecorded": true,
+      "artifact_exact": true,
+      "audit_ok": true,
+      "block_counts_exact": true,
+      "case_count_exact": true,
+      "claims_blocked": true,
+      "input_hash_lock": true,
+      "no_submit_boundary": true,
+      "public_rows_redacted": true,
+      "runtime_and_execution_blocked": true,
+      "selection_outcome_blind": true,
+      "status_exact": true
+    },
+    "claim_boundary": "Preregistered no-submit mechanism panel only. No AF2 prediction has run, W2c remains terminal, and no positive independent-predictor robustness claim is supported.",
+    "execution_ready": false,
+    "n_cases": 58,
+    "no_submit": true,
+    "predictor_or_protocol_id": "af2_multimer_colabfold_v1",
+    "runtime_ready": false,
+    "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
   },
   "workstream_status": {
     "W1_M6c_scale_up": {

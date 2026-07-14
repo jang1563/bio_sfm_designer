@@ -13,7 +13,7 @@ import copy
 import hashlib
 import json
 import os
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, Optional
 
 
 _W2B_TERMINAL_STATUS = "w2b_certification_terminal_not_supported"
@@ -57,6 +57,11 @@ _FIT_TERMINAL_NEXT_ACTION = (
     "Close W2c without independent-screen or certification compute: all 480 threshold-learning records "
     "passed strict QC, but the frozen learning decisions retained fewer than three selective-pAE target "
     "candidates. Preserve this negative result and select the next W3 scientific experiment."
+)
+_W3_MECHANISM_NEXT_ACTION = (
+    "Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without "
+    "prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before "
+    "executing the frozen 58-case W3 mechanism panel."
 )
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
@@ -523,6 +528,84 @@ def _fit_learn_result_summary(report: Optional[Dict[str, Any]]) -> Optional[Dict
     }
 
 
+def _w3_mechanism_summary(packet: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    if not isinstance(packet, dict):
+        return None
+    rows = packet.get("rows") if isinstance(packet.get("rows"), list) else []
+    execution = (
+        packet.get("execution_packet")
+        if isinstance(packet.get("execution_packet"), dict)
+        else {}
+    )
+    selection = (
+        packet.get("selection_lock")
+        if isinstance(packet.get("selection_lock"), dict)
+        else {}
+    )
+    blocks: Dict[str, int] = {}
+    raw_sequence_fields = 0
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        block = str(row.get("panel_block") or "")
+        blocks[block] = blocks.get(block, 0) + 1
+        raw_sequence_fields += int("target_sequence" in row or "binder_sequence" in row)
+    checks = {
+        "artifact_exact": packet.get("artifact") == "m6d_w3_decisive_mechanism_panel_protocol",
+        "status_exact": packet.get("status")
+        == "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit",
+        "audit_ok": packet.get("audit_ok") is True and packet.get("failures") == [],
+        "case_count_exact": len(rows) == 58 and selection.get("n_total_cases") == 58,
+        "block_counts_exact": blocks
+        == {"boltz_chai_3pc8_challenge": 18, "w2c_pae_order_statistics": 40},
+        "selection_outcome_blind": selection.get("selection_uses_outcome_labels") is False,
+        "input_hash_lock": (
+            execution.get("n_inputs") == 58
+            and execution.get("inputs_emitted") is True
+            and _is_sha256(execution.get("private_manifest_sha256"))
+        ),
+        "no_submit_boundary": (
+            execution.get("no_submit") is True
+            and execution.get("no_gpu_compute") is True
+            and execution.get("no_api_spend") is True
+            and execution.get("no_network_fetch") is True
+        ),
+        "approval_unrecorded": (
+            execution.get("approval_recorded") is False
+            and execution.get("approval_consumed") is False
+        ),
+        "runtime_and_execution_blocked": (
+            execution.get("runtime_ready") is False
+            and execution.get("execution_ready") is False
+        ),
+        "public_rows_redacted": raw_sequence_fields == 0,
+        "claims_blocked": (
+            packet.get("can_claim_independent_predictor_robustness_now") is False
+            and packet.get("can_claim_w2c_rescue_now") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3 mechanism-panel invariants failed: {', '.join(failed)}")
+    return {
+        "status": packet.get("status"),
+        "audit_ok": True,
+        "n_cases": 58,
+        "blocks": blocks,
+        "predictor_or_protocol_id": (
+            packet.get("predictor_protocol", {}).get("predictor_or_protocol_id")
+        ),
+        "runtime_ready": False,
+        "execution_ready": False,
+        "approval_recorded": False,
+        "approval_consumed": False,
+        "no_submit": True,
+        "can_claim_independent_predictor_robustness_now": False,
+        "claim_boundary": packet.get("claim_boundary"),
+        "checks": checks,
+    }
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -536,6 +619,7 @@ def refresh_bundle(
     w2c_fit_learn_packet: Optional[Dict[str, Any]] = None,
     w2c_fit_learn_submission: Optional[Dict[str, Any]] = None,
     w2c_threshold_learning_report: Optional[Dict[str, Any]] = None,
+    w3_mechanism_packet: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -549,12 +633,17 @@ def refresh_bundle(
     w2c_fit_learn = _fit_learn_packet_summary(w2c_fit_learn_packet)
     w2c_fit_submitted = _fit_learn_submission_summary(w2c_fit_learn_submission)
     w2c_fit_result = _fit_learn_result_summary(w2c_threshold_learning_report)
+    w3_mechanism = _w3_mechanism_summary(w3_mechanism_packet)
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
         raise ValueError("W2c fit-learn submission requires the validated no-submit packet")
     if w2c_fit_result is not None and w2c_fit_submitted is None:
         raise ValueError("W2c threshold-learning result requires the validated submission receipt")
+    if w3_mechanism is not None and not (
+        w2c_fit_result and w2c_fit_result["terminal_after_threshold_learning"]
+    ):
+        raise ValueError("W3 mechanism packet requires the terminal W2c threshold-learning result")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -726,6 +815,23 @@ def refresh_bundle(
             "Select eight entirely fresh targets only after the evaluator is fixed.",
             "Move to W3 if prospective W2c gates require post-hoc changes.",
         ]
+    if w3_mechanism is not None:
+        next_action = _W3_MECHANISM_NEXT_ACTION
+        remaining_requirement = "W3_colabfold_runtime_receipt_then_separate_compute_approval"
+        resume_steps = [
+            "read docs/M6D_W3_MECHANISM_PANEL.md and configs/m6d_w3_mechanism_panel_protocol.json",
+            "preserve the frozen 18-case 3PC8 block and 40-case W2c fixed-rank block",
+            "run only the no-prediction ColabFold 1.6.1 runtime and local-weight validation",
+            "keep the guarded W3 wrapper in dry-run mode until a separate exact approval is given",
+            "after approved compute, convert all 58 outputs and run the preregistered adjudicator without retuning",
+        ]
+        ranked_actions = [
+            "Validate or provision ColabFold 1.6.1 and local AF2-Multimer v3 weights without prediction.",
+            "Write and verify the hash-bound W3 runtime receipt.",
+            "Stop for separate explicit approval before any H100/GPU/HPC execution.",
+            "After approval, execute exactly the frozen 58-case panel and no adaptive additions.",
+            "Convert and adjudicate all outputs under the preregistered thresholds.",
+        ]
     date = updated_at.split("T", 1)[0]
     post_msa = w2c_target_msa_complete is not None
     fit_packet_ready = w2c_fit_learn is not None
@@ -734,7 +840,11 @@ def refresh_bundle(
     fit_terminal = bool(
         w2c_fit_result and w2c_fit_result["terminal_after_threshold_learning"]
     )
-    if fit_result_ready:
+    if w3_mechanism is not None:
+        goal_status = "goal_active_w3_mechanism_runtime_gate"
+        current_status = "m6_complex_in_progress_w3_mechanism_preregistered_runtime_blocked_no_submit"
+        goal_progress = "w3_mechanism_inputs_ready_awaiting_runtime_receipt_then_separate_approval"
+    elif fit_result_ready:
         if fit_terminal:
             goal_status = "goal_active_w2b_terminal_w2c_threshold_learning_terminal"
             current_status = (
@@ -790,6 +900,9 @@ def refresh_bundle(
         "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
     )
     refreshed_anchor["objective"] = (
+        "Execute the preregistered 58-case W3 AF2-Multimer mechanism panel only after an exact runtime "
+        "receipt and separate compute approval; preserve terminal W2b/W2c and all W1-W4 claim boundaries."
+        if w3_mechanism is not None else
         "Advance M6d from terminal W2b and W2c results into decisive W3 science: preserve W1-W4 claim "
         "boundaries, select and preregister one independent-predictor robustness or failure-mechanism "
         "experiment, and block new compute until a separate explicit approval."
@@ -813,6 +926,11 @@ def refresh_bundle(
                 )
             )
         ),
+        "w3_independent_predictor_robustness": (
+            "not_tested_mechanism_panel_preregistered_runtime_blocked"
+            if w3_mechanism is not None
+            else "not_supported_predictor_disagreement"
+        ),
     })
     refreshed_anchor.setdefault("current_artifacts", {}).update({
         "w2b_certification_completion": "docs/M6D_W2B_CERTIFICATION_COMPLETION.md",
@@ -832,6 +950,10 @@ def refresh_bundle(
         "w2c_fit_learn_submit_summary": "results/m6d_w2c_fit_learn_submit_receipt_summary.json",
         "w2c_threshold_learning_report": "results/m6d_w2c_threshold_learning_report.json",
         "w2c_threshold_learning_completion": "docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md",
+        "w3_mechanism_protocol": "configs/m6d_w3_mechanism_panel_protocol.json",
+        "w3_mechanism_doc": "docs/M6D_W3_MECHANISM_PANEL.md",
+        "w3_mechanism_guard": "hpc/run_w3_mechanism_panel_guarded.sh",
+        "w3_runtime_validator": "hpc/validate_w3_mechanism_runtime.sh",
         "goal_state_refresh": "results/m6d_goal_state_refresh_report.json",
     })
     refreshed_anchor["current_status"] = {
@@ -865,7 +987,17 @@ def refresh_bundle(
         ),
         "w2c_independent_screen_generation_approved": False,
         "w2c_certification_generation_approved": False,
-        "w3": "negative_robustness_result_adjudicated",
+        "w3": (
+            "mechanism_panel_preregistered_runtime_blocked_no_submit"
+            if w3_mechanism is not None
+            else "negative_robustness_result_adjudicated"
+        ),
+        "w3_mechanism_case_count": w3_mechanism["n_cases"] if w3_mechanism else None,
+        "w3_runtime_ready": w3_mechanism["runtime_ready"] if w3_mechanism else False,
+        "w3_execution_ready": w3_mechanism["execution_ready"] if w3_mechanism else False,
+        "w3_compute_approval_recorded": (
+            w3_mechanism["approval_recorded"] if w3_mechanism else False
+        ),
         "w4": "closed_loop_plumbing_supported_fail_closed_only",
         "local_harness_status": "results/m6d_goal_mode_local_harness_status.json",
         "local_harness_verification": f"{test_result} with {test_command}",
@@ -880,6 +1012,7 @@ def refresh_bundle(
     refreshed_anchor["w2c_fit_learn_approval"] = w2c_fit_learn
     refreshed_anchor["w2c_fit_learn_submission"] = w2c_fit_submitted
     refreshed_anchor["w2c_threshold_learning_result"] = w2c_fit_result
+    refreshed_anchor["w3_mechanism_panel"] = w3_mechanism
     refreshed_anchor["next_resume_steps"] = resume_steps
     refreshed_anchor["latest_goal_mode_refresh"] = {
         "updated_at": updated_at,
@@ -909,6 +1042,13 @@ def refresh_bundle(
         ),
         "w2c_independent_screen_generation_approved": False,
         "w2c_certification_generation_approved": False,
+        "w3_mechanism_panel_status": w3_mechanism["status"] if w3_mechanism else None,
+        "w3_mechanism_case_count": w3_mechanism["n_cases"] if w3_mechanism else None,
+        "w3_runtime_ready": w3_mechanism["runtime_ready"] if w3_mechanism else False,
+        "w3_execution_ready": w3_mechanism["execution_ready"] if w3_mechanism else False,
+        "w3_compute_approval_recorded": (
+            w3_mechanism["approval_recorded"] if w3_mechanism else False
+        ),
         "remaining_requirement": remaining_requirement,
     }
 
@@ -928,13 +1068,18 @@ def refresh_bundle(
         "w2c_fit_learn_approval": w2c_fit_learn,
         "w2c_fit_learn_submission": w2c_fit_submitted,
         "w2c_threshold_learning_result": w2c_fit_result,
+        "w3_mechanism_panel": w3_mechanism,
     })
     refreshed_completion["claim_boundary"] = {
         "w1": "target-specific certified evidence preserved",
         "w2": "universal multi-target generalization not supported",
         "w2b": "terminally not supported; no test compute and no extension",
         "w2c": w2c_claim_boundary,
-        "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
+        "w3": (
+            "58-case mechanism panel preregistered; runtime and compute approval absent; no positive claim"
+            if w3_mechanism is not None
+            else "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim"
+        ),
         "w4": "closed-loop plumbing evidence preserved as fail-closed only",
     }
     workstreams = refreshed_completion.setdefault("workstream_status", {})
@@ -966,6 +1111,8 @@ def refresh_bundle(
     refreshed_drift = copy.deepcopy(drift)
     refreshed_drift.update({
         "status": (
+            "no_major_direction_drift_w3_mechanism_preregistered_runtime_gate"
+            if w3_mechanism is not None else
             "no_major_direction_drift_w2b_terminal_w2c_threshold_learning_terminal"
             if fit_terminal else (
                 "no_major_direction_drift_w2b_terminal_w2c_thresholds_frozen_screen_gate"
@@ -1003,7 +1150,11 @@ def refresh_bundle(
                 )
             )
         ),
-        "w3": "negative_robustness_adjudicated_no_positive_claim",
+        "w3": (
+            "mechanism_panel_preregistered_no_compute_no_positive_claim"
+            if w3_mechanism is not None
+            else "negative_robustness_adjudicated_no_positive_claim"
+        ),
         "w4": "closed_loop_plumbing_only",
     }
     refreshed_drift["active_risks"] = [
@@ -1026,6 +1177,8 @@ def refresh_bundle(
             "id": "verification_instead_of_science",
             "status": "managed",
             "control": (
+                "W3 is frozen to one 58-case panel; next work is runtime validation then a separate approval"
+                if w3_mechanism is not None else
                 "W2c is closed under its frozen learning rule; next work must be a distinct W3 experiment"
                 if fit_terminal else (
                     "next boundary is a new no-submit screen packet; learned thresholds cannot be retuned"
@@ -1046,9 +1199,15 @@ def refresh_bundle(
     ]
     refreshed_drift["drift_assessment"] = {
         "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-        "protocol": "no_drift_w2b_lock_preserved_w2c_declared_as_new_experiment",
+        "protocol": (
+            "no_drift_terminal_w2_locks_preserved_w3_mechanism_panel_preregistered"
+            if w3_mechanism is not None
+            else "no_drift_w2b_lock_preserved_w2c_declared_as_new_experiment"
+        ),
         "claims": "no_drift_negative_boundaries_preserved",
         "execution": (
+            "w3_inputs_ready_runtime_blocked_compute_not_approved_no_submit"
+            if w3_mechanism is not None else
             "w2b_closed_w2c_threshold_learning_terminal_no_later_stage_submit"
             if fit_terminal else (
                 "w2b_closed_w2c_thresholds_frozen_screen_generation_not_approved"
@@ -1080,6 +1239,7 @@ def refresh_bundle(
     current_state["W2c_fit_learn_approval"] = w2c_fit_learn
     current_state["W2c_fit_learn_submission"] = w2c_fit_submitted
     current_state["W2c_threshold_learning_result"] = w2c_fit_result
+    current_state["W3_mechanism_panel"] = w3_mechanism
     current_state.setdefault("completion_audit", {}).update({
         "status": goal_status,
         "can_mark_goal_complete": False,
@@ -1093,6 +1253,8 @@ def refresh_bundle(
         "artifact": "m6d_followup_next_science_actions",
         "date": date,
         "status": (
+            "w3_mechanism_panel_preregistered_runtime_gate_no_submit"
+            if w3_mechanism is not None else
             "w2b_terminal_w2c_threshold_learning_terminal_move_to_w3"
             if fit_terminal else (
                 "w2b_terminal_w2c_thresholds_frozen_screen_packet_no_submit"
@@ -1124,7 +1286,11 @@ def refresh_bundle(
                     )
                 )
             ),
-            "w3_independent_predictor_robustness": "not_supported_predictor_disagreement",
+            "w3_independent_predictor_robustness": (
+                "not_tested_mechanism_panel_preregistered_runtime_blocked"
+                if w3_mechanism is not None
+                else "not_supported_predictor_disagreement"
+            ),
             "w4_closed_loop": "fail_closed_plumbing_only",
         },
         "w2b_terminal_result": w2b,
@@ -1134,10 +1300,12 @@ def refresh_bundle(
         "w2c_fit_learn_approval": w2c_fit_learn,
         "w2c_fit_learn_submission": w2c_fit_submitted,
         "w2c_threshold_learning_result": w2c_fit_result,
+        "w3_mechanism_panel": w3_mechanism,
         "next_actions_ranked": ranked_actions,
         "next_action": next_action,
-        "submission_performed": fit_submission_active,
-        "no_submit": not fit_submission_active,
+        "submission_performed": False if w3_mechanism is not None else fit_submission_active,
+        "historical_w2c_submission_performed": fit_submission_active,
+        "no_submit": True if w3_mechanism is not None else not fit_submission_active,
         "cayuga_submission_allowed": False,
     }
 
@@ -1146,6 +1314,8 @@ def refresh_bundle(
         "updated_at": updated_at,
         "goal_mode_status": (
             (
+                "active_w3_mechanism_runtime_gate"
+                if w3_mechanism is not None else
                 "active_w2c_threshold_learning_terminal_move_to_w3"
                 if fit_terminal else (
                     "active_w2c_thresholds_frozen_screen_packet_gate"
@@ -1163,6 +1333,8 @@ def refresh_bundle(
             ) if runtime_goal_active else "contract_ready_runtime_goal_inactive"
         ),
         "science_focus": (
+            "W3 58-case mechanism-panel runtime qualification and separate compute approval gate"
+            if w3_mechanism is not None else
             "W2c threshold-learning terminal result preservation plus W3 experiment selection"
             if fit_terminal else (
                 "W2c frozen-threshold preservation plus guarded independent-screen packet"
@@ -1184,6 +1356,7 @@ def refresh_bundle(
             "result": test_result,
             "w2b_terminal_regression": "preserved",
             "w2c_design_gate": w2c["status"],
+            "w3_mechanism_panel": w3_mechanism["status"] if w3_mechanism else None,
         },
         "hpc_status": {
             "active_branch": (
@@ -1223,6 +1396,13 @@ def refresh_bundle(
             ),
             "w2c_independent_screen_generation_approved": False,
             "w2c_certification_generation_approved": False,
+            "w3_mechanism_case_count": w3_mechanism["n_cases"] if w3_mechanism else None,
+            "w3_runtime_ready": w3_mechanism["runtime_ready"] if w3_mechanism else False,
+            "w3_execution_ready": w3_mechanism["execution_ready"] if w3_mechanism else False,
+            "w3_compute_approval_recorded": (
+                w3_mechanism["approval_recorded"] if w3_mechanism else False
+            ),
+            "w3_jobs_submitted": 0,
             "next_action": next_action,
         },
         "claim_boundary": {
@@ -1238,7 +1418,11 @@ def refresh_bundle(
                     )
                 )
             ),
-            "w3": "negative_robustness_result_preserved",
+            "w3": (
+                "mechanism_panel_preregistered_runtime_blocked_no_compute_no_claim"
+                if w3_mechanism is not None
+                else "negative_robustness_result_preserved"
+            ),
         },
         "w3_runtime_provision": harness.get("w3_runtime_provision", {}),
     }
@@ -1246,6 +1430,8 @@ def refresh_bundle(
     report = {
         "artifact": "m6d_goal_state_refresh_report",
         "status": (
+            "goal_state_refreshed_w3_mechanism_preregistered_runtime_gate_no_submit"
+            if w3_mechanism is not None else
             "goal_state_refreshed_w2b_terminal_w2c_threshold_learning_terminal"
             if fit_terminal else (
                 "goal_state_refreshed_w2b_terminal_w2c_thresholds_frozen_screen_gate"
@@ -1271,6 +1457,7 @@ def refresh_bundle(
         "w2c_fit_learn_approval": w2c_fit_learn,
         "w2c_fit_learn_submission": w2c_fit_submitted,
         "w2c_threshold_learning_result": w2c_fit_result,
+        "w3_mechanism_panel": w3_mechanism,
         "updated_artifacts": [
             "results/m6d_goal_mode_current_anchor.json",
             "results/m6d_goal_completion_audit.json",
@@ -1288,8 +1475,9 @@ def refresh_bundle(
             "W2b recertification or row extension",
         ],
         "historical_detail_retained": True,
-        "submission_performed": fit_submission_active,
-        "no_submit": not fit_submission_active,
+        "submission_performed": False if w3_mechanism is not None else fit_submission_active,
+        "historical_w2c_submission_performed": fit_submission_active,
+        "no_submit": True if w3_mechanism is not None else not fit_submission_active,
         "cayuga_submission_allowed": False,
         "next_action": next_action,
     }
@@ -1316,6 +1504,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     fit_learn = report.get("w2c_fit_learn_approval") or {}
     fit_submission = report.get("w2c_fit_learn_submission") or {}
     fit_result = report.get("w2c_threshold_learning_result") or {}
+    w3_mechanism = report.get("w3_mechanism_panel") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -1333,6 +1522,10 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`.",
         f"W2c fit-learn submission: `{fit_submission.get('status', 'not_submitted')}`.",
         f"W2c threshold-learning result: `{fit_result.get('status', 'not_evaluated')}`.",
+        f"W3 mechanism panel: `{w3_mechanism.get('status', 'not_preregistered')}`.",
+        f"W3 cases: `{w3_mechanism.get('n_cases', 0)}`.",
+        f"W3 runtime ready: `{w3_mechanism.get('runtime_ready', False)}`.",
+        f"W3 execution ready: `{w3_mechanism.get('execution_ready', False)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -1352,6 +1545,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     fit_learn = report.get("w2c_fit_learn_approval") or {}
     fit_submission = report.get("w2c_fit_learn_submission") or {}
     fit_result = report.get("w2c_threshold_learning_result") or {}
+    w3_mechanism = report.get("w3_mechanism_panel") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -1374,6 +1568,9 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`",
         f"- W2c fit-learn submission: `{fit_submission.get('status', 'not_submitted')}`",
         f"- W2c threshold-learning result: `{fit_result.get('status', 'not_evaluated')}`",
+        f"- W3 mechanism panel: `{w3_mechanism.get('status', 'not_preregistered')}`",
+        f"- W3 runtime ready: `{w3_mechanism.get('runtime_ready', False)}`",
+        f"- W3 execution ready: `{w3_mechanism.get('execution_ready', False)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -1552,6 +1749,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w2c-threshold-learning-report",
         default="results/m6d_w2c_threshold_learning_report.json",
     )
+    parser.add_argument(
+        "--w3-mechanism-packet",
+        default="configs/m6d_w3_mechanism_panel_protocol.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -1611,6 +1812,14 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w2c_threshold_learning_report)
             if os.path.exists(args.w2c_threshold_learning_report)
+            else None
+        ),
+        (
+            _load_json(args.w3_mechanism_packet)
+            if (
+                os.path.exists(args.w3_mechanism_packet)
+                and os.path.exists(args.w2c_threshold_learning_report)
+            )
             else None
         ),
         updated_at=args.updated_at,

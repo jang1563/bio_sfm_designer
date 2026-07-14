@@ -22,7 +22,10 @@
 > 480/480 strict-QC Boltz records, 16/16 local/Cayuga file-hash matches, no retries, and 1.0775 H100
 > GPU-hours. All eight frozen target decisions refuse, leaving zero selective candidates against the required
 > minimum of three. W2c is terminal before independent screening; no screen or certification compute is
-> approved. W2c does not alter W2b, and the next frontier is a distinct W3 experiment.
+> approved. W2c does not alter W2b. The next frontier is now frozen as the 58-case W3 AF2-Multimer
+> mechanism panel in `configs/m6d_w3_mechanism_panel_protocol.json`: 18 unchanged 3PC8 challenge cases
+> plus 40 fixed-rank W2c cases. Inputs and adjudication are ready, but the runtime is not; no W3 compute is
+> approved or submitted, and a separate exact approval remains mandatory.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -62,6 +65,14 @@ and all output hashes match Cayuga. The frozen evaluator retained 0/8 threshold 
 minimum of three is unreachable, so W2c is terminal and later-stage compute is blocked. The authoritative
 readout is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; the current milestone is selection and
 pre-registration of a distinct W3 predictor-robustness or failure-mechanism experiment.
+
+2026-07-14 W3 mechanism-panel preregistration: the distinct experiment is now selected. The public-safe
+protocol and claim boundary are in `configs/m6d_w3_mechanism_panel_protocol.json` and
+`docs/M6D_W3_MECHANISM_PANEL.md`. It combines the frozen 18-case 3PC8 Boltz-Chai challenge with five
+deterministic pAE order statistics from each W2c target, for 58 cases total. The target MSA is reused,
+the designed binder is single-sequence, templates and public MSA queries are forbidden, and all local
+A3Ms are hash-bound. The converter and adjudicator are implemented before execution. The current state is
+`runtime_blocked_no_submit`: runtime receipt absent, approval absent, predictions 0, submitted jobs 0.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

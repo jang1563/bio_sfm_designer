@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w2b_terminal_w2c_threshold_learning_terminal`.
+Status: `goal_active_w3_mechanism_runtime_gate`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -15,10 +15,13 @@ Can mark goal complete: `False`.
 - W2c fit-learn packet: `ready_for_explicit_w2c_fit_learn_approval_not_submitted`
 - W2c fit-learn submission: `submitted_on_cayuga`
 - W2c threshold-learning result: `w2c_threshold_learning_terminal_not_supported`
-- remaining requirement: `W3_next_experiment_selection`
+- W3 mechanism panel: `w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit`
+- W3 runtime ready: `False`
+- W3 execution ready: `False`
+- remaining requirement: `W3_colabfold_runtime_receipt_then_separate_compute_approval`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Close W2c without independent-screen or certification compute: all 480 threshold-learning records passed strict QC, but the frozen learning decisions retained fewer than three selective-pAE target candidates. Preserve this negative result and select the next W3 scientific experiment.
+Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before executing the frozen 58-case W3 mechanism panel.
