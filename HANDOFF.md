@@ -79,6 +79,11 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > 870-design-slot execution manifest/input lock. The evaluator requires those manifest-bound target-MSA hashes,
 > so two predictors agreeing on the same wrong MSA still fail closed. No scheduler job was submitted and no
 > W3b compute is approved; resume by waiting for the separate exact MSA approval.
+> The next CPU-side bridge is already implemented as `m6d_w3b_matched_records`: it will accept a stage only
+> when candidates, both predictor files, the execution input lock, and two runtime receipts agree on exact
+> candidate sets, target-MSA/candidate/runtime/model-output hashes, seed `0`, templates off, and no prediction-
+> time network. It also rejects near-total numeric copying across predictors. Current contract evidence is
+> `results/m6d_w3b_matched_record_contract.{json,md}` with `assembly_ready=false` until the execution lock exists.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

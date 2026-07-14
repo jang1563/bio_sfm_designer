@@ -84,6 +84,10 @@ are `results/m6d_w3b_target_msa_job_state_query.sh` and `results/m6d_w3b_target_
 post-sync path now creates the lifecycle-derived execution manifest/input lock; current readiness is
 audit-clean but blocked on 8/8 MSA completion in `results/m6d_w3b_execution_lock_readiness.{json,md}`.
 The evaluator rejects pairwise-matching records whose MSA hash is not the manifest-bound target hash.
+The downstream CPU assembler `m6d_w3b_matched_records` is also implemented and requires exact candidate
+sets, per-predictor runtime receipts, seed `0`, templates/network off, and candidate/MSA/runtime/output hashes;
+its current `results/m6d_w3b_matched_record_contract.{json,md}` is audit-clean but correctly waits on the
+execution lock.
 Stop for separate exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
 consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
 

@@ -1,0 +1,39 @@
+{
+  "artifact": "m6d_w3b_matched_record_contract",
+  "assembly_ready": false,
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_run_candidate_generation_or_prediction": false,
+  "claim_boundary": "Executable matched-record contract only. This artifact submits no work and supports no W3b claim.",
+  "execution_lock_readiness": "results/m6d_w3b_execution_lock_readiness.json",
+  "execution_lock_readiness_sha256": "2067af41960c588293763ab43178dbed9ed8064c8334e2c2b3fea3fa096253e0",
+  "failures": [],
+  "n_failures": 0,
+  "next_action": "complete the target-MSA lifecycle and materialize the frozen execution manifest/input lock",
+  "no_submit": true,
+  "protocol": "configs/m6d_w3b_disagreement_gate_protocol.json",
+  "protocol_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96",
+  "required_predictors": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "required_record_provenance": [
+    "candidate_sequence_sha256",
+    "target_sequence_sha256",
+    "target_msa_sha256",
+    "runtime_identity_sha256",
+    "model_output_sha256"
+  ],
+  "required_runtime_receipt": {
+    "prediction_time_network_used": false,
+    "runtime_identity_sha256": "canonical_sha256_required",
+    "seed": 0,
+    "templates_used": false
+  },
+  "stage_records_per_target": {
+    "certification": 150,
+    "fit": 60,
+    "held_out_test": 120
+  },
+  "status": "w3b_matched_record_contract_ready_awaiting_execution_lock"
+}

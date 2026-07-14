@@ -43,6 +43,12 @@ after target-chain alignment. Pairwise agreement alone is insufficient: the shar
 also equal the lifecycle-derived hash frozen for that target in the W3b execution manifest. A missing
 predictor output, manifest-bound MSA mismatch, or any pair mismatch fails QC.
 
+The executable assembler additionally requires one runtime receipt per target and predictor. Each receipt
+binds the candidate, MSA, and raw-record files by SHA-256; records bind candidate sequence, target sequence,
+target MSA, runtime identity, and model output. The Cayuga Boltz CLI exposes `--seed`; its unseeded default
+is not accepted, so W3b receipts and records must both prove seed `0`. Templates and prediction-time network
+must both be off. A near-total numeric copy of pAE and L-RMSD across predictors also fails closed.
+
 These are two structural-proxy endpoints, not wet-lab truth.
 
 ## Frozen gate
@@ -102,14 +108,40 @@ in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval.
 - design/power auditor: `bio_sfm_designer.experiments.m6d_w3b_disagreement_design_gate`;
 - lifecycle-derived execution manifest/input lock:
   `bio_sfm_designer.experiments.m6d_w3b_execution_lock`;
+- provenance-bound matched-record assembler:
+  `bio_sfm_designer.experiments.m6d_w3b_matched_records`;
 - frozen evaluator: `bio_sfm_designer.experiments.m6d_w3b_disagreement_gate`;
 - focused tests: `tests/test_m6d_w3b_target_selector.py` and
   `tests/test_m6d_w3b_disagreement_gate.py`; execution-lock tests are in
-  `tests/test_m6d_w3b_execution_lock.py`.
+  `tests/test_m6d_w3b_execution_lock.py`, and assembler tests are in
+  `tests/test_m6d_w3b_matched_records.py`.
 
 The current no-submit execution-lock readiness report is
 `results/m6d_w3b_execution_lock_readiness.{json,md}`. It is audit-clean but cannot materialize the
 execution manifest until the separately approved target-MSA lifecycle reaches strict 8/8 completion.
+The assembler contract is `results/m6d_w3b_matched_record_contract.{json,md}`. It is audit-clean but
+correctly reports `assembly_ready=false` until that execution manifest and input lock exist.
+
+After a separately approved predictor stage completes, create each target/predictor receipt from the
+captured runtime identity, then assemble the stage and run the frozen evaluator:
+
+```bash
+python -m bio_sfm_designer.experiments.m6d_w3b_matched_records \
+  --receipt-predictor boltz2_complex --receipt-target <target-id> \
+  --runtime-identity <boltz-runtime-identity.json>
+python -m bio_sfm_designer.experiments.m6d_w3b_matched_records \
+  --receipt-predictor af2_multimer_colabfold_v1 --receipt-target <target-id> \
+  --runtime-identity <af2-runtime-identity.json>
+python -m bio_sfm_designer.experiments.m6d_w3b_matched_records \
+  --stage fit --out-records results/m6d_w3b_fit_matched_records.jsonl \
+  --out-report results/m6d_w3b_fit_matched_record_assembly.json
+python -m bio_sfm_designer.experiments.m6d_w3b_disagreement_gate \
+  --records results/m6d_w3b_fit_matched_records.jsonl \
+  --out results/m6d_w3b_fit_gate_report.json
+```
+
+These are post-run CPU replay commands, not submission authority. Certification or held-out-test replay
+must use its own separately approved stage and cannot bypass the frozen stop rules.
 
 The previous `m6d_w2_w3_decision_protocol` remains a historical artifact for the pre-AF2 fork; it
 must not override this current W3b boundary.

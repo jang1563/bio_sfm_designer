@@ -70,7 +70,13 @@
 > lock builder is implemented and coherently waits on the same MSA completion in
 > `results/m6d_w3b_execution_lock_readiness.{json,md}`. After 8/8 completion it will freeze all 870
 > stage-assigned design slots and their target-MSA hashes before any fit-stage approval; the evaluator now
-> rejects pairwise-matching predictor records unless that MSA hash matches the frozen execution manifest. See
+> rejects pairwise-matching predictor records unless that MSA hash matches the frozen execution manifest.
+> The CPU-side matched-record assembler is also implemented in
+> `bio_sfm_designer.experiments.m6d_w3b_matched_records`. It requires exact candidate/output sets, the
+> execution input lock, per-predictor runtime receipts, seed `0`, templates off, prediction-time network
+> off, candidate/MSA/runtime/model-output hashes, and non-copied predictor values before producing evaluator
+> input. Its current no-submit contract is audit-clean and waits on the execution lock at
+> `results/m6d_w3b_matched_record_contract.{json,md}`. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
 > [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
@@ -111,7 +117,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`971` designer tests and `70` subtests on 2026-07-14).
+**Current local source verified** (`979` designer tests and `70` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

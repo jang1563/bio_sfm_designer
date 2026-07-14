@@ -97,6 +97,13 @@ lock only after strict 8/8 MSA completion. Its current report
 stage. The W3b evaluator now requires its paired predictor MSA hash to equal the target-specific hash in
 this execution manifest, closing the previous gap where two predictors could agree on the same wrong MSA.
 
+The downstream matched-record bridge is now executable without loosening that boundary.
+`m6d_w3b_matched_records` verifies exact stage target/candidate counts, candidate and target sequences,
+manifest-bound MSAs, per-predictor runtime identities, seed `0`, templates/network off, raw-record hashes,
+and predictor-specific pAE/L-RMSD provenance before emitting evaluator input. It also blocks missing pairs
+and near-total numeric copies. `results/m6d_w3b_matched_record_contract.{json,md}` is currently audit-clean
+but `assembly_ready=false`, as expected before MSA completion and execution-lock materialization.
+
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
 

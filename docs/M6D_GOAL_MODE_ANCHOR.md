@@ -122,6 +122,9 @@ from Chai records alone.
 - W3b lifecycle-derived execution-lock readiness:
   `results/m6d_w3b_execution_lock_readiness.{json,md}` and
   `bio_sfm_designer.experiments.m6d_w3b_execution_lock`
+- W3b provenance-bound matched-record contract:
+  `results/m6d_w3b_matched_record_contract.{json,md}` and
+  `bio_sfm_designer.experiments.m6d_w3b_matched_records`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
