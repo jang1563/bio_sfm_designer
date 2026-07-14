@@ -113,6 +113,16 @@ container, all five AF2-Multimer-v3 weight hashes, and exact predictor parameter
 requires receipts to bind the exact runtime-lock SHA, lock digest, and predictor identity digest. This
 closes runtime substitution but does not authorize the still-unapproved target-MSA or predictor stages.
 
+2026-07-15 W3b fit producer lock: the historical W2b/W2c runners remain untouched. Dedicated W3b
+ProteinMPNN validation, Boltz, AF2, runtime re-observation, conversion, guarded submission, and append-only
+journal paths are now hash-bound by `m6d_w3b_fit_packet`. Candidate IDs and sequences must both be unique.
+The complete synthetic-lock integration test materializes the three-target packet and dry-runs exactly
+3 CPU plus 6 H100 jobs, 180 candidates, and 360 matched evaluations with zero scheduler calls or receipt
+writes. The six H100 jobs are hard-limited to four hours each and `--no-requeue`, bounding fit allocation
+by the protocol-wide 24 H100 GPU-hour ceiling. Current tracked readiness remains correctly
+`w3b_fit_packet_awaiting_target_msa_and_execution_lock`; no approval packet exists and no W3b compute is
+authorized. See `docs/M6D_W3B_FIT_APPROVAL.md`.
+
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
 

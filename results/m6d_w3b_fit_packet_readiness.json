@@ -1,0 +1,150 @@
+{
+  "approval_contract": {
+    "af2_h100_jobs": 3,
+    "authorizes_adaptive_top_up": false,
+    "authorizes_certification": false,
+    "authorizes_claim": false,
+    "authorizes_held_out_test": false,
+    "boltz_h100_jobs": 3,
+    "candidate_designs": 180,
+    "environment_value": "approve-w3b-fit-180-matched-h100",
+    "environment_variable": "BIO_SFM_APPROVE_W3B_FIT",
+    "matched_predictor_evaluations": 360,
+    "maximum_fit_submission_h100_gpu_hours": 24.0,
+    "maximum_protocol_h100_gpu_hours_cumulative": 24.0,
+    "maximum_walltime_per_h100_job_hours": 4.0,
+    "proteinmpnn_cpu_jobs": 3,
+    "records_per_target": 60,
+    "requires_post_fit_slurm_gpu_accounting": true,
+    "stage": "fit",
+    "target_count": 3,
+    "user_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100"
+  },
+  "artifact": "m6d_w3b_fit_packet_readiness",
+  "audit_ok": true,
+  "bound_artifacts": [
+    {
+      "bytes": 8672,
+      "path": "configs/m6d_w3b_disagreement_gate_protocol.json",
+      "sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96"
+    },
+    {
+      "bytes": 1475,
+      "path": "results/m6d_w3b_execution_lock_readiness.json",
+      "sha256": "2067af41960c588293763ab43178dbed9ed8064c8334e2c2b3fea3fa096253e0"
+    },
+    {
+      "bytes": 1354,
+      "path": "results/m6d_w3b_runtime_lock_readiness.json",
+      "sha256": "00ef7d19c5fe28d4bc138f29955e175b93d5ca125e7ec3f1a1876700854b084d"
+    },
+    {
+      "bytes": 2101,
+      "path": "results/m6d_w3b_matched_record_contract.json",
+      "sha256": "697590a9f202bad951b7111a8902ebf5f93a8ac270b08a66d6d4ae3750dd5700"
+    },
+    {
+      "bytes": 5433,
+      "path": "configs/m6d_w3b_runtime_lock.json",
+      "sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28"
+    },
+    {
+      "bytes": 2773,
+      "path": "hpc/run_w3b_fit_guarded.sh",
+      "sha256": "7502965b8762df721d1a2b35dcefa3a560a2c39303ab4d5ae8137de773a7f047"
+    },
+    {
+      "bytes": 11861,
+      "path": "hpc/m6d_w3b_fit_submit_with_receipt.sh",
+      "sha256": "fe1f126b97477aeb1496d0e7eaadd1289c850c3eae165dddef864885e794d2c7"
+    },
+    {
+      "bytes": 3320,
+      "path": "hpc/run_generate_proteinmpnn_w3b_fit.sbatch",
+      "sha256": "b255362464e4c4ab523737eee0003d11056cd1c7a52e0e0652afafda65af9cbc"
+    },
+    {
+      "bytes": 10134,
+      "path": "hpc/generate_proteinmpnn_complex.py",
+      "sha256": "0245801d7a72f927352de3a447640c531e9364d0aa398718a7cea84fd8cfe4db"
+    },
+    {
+      "bytes": 4144,
+      "path": "hpc/run_predict_boltz_w3b_fit.sbatch",
+      "sha256": "2560a49b56fdf2aefbffd7655e4caa2a973fd625ec6eda28d7937d5b3cf38a65"
+    },
+    {
+      "bytes": 10933,
+      "path": "hpc/predict_boltz_w3b_complex.py",
+      "sha256": "372e4bf3d7a5a59b020f48b931cfef7e203a5ca89a97002f9959efa8df675a94"
+    },
+    {
+      "bytes": 5837,
+      "path": "hpc/run_predict_af2_w3b_fit.sbatch",
+      "sha256": "5dfdbff7118871b80fb61962bc752cb007c9e7c503c85917ae1741ed3964e318"
+    },
+    {
+      "bytes": 12311,
+      "path": "hpc/convert_w3b_af2_outputs.py",
+      "sha256": "22db9bf3a77f3b892fd70c1b4b6e072b27466734932f6f52b20841c3bbaa6870"
+    },
+    {
+      "bytes": 39172,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3_mechanism_panel.py",
+      "sha256": "d3bb166808f360d19960f88b784a4fe704d53a604b93ebcd8a3f14cb1ac3c098"
+    },
+    {
+      "bytes": 18548,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_producer_contract.py",
+      "sha256": "5ebf85ef2263f7664ba4acda6d1e7cc6a782b9f40b4247704349724ef43f4a16"
+    },
+    {
+      "bytes": 8205,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_runtime_observation.py",
+      "sha256": "cc4daa5445c725566b73875552f5b083f4cb44bc4c4e4be063b3fd5f0fd7ae93"
+    },
+    {
+      "bytes": 3626,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_structure_metrics.py",
+      "sha256": "577d8fcb40ca8989d943cb71a12fff533f8ad1aa330d965dd004d61dbf2e6d82"
+    },
+    {
+      "bytes": 38029,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_matched_records.py",
+      "sha256": "6628973a2eefc9517b8bd8c68debb27924d4403964e150e97a78bd34aeb7cf6a"
+    },
+    {
+      "bytes": 26441,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_runtime_lock.py",
+      "sha256": "8a19a3d3659ee324d07fd7657edfcbba99914c4933699634a6479a9d33b56587"
+    },
+    {
+      "bytes": 11791,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_fit_submit_journal.py",
+      "sha256": "172319ea6d632b1484c911fbedd97d7d5dad15a7d5aca24700e0c9681967e31f"
+    },
+    {
+      "bytes": 22505,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_fit_packet.py",
+      "sha256": "c4a608ffd606708d004f4b0616a0a70c2647a7612fb9ba54fc0b430a5c7f6088"
+    }
+  ],
+  "can_claim_w3b": false,
+  "can_run_candidate_generation_or_prediction": false,
+  "can_submit_fit_stage": false,
+  "claim_boundary": "Fit-stage packet readiness only. This artifact submits no job, records no approval, runs no candidate or predictor, and supports no W3b or biological-success claim.",
+  "execution_lock_ready": false,
+  "explicit_fit_approval_recorded": false,
+  "failures": [],
+  "fit_packet_ready": false,
+  "fit_targets": [],
+  "matched_record_contract_ready": false,
+  "n_failures": 0,
+  "next_action": "complete the separately approved eight-target MSA lifecycle and materialize the execution lock",
+  "no_submit": true,
+  "packet_digest_sha256": "7b16a01d95c036b814a3a220453aa4670939dd4ead741826b992d08d6e4ec68a",
+  "runtime_identity_ready": true,
+  "status": "w3b_fit_packet_awaiting_target_msa_and_execution_lock",
+  "submitted_jobs": 0,
+  "version": 1
+}

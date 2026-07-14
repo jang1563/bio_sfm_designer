@@ -90,6 +90,12 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}` are audit-clean and no-submit. Matched-record receipts
 > must bind the exact runtime-lock file SHA, lock digest, and predictor identity digest; recomputing internally
 > consistent hashes for an alternate runtime does not pass. No W3b MSA or predictor compute is approved.
+> The downstream W3b fit execution surface is also implemented without touching historical W2b/W2c runners.
+> `m6d_w3b_fit_packet` hash-binds unique-candidate validation, actual-runtime re-observation, dedicated
+> Boltz/AF2 producers, strict conversion, a guarded 3 CPU + 6 H100 submit bridge, and an append-only journal.
+> Six predictor jobs are limited to four hours each with no requeue. The tracked readiness is audit-clean but
+> `fit_packet_ready=false` because target MSA readiness is still 0/8; no approval packet exists. Resume from
+> `docs/M6D_W3B_FIT_APPROVAL.md` only after completing the separately approved MSA lifecycle.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

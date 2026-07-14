@@ -19,6 +19,7 @@ from bio_sfm_designer.experiments.m6d_w3b_matched_records import (
 
 ROOT = Path(__file__).resolve().parents[1]
 PREDICTORS = ("boltz2_complex", "af2_multimer_colabfold_v1")
+ALPHABET = "ACDEFGHIKLMNPQRSTVWY"
 
 
 def _load(path: str):
@@ -102,7 +103,7 @@ def _fixture(tmp_path: Path):
         raw = {predictor_id: [] for predictor_id in PREDICTORS}
         for row_index in range(60):
             candidate_id = f"{target['id_prefix']}-{row_index:03d}"
-            binder = "LMNPQRSTV" if row_index % 2 == 0 else "MNPQRSTVW"
+            binder = "MNPQ" + ALPHABET[row_index // 20] + ALPHABET[row_index % 20] + "RST"
             candidate_hash = hashlib.sha256(binder.encode()).hexdigest()
             candidates.append({
                 "id": candidate_id,
@@ -266,6 +267,40 @@ def test_full_fit_assembly_is_evaluator_ready(tmp_path):
     evaluated = evaluate(_load("configs/m6d_w3b_disagreement_gate_protocol.json"), json.loads(manifest_path.read_text()), records)
     assert evaluated["audit_ok"] is True
     assert evaluated["status"] == "w3b_fit_rules_frozen_awaiting_certification"
+
+
+def test_duplicate_candidate_sequence_fails_closed(tmp_path):
+    protocol_path, manifest_path, lock_path, runtime_lock_path = _fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text())
+    target = manifest["targets"][0]
+    candidates_path = Path(target["candidates"])
+    candidates = [json.loads(line) for line in candidates_path.read_text().splitlines()]
+    candidates[1]["representation"] = candidates[0]["representation"]
+    duplicate_hash = hashlib.sha256(candidates[0]["representation"].encode()).hexdigest()
+    _write_jsonl(candidates_path, candidates)
+
+    for filename, field in (
+        ("boltz2_runtime_receipt.json", "boltz_records"),
+        ("af2_multimer_runtime_receipt.json", "af2_records"),
+    ):
+        records_path = Path(target[field])
+        records = [json.loads(line) for line in records_path.read_text().splitlines()]
+        records[1]["provenance"]["candidate_sequence_sha256"] = duplicate_hash
+        _write_jsonl(records_path, records)
+        receipt_path = Path(target["out_prefix"]) / filename
+        receipt = json.loads(receipt_path.read_text())
+        receipt["candidates_sha256"] = _sha(candidates_path)
+        receipt["records_sha256"] = _sha(records_path)
+        _write_json(receipt_path, receipt)
+
+    _records, report = assemble_stage(
+        str(protocol_path), str(manifest_path), str(lock_path), str(runtime_lock_path), "fit"
+    )
+
+    assert report["audit_ok"] is False
+    assert "candidate_sequence_invalid_or_duplicate" in {
+        row["kind"] for row in report["failures"]
+    }
 
 
 def test_runtime_receipt_builder_binds_exact_target_files(tmp_path):

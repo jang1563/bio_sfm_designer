@@ -91,7 +91,12 @@ execution lock. `configs/m6d_w3b_runtime_lock.json` now binds Boltz `2.2.1` to i
 manifest and local checkpoint hashes, and binds AF2 to the verified W3 ColabFold container plus all five
 Multimer-v3 weight hashes. `results/m6d_w3b_runtime_lock_readiness.{json,md}` is audit-clean,
 `runtime_identity_ready=true`, and still no-submit; matched receipts must equal its exact predictor identity
-and lock digests.
+and lock digests. The dedicated W3b fit producer and guarded submit surface is now complete in
+`docs/M6D_W3B_FIT_APPROVAL.md`: it binds unique 60-candidate sets for the three fit targets, runtime
+re-observation, matched Boltz/AF2 conversion, a 3 CPU + 6 H100 scope, four-hour/no-requeue H100 limits,
+and an append-only scheduler journal. `results/m6d_w3b_fit_packet_readiness.{json,md}` is audit-clean but
+correctly remains `fit_packet_ready=false` until the same 8/8 MSA-derived execution lock exists. No fit
+approval packet has been emitted.
 Stop for separate exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
 consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
 

@@ -41,7 +41,7 @@ The pair must have the same candidate ID, candidate-sequence hash, target-MSA ha
 policy, seed `0`, and prediction-time network prohibition. Both labels use L-RMSD below 4 Angstrom
 after target-chain alignment. Pairwise agreement alone is insufficient: the shared target-MSA hash must
 also equal the lifecycle-derived hash frozen for that target in the W3b execution manifest. A missing
-predictor output, manifest-bound MSA mismatch, or any pair mismatch fails QC.
+predictor output, duplicate candidate sequence, manifest-bound MSA mismatch, or any pair mismatch fails QC.
 
 The executable assembler additionally requires one runtime receipt per target and predictor. Each receipt
 binds the candidate, MSA, and raw-record files by SHA-256; records bind candidate sequence, target sequence,
@@ -108,13 +108,18 @@ The maximum design is 870 candidate sequences and 1,740 matched predictor evalua
 held-out test; adaptive top-up is forbidden.
 
 The existing shared `hpc/predict_boltz_complex.py` and its Slurm wrapper remain hash-bound historical
-inputs to consumed W2b/W2c approval packets and are not W3b execution authority. A later fit-stage packet
-must emit and hash-bind a W3b-specific runner that passes every explicit runtime-lock parameter, including
-Boltz seed `0`; historical approval snapshots must not be rewritten to retrofit this contract.
+inputs to consumed W2b/W2c approval packets and are not W3b execution authority. Dedicated W3b producer,
+runtime-observation, Boltz, AF2, converter, guarded-submit, and append-only journal paths are now implemented
+and hash-bound by `m6d_w3b_fit_packet`. They pass every explicit runtime-lock parameter, including Boltz
+seed `0`, and reject duplicate candidate sequences. Six H100 fit jobs receive four-hour hard limits and
+`--no-requeue`, so fit cannot allocate more than the protocol-wide 24 H100 GPU-hour ceiling. Historical
+approval snapshots were not rewritten.
 
 Current target-MSA readiness is 0/8. No target-MSA query, candidate generation, predictor run,
 scheduler submission, API request, or GPU spend is authorized. The hash-bound MSA-only packet is ready
-in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval.
+in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval. The downstream fit producer
+contract is documented in `docs/M6D_W3B_FIT_APPROVAL.md`; its readiness is audit-clean but cannot emit an
+approval packet until the target-MSA-derived execution lock exists.
 
 ## Reproducibility
 
@@ -127,17 +132,28 @@ in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval.
   `bio_sfm_designer.experiments.m6d_w3b_matched_records`;
 - exact dual-predictor runtime lock:
   `bio_sfm_designer.experiments.m6d_w3b_runtime_lock`;
+- W3b-only producer, runtime-observation, and fit-packet contracts:
+  `bio_sfm_designer.experiments.m6d_w3b_producer_contract`,
+  `bio_sfm_designer.experiments.m6d_w3b_runtime_observation`, and
+  `bio_sfm_designer.experiments.m6d_w3b_fit_packet`;
+- append-only fit scheduler journal:
+  `bio_sfm_designer.experiments.m6d_w3b_fit_submit_journal`;
 - frozen evaluator: `bio_sfm_designer.experiments.m6d_w3b_disagreement_gate`;
 - focused tests: `tests/test_m6d_w3b_target_selector.py` and
   `tests/test_m6d_w3b_disagreement_gate.py`; execution-lock tests are in
   `tests/test_m6d_w3b_execution_lock.py`, and assembler tests are in
-  `tests/test_m6d_w3b_matched_records.py`.
+  `tests/test_m6d_w3b_matched_records.py`. Producer/fit-packet tests are in
+  `tests/test_m6d_w3b_producer_contract.py`, `tests/test_m6d_w3b_runtime_observation.py`,
+  `tests/test_m6d_w3b_fit_packet.py`, and `tests/test_m6d_w3b_fit_submit_journal.py`.
 
 The current no-submit execution-lock readiness report is
 `results/m6d_w3b_execution_lock_readiness.{json,md}`. It is audit-clean but cannot materialize the
 execution manifest until the separately approved target-MSA lifecycle reaches strict 8/8 completion.
 The assembler contract is `results/m6d_w3b_matched_record_contract.{json,md}`. It is audit-clean but
 correctly reports `assembly_ready=false` until that execution manifest and input lock exist.
+The dedicated fit packet report is `results/m6d_w3b_fit_packet_readiness.{json,md}`. It currently reports
+`fit_packet_ready=false` solely because the same execution lock is absent; it records no approval and has
+no authority to submit work.
 
 After a separately approved predictor stage completes, create each target/predictor receipt from the
 captured runtime identity, then assemble the stage and run the frozen evaluator:

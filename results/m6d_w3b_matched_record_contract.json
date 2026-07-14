@@ -4,6 +4,7 @@
   "audit_ok": true,
   "can_claim_w3b": false,
   "can_run_candidate_generation_or_prediction": false,
+  "candidate_sequence_uniqueness_required": true,
   "claim_boundary": "Executable matched-record contract only. This artifact submits no work and supports no W3b claim.",
   "execution_lock_readiness": "results/m6d_w3b_execution_lock_readiness.json",
   "execution_lock_readiness_sha256": "2067af41960c588293763ab43178dbed9ed8064c8334e2c2b3fea3fa096253e0",

@@ -466,6 +466,19 @@ def _assemble_target(
         failures=failures,
         target_id=target_id,
     )
+    candidate_sequences = [
+        str(row.get("representation"))
+        for row in candidates
+        if _valid_sequence(row.get("representation"))
+    ]
+    if len(candidate_sequences) != len(candidates) or len(set(candidate_sequences)) != len(candidates):
+        _failure(
+            failures,
+            "candidate_sequence_invalid_or_duplicate",
+            target_id=target_id,
+            expected_unique=len(candidates),
+            observed_unique=len(set(candidate_sequences)),
+        )
     records_by_predictor = {
         predictor_id: _indexed(
             rows,
@@ -788,6 +801,7 @@ def build_readiness(
             "runtime_identity_sha256",
             "model_output_sha256",
         ],
+        "candidate_sequence_uniqueness_required": True,
         "stage_records_per_target": {
             stage: int(_stage_contract(protocol, stage)["records_per_target"])
             for stage in _ROLES

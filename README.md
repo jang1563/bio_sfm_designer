@@ -82,9 +82,15 @@
 > Multimer-v3 weight hashes. Both identities include explicit execution parameters. Runtime-lock readiness
 > is audit-clean, no-submit, and correctly waits on the target-MSA-derived execution lock in
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}`. Runtime receipts must match the frozen per-predictor
-> identity and runtime-lock file/digest exactly; a self-consistent alternate runtime fails closed. See
+> identity and runtime-lock file/digest exactly; a self-consistent alternate runtime fails closed.
+> The W3b-only fit execution surface is now separately implemented and hash-bound: it rejects duplicate
+> candidate sequences, re-observes both runtimes, converts complete matched outputs, and limits submission
+> to 3 CPU plus 6 H100 jobs for 180 candidates/360 evaluations with an append-only journal. The H100 jobs
+> have four-hour hard limits and no requeue. This remains no-submit: the fit packet cannot be emitted until
+> the same 8/8 target-MSA-derived execution lock exists. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
+> [docs/M6D_W3B_FIT_APPROVAL.md](docs/M6D_W3B_FIT_APPROVAL.md),
 > [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
 > [configs/m6d_w3b_fresh_targets.json](configs/m6d_w3b_fresh_targets.json).
 
@@ -119,7 +125,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-14)
+## Status (2026-07-15)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 

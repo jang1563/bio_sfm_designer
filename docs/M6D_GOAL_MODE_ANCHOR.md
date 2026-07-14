@@ -71,6 +71,10 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   state is `target_msa_not_submitted_awaiting_explicit_approval`. Boltz `2.2.1` and AF2-Multimer/ColabFold
   `1.6.1` are now frozen by package/container/checkpoint/weight hashes and exact execution parameters in
   `configs/m6d_w3b_runtime_lock.json`; runtime readiness is audit-clean but cannot authorize execution.
+  The downstream W3b-only fit producer and guarded nine-job submit path are also implemented: they reject
+  duplicate sequences, re-observe both runtimes before prediction, enforce 3 fit targets x 60 candidates x
+  2 predictors, and hard-cap the six H100 jobs at 24 allocatable GPU-hours. Its no-submit readiness report
+  is audit-clean but remains `fit_packet_ready=false` until the 8/8 MSA-derived execution lock exists.
   This supports no gate or predictor-
   robustness claim and authorizes no compute.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
@@ -132,6 +136,9 @@ from Chai records alone.
 - W3b provenance-bound matched-record contract:
   `results/m6d_w3b_matched_record_contract.{json,md}` and
   `bio_sfm_designer.experiments.m6d_w3b_matched_records`
+- W3b dedicated fit producer and approval boundary:
+  `docs/M6D_W3B_FIT_APPROVAL.md`, `results/m6d_w3b_fit_packet_readiness.{json,md}`,
+  `bio_sfm_designer.experiments.m6d_w3b_fit_packet`, and `hpc/run_w3b_fit_guarded.sh`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
