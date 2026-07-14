@@ -286,6 +286,113 @@ def _cross_stage_failures(stages: Dict[str, List[dict]]) -> List[Dict[str, Any]]
     return failures
 
 
+def evaluate_threshold_learning(
+    protocol: Dict[str, Any],
+    learning_rows: Iterable[dict],
+    *,
+    threshold: float = 4.0,
+    qc_ok: bool = True,
+    qc_report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Freeze or refuse W2c thresholds without consuming later-stage rows."""
+    locked = protocol.get("locked_scientific_protocol")
+    if not isinstance(locked, dict):
+        raise ValueError("protocol must contain locked_scientific_protocol")
+    rows = list(learning_rows)
+    groups = _group(rows)
+    target_ids = sorted(set(groups) - {""})
+    expected_n = int(locked["fresh_target_contract"]["n_initial_targets"])
+    learning_rule = locked["fit_design"]["threshold_learning"]
+    minimum_selective = int(
+        locked["panel_decision_rule"]["minimum_selective_pae_certified_targets"]
+    )
+    failures: List[Dict[str, Any]] = []
+    if not qc_ok:
+        failures.append({"kind": "complex_records_qc_failed"})
+    if len(target_ids) != expected_n:
+        failures.append({
+            "kind": "initial_target_count_mismatch",
+            "observed": len(target_ids),
+            "expected": expected_n,
+        })
+    locked_target_ids = sorted(
+        str(value) for value in protocol.get("execution_state", {}).get("target_ids", [])
+    )
+    if locked_target_ids and target_ids != locked_target_ids:
+        failures.append({
+            "kind": "locked_initial_target_identity_mismatch",
+            "observed": target_ids,
+            "expected": locked_target_ids,
+        })
+    failures.extend(_stage_failures(
+        rows,
+        stage="threshold_learning",
+        namespace=str(learning_rule["seed_namespace"]),
+        expected_targets=target_ids,
+        expected_count=int(learning_rule["records_per_target"]),
+        threshold=threshold,
+    ))
+    learned = {
+        target_id: _learn_threshold(groups.get(target_id, []), locked["fit_design"], threshold)
+        for target_id in target_ids
+    }
+    candidate_targets = sorted(
+        target_id for target_id, rule in learned.items() if rule.get("candidate") is True
+    )
+    audit_ok = not failures
+    candidate_floor_reachable = len(candidate_targets) >= minimum_selective
+    terminal = audit_ok and not candidate_floor_reachable
+    if failures:
+        status = "w2c_threshold_learning_audit_failed"
+    elif terminal:
+        status = "w2c_threshold_learning_terminal_not_supported"
+    else:
+        status = "w2c_threshold_learning_complete_awaiting_screen_packet"
+    return {
+        "artifact": "m6d_w2c_threshold_learning_report",
+        "status": status,
+        "audit_ok": audit_ok,
+        "can_claim_w2c_selective_target_adaptive_viability": False,
+        "can_claim_universal_w2_generalization": False,
+        "independent_screen_generation_approved": False,
+        "certification_generation_approved": False,
+        "locked_scientific_digest": _canonical_digest(locked),
+        "lrmsd_threshold": threshold,
+        "n_initial_targets": len(target_ids),
+        "initial_target_ids": target_ids,
+        "threshold_candidate_targets": candidate_targets,
+        "n_threshold_candidate_targets": len(candidate_targets),
+        "minimum_selective_targets_required": minimum_selective,
+        "candidate_floor_reachable": candidate_floor_reachable,
+        "terminal_after_threshold_learning": terminal,
+        "threshold_decisions_frozen": audit_ok,
+        "targets": [
+            {
+                "target_id": target_id,
+                "learning": learned[target_id],
+                "decision_frozen": audit_ok,
+            }
+            for target_id in target_ids
+        ],
+        "qc": qc_report,
+        "failures": failures,
+        "claim_boundary": (
+            "Threshold-learning evidence only. This report freezes or refuses target-specific pAE "
+            "rules but does not evaluate, authorize, or support independent screening, certification, "
+            "W2c viability, or universal W2 generalization."
+        ),
+        "next_action": (
+            "Close W2c before independent-screen compute because fewer than the required selective "
+            "targets can remain eligible under the frozen learning decisions."
+            if terminal else
+            "Prepare a separate hash-bound independent-screen packet and require explicit approval; "
+            "do not retune the frozen learning decisions."
+            if audit_ok else
+            "Repair threshold-learning QC or provenance failures without changing locked scientific rules."
+        ),
+    }
+
+
 def evaluate(
     protocol: Dict[str, Any],
     learning_rows: Iterable[dict],
@@ -484,10 +591,16 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol", default="configs/m6d_w2c_one_shot_protocol.json")
     parser.add_argument("--threshold-learning-records", nargs="+", required=True)
-    parser.add_argument("--independent-screen-records", nargs="+", required=True)
+    parser.add_argument("--independent-screen-records", nargs="*", default=[])
     parser.add_argument("--certification-records", nargs="*", default=[])
+    parser.add_argument("--learning-only", action="store_true")
     parser.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+
+    if args.learning_only and (args.independent_screen_records or args.certification_records):
+        parser.error("--learning-only forbids independent-screen and certification inputs")
+    if not args.learning_only and not args.independent_screen_records:
+        parser.error("--independent-screen-records is required unless --learning-only is set")
 
     all_paths = [
         *args.threshold_learning_records,
@@ -503,19 +616,33 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         expect_signal_source="boltz2_pae_interaction",
         expect_label_source="boltz2_lrmsd_to_reference",
     )
-    report = evaluate(
-        _load_json(args.protocol),
-        load_merged_records(args.threshold_learning_records),
-        load_merged_records(args.independent_screen_records),
-        load_merged_records(args.certification_records),
-        qc_ok=qc.get("ok") is True,
-        qc_report=qc,
-    )
+    if args.learning_only:
+        report = evaluate_threshold_learning(
+            _load_json(args.protocol),
+            load_merged_records(args.threshold_learning_records),
+            qc_ok=qc.get("ok") is True,
+            qc_report=qc,
+        )
+    else:
+        report = evaluate(
+            _load_json(args.protocol),
+            load_merged_records(args.threshold_learning_records),
+            load_merged_records(args.independent_screen_records),
+            load_merged_records(args.certification_records),
+            qc_ok=qc.get("ok") is True,
+            qc_report=qc,
+        )
     _write_json(args.out, report)
-    print(
-        f"status={report['status']} eligible={len(report['fit_screen_eligible_targets'])} "
-        f"certified={len(report['certified_targets'])} audit_ok={report['audit_ok']}"
-    )
+    if args.learning_only:
+        print(
+            f"status={report['status']} "
+            f"candidates={report['n_threshold_candidate_targets']} audit_ok={report['audit_ok']}"
+        )
+    else:
+        print(
+            f"status={report['status']} eligible={len(report['fit_screen_eligible_targets'])} "
+            f"certified={len(report['certified_targets'])} audit_ok={report['audit_ok']}"
+        )
     return 0 if report["audit_ok"] else 1
 
 

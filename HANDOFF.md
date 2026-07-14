@@ -40,18 +40,19 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `configs/m6d_w2c_fresh_targets.json` with zero historical/W2b target, source, or sequence overlap.
 > Target-MSA preparation is now complete for all eight targets. The synced MSA/report pairs pass strict
 > manifest validation at 8/8 and consumed 0.144722 A40 GPU-hours in total. The detailed local completion
-> record is `results/m6d_w2c_target_msa_completion.json`. No ProteinMPNN/Boltz design records were generated,
-> and this input-preparation result is not a W2c certificate or claim. The design gate and guarded approval
-> packet remain immutable historical pre-submit snapshots. The next boundary is a hash-bound no-submit
-> threshold-learning packet for exactly 60 fresh rows per target, 480 total, under namespace
-> `w2c-fit-learn-v1`. That packet is now complete: its 56-input lock and 19-artifact execution binding pass,
-> local and Cayuga dry-runs enumerate eight ProteinMPNN plus eight dependent H100 Boltz jobs, Slurm remains
-> `0 -> 0`, and no receipt, summary, candidate, or record exists. The authoritative boundary is
-> `docs/M6D_W2C_FIT_LEARN_APPROVAL.md` plus
-> the ignored local operational packet `results/m6d_w2c_fit_learn_approval_packet.json` when present.
-> The tracked goal-state report retains its non-sensitive summary. Actual generation still requires separate explicit
-> approval naming **W2c threshold-learning 480-record generation on H100**. All W2 v1-v11 execution routes
-> later in this handoff are historical.
+> record is `results/m6d_w2c_target_msa_completion.json`. The later exact approval for
+> `w2c-fit-learn-v1` was consumed on 2026-07-14. Eight CPU ProteinMPNN jobs and eight dependent H100 Boltz
+> jobs completed with exit code `0:0`, no retry, and 1.0775 H100 GPU-hours. Exactly 480 candidates and 480
+> records were synced; all 16 file hashes match Cayuga, and strict provenance QC passed 480/480 rows.
+> The frozen learning-only decision retained zero of eight selective-pAE target candidates against a
+> required minimum of three, so W2c is `w2c_threshold_learning_terminal_not_supported`. High pAE AUROC on
+> several targets did not produce a >=30-accept region below the fixed 0.08 false-accept cap; the one
+> all-success target has undefined AUROC and cannot count because `trust_all` was excluded prospectively.
+> No independent-screen or certification compute is approved or submitted. The authoritative result is
+> `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; the ignored local operational evidence is
+> `results/m6d_w2c_fit_learn_completion.json`. Do not reuse the consumed approval, retune W2c, or rescue it
+> post hoc. The next project decision is a distinct W3 predictor-robustness or failure-mechanism experiment.
+> All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and
 `docs/PROJECT_ROADMAP.md`.

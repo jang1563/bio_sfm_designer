@@ -11,10 +11,10 @@ Use this objective when creating or resuming the Codex goal:
 
 ```text
 Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
-preserve terminal W2b v1, implement and prospectively qualify the one-shot W2c selective-pAE
-successor without reusing W2b rows or authorizing compute early, move to W3 if W2c cannot
-qualify under its locked rules, preserve W1 as target-specific certified evidence and W4 as
-closed-loop plumbing evidence, and keep all status artifacts honest and reproducible.
+preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
+post-hoc rescue, select and pre-register the next W3 predictor-robustness experiment before new
+compute, preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence,
+and keep all status artifacts honest and reproducible.
 ```
 
 ## Current Resume Anchor
@@ -27,8 +27,10 @@ test rows cannot change the certificate or panel decision.
 Current W2c successor anchor: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md`. The exact design
 power gate passes, the locked evaluator is implemented, and eight label-blind fresh targets
 are selected. Their target MSAs and reports are complete and pass strict manifest validation
-at 8/8; total A40 allocation was 0.144722 GPU-hours. This stage prepared inputs only: zero design
-records exist, no W2c claim is supported, and Cayuga ProteinMPNN/Boltz submission remains blocked.
+at 8/8; total A40 allocation was 0.144722 GPU-hours. The approved `w2c-fit-learn-v1` stage then
+completed with 480/480 strict-QC records, exact local/Cayuga file-hash parity, and no retry. All
+eight target decisions froze to `refuse`, leaving zero candidates against the required minimum of
+three. W2c is terminal before independent screening and supports no positive viability claim.
 
 Current W2c machine artifacts:
 `configs/m6d_w2c_one_shot_protocol.json` and `results/m6d_w2c_design_gate.{json,md}`.
@@ -44,16 +46,17 @@ must not be rewritten after completion.
 Current W2c target-MSA completion:
 `results/m6d_w2c_target_msa_completion.json`.
 
-Current W2c threshold-learning packet:
+Historical consumed W2c threshold-learning packet:
 `docs/M6D_W2C_FIT_LEARN_APPROVAL.md`, `configs/m6d_w2c_fit_learn_targets.json`,
-`configs/m6d_w2c_fit_learn_input_lock.json`, and
-the ignored local operational packet `results/m6d_w2c_fit_learn_approval_packet.json`, when present.
-The 8x60 no-submit packet passes local and Cayuga
-dry-runs with Slurm `0 -> 0`; no candidate, record, receipt, or summary exists.
+`configs/m6d_w2c_fit_learn_input_lock.json`.
 
-Current next action: wait for separate explicit approval naming **W2c threshold-learning 480-record
-generation on H100**. Packet-preparation approval, target-MSA approval, generic continuation, and
-goal-mode resume do not authorize ProteinMPNN/Boltz generation.
+Current W2c completion:
+`docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; local detailed evidence is
+`results/m6d_w2c_threshold_learning_report.json` and `results/m6d_w2c_fit_learn_completion.json`.
+
+Current next action: select and pre-register a distinct W3 predictor-robustness or failure-mechanism
+experiment. Do not generate W2c independent-screen or certification records, reuse the consumed approval,
+or relax the frozen W2c criteria.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.

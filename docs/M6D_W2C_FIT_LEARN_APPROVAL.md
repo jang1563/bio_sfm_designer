@@ -1,6 +1,12 @@
 # W2c Threshold-Learning Approval Packet
 
-Status: `ready_for_explicit_w2c_fit_learn_approval_not_submitted`.
+Status: `approval_consumed_run_complete_threshold_learning_terminal_not_supported`.
+
+The exact approval was consumed on 2026-07-14. All 16 receipt-bound jobs completed without
+retry, 480/480 Boltz records passed strict QC, and the frozen learning rule retained zero
+of eight target candidates. W2c is terminal before independent screening. See
+`docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`. This historical packet must not be reused
+for resubmission or any later stage.
 
 This packet authorizes nothing by itself. The user's approval in the packet-preparation turn covered
 construction and dry-run validation only. It did not approve ProteinMPNN or Boltz record generation.
@@ -69,10 +75,10 @@ was also refused with exit code 2 locally and on Cayuga.
 - automatic retry or resubmission after a partial receipt without a separate recovery audit;
 - claiming W2c viability, certification, W2 generalization, or publication readiness.
 
-## Separate Approval Required
+## Consumed Approval
 
-Only an explicit approval naming **W2c threshold-learning 480-record generation on H100** authorizes the
-following guarded command shape:
+The explicit approval naming **W2c threshold-learning 480-record generation on H100** authorized only the
+following guarded command shape and has now been consumed:
 
 ```bash
 ssh <hpc-login-host> 'cd <repo-root> && \
@@ -82,6 +88,6 @@ ssh <hpc-login-host> 'cd <repo-root> && \
   bash hpc/run_w2c_fit_learn_guarded.sh'
 ```
 
-After successful generation, sync and verify exactly 60 candidates and records per target, run strict
-record QC, and evaluate threshold-learning rows only. Stop after freezing or refusing target thresholds.
-Do not generate independent-screen rows until a new packet is reviewed and separately approved.
+The approved generation, sync, strict QC, and learning-only evaluation are complete. Because all eight
+targets froze to `refuse`, no independent-screen packet is scientifically reachable under the locked
+protocol. Independent-screen and certification generation remain unapproved and unsubmitted.

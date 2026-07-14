@@ -105,18 +105,34 @@ class M6DW2CFitLearnGuardedTests(unittest.TestCase):
 
     def test_dry_run_enumerates_eight_pairs_without_receipt(self):
         with tempfile.TemporaryDirectory() as root:
-            receipt = pathlib.Path(root) / "receipt.jsonl"
-            summary = pathlib.Path(root) / "summary.json"
+            temp_root = pathlib.Path(root)
+            isolated = temp_root / "repo"
+            isolated.mkdir()
+            for name in ("configs", "hpc", "results", "src"):
+                (isolated / name).symlink_to(ROOT / name, target_is_directory=True)
+            isolated_outputs = isolated / "hpc_outputs"
+            isolated_outputs.mkdir()
+            for name in (
+                "m6d_w2b_target_adaptive_sources",
+                "m6d_w2b_target_adaptive_targets",
+            ):
+                (isolated_outputs / name).symlink_to(
+                    ROOT / "hpc_outputs" / name,
+                    target_is_directory=True,
+                )
+            receipt = temp_root / "receipt.jsonl"
+            summary = temp_root / "summary.json"
             env = {
                 **os.environ,
                 "BIO_SFM_SUBMIT_DRY_RUN": "1",
                 "BIO_SFM_PYTHON": "python3",
+                "BIO_SFM_TRUST_CORE_SRC": str(ROOT.parent / "bio-sfm-trust-core/src"),
                 "W2C_FIT_LEARN_RECEIPT": str(receipt),
                 "W2C_FIT_LEARN_SUMMARY": str(summary),
             }
             result = subprocess.run(
-                ["bash", str(SCRIPT)],
-                cwd=ROOT,
+                ["bash", str(isolated / "hpc/run_w2c_fit_learn_guarded.sh")],
+                cwd=isolated,
                 env=env,
                 text=True,
                 capture_output=True,

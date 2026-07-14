@@ -8,19 +8,19 @@
     "w1": "target-specific certified evidence preserved",
     "w2": "universal multi-target generalization not supported",
     "w2b": "terminally not supported; no test compute and no extension",
-    "w2c": "power-qualified design with hash-bound fit packet ready; no model records, certificate, or claim",
+    "w2c": "threshold learning terminally retained zero eligible targets; no W2c viability claim or later-stage compute",
     "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Wait for explicit user approval naming W2c threshold-learning 480-record generation on H100. Packet-preparation approval, generic continuation, and target-MSA approval do not transfer; no independent-screen or certification compute is authorized.",
+  "next_action": "Close W2c without independent-screen or certification compute: all 480 threshold-learning records passed strict QC, but the frozen learning decisions retained fewer than three selective-pAE target candidates. Preserve this negative result and select the next W3 scientific experiment.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W2c_threshold_learning_explicit_approval"
+    "W3_next_experiment_selection"
   ],
-  "status": "goal_active_w2b_terminal_w2c_fit_learn_approval_wait",
+  "status": "goal_active_w2b_terminal_w2c_threshold_learning_terminal",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -551,6 +551,91 @@
     "total_records": 480,
     "total_slurm_jobs": 16
   },
+  "w2c_fit_learn_submission": {
+    "additional_submission_allowed": false,
+    "approval_consumed": true,
+    "authorizes_certification": false,
+    "authorizes_independent_screen": false,
+    "checks": {
+      "artifact_exact": true,
+      "claim_boundary_preserved": true,
+      "event_count": true,
+      "job_ids_complete": true,
+      "job_ids_valid": true,
+      "manifest_exact": true,
+      "pair_count": true,
+      "record_paths_isolated": true,
+      "status_submitted": true,
+      "target_count": true,
+      "target_ids_unique": true,
+      "workstream_exact": true
+    },
+    "jobs": [
+      {
+        "boltz_job_id": "3084936",
+        "proteinmpnn_job_id": "3084935",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1EZV_XY/records_boltz_complex.jsonl",
+        "target_id": "1EZV_XY"
+      },
+      {
+        "boltz_job_id": "3084934",
+        "proteinmpnn_job_id": "3084933",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1F80_BC/records_boltz_complex.jsonl",
+        "target_id": "1F80_BC"
+      },
+      {
+        "boltz_job_id": "3084946",
+        "proteinmpnn_job_id": "3084945",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1F99_BA/records_boltz_complex.jsonl",
+        "target_id": "1F99_BA"
+      },
+      {
+        "boltz_job_id": "3084938",
+        "proteinmpnn_job_id": "3084937",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FFG_CD/records_boltz_complex.jsonl",
+        "target_id": "1FFG_CD"
+      },
+      {
+        "boltz_job_id": "3084940",
+        "proteinmpnn_job_id": "3084939",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FFK_HR/records_boltz_complex.jsonl",
+        "target_id": "1FFK_HR"
+      },
+      {
+        "boltz_job_id": "3084942",
+        "proteinmpnn_job_id": "3084941",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FQ9_CA/records_boltz_complex.jsonl",
+        "target_id": "1FQ9_CA"
+      },
+      {
+        "boltz_job_id": "3084932",
+        "proteinmpnn_job_id": "3084931",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FR2_BA/records_boltz_complex.jsonl",
+        "target_id": "1FR2_BA"
+      },
+      {
+        "boltz_job_id": "3084944",
+        "proteinmpnn_job_id": "3084943",
+        "records": "hpc_outputs/m6d_w2c_fit_learn_records/1FYR_CD/records_boltz_complex.jsonl",
+        "target_id": "1FYR_CD"
+      }
+    ],
+    "n_receipt_events": 16,
+    "n_submission_pairs": 8,
+    "n_targets": 8,
+    "status": "submitted_on_cayuga",
+    "target_ids": [
+      "1EZV_XY",
+      "1F80_BC",
+      "1F99_BA",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FR2_BA",
+      "1FYR_CD"
+    ],
+    "workstream": "m6d_w2c_fit_learn"
+  },
   "w2c_successor": {
     "audit_ok": true,
     "can_claim_w2c": false,
@@ -709,6 +794,177 @@
       "1FYR_CD"
     ],
     "within_approved_gpu_hour_ceiling": true
+  },
+  "w2c_threshold_learning_result": {
+    "audit_ok": true,
+    "can_claim_universal_w2_generalization": false,
+    "can_claim_w2c_selective_target_adaptive_viability": false,
+    "candidate_floor_reachable": false,
+    "certification_generation_approved": false,
+    "checks": {
+      "artifact_exact": true,
+      "audit_ok": true,
+      "candidate_count_consistent": true,
+      "initial_target_count": true,
+      "initial_target_ids_unique": true,
+      "later_compute_blocked": true,
+      "locked_digest_valid": true,
+      "minimum_selective_exact": true,
+      "positive_claims_blocked": true,
+      "predictor_provenance_exact": true,
+      "qc_complete": true,
+      "status_supported": true,
+      "target_decisions_frozen": true,
+      "target_rows_complete": true,
+      "terminal_logic_consistent": true,
+      "threshold_exact": true
+    },
+    "claim_boundary": "Threshold-learning evidence only. This report freezes or refuses target-specific pAE rules but does not evaluate, authorize, or support independent screening, certification, W2c viability, or universal W2 generalization.",
+    "independent_screen_generation_approved": false,
+    "initial_target_ids": [
+      "1EZV_XY",
+      "1F80_BC",
+      "1F99_BA",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FR2_BA",
+      "1FYR_CD"
+    ],
+    "locked_scientific_digest": "c2d9757ce77a9afbf02d0ce30e2e609607ece430539d6378e3eeef3ba77071f5",
+    "minimum_selective_targets_required": 3,
+    "n_initial_targets": 8,
+    "n_records": 480,
+    "n_threshold_candidate_targets": 0,
+    "next_action": "Close W2c before independent-screen compute because fewer than the required selective targets can remain eligible under the frozen learning decisions.",
+    "qc": {
+      "expect_label_source": "boltz2_lrmsd_to_reference",
+      "expect_predictor_id": "boltz2_complex",
+      "expect_signal_source": "boltz2_pae_interaction",
+      "failures": [],
+      "failures_by_kind": {},
+      "forbid_predictor_ids": [],
+      "n_blank": 0,
+      "n_exact_duplicates": 0,
+      "n_failures": 0,
+      "n_rows": 480,
+      "n_unique_record_keys": 480,
+      "n_unique_target_ids": 480,
+      "ok": true,
+      "require_chain_ids": true,
+      "require_complex_target_id": true,
+      "require_provenance": true
+    },
+    "status": "w2c_threshold_learning_terminal_not_supported",
+    "targets": [
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": null,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1EZV_XY"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": 0.3362962962962963,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1F80_BC"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": 0.8260869565217391,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1F99_BA"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": 0.7997557997557998,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1FFG_CD"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": null,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1FFK_HR"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": 0.9655172413793104,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1FQ9_CA"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": 0.9247685185185185,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1FR2_BA"
+      },
+      {
+        "decision_frozen": true,
+        "learning": {
+          "accepted": 0,
+          "auroc_pae": null,
+          "candidate": false,
+          "false_accept_rate": null,
+          "false_accepts": 0,
+          "mode": "refuse",
+          "tau": null
+        },
+        "target_id": "1FYR_CD"
+      }
+    ],
+    "terminal_after_threshold_learning": true,
+    "threshold_candidate_targets": [],
+    "threshold_decisions_frozen": true
   },
   "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json",
   "w3_gate": {

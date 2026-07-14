@@ -29,22 +29,18 @@
 > Test data cannot change certificates and no test compute was submitted. See
 > [docs/M6D_W2B_CERTIFICATION_COMPLETION.md](docs/M6D_W2B_CERTIFICATION_COMPLETION.md).
 
-> **Current forward path:** W2c is a separate selective-pAE-only one-shot successor; it does not alter
-> W2b or reuse its rows. The prospective exact design has conditional certification power 0.817860 at
-> 90 accepts under design risk 0.08 and requires three selective certificates. The power gate passes,
-> and its locked evaluator is implemented. Eight label-blind fresh targets are selected with zero historical/W2b
-> target, source, or sequence overlap. All eight target-MSA/report pairs now pass strict manifest validation;
-> input preparation consumed 0.144722 A40 GPU-hours and generated zero design records. Record-generation
-> submission remains blocked. The dedicated `w2c-fit-learn-v1` threshold-learning packet is now prepared
-> for exactly 60 records per target, 480 total. Its 56-input lock and 19-artifact execution binding passed
-> local and Cayuga dry-runs; Cayuga Slurm remained `0 -> 0`, and no receipt, summary, candidate, or record
-> was created. See [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md),
-> [docs/M6D_W2C_FIT_LEARN_APPROVAL.md](docs/M6D_W2C_FIT_LEARN_APPROVAL.md), and
-> `results/m6d_w2c_design_gate.{json,md}`.
-> The target-MSA approval packet is now an immutable historical pre-submit snapshot. The next boundary is
-> separate explicit approval naming **W2c threshold-learning 480-record generation on H100**. Packet
-> preparation approval does not authorize ProteinMPNN/Boltz generation, independent screening, or
-> certification.
+> **Current W2c result (2026-07-14):** the separately approved `w2c-fit-learn-v1` run completed on
+> Cayuga with 8 CPU ProteinMPNN jobs, 8 dependent H100 Boltz jobs, and no retries. All 480 candidate and
+> 480 record IDs are unique; strict provenance QC passed 480/480 rows, and all 16 output files have exact
+> local-to-Cayuga SHA-256 parity. Under the pre-locked selective-pAE rule, however, all eight targets froze
+> to `refuse`: zero threshold candidates remain against the required minimum of three. Some targets retain
+> strong pAE ranking AUROC, but none supplies the required >=30-accept region at empirical false-accept
+> rate <=0.08; the all-success target has undefined AUROC and cannot count because `trust_all` was excluded
+> prospectively. W2c is therefore `w2c_threshold_learning_terminal_not_supported` before independent
+> screening. No screen or certification job is approved or submitted. See
+> [docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md](docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md) and
+> [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md). The next science frontier is a
+> distinct W3 predictor-robustness or failure-mechanism experiment, not another W2c rescue iteration.
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
@@ -81,7 +77,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`913` designer tests and `53` subtests on 2026-07-14).
+**Current local source verified** (`920` designer tests and `53` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

@@ -1,6 +1,6 @@
 # M6d W2c One-Shot Selective-Gate Protocol
 
-Status: `w2c_design_power_qualified_no_submit`.
+Status: `w2c_threshold_learning_terminal_not_supported`.
 
 W2c is a new experiment motivated by the terminal W2b result. It is not an extension,
 recertification, or reinterpretation of W2b. W2b rows may inform design diagnosis only and
@@ -52,7 +52,7 @@ Panel success requires at least three certified targets and all three must be
 - maximum fit rows: 1,440;
 - maximum certification rows: 1,440;
 - maximum total rows: 2,880;
-- current generated rows: 0;
+- current generated rows: 480 threshold-learning rows;
 - current target manifest: `configs/m6d_w2c_fresh_targets.json`;
 - selected targets: `1FR2_BA`, `1F80_BC`, `1EZV_XY`, `1FFG_CD`, `1FFK_HR`,
   `1FQ9_CA`, `1FYR_CD`, and `1F99_BA`;
@@ -63,8 +63,11 @@ Panel success requires at least three certified targets and all three must be
 - evaluator implemented: true (`m6d_w2c_one_shot_report.py`, with fail-closed regression tests);
 - threshold-learning stage manifest and 56-artifact input lock: ready;
 - guarded command wrappers: ready and hash-bound across 19 execution artifacts;
-- local/Cayuga threshold-learning dry-run: passed, with Slurm `0 -> 0` and no receipt or summary;
-- threshold-learning record generation approved: false;
+- approved threshold-learning run: complete, with 16/16 receipt-bound jobs at exit code `0:0`;
+- strict threshold-learning QC: 480/480 rows, zero failures;
+- frozen selective-pAE threshold candidates: 0/8 against the required minimum of 3;
+- threshold-learning approval: consumed and not reusable;
+- independent-screen and certification generation approved: false;
 - Cayuga submission allowed: false.
 
 The current design gate is `results/m6d_w2c_design_gate.{json,md}`. Passing it only shows
@@ -79,9 +82,12 @@ This input-preparation result does not authorize ProteinMPNN/Boltz record genera
 `results/m6d_w2c_design_gate.{json,md}` and
 `results/m6d_w2c_target_msa_approval_packet.json` remain immutable pre-submit snapshots.
 
-The hash-bound no-submit threshold-learning packet for exactly 60 fresh rows per target, 480 total,
-under `w2c-fit-learn-v1` is complete and documented in `docs/M6D_W2C_FIT_LEARN_APPROVAL.md`.
-It authorizes nothing by itself. The next boundary is separate explicit approval naming **W2c
-threshold-learning 480-record generation on H100**. If this stage or the later prospective fit screen
-cannot pass without changing locked rules, close W2c before broader GPU spend and move the science
-frontier to W3 independent-predictor robustness.
+The hash-bound threshold-learning stage for exactly 60 fresh rows per target, 480 total, under
+`w2c-fit-learn-v1` completed on 2026-07-14. All records passed strict QC, but all eight targets froze
+to `refuse`; zero selective candidates remain against the required minimum of three. The authoritative
+result is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md` and the local machine-readable report is
+`results/m6d_w2c_threshold_learning_report.json`.
+
+The predeclared stop rule is now active: close W2c before independent-screen or certification compute.
+Do not retune thresholds or relax the AUROC, minimum-acceptance, empirical-risk, or selective-only rules.
+The science frontier moves to a distinct W3 predictor-robustness or failure-mechanism experiment.

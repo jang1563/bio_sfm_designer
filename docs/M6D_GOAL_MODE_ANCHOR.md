@@ -18,22 +18,20 @@ experiment with an exact prospective power gate. Its design qualifies at 90 cert
 accepts with conditional power 0.817860 under design risk 0.08. Its locked evaluator is
 implemented, and eight label-blind fresh targets are now selected with zero historical/W2b target,
 source, or sequence overlap. Target-MSA preparation is complete for all eight targets, strict manifest
-validation passes 8/8, and total A40 allocation was 0.144722 GPU-hours. No design records were generated,
-so W2c remains `no_submit`. The authoritative design artifacts are
-`docs/M6D_W2C_ONE_SHOT_PROTOCOL.md`, `configs/m6d_w2c_one_shot_protocol.json`, and
-`results/m6d_w2c_design_gate.{json,md}`; the input-preparation completion is
-`results/m6d_w2c_target_msa_completion.json`. The no-submit threshold-learning packet is now ready for
-exactly 60 fresh rows per target under `w2c-fit-learn-v1`: its input lock and execution bindings pass local
-and Cayuga dry-runs, Slurm remained at zero, and no records were generated. The next boundary is separate
-explicit approval naming **W2c threshold-learning 480-record generation on H100**. All W2 v1-v11 execution
-entries later in this chronological ledger are historical even where their original labels say `current`.
+validation passes 8/8, and total A40 allocation was 0.144722 GPU-hours. The separately approved
+`w2c-fit-learn-v1` stage then completed with 480 H100-generated Boltz records, 480/480 strict-QC rows,
+16/16 local-to-Cayuga file-hash matches, no retries, and 1.0775 H100 GPU-hours. All eight target rules
+froze to `refuse`; zero selective candidates remain against the required minimum of three. W2c is now
+`w2c_threshold_learning_terminal_not_supported`, and no independent-screen or certification compute is
+approved. The authoritative result is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`. The next boundary
+is W3 experiment selection, not W2c rescue. All W2 v1-v11 execution entries later in this chronological
+ledger are historical even where their original labels say `current`.
 
 ## Active Objective
 
 Continue the M6d science-result program in Cayuga-first goal mode:
 
-- implement and prospectively qualify the one-shot W2c selective-pAE successor without
-  reusing W2b rows or authorizing compute early;
+- preserve the terminal one-shot W2c selective-pAE result without post-hoc rescue;
 - resolve W3 Boltz-Chai predictor disagreement through an explicit robustness protocol;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
@@ -44,9 +42,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W1: certified as target-specific complex evidence.
 - W2: not certified as universal multi-target generalization. W2b v1 is also terminally not supported:
   four `trust_all` targets certified, but zero selective-pAE targets certified against a requirement of one.
-- W2c: design and power gate qualified; eight fresh targets and their MSA inputs are ready. The guarded
-  8x60 threshold-learning packet passes no-submit validation, but no model records, certificate, or claim
-  exist. ProteinMPNN/Boltz record generation remains unapproved and blocked.
+- W2c: threshold learning completed on eight fresh targets with 480/480 strict-QC rows. All eight targets
+  refused under the locked rule, so selective target-adaptive viability is terminally unsupported. No
+  independent-screen or certification compute is approved or scientifically reachable.
 - W3: independent-predictor robustness is not supported under the current Boltz-vs-Chai readout.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
@@ -75,9 +73,11 @@ from Chai records alone.
 - W2c target-MSA completion: `results/m6d_w2c_target_msa_completion.json`
 - W2c threshold-learning stage manifest and input lock:
   `configs/m6d_w2c_fit_learn_targets.json` and `configs/m6d_w2c_fit_learn_input_lock.json`
-- Current W2c no-submit threshold-learning approval boundary:
-  `docs/M6D_W2C_FIT_LEARN_APPROVAL.md` and the ignored local operational packet
-  `results/m6d_w2c_fit_learn_approval_packet.json`, when present
+- Historical consumed W2c threshold-learning approval boundary:
+  `docs/M6D_W2C_FIT_LEARN_APPROVAL.md`
+- W2c threshold-learning completion:
+  `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`, plus ignored local operational artifacts
+  `results/m6d_w2c_threshold_learning_report.json` and `results/m6d_w2c_fit_learn_completion.json`
 - Current goal-state refresh audit: `results/m6d_goal_state_refresh_report.{json,md}`
 - Science-action anchor: `results/m6d_followup_next_science_actions.{json,md}`
 - Compact tracked machine-readable goal state: `results/m6d_goal_state_refresh_report.json`

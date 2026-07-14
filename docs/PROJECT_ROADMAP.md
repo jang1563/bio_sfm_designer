@@ -18,9 +18,11 @@
 > W2c is now declared as a separate selective-pAE-only one-shot successor. Its prospective exact-binomial
 > design gate qualifies at 90 certification accepts with conditional power 0.817860 under design risk 0.08,
 > the evaluator is implemented, eight label-blind fresh targets are selected, and all eight target-MSA/report
-> pairs now pass strict validation. This consumed 0.144722 A40 GPU-hours and generated zero design records.
-> The hash-bound 8x60 threshold-learning packet is now complete and passes local/Cayuga no-submit
-> validation with Slurm `0 -> 0`; record generation is still unapproved and blocked. W2c does not alter W2b.
+> pairs pass strict validation. The separately approved 8x60 threshold-learning run then completed with
+> 480/480 strict-QC Boltz records, 16/16 local/Cayuga file-hash matches, no retries, and 1.0775 H100
+> GPU-hours. All eight frozen target decisions refuse, leaving zero selective candidates against the required
+> minimum of three. W2c is terminal before independent screening; no screen or certification compute is
+> approved. W2c does not alter W2b, and the next frontier is a distinct W3 experiment.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -49,18 +51,17 @@ The project succeeds when a new protein-design regime can be added with:
 (AUROC 0.7839), but its frozen threshold fails exact risk certification. Four easy `trust_all` targets
 certify; zero selective targets certify. No test rows were generated because they cannot change this result.
 
-2026-07-14 W2c input-preparation update: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md` and
+2026-07-14 W2c threshold-learning completion: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md` and
 `results/m6d_w2c_design_gate.{json,md}` define the current forward path. W2c counts only selective-pAE
 certificates, separates threshold learning from an independent fit screen, requires prospective exact
-power, forbids adaptive top-up, and remains no-submit. The fresh manifest now locks `1FR2_BA`, `1F80_BC`,
+power, and forbids adaptive top-up. The fresh manifest locks `1FR2_BA`, `1F80_BC`,
 `1EZV_XY`, `1FFG_CD`, `1FFK_HR`, `1FQ9_CA`, `1FYR_CD`, and `1F99_BA`. Target-MSA preparation is complete:
-8/8 MSA/report pairs pass strict manifest validation, with 0.144722 A40 GPU-hours consumed and zero design
-records generated. The approval packet is an immutable historical pre-submit snapshot. The next milestone
-was a hash-bound no-submit threshold-learning packet for exactly 60 rows per target under
-`w2c-fit-learn-v1`. It is now ready: `docs/M6D_W2C_FIT_LEARN_APPROVAL.md` records the 56-input lock,
-19 bound execution artifacts, local/Cayuga dry-runs, and zero Slurm delta. The current milestone is
-separate explicit approval naming **W2c threshold-learning 480-record generation on H100**; no approval
-has been granted for ProteinMPNN/Boltz generation, independent screening, or certification.
+8/8 MSA/report pairs pass strict validation, with 0.144722 A40 GPU-hours consumed. The later exact approval
+for `w2c-fit-learn-v1` was consumed: 16/16 receipt-bound jobs completed, 480/480 records passed strict QC,
+and all output hashes match Cayuga. The frozen evaluator retained 0/8 threshold candidates. The predeclared
+minimum of three is unreachable, so W2c is terminal and later-stage compute is blocked. The authoritative
+readout is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; the current milestone is selection and
+pre-registration of a distinct W3 predictor-robustness or failure-mechanism experiment.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

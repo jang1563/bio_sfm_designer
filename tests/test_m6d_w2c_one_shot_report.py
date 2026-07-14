@@ -3,7 +3,10 @@
 import copy
 import unittest
 
-from bio_sfm_designer.experiments.m6d_w2c_one_shot_report import evaluate
+from bio_sfm_designer.experiments.m6d_w2c_one_shot_report import (
+    evaluate,
+    evaluate_threshold_learning,
+)
 
 
 TARGETS = ("A_AB", "B_AB", "C_AB")
@@ -111,6 +114,41 @@ def _certification(*, false_accepts=5):
 
 
 class M6DW2COneShotReportTests(unittest.TestCase):
+    def test_learning_only_freezes_rules_without_authorizing_later_stages(self):
+        report = evaluate_threshold_learning(_protocol(), _learning())
+
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(
+            report["status"],
+            "w2c_threshold_learning_complete_awaiting_screen_packet",
+        )
+        self.assertEqual(report["threshold_candidate_targets"], list(TARGETS))
+        self.assertTrue(report["threshold_decisions_frozen"])
+        self.assertFalse(report["terminal_after_threshold_learning"])
+        self.assertFalse(report["independent_screen_generation_approved"])
+        self.assertFalse(report["certification_generation_approved"])
+        self.assertFalse(report["can_claim_w2c_selective_target_adaptive_viability"])
+        self.assertTrue(all(row["decision_frozen"] for row in report["targets"]))
+
+    def test_learning_only_futility_stop_when_candidate_floor_is_unreachable(self):
+        report = evaluate_threshold_learning(_protocol(), _learning(all_success=True))
+
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(report["status"], "w2c_threshold_learning_terminal_not_supported")
+        self.assertEqual(report["threshold_candidate_targets"], [])
+        self.assertTrue(report["terminal_after_threshold_learning"])
+        self.assertFalse(report["candidate_floor_reachable"])
+
+    def test_learning_only_metadata_drift_fails_closed(self):
+        rows = _learning()
+        rows[0]["w2c_seed_namespace"] = "wrong-stage"
+        report = evaluate_threshold_learning(_protocol(), rows)
+
+        self.assertFalse(report["audit_ok"])
+        self.assertEqual(report["status"], "w2c_threshold_learning_audit_failed")
+        self.assertFalse(report["threshold_decisions_frozen"])
+        self.assertIn("stage_namespace_mismatch", {row["kind"] for row in report["failures"]})
+
     def test_three_selective_targets_certify(self):
         report = evaluate(_protocol(), _learning(), _screen(), _certification())
 
