@@ -21,6 +21,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "hpc/run_w3_mechanism_panel_guarded.sh"
 RUNTIME_SCRIPT = ROOT / "hpc/validate_w3_mechanism_runtime.sh"
 RUNTIME_RECEIPT_BUILDER = ROOT / "hpc/prepare_w3_mechanism_runtime_receipt.py"
+PROVISION_SCRIPT = ROOT / "hpc/provision_w3_colabfold_161_guarded.sh"
+H100_SCRIPT = ROOT / "hpc/run_w3_mechanism_panel_h100.sbatch"
+RESULT_FIXTURE = ROOT / "tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl"
 AA = "ACDEFGHIKLMNPQRSTVWY"
 
 
@@ -288,6 +291,15 @@ class M6DW3MechanismPanelTests(unittest.TestCase):
             self.assertEqual(refused.returncode, 64)
             self.assertIn("separate exact approval", refused.stderr)
 
+    def test_shell_guard_preserves_precomputed_msa_and_blocks_network(self):
+        text = SCRIPT.read_text()
+        self.assertIn("--msa-mode mmseqs2_uniref_env", text)
+        self.assertNotIn("--msa-mode single_sequence", text)
+        self.assertIn("--pair-mode unpaired_paired", text)
+        self.assertIn("--max-seq 508", text)
+        self.assertIn("--max-extra-seq 2048", text)
+        self.assertIn("--net --network none", text)
+
     def test_adjudicator_supports_boltz_mechanism_only_at_frozen_thresholds(self):
         packet, _, _ = _build()
         records = []
@@ -329,6 +341,47 @@ class M6DW3MechanismPanelTests(unittest.TestCase):
             "result_label_lrmsd_mismatch",
             {row["kind"] for row in blocked["failures"]},
         )
+
+    def test_completed_af2_fixture_replays_frozen_adjudication(self):
+        packet = json.loads(
+            (ROOT / "configs/m6d_w3_mechanism_panel_protocol.json").read_text()
+        )
+        records = [
+            json.loads(line)
+            for line in RESULT_FIXTURE.read_text().splitlines()
+            if line.strip()
+        ]
+        report = adjudicate(packet, records)
+
+        self.assertEqual(len(records), 58)
+        self.assertEqual(
+            hashlib.sha256(RESULT_FIXTURE.read_bytes()).hexdigest(),
+            "830a31bd7ad849fb55be0aec760e40b1cd587872f11ee5dd6e4810702003bef2",
+        )
+        self.assertTrue(report["audit_ok"])
+        self.assertEqual(report["failures"], [])
+        self.assertEqual(
+            report["three_pc8"],
+            {
+                "n_discordant": 12,
+                "n_controls": 6,
+                "aligns_with_boltz": 0,
+                "aligns_with_chai": 12,
+                "control_successes": 6,
+                "outcome": "chai_supported_on_challenge_panel",
+            },
+        )
+        self.assertEqual(report["w2c"]["label_agreement_with_boltz"], 30)
+        self.assertEqual(report["w2c"]["targets_with_at_least_4_of_5_agreement"], 5)
+        self.assertEqual(report["w2c"]["outcome"], "mixed_or_contract_blocked")
+        self.assertEqual(report["joint_outcome"], "context_dependent_or_unresolved")
+        self.assertFalse(report["can_claim_population_level_independent_predictor_robustness"])
+        self.assertFalse(report["can_reopen_or_rescue_w2c"])
+        for row in records:
+            self.assertFalse(pathlib.Path(row["model_pdb"]).is_absolute())
+            self.assertFalse(pathlib.Path(row["scores_json"]).is_absolute())
+            for raw_key in ("target_sequence", "binder_sequence", "representation"):
+                self.assertNotIn(raw_key, row)
 
     def test_guard_enforces_network_and_api_locks(self):
         packet, private_rows, payloads = _build()
@@ -393,6 +446,77 @@ class M6DW3MechanismPanelTests(unittest.TestCase):
         text = RUNTIME_SCRIPT.read_text()
         for forbidden in ("sbatch ", "srun ", "curl ", "wget ", "pip install"):
             self.assertNotIn(forbidden, text)
+
+    def test_runtime_builder_remains_compatible_with_cayuga_system_python(self):
+        self.assertNotIn(
+            "from __future__ import annotations",
+            RUNTIME_RECEIPT_BUILDER.read_text(),
+        )
+
+    def test_provision_guard_is_pinned_no_submit_and_approval_gated(self):
+        subprocess.run(["bash", "-n", str(PROVISION_SCRIPT)], check=True)
+        text = PROVISION_SCRIPT.read_text()
+        self.assertIn(
+            "docker://ghcr.io/sokrypton/colabfold:1.6.1-cuda12",
+            text,
+        )
+        self.assertIn(
+            'download_alphafold_params("alphafold2_multimer_v3"',
+            text,
+        )
+        for forbidden in ("sbatch ", "srun ", "--model-type", "--num-recycle"):
+            self.assertNotIn(forbidden, text)
+
+        with tempfile.TemporaryDirectory() as directory:
+            provision_root = pathlib.Path(directory) / "must-not-exist"
+            env = os.environ.copy()
+            env.pop("BIO_SFM_APPROVE_W3_RUNTIME_PROVISION", None)
+            env["W3_PROVISION_ROOT"] = str(provision_root)
+            refused = subprocess.run(
+                ["bash", str(PROVISION_SCRIPT)],
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(refused.returncode, 64)
+            self.assertFalse(provision_root.exists())
+
+    def test_h100_entrypoint_is_exact_and_approval_gated(self):
+        subprocess.run(["bash", "-n", str(H100_SCRIPT)], check=True)
+        text = H100_SCRIPT.read_text()
+        for marker in (
+            "#SBATCH --partition=preempt_gpu",
+            "#SBATCH --qos=low",
+            "#SBATCH --gres=gpu:h100:1",
+            "#SBATCH --cpus-per-task=8",
+            "#SBATCH --mem=128G",
+            "#SBATCH --time=12:00:00",
+            'APPROVAL_TOKEN="approve-w3-mechanism-panel-h100"',
+            "--nv",
+            "--net --network none",
+            '"$ROOT/hpc/run_w3_mechanism_panel_guarded.sh"',
+        ):
+            self.assertIn(marker, text)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            env = os.environ.copy()
+            env.pop("BIO_SFM_APPROVE_W3_MECHANISM_PANEL", None)
+            env.update({
+                "W3_RUN_ROOT": str(root),
+                "W3_HOST_PYTHON_BIN": str(root / "python3"),
+                "W3_COLABFOLD_SIF": str(root / "colabfold.sif"),
+                "W3_AF2_DATA_DIR": str(root / "af2_data"),
+                "W3_RUNTIME_RECEIPT": str(root / "runtime_receipt.json"),
+            })
+            refused = subprocess.run(
+                ["bash", str(H100_SCRIPT)],
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(refused.returncode, 64)
+            self.assertIn("without exact approval", refused.stderr)
 
 
 if __name__ == "__main__":

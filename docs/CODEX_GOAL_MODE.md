@@ -1,11 +1,10 @@
 # Codex Goal Mode
 
-> **Current anchor (2026-07-14):** W2c is terminal and must not be rescued or retuned. W3 now has one
-> selected, preregistered 58-case AF2-Multimer mechanism panel in
-> `configs/m6d_w3_mechanism_panel_protocol.json`, with the detailed rationale in
-> `docs/M6D_W3_MECHANISM_PANEL.md`. The 58 local A3M inputs and dry-run bundle validation are complete.
-> ColabFold runtime readiness and compute approval are both false. Resume by validating/provisioning the
-> exact ColabFold 1.6.1 runtime without prediction; do not run or submit AF2 until a separate exact approval.
+> **Current anchor (2026-07-14):** W2c is terminal and must not be rescued or retuned. The distinct
+> 58-case W3 AF2-Multimer mechanism panel is also complete. Frozen adjudication supports Chai on 3PC8,
+> finds mixed Boltz agreement on W2c, and returns `context_dependent_or_unresolved`. Resume from
+> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The next frontier is a new, prospectively locked
+> predictor-disagreement-aware gate on fresh matched-protocol targets; no new compute is approved.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -19,8 +18,9 @@ Use this objective when creating or resuming the Codex goal:
 ```text
 Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
 preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
-post-hoc rescue; preserve the preregistered 58-case W3 AF2-Multimer mechanism-panel input,
-runtime, approval, and adjudication locks; execute no W3 compute without a separate exact approval;
+post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result and its
+input, runtime, approval, and adjudication locks; prospectively define a predictor-disagreement-aware
+gate on fresh matched-protocol targets and execute no new predictor compute without explicit approval;
 preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep
 all status artifacts honest and reproducible.
 ```
@@ -62,10 +62,14 @@ Current W2c completion:
 `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; local detailed evidence is
 `results/m6d_w2c_threshold_learning_report.json` and `results/m6d_w2c_fit_learn_completion.json`.
 
-Current next action: validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3
-weights without prediction, then stop for a separate explicit compute approval. Do not generate W2c
-independent-screen or certification records, reuse the consumed approval, relax the frozen W2c criteria,
-or alter the 58-case W3 selection/adjudication after seeing AF2 output.
+Current W3 completion: `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. Corrected job `3084977` completed
+58/58 after job `3084976` was cancelled and invalidated for target-MSA truncation. The public replay
+fixture is `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`.
+
+Current next action: preregister a fresh matched-protocol, predictor-disagreement-aware abstention/gating
+experiment with explicit fit, certification, and held-out test roles. Do not generate W2c independent-
+screen or certification records, reuse consumed approvals, relax frozen criteria, or tune the next gate
+on the completed W3 panel.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -668,8 +672,9 @@ Use this order unless the user gives a newer instruction:
    new alpha target or target-specific stress test is explicitly chosen.
 3. W2 - Redesign multi-target generalization. Treat the current panels as completed negative
    evidence, then select or design more 3PC8-like targets before any broad panel spend.
-4. W3 - Resolve predictor disagreement. The Chai scale-up is complete; choose a third
-   predictor/protocol, stronger Chai MSA/template rerun, or formal negative robustness result.
+4. W3 successor - Build a predictor-disagreement-aware abstention/gating protocol on fresh targets.
+   Keep the completed AF2 mechanism panel frozen and require matched predictor inputs plus prospective
+   fit, certification, and held-out test roles before new compute.
 5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

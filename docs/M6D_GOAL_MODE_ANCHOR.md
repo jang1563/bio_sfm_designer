@@ -1,11 +1,10 @@
 # M6d Goal-Mode Current Anchor
 
-> **2026-07-14 active boundary:** W2c ended with 0/8 threshold candidates. The successor is no longer an
-> open fork: `configs/m6d_w3_mechanism_panel_protocol.json` freezes a 58-case AF2-Multimer mechanism
-> panel, and `docs/M6D_W3_MECHANISM_PANEL.md` explains the science and adjudication. Sequence-bearing
-> inputs are locally materialized and hash-verified; public artifacts contain hashes only. Runtime is not
-> ready, no W3 compute is approved, and `hpc/run_w3_mechanism_panel_guarded.sh` must remain in dry-run mode
-> until a separate exact approval is given after runtime-receipt validation.
+> **2026-07-14 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
+> AF2-Multimer mechanism panel is complete. Corrected job `3084977` completed 58/58 after job `3084976`
+> was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
+> finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
+> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes.
 
 Date: 2026-07-14
 
@@ -30,18 +29,20 @@ validation passes 8/8, and total A40 allocation was 0.144722 GPU-hours. The sepa
 16/16 local-to-Cayuga file-hash matches, no retries, and 1.0775 H100 GPU-hours. All eight target rules
 froze to `refuse`; zero selective candidates remain against the required minimum of three. W2c is now
 `w2c_threshold_learning_terminal_not_supported`, and no independent-screen or certification compute is
-approved. The authoritative result is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`. The next boundary
-is the preregistered 58-case W3 mechanism panel, not W2c rescue. The panel input and adjudication locks are
-complete, but ColabFold runtime readiness and compute approval are false. All W2 v1-v11 execution entries
-later in this chronological ledger are historical even where their original labels say `current`.
+approved. The authoritative result is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`. The W3 successor
+then completed under its frozen 58-case protocol. The 3PC8 block supports Chai (`12/12` discordant labels,
+`6/6` controls), while the W2c block is mixed (`30/40` Boltz agreement; `5/8` targets at least `4/5`).
+The joint result is `context_dependent_or_unresolved`. All W2 v1-v11 execution entries later in this
+chronological ledger are historical even where their original labels say `current`.
 
 ## Active Objective
 
 Continue the M6d science-result program in Cayuga-first goal mode:
 
 - preserve the terminal one-shot W2c selective-pAE result without post-hoc rescue;
-- preserve and eventually execute the frozen 58-case W3 AF2-Multimer mechanism panel without changing
-  its inputs or thresholds after output inspection;
+- preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
+- prospectively define the next predictor-disagreement-aware gate on fresh matched-protocol targets before
+  any new predictor output is generated;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -54,9 +55,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W2c: threshold learning completed on eight fresh targets with 480/480 strict-QC rows. All eight targets
   refused under the locked rule, so selective target-adaptive viability is terminally unsupported. No
   independent-screen or certification compute is approved or scientifically reachable.
-- W3: independent-predictor robustness is not supported under the current Boltz-vs-Chai readout. The
-  bounded third-predictor mechanism experiment is preregistered with 58 hash-locked inputs, but runtime
-  readiness is false and predictions/submitted jobs remain 0.
+- W3: the bounded third-predictor mechanism panel is complete and audited. 3PC8 supports Chai over Boltz,
+  but W2c agreement is target-dependent and mixed; the joint outcome is `context_dependent_or_unresolved`.
+  Population-level independent-predictor robustness remains unsupported.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -91,6 +92,9 @@ from Chai records alone.
   `results/m6d_w2c_threshold_learning_report.json` and `results/m6d_w2c_fit_learn_completion.json`
 - W3 decisive mechanism-panel protocol and rationale:
   `configs/m6d_w3_mechanism_panel_protocol.json` and `docs/M6D_W3_MECHANISM_PANEL.md`
+- W3 completion and public CPU replay:
+  `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md` and
+  `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and

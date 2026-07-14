@@ -1,6 +1,10 @@
 # M6d W3 decisive mechanism panel
 
-Status: `w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit`.
+Preregistered packet status: `w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit`.
+
+Runtime status at execution: `w3_mechanism_runtime_ready`. ColabFold 1.6.1 and exactly five AlphaFold2-Multimer v3 weight files were provisioned and hash-validated on 2026-07-14. The runtime receipt is local/HPC-only and did not amend the immutable preregistration packet.
+
+Completed result status: `w3_mechanism_panel_adjudicated_context_dependent_or_unresolved`. See `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md` for the execution audit, frozen result, replay fixture, and claim boundary.
 
 ## Scientific question
 
@@ -44,8 +48,20 @@ W2c remains closed. These diagnostics characterize why the frozen rule refused e
 
 ## Execution boundary
 
-This is a no-submit packet. It records no approval and performs no API, network, GPU, or HPC action. The guarded wrapper requires a separately supplied exact approval token, a validated immutable runtime receipt, local model weights, and exact input hashes before it can invoke ColabFold.
+The preregistration artifact itself is a no-submit packet. It records no approval and performs no API, network, GPU, or HPC action. The guarded wrapper requires a separately supplied exact approval token, a validated immutable runtime receipt, local model weights, and exact input hashes before it can invoke ColabFold.
+
+Runtime provisioning is a separate guarded step:
+
+```bash
+export BIO_SFM_APPROVE_W3_RUNTIME_PROVISION=approve-w3-runtime-provision
+export W3_PROVISION_ROOT=/shared/path/to/colabfold/1.6.1-cuda12
+hpc/provision_w3_colabfold_161_guarded.sh
+```
+
+The provisioning guard pins `docker://ghcr.io/sokrypton/colabfold:1.6.1-cuda12`, invokes the official parameter archive selected for Multimer v3, validates exactly the five Multimer v3 model files plus the runtime hash, and never invokes prediction or a scheduler. The upstream archive also contains monomer-family parameter files; those are not part of the W3 identity receipt. Mechanism-panel execution required and consumed a separate explicit approval.
+
+The first approved job, `3084976`, was cancelled and invalidated before adjudication because the wrapper's `single_sequence` mode reduced the model MSA to `1/1`. The corrected wrapper preserved the precomputed target MSA at `508/2048`, blocked container networking, and completed job `3084977` at 58/58 with exit `0:0`. No input or decision rule changed.
 
 ## Claim boundary
 
-Preregistered no-submit mechanism panel only. No AF2 prediction has run, W2c remains terminal, and no positive independent-predictor robustness claim is supported.
+The completed panel supports only a bounded, target- and predictor-protocol-dependent mechanism interpretation. W2c remains terminal; population-level independent-predictor robustness and W2c rescue remain unsupported.

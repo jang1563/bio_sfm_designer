@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Hash a pre-staged ColabFold runtime and AF2-Multimer weights without prediction."""
 
-from __future__ import annotations
-
 import argparse
 import hashlib
 import json

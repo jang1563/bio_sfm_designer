@@ -22,10 +22,10 @@
 > 480/480 strict-QC Boltz records, 16/16 local/Cayuga file-hash matches, no retries, and 1.0775 H100
 > GPU-hours. All eight frozen target decisions refuse, leaving zero selective candidates against the required
 > minimum of three. W2c is terminal before independent screening; no screen or certification compute is
-> approved. W2c does not alter W2b. The next frontier is now frozen as the 58-case W3 AF2-Multimer
-> mechanism panel in `configs/m6d_w3_mechanism_panel_protocol.json`: 18 unchanged 3PC8 challenge cases
-> plus 40 fixed-rank W2c cases. Inputs and adjudication are ready, but the runtime is not; no W3 compute is
-> approved or submitted, and a separate exact approval remains mandatory.
+> approved. W2c does not alter W2b. Its distinct 58-case W3 AF2-Multimer mechanism panel then completed
+> under the frozen protocol. 3PC8 supports Chai (`12/12` discordant labels, `6/6` controls), while W2c
+> agreement with Boltz is mixed (`30/40`, with `5/8` targets at least `4/5`). The joint outcome is
+> `context_dependent_or_unresolved`, so population-level robustness and W2c rescue remain unsupported.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -63,16 +63,16 @@ power, and forbids adaptive top-up. The fresh manifest locks `1FR2_BA`, `1F80_BC
 for `w2c-fit-learn-v1` was consumed: 16/16 receipt-bound jobs completed, 480/480 records passed strict QC,
 and all output hashes match Cayuga. The frozen evaluator retained 0/8 threshold candidates. The predeclared
 minimum of three is unreachable, so W2c is terminal and later-stage compute is blocked. The authoritative
-readout is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`; the current milestone is selection and
-pre-registration of a distinct W3 predictor-robustness or failure-mechanism experiment.
+readout is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETION.md`. That terminal result motivated the distinct
+W3 predictor-robustness and failure-mechanism experiment summarized below.
 
-2026-07-14 W3 mechanism-panel preregistration: the distinct experiment is now selected. The public-safe
-protocol and claim boundary are in `configs/m6d_w3_mechanism_panel_protocol.json` and
-`docs/M6D_W3_MECHANISM_PANEL.md`. It combines the frozen 18-case 3PC8 Boltz-Chai challenge with five
-deterministic pAE order statistics from each W2c target, for 58 cases total. The target MSA is reused,
-the designed binder is single-sequence, templates and public MSA queries are forbidden, and all local
-A3Ms are hash-bound. The converter and adjudicator are implemented before execution. The current state is
-`runtime_blocked_no_submit`: runtime receipt absent, approval absent, predictions 0, submitted jobs 0.
+2026-07-14 W3 mechanism-panel completion: the public-safe protocol and claim boundary are in
+`configs/m6d_w3_mechanism_panel_protocol.json`; the terminal readout is in
+`docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The first job was cancelled and invalidated when a wrapper
+bug truncated target MSA depth. Corrected, network-isolated job `3084977` preserved the precomputed MSA,
+completed 58/58 with exit `0:0`, and passed 58-record conversion and adjudication with zero failures.
+The next frontier is not more W2c rescue or W3 retuning. It is a new prospective matched-protocol panel
+testing whether predictor-disagreement-aware abstention improves calibratable trust on fresh targets.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -493,14 +493,12 @@ Allowed decisions:
    At least 176 total records per target are needed for best-case zero-error feasibility under the same
    split. This cannot recertify the completed panel. The next W2 action is protocol redesign and
    predeclaration on new held-out targets, not automatic submission of 836 additional folds.
-7. Treat the Chai-1 W3 scale-up as completed, not missing. The latest Chai batch passes QC/contract
-   with 30 matched records, but `results/m6c_cross_predictor.json` reports Boltz-Chai label agreement
-   of 0.600 against the required 0.800. Therefore independent-predictor robustness is not supported
-   under the current no-MSA Chai protocol.
-8. For W3 specifically, resume from the decision fork in `docs/M6D_GOAL_MODE_ANCHOR.md`: add a third
-   predictor/protocol, rerun Chai with stronger MSA/template support, or formalize the Boltz-Chai
-   disagreement as a negative robustness result. Do not spend more API/GPU on W3 until that protocol
-   choice is explicit.
+7. Treat both the Chai-1 scale-up and the later AF2 W3 mechanism panel as completed. The AF2 panel
+   resolves the old third-predictor fork but not the robustness claim: 3PC8 supports Chai, W2c is mixed,
+   and the joint result is context-dependent or unresolved.
+8. For the W3 successor, preregister a fresh matched-protocol predictor-disagreement-aware gate with
+   fit, certification, and held-out test roles. Do not tune on the completed 58 cases or spend new
+   API/GPU resources until that protocol, power gate, and exact approval boundary exist.
 9. Keep W4 in fail-closed mode until the screen head is replaced or trained. The current W4 artifact proves
    strict closed-loop plumbing and conservative safety behavior, but all candidate verdicts were non-finite
    DeBERTa outputs and therefore deferred; do not use it as a productive route-to-build policy.

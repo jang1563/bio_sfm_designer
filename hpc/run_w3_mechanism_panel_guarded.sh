@@ -52,7 +52,7 @@ elif [ -n "${W3_COLABFOLD_SIF:-}" ]; then
     echo "apptainer/singularity is required for W3_COLABFOLD_SIF" >&2
     exit 68
   fi
-  RUNNER=("$APPTAINER_BIN" exec --nv --containall --bind "$ROOT:$ROOT" --bind "$W3_AF2_DATA_DIR:$W3_AF2_DATA_DIR" "$W3_COLABFOLD_SIF" colabfold_batch)
+  RUNNER=("$APPTAINER_BIN" exec --nv --containall --net --network none --bind "$ROOT:$ROOT" --bind "$W3_AF2_DATA_DIR:$W3_AF2_DATA_DIR" "$W3_COLABFOLD_SIF" colabfold_batch)
 else
   echo "set exactly one existing W3_COLABFOLD_BIN or W3_COLABFOLD_SIF" >&2
   exit 69
@@ -67,6 +67,7 @@ python3 "$ROOT/src/bio_sfm_designer/experiments/m6d_w3_mechanism_guard.py" \
   --data-dir "$W3_AF2_DATA_DIR" >/dev/null
 
 mkdir -p "$OUTPUT_DIR"
+# Precomputed A3Ms bypass MMseqs2; a non-single mode preserves the locked target-MSA depth.
 "${RUNNER[@]}" "$INPUT_DIR" "$OUTPUT_DIR" \
   --model-type alphafold2_multimer_v3 \
   --num-models 5 \
@@ -75,5 +76,8 @@ mkdir -p "$OUTPUT_DIR"
   --num-recycle 20 \
   --rank multimer \
   --num-relax 0 \
-  --msa-mode single_sequence \
+  --msa-mode mmseqs2_uniref_env \
+  --pair-mode unpaired_paired \
+  --max-seq 508 \
+  --max-extra-seq 2048 \
   --data "$W3_AF2_DATA_DIR"
