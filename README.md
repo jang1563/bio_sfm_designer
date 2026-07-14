@@ -53,6 +53,20 @@
 > [docs/M6D_W3_MECHANISM_PANEL.md](docs/M6D_W3_MECHANISM_PANEL.md), and
 > [configs/m6d_w3_mechanism_panel_protocol.json](configs/m6d_w3_mechanism_panel_protocol.json).
 
+> **Current W3b packet (2026-07-14):** the next experiment is now prospectively locked as a
+> predictor-disagreement-aware gate on eight unused, source- and sequence-unique targets. Label-blind
+> hashing fixed target-level roles at 3 fit, 3 certification, and 2 held-out test targets before any
+> W3b predictor output exists. Each candidate will be evaluated by matched Boltz-2 and AF2-Multimer
+> protocols; the primary gate uses `max(pAE_interaction)` plus the inter-predictor pAE gap and is compared
+> with a Boltz-pAE-only gate. Exact endpoint power is 0.824333 at 100 accepts, alpha 0.2, and Bonferroni
+> delta 0.05/(3 targets x 2 predictors). The design is no-submit: target-MSA readiness is 0/8 and no
+> query, candidate generation, candidate-level predictor run, scheduler submission, API request, or GPU spend is
+> authorized. The hash-bound MSA-only packet awaits separate explicit approval with an 8 A40 GPU-hour
+> ceiling. See [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
+> [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
+> [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
+> [configs/m6d_w3b_fresh_targets.json](configs/m6d_w3b_fresh_targets.json).
+
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
 protein/genome/single-cell); an **external calibrated trust gate** decides, per
@@ -88,7 +102,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`936` designer tests and `53` subtests on 2026-07-14).
+**Current local source verified** (`955` designer tests and `61` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

@@ -62,6 +62,15 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `5/8` targets at least `4/5`). The joint result is `context_dependent_or_unresolved`, not independent-
 > predictor robustness or W2c rescue. Read `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md` next; the public
 > CPU replay fixture is `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`.
+> The distinct W3b successor is now preregistered in
+> `configs/m6d_w3b_disagreement_gate_protocol.json` and
+> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. Exactly eight unused source/sequence-unique targets were
+> label-blindly assigned to 3 fit, 3 certification, and 2 held-out-test roles in
+> `configs/m6d_w3b_fresh_targets.json`. The primary matched Boltz-2/AF2 gate uses maximum interface pAE
+> plus the pAE gap; a Boltz-pAE-only gate is the frozen comparator. Exact endpoint power is 0.824333 at
+> 100 accepts. The design auditor passes but target-MSA readiness is 0/8. The hash-bound MSA-only packet
+> is ready in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md`, capped at 8 A40 GPU-hours. No W3b compute is
+> approved; resume by waiting for the separate exact MSA approval.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

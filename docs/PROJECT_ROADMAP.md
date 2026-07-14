@@ -26,6 +26,9 @@
 > under the frozen protocol. 3PC8 supports Chai (`12/12` discordant labels, `6/6` controls), while W2c
 > agreement with Boltz is mixed (`30/40`, with `5/8` targets at least `4/5`). The joint outcome is
 > `context_dependent_or_unresolved`, so population-level robustness and W2c rescue remain unsupported.
+> W3b now prospectively locks the successor: eight unused source/sequence-unique targets, a label-blind
+> 3 fit / 3 certification / 2 held-out-test split, matched Boltz-2/AF2 inputs, and an exact endpoint-power
+> gate. The design passes at power 0.824333 but remains input-incomplete and no-submit with 0/8 target MSAs.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -73,6 +76,14 @@ bug truncated target MSA depth. Corrected, network-isolated job `3084977` preser
 completed 58/58 with exit `0:0`, and passed 58-record conversion and adjudication with zero failures.
 The next frontier is not more W2c rescue or W3 retuning. It is a new prospective matched-protocol panel
 testing whether predictor-disagreement-aware abstention improves calibratable trust on fresh targets.
+
+2026-07-14 W3b preregistration: `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md` and
+`configs/m6d_w3b_disagreement_gate_protocol.json` freeze the gate, comparator, matched predictor contract,
+target-level split, exact multiplicity correction, held-out decision rule, staged stop conditions, and
+24 H100 GPU-hour ceiling. `configs/m6d_w3b_fresh_targets.json` locks the eight label-blind targets and roles.
+The evaluator and design auditor are implemented. Target MSAs are missing 8/8. The hash-bound MSA-only
+packet in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` awaits exact approval; candidate and predictor execution
+remain forbidden.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -496,9 +507,9 @@ Allowed decisions:
 7. Treat both the Chai-1 scale-up and the later AF2 W3 mechanism panel as completed. The AF2 panel
    resolves the old third-predictor fork but not the robustness claim: 3PC8 supports Chai, W2c is mixed,
    and the joint result is context-dependent or unresolved.
-8. For the W3 successor, preregister a fresh matched-protocol predictor-disagreement-aware gate with
-   fit, certification, and held-out test roles. Do not tune on the completed 58 cases or spend new
-   API/GPU resources until that protocol, power gate, and exact approval boundary exist.
+8. For W3b, preserve the now-preregistered matched-protocol disagreement gate and 3/3/2 target roles.
+   The eight-target MSA-only packet is ready and awaits exact approval. Do not generate candidates, run
+   predictors, tune on the completed 58 cases, or spend beyond the exact approved stage.
 9. Keep W4 in fail-closed mode until the screen head is replaced or trained. The current W4 artifact proves
    strict closed-loop plumbing and conservative safety behavior, but all candidate verdicts were non-finite
    DeBERTa outputs and therefore deferred; do not use it as a productive route-to-build policy.

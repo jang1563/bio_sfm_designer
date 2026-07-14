@@ -1,0 +1,191 @@
+{
+  "artifact": "m6d_w3b_disagreement_gate_protocol",
+  "date": "2026-07-14",
+  "execution_state": {
+    "approval_recorded": false,
+    "cayuga_submission_allowed": false,
+    "command_wrapper_emitted": false,
+    "evaluator_implemented": true,
+    "evaluator_module": "bio_sfm_designer.experiments.m6d_w3b_disagreement_gate",
+    "no_api_spend": true,
+    "no_gpu_compute": true,
+    "no_submit": true,
+    "operator_approval_recorded": false,
+    "target_manifest": "configs/m6d_w3b_fresh_targets.json",
+    "target_manifest_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
+    "target_msa_precompute": {
+      "approval_env_value": "approve-w3b-target-msa-precompute",
+      "approval_env_var": "BIO_SFM_APPROVE_W3B_TARGET_MSA",
+      "approval_packet": "results/m6d_w3b_target_msa_approval_packet.json",
+      "approval_packet_ready": true,
+      "approval_recorded": false,
+      "command_wrapper": "hpc/run_w3b_target_msa_guarded.sh",
+      "command_wrapper_emitted": true,
+      "maximum_a40_gpu_hours": 8.0,
+      "plan": "results/m6d_w3b_target_msas.sh",
+      "scope": "eight target-MSA precomputations only; no W3b candidate generation or candidate-level Boltz/AF2 evaluation"
+    }
+  },
+  "locked_scientific_protocol": {
+    "certification_design": {
+      "adaptive_extension_allowed": false,
+      "design_true_risk": 0.08,
+      "failed_or_refused_targets_remain_in_multiplicity_denominator": true,
+      "method": "one_sided_clopper_pearson_exact",
+      "minimum_accepted_per_target": 100,
+      "minimum_certified_targets": 2,
+      "minimum_conditional_power": 0.8,
+      "multiplicity_correction": "bonferroni_over_3_targets_x_2_predictor_endpoints",
+      "n_predictor_endpoints": 2,
+      "n_target_predictor_endpoints": 6,
+      "panel_delta": 0.05,
+      "per_endpoint_delta": 0.008333333333333333,
+      "records_per_target": 150,
+      "seed_namespace": "w3b-cert-v1",
+      "target_alpha": 0.2,
+      "thresholds_frozen_before_certification": true
+    },
+    "claim_scope": {
+      "never_supported_by_this_protocol": [
+        "wet-lab or biological binder success",
+        "a universal protein-complex trust gate",
+        "population-level independent-predictor robustness",
+        "W2c rescue or reinterpretation",
+        "post-hoc tuning on W3 or W2c outcomes"
+      ],
+      "supported_if_successful": "bounded viability of a prospectively frozen predictor-disagreement-aware gate for controlling structural-proxy false accepts across Boltz-2 and AF2-Multimer on fresh targets under this exact protocol"
+    },
+    "compute_budget": {
+      "maximum_candidate_designs": 870,
+      "maximum_h100_gpu_hours": 24.0,
+      "maximum_predictor_evaluations": 1740,
+      "no_adaptive_top_up": true,
+      "stage_stop_after_certification_failure": true,
+      "stage_stop_after_fit_failure": true
+    },
+    "fit_design": {
+      "comparator": {
+        "accept_if": "boltz_pae_interaction <= tau_boltz",
+        "candidate_thresholds": "sorted unique observed fit values with inclusive comparison",
+        "name": "boltz_pae_only"
+      },
+      "maximum_empirical_false_accept_rate_per_predictor": 0.08,
+      "minimum_accepted_per_target": 15,
+      "minimum_total_accepted": 90,
+      "primary_gate": {
+        "accept_if": "max_pae <= tau_max_pae and pae_gap <= tau_pae_gap",
+        "candidate_thresholds": "Cartesian product of sorted unique observed fit max_pae and pae_gap values with inclusive comparisons",
+        "max_pae": "max(boltz_pae_interaction, af2_pae_interaction)",
+        "name": "matched_predictor_max_pae_plus_gap",
+        "pae_gap": "abs(boltz_pae_interaction - af2_pae_interaction)"
+      },
+      "records_per_target": 60,
+      "seed_namespace": "w3b-fit-v1",
+      "selection_order": [
+        "maximize total accepted rows subject to every fit constraint",
+        "maximize the minimum accepted rows across fit targets",
+        "minimize the worst empirical false-accept rate across predictor endpoints",
+        "minimize tau_max_pae or tau_boltz",
+        "minimize tau_pae_gap"
+      ],
+      "target_roles_used": [
+        "fit"
+      ],
+      "thresholds_frozen_after_fit": true
+    },
+    "fresh_target_contract": {
+      "exclude_all_historical_registry_targets_and_sources": true,
+      "exclude_w2b_targets_sources_and_target_sequences": true,
+      "exclude_w2c_targets_sources_and_target_sequences": true,
+      "exclude_w3_complex_target_ids": true,
+      "input_reuse_scope": "unselected label-blind structural inputs only; no candidate or predictor rows",
+      "label_blind_selection_and_role_assignment": true,
+      "n_certification_targets": 3,
+      "n_fit_targets": 3,
+      "n_held_out_test_targets": 2,
+      "n_initial_targets": 8,
+      "require_manifest_and_msa_sha_validation": true,
+      "require_one_representative_per_target_sequence": true,
+      "require_unique_source_pdb": true
+    },
+    "held_out_test_design": {
+      "certificate_can_change_from_test": false,
+      "comparison": "primary disagreement-aware gate versus frozen boltz_pae_only comparator",
+      "minimum_accepted_per_target": 48,
+      "minimum_pooled_coverage_retention": 0.7,
+      "minimum_pooled_worst_predictor_risk_improvement": 0.05,
+      "predictor_disagreement_abstention_required_per_target": true,
+      "records_per_target": 120,
+      "require_primary_worst_predictor_risk_no_worse_on_each_target": true,
+      "seed_namespace": "w3b-test-v1",
+      "test_support_cannot_rescue_failed_certification": true
+    },
+    "post_hoc_changes_forbidden": [
+      "using W2c or W3 rows in fit, certification, or held-out test",
+      "changing target roles after any predictor output exists",
+      "changing predictor versions, MSA hashes, templates, seeds, label threshold, or pairing policy within a candidate pair",
+      "changing gate features, comparator, threshold grid, or threshold-selection order",
+      "changing alpha, delta, sample sizes, minimum accepts, design risk, power floor, or target breadth",
+      "dropping failed or refused targets from the multiplicity denominator",
+      "generating held-out test rows after failed certification",
+      "adaptive sample top-up or threshold retuning"
+    ],
+    "predecessor_evidence_use": {
+      "predecessor": "M6d W3 58-case AF2 mechanism panel",
+      "preserve_terminal_result": true,
+      "required_joint_outcome": "context_dependent_or_unresolved",
+      "reuse_w2c_rows_as_fit_certification_or_test": false,
+      "reuse_w3_rows_as_fit_certification_or_test": false,
+      "role": "design_diagnostic_only"
+    },
+    "predictor_contract": {
+      "candidate_pairing": {
+        "matched_candidate_sequence_sha256_required": true,
+        "matched_target_msa_sha256_required": true,
+        "missing_predictor_output_fails_pair_qc": true,
+        "same_candidate_id_required": true
+      },
+      "label": "lrmsd_to_reference < 4.0 Angstrom after target-chain alignment",
+      "label_threshold": 4.0,
+      "predictors": [
+        {
+          "binder_msa": "single_sequence",
+          "id": "boltz2_complex",
+          "runtime_identity_receipt_required": true,
+          "seed": 0,
+          "target_msa": "reuse_hash_locked_target_msa",
+          "templates": false
+        },
+        {
+          "binder_msa": "single_sequence",
+          "id": "af2_multimer_colabfold_v1",
+          "model_type": "alphafold2_multimer_v3",
+          "required_colabfold_version": "1.6.1",
+          "runtime_identity_receipt_required": true,
+          "seed": 0,
+          "target_msa": "reuse_same_hash_locked_target_msa",
+          "templates": false
+        }
+      ],
+      "same_label_implementation_required": true,
+      "same_prediction_time_network_policy": "forbidden",
+      "same_seed_required": true,
+      "same_template_policy_required": true
+    },
+    "scientific_question": "Can a prospectively frozen gate that abstains on high or divergent Boltz-2/AF2-Multimer interface uncertainty control worst-predictor structural-proxy false-accept risk on fresh targets and improve held-out risk-coverage versus a matched Boltz-pAE-only gate?",
+    "stage_order": [
+      "target_msa_precompute",
+      "fit",
+      "certification",
+      "held_out_test"
+    ]
+  },
+  "remaining_unlock_conditions": [
+    "materialize and hash-lock the eight label-blind fresh target roles",
+    "precompute and validate the eight target MSAs under a separate exact approval",
+    "emit immutable matched-predictor input locks and runtime receipts",
+    "emit approval-gated fit-stage wrappers and stop for explicit compute approval"
+  ],
+  "status": "w3b_disagreement_gate_preregistered_no_submit",
+  "version": 1
+}

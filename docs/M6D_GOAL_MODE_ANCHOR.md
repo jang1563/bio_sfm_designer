@@ -4,7 +4,9 @@
 > AF2-Multimer mechanism panel is complete. Corrected job `3084977` completed 58/58 after job `3084976`
 > was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
 > finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
-> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes.
+> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes. The
+> W3b successor is now prospectively locked with eight label-blind fresh target roles, exact endpoint
+> power 0.824333, and a frozen matched-predictor evaluator. Target-MSA readiness is 0/8 and no compute is approved.
 
 Date: 2026-07-14
 
@@ -33,7 +35,9 @@ approved. The authoritative result is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETIO
 then completed under its frozen 58-case protocol. The 3PC8 block supports Chai (`12/12` discordant labels,
 `6/6` controls), while the W2c block is mixed (`30/40` Boltz agreement; `5/8` targets at least `4/5`).
 The joint result is `context_dependent_or_unresolved`. All W2 v1-v11 execution entries later in this
-chronological ledger are historical even where their original labels say `current`.
+chronological ledger are historical even where their original labels say `current`. W3b is now
+`w3b_design_power_qualified_inputs_incomplete_no_submit`: eight unused targets are locked to 3 fit,
+3 certification, and 2 held-out-test roles, but their MSAs are not yet prepared.
 
 ## Active Objective
 
@@ -41,8 +45,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 
 - preserve the terminal one-shot W2c selective-pAE result without post-hoc rescue;
 - preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
-- prospectively define the next predictor-disagreement-aware gate on fresh matched-protocol targets before
-  any new predictor output is generated;
+- preserve the preregistered W3b disagreement-aware gate, target roles, exact-power design, and staged
+  stop rules before any new predictor output is generated;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -58,6 +62,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W3: the bounded third-predictor mechanism panel is complete and audited. 3PC8 supports Chai over Boltz,
   but W2c agreement is target-dependent and mixed; the joint outcome is `context_dependent_or_unresolved`.
   Population-level independent-predictor robustness remains unsupported.
+- W3b: the fresh matched-predictor gate is preregistered and power-qualified, but input readiness is 0/8
+  target MSAs. Its hash-bound MSA-only packet awaits exact approval with an 8 A40 GPU-hour ceiling.
+  It supports no gate or predictor-robustness claim and authorizes no compute.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -95,6 +102,13 @@ from Chai records alone.
 - W3 completion and public CPU replay:
   `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md` and
   `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`
+- W3b no-submit protocol, target roles, and frozen evaluator:
+  `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`,
+  `configs/m6d_w3b_disagreement_gate_protocol.json`, and
+  `configs/m6d_w3b_fresh_targets.json`
+- W3b target-MSA approval boundary:
+  `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and
+  `results/m6d_w3b_target_msa_approval_packet.json`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -104,7 +118,7 @@ from Chai records alone.
 - Compact tracked machine-readable goal state: `results/m6d_goal_state_refresh_report.json`
 - Local extended machine-readable goal anchor, when present:
   `results/m6d_goal_mode_current_anchor.json`
-- Current W2/W3 decision protocol: `results/m6d_w2_w3_decision_protocol.{json,md}`
+- Historical pre-AF2 W2/W3 decision protocol: `results/m6d_w2_w3_decision_protocol.{json,md}`
 - Current W3 next-protocol contract: `results/m6d_w3_next_protocol.{json,md}`
 - Current W3 challenge manifest: `results/m6d_w3_challenge_manifest.{json,md}`
 - Current W3 third-predictor execution contract: `results/m6d_w3_third_predictor_contract.{json,md}`

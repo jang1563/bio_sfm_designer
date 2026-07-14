@@ -96,4 +96,5 @@ across the Cayuga and local NumPy stacks by at most `1.78e-14` Angstrom, far bel
 Freeze W3 as a bounded, terminal mechanism result. The next high-impact experiment should be a new,
 prospectively locked predictor-disagreement-aware gate on fresh source-diverse targets with matched
 target-MSA, template, seed, and label protocols across predictors. It must define fit, certification,
-and held-out test roles before labels are observed. No new predictor compute is authorized by this result.
+and held-out test roles before labels are observed. That successor is now preregistered in
+`docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`; no new predictor compute is authorized.

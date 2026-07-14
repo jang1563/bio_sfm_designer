@@ -4,7 +4,9 @@
 > 58-case W3 AF2-Multimer mechanism panel is also complete. Frozen adjudication supports Chai on 3PC8,
 > finds mixed Boltz agreement on W2c, and returns `context_dependent_or_unresolved`. Resume from
 > `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The next frontier is a new, prospectively locked
-> predictor-disagreement-aware gate on fresh matched-protocol targets; no new compute is approved.
+> predictor-disagreement-aware gate on fresh matched-protocol targets. That W3b protocol, target-level
+> 3/3/2 split, power gate, and evaluator are now frozen in
+> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. Target-MSA readiness is 0/8 and no new compute is approved.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -19,8 +21,9 @@ Use this objective when creating or resuming the Codex goal:
 Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
 preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
 post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result and its
-input, runtime, approval, and adjudication locks; prospectively define a predictor-disagreement-aware
-gate on fresh matched-protocol targets and execute no new predictor compute without explicit approval;
+input, runtime, approval, and adjudication locks; preserve the preregistered W3b predictor-disagreement-
+aware gate, label-blind target roles, power gate, and staged stop rules; execute no W3b target-MSA or
+predictor compute without the corresponding explicit approval;
 preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep
 all status artifacts honest and reproducible.
 ```
@@ -66,10 +69,13 @@ Current W3 completion: `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. Corrected jo
 58/58 after job `3084976` was cancelled and invalidated for target-MSA truncation. The public replay
 fixture is `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`.
 
-Current next action: preregister a fresh matched-protocol, predictor-disagreement-aware abstention/gating
-experiment with explicit fit, certification, and held-out test roles. Do not generate W2c independent-
-screen or certification records, reuse consumed approvals, relax frozen criteria, or tune the next gate
-on the completed W3 panel.
+Current W3b protocol: `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`,
+`configs/m6d_w3b_disagreement_gate_protocol.json`, and `configs/m6d_w3b_fresh_targets.json`.
+The design/power audit passes at conditional power 0.824333, but all eight target MSAs are absent.
+
+Current next action: the hash-bound eight-target MSA-only packet is complete in
+`docs/M6D_W3B_TARGET_MSA_APPROVAL.md`; stop for separate exact approval. Do not generate candidates, run
+Boltz or AF2, reuse consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -85,8 +91,8 @@ Current compact machine-readable decision artifact:
 Local extended machine-readable anchor, when present:
 `results/m6d_goal_mode_current_anchor.json`.
 
-Current W2/W3 decision protocol:
-`results/m6d_w2_w3_decision_protocol.{json,md}`.
+Historical pre-AF2 W2/W3 decision protocol:
+`results/m6d_w2_w3_decision_protocol.{json,md}`. It must not override the W3 completion or W3b packet.
 
 Current decisive W3 mechanism-panel protocol and rationale:
 `configs/m6d_w3_mechanism_panel_protocol.json` and `docs/M6D_W3_MECHANISM_PANEL.md`.
@@ -672,9 +678,8 @@ Use this order unless the user gives a newer instruction:
    new alpha target or target-specific stress test is explicitly chosen.
 3. W2 - Redesign multi-target generalization. Treat the current panels as completed negative
    evidence, then select or design more 3PC8-like targets before any broad panel spend.
-4. W3 successor - Build a predictor-disagreement-aware abstention/gating protocol on fresh targets.
-   Keep the completed AF2 mechanism panel frozen and require matched predictor inputs plus prospective
-   fit, certification, and held-out test roles before new compute.
+4. W3b - Preserve the preregistered disagreement-aware gate and label-blind 3/3/2 target roles.
+   The MSA-only packet is ready; stop for exact approval before any query or compute.
 5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

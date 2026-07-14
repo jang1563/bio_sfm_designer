@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+# Guarded W3b target-MSA-only entrypoint. It never authorizes candidate-level predictor execution.
+set -euo pipefail
+
+MANIFEST="configs/m6d_w3b_fresh_targets.json"
+PROTOCOL="configs/m6d_w3b_disagreement_gate_protocol.json"
+SELECTION="results/m6d_w3b_target_selection.json"
+DESIGN_GATE="results/m6d_w3b_disagreement_design_gate.json"
+PLAN="results/m6d_w3b_target_msas.sh"
+EXPECTED_MANIFEST_SHA256="0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc"
+EXPECTED_PROTOCOL_SHA256="8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96"
+EXPECTED_SELECTION_SHA256="9349357a35986982bc05867e81e4a345040f444c1685c2e7059f96d4d8e47902"
+EXPECTED_DESIGN_GATE_SHA256="bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea"
+EXPECTED_PLAN_SHA256="ecb815347161d7b1f4ed0f9e7889749a9eb086c590eae6c9fc13137f9f075ca1"
+APPROVAL_ENV_VAR="BIO_SFM_APPROVE_W3B_TARGET_MSA"
+APPROVAL_TOKEN="approve-w3b-target-msa-precompute"
+RECEIPT="${W3B_TARGET_MSA_RECEIPT:-results/m6d_w3b_target_msa_receipt.jsonl}"
+SUMMARY="${W3B_TARGET_MSA_SUMMARY:-results/m6d_w3b_target_msa_receipt_summary.json}"
+WORKSTREAM="m6d_w3b_target_msa_input_prep_only"
+PYTHON_BIN="${BIO_SFM_PYTHON:-${ENV_PY:-python3}}"
+
+sha256_file() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | awk '{print $1}'
+  else
+    shasum -a 256 "$1" | awk '{print $1}'
+  fi
+}
+
+require_sha256() {
+  local path="$1"
+  local expected="$2"
+  if [ ! -s "$path" ]; then
+    echo "required W3b target-MSA artifact is missing or empty: $path" >&2
+    exit 65
+  fi
+  local actual
+  actual="$(sha256_file "$path")"
+  if [ "$actual" != "$expected" ]; then
+    echo "stale W3b target-MSA artifact: $path expected_sha256=$expected actual_sha256=$actual" >&2
+    exit 65
+  fi
+}
+
+require_sha256 "$MANIFEST" "$EXPECTED_MANIFEST_SHA256"
+require_sha256 "$PROTOCOL" "$EXPECTED_PROTOCOL_SHA256"
+require_sha256 "$SELECTION" "$EXPECTED_SELECTION_SHA256"
+require_sha256 "$DESIGN_GATE" "$EXPECTED_DESIGN_GATE_SHA256"
+require_sha256 "$PLAN" "$EXPECTED_PLAN_SHA256"
+bash -n "$PLAN"
+
+if [ "${TARGET_MSA_PRECOMPUTE_DRY_RUN:-0}" = "1" ]; then
+  TARGET_MSA_PRECOMPUTE_DRY_RUN=1 \
+  TARGET_MSA_PRECOMPUTE_RECEIPT="$RECEIPT" \
+  TARGET_MSA_PRECOMPUTE_WORKSTREAM="$WORKSTREAM" \
+  BIO_SFM_PYTHON="$PYTHON_BIN" \
+  PYTHONNOUSERSITE=1 \
+    bash "$PLAN"
+  exit 0
+fi
+
+if [ "${BIO_SFM_APPROVE_W3B_TARGET_MSA:-}" != "$APPROVAL_TOKEN" ]; then
+  echo "refusing W3b target-MSA submission without exact approval:" >&2
+  echo "  export ${APPROVAL_ENV_VAR}=${APPROVAL_TOKEN}" >&2
+  echo "this approval covers eight target-MSA jobs only; it does not authorize ProteinMPNN or candidate-level Boltz/AF2 prediction" >&2
+  exit 64
+fi
+
+if [ -e "$RECEIPT" ]; then
+  echo "refusing initial W3b target-MSA submission because receipt path already exists: $RECEIPT" >&2
+  echo "audit the existing receipt and use an explicit recovery plan instead of rerunning this wrapper" >&2
+  exit 66
+fi
+
+mkdir -p "$(dirname "$RECEIPT")" "$(dirname "$SUMMARY")"
+: > "$RECEIPT"
+TARGET_MSA_PRECOMPUTE_RECEIPT="$RECEIPT" \
+TARGET_MSA_PRECOMPUTE_WORKSTREAM="$WORKSTREAM" \
+BIO_SFM_PYTHON="$PYTHON_BIN" \
+PYTHONNOUSERSITE=1 \
+  bash "$PLAN"
+
+MANIFEST="$MANIFEST" PROTOCOL="$PROTOCOL" SELECTION="$SELECTION" DESIGN_GATE="$DESIGN_GATE" PLAN="$PLAN" \
+MANIFEST_SHA256="$EXPECTED_MANIFEST_SHA256" PROTOCOL_SHA256="$EXPECTED_PROTOCOL_SHA256" \
+SELECTION_SHA256="$EXPECTED_SELECTION_SHA256" DESIGN_GATE_SHA256="$EXPECTED_DESIGN_GATE_SHA256" \
+PLAN_SHA256="$EXPECTED_PLAN_SHA256" WORKSTREAM="$WORKSTREAM" \
+  "$PYTHON_BIN" - "$RECEIPT" "$SUMMARY" <<'PY'
+import json
+import os
+import pathlib
+import sys
+
+receipt = pathlib.Path(sys.argv[1])
+summary_path = pathlib.Path(sys.argv[2])
+records = [json.loads(line) for line in receipt.read_text().splitlines() if line.strip()]
+target_ids = sorted({str(row.get("target_id")) for row in records if row.get("target_id")})
+status_counts = {}
+for row in records:
+    status = str(row.get("status"))
+    status_counts[status] = status_counts.get(status, 0) + 1
+summary = {
+    "artifact": "m6d_w3b_target_msa_receipt_summary",
+    "status": "target_msa_jobs_submitted_or_reused",
+    "workstream": os.environ["WORKSTREAM"],
+    "manifest": os.environ["MANIFEST"],
+    "manifest_sha256": os.environ["MANIFEST_SHA256"],
+    "protocol": os.environ["PROTOCOL"],
+    "protocol_sha256": os.environ["PROTOCOL_SHA256"],
+    "selection": os.environ["SELECTION"],
+    "selection_sha256": os.environ["SELECTION_SHA256"],
+    "design_gate": os.environ["DESIGN_GATE"],
+    "design_gate_sha256": os.environ["DESIGN_GATE_SHA256"],
+    "plan": os.environ["PLAN"],
+    "plan_sha256": os.environ["PLAN_SHA256"],
+    "receipt": str(receipt),
+    "n_records": len(records),
+    "n_targets": len(target_ids),
+    "target_ids": target_ids,
+    "status_counts": status_counts,
+    "claim_boundary": (
+        "Target-MSA input-prep provenance only. This does not authorize candidate generation, "
+        "candidate-level Boltz/AF2 prediction, or a W3b scientific claim."
+    ),
+}
+summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+print(f"wrote {summary_path}")
+PY

@@ -1,0 +1,62 @@
+{
+  "approval_packet_ready": true,
+  "artifact": "m6d_w3b_target_msa_approval_packet",
+  "bound_artifacts": {
+    "design_gate": {
+      "path": "results/m6d_w3b_disagreement_design_gate.json",
+      "sha256": "bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea"
+    },
+    "manifest": {
+      "path": "configs/m6d_w3b_fresh_targets.json",
+      "sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc"
+    },
+    "plan": {
+      "path": "results/m6d_w3b_target_msas.sh",
+      "sha256": "ecb815347161d7b1f4ed0f9e7889749a9eb086c590eae6c9fc13137f9f075ca1"
+    },
+    "protocol": {
+      "path": "configs/m6d_w3b_disagreement_gate_protocol.json",
+      "sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96"
+    },
+    "selection": {
+      "path": "results/m6d_w3b_target_selection.json",
+      "sha256": "9349357a35986982bc05867e81e4a345040f444c1685c2e7059f96d4d8e47902"
+    }
+  },
+  "can_submit_candidate_generation_or_candidate_level_prediction": false,
+  "can_submit_target_msa_if_explicitly_approved": true,
+  "claim_boundary": "Approval covers exactly eight target-MSA input-prep jobs, capped at 8 A40 GPU-hours. It does not authorize candidate generation, candidate-level Boltz/AF2 prediction, or a W3b claim.",
+  "explicit_approval_required": true,
+  "failures": [],
+  "maximum_a40_gpu_hours": 8.0,
+  "missing_target_msa_targets": [
+    "1FSK_LJ",
+    "1FSX_BA",
+    "1FL7_DC",
+    "1F2U_CD",
+    "1FV1_BA",
+    "1FN3_DC",
+    "1FHJ_BA",
+    "1F3V_BA"
+  ],
+  "no_submit": true,
+  "status": "awaiting_explicit_w3b_target_msa_approval",
+  "submit_command_if_approved": "BIO_SFM_APPROVE_W3B_TARGET_MSA=approve-w3b-target-msa-precompute bash hpc/run_w3b_target_msa_guarded.sh",
+  "target_count": 8,
+  "target_ids": [
+    "1FSK_LJ",
+    "1FSX_BA",
+    "1FL7_DC",
+    "1F2U_CD",
+    "1FV1_BA",
+    "1FN3_DC",
+    "1FHJ_BA",
+    "1F3V_BA"
+  ],
+  "target_msa_approval_env_value": "approve-w3b-target-msa-precompute",
+  "target_msa_approval_env_var": "BIO_SFM_APPROVE_W3B_TARGET_MSA",
+  "wrapper": {
+    "path": "hpc/run_w3b_target_msa_guarded.sh",
+    "sha256": "3d756c1b95247eaf3d900595759c725ecfd4342bde3243294580064a2f29b227"
+  }
+}
