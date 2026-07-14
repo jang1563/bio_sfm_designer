@@ -3,7 +3,7 @@
   "audit_ok": true,
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
-  "next_action": "Wait for explicit user approval naming W2c target-MSA precompute. Do not infer approval from generic continuation or goal-mode resume; ProteinMPNN/Boltz record generation remains separately blocked.",
+  "next_action": "Prepare a hash-bound, no-submit W2c threshold-learning packet for exactly 60 fresh records per target under seed namespace w2c-fit-learn-v1. Require a separate explicit approval before any ProteinMPNN/Boltz record generation; target-MSA approval does not transfer to this stage.",
   "no_submit": true,
   "obsolete_current_routes_removed": [
     "v9/v11 panel approval wait",
@@ -11,18 +11,18 @@
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "54963cca851ff993dc0e93987d6d7cd3be70fa2cfeabd9178db159bc5712e356",
-    "results/m6d_followup_next_science_actions.md": "a076164a3b893dbedb83d724fcb5bc18ad731655a0a0e47ebb87b8b0a1b60527",
-    "results/m6d_goal_completion_audit.json": "50111f9b204718a0f880a2eb0e2122045e08f182293a06510f0195491b902ffc",
-    "results/m6d_goal_completion_audit.md": "789d43cbb051e3a4e3c584f09c7cc219f7c2835d821cfdf04e1ba8748faa49ea",
-    "results/m6d_goal_drift_audit.json": "58b44400b852d9c413dc435f3f5b816b9b3b8ba1802159bea4ebc36ba4e1645b",
-    "results/m6d_goal_drift_audit.md": "ec89e23b28a3a3785ead589191c73f1f3af64a09bb8627d2badd43f4200b9570",
-    "results/m6d_goal_mode_current_anchor.json": "35d93564b3a6341684ede51317abdfd1800a4fb9056bedb15f570afc110a245c",
-    "results/m6d_goal_mode_local_harness_status.json": "0729ba5ff0d241345dec98cd4d5689d15a19da70cd52686a8035ef2a1a5f42b1",
-    "results/m6d_goal_mode_local_harness_status.md": "4bf50efd3073b08e2ed1b62ad0d0b326583131960d641ce272c94dd4a9ef3504"
+    "results/m6d_followup_next_science_actions.json": "1358fdd957770b87901f1f37a4a9a03fb4be166863e4843d8151653a228e11f5",
+    "results/m6d_followup_next_science_actions.md": "8a201b4be3ed07e1a3a2487745c25487f33b8cd2e962192305bcda9de61da1ac",
+    "results/m6d_goal_completion_audit.json": "37ccfa005c51b687d3aa47a61200ac50c35d00d71ece093686c7d7d4814c3f79",
+    "results/m6d_goal_completion_audit.md": "7c1bcd7ba89a9e890bc91754f379de0e9740a5a78ab2736a930fdac5e74bf3a3",
+    "results/m6d_goal_drift_audit.json": "8424571176fb7ba5612350f03727b3f1df96733f1f451e661b2042dfa1b29992",
+    "results/m6d_goal_drift_audit.md": "307aa8395d5b225ce1f66d525ad167816b3a3d25bb0c8757f5cefe87605f4b47",
+    "results/m6d_goal_mode_current_anchor.json": "3642ff54b09b6f3f37a5d711ee4596108003640b1ecaf316dabd4b8d396d00a4",
+    "results/m6d_goal_mode_local_harness_status.json": "04ee72b2b0ea493ae5d985cf78718350813a2715639ca070e384db9032b20a39",
+    "results/m6d_goal_mode_local_harness_status.md": "f1000b23a5aa001acf35a79e93b4c2f9314eb625366eef99bd7aaf42da28e36d"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w2b_terminal_w2c_no_submit",
+  "status": "goal_state_refreshed_w2b_terminal_w2c_msa_complete_fit_packet_no_submit",
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
     "results/m6d_goal_completion_audit.json",
@@ -34,7 +34,7 @@
     "results/m6d_goal_mode_local_harness_status.json",
     "results/m6d_goal_mode_local_harness_status.md"
   ],
-  "updated_at": "2026-07-12T09:10:53+09:00",
+  "updated_at": "2026-07-14T11:45:20+09:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -109,7 +109,8 @@
     ],
     "target_manifest_integrity_ok": true,
     "target_manifest_present": true,
-    "target_msa_ready": false
+    "target_msa_completion_status": "target_msa_precompute_complete_8_of_8",
+    "target_msa_ready": true
   },
   "w2c_target_msa_approval": {
     "audit_ok": true,
@@ -127,12 +128,14 @@
     },
     "expected_slurm_jobs": 8,
     "explicit_user_approval_required": true,
+    "historical_after_completion": true,
     "input_sha_matches": 40,
     "input_sha_mismatches": 0,
     "n_targets": 8,
     "required_user_phrase": "approve W2c target-MSA precompute",
     "status": "ready_for_explicit_target_msa_approval_not_submitted",
     "submission_performed": false,
+    "superseded_by": "target_msa_precompute_complete_8_of_8",
     "target_ids": [
       "1FR2_BA",
       "1F80_BC",
@@ -143,5 +146,84 @@
       "1FYR_CD",
       "1F99_BA"
     ]
+  },
+  "w2c_target_msa_completion": {
+    "approved_gpu_hour_ceiling": 8.0,
+    "audit_ok": true,
+    "authorizes_record_generation": false,
+    "checks": {
+      "audit_ok": true,
+      "hash_locks_present": true,
+      "msa_count": true,
+      "report_count": true,
+      "reports_ok": true,
+      "status_complete": true,
+      "strict_manifest_ready": true,
+      "target_count": true,
+      "target_msa_only_boundary": true,
+      "target_rows_complete": true,
+      "within_approved_budget": true
+    },
+    "gpu_allocation_hours_total": 0.14472222222222222,
+    "n_target_msa_reports": 8,
+    "n_target_msas": 8,
+    "n_targets": 8,
+    "records_generated": 0,
+    "status": "target_msa_precompute_complete_8_of_8",
+    "strict_manifest_ready_targets": 8,
+    "submitted_jobs_total": 19,
+    "target_hash_locks": [
+      {
+        "target_id": "1EZV_XY",
+        "target_msa_report_sha256": "9751ebb6c5aa3564abb32d6e70d75909e502ad0e6f438d38ebd07ea640f58890",
+        "target_msa_sha256": "e2ad58734e4f2fe16f71317c89ae2ae59594cd204e4c8915825bd25647a302a1"
+      },
+      {
+        "target_id": "1F80_BC",
+        "target_msa_report_sha256": "00178d17bf21006120131861967363a9b62e85ee548d36ccc635a4a3a4d2e709",
+        "target_msa_sha256": "ec884f9f221096af0adea11bce9ef120749db20a6d2536686f08d6c998c210f5"
+      },
+      {
+        "target_id": "1F99_BA",
+        "target_msa_report_sha256": "2705f1279666700060d643bbe737416bf6e158e0b0209170247250ca2d4fc8d7",
+        "target_msa_sha256": "b0da976c8d45385c62e31b1b0072421188b776811ada11b03fe9b860254105df"
+      },
+      {
+        "target_id": "1FFG_CD",
+        "target_msa_report_sha256": "7f81fff2d2a5bd467a4226d38539a53bd70c60f7d1a0f938ac044f13ec63c3c9",
+        "target_msa_sha256": "8f644fe469a3d9de27a61f8e7bcd08034e419fd41adfd4056f61a24e411854a0"
+      },
+      {
+        "target_id": "1FFK_HR",
+        "target_msa_report_sha256": "da5714db1996857c6f0e64a4efb83386e330e03bd20df8a94833e02907515b5b",
+        "target_msa_sha256": "bcce9d9fa254573bf4e68b98e7703b732d88da20851cff8dec6115ff32a7bd36"
+      },
+      {
+        "target_id": "1FQ9_CA",
+        "target_msa_report_sha256": "0dbf84e9187f332e1c6247e7b3fd4daebc3c5eabf0ea63b15ff31b2eb4f391cc",
+        "target_msa_sha256": "cfc70a996e57c02164f0aad9f753e94c0720aad9d146c784913bf005cf45614d"
+      },
+      {
+        "target_id": "1FR2_BA",
+        "target_msa_report_sha256": "ea28719c26d3f99a6e8fc59af00bd07de7cddf0ff19b18f236b3a275f20c9f0a",
+        "target_msa_sha256": "2f9b189a4ccc8cb5a4dd2ff0ad6bf87b9758ac3a0fcc771088263ae6c6c1b370"
+      },
+      {
+        "target_id": "1FYR_CD",
+        "target_msa_report_sha256": "dbdf82426ddf1e3854e7bf3863cec3aa0bfcd66497df3012f05f8ce5d80bb8ac",
+        "target_msa_sha256": "07404b19fb932bc8282c1d8d20b677f2233e71c5974cd065069d19313919f4d7"
+      }
+    ],
+    "target_ids": [
+      "1EZV_XY",
+      "1F80_BC",
+      "1F99_BA",
+      "1FFG_CD",
+      "1FFK_HR",
+      "1FQ9_CA",
+      "1FR2_BA",
+      "1FYR_CD"
+    ],
+    "within_approved_gpu_hour_ceiling": true
   }
 }

@@ -58,7 +58,8 @@ Panel success requires at least three certified targets and all three must be
   `1FQ9_CA`, `1FYR_CD`, and `1F99_BA`;
 - target selection: deterministic and label-blind from 16 eligible unused representatives
   after historical target/source and W2b target/source/sequence exclusion;
-- target MSAs ready: false (8/8 still require MSA precompute);
+- target MSAs ready: true (8/8 MSA/report pairs pass strict manifest validation);
+- target-MSA allocation consumed: 0.144722 A40 GPU-hours, below the approved 8 GPU-hour ceiling;
 - evaluator implemented: true (`m6d_w2c_one_shot_report.py`, with fail-closed regression tests);
 - command wrapper emitted: false;
 - Cayuga submission allowed: false.
@@ -69,13 +70,13 @@ not authorize compute or support a W2c claim.
 
 ## Go/No-Go Rule
 
-The next boundary is a guarded target-MSA-only packet for the eight selected targets. MSA
-precompute does not authorize ProteinMPNN/Boltz record generation. If strict MSA/input
-locking or the later prospective fit screen cannot pass without changing locked rules,
-close W2c before broader GPU spend and move the science frontier to W3
-independent-predictor robustness.
+Target-MSA preparation is complete. All eight synced MSA/report pairs pass strict validation;
+the detailed local completion artifact is `results/m6d_w2c_target_msa_completion.json`.
+This input-preparation result does not authorize ProteinMPNN/Boltz record generation.
+`results/m6d_w2c_design_gate.{json,md}` and
+`results/m6d_w2c_target_msa_approval_packet.json` remain immutable pre-submit snapshots.
 
-The local/Cayuga packet is now ready but not submitted. See
-`docs/M6D_W2C_TARGET_MSA_APPROVAL.md` and
-`results/m6d_w2c_target_msa_approval_packet.json`. It requires a separate explicit
-W2c target-MSA approval.
+The next boundary is a hash-bound no-submit threshold-learning packet for exactly 60 fresh rows
+per target, 480 total, under `w2c-fit-learn-v1`. It requires separate explicit approval. If that
+packet or the later prospective fit screen cannot pass without changing locked rules, close W2c
+before broader GPU spend and move the science frontier to W3 independent-predictor robustness.

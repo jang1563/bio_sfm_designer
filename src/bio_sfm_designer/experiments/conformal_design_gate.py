@@ -31,7 +31,7 @@ from bio_sfm_trust import confidence_to_risk
 from ..trust import TrustGate
 from ..types import Prediction
 
-_REGIME = "monomer_design"   # not in assume_validated -> the gate must earn trust + certify tau
+_REGIME = "monomer"   # assume_validated is empty, so this experiment must still earn trust + certify tau
 _DEFAULT_FIXTURE = os.path.join(os.path.dirname(__file__), "..", "..", "..",
                                 "tests", "fixtures", "esmfold_designs_records.jsonl")
 

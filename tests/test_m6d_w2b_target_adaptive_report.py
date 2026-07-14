@@ -130,7 +130,7 @@ class W2BTargetAdaptiveReportTests(unittest.TestCase):
         self.assertEqual(target["certification"]["accepted"], 31)
         self.assertEqual(target["certification"]["false_accepts"], 6)
         self.assertEqual(target["certification"]["false_accept_rate"], 6 / 31)
-        self.assertEqual(target["certification"]["ucb"], 0.4002058003899586)
+        self.assertAlmostEqual(target["certification"]["ucb"], 0.4002058003899586, places=15)
         self.assertEqual(
             target["certification"]["diagnostic_auroc_pae"],
             0.7839366515837104,

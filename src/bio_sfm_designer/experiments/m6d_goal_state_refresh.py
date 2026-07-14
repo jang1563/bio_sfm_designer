@@ -1,9 +1,9 @@
-"""Refresh current M6d goal artifacts from terminal W2b and no-submit W2c evidence.
+"""Refresh current M6d goal artifacts from terminal W2b and prospective W2c evidence.
 
 The older goal audits contain useful historical detail but predate W2b.  This
 refresh layer preserves that detail, marks obsolete W2 execution branches as
 historical, and replaces every current-status and next-action surface with one
-consistent terminal-W2b / precompute-W2c state.
+consistent terminal-W2b / prospective-W2c state.
 """
 
 from __future__ import annotations
@@ -38,6 +38,19 @@ _APPROVAL_NEXT_ACTION = (
     "Wait for explicit user approval naming W2c target-MSA precompute. Do not infer approval from generic "
     "continuation or goal-mode resume; ProteinMPNN/Boltz record generation remains separately blocked."
 )
+_FIT_PACKET_NEXT_ACTION = (
+    "Prepare a hash-bound, no-submit W2c threshold-learning packet for exactly 60 fresh records per "
+    "target under seed namespace w2c-fit-learn-v1. Require a separate explicit approval before any "
+    "ProteinMPNN/Boltz record generation; target-MSA approval does not transfer to this stage."
+)
+
+
+def _is_sha256(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
 
 
 def _file_sha256(path: str) -> str:
@@ -157,6 +170,74 @@ def _target_msa_packet_summary(packet: Optional[Dict[str, Any]]) -> Optional[Dic
     }
 
 
+def _target_msa_completion_summary(completion: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    if not isinstance(completion, dict):
+        return None
+    targets = completion.get("targets") if isinstance(completion.get("targets"), list) else []
+    target_ids = [str(row.get("target_id") or "") for row in targets if isinstance(row, dict)]
+    gpu_hours = completion.get("gpu_allocation_hours_total")
+    gpu_hour_ceiling = completion.get("approved_gpu_hour_ceiling")
+    budget_values_valid = (
+        isinstance(gpu_hours, (int, float))
+        and not isinstance(gpu_hours, bool)
+        and isinstance(gpu_hour_ceiling, (int, float))
+        and not isinstance(gpu_hour_ceiling, bool)
+        and 0 <= gpu_hours <= gpu_hour_ceiling
+    )
+    required = {
+        "status_complete": completion.get("status") == "target_msa_precompute_complete_8_of_8",
+        "audit_ok": completion.get("audit_ok") is True,
+        "target_count": completion.get("n_targets") == 8,
+        "msa_count": completion.get("n_target_msas") == 8,
+        "report_count": completion.get("n_target_msa_reports") == 8,
+        "strict_manifest_ready": completion.get("strict_manifest_ready_targets") == 8,
+        "target_rows_complete": len(target_ids) == 8 and len(set(target_ids)) == 8 and all(target_ids),
+        "reports_ok": len(targets) == 8 and all(
+            isinstance(row, dict) and row.get("report_ok") is True for row in targets
+        ),
+        "hash_locks_present": len(targets) == 8 and all(
+            isinstance(row, dict)
+            and _is_sha256(row.get("target_msa_sha256"))
+            and _is_sha256(row.get("target_msa_report_sha256"))
+            for row in targets
+        ),
+        "target_msa_only_boundary": completion.get("claim_boundary") == (
+            "Target-MSA input preparation only. This is not W2c predictive evidence, a gate "
+            "certificate, or authorization for ProteinMPNN/Boltz record generation."
+        ),
+        "within_approved_budget": (
+            completion.get("within_approved_gpu_hour_ceiling") is True and budget_values_valid
+        ),
+    }
+    failed = [name for name, passed in required.items() if not passed]
+    if failed:
+        raise ValueError(f"W2c target-MSA completion invariants failed: {', '.join(failed)}")
+    return {
+        "status": completion.get("status"),
+        "audit_ok": True,
+        "n_targets": 8,
+        "n_target_msas": 8,
+        "n_target_msa_reports": 8,
+        "strict_manifest_ready_targets": 8,
+        "target_ids": sorted(target_ids),
+        "target_hash_locks": [
+            {
+                "target_id": row["target_id"],
+                "target_msa_sha256": row["target_msa_sha256"],
+                "target_msa_report_sha256": row["target_msa_report_sha256"],
+            }
+            for row in sorted(targets, key=lambda value: str(value.get("target_id") or ""))
+        ],
+        "submitted_jobs_total": completion.get("submitted_jobs_total"),
+        "gpu_allocation_hours_total": gpu_hours,
+        "approved_gpu_hour_ceiling": gpu_hour_ceiling,
+        "within_approved_gpu_hour_ceiling": True,
+        "records_generated": 0,
+        "authorizes_record_generation": False,
+        "checks": required,
+    }
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -166,6 +247,7 @@ def refresh_bundle(
     w2b_report: Dict[str, Any],
     w2c_gate: Dict[str, Any],
     w2c_target_msa_packet: Optional[Dict[str, Any]] = None,
+    w2c_target_msa_completion: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -175,7 +257,35 @@ def refresh_bundle(
     w2b = _terminal_summary(w2b_report)
     w2c = _w2c_summary(w2c_gate)
     w2c_target_msa = _target_msa_packet_summary(w2c_target_msa_packet)
-    if w2c_target_msa is not None:
+    w2c_target_msa_complete = _target_msa_completion_summary(w2c_target_msa_completion)
+    if w2c_target_msa_complete is not None:
+        expected_ids = sorted(w2c.get("target_manifest_ids", []))
+        if w2c_target_msa_complete["target_ids"] != expected_ids:
+            raise ValueError("W2c target-MSA completion targets do not match the locked W2c manifest")
+        w2c["target_msa_ready"] = True
+        w2c["target_msa_completion_status"] = w2c_target_msa_complete["status"]
+        if w2c_target_msa is not None:
+            w2c_target_msa["historical_after_completion"] = True
+            w2c_target_msa["superseded_by"] = w2c_target_msa_complete["status"]
+        next_action = _FIT_PACKET_NEXT_ACTION
+        remaining_requirement = "W2c_threshold_learning_packet_gate"
+        resume_steps = [
+            "read docs/M6D_W2B_CERTIFICATION_COMPLETION.md and preserve W2b as terminal",
+            "read results/m6d_w2c_target_msa_completion.json and preserve the 8/8 MSA hash lock",
+            "prepare a no-submit threshold-learning packet for exactly 60 fresh rows per target",
+            "bind the w2c-fit-learn-v1 namespace, manifest, MSA, evaluator, and wrapper hashes",
+            "require a separate explicit approval; target-MSA approval does not authorize record generation",
+            "do not generate independent-screen or certification rows from the learning-stage approval",
+            "move to W3 if W2c cannot pass its locked prospective gates",
+        ]
+        ranked_actions = [
+            "Prepare and dry-run the hash-bound W2c threshold-learning packet with zero submissions.",
+            "Obtain separate explicit approval for exactly 480 learning-stage records before compute.",
+            "Freeze target-wise selective-pAE thresholds from learning rows only.",
+            "Generate independent-screen rows only after the learning artifact is locked and reviewed.",
+            "Move to W3 if the prospective W2c protocol cannot qualify without changing locked rules.",
+        ]
+    elif w2c_target_msa is not None:
         next_action = _APPROVAL_NEXT_ACTION
         remaining_requirement = "W2c_target_MSA_completion_and_fit_packet_gate"
         resume_steps = [
@@ -236,6 +346,23 @@ def refresh_bundle(
             "Move to W3 if prospective W2c gates require post-hoc changes.",
         ]
     date = updated_at.split("T", 1)[0]
+    post_msa = w2c_target_msa_complete is not None
+    goal_status = (
+        "goal_active_w2b_terminal_w2c_threshold_learning_packet"
+        if post_msa else _GOAL_STATUS
+    )
+    current_status = (
+        "m6_complex_in_progress_w2b_terminal_w2c_msa_complete_record_generation_blocked"
+        if post_msa else "m6_complex_in_progress_w2b_terminal_w2c_design_no_submit"
+    )
+    goal_progress = (
+        "local_w2c_threshold_learning_packet_work_required"
+        if post_msa else "local_w2c_precompute_work_required"
+    )
+    w2c_claim_boundary = (
+        "power-qualified design with target inputs ready; no model records, certificate, or claim"
+        if post_msa else "power-qualified design only; no targets, compute, certificate, or claim"
+    )
 
     refreshed_anchor = copy.deepcopy(anchor)
     refreshed_anchor["date"] = date
@@ -250,7 +377,9 @@ def refresh_bundle(
     refreshed_anchor.setdefault("claim_boundaries", {}).update({
         "w2_multi_target_generalization": "not_supported",
         "w2b_target_adaptive_viability": "terminal_not_supported",
-        "w2c_selective_target_adaptive_viability": "not_tested_design_only",
+        "w2c_selective_target_adaptive_viability": (
+            "not_tested_inputs_ready" if post_msa else "not_tested_design_only"
+        ),
     })
     refreshed_anchor.setdefault("current_artifacts", {}).update({
         "w2b_certification_completion": "docs/M6D_W2B_CERTIFICATION_COMPLETION.md",
@@ -261,11 +390,12 @@ def refresh_bundle(
         "w2c_target_manifest": "configs/m6d_w2c_fresh_targets.json",
         "w2c_target_selection": "results/m6d_w2c_target_selection.json",
         "w2c_target_msa_approval_packet": "results/m6d_w2c_target_msa_approval_packet.json",
+        "w2c_target_msa_completion": "results/m6d_w2c_target_msa_completion.json",
         "goal_state_refresh": "results/m6d_goal_state_refresh_report.json",
     })
     refreshed_anchor["current_status"] = {
-        "status": "m6_complex_in_progress_w2b_terminal_w2c_design_no_submit",
-        "goal_progress": "local_w2c_precompute_work_required",
+        "status": current_status,
+        "goal_progress": goal_progress,
         "runtime_goal_active": runtime_goal_active,
         "remaining_requirements": [remaining_requirement],
         "w1": "target_specific_certification_supported",
@@ -277,6 +407,9 @@ def refresh_bundle(
         "w2c_target_manifest_present": w2c["target_manifest_present"],
         "w2c_target_msa_ready": w2c["target_msa_ready"],
         "w2c_target_msa_packet_status": w2c_target_msa["status"] if w2c_target_msa else None,
+        "w2c_target_msa_completion_status": (
+            w2c_target_msa_complete["status"] if w2c_target_msa_complete else None
+        ),
         "w3": "negative_robustness_result_adjudicated",
         "w4": "closed_loop_plumbing_supported_fail_closed_only",
         "local_harness_status": "results/m6d_goal_mode_local_harness_status.json",
@@ -288,6 +421,7 @@ def refresh_bundle(
     refreshed_anchor["w2b_terminal_result"] = w2b
     refreshed_anchor["w2c_successor"] = w2c
     refreshed_anchor["w2c_target_msa_approval"] = w2c_target_msa
+    refreshed_anchor["w2c_target_msa_completion"] = w2c_target_msa_complete
     refreshed_anchor["next_resume_steps"] = resume_steps
     refreshed_anchor["latest_goal_mode_refresh"] = {
         "updated_at": updated_at,
@@ -300,12 +434,15 @@ def refresh_bundle(
         "w2c_target_manifest_present": w2c["target_manifest_present"],
         "w2c_target_msa_ready": w2c["target_msa_ready"],
         "w2c_target_msa_packet_status": w2c_target_msa["status"] if w2c_target_msa else None,
+        "w2c_target_msa_completion_status": (
+            w2c_target_msa_complete["status"] if w2c_target_msa_complete else None
+        ),
         "remaining_requirement": remaining_requirement,
     }
 
     refreshed_completion = copy.deepcopy(completion)
     refreshed_completion.update({
-        "status": _GOAL_STATUS,
+        "status": goal_status,
         "audit_ok": True,
         "complete": False,
         "can_mark_goal_complete": False,
@@ -315,12 +452,13 @@ def refresh_bundle(
         "w2b_terminal_result": w2b,
         "w2c_successor": w2c,
         "w2c_target_msa_approval": w2c_target_msa,
+        "w2c_target_msa_completion": w2c_target_msa_complete,
     })
     refreshed_completion["claim_boundary"] = {
         "w1": "target-specific certified evidence preserved",
         "w2": "universal multi-target generalization not supported",
         "w2b": "terminally not supported; no test compute and no extension",
-        "w2c": "power-qualified design only; no targets, compute, certificate, or claim",
+        "w2c": w2c_claim_boundary,
         "w3": "negative no-MSA Chai robustness result preserved; no positive independent-predictor claim",
         "w4": "closed-loop plumbing evidence preserved as fail-closed only",
     }
@@ -352,7 +490,10 @@ def refresh_bundle(
 
     refreshed_drift = copy.deepcopy(drift)
     refreshed_drift.update({
-        "status": "no_major_direction_drift_w2b_terminal_w2c_precompute",
+        "status": (
+            "no_major_direction_drift_w2b_terminal_w2c_msa_complete_fit_packet"
+            if post_msa else "no_major_direction_drift_w2b_terminal_w2c_precompute"
+        ),
         "audit_ok": True,
         "major_direction_drift": False,
         "can_mark_goal_complete": False,
@@ -364,7 +505,7 @@ def refresh_bundle(
         "w1": "preserved_target_specific_certificate",
         "w2": "generalization_not_supported",
         "w2b": "terminal_not_supported_no_extension",
-        "w2c": "design_only_no_submit_no_claim",
+        "w2c": "inputs_ready_no_records_no_claim" if post_msa else "design_only_no_submit_no_claim",
         "w3": "negative_robustness_adjudicated_no_positive_claim",
         "w4": "closed_loop_plumbing_only",
     }
@@ -387,14 +528,21 @@ def refresh_bundle(
         {
             "id": "verification_instead_of_science",
             "status": "managed",
-            "control": "next work is evaluator plus fresh-target qualification; no further W2b validation is allowed",
+            "control": (
+                "next work is a bounded threshold-learning packet; no further W2b validation is allowed"
+                if post_msa else
+                "next work is evaluator plus fresh-target qualification; no further W2b validation is allowed"
+            ),
         },
     ]
     refreshed_drift["drift_assessment"] = {
         "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
         "protocol": "no_drift_w2b_lock_preserved_w2c_declared_as_new_experiment",
         "claims": "no_drift_negative_boundaries_preserved",
-        "execution": "w2b_closed_without_nondecisive_test_compute_w2c_no_submit",
+        "execution": (
+            "w2b_closed_w2c_target_msa_complete_record_generation_no_submit"
+            if post_msa else "w2b_closed_without_nondecisive_test_compute_w2c_no_submit"
+        ),
         "operational_status": "stale_current_surfaces_replaced_historical_detail_retained",
         "major_direction_drift": False,
     }
@@ -407,8 +555,9 @@ def refresh_bundle(
     current_state["W2b_terminal_result"] = w2b
     current_state["W2c_successor"] = w2c
     current_state["W2c_target_msa_approval"] = w2c_target_msa
+    current_state["W2c_target_msa_completion"] = w2c_target_msa_complete
     current_state.setdefault("completion_audit", {}).update({
-        "status": _GOAL_STATUS,
+        "status": goal_status,
         "can_mark_goal_complete": False,
         "historical_panel_fields_retained": True,
     })
@@ -419,19 +568,25 @@ def refresh_bundle(
     refreshed_actions = {
         "artifact": "m6d_followup_next_science_actions",
         "date": date,
-        "status": "w2b_terminal_w2c_design_gate_no_submit",
+        "status": (
+            "w2b_terminal_w2c_msa_complete_threshold_learning_packet_no_submit"
+            if post_msa else "w2b_terminal_w2c_design_gate_no_submit"
+        ),
         "target_alpha": 0.2,
         "claim_boundary": {
             "w1_target_specific": "supported",
             "w2_multi_target_generalization": "not_supported",
             "w2b_target_adaptive_viability": "terminal_not_supported",
-            "w2c_selective_target_adaptive_viability": "not_tested_design_only",
+            "w2c_selective_target_adaptive_viability": (
+                "not_tested_inputs_ready" if post_msa else "not_tested_design_only"
+            ),
             "w3_independent_predictor_robustness": "not_supported_predictor_disagreement",
             "w4_closed_loop": "fail_closed_plumbing_only",
         },
         "w2b_terminal_result": w2b,
         "w2c_successor": w2c,
         "w2c_target_msa_approval": w2c_target_msa,
+        "w2c_target_msa_completion": w2c_target_msa_complete,
         "next_actions_ranked": ranked_actions,
         "next_action": next_action,
         "no_submit": True,
@@ -442,9 +597,16 @@ def refresh_bundle(
         "artifact": "m6d_goal_mode_local_harness_status",
         "updated_at": updated_at,
         "goal_mode_status": (
-            "active_w2c_precompute" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+            (
+                "active_w2c_threshold_learning_packet"
+                if post_msa else "active_w2c_precompute"
+            ) if runtime_goal_active else "contract_ready_runtime_goal_inactive"
         ),
-        "science_focus": "W2b terminal preservation plus W2c selective one-shot precompute qualification",
+        "science_focus": (
+            "W2b terminal preservation plus W2c threshold-learning packet qualification"
+            if post_msa else
+            "W2b terminal preservation plus W2c selective one-shot precompute qualification"
+        ),
         "local_verification": {
             "command": test_command,
             "result": test_result,
@@ -457,11 +619,17 @@ def refresh_bundle(
             "w2b_test_compute": "not_submitted_terminal_futility_stop",
             "w2c_submission_allowed": False,
             "w2c_target_msa_packet_status": w2c_target_msa["status"] if w2c_target_msa else None,
+            "w2c_target_msa_packet_historical": bool(
+                w2c_target_msa and w2c_target_msa.get("historical_after_completion")
+            ),
+            "w2c_target_msa_completion_status": (
+                w2c_target_msa_complete["status"] if w2c_target_msa_complete else None
+            ),
             "next_action": next_action,
         },
         "claim_boundary": {
             "w2b": "terminal_not_supported",
-            "w2c": "design_only_no_submit_no_claim",
+            "w2c": "inputs_ready_no_records_no_claim" if post_msa else "design_only_no_submit_no_claim",
             "w3": "negative_robustness_result_preserved",
         },
         "w3_runtime_provision": harness.get("w3_runtime_provision", {}),
@@ -469,13 +637,17 @@ def refresh_bundle(
 
     report = {
         "artifact": "m6d_goal_state_refresh_report",
-        "status": "goal_state_refreshed_w2b_terminal_w2c_no_submit",
+        "status": (
+            "goal_state_refreshed_w2b_terminal_w2c_msa_complete_fit_packet_no_submit"
+            if post_msa else "goal_state_refreshed_w2b_terminal_w2c_no_submit"
+        ),
         "audit_ok": True,
         "updated_at": updated_at,
         "runtime_goal_active": runtime_goal_active,
         "w2b": w2b,
         "w2c": w2c,
         "w2c_target_msa_approval": w2c_target_msa,
+        "w2c_target_msa_completion": w2c_target_msa_complete,
         "updated_artifacts": [
             "results/m6d_goal_mode_current_anchor.json",
             "results/m6d_goal_completion_audit.json",
@@ -507,8 +679,20 @@ def refresh_bundle(
     }
 
 
+def _target_msa_packet_status_label(status: Any, historical: bool) -> str:
+    label = str(status or "not_ready")
+    if historical:
+        return f"{label} (historical; superseded by completion)"
+    return label
+
+
 def render_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
+    target_msa_completion = report.get("w2c_target_msa_completion") or {}
+    target_msa_status = _target_msa_packet_status_label(
+        target_msa.get("status"),
+        bool(target_msa.get("historical_after_completion")),
+    )
     return "\n".join([
         "# M6d Goal-State Refresh",
         "",
@@ -517,7 +701,8 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"Runtime goal active: `{report['runtime_goal_active']}`.",
         f"W2b: `{report['w2b']['status']}`.",
         f"W2c: `{report['w2c']['status']}`.",
-        f"W2c target-MSA packet: `{target_msa.get('status', 'not_ready')}`.",
+        f"W2c target-MSA packet: `{target_msa_status}`.",
+        f"W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -533,6 +718,11 @@ def render_markdown(report: Dict[str, Any]) -> str:
 
 def render_completion_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
+    target_msa_completion = report.get("w2c_target_msa_completion") or {}
+    target_msa_status = _target_msa_packet_status_label(
+        target_msa.get("status"),
+        bool(target_msa.get("historical_after_completion")),
+    )
     return "\n".join([
         "# M6d Goal Completion Audit",
         "",
@@ -546,7 +736,8 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W2c: `{report['w2c_successor']['status']}`",
         f"- W2c execution ready: `{report['w2c_successor']['execution_ready']}`",
         f"- W2c Cayuga submission allowed: `{report['w2c_successor']['cayuga_submission_allowed']}`",
-        f"- W2c target-MSA packet: `{target_msa.get('status', 'not_ready')}`",
+        f"- W2c target-MSA packet: `{target_msa_status}`",
+        f"- W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -588,13 +779,19 @@ def render_drift_markdown(report: Dict[str, Any]) -> str:
 
 def render_actions_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
+    target_msa_completion = report.get("w2c_target_msa_completion") or {}
+    target_msa_status = _target_msa_packet_status_label(
+        target_msa.get("status"),
+        bool(target_msa.get("historical_after_completion")),
+    )
     lines = [
         "# M6d Next Science Actions",
         "",
         f"Status: `{report['status']}`.",
         f"No submit: `{report['no_submit']}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
-        f"W2c target-MSA packet: `{target_msa.get('status', 'not_ready')}`.",
+        f"W2c target-MSA packet: `{target_msa_status}`.",
+        f"W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`.",
         "",
         "## Ranked Actions",
         "",
@@ -610,6 +807,10 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
 def render_harness_markdown(report: Dict[str, Any]) -> str:
     verification = report["local_verification"]
     hpc = report["hpc_status"]
+    target_msa_status = _target_msa_packet_status_label(
+        hpc.get("w2c_target_msa_packet_status"),
+        bool(hpc.get("w2c_target_msa_packet_historical")),
+    )
     return "\n".join([
         "# M6d Goal-Mode Local Harness Status",
         "",
@@ -624,7 +825,8 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- jobs running: `{hpc['jobs_running']}`",
         f"- W2b test compute: `{hpc['w2b_test_compute']}`",
         f"- W2c submission allowed: `{hpc['w2c_submission_allowed']}`",
-        f"- W2c target-MSA packet: `{hpc.get('w2c_target_msa_packet_status', 'not_ready')}`",
+        f"- W2c target-MSA packet: `{target_msa_status}`",
+        f"- W2c target-MSA completion: `{hpc.get('w2c_target_msa_completion_status', 'not_complete')}`",
         "",
         "## Next Action",
         "",
@@ -684,6 +886,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w2c-target-msa-packet",
         default="results/m6d_w2c_target_msa_approval_packet.json",
     )
+    parser.add_argument(
+        "--w2c-target-msa-completion",
+        default="results/m6d_w2c_target_msa_completion.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -714,6 +920,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         _load_json(args.w2b_report),
         _load_json(args.w2c_gate),
         _load_json(args.w2c_target_msa_packet) if os.path.exists(args.w2c_target_msa_packet) else None,
+        (
+            _load_json(args.w2c_target_msa_completion)
+            if os.path.exists(args.w2c_target_msa_completion)
+            else None
+        ),
         updated_at=args.updated_at,
         test_command=args.test_command,
         test_result=args.test_result,

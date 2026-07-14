@@ -3,7 +3,7 @@
 Self-contained context to continue this project in a fresh session (Codex or otherwise) with **no prior
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
-> **2026-07-12 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
+> **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
 > (`AUROC=0.938`) but refuses alpha=0.3 (`certification UCB=0.510`, `tau=null`). All older positive
 > certificate fields are legacy exploratory outputs until rerun under `split_ltt_v1`. The replacement
@@ -38,10 +38,14 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > power gate passes at 90 accepts (`power=0.817860` for design risk 0.08), and the locked evaluator is
 > implemented. Deterministic label-blind selection then chose eight fresh targets in
 > `configs/m6d_w2c_fresh_targets.json` with zero historical/W2b target, source, or sequence overlap.
-> All eight still need target MSAs. `results/m6d_w2c_design_gate.{json,md}` remains no-submit and not a
-> W2c claim. All W2 v1-v11 execution routes later in this handoff are historical.
-> The guarded target-MSA packet now passes local/Cayuga dry-run and 40/40 input SHA parity checks,
-> but remains `ready_for_explicit_target_msa_approval_not_submitted`; generic continuation is not approval.
+> Target-MSA preparation is now complete for all eight targets. The synced MSA/report pairs pass strict
+> manifest validation at 8/8 and consumed 0.144722 A40 GPU-hours in total. The detailed local completion
+> record is `results/m6d_w2c_target_msa_completion.json`. No ProteinMPNN/Boltz design records were generated,
+> and this input-preparation result is not a W2c certificate or claim. The design gate and guarded approval
+> packet remain immutable historical pre-submit snapshots. The next boundary is a hash-bound no-submit
+> threshold-learning packet for exactly 60 fresh rows per target, 480 total, under namespace
+> `w2c-fit-learn-v1`; record generation requires separate explicit approval. All W2 v1-v11 execution routes
+> later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and
 `docs/PROJECT_ROADMAP.md`.

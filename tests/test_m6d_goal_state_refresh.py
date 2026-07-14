@@ -1,11 +1,15 @@
-"""Tests for the terminal-W2b / precompute-W2c goal-state refresh."""
+"""Tests for terminal-W2b / prospective-W2c goal-state refresh."""
 
 import json
 import os
 import tempfile
 import unittest
 
-from bio_sfm_designer.experiments.m6d_goal_state_refresh import main, refresh_bundle
+from bio_sfm_designer.experiments.m6d_goal_state_refresh import (
+    main,
+    refresh_bundle,
+    render_completion_markdown,
+)
 
 
 def _w2b():
@@ -70,6 +74,34 @@ def _target_msa_packet():
             "explicit_user_approval_required": True,
             "required_user_phrase": "approve W2c target-MSA precompute",
         },
+    }
+
+
+def _target_msa_completion():
+    return {
+        "status": "target_msa_precompute_complete_8_of_8",
+        "audit_ok": True,
+        "n_targets": 8,
+        "n_target_msas": 8,
+        "n_target_msa_reports": 8,
+        "strict_manifest_ready_targets": 8,
+        "submitted_jobs_total": 19,
+        "gpu_allocation_hours_total": 0.144722,
+        "approved_gpu_hour_ceiling": 8.0,
+        "within_approved_gpu_hour_ceiling": True,
+        "claim_boundary": (
+            "Target-MSA input preparation only. This is not W2c predictive evidence, a gate "
+            "certificate, or authorization for ProteinMPNN/Boltz record generation."
+        ),
+        "targets": [
+            {
+                "target_id": f"fresh-{index}",
+                "target_msa_sha256": "a" * 64,
+                "target_msa_report_sha256": "b" * 64,
+                "report_ok": True,
+            }
+            for index in range(8)
+        ],
     }
 
 
@@ -183,6 +215,70 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertFalse(bundle["completion"]["w2c_target_msa_approval"]["submission_performed"])
         self.assertFalse(bundle["harness"]["hpc_status"]["w2c_submission_allowed"])
 
+    def test_target_msa_completion_supersedes_pre_submit_packet(self):
+        gate = _w2c()
+        gate["execution_readiness"] = {
+            "target_manifest_present": True,
+            "target_manifest_integrity_ok": True,
+            "target_manifest_ids": [f"fresh-{index}" for index in range(8)],
+            "target_msa_ready": False,
+            "evaluator_implemented": True,
+        }
+        bundle = refresh_bundle(
+            *_legacy_bundle(),
+            _w2b(),
+            gate,
+            _target_msa_packet(),
+            _target_msa_completion(),
+            updated_at="2026-07-14T11:30:00+09:00",
+            test_command="pytest",
+            test_result="passed",
+        )
+
+        self.assertTrue(bundle["anchor"]["current_status"]["w2c_target_msa_ready"])
+        self.assertEqual(
+            bundle["completion"]["remaining_requirements"],
+            ["W2c_threshold_learning_packet_gate"],
+        )
+        self.assertIn("threshold-learning packet", bundle["completion"]["next_action"])
+        self.assertTrue(
+            bundle["completion"]["w2c_target_msa_approval"]["historical_after_completion"]
+        )
+        self.assertEqual(
+            bundle["report"]["w2c_target_msa_completion"]["status"],
+            "target_msa_precompute_complete_8_of_8",
+        )
+        self.assertNotIn("job_ids", bundle["report"]["w2c_target_msa_completion"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertIn(
+            "historical; superseded by completion",
+            render_completion_markdown(bundle["completion"]),
+        )
+
+    def test_malformed_target_msa_completion_is_rejected(self):
+        gate = _w2c()
+        gate["execution_readiness"] = {
+            "target_manifest_present": True,
+            "target_manifest_integrity_ok": True,
+            "target_manifest_ids": [f"fresh-{index}" for index in range(8)],
+            "target_msa_ready": False,
+            "evaluator_implemented": True,
+        }
+        malformed = _target_msa_completion()
+        malformed["targets"][0]["target_msa_sha256"] = "not-a-sha256"
+
+        with self.assertRaisesRegex(ValueError, "hash_locks_present"):
+            refresh_bundle(
+                *_legacy_bundle(),
+                _w2b(),
+                gate,
+                _target_msa_packet(),
+                malformed,
+                updated_at="2026-07-14T11:30:00+09:00",
+                test_command="pytest",
+                test_result="passed",
+            )
+
     def test_executable_w2c_is_rejected(self):
         gate = _w2c()
         gate["cayuga_submission_allowed"] = True
@@ -218,6 +314,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "report": os.path.join(root, "refresh.json"),
                 "report_md": os.path.join(root, "refresh.md"),
                 "target_msa_packet": os.path.join(root, "missing-target-msa-packet.json"),
+                "target_msa_completion": os.path.join(root, "missing-target-msa-completion.json"),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -232,6 +329,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w2b-report", w2b_path,
                 "--w2c-gate", w2c_path,
                 "--w2c-target-msa-packet", paths["target_msa_packet"],
+                "--w2c-target-msa-completion", paths["target_msa_completion"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -241,7 +339,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
 
             self.assertEqual(main(argv), 0)
             for key, path in paths.items():
-                if key == "target_msa_packet":
+                if key in {"target_msa_packet", "target_msa_completion"}:
                     continue
                 self.assertTrue(os.path.exists(path), path)
             with open(paths["anchor"]) as handle:

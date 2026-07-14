@@ -26,8 +26,9 @@ test rows cannot change the certificate or panel decision.
 
 Current W2c successor anchor: `docs/M6D_W2C_ONE_SHOT_PROTOCOL.md`. The exact design
 power gate passes, the locked evaluator is implemented, and eight label-blind fresh targets
-are selected. Their target MSAs are not ready. Therefore `execution_ready=false`, no
-record-generation wrapper exists, and Cayuga ProteinMPNN/Boltz submission remains blocked.
+are selected. Their target MSAs and reports are complete and pass strict manifest validation
+at 8/8; total A40 allocation was 0.144722 GPU-hours. This stage prepared inputs only: zero design
+records exist, no W2c claim is supported, and Cayuga ProteinMPNN/Boltz submission remains blocked.
 
 Current W2c machine artifacts:
 `configs/m6d_w2c_one_shot_protocol.json` and `results/m6d_w2c_design_gate.{json,md}`.
@@ -35,10 +36,17 @@ Current W2c machine artifacts:
 Current W2c target selection:
 `configs/m6d_w2c_fresh_targets.json` and `results/m6d_w2c_target_selection.json`.
 
-Current W2c target-MSA approval boundary:
+Historical immutable W2c target-MSA approval boundary:
 `docs/M6D_W2C_TARGET_MSA_APPROVAL.md` and
-`results/m6d_w2c_target_msa_approval_packet.json`. It is ready but not submitted; generic
-continuation or goal-mode resume is not approval.
+`results/m6d_w2c_target_msa_approval_packet.json`. This is the consumed pre-submit snapshot and
+must not be rewritten after completion.
+
+Current W2c target-MSA completion:
+`results/m6d_w2c_target_msa_completion.json`.
+
+Current next action: prepare a hash-bound no-submit threshold-learning packet for exactly 60 fresh
+records per target, 480 total, under `w2c-fit-learn-v1`. Target-MSA approval does not authorize this
+record-generation stage; separate explicit approval is required.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.

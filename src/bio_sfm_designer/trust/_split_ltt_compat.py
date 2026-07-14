@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 from typing import Any, Dict, Optional, Sequence
 
 
@@ -22,6 +23,42 @@ def _hoeffding(empirical: float, n: int, delta: float) -> float:
     return min(1.0, empirical + math.sqrt(math.log(1.0 / delta) / (2 * n)))
 
 
+@lru_cache(maxsize=256)
+def _log_binomial_coefficient(n: int, value: int) -> float:
+    return math.log(math.comb(n, value))
+
+
+def _binomial_boundary_pmf(value: int, n: int, probability: float) -> float:
+    return math.exp(
+        _log_binomial_coefficient(n, value)
+        + value * math.log(probability)
+        + (n - value) * math.log1p(-probability)
+    )
+
+
+def _binomial_lower_tail(k: int, n: int, probability: float) -> float:
+    q = 1.0 - probability
+    term = _binomial_boundary_pmf(k, n, probability)
+    terms = [term]
+    reverse_odds = q / probability
+    for value in range(k, 0, -1):
+        term *= (value / (n - value + 1)) * reverse_odds
+        terms.append(term)
+    return min(1.0, math.fsum(terms))
+
+
+def _binomial_upper_tail(k: int, n: int, probability: float) -> float:
+    q = 1.0 - probability
+    first = k + 1
+    term = _binomial_boundary_pmf(first, n, probability)
+    terms = [term]
+    odds = probability / q
+    for value in range(first, n):
+        term *= ((n - value) / (value + 1)) * odds
+        terms.append(term)
+    return min(1.0, math.fsum(terms))
+
+
 def _binomial_cdf(k: int, n: int, probability: float) -> float:
     if k >= n:
         return 1.0
@@ -29,22 +66,21 @@ def _binomial_cdf(k: int, n: int, probability: float) -> float:
         return 1.0
     if probability >= 1.0:
         return 0.0
-    q = 1.0 - probability
-    if k <= n // 2:
-        term = q ** n
-        total = term
-        odds = probability / q
-        for value in range(1, k + 1):
-            term *= ((n - value + 1) / value) * odds
-            total += term
-        return min(1.0, total)
-    term = probability ** n
-    upper_tail = term
-    reverse_odds = q / probability
-    for value in range(n, k + 1, -1):
-        term *= (value / (n - value + 1)) * reverse_odds
-        upper_tail += term
-    return max(0.0, 1.0 - min(1.0, upper_tail))
+    if k < (n + 1) * probability:
+        return _binomial_lower_tail(k, n, probability)
+    return max(0.0, 1.0 - _binomial_upper_tail(k, n, probability))
+
+
+def _binomial_survival(k: int, n: int, probability: float) -> float:
+    if k >= n:
+        return 0.0
+    if probability <= 0.0:
+        return 0.0
+    if probability >= 1.0:
+        return 1.0
+    if k >= (n + 1) * probability:
+        return _binomial_upper_tail(k, n, probability)
+    return max(0.0, 1.0 - _binomial_lower_tail(k, n, probability))
 
 
 def clopper_pearson_upper_bound(false_accepts: int, n: int, delta: float = 0.1) -> float:
@@ -61,7 +97,13 @@ def clopper_pearson_upper_bound(false_accepts: int, n: int, delta: float = 0.1) 
     low, high = 0.0, 1.0
     for _ in range(100):
         midpoint = (low + high) / 2.0
-        if _binomial_cdf(false_accepts, n, midpoint) > delta:
+        if delta <= 0.5:
+            cdf_exceeds_delta = _binomial_cdf(false_accepts, n, midpoint) > delta
+        else:
+            cdf_exceeds_delta = (
+                _binomial_survival(false_accepts, n, midpoint) < 1.0 - delta
+            )
+        if cdf_exceeds_delta:
             low = midpoint
         else:
             high = midpoint

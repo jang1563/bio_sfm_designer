@@ -33,12 +33,13 @@
 > W2b or reuse its rows. The prospective exact design has conditional certification power 0.817860 at
 > 90 accepts under design risk 0.08 and requires three selective certificates. The power gate passes,
 > and its locked evaluator is implemented. Eight label-blind fresh targets are selected with zero historical/W2b
-> target, source, or sequence overlap, but all eight need target MSAs, so `execution_ready=false` and
-> record-generation submission is blocked. See [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md) and
+> target, source, or sequence overlap. All eight target-MSA/report pairs now pass strict manifest validation;
+> input preparation consumed 0.144722 A40 GPU-hours and generated zero design records. Record-generation
+> submission remains blocked. See [docs/M6D_W2C_ONE_SHOT_PROTOCOL.md](docs/M6D_W2C_ONE_SHOT_PROTOCOL.md) and
 > `results/m6d_w2c_design_gate.{json,md}`.
-> The guarded local/Cayuga target-MSA packet passes dry-run and input parity checks but is not submitted;
-> it requires separate explicit approval documented in
-> [docs/M6D_W2C_TARGET_MSA_APPROVAL.md](docs/M6D_W2C_TARGET_MSA_APPROVAL.md).
+> The target-MSA approval packet is now an immutable historical pre-submit snapshot. The next boundary is
+> a hash-bound no-submit threshold-learning packet for exactly 60 fresh rows per target under
+> `w2c-fit-learn-v1`; record generation requires separate explicit approval.
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
