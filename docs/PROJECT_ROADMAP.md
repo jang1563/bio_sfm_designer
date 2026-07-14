@@ -84,11 +84,18 @@ target-level split, exact multiplicity correction, held-out decision rule, stage
 The evaluator and design auditor are implemented. Target MSAs are missing 8/8. The hash-bound MSA-only
 packet in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` awaits exact approval; candidate and predictor execution
 remain forbidden. The packet now binds every runtime and post-submit replay helper used by the plan. Its
-staged Cayuga mirror passes `results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 15 exact SHA
+staged Cayuga mirror passes `results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 16 exact SHA
 checks, five shell-syntax checks, runtime and lifecycle-import checks, untouched receipts, the expected
 receiptless-query refusal, and a no-submit eight-target dry-run. The lifecycle report is coherently
 `target_msa_not_submitted_awaiting_explicit_approval`. This is readiness evidence, not approval or
 scientific evidence.
+
+The next execution-integrity layer is also implemented without compute. The lifecycle-derived builder
+`m6d_w3b_execution_lock` will materialize an immutable 870-design-slot execution manifest and 56-artifact input
+lock only after strict 8/8 MSA completion. Its current report
+`results/m6d_w3b_execution_lock_readiness.{json,md}` is audit-clean and blocked only on that approved MSA
+stage. The W3b evaluator now requires its paired predictor MSA hash to equal the target-specific hash in
+this execution manifest, closing the previous gap where two predictors could agree on the same wrong MSA.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

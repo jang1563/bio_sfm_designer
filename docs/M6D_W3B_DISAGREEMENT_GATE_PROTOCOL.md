@@ -39,7 +39,9 @@ Each ProteinMPNN candidate is generated once and evaluated by both:
 
 The pair must have the same candidate ID, candidate-sequence hash, target-MSA hash, template-off
 policy, seed `0`, and prediction-time network prohibition. Both labels use L-RMSD below 4 Angstrom
-after target-chain alignment. A missing predictor output or any pair mismatch fails QC.
+after target-chain alignment. Pairwise agreement alone is insufficient: the shared target-MSA hash must
+also equal the lifecycle-derived hash frozen for that target in the W3b execution manifest. A missing
+predictor output, manifest-bound MSA mismatch, or any pair mismatch fails QC.
 
 These are two structural-proxy endpoints, not wet-lab truth.
 
@@ -98,9 +100,16 @@ in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval.
 - protocol: `configs/m6d_w3b_disagreement_gate_protocol.json`;
 - target selector: `bio_sfm_designer.experiments.m6d_w3b_target_selector`;
 - design/power auditor: `bio_sfm_designer.experiments.m6d_w3b_disagreement_design_gate`;
+- lifecycle-derived execution manifest/input lock:
+  `bio_sfm_designer.experiments.m6d_w3b_execution_lock`;
 - frozen evaluator: `bio_sfm_designer.experiments.m6d_w3b_disagreement_gate`;
 - focused tests: `tests/test_m6d_w3b_target_selector.py` and
-  `tests/test_m6d_w3b_disagreement_gate.py`.
+  `tests/test_m6d_w3b_disagreement_gate.py`; execution-lock tests are in
+  `tests/test_m6d_w3b_execution_lock.py`.
+
+The current no-submit execution-lock readiness report is
+`results/m6d_w3b_execution_lock_readiness.{json,md}`. It is audit-clean but cannot materialize the
+execution manifest until the separately approved target-MSA lifecycle reaches strict 8/8 completion.
 
 The previous `m6d_w2_w3_decision_protocol` remains a historical artifact for the pre-AF2 fork; it
 must not override this current W3b boundary.

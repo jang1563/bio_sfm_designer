@@ -77,12 +77,15 @@ The design/power audit passes at conditional power 0.824333, but all eight targe
 
 Current next action: the hash-bound eight-target MSA-only packet is complete in
 `docs/M6D_W3B_TARGET_MSA_APPROVAL.md`; its staged remote mirror passes
-`results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 15 exact SHA checks, five shell-syntax
+`results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 16 exact SHA checks, five shell-syntax
 checks, lifecycle import, and the expected receiptless-query refusal. The current state is
 `results/m6d_w3b_target_msa_lifecycle.{json,md}`; the generated read-only query and scoped sync-back replay
-are `results/m6d_w3b_target_msa_job_state_query.sh` and `results/m6d_w3b_target_msa_sync_back.sh`. Stop for
-separate exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse consumed
-approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
+are `results/m6d_w3b_target_msa_job_state_query.sh` and `results/m6d_w3b_target_msa_sync_back.sh`. The
+post-sync path now creates the lifecycle-derived execution manifest/input lock; current readiness is
+audit-clean but blocked on 8/8 MSA completion in `results/m6d_w3b_execution_lock_readiness.{json,md}`.
+The evaluator rejects pairwise-matching records whose MSA hash is not the manifest-bound target hash.
+Stop for separate exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
+consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.

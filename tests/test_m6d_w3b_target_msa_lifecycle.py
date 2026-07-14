@@ -3,7 +3,7 @@
 import hashlib
 import json
 
-from bio_sfm_designer.experiments.m6d_w3b_target_msa_lifecycle import evaluate_lifecycle
+from bio_sfm_designer.experiments.m6d_w3b_target_msa_lifecycle import evaluate_lifecycle, render_sync_script
 
 
 def _sha(path):
@@ -207,3 +207,22 @@ def test_fasta_a3m_query_mismatch_and_scope_expansion_fail_closed(tmp_path):
     packet["can_submit_candidate_generation_or_candidate_level_prediction"] = False
     report = _evaluate(state, sacct=_sacct())
     assert "target_msa_mismatch" in report["strict_manifest"]["failures_by_kind"]
+
+
+def test_sync_replay_materializes_execution_lock_then_stops_before_compute():
+    script = render_sync_script(
+        manifest_path="configs/m6d_w3b_fresh_targets.json",
+        packet_path="results/packet.json",
+        receipt_path="results/receipt.jsonl",
+        summary_path="results/summary.json",
+        sacct_path="results/sacct.tsv",
+        query_path="results/query.sh",
+        out_json="results/lifecycle.json",
+        out_md="results/lifecycle.md",
+    )
+
+    assert "m6d_w3b_execution_lock" in script
+    assert "--emit-execution-lock" in script
+    assert "generate_proteinmpnn" not in script
+    assert "colabfold_batch" not in script
+    assert "run_predict_boltz" not in script

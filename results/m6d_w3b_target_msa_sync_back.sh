@@ -70,4 +70,5 @@ PY
 )"
 test "$completion_ok" = 1 || { echo "W3b target-MSA completion validation failed" >&2; exit 2; }
 "$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w3b_disagreement_design_gate --out-json results/m6d_w3b_disagreement_design_gate_post_msa.json --out-md results/m6d_w3b_disagreement_design_gate_post_msa.md
-echo 'W3b target-MSA inputs validated; stop before candidate generation or candidate-level prediction.'
+"$PYTHON_BIN" -m bio_sfm_designer.experiments.m6d_w3b_execution_lock --protocol configs/m6d_w3b_disagreement_gate_protocol.json --source-manifest "$MANIFEST" --lifecycle "$OUT_JSON" --emit-execution-lock
+echo 'W3b target-MSA inputs and execution lock validated; stop before candidate generation or candidate-level prediction.'

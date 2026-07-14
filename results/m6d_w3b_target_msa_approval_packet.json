@@ -6,6 +6,10 @@
       "path": "results/m6d_w3b_disagreement_design_gate.json",
       "sha256": "bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea"
     },
+    "execution_lock_tool": {
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_execution_lock.py",
+      "sha256": "7add736b3c213a800c81c5cb110041a2fddefce03984bf48f085d4864cd00a5f"
+    },
     "extract_chain_fasta": {
       "path": "hpc/extract_chain_fasta.py",
       "sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b"
@@ -16,7 +20,7 @@
     },
     "lifecycle": {
       "path": "src/bio_sfm_designer/experiments/m6d_w3b_target_msa_lifecycle.py",
-      "sha256": "9c3ecf8ba3d63194d6927c2307e6251e736234496e44d555ba8ba74cbf79db40"
+      "sha256": "0be4b722f00d37904326a2dab66eef9b5383521290d429139bb99037a3c20110"
     },
     "manifest": {
       "path": "configs/m6d_w3b_fresh_targets.json",
@@ -52,7 +56,7 @@
     },
     "sync_back": {
       "path": "results/m6d_w3b_target_msa_sync_back.sh",
-      "sha256": "9db801ac3746b368c15542565ee5a51f0d33a1a7d29ed8f6b736520b5f07c393"
+      "sha256": "1e4e47e1bf7935b9647ab3ee8a5c393f04b163dfed1139c9ce3bfbca7b1d426b"
     }
   },
   "can_submit_candidate_generation_or_candidate_level_prediction": false,
@@ -89,6 +93,6 @@
   "target_msa_approval_env_var": "BIO_SFM_APPROVE_W3B_TARGET_MSA",
   "wrapper": {
     "path": "hpc/run_w3b_target_msa_guarded.sh",
-    "sha256": "303d1fbd7a18f4edeed66af9c46a12c0a1d880b9fc0900371e9d83eb0bf864fb"
+    "sha256": "1355badd51f6700293d4ee8954f0f1112f2055d69eb1442737080964eddb3b8c"
   }
 }

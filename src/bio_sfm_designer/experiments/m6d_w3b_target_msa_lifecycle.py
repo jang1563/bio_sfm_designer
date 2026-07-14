@@ -609,6 +609,7 @@ def render_sync_script(
 ) -> str:
     module = "bio_sfm_designer.experiments.m6d_w3b_target_msa_lifecycle"
     design_module = "bio_sfm_designer.experiments.m6d_w3b_disagreement_design_gate"
+    execution_lock_module = "bio_sfm_designer.experiments.m6d_w3b_execution_lock"
     return "\n".join([
         "#!/usr/bin/env bash",
         "# Pull only W3b target input-prep artifacts and replay strict CPU validation.",
@@ -690,7 +691,12 @@ def render_sync_script(
             '--out-json results/m6d_w3b_disagreement_design_gate_post_msa.json '
             '--out-md results/m6d_w3b_disagreement_design_gate_post_msa.md'
         ),
-        "echo 'W3b target-MSA inputs validated; stop before candidate generation or candidate-level prediction.'",
+        (
+            f'"$PYTHON_BIN" -m {execution_lock_module} '
+            '--protocol configs/m6d_w3b_disagreement_gate_protocol.json '
+            '--source-manifest "$MANIFEST" --lifecycle "$OUT_JSON" --emit-execution-lock'
+        ),
+        "echo 'W3b target-MSA inputs and execution lock validated; stop before candidate generation or candidate-level prediction.'",
         "",
     ])
 

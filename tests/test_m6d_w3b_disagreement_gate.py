@@ -84,7 +84,16 @@ class M6DW3BDisagreementGateTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.protocol = _load("configs/m6d_w3b_disagreement_gate_protocol.json")
-        cls.manifest = _load("configs/m6d_w3b_fresh_targets.json")
+        cls.source_manifest = _load("configs/m6d_w3b_fresh_targets.json")
+        cls.manifest = copy.deepcopy(cls.source_manifest)
+        cls.manifest.update({
+            "artifact": "m6d_w3b_execution_target_manifest",
+            "status": "w3b_execution_inputs_locked_no_submit",
+            "no_submit": True,
+            "cayuga_submission_allowed": False,
+        })
+        for target in cls.manifest["targets"]:
+            target["target_msa_sha256"] = f"{sum(ord(char) for char in target['id']):064x}"
 
     def test_public_design_is_powered_but_remains_no_submit(self):
         predecessor = adjudicate(
@@ -94,7 +103,7 @@ class M6DW3BDisagreementGateTests(unittest.TestCase):
         report = audit_design(
             self.protocol,
             predecessor,
-            self.manifest,
+            self.source_manifest,
             target_manifest_path=str(ROOT / "configs/m6d_w3b_fresh_targets.json"),
         )
 
@@ -151,6 +160,29 @@ class M6DW3BDisagreementGateTests(unittest.TestCase):
         self.assertFalse(report["audit_ok"])
         self.assertEqual(report["status"], "w3b_gate_audit_blocked")
         self.assertIn("target_msa_hash_mismatch", {row["kind"] for row in report["failures"]})
+
+    def test_pairwise_matching_but_wrong_manifest_msa_fails_closed(self):
+        records = _synthetic_records(self.manifest)
+        for predictor in records[0]["predictors"].values():
+            predictor["target_msa_sha256"] = "f" * 64
+        report = evaluate(self.protocol, self.manifest, records)
+
+        self.assertFalse(report["audit_ok"])
+        self.assertIn("target_msa_not_manifest_bound", {row["kind"] for row in report["failures"]})
+
+    def test_missing_execution_manifest_msa_hash_fails_closed(self):
+        manifest = copy.deepcopy(self.manifest)
+        manifest["targets"][0].pop("target_msa_sha256")
+        report = evaluate(self.protocol, manifest, _synthetic_records(self.manifest))
+
+        self.assertFalse(report["audit_ok"])
+        self.assertIn("target_manifest_msa_hash_missing", {row["kind"] for row in report["failures"]})
+
+    def test_original_source_manifest_cannot_be_used_for_evaluation(self):
+        report = evaluate(self.protocol, self.source_manifest, _synthetic_records(self.manifest))
+
+        self.assertFalse(report["audit_ok"])
+        self.assertIn("execution_manifest_contract_invalid", {row["kind"] for row in report["failures"]})
 
     def test_failed_certification_stops_before_test(self):
         records = _synthetic_records(self.manifest)

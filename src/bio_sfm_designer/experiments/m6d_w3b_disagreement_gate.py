@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -32,6 +33,19 @@ def _as_float(value: Any) -> Optional[float]:
     return number if math.isfinite(number) else None
 
 
+def _is_sha256(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _canonical_sha256(value: Any) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def _prepare_rows(
     protocol: Dict[str, Any],
     target_manifest: Dict[str, Any],
@@ -39,9 +53,32 @@ def _prepare_rows(
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     failures: List[Dict[str, Any]] = []
     locked = protocol["locked_scientific_protocol"]
+    expected_scientific_digest = _canonical_sha256(locked)
+    if not (
+        target_manifest.get("artifact") == "m6d_w3b_execution_target_manifest"
+        and target_manifest.get("status") == "w3b_execution_inputs_locked_no_submit"
+        and target_manifest.get("no_submit") is True
+        and target_manifest.get("cayuga_submission_allowed") is False
+    ):
+        _failure(
+            failures,
+            "execution_manifest_contract_invalid",
+            "records must be evaluated against the lifecycle-derived W3b execution manifest",
+        )
+    if target_manifest.get("locked_scientific_digest") != expected_scientific_digest:
+        _failure(
+            failures,
+            "execution_manifest_scientific_digest_mismatch",
+            "execution manifest is not bound to the frozen W3b scientific protocol",
+        )
     threshold = float(locked["predictor_contract"]["label_threshold"])
     manifest_roles = {
         str(row.get("id") or ""): str(row.get("experimental_role") or "")
+        for row in target_manifest.get("targets", [])
+        if isinstance(row, dict)
+    }
+    manifest_msa_hashes = {
+        str(row.get("id") or ""): row.get("target_msa_sha256")
         for row in target_manifest.get("targets", [])
         if isinstance(row, dict)
     }
@@ -68,6 +105,16 @@ def _prepare_rows(
             continue
         if role != manifest_roles[target_id] or role not in _ROLES:
             _failure(failures, "role_mismatch", "record role differs from the frozen target role", candidate_id=candidate_id, target_id=target_id)
+            continue
+        expected_msa_hash = manifest_msa_hashes.get(target_id)
+        if not _is_sha256(expected_msa_hash):
+            _failure(
+                failures,
+                "target_manifest_msa_hash_missing",
+                "target must carry the lifecycle-bound MSA hash from the W3b execution manifest",
+                candidate_id=candidate_id,
+                target_id=target_id,
+            )
             continue
         if source.get("seed_namespace") != expected_namespaces[role]:
             _failure(failures, "seed_namespace_mismatch", "record uses the wrong frozen stage namespace", candidate_id=candidate_id)
@@ -118,6 +165,18 @@ def _prepare_rows(
             continue
         if len(msa_hashes) != 1 or None in msa_hashes or "" in msa_hashes:
             _failure(failures, "target_msa_hash_mismatch", "predictors must use the same target MSA", candidate_id=candidate_id)
+            continue
+        observed_msa_hash = next(iter(msa_hashes))
+        if observed_msa_hash != expected_msa_hash:
+            _failure(
+                failures,
+                "target_msa_not_manifest_bound",
+                "matched predictors did not use the frozen target MSA hash",
+                candidate_id=candidate_id,
+                target_id=target_id,
+                expected=expected_msa_hash,
+                observed=observed_msa_hash,
+            )
             continue
 
         boltz_pae = float(values[_PREDICTORS[0]]["pae_interaction"])
@@ -464,7 +523,7 @@ def _load_jsonl(path: str) -> List[Dict[str, Any]]:
 def main(argv: Optional[Iterable[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol", default="configs/m6d_w3b_disagreement_gate_protocol.json")
-    parser.add_argument("--target-manifest", default="configs/m6d_w3b_fresh_targets.json")
+    parser.add_argument("--target-manifest", default="configs/m6d_w3b_execution_targets.json")
     parser.add_argument("--records", required=True)
     parser.add_argument("--out", default="results/m6d_w3b_disagreement_gate_report.json")
     args = parser.parse_args(argv)

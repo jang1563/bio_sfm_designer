@@ -38,6 +38,7 @@ class M6DW3BTargetMSAGuardedTests(unittest.TestCase):
             set(packet["bound_artifacts"]),
             {
                 "design_gate",
+                "execution_lock_tool",
                 "extract_chain_fasta",
                 "job_state_query",
                 "lifecycle",
@@ -84,6 +85,7 @@ class M6DW3BTargetMSAGuardedTests(unittest.TestCase):
         self.assertIn('require_sha256 "$EXTRACT_CHAIN_FASTA" "$EXPECTED_EXTRACT_CHAIN_FASTA_SHA256"', text)
         self.assertIn('require_sha256 "$LIFECYCLE" "$EXPECTED_LIFECYCLE_SHA256"', text)
         self.assertIn('require_sha256 "$MANIFEST_VALIDATOR" "$EXPECTED_MANIFEST_VALIDATOR_SHA256"', text)
+        self.assertIn('require_sha256 "$EXECUTION_LOCK_TOOL" "$EXPECTED_EXECUTION_LOCK_TOOL_SHA256"', text)
         self.assertIn('require_sha256 "$JOB_STATE_QUERY" "$EXPECTED_JOB_STATE_QUERY_SHA256"', text)
         self.assertIn('require_sha256 "$SYNC_BACK" "$EXPECTED_SYNC_BACK_SHA256"', text)
 

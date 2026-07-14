@@ -1,0 +1,38 @@
+{
+  "artifact": "m6d_w3b_execution_lock_readiness",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_generate_candidates_or_run_predictors": false,
+  "claim_boundary": "Execution-input provenance only. This readiness check never submits work and cannot authorize candidate generation, predictor execution, certification, or a W3b claim.",
+  "execution_lock_ready": false,
+  "failures": [],
+  "n_failures": 0,
+  "next_action": "complete the separately approved eight-target MSA precompute and strict sync-back replay",
+  "no_submit": true,
+  "protocol": "configs/m6d_w3b_disagreement_gate_protocol.json",
+  "protocol_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96",
+  "requirements": [
+    "complete the separately approved eight-target MSA precompute and strict sync-back replay"
+  ],
+  "role_counts": {
+    "certification": 3,
+    "fit": 3,
+    "held_out_test": 2
+  },
+  "source_manifest": "configs/m6d_w3b_fresh_targets.json",
+  "source_manifest_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
+  "status": "w3b_execution_lock_awaiting_target_msa_approval_and_completion",
+  "target_bindings": [],
+  "target_ids": [
+    "1FSK_LJ",
+    "1FSX_BA",
+    "1FL7_DC",
+    "1F2U_CD",
+    "1FV1_BA",
+    "1FN3_DC",
+    "1FHJ_BA",
+    "1F3V_BA"
+  ],
+  "target_msa_lifecycle": "results/m6d_w3b_target_msa_lifecycle.json",
+  "target_msa_lifecycle_sha256": "9ee516dd6ce69eeec388920bef033b899c983f833eabeba194e63e368602c2d5"
+}

@@ -71,11 +71,14 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > 100 accepts. The design auditor passes but target-MSA readiness is 0/8. The hash-bound MSA-only packet
 > is ready in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md`, capped at 8 A40 GPU-hours. It binds all execution and
 > post-submit replay helpers. The packet and wrapper are staged on Cayuga; the no-submit readiness report
-> at `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 15 exact SHA checks, five shell-syntax
+> at `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 16 exact SHA checks, five shell-syntax
 > checks, Boltz/runtime and lifecycle-import checks, receipt absence, the expected receiptless-query
 > refusal, and the exact eight-target dry-run with zero failures. The local lifecycle report remains
-> `target_msa_not_submitted_awaiting_explicit_approval`. No scheduler job was submitted and no W3b compute
-> is approved; resume by waiting for the separate exact MSA approval.
+> `target_msa_not_submitted_awaiting_explicit_approval`. The post-sync replay now also invokes the hash-
+> bound `m6d_w3b_execution_lock` builder: only after strict 8/8 completion will it materialize the frozen
+> 870-design-slot execution manifest/input lock. The evaluator requires those manifest-bound target-MSA hashes,
+> so two predictors agreeing on the same wrong MSA still fail closed. No scheduler job was submitted and no
+> W3b compute is approved; resume by waiting for the separate exact MSA approval.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

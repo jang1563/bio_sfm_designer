@@ -187,6 +187,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--manifest-validator",
         default="src/bio_sfm_designer/experiments/complex_target_manifest.py",
     )
+    parser.add_argument(
+        "--execution-lock-tool",
+        default="src/bio_sfm_designer/experiments/m6d_w3b_execution_lock.py",
+    )
     parser.add_argument("--job-state-query", default="results/m6d_w3b_target_msa_job_state_query.sh")
     parser.add_argument("--sync-back", default="results/m6d_w3b_target_msa_sync_back.sh")
     parser.add_argument("--wrapper", default="hpc/run_w3b_target_msa_guarded.sh")
@@ -205,6 +209,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "extract_chain_fasta": args.extract_chain_fasta,
         "lifecycle": args.lifecycle,
         "manifest_validator": args.manifest_validator,
+        "execution_lock_tool": args.execution_lock_tool,
         "job_state_query": args.job_state_query,
         "sync_back": args.sync_back,
     }

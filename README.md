@@ -63,10 +63,14 @@
 > query, candidate generation, candidate-level predictor run, scheduler submission, API request, or GPU spend is
 > authorized. The hash-bound MSA-only packet awaits separate explicit approval with an 8 A40 GPU-hour
 > ceiling. The packet now hash-locks all execution and post-submit replay helpers as well as the
-> scientific artifacts. Its no-submit Cayuga readiness audit passes 15/15 exact SHA checks, 5/5 shell
+> scientific artifacts. Its no-submit Cayuga readiness audit passes 16/16 exact SHA checks, 5/5 shell
 > syntax checks, runtime and lifecycle-import checks, receipt absence, the expected receiptless-query
 > refusal, and the exact eight-target dry-run; no scheduler job was submitted. The current lifecycle
-> state is recorded in `results/m6d_w3b_target_msa_lifecycle.{json,md}`. See
+> state is recorded in `results/m6d_w3b_target_msa_lifecycle.{json,md}`. A lifecycle-derived execution-
+> lock builder is implemented and coherently waits on the same MSA completion in
+> `results/m6d_w3b_execution_lock_readiness.{json,md}`. After 8/8 completion it will freeze all 870
+> stage-assigned design slots and their target-MSA hashes before any fit-stage approval; the evaluator now
+> rejects pairwise-matching predictor records unless that MSA hash matches the frozen execution manifest. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
 > [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
@@ -107,7 +111,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`962` designer tests and `69` subtests on 2026-07-14).
+**Current local source verified** (`971` designer tests and `70` subtests on 2026-07-14).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

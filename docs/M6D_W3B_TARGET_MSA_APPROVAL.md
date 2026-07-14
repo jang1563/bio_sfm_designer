@@ -20,15 +20,16 @@ MSA plan are complete and hash-bound. This packet does not record approval and d
 
 The machine-readable packet is `results/m6d_w3b_target_msa_approval_packet.json`. It binds the protocol,
 target manifest, target-selection report, design audit, and generated MSA plan by SHA-256. The guarded
-wrapper is `hpc/run_w3b_target_msa_guarded.sh`. The packet and wrapper also bind all eight execution and
+wrapper is `hpc/run_w3b_target_msa_guarded.sh`. The packet and wrapper also bind all nine execution and
 replay dependencies: the target-MSA Slurm script, Boltz MSA helper, heterodimer preparation helper,
 chain-FASTA extractor, strict manifest validator, lifecycle auditor, read-only Slurm query, and scoped
-sync-back replay. Any drift in those files fails closed before dry-run or submission.
+sync-back replay, plus the lifecycle-derived W3b execution-lock builder. Any drift in those files fails
+closed before dry-run or submission.
 
 ## Cayuga no-submit readiness
 
 The exact packet and wrapper are staged at the logical mirror path `$HOME/bio_sfm_smoke`. The live audit
-in `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 15 exact SHA checks, five shell-syntax
+in `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 16 exact SHA checks, five shell-syntax
 checks, Boltz Python/CLI and `sbatch` checks, lifecycle import, receipt absence before and after, the
 expected receiptless-query refusal, and the exact eight-target dry-run. This proves staging and runtime
 readiness only; it records no approval and submits no scheduler job.
@@ -62,5 +63,8 @@ After an approved submission, run `results/m6d_w3b_target_msa_job_state_query.sh
 receipt, queries `sacct`, and updates the lifecycle report without submitting work. Only after all eight
 jobs are terminal-success, run `results/m6d_w3b_target_msa_sync_back.sh` locally. It pulls only the receipt,
 job state, and target input-prep artifacts; then it replays strict manifest, sequence, report-hash, frozen-
-sequence, allocation, and 8/8 completion checks and reruns the design gate. Stop again before candidate
-generation or either predictor. Those later stages require distinct immutable packets and explicit approvals.
+sequence, allocation, and 8/8 completion checks, reruns the design gate, and materializes
+`configs/m6d_w3b_execution_targets.json` plus `configs/m6d_w3b_execution_input_lock.json`. Those outputs
+freeze all 870 stage-assigned design slots and bind every target to its lifecycle-validated MSA hash; they still
+authorize no work. Stop again before candidate generation or either predictor. Those later stages require
+distinct immutable packets and explicit approvals.
