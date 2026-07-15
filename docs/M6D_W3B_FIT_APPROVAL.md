@@ -1,18 +1,20 @@
 # M6d W3b fit-stage approval boundary
 
-Status: `producer_and_submit_contract_ready_awaiting_target_msa_execution_lock_no_submit`.
+Status: `fit_approval_packet_ready_no_submit`.
 
 Date: 2026-07-15.
 
 ## Current state
 
-The W3b fit execution surface is implemented, but the fit approval packet is intentionally not emitted.
-The eight target MSAs remain 0/8 and the lifecycle-derived execution manifest/input lock therefore do not
-exist. `results/m6d_w3b_fit_packet_readiness.{json,md}` is audit-clean and reports
-`w3b_fit_packet_awaiting_target_msa_and_execution_lock`.
+The separately approved target-MSA stage completed 8/8 at `0.216389 A40 GPU-hours`; strict lifecycle
+replay and the execution manifest/input lock pass. Runtime and matched-record prerequisites are ready.
+`results/m6d_w3b_fit_packet_readiness.{json,md}` is audit-clean and reports
+`w3b_fit_packet_ready_awaiting_explicit_approval`. The immutable no-submit packet now exists at
+`results/m6d_w3b_fit_approval_packet.json`.
 
-This state submits no job, records no approval, generates no candidate, runs no predictor, and supports no
-W3b or biological-success claim. The earlier W3 mechanism-panel approval does not authorize W3b.
+The guarded bridge dry-run verified exactly three fit targets, 180 candidates, 360 matched evaluations,
+3 CPU jobs, and 6 H100 jobs with zero scheduler calls and zero receipt writes. This state records no fit
+approval, generates no candidate, runs no predictor, and supports no W3b or biological-success claim.
 
 ## Frozen fit scope
 
@@ -47,21 +49,20 @@ Historical W2b/W2c helpers remain unchanged. W3b uses dedicated, packet-bound ex
   append-only nine-event journal through `m6d_w3b_fit_submit_journal`;
 - `hpc/run_w3b_fit_guarded.sh` re-derives and verifies the approval packet before any `sbatch` call.
 
-## Future unlock sequence
+## Completed readiness sequence
 
-1. Obtain the separate target-MSA approval, complete all 8/8 jobs, sync back, and materialize the execution
-   manifest/input lock.
-2. Rebuild all W3b runtime and matched-record readiness artifacts.
-3. Emit `results/m6d_w3b_fit_approval_packet.json` with:
+1. The separate target-MSA approval was consumed; 8/8 jobs completed and the execution lock was materialized.
+2. Runtime and matched-record readiness artifacts were rebuilt and pass.
+3. `results/m6d_w3b_fit_approval_packet.json` was emitted with:
 
    ```bash
    python -m bio_sfm_designer.experiments.m6d_w3b_fit_packet \
      --emit-approval-packet results/m6d_w3b_fit_approval_packet.json
    ```
 
-4. Run the guarded bridge with `BIO_SFM_SUBMIT_DRY_RUN=1`; it must enumerate exactly three target triplets,
-   180 candidates, 360 predictor evaluations, zero `sbatch` calls, and zero receipt writes.
-5. Stop and request a separate exact fit approval. The future approval phrase is
+4. The guarded bridge dry-run enumerated exactly three target triplets, 180 candidates, 360 predictor
+   evaluations, zero `sbatch` calls, and zero receipt writes.
+5. The project is stopped for a separate exact fit approval. The approval phrase is
    `approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100`; its machine token is
    `approve-w3b-fit-180-matched-h100` in `BIO_SFM_APPROVE_W3B_FIT`.
 

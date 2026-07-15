@@ -20,7 +20,8 @@
     "target_count": 3,
     "user_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100"
   },
-  "artifact": "m6d_w3b_fit_packet_readiness",
+  "approval_recorded": false,
+  "artifact": "m6d_w3b_fit_approval_packet",
   "audit_ok": true,
   "bound_artifacts": [
     {
@@ -140,13 +141,7 @@
     }
   ],
   "can_claim_w3b": false,
-  "can_run_candidate_generation_or_prediction": false,
-  "can_submit_fit_stage": false,
   "claim_boundary": "Fit-stage packet readiness only. This artifact submits no job, records no approval, runs no candidate or predictor, and supports no W3b or biological-success claim.",
-  "execution_lock_ready": true,
-  "explicit_fit_approval_recorded": false,
-  "failures": [],
-  "fit_packet_ready": true,
   "fit_targets": [
     {
       "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/records_af2_multimer.jsonl",
@@ -203,13 +198,9 @@
       "target_msa_sha256": "4eabc706127bfa20d580f1254d095243634a9a0d2790a0e8dd53b8635384a21a"
     }
   ],
-  "matched_record_contract_ready": true,
-  "n_failures": 0,
-  "next_action": "request the exact, separately scoped W3b fit-stage approval",
   "no_submit": true,
-  "packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
-  "runtime_identity_ready": true,
-  "status": "w3b_fit_packet_ready_awaiting_explicit_approval",
+  "readiness_packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
+  "status": "w3b_fit_approval_packet_ready_no_submit",
   "submitted_jobs": 0,
   "version": 1
 }

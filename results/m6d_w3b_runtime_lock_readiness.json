@@ -6,12 +6,12 @@
   "can_submit_fit_stage": false,
   "claim_boundary": "Runtime readiness only. No W3b target MSA, candidate, predictor, scheduler, API, or GPU action is authorized by this artifact.",
   "execution_lock_readiness": "results/m6d_w3b_execution_lock_readiness.json",
-  "execution_lock_readiness_sha256": "2067af41960c588293763ab43178dbed9ed8064c8334e2c2b3fea3fa096253e0",
-  "execution_lock_ready": false,
+  "execution_lock_readiness_sha256": "82bea3165ae16057fb6953f1f8c52fcac9794853131628fa718bbeead19768c5",
+  "execution_lock_ready": true,
   "failures": [],
-  "fit_packet_prerequisites_ready": false,
+  "fit_packet_prerequisites_ready": true,
   "n_failures": 0,
-  "next_action": "obtain exact approval for the eight-target W3b target-MSA precompute, then materialize the execution lock",
+  "next_action": "prepare a separately approval-gated fit-stage packet bound to both locks",
   "no_submit": true,
   "predictor_runtime_identity_sha256": {
     "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
@@ -21,5 +21,5 @@
   "runtime_lock": "configs/m6d_w3b_runtime_lock.json",
   "runtime_lock_digest_sha256": "89ef3ccd7f7c361b186170c14ec21e715633fc6e94b48126bef6879058eb27c0",
   "runtime_lock_sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28",
-  "status": "w3b_runtime_locked_awaiting_execution_lock"
+  "status": "w3b_runtime_lock_ready_for_separate_fit_approval_packet"
 }

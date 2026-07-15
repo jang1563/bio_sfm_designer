@@ -3,6 +3,9 @@
 import hashlib
 import json
 
+from bio_sfm_designer.experiments.m6d_w3b_target_msa_allocation_reconcile import (
+    reconcile_lifecycle,
+)
 from bio_sfm_designer.experiments.m6d_w3b_target_msa_lifecycle import evaluate_lifecycle, render_sync_script
 
 
@@ -133,6 +136,64 @@ def _sacct(*, pending_job=None):
     return "\n".join(lines) + "\n"
 
 
+def _generic_sacct():
+    lines = ["JobIDRaw|State|ExitCode|ElapsedRaw|AllocTRES|NodeList|"]
+    for index in range(8):
+        lines.append(
+            f"{1000 + index}|COMPLETED|0:0|60|cpu=4,gres/gpu=1,mem=32G|g000{index % 2 + 1}|"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _scontrol_submit(*, wrong_job=None):
+    lines = []
+    for index in range(8):
+        job_id = str(1000 + index)
+        tres = "gres/gpu:h100:1" if job_id == wrong_job else "gres/gpu:a40:1"
+        lines.append(
+            f"JobId={job_id} JobState=PENDING Partition=scu-gpu "
+            "Command=/repo/hpc/run_precompute_boltz_target_msa.sbatch "
+            f"TresPerNode={tres}"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _scontrol_nodes():
+    return "\n".join(
+        [
+            "NodeName=g0001 Gres=gpu:a40:4 State=IDLE",
+            "NodeName=g0002 Gres=gpu:a40:4 State=IDLE",
+            "",
+        ]
+    )
+
+
+def _reconcile(state, tmp_path, *, scontrol_submit=None):
+    manifest, manifest_path, packet, receipt, summary, _targets = state
+    sbatch = tmp_path / "run_precompute_boltz_target_msa.sbatch"
+    sbatch.write_text(
+        "#!/usr/bin/env bash\n"
+        "#SBATCH --partition=scu-gpu\n"
+        "#SBATCH --gres=gpu:a40:1\n"
+        "#SBATCH --time=01:00:00\n"
+    )
+    packet["bound_artifacts"]["precompute_sbatch"] = {
+        "path": str(sbatch),
+        "sha256": _sha(sbatch),
+    }
+    return reconcile_lifecycle(
+        manifest=manifest,
+        manifest_path=manifest_path,
+        packet=packet,
+        receipt_rows=receipt,
+        summary=summary,
+        sacct_text=_generic_sacct(),
+        scontrol_submit_text=scontrol_submit or _scontrol_submit(),
+        scontrol_nodes_text=_scontrol_nodes(),
+        precompute_sbatch_path=str(sbatch),
+    )
+
+
 def _evaluate(state, *, receipt=True, sacct=None):
     manifest, manifest_path, packet, receipt_rows, summary, _targets = state
     return evaluate_lifecycle(
@@ -167,6 +228,48 @@ def test_eight_completed_a40_jobs_and_strict_inputs_complete(tmp_path):
     assert report["within_gpu_budget"] is True
     assert report["can_run_post_msa_design_gate"] is True
     assert report["can_submit_candidate_generation_or_candidate_level_prediction"] is False
+
+
+def test_generic_sacct_gpu_subtype_reconciles_from_independent_a40_evidence(tmp_path):
+    report = _reconcile(_fixture(tmp_path), tmp_path)
+
+    assert report["status"] == "target_msa_precompute_complete_8_of_8"
+    assert report["audit_ok"] is True
+    assert report["completion_ok"] is True
+    assert report["gpu_allocation_seconds"] == 480
+    evidence = report["allocation_telemetry_reconciliation"]
+    assert evidence["status"] == "allocation_telemetry_reconciled"
+    assert evidence["audit_ok"] is True
+    assert evidence["normalized_job_ids"] == [str(1000 + index) for index in range(8)]
+    assert {row["kind"] for row in evidence["raw_lifecycle_failures"]} == {
+        "job_gpu_allocation_invalid"
+    }
+
+
+def test_reconciliation_rejects_one_wrong_gpu_request(tmp_path):
+    report = _reconcile(
+        _fixture(tmp_path),
+        tmp_path,
+        scontrol_submit=_scontrol_submit(wrong_job="1004"),
+    )
+
+    assert report["status"] == "target_msa_lifecycle_blocked"
+    assert report["audit_ok"] is False
+    assert report["completion_ok"] is False
+    assert "allocation_tres_per_node_invalid" in {
+        row["kind"] for row in report["allocation_telemetry_reconciliation"]["failures"]
+    }
+
+
+def test_reconciliation_never_suppresses_non_telemetry_failure(tmp_path):
+    state = _fixture(tmp_path)
+    state[2]["can_submit_candidate_generation_or_candidate_level_prediction"] = True
+    report = _reconcile(state, tmp_path)
+
+    assert report["audit_ok"] is False
+    kinds = {row["kind"] for row in report["failures"]}
+    assert "approval_scope_expanded" in kinds
+    assert "allocation_reconciliation_scope_invalid" in kinds
 
 
 def test_pending_job_waits_without_claiming_completion(tmp_path):

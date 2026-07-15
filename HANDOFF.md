@@ -68,34 +68,34 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > label-blindly assigned to 3 fit, 3 certification, and 2 held-out-test roles in
 > `configs/m6d_w3b_fresh_targets.json`. The primary matched Boltz-2/AF2 gate uses maximum interface pAE
 > plus the pAE gap; a Boltz-pAE-only gate is the frozen comparator. Exact endpoint power is 0.824333 at
-> 100 accepts. The design auditor passes but target-MSA readiness is 0/8. The hash-bound MSA-only packet
-> is ready in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md`, capped at 8 A40 GPU-hours. It binds all execution and
-> post-submit replay helpers. The packet and wrapper are staged on Cayuga; the no-submit readiness report
-> at `results/m6d_w3b_target_msa_remote_readiness.{json,md}` passes 16 exact SHA checks, five shell-syntax
-> checks, Boltz/runtime and lifecycle-import checks, receipt absence, the expected receiptless-query
-> refusal, and the exact eight-target dry-run with zero failures. The local lifecycle report remains
-> `target_msa_not_submitted_awaiting_explicit_approval`. The post-sync replay now also invokes the hash-
-> bound `m6d_w3b_execution_lock` builder: only after strict 8/8 completion will it materialize the frozen
-> 870-design-slot execution manifest/input lock. The evaluator requires those manifest-bound target-MSA hashes,
-> so two predictors agreeing on the same wrong MSA still fail closed. No scheduler job was submitted and no
-> W3b compute is approved; resume by waiting for the separate exact MSA approval.
+> 100 accepts. The design auditor passes. The exact MSA-only approval was consumed once: jobs
+> `3085384`-`3085391` completed 8/8 with `0:0`, no retry, and 0.216389 A40 GPU-hours. Scoped sync and strict
+> replay validate 56/56 input artifacts, 8/8 reports, and 8/8 frozen target sequences. Cayuga's raw
+> `AllocTRES` omitted the subtype, so the original lifecycle correctly failed closed; the versioned
+> `m6d_w3b_target_msa_allocation_reconcile` accepted A40 only after the packet-bound sbatch, all eight
+> submit-time `scontrol` A40 requests, terminal one-GPU records, and A40 node inventory agreed. Raw Slurm
+> accounting remains unchanged. Read `docs/M6D_W3B_TARGET_MSA_COMPLETION.md`. The lifecycle-derived
+> execution lock is now verified and freezes all 870 design slots plus the eight exact MSA hashes. Two
+> predictors agreeing on the same wrong MSA still fail closed. No candidate generation or predictor compute
+> was submitted under the consumed MSA approval.
 > The next CPU-side bridge is already implemented as `m6d_w3b_matched_records`: it will accept a stage only
 > when candidates, both predictor files, the execution input lock, and two runtime receipts agree on exact
 > candidate sets, target-MSA/candidate/runtime/model-output hashes, seed `0`, templates off, and no prediction-
 > time network. It also rejects near-total numeric copying across predictors. Current contract evidence is
-> `results/m6d_w3b_matched_record_contract.{json,md}` with `assembly_ready=false` until the execution lock exists.
+> `results/m6d_w3b_matched_record_contract.{json,md}` with `assembly_ready=true`; it remains no-submit.
 > W3b runtime identity is no longer operator-supplied: `configs/m6d_w3b_runtime_lock.json` freezes Boltz
 > `2.2.1`, its 116-file installed-distribution manifest, both required local cache checkpoints, the W3
 > ColabFold container, all five AF2-Multimer-v3 parameter hashes, and exact predictor settings. The lock and
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}` are audit-clean and no-submit. Matched-record receipts
 > must bind the exact runtime-lock file SHA, lock digest, and predictor identity digest; recomputing internally
-> consistent hashes for an alternate runtime does not pass. No W3b MSA or predictor compute is approved.
+> consistent hashes for an alternate runtime does not pass. No W3b fit predictor compute is approved.
 > The downstream W3b fit execution surface is also implemented without touching historical W2b/W2c runners.
 > `m6d_w3b_fit_packet` hash-binds unique-candidate validation, actual-runtime re-observation, dedicated
 > Boltz/AF2 producers, strict conversion, a guarded 3 CPU + 6 H100 submit bridge, and an append-only journal.
-> Six predictor jobs are limited to four hours each with no requeue. The tracked readiness is audit-clean but
-> `fit_packet_ready=false` because target MSA readiness is still 0/8; no approval packet exists. Resume from
-> `docs/M6D_W3B_FIT_APPROVAL.md` only after completing the separately approved MSA lifecycle.
+> Six predictor jobs are limited to four hours each with no requeue. The tracked readiness is audit-clean with
+> `fit_packet_ready=true`; the immutable approval packet exists, and the guarded dry-run enumerates exactly
+> 3 CPU plus 6 H100 jobs, 180 candidates, and 360 evaluations with zero scheduler or receipt writes. Resume
+> from `docs/M6D_W3B_FIT_APPROVAL.md` and wait for the separate exact fit approval.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

@@ -4,16 +4,14 @@
   "can_claim_w3b": false,
   "can_generate_candidates_or_run_predictors": false,
   "claim_boundary": "Execution-input provenance only. This readiness check never submits work and cannot authorize candidate generation, predictor execution, certification, or a W3b claim.",
-  "execution_lock_ready": false,
+  "execution_lock_ready": true,
   "failures": [],
   "n_failures": 0,
-  "next_action": "complete the separately approved eight-target MSA precompute and strict sync-back replay",
+  "next_action": "materialize the immutable execution manifest and input lock, then prepare a separate fit-stage approval packet",
   "no_submit": true,
   "protocol": "configs/m6d_w3b_disagreement_gate_protocol.json",
   "protocol_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96",
-  "requirements": [
-    "complete the separately approved eight-target MSA precompute and strict sync-back replay"
-  ],
+  "requirements": [],
   "role_counts": {
     "certification": 3,
     "fit": 3,
@@ -21,8 +19,65 @@
   },
   "source_manifest": "configs/m6d_w3b_fresh_targets.json",
   "source_manifest_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
-  "status": "w3b_execution_lock_awaiting_target_msa_approval_and_completion",
-  "target_bindings": [],
+  "status": "w3b_execution_lock_ready_for_manifest_materialization",
+  "target_bindings": [
+    {
+      "target_id": "1FSK_LJ",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.a3m.report.json",
+      "target_msa_report_sha256": "d4691c97ac21ea3912eec2c418ea5edce77eaa0c89adc00ed2c08bc08c35db7d",
+      "target_msa_sha256": "a85689ed142c03ac7dfda6a97d5f79f8a12bcbed91c64e285f3e4e8d5befe591"
+    },
+    {
+      "target_id": "1FSX_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.a3m.report.json",
+      "target_msa_report_sha256": "2a1a3830f988b8346c48398f34bebffa1919769357b2cff7816a8b6dac68ea9c",
+      "target_msa_sha256": "1852d5c9b1b0a02cb893572e688c00ec74f978e550dc8ffd6bc1f1399b50213c"
+    },
+    {
+      "target_id": "1FL7_DC",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.a3m.report.json",
+      "target_msa_report_sha256": "c9daf5fb4370441f0684e17ec1bf8d457a165a9be68a83cc17cc9ad97797bf4d",
+      "target_msa_sha256": "4eabc706127bfa20d580f1254d095243634a9a0d2790a0e8dd53b8635384a21a"
+    },
+    {
+      "target_id": "1F2U_CD",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.a3m.report.json",
+      "target_msa_report_sha256": "4b1d73981c5873ba98470e81ad87149af4efa54a9b4ae3ce86e5670147634520",
+      "target_msa_sha256": "c2e3912fb0ef62f90790485103d59702f4e60447085386b398da811cccd0e5ae"
+    },
+    {
+      "target_id": "1FV1_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.a3m.report.json",
+      "target_msa_report_sha256": "e7286622b78de07b13fd32806e28db6ae4f0c784abc76e2c683f8e1face4d088",
+      "target_msa_sha256": "dd72e88ff64903a2611f4d7b32347e3691a0b0a2f9be8c0a5db6abc16a88a543"
+    },
+    {
+      "target_id": "1FN3_DC",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.a3m.report.json",
+      "target_msa_report_sha256": "9a77d6a5f08447b6e81fc9b99943812527082c40ab1a0f82aff38ee6060684dd",
+      "target_msa_sha256": "f6436bbbe376ca36ff66612b5120255a758d6a74d945e924d286979dca3bf69c"
+    },
+    {
+      "target_id": "1FHJ_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.a3m.report.json",
+      "target_msa_report_sha256": "3b9381bf9356f4fc102f89529b0ec7f5cf59c8ea2c9135ae0e74ff684151dc66",
+      "target_msa_sha256": "66aa08bbfa6ec6a3de18acf0a8e76c9cf24d1b8d2ef49d270bdecd96326c5dd0"
+    },
+    {
+      "target_id": "1F3V_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.a3m.report.json",
+      "target_msa_report_sha256": "791830ace6c91d2c788441847c52503d8178c91fb73a2d631417ec0c09c2bb6c",
+      "target_msa_sha256": "fa763a7bbe4ee501bc5944ea5ec1454baaf17d7aea7cedc7ec6b880d1378ccad"
+    }
+  ],
   "target_ids": [
     "1FSK_LJ",
     "1FSX_BA",
@@ -34,5 +89,5 @@
     "1F3V_BA"
   ],
   "target_msa_lifecycle": "results/m6d_w3b_target_msa_lifecycle.json",
-  "target_msa_lifecycle_sha256": "9ee516dd6ce69eeec388920bef033b899c983f833eabeba194e63e368602c2d5"
+  "target_msa_lifecycle_sha256": "cbf7ac40196c0e941ae1b753e7233799534fc865d46673f8b98c152ecdb81439"
 }

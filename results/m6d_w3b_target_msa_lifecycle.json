@@ -1,69 +1,719 @@
 {
+  "allocation_telemetry_reconciliation": {
+    "allowed_correction": "Add a40 only in memory for the eight exact primary sacct rows after independent proof.",
+    "artifact": "m6d_w3b_target_msa_allocation_telemetry_reconciliation",
+    "audit_ok": true,
+    "evidence_paths": {
+      "raw_sacct": "results/m6d_w3b_target_msa_sacct.tsv",
+      "scontrol_nodes": "results/m6d_w3b_target_msa_scontrol_nodes.txt",
+      "scontrol_submit": "results/m6d_w3b_target_msa_scontrol_submit.txt"
+    },
+    "failures": [],
+    "job_ids": [
+      "3085384",
+      "3085385",
+      "3085386",
+      "3085387",
+      "3085388",
+      "3085389",
+      "3085390",
+      "3085391"
+    ],
+    "n_failures": 0,
+    "no_submit": true,
+    "normalized_job_ids": [
+      "3085384",
+      "3085385",
+      "3085386",
+      "3085387",
+      "3085388",
+      "3085389",
+      "3085390",
+      "3085391"
+    ],
+    "normalized_sacct_sha256": "78332f60c80654f9d97a0806164cd9ad0420f0e9c554edf457313188a6f8abe6",
+    "precompute_sbatch": "hpc/run_precompute_boltz_target_msa.sbatch",
+    "precompute_sbatch_sha256": "14080cbbb791a1db2fe1bcd4ca8bcba36d5f4d47ba9ae22f6f27042c59e2f82f",
+    "raw_lifecycle_failures": [
+      {
+        "job_id": "3085384",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085385",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085386",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085387",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085388",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085389",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085390",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      },
+      {
+        "job_id": "3085391",
+        "kind": "job_gpu_allocation_invalid",
+        "message": "completed target-MSA job was not proven to use exactly one A40"
+      }
+    ],
+    "raw_lifecycle_status": "target_msa_lifecycle_blocked",
+    "raw_sacct_sha256": "f5bf4643dd172b64edb12c502e18a5445ead87b72cab65ae0ae9efcd27b62bda",
+    "reason": "Cayuga sacct AllocTRES omits the GPU subtype while retaining the one-GPU allocation count.",
+    "scontrol_nodes_sha256": "6ac91e1ff757417767a670404d5f7d7006881db75199f424017f5ce6f0529fdb",
+    "scontrol_submit_sha256": "5813c291e35d4bf615e57a461268c977d752d67e0b122add9d741a3121988231",
+    "status": "allocation_telemetry_reconciled",
+    "terminal_nodes": {
+      "3085384": "g0002",
+      "3085385": "g0002",
+      "3085386": "g0002",
+      "3085387": "g0002",
+      "3085388": "g0002",
+      "3085389": "g0002",
+      "3085390": "g0002",
+      "3085391": "g0002"
+    }
+  },
   "artifact": "m6d_w3b_target_msa_lifecycle",
   "audit_ok": true,
   "can_claim_w3b": false,
-  "can_run_post_msa_design_gate": false,
+  "can_run_post_msa_design_gate": true,
   "can_submit_candidate_generation_or_candidate_level_prediction": false,
-  "claim_boundary": "Target-MSA lifecycle provenance only. This tool never submits work and cannot authorize candidate generation, candidate-level prediction, a gate certificate, or a W3b claim.",
-  "completion_ok": false,
-  "explicit_approval_still_required": true,
+  "claim_boundary": "Target-MSA lifecycle provenance only. This tool never submits work and cannot authorize candidate generation, candidate-level prediction, a gate certificate, or a W3b claim. The reconciliation changes no raw accounting, scientific input, threshold, role, or compute scope.",
+  "completion_ok": true,
+  "explicit_approval_still_required": false,
   "failures": [],
-  "gpu_allocation_hours": 0.0,
-  "gpu_allocation_seconds": 0,
-  "job_states": [],
-  "jobs_terminal_success": false,
+  "gpu_allocation_hours": 0.21638888888888888,
+  "gpu_allocation_seconds": 779,
+  "job_states": [
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 118,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085384",
+      "node_list": "g0002",
+      "raw_job_id": "3085384",
+      "state": "COMPLETED",
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 142,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085385",
+      "node_list": "g0002",
+      "raw_job_id": "3085385",
+      "state": "COMPLETED",
+      "target_id": "1FSX_BA"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 104,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085386",
+      "node_list": "g0002",
+      "raw_job_id": "3085386",
+      "state": "COMPLETED",
+      "target_id": "1FL7_DC"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 127,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085387",
+      "node_list": "g0002",
+      "raw_job_id": "3085387",
+      "state": "COMPLETED",
+      "target_id": "1F2U_CD"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 84,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085388",
+      "node_list": "g0002",
+      "raw_job_id": "3085388",
+      "state": "COMPLETED",
+      "target_id": "1FV1_BA"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 50,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085389",
+      "node_list": "g0002",
+      "raw_job_id": "3085389",
+      "state": "COMPLETED",
+      "target_id": "1FN3_DC"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 50,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085390",
+      "node_list": "g0002",
+      "raw_job_id": "3085390",
+      "state": "COMPLETED",
+      "target_id": "1FHJ_BA"
+    },
+    {
+      "alloc_tres": "billing=4,cpu=4,gres/gpu:a40=1,mem=32G,node=1",
+      "elapsed_seconds": 104,
+      "exit_code": "0:0",
+      "gpu_type": "a40",
+      "gpus": 1,
+      "job_id": "3085391",
+      "node_list": "g0002",
+      "raw_job_id": "3085391",
+      "state": "COMPLETED",
+      "target_id": "1F3V_BA"
+    }
+  ],
+  "jobs_terminal_success": true,
   "manifest": "configs/m6d_w3b_fresh_targets.json",
   "manifest_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
   "maximum_a40_gpu_hours": 8.0,
   "msa_presence": {
     "1F2U_CD": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1F3V_BA": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1FHJ_BA": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1FL7_DC": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1FN3_DC": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1FSK_LJ": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1FSX_BA": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     },
     "1FV1_BA": {
-      "target_msa_exists": false,
-      "target_msa_report_exists": false
+      "target_msa_exists": true,
+      "target_msa_report_exists": true
     }
   },
   "n_failures": 0,
   "n_targets": 8,
-  "next_action": "exact W3b target-MSA approval and guarded submission",
+  "next_action": "rerun the design audit into post-MSA outputs, then stop for a separate candidate-generation approval packet",
   "no_submit": true,
-  "receipt_present": false,
-  "receipt_status_counts": {},
-  "requirements": [
-    "exact W3b target-MSA approval and guarded submission"
+  "receipt_present": true,
+  "receipt_status_counts": {
+    "submitted": 8
+  },
+  "requirements": [],
+  "status": "target_msa_precompute_complete_8_of_8",
+  "strict_manifest": {
+    "failures": [],
+    "failures_by_kind": {},
+    "input_prep_artifacts": [
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FSK.pdb",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/prepared_1FSK_LJ.pdb",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/prepared_1FSK_LJ.report.json",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.fasta",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.fasta.report.json",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.a3m",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.a3m.report.json",
+        "target_id": "1FSK_LJ"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FSX.pdb",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/prepared_1FSX_BA.pdb",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/prepared_1FSX_BA.report.json",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.fasta",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.fasta.report.json",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.a3m",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.a3m.report.json",
+        "target_id": "1FSX_BA"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FL7.pdb",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/prepared_1FL7_DC.pdb",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/prepared_1FL7_DC.report.json",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.fasta",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.fasta.report.json",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.a3m",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.a3m.report.json",
+        "target_id": "1FL7_DC"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F2U.pdb",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/prepared_1F2U_CD.pdb",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/prepared_1F2U_CD.report.json",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.fasta",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.fasta.report.json",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.a3m",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.a3m.report.json",
+        "target_id": "1F2U_CD"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FV1.pdb",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/prepared_1FV1_BA.pdb",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/prepared_1FV1_BA.report.json",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.fasta",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.fasta.report.json",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.a3m",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.a3m.report.json",
+        "target_id": "1FV1_BA"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FN3.pdb",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/prepared_1FN3_DC.pdb",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/prepared_1FN3_DC.report.json",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.fasta",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.fasta.report.json",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.a3m",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.a3m.report.json",
+        "target_id": "1FN3_DC"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1FHJ.pdb",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/prepared_1FHJ_BA.pdb",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/prepared_1FHJ_BA.report.json",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.fasta",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.fasta.report.json",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.a3m",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.a3m.report.json",
+        "target_id": "1FHJ_BA"
+      },
+      {
+        "field": "source_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_sources/source_1F3V.pdb",
+        "target_id": "1F3V_BA"
+      },
+      {
+        "field": "prepared_pdb",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/prepared_1F3V_BA.pdb",
+        "target_id": "1F3V_BA"
+      },
+      {
+        "field": "prep_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/prepared_1F3V_BA.report.json",
+        "target_id": "1F3V_BA"
+      },
+      {
+        "field": "target_fasta",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.fasta",
+        "target_id": "1F3V_BA"
+      },
+      {
+        "field": "target_fasta_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.fasta.report.json",
+        "target_id": "1F3V_BA"
+      },
+      {
+        "field": "target_msa",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.a3m",
+        "target_id": "1F3V_BA"
+      },
+      {
+        "field": "target_msa_report",
+        "path": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.a3m.report.json",
+        "target_id": "1F3V_BA"
+      }
+    ],
+    "manifest": "<repo-root>/configs/m6d_w3b_fresh_targets.json",
+    "min_contacts": 1,
+    "min_targets": 8,
+    "n_ready_targets": 8,
+    "n_targets": 8,
+    "ok": true,
+    "ready_targets": [
+      "1FSK_LJ",
+      "1FSX_BA",
+      "1FL7_DC",
+      "1F2U_CD",
+      "1FV1_BA",
+      "1FN3_DC",
+      "1FHJ_BA",
+      "1F3V_BA"
+    ],
+    "require_files": true,
+    "require_records": false,
+    "target_ids": [
+      "1F2U_CD",
+      "1F3V_BA",
+      "1FHJ_BA",
+      "1FL7_DC",
+      "1FN3_DC",
+      "1FSK_LJ",
+      "1FSX_BA",
+      "1FV1_BA"
+    ]
+  },
+  "submitted": true,
+  "submitted_jobs": [
+    {
+      "job_id": "3085384",
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "job_id": "3085385",
+      "target_id": "1FSX_BA"
+    },
+    {
+      "job_id": "3085386",
+      "target_id": "1FL7_DC"
+    },
+    {
+      "job_id": "3085387",
+      "target_id": "1F2U_CD"
+    },
+    {
+      "job_id": "3085388",
+      "target_id": "1FV1_BA"
+    },
+    {
+      "job_id": "3085389",
+      "target_id": "1FN3_DC"
+    },
+    {
+      "job_id": "3085390",
+      "target_id": "1FHJ_BA"
+    },
+    {
+      "job_id": "3085391",
+      "target_id": "1F3V_BA"
+    }
   ],
-  "status": "target_msa_not_submitted_awaiting_explicit_approval",
-  "strict_manifest": null,
-  "submitted": false,
-  "submitted_jobs": [],
-  "summary_present": false,
-  "target_artifacts": [],
+  "summary_present": true,
+  "target_artifacts": [
+    {
+      "expected_target_sequence_sha256": "ec0db632aa3b3ec9dd5ea9370dce1bfe785add368f0f1aace970dfec07e50155",
+      "sequence_length": 220,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.fasta",
+      "target_fasta_sha256": "2f4a5244d1b1ae019f0bd61fc39848eb7b55d76d4b74023acdeac31b3d54f268",
+      "target_id": "1FSK_LJ",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.a3m",
+      "target_msa_bytes": 370902,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSK_LJ/1FSK_LJ_L.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "d4691c97ac21ea3912eec2c418ea5edce77eaa0c89adc00ed2c08bc08c35db7d",
+      "target_msa_sha256": "a85689ed142c03ac7dfda6a97d5f79f8a12bcbed91c64e285f3e4e8d5befe591",
+      "target_sequence_sha256": "ec0db632aa3b3ec9dd5ea9370dce1bfe785add368f0f1aace970dfec07e50155"
+    },
+    {
+      "expected_target_sequence_sha256": "bbba23e183c656a87d623d6f69dc10b2e6ba4e9c4ca1cb1992f07f14964d7327",
+      "sequence_length": 145,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.fasta",
+      "target_fasta_sha256": "a9ac0697a868235a9db6e9b1626ca812e47e26ea5ff1373d6d769bcdce8427c3",
+      "target_id": "1FSX_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.a3m",
+      "target_msa_bytes": 104196,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FSX_BA/1FSX_BA_B.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "2a1a3830f988b8346c48398f34bebffa1919769357b2cff7816a8b6dac68ea9c",
+      "target_msa_sha256": "1852d5c9b1b0a02cb893572e688c00ec74f978e550dc8ffd6bc1f1399b50213c",
+      "target_sequence_sha256": "bbba23e183c656a87d623d6f69dc10b2e6ba4e9c4ca1cb1992f07f14964d7327"
+    },
+    {
+      "expected_target_sequence_sha256": "fadc32f7747ed71a3d5a5415139d3d8e525fb84a5929baa2fc703fd5eaa98dd8",
+      "sequence_length": 106,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.fasta",
+      "target_fasta_sha256": "f1926982d7f5ced2b1ec4a7dd1cd64d3bd3a7ebac64657fec70efc7cd12044a5",
+      "target_id": "1FL7_DC",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.a3m",
+      "target_msa_bytes": 38486,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FL7_DC/1FL7_DC_D.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "c9daf5fb4370441f0684e17ec1bf8d457a165a9be68a83cc17cc9ad97797bf4d",
+      "target_msa_sha256": "4eabc706127bfa20d580f1254d095243634a9a0d2790a0e8dd53b8635384a21a",
+      "target_sequence_sha256": "fadc32f7747ed71a3d5a5415139d3d8e525fb84a5929baa2fc703fd5eaa98dd8"
+    },
+    {
+      "expected_target_sequence_sha256": "f738cb15289627da10a7eeeee50388df94288a3bdcd7ded8affdee1001176327",
+      "sequence_length": 148,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.fasta",
+      "target_fasta_sha256": "c759c781b5b74d581331fe6c5f756d2f9b652fb37f768f109ca2c4045183a518",
+      "target_id": "1F2U_CD",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.a3m",
+      "target_msa_bytes": 1123836,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F2U_CD/1F2U_CD_C.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "4b1d73981c5873ba98470e81ad87149af4efa54a9b4ae3ce86e5670147634520",
+      "target_msa_sha256": "c2e3912fb0ef62f90790485103d59702f4e60447085386b398da811cccd0e5ae",
+      "target_sequence_sha256": "f738cb15289627da10a7eeeee50388df94288a3bdcd7ded8affdee1001176327"
+    },
+    {
+      "expected_target_sequence_sha256": "e205070e0b3aee7344bada6a9a369e180588406ea0fc530672979c5b2afe8243",
+      "sequence_length": 190,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.fasta",
+      "target_fasta_sha256": "a6cf93ff423d746938b9f7d761ec12f652d16f29b9c8479a31ab19623373c5d9",
+      "target_id": "1FV1_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.a3m",
+      "target_msa_bytes": 326213,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FV1_BA/1FV1_BA_B.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "e7286622b78de07b13fd32806e28db6ae4f0c784abc76e2c683f8e1face4d088",
+      "target_msa_sha256": "dd72e88ff64903a2611f4d7b32347e3691a0b0a2f9be8c0a5db6abc16a88a543",
+      "target_sequence_sha256": "e205070e0b3aee7344bada6a9a369e180588406ea0fc530672979c5b2afe8243"
+    },
+    {
+      "expected_target_sequence_sha256": "f01c9c95659c68488313db7ec922b165fcced63b80efd673e5410e311d20f60e",
+      "sequence_length": 146,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.fasta",
+      "target_fasta_sha256": "ea4627334847ebc25494f48b4c3dc229bd477429d00d22d9d2c16ec7844421f3",
+      "target_id": "1FN3_DC",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.a3m",
+      "target_msa_bytes": 140765,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FN3_DC/1FN3_DC_D.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "9a77d6a5f08447b6e81fc9b99943812527082c40ab1a0f82aff38ee6060684dd",
+      "target_msa_sha256": "f6436bbbe376ca36ff66612b5120255a758d6a74d945e924d286979dca3bf69c",
+      "target_sequence_sha256": "f01c9c95659c68488313db7ec922b165fcced63b80efd673e5410e311d20f60e"
+    },
+    {
+      "expected_target_sequence_sha256": "bd1cf9e05d7d2fa1fdf0b6276270d693b3d1837c1ef28d8d04fb5c396f4f43a0",
+      "sequence_length": 146,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.fasta",
+      "target_fasta_sha256": "9c48c1c9ac65115fc429cd15677ae6e29b73f9fd050cb088b4de67b4d1919850",
+      "target_id": "1FHJ_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.a3m",
+      "target_msa_bytes": 163356,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1FHJ_BA/1FHJ_BA_B.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "3b9381bf9356f4fc102f89529b0ec7f5cf59c8ea2c9135ae0e74ff684151dc66",
+      "target_msa_sha256": "66aa08bbfa6ec6a3de18acf0a8e76c9cf24d1b8d2ef49d270bdecd96326c5dd0",
+      "target_sequence_sha256": "bd1cf9e05d7d2fa1fdf0b6276270d693b3d1837c1ef28d8d04fb5c396f4f43a0"
+    },
+    {
+      "expected_target_sequence_sha256": "4d7da7f21c446414291bc0ed4f0b2e8378e47edc97f009f0412144e38bd4edad",
+      "sequence_length": 171,
+      "target_fasta": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.fasta",
+      "target_fasta_sha256": "c5a2561db1afce7f96bc6567cc7fb4c348c35a0084dda8766f215fcf87794974",
+      "target_id": "1F3V_BA",
+      "target_msa": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.a3m",
+      "target_msa_bytes": 334791,
+      "target_msa_report": "hpc_outputs/m6d_w2b_target_adaptive_targets/1F3V_BA/1F3V_BA_B.a3m.report.json",
+      "target_msa_report_ok": true,
+      "target_msa_report_sha256": "791830ace6c91d2c788441847c52503d8178c91fb73a2d631417ec0c09c2bb6c",
+      "target_msa_sha256": "fa763a7bbe4ee501bc5944ea5ec1454baaf17d7aea7cedc7ec6b880d1378ccad",
+      "target_sequence_sha256": "4d7da7f21c446414291bc0ed4f0b2e8378e47edc97f009f0412144e38bd4edad"
+    }
+  ],
   "target_ids": [
     "1FSK_LJ",
     "1FSX_BA",
@@ -74,5 +724,6 @@
     "1FHJ_BA",
     "1F3V_BA"
   ],
+  "telemetry_reconciliation_applied": true,
   "within_gpu_budget": true
 }

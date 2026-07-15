@@ -5,9 +5,11 @@
 > was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
 > finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
 > `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes. The
-> W3b successor is now prospectively locked with eight label-blind fresh target roles, exact endpoint
-> power 0.824333, a frozen matched-predictor evaluator, and an exact dual-predictor runtime lock. Target-MSA
-> readiness is 0/8 and no compute is approved.
+> W3b successor is prospectively locked with eight label-blind fresh target roles, exact endpoint power
+> 0.824333, a frozen matched-predictor evaluator, and an exact dual-predictor runtime lock. The separately
+> approved target-MSA stage completed 8/8 at 0.216389 A40 GPU-hours, strict replay passed, and the immutable
+> 870-slot execution lock now exists. The fit approval packet and zero-submit dry-run are ready, but no fit
+> candidate generation or predictor compute is approved.
 
 Date: 2026-07-15
 
@@ -37,8 +39,8 @@ then completed under its frozen 58-case protocol. The 3PC8 block supports Chai (
 `6/6` controls), while the W2c block is mixed (`30/40` Boltz agreement; `5/8` targets at least `4/5`).
 The joint result is `context_dependent_or_unresolved`. All W2 v1-v11 execution entries later in this
 chronological ledger are historical even where their original labels say `current`. W3b is now
-`w3b_design_power_qualified_inputs_incomplete_no_submit`: eight unused targets are locked to 3 fit,
-3 certification, and 2 held-out-test roles, but their MSAs are not yet prepared.
+`w3b_fit_packet_ready_awaiting_explicit_approval`: eight unused targets are locked to 3 fit,
+3 certification, and 2 held-out-test roles; their MSAs, strict lifecycle, and execution lock are complete.
 
 ## Active Objective
 
@@ -63,20 +65,18 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W3: the bounded third-predictor mechanism panel is complete and audited. 3PC8 supports Chai over Boltz,
   but W2c agreement is target-dependent and mixed; the joint outcome is `context_dependent_or_unresolved`.
   Population-level independent-predictor robustness remains unsupported.
-- W3b: the fresh matched-predictor gate is preregistered and power-qualified, but input readiness is 0/8
-  target MSAs. Its hash-bound MSA-only packet awaits exact approval with an 8 A40 GPU-hour ceiling.
-  All execution and post-submit replay helpers are hash-bound, and the staged Cayuga mirror passes 16
-  exact SHA checks, five shell-syntax checks, runtime and lifecycle-import checks, receipt absence, the
-  expected receiptless-query refusal, and the exact eight-target no-submit dry-run. The current lifecycle
-  state is `target_msa_not_submitted_awaiting_explicit_approval`. Boltz `2.2.1` and AF2-Multimer/ColabFold
-  `1.6.1` are now frozen by package/container/checkpoint/weight hashes and exact execution parameters in
-  `configs/m6d_w3b_runtime_lock.json`; runtime readiness is audit-clean but cannot authorize execution.
-  The downstream W3b-only fit producer and guarded nine-job submit path are also implemented: they reject
-  duplicate sequences, re-observe both runtimes before prediction, enforce 3 fit targets x 60 candidates x
-  2 predictors, and hard-cap the six H100 jobs at 24 allocatable GPU-hours. Its no-submit readiness report
-  is audit-clean but remains `fit_packet_ready=false` until the 8/8 MSA-derived execution lock exists.
-  This supports no gate or predictor-
-  robustness claim and authorizes no compute.
+- W3b: the fresh matched-predictor gate is preregistered and power-qualified. The consumed MSA-only packet
+  submitted jobs `3085384`-`3085391`; all completed `0:0` without retry at 0.216389 A40 GPU-hours. The 56
+  scoped artifacts pass strict 8/8 manifest, report, and frozen-sequence checks. Cayuga's raw `AllocTRES`
+  omitted the subtype, so a versioned reconciliation accepted A40 only after 8/8 submit-time `scontrol`
+  proof, terminal one-GPU accounting, A40 node inventory, and the packet-bound A40 sbatch all agreed; it
+  cannot suppress any non-telemetry failure. The resulting lifecycle is
+  `target_msa_precompute_complete_8_of_8`, and the verified execution lock binds eight MSA hashes and 870
+  design slots. Boltz `2.2.1` and AF2-Multimer/ColabFold `1.6.1` remain frozen by exact package/container/
+  checkpoint/weight hashes. The downstream fit packet is emitted and its guarded dry-run proves exactly
+  3 CPU plus 6 H100 jobs, 180 candidates, and 360 matched evaluations with zero scheduler or receipt
+  writes. No fit approval, candidate generation, predictor run, gate claim, or biological-success claim
+  exists.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -121,6 +121,10 @@ from Chai records alone.
 - W3b target-MSA approval boundary:
   `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and
   `results/m6d_w3b_target_msa_approval_packet.json`
+- W3b target-MSA completion and allocation reconciliation:
+  `docs/M6D_W3B_TARGET_MSA_COMPLETION.md`,
+  `results/m6d_w3b_target_msa_lifecycle.{json,md}`, and
+  `bio_sfm_designer.experiments.m6d_w3b_target_msa_allocation_reconcile`
 - W3b Cayuga no-submit readiness evidence:
   `results/m6d_w3b_target_msa_remote_readiness.{json,md}`
 - W3b target-MSA lifecycle and post-submit replay:
@@ -130,6 +134,8 @@ from Chai records alone.
 - W3b lifecycle-derived execution-lock readiness:
   `results/m6d_w3b_execution_lock_readiness.{json,md}` and
   `bio_sfm_designer.experiments.m6d_w3b_execution_lock`
+- W3b immutable execution manifest/input lock:
+  `configs/m6d_w3b_execution_targets.json` and `configs/m6d_w3b_execution_input_lock.json`
 - W3b exact dual-predictor runtime lock:
   `configs/m6d_w3b_runtime_lock.json`, `results/m6d_w3b_runtime_lock_readiness.{json,md}`, and
   `bio_sfm_designer.experiments.m6d_w3b_runtime_lock`

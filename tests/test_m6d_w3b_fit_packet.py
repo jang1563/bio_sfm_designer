@@ -10,8 +10,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 from bio_sfm_designer.experiments.m6d_w3b_fit_packet import (
     build_approval_packet,
     build_readiness,
@@ -181,17 +179,17 @@ def _current():
     )
 
 
-def test_current_packet_is_clean_but_waits_for_target_msa(monkeypatch):
+def test_current_packet_is_clean_and_ready_for_explicit_fit_approval(monkeypatch):
     monkeypatch.chdir(ROOT)
     report = _current()
 
     assert report["audit_ok"] is True
-    assert report["fit_packet_ready"] is False
-    assert report["execution_lock_ready"] is False
+    assert report["fit_packet_ready"] is True
+    assert report["execution_lock_ready"] is True
     assert report["runtime_identity_ready"] is True
     assert report["can_submit_fit_stage"] is False
     assert report["submitted_jobs"] == 0
-    assert report["status"] == "w3b_fit_packet_awaiting_target_msa_and_execution_lock"
+    assert report["status"] == "w3b_fit_packet_ready_awaiting_explicit_approval"
     assert report["approval_contract"]["candidate_designs"] == 180
     assert report["approval_contract"]["matched_predictor_evaluations"] == 360
     assert report["approval_contract"]["authorizes_certification"] is False
@@ -199,10 +197,14 @@ def test_current_packet_is_clean_but_waits_for_target_msa(monkeypatch):
     assert len(report["bound_artifacts"]) >= 17
 
 
-def test_waiting_readiness_cannot_emit_approval_packet(monkeypatch):
+def test_current_readiness_emits_no_submit_approval_packet(monkeypatch):
     monkeypatch.chdir(ROOT)
-    with pytest.raises(ValueError, match="cannot be emitted"):
-        build_approval_packet(_current())
+    packet = build_approval_packet(_current())
+
+    assert packet["status"] == "w3b_fit_approval_packet_ready_no_submit"
+    assert packet["audit_ok"] is True
+    assert packet["approval_recorded"] is False
+    assert packet["submitted_jobs"] == 0
 
 
 def test_approval_packet_preserves_exact_fit_scope(monkeypatch):

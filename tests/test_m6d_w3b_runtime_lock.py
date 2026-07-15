@@ -148,7 +148,7 @@ def test_rehashed_source_binding_cannot_hide_source_file_drift():
     assert "runtime_lock_source_file_hash_mismatch" in {row["kind"] for row in failures}
 
 
-def test_current_readiness_is_runtime_ready_but_execution_locked(tmp_path):
+def test_current_readiness_is_runtime_and_execution_ready(tmp_path):
     lock_path = tmp_path / "runtime_lock.json"
     _write(lock_path, _build())
 
@@ -156,10 +156,10 @@ def test_current_readiness_is_runtime_ready_but_execution_locked(tmp_path):
 
     assert report["audit_ok"] is True
     assert report["runtime_identity_ready"] is True
-    assert report["execution_lock_ready"] is False
-    assert report["fit_packet_prerequisites_ready"] is False
+    assert report["execution_lock_ready"] is True
+    assert report["fit_packet_prerequisites_ready"] is True
     assert report["can_submit_fit_stage"] is False
-    assert report["status"] == "w3b_runtime_locked_awaiting_execution_lock"
+    assert report["status"] == "w3b_runtime_lock_ready_for_separate_fit_approval_packet"
 
 
 def test_execution_readiness_from_different_protocol_is_blocked(tmp_path):

@@ -1,0 +1,54 @@
+{
+  "artifact": "m6d_w3b_disagreement_design_gate",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "cayuga_submission_allowed": false,
+  "certification_power": {
+    "accepted_rows": 100,
+    "conditional_certification_power": 0.8243330044654517,
+    "design_true_risk": 0.08,
+    "maximum_certifiable_empirical_risk": 0.1,
+    "maximum_certifiable_false_accepts": 10
+  },
+  "claim_boundary": "Prospective design, target-role, and exact-power audit only. It does not authorize compute, certify a gate, establish biological binder success, or rescue W2c.",
+  "compute_budget": {
+    "maximum_candidate_designs": 870,
+    "maximum_h100_gpu_hours": 24.0,
+    "maximum_predictor_evaluations": 1740
+  },
+  "design_power_qualified": true,
+  "execution_ready": false,
+  "failures": [],
+  "fresh_target_contract": {
+    "manifest_sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc",
+    "missing_target_msa_targets": [],
+    "n_targets": 8,
+    "role_counts": {
+      "certification": 3,
+      "fit": 3,
+      "held_out_test": 2
+    },
+    "target_ids": [
+      "1FSK_LJ",
+      "1FSX_BA",
+      "1FL7_DC",
+      "1F2U_CD",
+      "1FV1_BA",
+      "1FN3_DC",
+      "1FHJ_BA",
+      "1F3V_BA"
+    ],
+    "target_msa_ready": true
+  },
+  "inputs_ready": true,
+  "locked_scientific_digest": "435eadc78fa850d4a67d6eeef463b5a805727cc46e714739d709fec7c28257cb",
+  "next_action": "Prepare a separately hash-bound candidate-generation packet and stop for explicit approval; do not run ProteinMPNN or either predictor.",
+  "no_submit": true,
+  "predecessor_checks": {
+    "audit_ok": true,
+    "joint_outcome": true,
+    "population_claim_false": true,
+    "w2c_reopen_false": true
+  },
+  "status": "w3b_design_power_qualified_inputs_ready_no_submit"
+}

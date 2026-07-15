@@ -1,11 +1,14 @@
 # M6d W3b target-MSA approval boundary
 
-Status: `awaiting_explicit_w3b_target_msa_approval`.
+Status: `consumed_and_completed_8_of_8`.
 
 Date: 2026-07-14.
 
 The W3b scientific protocol, label-blind 3/3/2 target roles, exact-power design audit, and eight-target
-MSA plan are complete and hash-bound. This packet does not record approval and does not submit work.
+MSA plan were completed and hash-bound before execution. The exact approval was later consumed, jobs
+`3085384`-`3085391` completed `8/8` with exit `0:0`, and strict replay passed at `0.216389 A40 GPU-hours`.
+This document and its machine packet are now immutable historical approval evidence. The authoritative
+completion record is `docs/M6D_W3B_TARGET_MSA_COMPLETION.md`.
 
 ## Exact scope
 
@@ -45,26 +48,22 @@ bash hpc/run_w3b_target_msa_guarded.sh
 The verified dry-run enumerates exactly eight targets, submits no scheduler jobs, and leaves receipt
 and summary paths untouched.
 
-## Approval gate
+## Historical approval gate
 
-A real MSA submission requires the exact, separate approval token:
+The completed MSA submission required the exact, separate approval token:
 
 ```bash
 BIO_SFM_APPROVE_W3B_TARGET_MSA=approve-w3b-target-msa-precompute \
 bash hpc/run_w3b_target_msa_guarded.sh
 ```
 
-Generic continuation language and shorter token variants are not approval. The wrapper refuses them
-before creating a receipt.
+Generic continuation language and shorter token variants were not approval. The wrapper refused them
+before creating a receipt. Do not reuse this consumed token.
 
-## After completion
+## Completed replay
 
-After an approved submission, run `results/m6d_w3b_target_msa_job_state_query.sh` on Cayuga. It reads the
-receipt, queries `sacct`, and updates the lifecycle report without submitting work. Only after all eight
-jobs are terminal-success, run `results/m6d_w3b_target_msa_sync_back.sh` locally. It pulls only the receipt,
-job state, and target input-prep artifacts; then it replays strict manifest, sequence, report-hash, frozen-
-sequence, allocation, and 8/8 completion checks, reruns the design gate, and materializes
-`configs/m6d_w3b_execution_targets.json` plus `configs/m6d_w3b_execution_input_lock.json`. Those outputs
-freeze all 870 stage-assigned design slots and bind every target to its lifecycle-validated MSA hash; they still
-authorize no work. Stop again before candidate generation or either predictor. Those later stages require
-distinct immutable packets and explicit approvals.
+The read-only query, scoped sync, strict manifest/sequence/report replay, and lifecycle-derived execution
+lock are complete. `configs/m6d_w3b_execution_targets.json` and
+`configs/m6d_w3b_execution_input_lock.json` freeze all 870 stage-assigned design slots and bind every
+target to its validated MSA hash. They authorize no candidate generation or predictor work. The project
+has stopped at the distinct fit-stage approval boundary in `docs/M6D_W3B_FIT_APPROVAL.md`.

@@ -225,15 +225,15 @@ def _fixture(tmp_path: Path):
     return protocol_path, manifest_path, lock_path, runtime_lock_path
 
 
-def test_current_matched_record_contract_is_coherent_and_waiting():
+def test_current_matched_record_contract_is_stage_input_ready():
     report = build_readiness(
         str(ROOT / "configs/m6d_w3b_disagreement_gate_protocol.json"),
         str(ROOT / "results/m6d_w3b_execution_lock_readiness.json"),
     )
 
     assert report["audit_ok"] is True
-    assert report["assembly_ready"] is False
-    assert report["status"] == "w3b_matched_record_contract_ready_awaiting_execution_lock"
+    assert report["assembly_ready"] is True
+    assert report["status"] == "w3b_matched_record_contract_ready_for_stage_inputs"
     assert report["required_runtime_receipt"]["seed"] == 0
 
 

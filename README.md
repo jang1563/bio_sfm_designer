@@ -53,41 +53,39 @@
 > [docs/M6D_W3_MECHANISM_PANEL.md](docs/M6D_W3_MECHANISM_PANEL.md), and
 > [configs/m6d_w3_mechanism_panel_protocol.json](configs/m6d_w3_mechanism_panel_protocol.json).
 
-> **Current W3b packet (2026-07-14):** the next experiment is now prospectively locked as a
+> **Current W3b input completion (2026-07-15):** the next experiment is prospectively locked as a
 > predictor-disagreement-aware gate on eight unused, source- and sequence-unique targets. Label-blind
 > hashing fixed target-level roles at 3 fit, 3 certification, and 2 held-out test targets before any
 > W3b predictor output exists. Each candidate will be evaluated by matched Boltz-2 and AF2-Multimer
 > protocols; the primary gate uses `max(pAE_interaction)` plus the inter-predictor pAE gap and is compared
 > with a Boltz-pAE-only gate. Exact endpoint power is 0.824333 at 100 accepts, alpha 0.2, and Bonferroni
-> delta 0.05/(3 targets x 2 predictors). The design is no-submit: target-MSA readiness is 0/8 and no
-> query, candidate generation, candidate-level predictor run, scheduler submission, API request, or GPU spend is
-> authorized. The hash-bound MSA-only packet awaits separate explicit approval with an 8 A40 GPU-hour
-> ceiling. The packet now hash-locks all execution and post-submit replay helpers as well as the
-> scientific artifacts. Its no-submit Cayuga readiness audit passes 16/16 exact SHA checks, 5/5 shell
-> syntax checks, runtime and lifecycle-import checks, receipt absence, the expected receiptless-query
-> refusal, and the exact eight-target dry-run; no scheduler job was submitted. The current lifecycle
-> state is recorded in `results/m6d_w3b_target_msa_lifecycle.{json,md}`. A lifecycle-derived execution-
-> lock builder is implemented and coherently waits on the same MSA completion in
-> `results/m6d_w3b_execution_lock_readiness.{json,md}`. After 8/8 completion it will freeze all 870
-> stage-assigned design slots and their target-MSA hashes before any fit-stage approval; the evaluator now
+> delta 0.05/(3 targets x 2 predictors). The separately approved MSA-only stage completed jobs
+> `3085384`-`3085391` at 8/8 `COMPLETED/0:0`, no retry, and `0.216389 A40 GPU-hours`. Strict scoped replay
+> validates 56/56 input-prep artifacts, 8/8 A3M reports, and 8/8 frozen target sequences. Cayuga's raw
+> `sacct AllocTRES` omitted the GPU subtype; a versioned fail-closed reconciliation preserved the raw table
+> and accepted A40 only after the packet-bound sbatch, 8/8 submit-time `scontrol` records, one-GPU terminal
+> accounting, and A40 node inventory all agreed. See
+> [docs/M6D_W3B_TARGET_MSA_COMPLETION.md](docs/M6D_W3B_TARGET_MSA_COMPLETION.md). The lifecycle-derived
+> execution lock now freezes all 870 stage-assigned design slots and their target-MSA hashes; the evaluator
 > rejects pairwise-matching predictor records unless that MSA hash matches the frozen execution manifest.
 > The CPU-side matched-record assembler is also implemented in
 > `bio_sfm_designer.experiments.m6d_w3b_matched_records`. It requires exact candidate/output sets, the
 > execution input lock, per-predictor runtime receipts, seed `0`, templates off, prediction-time network
 > off, candidate/MSA/runtime/model-output hashes, and non-copied predictor values before producing evaluator
-> input. Its current no-submit contract is audit-clean and waits on the execution lock at
+> input. Its current no-submit contract is audit-clean and stage-input ready at
 > `results/m6d_w3b_matched_record_contract.{json,md}`. The dual-predictor runtime is now separately
 > frozen in `configs/m6d_w3b_runtime_lock.json`: Boltz `2.2.1` is bound to its installed-distribution
 > manifest and local checkpoint hashes, while AF2 is bound to the W3 ColabFold container and all five
 > Multimer-v3 weight hashes. Both identities include explicit execution parameters. Runtime-lock readiness
-> is audit-clean, no-submit, and correctly waits on the target-MSA-derived execution lock in
+> is audit-clean, no-submit, and ready against the target-MSA-derived execution lock in
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}`. Runtime receipts must match the frozen per-predictor
 > identity and runtime-lock file/digest exactly; a self-consistent alternate runtime fails closed.
 > The W3b-only fit execution surface is now separately implemented and hash-bound: it rejects duplicate
 > candidate sequences, re-observes both runtimes, converts complete matched outputs, and limits submission
 > to 3 CPU plus 6 H100 jobs for 180 candidates/360 evaluations with an append-only journal. The H100 jobs
-> have four-hour hard limits and no requeue. This remains no-submit: the fit packet cannot be emitted until
-> the same 8/8 target-MSA-derived execution lock exists. See
+> have four-hour hard limits and no requeue. The immutable fit packet now exists and the guarded bridge
+> dry-run proves the exact 3 CPU + 6 H100, 180-candidate, 360-evaluation scope with zero scheduler calls
+> and zero receipt writes. Fit compute remains separately unapproved. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
 > [docs/M6D_W3B_FIT_APPROVAL.md](docs/M6D_W3B_FIT_APPROVAL.md),
@@ -129,7 +127,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`979` designer tests and `70` subtests on 2026-07-14).
+**Current local source verified** (`1012` designer tests on 2026-07-15).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

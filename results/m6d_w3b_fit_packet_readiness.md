@@ -1,11 +1,11 @@
 # M6d W3b Fit-Packet Readiness
 
-Status: `w3b_fit_packet_awaiting_target_msa_and_execution_lock`.
+Status: `w3b_fit_packet_ready_awaiting_explicit_approval`.
 Audit ok: `True`.
-Fit packet ready: `False`.
-Execution lock ready: `False`.
+Fit packet ready: `True`.
+Execution lock ready: `True`.
 Runtime identity ready: `True`.
-Matched-record contract ready: `False`.
+Matched-record contract ready: `True`.
 No submit: `True`.
 
 Fit-stage packet readiness only. This artifact submits no job, records no approval, runs no candidate or predictor, and supports no W3b or biological-success claim.
@@ -16,6 +16,6 @@ Fit-stage packet readiness only. This artifact submits no job, records no approv
 - candidates: `180` (`60` per target)
 - matched predictor evaluations: `360`
 - certification/test jobs: `0`
-- packet digest: `7b16a01d95c036b814a3a220453aa4670939dd4ead741826b992d08d6e4ec68a`
+- packet digest: `74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34`
 
-Next action: complete the separately approved eight-target MSA lifecycle and materialize the execution lock.
+Next action: request the exact, separately scoped W3b fit-stage approval.

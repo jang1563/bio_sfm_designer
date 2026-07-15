@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import hashlib
 import json
 from pathlib import Path
@@ -95,7 +94,7 @@ def _completed_fixture(tmp_path: Path):
     return protocol_path, source_path, lifecycle_path
 
 
-def test_current_repo_is_coherent_but_waiting_for_target_msa_completion(monkeypatch):
+def test_current_repo_is_coherent_and_execution_lock_ready(monkeypatch):
     monkeypatch.chdir(ROOT)
     report = evaluate_readiness(
         "configs/m6d_w3b_disagreement_gate_protocol.json",
@@ -104,8 +103,8 @@ def test_current_repo_is_coherent_but_waiting_for_target_msa_completion(monkeypa
     )
 
     assert report["audit_ok"] is True
-    assert report["execution_lock_ready"] is False
-    assert report["status"] == "w3b_execution_lock_awaiting_target_msa_approval_and_completion"
+    assert report["execution_lock_ready"] is True
+    assert report["status"] == "w3b_execution_lock_ready_for_manifest_materialization"
     assert report["failures"] == []
 
 

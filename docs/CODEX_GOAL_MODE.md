@@ -6,9 +6,10 @@
 > `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The next frontier is a new, prospectively locked
 > predictor-disagreement-aware gate on fresh matched-protocol targets. That W3b protocol, target-level
 > 3/3/2 split, power gate, and evaluator are now frozen in
-> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. Target-MSA readiness is 0/8. The hash-bound wrapper is
-> staged and passes the Cayuga no-submit readiness audit with a fail-closed post-submit lifecycle. Exact
-> Boltz/AF2 runtime identities are also frozen and audit-clean, but no new compute is approved.
+> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. The separately approved target-MSA stage completed 8/8
+> at 0.216389 A40 GPU-hours, strict replay passed, and the lifecycle-derived 870-slot execution lock is
+> verified. Exact Boltz/AF2 runtime identities remain frozen. The separate fit approval packet and guarded
+> zero-submit dry-run are ready, but no candidate generation or predictor compute is approved.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -73,31 +74,30 @@ fixture is `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`.
 
 Current W3b protocol: `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`,
 `configs/m6d_w3b_disagreement_gate_protocol.json`, and `configs/m6d_w3b_fresh_targets.json`.
-The design/power audit passes at conditional power 0.824333, but all eight target MSAs are absent.
+The design/power audit passes at conditional power 0.824333, and all eight target MSAs are complete.
 
-Current next action: the hash-bound eight-target MSA-only packet is complete in
-`docs/M6D_W3B_TARGET_MSA_APPROVAL.md`; its staged remote mirror passes
-`results/m6d_w3b_target_msa_remote_readiness.{json,md}` with 16 exact SHA checks, five shell-syntax
-checks, lifecycle import, and the expected receiptless-query refusal. The current state is
-`results/m6d_w3b_target_msa_lifecycle.{json,md}`; the generated read-only query and scoped sync-back replay
-are `results/m6d_w3b_target_msa_job_state_query.sh` and `results/m6d_w3b_target_msa_sync_back.sh`. The
-post-sync path now creates the lifecycle-derived execution manifest/input lock; current readiness is
-audit-clean but blocked on 8/8 MSA completion in `results/m6d_w3b_execution_lock_readiness.{json,md}`.
+Current MSA completion: `docs/M6D_W3B_TARGET_MSA_COMPLETION.md`. Jobs `3085384`-`3085391` completed
+8/8 at `0.216389 A40 GPU-hours`; the scoped 56 artifacts pass strict manifest, report, and frozen-sequence
+checks. The versioned allocation reconciliation preserves raw `sacct` and corrects its omitted subtype
+only after packet-bound sbatch, 8/8 `scontrol`, one-GPU terminal accounting, and A40 node inventory agree.
+The immutable execution artifacts are `configs/m6d_w3b_execution_targets.json` and
+`configs/m6d_w3b_execution_input_lock.json`; readiness is audit-clean in
+`results/m6d_w3b_execution_lock_readiness.{json,md}`.
 The evaluator rejects pairwise-matching records whose MSA hash is not the manifest-bound target hash.
 The downstream CPU assembler `m6d_w3b_matched_records` is also implemented and requires exact candidate
 sets, per-predictor runtime receipts, seed `0`, templates/network off, and candidate/MSA/runtime/output hashes;
-its current `results/m6d_w3b_matched_record_contract.{json,md}` is audit-clean but correctly waits on the
-execution lock. `configs/m6d_w3b_runtime_lock.json` now binds Boltz `2.2.1` to its installed package
+its current `results/m6d_w3b_matched_record_contract.{json,md}` is audit-clean and stage-input ready.
+`configs/m6d_w3b_runtime_lock.json` binds Boltz `2.2.1` to its installed package
 manifest and local checkpoint hashes, and binds AF2 to the verified W3 ColabFold container plus all five
 Multimer-v3 weight hashes. `results/m6d_w3b_runtime_lock_readiness.{json,md}` is audit-clean,
 `runtime_identity_ready=true`, and still no-submit; matched receipts must equal its exact predictor identity
 and lock digests. The dedicated W3b fit producer and guarded submit surface is now complete in
 `docs/M6D_W3B_FIT_APPROVAL.md`: it binds unique 60-candidate sets for the three fit targets, runtime
 re-observation, matched Boltz/AF2 conversion, a 3 CPU + 6 H100 scope, four-hour/no-requeue H100 limits,
-and an append-only scheduler journal. `results/m6d_w3b_fit_packet_readiness.{json,md}` is audit-clean but
-correctly remains `fit_packet_ready=false` until the same 8/8 MSA-derived execution lock exists. No fit
-approval packet has been emitted.
-Stop for separate exact approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
+and an append-only scheduler journal. `results/m6d_w3b_fit_packet_readiness.{json,md}` is audit-clean with
+`fit_packet_ready=true`; `results/m6d_w3b_fit_approval_packet.json` is emitted, and the guarded bridge
+dry-run proves 3 CPU plus 6 H100 jobs, 180 candidates, and 360 evaluations with zero scheduler/receipt
+writes. Stop for the separate exact fit approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
 consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
 
 Current goal-state refresh audit:

@@ -95,7 +95,7 @@ class M6DW3BDisagreementGateTests(unittest.TestCase):
         for target in cls.manifest["targets"]:
             target["target_msa_sha256"] = f"{sum(ord(char) for char in target['id']):064x}"
 
-    def test_public_design_is_powered_but_remains_no_submit(self):
+    def test_public_design_is_powered_inputs_ready_but_remains_no_submit(self):
         predecessor = adjudicate(
             _load("configs/m6d_w3_mechanism_panel_protocol.json"),
             _load_jsonl("tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl"),
@@ -109,12 +109,12 @@ class M6DW3BDisagreementGateTests(unittest.TestCase):
 
         self.assertTrue(report["audit_ok"])
         self.assertTrue(report["design_power_qualified"])
-        self.assertFalse(report["inputs_ready"])
+        self.assertTrue(report["inputs_ready"])
         self.assertFalse(report["execution_ready"])
         self.assertTrue(report["no_submit"])
         self.assertFalse(report["cayuga_submission_allowed"])
         self.assertEqual(report["fresh_target_contract"]["role_counts"], {"fit": 3, "certification": 3, "held_out_test": 2})
-        self.assertEqual(len(report["fresh_target_contract"]["missing_target_msa_targets"]), 8)
+        self.assertEqual(report["fresh_target_contract"]["missing_target_msa_targets"], [])
         self.assertEqual(report["certification_power"]["maximum_certifiable_false_accepts"], 10)
         self.assertGreaterEqual(report["certification_power"]["conditional_certification_power"], 0.8)
 
