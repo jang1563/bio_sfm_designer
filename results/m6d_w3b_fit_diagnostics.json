@@ -1,0 +1,253 @@
+{
+  "artifact": "m6d_w3b_fit_diagnostics",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "certification_reachable": false,
+  "certification_submission_authorized": false,
+  "claim_boundary": "Post-fit descriptive diagnostics only. These calculations cannot change the frozen rule, authorize certification/test compute, or support a W3b or biological-success claim.",
+  "exhaustive_threshold_diagnostics": {
+    "comparator": {
+      "best_coverage_subject_to_frozen_risk_cap": {
+        "accepted": 59,
+        "accepted_per_target": {
+          "1FL7_DC": 4,
+          "1FSK_LJ": 0,
+          "1FSX_BA": 55
+        },
+        "errors": {
+          "af2_multimer_colabfold_v1": 4,
+          "boltz2_complex": 3
+        },
+        "false_accept_rates": {
+          "af2_multimer_colabfold_v1": 0.06779661016949153,
+          "boltz2_complex": 0.05084745762711865
+        },
+        "tau_boltz": 4.0755,
+        "worst_false_accept_rate": 0.06779661016949153
+      },
+      "best_risk_subject_to_frozen_coverage": {
+        "accepted": 134,
+        "accepted_per_target": {
+          "1FL7_DC": 60,
+          "1FSK_LJ": 15,
+          "1FSX_BA": 59
+        },
+        "errors": {
+          "af2_multimer_colabfold_v1": 64,
+          "boltz2_complex": 39
+        },
+        "false_accept_rates": {
+          "af2_multimer_colabfold_v1": 0.47761194029850745,
+          "boltz2_complex": 0.291044776119403
+        },
+        "tau_boltz": 15.2141,
+        "worst_false_accept_rate": 0.47761194029850745
+      },
+      "coverage_feasible_rule_count": 46,
+      "risk_feasible_rule_count": 59
+    },
+    "primary": {
+      "best_coverage_subject_to_frozen_risk_cap": {
+        "accepted": 73,
+        "accepted_per_target": {
+          "1FL7_DC": 15,
+          "1FSK_LJ": 0,
+          "1FSX_BA": 58
+        },
+        "errors": {
+          "af2_multimer_colabfold_v1": 5,
+          "boltz2_complex": 5
+        },
+        "false_accept_rates": {
+          "af2_multimer_colabfold_v1": 0.0684931506849315,
+          "boltz2_complex": 0.0684931506849315
+        },
+        "tau_max_pae": 9.8003,
+        "tau_pae_gap": 4.5499,
+        "worst_false_accept_rate": 0.0684931506849315
+      },
+      "best_risk_subject_to_frozen_coverage": {
+        "accepted": 90,
+        "accepted_per_target": {
+          "1FL7_DC": 17,
+          "1FSK_LJ": 15,
+          "1FSX_BA": 58
+        },
+        "errors": {
+          "af2_multimer_colabfold_v1": 21,
+          "boltz2_complex": 22
+        },
+        "false_accept_rates": {
+          "af2_multimer_colabfold_v1": 0.23333333333333334,
+          "boltz2_complex": 0.24444444444444444
+        },
+        "tau_max_pae": 24.1048,
+        "tau_pae_gap": 4.5869,
+        "worst_false_accept_rate": 0.24444444444444444
+      },
+      "coverage_feasible_rule_count": 4028,
+      "risk_feasible_rule_count": 18228
+    }
+  },
+  "fit_rule_status": "w3b_fit_rule_not_found_stop",
+  "frozen_fit_mathematically_impossible": true,
+  "held_out_test_reachable": false,
+  "impossibility_proofs": [
+    {
+      "all_target_rows_wrong": true,
+      "frozen_risk_cap": 0.08,
+      "maximum_total_accepts": 180,
+      "minimum_possible_global_false_accept_rate": 0.08333333333333333,
+      "minimum_target_accepts": 15,
+      "predictor_id": "boltz2_complex",
+      "target_id": "1FSK_LJ",
+      "violates_cap_even_if_all_rows_accepted": true
+    },
+    {
+      "all_target_rows_wrong": true,
+      "frozen_risk_cap": 0.08,
+      "maximum_total_accepts": 180,
+      "minimum_possible_global_false_accept_rate": 0.08333333333333333,
+      "minimum_target_accepts": 15,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "target_id": "1FSK_LJ",
+      "violates_cap_even_if_all_rows_accepted": true
+    }
+  ],
+  "interpretation": "The frozen fit gate failed before certification. The all-wrong 1FSK_LJ endpoint and minimum per-target coverage make the 0.08 empirical-risk cap mathematically impossible; threshold retuning cannot repair this preregistered experiment.",
+  "n_records": 180,
+  "rules_frozen": false,
+  "status": "w3b_fit_terminal_negative_diagnostics_complete",
+  "target_reports": [
+    {
+      "endpoints": {
+        "af2_multimer_colabfold_v1": {
+          "correct": 12,
+          "wrong": 48,
+          "wrong_fraction": 0.8
+        },
+        "boltz2_complex": {
+          "correct": 36,
+          "wrong": 24,
+          "wrong_fraction": 0.4
+        }
+      },
+      "label_disagreements": 36,
+      "n_rows": 60,
+      "predictor_distributions": {
+        "af2_multimer_colabfold_v1": {
+          "lrmsd": {
+            "maximum": 37.40135227888692,
+            "median": 15.535551431606162,
+            "minimum": 1.5569476768595263
+          },
+          "pae_interaction": {
+            "maximum": 23.3347,
+            "median": 15.009799999999998,
+            "minimum": 7.0344
+          }
+        },
+        "boltz2_complex": {
+          "lrmsd": {
+            "maximum": 22.02761702801971,
+            "median": 2.8738386948500527,
+            "minimum": 1.3665274882742668
+          },
+          "pae_interaction": {
+            "maximum": 8.4825,
+            "median": 4.996499999999999,
+            "minimum": 3.8028
+          }
+        }
+      },
+      "target_id": "1FL7_DC"
+    },
+    {
+      "endpoints": {
+        "af2_multimer_colabfold_v1": {
+          "correct": 0,
+          "wrong": 60,
+          "wrong_fraction": 1.0
+        },
+        "boltz2_complex": {
+          "correct": 0,
+          "wrong": 60,
+          "wrong_fraction": 1.0
+        }
+      },
+      "label_disagreements": 0,
+      "n_rows": 60,
+      "predictor_distributions": {
+        "af2_multimer_colabfold_v1": {
+          "lrmsd": {
+            "maximum": 27.953715122803303,
+            "median": 20.954420409264507,
+            "minimum": 4.373676799882837
+          },
+          "pae_interaction": {
+            "maximum": 25.5415,
+            "median": 23.8303,
+            "minimum": 9.8609
+          }
+        },
+        "boltz2_complex": {
+          "lrmsd": {
+            "maximum": 88.86024631213101,
+            "median": 25.170076357367474,
+            "minimum": 4.165889833394008
+          },
+          "pae_interaction": {
+            "maximum": 25.9582,
+            "median": 17.26365,
+            "minimum": 11.6278
+          }
+        }
+      },
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "endpoints": {
+        "af2_multimer_colabfold_v1": {
+          "correct": 59,
+          "wrong": 1,
+          "wrong_fraction": 0.016666666666666666
+        },
+        "boltz2_complex": {
+          "correct": 59,
+          "wrong": 1,
+          "wrong_fraction": 0.016666666666666666
+        }
+      },
+      "label_disagreements": 2,
+      "n_rows": 60,
+      "predictor_distributions": {
+        "af2_multimer_colabfold_v1": {
+          "lrmsd": {
+            "maximum": 25.71798852882754,
+            "median": 1.9581620120689878,
+            "minimum": 1.0999877525501556
+          },
+          "pae_interaction": {
+            "maximum": 16.2026,
+            "median": 4.3159,
+            "minimum": 3.8039
+          }
+        },
+        "boltz2_complex": {
+          "lrmsd": {
+            "maximum": 12.033320692349637,
+            "median": 1.7647426541701456,
+            "minimum": 1.0932013424896714
+          },
+          "pae_interaction": {
+            "maximum": 18.573,
+            "median": 3.84165,
+            "minimum": 3.3934
+          }
+        }
+      },
+      "target_id": "1FSX_BA"
+    }
+  ],
+  "version": 1
+}

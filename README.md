@@ -53,47 +53,23 @@
 > [docs/M6D_W3_MECHANISM_PANEL.md](docs/M6D_W3_MECHANISM_PANEL.md), and
 > [configs/m6d_w3_mechanism_panel_protocol.json](configs/m6d_w3_mechanism_panel_protocol.json).
 
-> **Current W3b initial fit boundary (2026-07-15):** the next experiment is prospectively locked as a
-> predictor-disagreement-aware gate on eight unused, source- and sequence-unique targets. Label-blind
-> hashing fixed target-level roles at 3 fit, 3 certification, and 2 held-out test targets before any
-> W3b predictor output exists. Each candidate will be evaluated by matched Boltz-2 and AF2-Multimer
-> protocols; the primary gate uses `max(pAE_interaction)` plus the inter-predictor pAE gap and is compared
-> with a Boltz-pAE-only gate. Exact endpoint power is 0.824333 at 100 accepts, alpha 0.2, and Bonferroni
-> delta 0.05/(3 targets x 2 predictors). The separately approved MSA-only stage completed jobs
-> `3085384`-`3085391` at 8/8 `COMPLETED/0:0`, no retry, and `0.216389 A40 GPU-hours`. Strict scoped replay
-> validates 56/56 input-prep artifacts, 8/8 A3M reports, and 8/8 frozen target sequences. Cayuga's raw
-> `sacct AllocTRES` omitted the GPU subtype; a versioned fail-closed reconciliation preserved the raw table
-> and accepted A40 only after the packet-bound sbatch, 8/8 submit-time `scontrol` records, one-GPU terminal
-> accounting, and A40 node inventory all agreed. See
-> [docs/M6D_W3B_TARGET_MSA_COMPLETION.md](docs/M6D_W3B_TARGET_MSA_COMPLETION.md). The lifecycle-derived
-> execution lock now freezes all 870 stage-assigned design slots and their target-MSA hashes; the evaluator
-> rejects pairwise-matching predictor records unless that MSA hash matches the frozen execution manifest.
-> The CPU-side matched-record assembler is also implemented in
-> `bio_sfm_designer.experiments.m6d_w3b_matched_records`. It requires exact candidate/output sets, the
-> execution input lock, per-predictor runtime receipts, seed `0`, templates off, prediction-time network
-> off, candidate/MSA/runtime/model-output hashes, and non-copied predictor values before producing evaluator
-> input. Its current no-submit contract is audit-clean and stage-input ready at
-> `results/m6d_w3b_matched_record_contract.{json,md}`. The dual-predictor runtime is now separately
-> frozen in `configs/m6d_w3b_runtime_lock.json`: Boltz `2.2.1` is bound to its installed-distribution
-> manifest and local checkpoint hashes, while AF2 is bound to the W3 ColabFold container and all five
-> Multimer-v3 weight hashes. Both identities include explicit execution parameters. Runtime-lock readiness
-> is audit-clean, no-submit, and ready against the target-MSA-derived execution lock in
-> `results/m6d_w3b_runtime_lock_readiness.{json,md}`. Runtime receipts must match the frozen per-predictor
-> identity and runtime-lock file/digest exactly; a self-consistent alternate runtime fails closed.
-> The exact initial fit approval was consumed once for 3 CPU plus 6 H100 jobs. All three ProteinMPNN and
-> all three Boltz jobs completed, producing 180 candidates and 180 Boltz records. AF2 jobs `3085449`,
-> `3085452`, and `3085455` failed before prediction after 38 combined H100 GPU-seconds because the
-> container could not resolve a relative input path. Their 180 A3Ms and manifests remain intact, output
-> directories are empty, and no AF2 record or runtime receipt exists. A separate hash-bound recovery uses
-> absolute container paths, revalidates all 180 A3Ms before any scheduler call, and permits exactly three
-> AF2 replacements with zero ProteinMPNN/Boltz jobs. Local and Cayuga dry-runs pass with zero scheduler or
-> receipt writes; no recovery compute or W3b claim is authorized. See
+> **Current W3b result (2026-07-15):** the prospectively locked matched Boltz-2/AF2-Multimer fit stage is
+> complete. The initial approval produced 180 unique candidates and 180 Boltz records. Three AF2 jobs
+> failed before prediction on a relative container path; the separately approved path-only replacements
+> `3085544`-`3085546` then completed `0:0`, producing 180 AF2 records and runtime receipts. Strict assembly
+> passed 180/180 matched rows with zero failures and exact local/Cayuga hash parity. Actual fit H100
+> allocation was `4.6225` GPU-hours. Slurm rounded the packet's `03:59:30` request up to `04:00:00`, so all
+> three live jobs were immediately corrected to `03:59:00`; the resulting 86,258-second worst case stayed
+> 142 seconds below the 24-H100-hour ceiling. The frozen evaluator returned
+> `w3b_fit_rule_not_found_stop`: neither the `max_pAE + pAE_gap` primary nor the Boltz-pAE comparator had a
+> qualifying rule. `1FSK_LJ` was wrong for all 60 candidates under both L-RMSD endpoints, making the fit
+> mathematically impossible under the required 15 accepts per target and 0.08 risk cap
+> (`15/180 = 0.08333`). W3b therefore stops before certification; no certification or held-out-test job was
+> submitted, and no threshold or target was changed post hoc. See
+> [docs/M6D_W3B_FIT_COMPLETION.md](docs/M6D_W3B_FIT_COMPLETION.md),
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
-> [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
-> [docs/M6D_W3B_FIT_APPROVAL.md](docs/M6D_W3B_FIT_APPROVAL.md),
-> [docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md](docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md),
-> [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
-> [configs/m6d_w3b_fresh_targets.json](configs/m6d_w3b_fresh_targets.json).
+> [results/m6d_w3b_fit_gate_report.json](results/m6d_w3b_fit_gate_report.json), and
+> [results/m6d_w3b_fit_diagnostics.json](results/m6d_w3b_fit_diagnostics.json).
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. Claude orchestrates specialist scientific foundation models (SFMs —
@@ -130,7 +106,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1016` designer tests on 2026-07-15).
+**Current local source verified** (`1031` designer tests on 2026-07-15).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).

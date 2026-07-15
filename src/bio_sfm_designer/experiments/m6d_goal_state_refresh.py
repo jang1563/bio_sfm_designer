@@ -76,6 +76,12 @@ _W3B_FIT_NEXT_ACTION = (
     "no certification, held-out-test, or claim authority is included."
 )
 _W3B_AF2_RECOVERY_STATUS = "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval"
+_W3B_FIT_TERMINAL_STATUS = "w3b_fit_complete_rule_not_found_terminal_stop"
+_W3B_FIT_TERMINAL_NEXT_ACTION = (
+    "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test "
+    "compute. Use the target-level failure pattern only to choose and preregister a distinct successor "
+    "question; do not retune the frozen W3b thresholds or rescue this experiment."
+)
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
     "candidates. Require a new explicit approval before compute and do not retune any learned threshold."
@@ -1147,6 +1153,99 @@ def _w3b_fit_recovery_summary(
     }
 
 
+def _w3b_fit_terminal_summary(report: Dict[str, Any]) -> Dict[str, Any]:
+    outcome = report.get("fit_outcome") if isinstance(report.get("fit_outcome"), dict) else {}
+    accounting = report.get("h100_accounting") if isinstance(report.get("h100_accounting"), dict) else {}
+    target_summary = (
+        report.get("target_endpoint_summary")
+        if isinstance(report.get("target_endpoint_summary"), dict)
+        else {}
+    )
+    fsk = target_summary.get("1FSK_LJ") if isinstance(target_summary.get("1FSK_LJ"), dict) else {}
+    checks = {
+        "terminal_status": report.get("status") == _W3B_FIT_TERMINAL_STATUS,
+        "audit_ok": report.get("audit_ok") is True,
+        "approval_consumed": report.get("approval_consumed") is True,
+        "job_scope_exact": (
+            report.get("initial_fit_jobs_submitted") == 9
+            and report.get("af2_recovery_jobs_submitted") == 3
+            and report.get("jobs_completed_successfully") == 9
+            and report.get("jobs_failed_before_prediction") == 3
+            and report.get("replacement_jobs_completed_successfully") == 3
+        ),
+        "h100_accounting_exact": (
+            report.get("observed_h100_allocation_seconds") == 16641
+            and report.get("observed_h100_allocation_hours") == 4.6225
+            and accounting.get("corrected_worst_case_seconds") == 86258
+            and accounting.get("protocol_limit_seconds") == 86400
+        ),
+        "records_exact": (
+            report.get("n_fit_targets") == 3
+            and report.get("n_matched_records") == 180
+            and report.get("matched_records_by_target")
+            == {"1FL7_DC": 60, "1FSK_LJ": 60, "1FSX_BA": 60}
+            and report.get("local_remote_sha256_parity") is True
+        ),
+        "frozen_fit_stop_exact": (
+            outcome.get("status") == "w3b_fit_rule_not_found_stop"
+            and outcome.get("primary_rules_frozen") is False
+            and outcome.get("comparator_rules_frozen") is False
+            and outcome.get("primary_qualifying_rules") == 0
+            and outcome.get("comparator_qualifying_rules") == 0
+            and outcome.get("mathematically_impossible_under_frozen_constraints") is True
+            and outcome.get("impossibility_target") == "1FSK_LJ"
+            and outcome.get("minimum_possible_global_false_accept_rate") == 15 / 180
+            and outcome.get("frozen_empirical_risk_cap") == 0.08
+        ),
+        "all_wrong_target_exact": all(
+            isinstance(fsk.get(predictor), dict)
+            and fsk[predictor].get("wrong") == 60
+            and fsk[predictor].get("correct") == 0
+            for predictor in ("boltz2_complex", "af2_multimer_colabfold_v1")
+        ),
+        "later_stages_closed": (
+            report.get("certification_reachable") is False
+            and report.get("certification_compute_approved") is False
+            and report.get("certification_jobs_submitted") == 0
+            and report.get("held_out_test_reachable") is False
+            and report.get("held_out_test_jobs_submitted") == 0
+            and report.get("adaptive_top_up_allowed") is False
+        ),
+        "claims_closed": (
+            report.get("can_claim_w3b") is False
+            and report.get("can_claim_biological_binder_success") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3b terminal fit invariants failed: {', '.join(failed)}")
+    return {
+        "status": report["status"],
+        "audit_ok": True,
+        "initial_fit_jobs_submitted": 9,
+        "af2_recovery_jobs_submitted": 3,
+        "af2_recovery_jobs_completed": 3,
+        "n_matched_records": 180,
+        "fit_rule_status": outcome["status"],
+        "rules_frozen": False,
+        "mathematically_impossible_under_frozen_constraints": True,
+        "impossibility_target": "1FSK_LJ",
+        "observed_h100_allocation_seconds": report[
+            "observed_h100_allocation_seconds"
+        ],
+        "observed_h100_allocation_hours": report[
+            "observed_h100_allocation_hours"
+        ],
+        "certification_reachable": False,
+        "certification_jobs_submitted": 0,
+        "held_out_test_reachable": False,
+        "held_out_test_jobs_submitted": 0,
+        "can_claim_w3b": False,
+        "next_action": _W3B_FIT_TERMINAL_NEXT_ACTION,
+        "checks": checks,
+    }
+
+
 def _apply_w3b_fit_ready_state(
     bundle: Dict[str, Dict[str, Any]],
     w3_completion: Dict[str, Any],
@@ -1660,6 +1759,284 @@ def _apply_w3b_fit_recovery_state(
     })
 
 
+def _apply_w3b_fit_terminal_state(
+    bundle: Dict[str, Dict[str, Any]],
+    w3_completion: Dict[str, Any],
+    w3b: Dict[str, Any],
+    recovery: Dict[str, Any],
+    terminal: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3b_successor_scientific_question_and_preregistration"
+    next_action = terminal["next_action"]
+    ranked_actions = [
+        "Freeze W3b as a terminal negative fit result and submit no certification or held-out-test jobs.",
+        "Preserve the 180 matched rows, the frozen evaluator, and the 1FSK_LJ impossibility proof.",
+        "Separate generator failure, target heterogeneity, and trust-signal failure as successor hypotheses.",
+        "Choose one successor question and preregister targets, endpoints, stop rules, and compute before execution.",
+        "Do not rescue W3b by retuning thresholds, dropping 1FSK_LJ, or reusing fit labels.",
+    ]
+    recovery_terminal = copy.deepcopy(recovery)
+    recovery_terminal.update({
+        "status": "w3b_fit_af2_recovery_completed",
+        "approval_packet_status": recovery["recovery_packet_status"],
+        "recovery_packet_status": "w3b_fit_af2_recovery_completed",
+        "recovery_approval_recorded": True,
+        "recovery_jobs_submitted": 3,
+        "recovery_jobs_completed": 3,
+        "fit_records_ready": True,
+        "no_submit": True,
+        "can_claim_w3b": False,
+        "next_action": next_action,
+    })
+    successor = copy.deepcopy(w3b)
+    successor.update({
+        "status": terminal["status"],
+        "approval_recorded": True,
+        "submitted_jobs": 9,
+        "initial_fit_approval_recorded": True,
+        "initial_fit_jobs_submitted": 9,
+        "proteinmpnn_completed": 3,
+        "boltz_completed": 3,
+        "af2_failed_before_prediction": 3,
+        "af2_recovery_jobs_submitted": 3,
+        "af2_recovery_jobs_completed": 3,
+        "af2_completed": 3,
+        "fit_records_ready": True,
+        "n_matched_records": 180,
+        "fit_rule_status": terminal["fit_rule_status"],
+        "rules_frozen": False,
+        "fit_terminal": True,
+        "fit_supported": False,
+        "mathematically_impossible_under_frozen_constraints": True,
+        "impossibility_target": terminal["impossibility_target"],
+        "certification_reachable": False,
+        "certification_jobs_submitted": 0,
+        "held_out_test_reachable": False,
+        "held_out_test_jobs_submitted": 0,
+        "observed_h100_allocation_hours": terminal[
+            "observed_h100_allocation_hours"
+        ],
+        "claim_boundary": (
+            "W3b assembled 180 matched fit rows, but no frozen primary or comparator rule met the "
+            "predeclared coverage and dual-predictor risk constraints. Certification and held-out test "
+            "are unreachable; no W3b or biological-success claim is supported."
+        ),
+        "no_submit": True,
+        "can_claim_w3b": False,
+        "next_action": next_action,
+    })
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor["objective"] = (
+        "Preserve the terminal negative W3b fit result and advance only through a distinct, "
+        "prospectively preregistered successor question; do not retune W3b or run its blocked "
+        "certification and held-out-test stages."
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3b_af2_recovery_completion": (
+            "results/m6d_w3b_fit_af2_recovery_completion.json"
+        ),
+        "w3b_fit_matched_records": "results/m6d_w3b_fit_matched_records.jsonl",
+        "w3b_fit_assembly": "results/m6d_w3b_fit_matched_record_assembly.json",
+        "w3b_fit_gate_report": "results/m6d_w3b_fit_gate_report.json",
+        "w3b_fit_diagnostics": "results/m6d_w3b_fit_diagnostics.json",
+        "w3b_fit_completion": "results/m6d_w3b_fit_completion.json",
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_in_progress_w3b_fit_terminal_successor_preregistration_required",
+        "goal_progress": terminal["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3": w3_completion["status"],
+        "w3b": terminal["status"],
+        "w3b_initial_fit_approval_recorded": True,
+        "w3b_initial_fit_jobs_submitted": 9,
+        "w3b_af2_recovery_approval_recorded": True,
+        "w3b_af2_recovery_jobs_submitted": 3,
+        "w3b_af2_recovery_jobs_completed": 3,
+        "w3b_fit_records_ready": True,
+        "w3b_fit_matched_records": 180,
+        "w3b_fit_supported": False,
+        "w3b_certification_reachable": False,
+        "w3b_certification_jobs_submitted": 0,
+        "w3b_held_out_test_reachable": False,
+        "w3b_held_out_test_jobs_submitted": 0,
+        "w3b_cayuga_submission_allowed": False,
+        "w3b_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3b_successor"] = successor
+    anchor["w3b_fit_recovery"] = recovery_terminal
+    anchor["w3b_fit_completion"] = terminal
+    anchor["next_resume_steps"] = [
+        "read results/m6d_w3b_fit_completion.json and preserve the frozen terminal stop",
+        "preserve all 180 matched rows and the all-wrong 1FSK_LJ endpoint without exclusion",
+        "submit no W3b certification, held-out-test, retry, or adaptive-top-up compute",
+        "choose whether the successor studies generator failure, target heterogeneity, or trust signals",
+        "preregister the successor before preparing any new compute packet",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3_status": w3_completion["status"],
+        "w3b_status": terminal["status"],
+        "w3b_af2_recovery_jobs_submitted": 3,
+        "w3b_fit_matched_records": 180,
+        "w3b_certification_reachable": False,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3b_fit_terminal_successor_preregistration_required",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery_terminal,
+        "w3b_fit_completion": terminal,
+    })
+    completion.setdefault("claim_boundary", {})["w3b"] = (
+        "terminal negative fit; no qualifying rule, certification, held-out test, or claim"
+    )
+    completion.setdefault("workstream_status", {})["W3b_disagreement_gate"] = {
+        "complete": True,
+        "scientific_success": False,
+        "status": terminal["status"],
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3b_fit_terminal_stop_honored",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3b"] = (
+        "fit_terminal_negative_certification_unreachable_no_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3b_posthoc_rescue",
+            "status": "managed",
+            "control": "the frozen fit stop is terminal; thresholds and target membership remain unchanged",
+        },
+        {
+            "id": "w3b_later_stage_leak",
+            "status": "managed",
+            "control": "certification and held-out-test stages are unreachable and have zero submissions",
+        },
+        {
+            "id": "w3b_negative_result_overclaim",
+            "status": "managed",
+            "control": "the result is structural-proxy evidence and cannot establish wet-lab failure or universal predictor behavior",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_frozen_fit_stop_honored_without_retuning",
+        "claims": "no_drift_terminal_negative_result_no_w3b_claim",
+        "execution": "12_terminal_allocations_180_matched_rows_no_later_stage_submission",
+        "operational_status": "w3b_closed_at_fit_successor_question_not_yet_preregistered",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).update({
+        "W3b_disagreement_gate": successor,
+        "W3b_fit_recovery": recovery_terminal,
+        "W3b_fit_completion": terminal,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3b_fit_terminal_negative_successor_preregistration_required",
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery_terminal,
+        "w3b_fit_completion": terminal,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3b_initial_submission_performed": True,
+        "w3b_recovery_submission_performed": True,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3b_disagreement_aware_gate"] = (
+        "terminal_negative_fit_no_rule_no_certificate"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3b_fit_terminal_successor_preregistration_required"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3b terminal negative fit and successor-question selection",
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery_terminal,
+        "w3b_fit_completion": terminal,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3b_af2_recovery": "3_of_3_completed",
+        "w3b_fit_matched_records": 180,
+        "w3b_fit_evaluator": terminal["fit_rule_status"],
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_submitted": 12,
+        "jobs_completed": 9,
+        "jobs_failed": 3,
+        "jobs_running": 0,
+        "job_state": "w3b_fit_terminal_all_allocations_accounted",
+        "w3b_fit_approval_recorded": True,
+        "w3b_fit_jobs_submitted": 9,
+        "w3b_proteinmpnn_jobs_completed": 3,
+        "w3b_boltz_jobs_completed": 3,
+        "w3b_af2_jobs_failed_before_prediction": 3,
+        "w3b_af2_recovery_approval_recorded": True,
+        "w3b_af2_recovery_jobs_submitted": 3,
+        "w3b_af2_recovery_jobs_completed": 3,
+        "w3b_fit_matched_records": 180,
+        "w3b_fit_status": terminal["status"],
+        "w3b_certification_reachable": False,
+        "w3b_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3b"] = (
+        "terminal_negative_fit_no_certificate_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3b_fit_terminal_successor_preregistration_required",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery_terminal,
+        "w3b_fit_completion": terminal,
+        "submission_performed": False,
+        "w3b_initial_submission_performed": True,
+        "w3b_recovery_submission_performed": True,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -1686,6 +2063,7 @@ def refresh_bundle(
     w3b_fit_submission_summary: Optional[Dict[str, Any]] = None,
     w3b_fit_initial_execution_observation: Optional[Dict[str, Any]] = None,
     w3b_fit_af2_recovery_packet: Optional[Dict[str, Any]] = None,
+    w3b_fit_completion: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -1744,6 +2122,11 @@ def refresh_bundle(
         )
         else None
     )
+    w3b_terminal = (
+        _w3b_fit_terminal_summary(w3b_fit_completion)
+        if isinstance(w3b_fit_completion, dict)
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -1760,6 +2143,8 @@ def refresh_bundle(
         raise ValueError("W3b fit-ready state requires the validated completed W3 adjudication")
     if any(value is not None for value in w3b_recovery_inputs) and w3b is None:
         raise ValueError("W3b AF2 recovery state requires the validated initial fit packet")
+    if w3b_terminal is not None and w3b_recovery is None:
+        raise ValueError("W3b terminal fit state requires the validated recovery evidence chain")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -2612,12 +2997,31 @@ def refresh_bundle(
             w3b,
             runtime_goal_active=runtime_goal_active,
         )
-    if w3b_recovery is not None and w3b is not None and w3_completion is not None:
+    if (
+        w3b_terminal is None
+        and w3b_recovery is not None
+        and w3b is not None
+        and w3_completion is not None
+    ):
         _apply_w3b_fit_recovery_state(
             bundle,
             w3_completion,
             w3b,
             w3b_recovery,
+            runtime_goal_active=runtime_goal_active,
+        )
+    if (
+        w3b_terminal is not None
+        and w3b_recovery is not None
+        and w3b is not None
+        and w3_completion is not None
+    ):
+        _apply_w3b_fit_terminal_state(
+            bundle,
+            w3_completion,
+            w3b,
+            w3b_recovery,
+            w3b_terminal,
             runtime_goal_active=runtime_goal_active,
         )
     return bundle
@@ -2647,6 +3051,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
+    w3b_fit_completion = report.get("w3b_fit_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -2685,6 +3090,8 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`.",
         f"W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`.",
         f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
+        f"W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`.",
+        f"W3b certification reachable: `{w3b_fit_completion.get('certification_reachable', False)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -2708,6 +3115,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
+    w3b_fit_completion = report.get("w3b_fit_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -2750,6 +3158,8 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`",
         f"- W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`",
         f"- W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`",
+        f"- W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`",
+        f"- W3b certification reachable: `{w3b_fit_completion.get('certification_reachable', False)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -2798,6 +3208,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
+    w3b_fit_completion = report.get("w3b_fit_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -2820,6 +3231,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`.",
         f"W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`.",
         f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
+        f"W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`.",
         "",
         "## Ranked Actions",
         "",
@@ -2838,6 +3250,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
+    w3b_fit_completion = report.get("w3b_fit_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -2876,6 +3289,8 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`",
         f"- W3b AF2 recovery approval recorded: `{hpc.get('w3b_af2_recovery_approval_recorded', False)}`",
         f"- W3b AF2 recovery jobs submitted: `{hpc.get('w3b_af2_recovery_jobs_submitted', 0)}`",
+        f"- W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`",
+        f"- W3b certification reachable: `{hpc.get('w3b_certification_reachable', False)}`",
         "",
         "## Next Action",
         "",
@@ -3002,6 +3417,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3b-fit-af2-recovery-packet",
         default="results/m6d_w3b_fit_af2_recovery_approval_packet.json",
+    )
+    parser.add_argument(
+        "--w3b-fit-completion",
+        default="results/m6d_w3b_fit_completion.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -3143,6 +3562,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3b_fit_af2_recovery_packet)
             if os.path.exists(args.w3b_fit_af2_recovery_packet)
+            else None
+        ),
+        (
+            _load_json(args.w3b_fit_completion)
+            if os.path.exists(args.w3b_fit_completion)
             else None
         ),
         updated_at=args.updated_at,

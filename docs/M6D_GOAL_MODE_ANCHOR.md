@@ -4,14 +4,13 @@
 > AF2-Multimer mechanism panel is complete. Corrected job `3084977` completed 58/58 after job `3084976`
 > was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
 > finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
-> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes. The
-> W3b successor is prospectively locked with eight label-blind fresh target roles, exact endpoint power
-> 0.824333, a frozen matched-predictor evaluator, and an exact dual-predictor runtime lock. The separately
-> approved target-MSA stage completed 8/8 at 0.216389 A40 GPU-hours, strict replay passed, and the immutable
-> 870-slot execution lock now exists. The later exact initial fit approval was consumed once. ProteinMPNN
-> and Boltz completed all three fit targets, producing 180 candidates and 180 Boltz records. All three AF2
-> jobs failed before prediction on a container-relative input path. A separate AF2-only recovery packet is
-> ready, but no recovery compute is approved or submitted.
+> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`; do not rescue W2c or retune W3 from these outcomes. W3b is
+> also complete at its frozen fit stop. The initial and AF2-recovery approvals were consumed once each;
+> replacements `3085544`-`3085546` completed and strict assembly produced 180/180 matched Boltz/AF2 rows.
+> The evaluator returned `w3b_fit_rule_not_found_stop`. `1FSK_LJ` was wrong for all 60 candidates under
+> both endpoints, so the required 15 target accepts imply `15/180 = 0.08333`, above the 0.08 risk cap.
+> Certification and held-out test are unreachable and have zero submissions. Resume from
+> `docs/M6D_W3B_FIT_COMPLETION.md`; choose a distinct successor rather than rescuing W3b.
 
 Date: 2026-07-15
 
@@ -40,10 +39,10 @@ approved. The authoritative result is `docs/M6D_W2C_THRESHOLD_LEARNING_COMPLETIO
 then completed under its frozen 58-case protocol. The 3PC8 block supports Chai (`12/12` discordant labels,
 `6/6` controls), while the W2c block is mixed (`30/40` Boltz agreement; `5/8` targets at least `4/5`).
 The joint result is `context_dependent_or_unresolved`. All W2 v1-v11 execution entries later in this
-chronological ledger are historical even where their original labels say `current`. W3b is now
-`w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait`: eight unused targets remain locked
-to 3 fit, 3 certification, and 2 held-out-test roles. The initial fit approval is consumed; 180 candidates
-and 180 Boltz records are ready, while AF2 is incomplete and separately gated.
+chronological ledger are historical even where their original labels say `current`. W3b is now terminal at
+`w3b_fit_rule_not_found_stop`. Its initial and AF2-recovery approvals were consumed once each, strict
+assembly produced 180/180 matched fit rows, and the frozen evaluator found no qualifying primary or
+comparator rule. Certification and held-out test remain unsubmitted and unreachable under this protocol.
 
 ## Active Objective
 
@@ -51,8 +50,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 
 - preserve the terminal one-shot W2c selective-pAE result without post-hoc rescue;
 - preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
-- preserve the preregistered W3b disagreement-aware gate, target roles, exact-power design, and staged
-  stop rules before any new predictor output is generated;
+- preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
+  certification and held-out-test roles;
+- define and preregister a scientifically distinct successor before requesting any new predictor compute;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -68,7 +68,7 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - W3: the bounded third-predictor mechanism panel is complete and audited. 3PC8 supports Chai over Boltz,
   but W2c agreement is target-dependent and mixed; the joint outcome is `context_dependent_or_unresolved`.
   Population-level independent-predictor robustness remains unsupported.
-- W3b: the fresh matched-predictor gate is preregistered and power-qualified. The consumed MSA-only packet
+- W3b: the fresh matched-predictor gate was preregistered and power-qualified. The consumed MSA-only packet
   submitted jobs `3085384`-`3085391`; all completed `0:0` without retry at 0.216389 A40 GPU-hours. The 56
   scoped artifacts pass strict 8/8 manifest, report, and frozen-sequence checks. Cayuga's raw `AllocTRES`
   omitted the subtype, so a versioned reconciliation accepted A40 only after 8/8 submit-time `scontrol`
@@ -79,10 +79,15 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   checkpoint/weight hashes. The exact initial fit approval submitted nine jobs once. All three ProteinMPNN
   and all three Boltz jobs completed, producing 180 candidates and 180 Boltz records. AF2 jobs `3085449`,
   `3085452`, and `3085455` failed before prediction on a relative container input path after 38 combined
-  H100 GPU-seconds; no AF2 records or runtime receipts exist. The separately hash-bound recovery uses
-  absolute paths, revalidates all 180 A3Ms before submission, permits exactly three AF2 replacements and
-  zero ProteinMPNN/Boltz jobs, and remains no-submit pending exact new approval. No fit result, gate claim,
-  or biological-success claim exists.
+  H100 GPU-seconds. The separately approved path-only replacements `3085544`-`3085546` then completed
+  `0:0`, producing exactly 60 AF2 records per target. Slurm rounded the requested `03:59:30` limits to
+  `04:00:00`; the live limits were corrected to `03:59:00`, preserving an 86,258-second worst case and a
+  142-second margin. Total observed fit H100 allocation was 16,641 seconds (`4.6225` hours). Strict
+  local/Cayuga replay assembled 180/180 matched rows. The frozen evaluator returned
+  `w3b_fit_rule_not_found_stop`: no primary or comparator rule qualified. `1FSK_LJ` was wrong for all 60
+  rows under both predictors, making the best possible global risk with its required 15 accepts
+  `15/180 = 0.08333`, above the 0.08 cap. Certification and held-out test have zero submissions, and W3b
+  supports no gate or biological-success claim.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -157,6 +162,9 @@ from Chai records alone.
   `results/m6d_w3b_fit_af2_recovery_approval_packet.json`,
   `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`, and
   `bio_sfm_designer.experiments.m6d_w3b_fit_af2_recovery`
+- W3b terminal fit completion, strict matched records, and descriptive diagnostics:
+  `docs/M6D_W3B_FIT_COMPLETION.md`, `results/m6d_w3b_fit_completion.json`,
+  `results/m6d_w3b_fit_matched_records.jsonl`, and `results/m6d_w3b_fit_diagnostics.json`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -1274,17 +1282,16 @@ Start with a no-spend status/decision refresh:
 jq '{status, audit_ok, runtime_goal_active, w3: .w3_mechanism_completion.status, w3_outcome: .w3_mechanism_completion.joint_outcome, w3b: .w3b_successor.status, recovery: .w3b_fit_recovery.recovery_packet_status, initial_jobs: .w3b_fit_recovery.initial_fit_jobs_submitted, recovery_approval: .w3b_fit_recovery.recovery_approval_recorded, recovery_jobs: .w3b_fit_recovery.recovery_jobs_submitted, no_submit, cayuga_submission_allowed, next_action}' \
   results/m6d_goal_state_refresh_report.json
 
-jq '{status, audit_ok, n_initial_jobs, n_proteinmpnn_completed, n_af2_failed_before_prediction, initial_failed_af2_gpu_seconds, recovery_submission_performed, no_submit, can_claim_w3b}' \
-  results/m6d_w3b_fit_initial_execution_observation.json
+jq '{status, audit_ok, n_matched_records, fit_status: .fit_outcome.status, primary_rules: .fit_outcome.primary_qualifying_rules, comparator_rules: .fit_outcome.comparator_qualifying_rules, mathematically_impossible: .fit_outcome.mathematically_impossible_under_frozen_constraints, impossibility_target: .fit_outcome.impossibility_target, corrected_worst_case_seconds: .h100_accounting.corrected_worst_case_seconds, observed_h100_allocation_hours, certification_reachable, held_out_test_reachable, certification_jobs_submitted, held_out_test_jobs_submitted, can_claim_w3b}' \
+  results/m6d_w3b_fit_completion.json
 
-jq '{status, audit_ok, approval_recorded, submitted_jobs, recovery_jobs: .approval_contract.af2_h100_recovery_jobs, proteinmpnn_jobs: .approval_contract.proteinmpnn_jobs_authorized, boltz_jobs: .approval_contract.boltz_jobs_authorized, failed_jobs: .approval_contract.failed_af2_job_ids, maximum_gpu_seconds: .approval_contract.maximum_protocol_gpu_seconds_after_recovery, phrase: .approval_contract.user_phrase, no_submit, can_claim_w3b}' \
-  results/m6d_w3b_fit_af2_recovery_approval_packet.json
+jq '{status, audit_ok, n_records, fit_rule_status, rules_frozen, frozen_fit_mathematically_impossible, impossibility_proofs, exhaustive_threshold_diagnostics, certification_reachable, held_out_test_reachable, certification_submission_authorized, can_claim_w3b}' \
+  results/m6d_w3b_fit_diagnostics.json
 
 git status --short --branch
 ```
 
-The current science branch is fixed: wait for the exact AF2-only recovery approval in
-`docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`. After that approval, run only the packet-bound recovery bridge on
-Cayuga, capture exactly three AF2 replacement job IDs, and monitor them to terminal state. Do not submit
-ProteinMPNN or Boltz, assemble partial matched records, or prepare certification until all three recovery
-outputs pass strict sync and provenance replay.
+The current science branch is fixed: preserve W3b at its terminal fit stop. Do not retune thresholds,
+substitute targets, use certification or held-out-test roles, or reuse either consumed approval. The next
+research action is a no-submit design decision and preregistration for a scientifically distinct successor;
+any later compute requires a new experiment-specific approval.

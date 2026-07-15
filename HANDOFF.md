@@ -88,20 +88,20 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > ColabFold container, all five AF2-Multimer-v3 parameter hashes, and exact predictor settings. The lock and
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}` are audit-clean and no-submit. Matched-record receipts
 > must bind the exact runtime-lock file SHA, lock digest, and predictor identity digest; recomputing internally
-> consistent hashes for an alternate runtime does not pass. The exact initial fit approval was consumed once.
-> Jobs `3085447`, `3085450`, and `3085453` completed ProteinMPNN; jobs `3085448`, `3085451`, and `3085454`
-> completed Boltz; AF2 jobs `3085449`, `3085452`, and `3085455` failed before prediction after successful
-> GPU/runtime preflight because the container could not resolve a relative input path. Their total failed
-> H100 allocation was 38 seconds. Exactly 180 candidates and 180 Boltz records exist; all 180 AF2 A3Ms and
-> manifests remain intact, output directories are empty, and no AF2 records or runtime receipts exist. This
-> is an incomplete fit stage and supports no W3b or biological-success claim.
-> The path-only AF2 recovery surface is separate: `m6d_w3b_fit_af2_recovery`,
-> `hpc/m6d_w3b_fit_af2_recovery_with_receipt.sh`, and
-> `hpc/run_predict_af2_w3b_fit_recovery.sbatch`. It revalidates all 180 A3Ms before any scheduler call,
-> uses absolute container paths, allows exactly three AF2 replacements, allows zero ProteinMPNN/Boltz jobs,
-> and remains below the 24 H100 GPU-hour ceiling at a worst-case 86,348 seconds. Local and Cayuga dry-runs
-> pass with zero scheduler or receipt writes. Resume from `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`; only the
-> exact new recovery phrase can authorize those three retries. Do not reuse the consumed initial fit approval.
+> consistent hashes for an alternate runtime does not pass. The exact initial fit approval and separate AF2
+> recovery approval were each consumed once. The three path-only replacements `3085544`-`3085546` completed
+> `0:0` on H100 and produced 180 AF2 records plus runtime receipts. Slurm rounded the packet's `03:59:30`
+> request to `04:00:00`; all live jobs were immediately corrected to `03:59:00`, restoring a worst-case
+> 86,258 GPU-seconds with 142 seconds of protocol margin. Actual initial-Boltz, failed-AF2, and recovery-AF2
+> allocation was 16,641 seconds (`4.6225` H100 GPU-hours). Strict assembly passed 180/180 matched rows with
+> zero failures and exact local/Cayuga parity.
+> The frozen evaluator returned `w3b_fit_rule_not_found_stop`: neither the primary disagreement rule nor
+> the Boltz-pAE comparator qualified. `1FSK_LJ` was wrong on all 60 rows for both predictors. Because fit
+> requires at least 15 accepts per target, even accepting all 180 rows gives a false-accept lower bound of
+> `15/180 = 0.08333`, above the frozen 0.08 cap. W3b is terminal before certification; certification and
+> held-out-test jobs remain zero, and no target or threshold may be changed post hoc. Resume from
+> `docs/M6D_W3B_FIT_COMPLETION.md` and `results/m6d_w3b_fit_completion.json`. The next task is to choose and
+> preregister a distinct successor question, not to rescue W3b.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and
@@ -840,7 +840,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6c | bounded positive anchor | complex `pAE_interaction` discriminates target-wise; the canonical split-LTT reanalysis does not support a universal alpha=0.3 claim |
 | M6d / W2-W2c | complete negative result | multi-target and target-adaptive panels completed; universal and selective-pAE viability claims are not supported |
 | M6e / W3 | complete unresolved result | the frozen 58-case AF2 mechanism panel completed; the joint outcome is `context_dependent_or_unresolved` |
-| M6e successor / W3b | fit-ready, no submit | eight fresh roles, MSAs, execution/runtime locks, matched-record contract, and fit packet are ready; zero fit jobs or W3b records exist |
+| M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
 | M7/M8 | future | live gated orchestration and a new de-novo generator remain downstream of W3b and productive W4 evidence |
 

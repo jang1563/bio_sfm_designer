@@ -1,0 +1,30 @@
+{
+  "approval_packet": "results/m6d_w3b_fit_af2_recovery_approval_packet.json",
+  "approval_packet_sha256": "feba993bb91168d091667e814557a0cae6e6451a3c2b9ff60f1f1a36cedf8543",
+  "artifact": "m6d_w3b_fit_af2_recovery_submit_summary",
+  "can_claim_w3b": false,
+  "claim_boundary": "Scheduler provenance only; recovery submission is not fit evidence.",
+  "n_af2_h100_recovery_jobs": 3,
+  "n_targets": 3,
+  "receipt": "results/m6d_w3b_fit_af2_recovery_submit_receipt.jsonl",
+  "receipt_sha256": "ac8f0e9960e25ac9c5bb20f0c7de875e9f8873ca5ec4ec438104b2d0caad378e",
+  "status": "w3b_fit_af2_recovery_jobs_submitted_awaiting_completion",
+  "targets": [
+    {
+      "failed_af2_job_id": "3085455",
+      "recovery_af2_job_id": "3085544",
+      "target_id": "1FL7_DC"
+    },
+    {
+      "failed_af2_job_id": "3085449",
+      "recovery_af2_job_id": "3085545",
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "failed_af2_job_id": "3085452",
+      "recovery_af2_job_id": "3085546",
+      "target_id": "1FSX_BA"
+    }
+  ],
+  "version": 1
+}

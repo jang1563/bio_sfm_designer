@@ -4,12 +4,15 @@ Frozen preregistration status: `w3b_design_power_qualified_inputs_incomplete_no_
 
 Date: 2026-07-14.
 
-Operational update, 2026-07-15: the frozen protocol below is unchanged. The separately approved target-MSA
-stage completed 8/8, and the later exact initial fit approval was consumed once. ProteinMPNN and Boltz
-completed all three fit targets, producing 180 candidates and 180 Boltz records. All three AF2 jobs failed
-before prediction because the container could not resolve a relative input path. The separate AF2-only
-recovery packet is ready, with no retry submitted and no fit, certification, held-out-test, or claim result.
-See `docs/M6D_W3B_FIT_APPROVAL.md` and `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md` for the current boundary.
+Terminal operational update, 2026-07-15: the frozen protocol below is unchanged. The initial fit approval
+and the separate AF2-recovery approval were consumed once each. Path-only replacement jobs
+`3085544`-`3085546` completed, and strict provenance replay assembled 180/180 matched Boltz/AF2 fit rows.
+The frozen evaluator returned `w3b_fit_rule_not_found_stop`; no primary or comparator rule qualified.
+Because `1FSK_LJ` was wrong for all 60 rows under both endpoints, its required 15 accepts alone imply
+`15/180 = 0.08333`, above the 0.08 global risk cap. W3b therefore stopped before certification. No
+certification or held-out-test job was submitted, and no gate or biological-success claim is supported.
+See `docs/M6D_W3B_FIT_COMPLETION.md` for the terminal result. The protocol text below remains the immutable
+preregistration rather than a current execution route.
 
 ## Scientific question
 

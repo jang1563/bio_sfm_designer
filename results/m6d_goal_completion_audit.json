@@ -10,18 +10,18 @@
     "w2b": "terminally not supported; no test compute and no extension",
     "w2c": "threshold learning terminally retained zero eligible targets; no later-stage compute",
     "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
-    "w3b": "initial fit submitted; ProteinMPNN and Boltz complete, AF2 failed before prediction, recovery packet ready without approval or recovery submission",
+    "w3b": "terminal negative fit; no qualifying rule, certification, held-out test, or claim",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
+  "next_action": "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3b_AF2_fit_recovery_explicit_approval"
+    "W3b_successor_scientific_question_and_preregistration"
   ],
-  "status": "goal_active_w3_complete_w3b_af2_recovery_approval_wait",
+  "status": "goal_active_w3b_fit_terminal_successor_preregistration_required",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -1075,8 +1075,41 @@
     "runtime_ready": false,
     "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
   },
+  "w3b_fit_completion": {
+    "af2_recovery_jobs_completed": 3,
+    "af2_recovery_jobs_submitted": 3,
+    "audit_ok": true,
+    "can_claim_w3b": false,
+    "certification_jobs_submitted": 0,
+    "certification_reachable": false,
+    "checks": {
+      "all_wrong_target_exact": true,
+      "approval_consumed": true,
+      "audit_ok": true,
+      "claims_closed": true,
+      "frozen_fit_stop_exact": true,
+      "h100_accounting_exact": true,
+      "job_scope_exact": true,
+      "later_stages_closed": true,
+      "records_exact": true,
+      "terminal_status": true
+    },
+    "fit_rule_status": "w3b_fit_rule_not_found_stop",
+    "held_out_test_jobs_submitted": 0,
+    "held_out_test_reachable": false,
+    "impossibility_target": "1FSK_LJ",
+    "initial_fit_jobs_submitted": 9,
+    "mathematically_impossible_under_frozen_constraints": true,
+    "n_matched_records": 180,
+    "next_action": "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.",
+    "observed_h100_allocation_hours": 4.6225,
+    "observed_h100_allocation_seconds": 16641,
+    "rules_frozen": false,
+    "status": "w3b_fit_complete_rule_not_found_terminal_stop"
+  },
   "w3b_fit_recovery": {
     "af2_failed_before_prediction": 3,
+    "approval_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
     "approval_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100",
     "approval_token": "approve-w3b-af2-fit-recovery-3085449-3085452-3085455-h100",
     "audit_ok": true,
@@ -1094,29 +1127,35 @@
       "3085452",
       "3085455"
     ],
-    "fit_records_ready": false,
+    "fit_records_ready": true,
     "initial_failed_af2_gpu_seconds": 38,
     "initial_fit_approval_recorded": true,
     "initial_fit_jobs_submitted": 9,
     "maximum_protocol_gpu_seconds_after_recovery": 86348,
-    "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
+    "next_action": "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.",
     "no_submit": true,
     "proteinmpnn_completed": 3,
-    "recovery_approval_recorded": false,
-    "recovery_jobs_submitted": 0,
+    "recovery_approval_recorded": true,
+    "recovery_jobs_completed": 3,
+    "recovery_jobs_submitted": 3,
     "recovery_packet_ready": true,
-    "recovery_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+    "recovery_packet_status": "w3b_fit_af2_recovery_completed",
     "recovery_time_limit": "03:59:30",
-    "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait"
+    "status": "w3b_fit_af2_recovery_completed"
   },
   "w3b_successor": {
+    "af2_completed": 3,
     "af2_failed_before_prediction": 3,
+    "af2_recovery_jobs_completed": 3,
+    "af2_recovery_jobs_submitted": 3,
     "approval_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100",
     "approval_recorded": true,
     "audit_ok": true,
     "boltz_completed": 3,
     "can_claim_w3b": false,
+    "certification_jobs_submitted": 0,
     "certification_power": 0.8243330044654517,
+    "certification_reachable": false,
     "checks": {
       "design_gate_exact": true,
       "design_scope_exact": true,
@@ -1134,7 +1173,7 @@
       "target_msa_strict_replay": true,
       "telemetry_reconciliation_scoped": true
     },
-    "claim_boundary": "The initial fit is incomplete: 180 candidates and 180 Boltz records exist, but all three AF2 jobs failed before prediction. Recovery is not approved or submitted, so no fit result, gate, certification, held-out test, or biological-success claim is supported.",
+    "claim_boundary": "W3b assembled 180 matched fit rows, but no frozen primary or comparator rule met the predeclared coverage and dual-predictor risk constraints. Certification and held-out test are unreachable; no W3b or biological-success claim is supported.",
     "execution_lock": {
       "candidate_designs": 870,
       "lock_digest_sha256": "44f8acfbdda7bd42c7acce3b1aadaa111f862efb3b68f15da79d752dcaeb2b37",
@@ -1143,7 +1182,8 @@
       "n_targets": 8
     },
     "fit_packet_ready": true,
-    "fit_records_ready": false,
+    "fit_records_ready": true,
+    "fit_rule_status": "w3b_fit_rule_not_found_stop",
     "fit_scope": {
       "af2_h100_jobs": 3,
       "boltz_h100_jobs": 3,
@@ -1151,33 +1191,34 @@
       "matched_predictor_evaluations": 360,
       "proteinmpnn_cpu_jobs": 3
     },
+    "fit_supported": false,
     "fit_target_ids": [
       "1FSK_LJ",
       "1FSX_BA",
       "1FL7_DC"
     ],
-    "initial_failed_af2_gpu_seconds": 38,
+    "fit_terminal": true,
+    "held_out_test_jobs_submitted": 0,
+    "held_out_test_reachable": false,
+    "impossibility_target": "1FSK_LJ",
     "initial_fit_approval_recorded": true,
     "initial_fit_jobs_submitted": 9,
     "matched_record_contract_ready": true,
-    "maximum_protocol_gpu_seconds_after_recovery": 86348,
-    "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
+    "mathematically_impossible_under_frozen_constraints": true,
+    "n_matched_records": 180,
+    "next_action": "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.",
     "no_submit": true,
+    "observed_h100_allocation_hours": 4.6225,
     "packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
     "proteinmpnn_completed": 3,
-    "recovery_approval_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100",
-    "recovery_approval_recorded": false,
-    "recovery_jobs_submitted": 0,
-    "recovery_packet_ready": true,
-    "recovery_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
-    "recovery_time_limit": "03:59:30",
     "role_counts": {
       "certification": 3,
       "fit": 3,
       "held_out_test": 2
     },
+    "rules_frozen": false,
     "runtime_identity_ready": true,
-    "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait",
+    "status": "w3b_fit_complete_rule_not_found_terminal_stop",
     "submitted_jobs": 9,
     "target_ids": [
       "1FSK_LJ",
@@ -1214,10 +1255,10 @@
       "status": "w3_mechanism_panel_adjudicated_context_dependent_or_unresolved"
     },
     "W3b_disagreement_gate": {
-      "complete": false,
-      "remaining_requirement": "W3b_AF2_fit_recovery_explicit_approval",
-      "scientific_success": null,
-      "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait"
+      "complete": true,
+      "remaining_requirement": "W3b_successor_scientific_question_and_preregistration",
+      "scientific_success": false,
+      "status": "w3b_fit_complete_rule_not_found_terminal_stop"
     },
     "W4_closed_loop_DBTL": {
       "complete": true,

@@ -4,6 +4,13 @@ Status: `initial_fit_approval_consumed_af2_recovery_approval_wait`.
 
 Date: 2026-07-15.
 
+> **Historical consumed snapshot:** this file preserves the initial fit and then-pending recovery boundary.
+> The separate AF2-recovery approval was later consumed once; replacements `3085544`-`3085546` completed,
+> strict replay assembled 180/180 matched rows, and the frozen evaluator returned
+> `w3b_fit_rule_not_found_stop`. Certification and held-out test were not submitted. See
+> `docs/M6D_W3B_FIT_COMPLETION.md`. The status and approval language below remain immutable historical
+> evidence and cannot authorize another run.
+
 ## Current state
 
 The exact W3b fit approval was consumed once for the packet-bound 180-design matched Boltz-AF2 fit

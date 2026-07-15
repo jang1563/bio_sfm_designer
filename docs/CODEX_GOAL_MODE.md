@@ -3,13 +3,14 @@
 > **Current anchor (2026-07-15):** W2c is terminal and must not be rescued or retuned. The distinct
 > 58-case W3 AF2-Multimer mechanism panel is also complete. Frozen adjudication supports Chai on 3PC8,
 > finds mixed Boltz agreement on W2c, and returns `context_dependent_or_unresolved`. Resume from
-> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The next frontier is a new, prospectively locked
-> predictor-disagreement-aware gate on fresh matched-protocol targets. That W3b protocol, target-level
-> 3/3/2 split, power gate, and evaluator are now frozen in
-> `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`. The separately approved target-MSA stage completed 8/8
-> at 0.216389 A40 GPU-hours, strict replay passed, and the lifecycle-derived 870-slot execution lock is
-> verified. Exact Boltz/AF2 runtime identities remain frozen. The separate fit approval packet and guarded
-> zero-submit dry-run are ready, but no candidate generation or predictor compute is approved.
+> `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. The prospectively locked W3b matched-predictor experiment
+> is also complete at its fit stop. Its initial and AF2-recovery approvals were consumed once each;
+> replacements `3085544`-`3085546` completed and strict replay assembled 180/180 matched Boltz/AF2 rows.
+> The frozen evaluator returned `w3b_fit_rule_not_found_stop`. `1FSK_LJ` was wrong for all 60 candidates
+> under both endpoints, so the required 15 target accepts imply a minimum global risk of
+> `15/180 = 0.08333`, above the 0.08 cap. No certification or held-out-test job was submitted. Resume from
+> `docs/M6D_W3B_FIT_COMPLETION.md` and preregister a scientifically distinct successor rather than rescuing
+> W3b.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -24,9 +25,9 @@ Use this objective when creating or resuming the Codex goal:
 Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mode:
 preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
 post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result and its
-input, runtime, approval, and adjudication locks; preserve the preregistered W3b predictor-disagreement-
-aware gate, label-blind target roles, power gate, and staged stop rules; execute no W3b target-MSA or
-predictor compute without the corresponding explicit approval;
+input, runtime, approval, and adjudication locks; preserve the terminal W3b fit result without
+threshold rescue, target substitution, certification, or held-out testing; define and preregister a
+scientifically distinct successor before any new predictor compute and require a new exact approval;
 preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep
 all status artifacts honest and reproducible.
 ```
@@ -72,9 +73,9 @@ Current W3 completion: `docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md`. Corrected jo
 58/58 after job `3084976` was cancelled and invalidated for target-MSA truncation. The public replay
 fixture is `tests/fixtures/m6d_w3_mechanism_panel_af2_records.jsonl`.
 
-Current W3b protocol: `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`,
+Historical W3b protocol: `docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md`,
 `configs/m6d_w3b_disagreement_gate_protocol.json`, and `configs/m6d_w3b_fresh_targets.json`.
-The design/power audit passes at conditional power 0.824333, and all eight target MSAs are complete.
+The design/power audit passed at conditional power 0.824333, and all eight target MSAs completed.
 
 Current MSA completion: `docs/M6D_W3B_TARGET_MSA_COMPLETION.md`. Jobs `3085384`-`3085391` completed
 8/8 at `0.216389 A40 GPU-hours`; the scoped 56 artifacts pass strict manifest, report, and frozen-sequence
@@ -84,21 +85,22 @@ The immutable execution artifacts are `configs/m6d_w3b_execution_targets.json` a
 `configs/m6d_w3b_execution_input_lock.json`; readiness is audit-clean in
 `results/m6d_w3b_execution_lock_readiness.{json,md}`.
 The evaluator rejects pairwise-matching records whose MSA hash is not the manifest-bound target hash.
-The downstream CPU assembler `m6d_w3b_matched_records` is also implemented and requires exact candidate
-sets, per-predictor runtime receipts, seed `0`, templates/network off, and candidate/MSA/runtime/output hashes;
-its current `results/m6d_w3b_matched_record_contract.{json,md}` is audit-clean and stage-input ready.
+The downstream CPU assembler `m6d_w3b_matched_records` requires exact candidate sets, per-predictor runtime
+receipts, seed `0`, templates/network off, and candidate/MSA/runtime/output hashes.
 `configs/m6d_w3b_runtime_lock.json` binds Boltz `2.2.1` to its installed package
 manifest and local checkpoint hashes, and binds AF2 to the verified W3 ColabFold container plus all five
 Multimer-v3 weight hashes. `results/m6d_w3b_runtime_lock_readiness.{json,md}` is audit-clean,
-`runtime_identity_ready=true`, and still no-submit; matched receipts must equal its exact predictor identity
-and lock digests. The dedicated W3b fit producer and guarded submit surface is now complete in
-`docs/M6D_W3B_FIT_APPROVAL.md`: it binds unique 60-candidate sets for the three fit targets, runtime
-re-observation, matched Boltz/AF2 conversion, a 3 CPU + 6 H100 scope, four-hour/no-requeue H100 limits,
-and an append-only scheduler journal. `results/m6d_w3b_fit_packet_readiness.{json,md}` is audit-clean with
-`fit_packet_ready=true`; `results/m6d_w3b_fit_approval_packet.json` is emitted, and the guarded bridge
-dry-run proves 3 CPU plus 6 H100 jobs, 180 candidates, and 360 evaluations with zero scheduler/receipt
-writes. Stop for the separate exact fit approval. Do not generate candidates, run candidate-level Boltz or AF2, reuse
-consumed approvals, relax frozen criteria, or tune W3b on the completed W3 panel.
+`runtime_identity_ready=true`; matched receipts were required to equal its exact predictor identity and lock
+digests. The initial fit approval produced 180 unique candidates and 180 Boltz records. Its three AF2 jobs
+failed before prediction after 38 combined H100 seconds because of a relative container input path. The
+separately approved path-only replacements `3085544`-`3085546` completed `0:0`, producing 180 AF2 records.
+Slurm rounded `03:59:30` to `04:00:00`, so all three live limits were corrected to `03:59:00`; the corrected
+worst case was 86,258 seconds with a 142-second margin. Actual fit allocation was 16,641 H100 seconds
+(`4.6225` hours). Strict assembly passed 180/180 matched rows with local/Cayuga hash parity. The frozen
+evaluator found no qualifying primary or comparator rule and returned `w3b_fit_rule_not_found_stop`.
+Certification and held-out test are unreachable, unsubmitted, and not authorized. The terminal anchor is
+`docs/M6D_W3B_FIT_COMPLETION.md`. Do not reuse consumed approvals, retune W3b, substitute targets, or run
+later stages.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -701,11 +703,11 @@ Use this order unless the user gives a newer instruction:
    and documentation that prevents stale HPC actions.
 2. W1 - Preserve the certified target-specific evidence. Do not spend more W1 GPU unless a
    new alpha target or target-specific stress test is explicitly chosen.
-3. W2 - Redesign multi-target generalization. Treat the current panels as completed negative
-   evidence, then select or design more 3PC8-like targets before any broad panel spend.
-4. W3b - Preserve the preregistered disagreement-aware gate and label-blind 3/3/2 target roles.
-   The exact dual-predictor runtime lock, MSA-only packet, Cayuga no-submit readiness audit, read-only job
-   query, and scoped post-submit replay are ready; stop for exact approval before any MSA query or compute.
+3. W2/W2b/W2c/W3b - Preserve the completed negative evidence and frozen stop decisions. Do not rescue,
+   retune, substitute targets, or spend on stages made unreachable by their protocols.
+4. Successor design - Choose a scientifically distinct question that addresses the observed target-regime
+   heterogeneity, preregister it without using held-out W3b labels, and require a new exact approval before
+   any MSA query, candidate generation, or predictor compute.
 5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

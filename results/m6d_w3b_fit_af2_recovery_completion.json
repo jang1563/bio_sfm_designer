@@ -1,0 +1,197 @@
+{
+  "approval_consumed": true,
+  "approval_packet": {
+    "bytes": 7535,
+    "path": "results/m6d_w3b_fit_af2_recovery_approval_packet.json",
+    "sha256": "feba993bb91168d091667e814557a0cae6e6451a3c2b9ff60f1f1a36cedf8543"
+  },
+  "artifact": "m6d_w3b_fit_af2_recovery_completion",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_run_fit_assembler": true,
+  "can_submit_certification": false,
+  "can_submit_more_recovery_jobs": false,
+  "claim_boundary": "Terminal AF2 fit-recovery evidence only. It authorizes no retry, certification, held-out test, adaptive top-up, or W3b/biological-success claim.",
+  "initial_observation": {
+    "bytes": 8876,
+    "path": "results/m6d_w3b_fit_initial_execution_observation.json",
+    "sha256": "c3de8eb98191e335afa585261a2a5f62d6ba120793b402c5405fb140b6192821"
+  },
+  "n_recovery_jobs": 3,
+  "n_recovery_jobs_completed": 3,
+  "observed_recovery_gpu_seconds": 15679,
+  "sacct_snapshot": {
+    "bytes": 228,
+    "path": "results/m6d_w3b_fit_af2_recovery_sacct.tsv",
+    "sha256": "8cf7b7070082dd201fe1f12a145540dc33d685a66cc6e9831fd1c623281d04a6"
+  },
+  "scheduler_time_limit_correction": {
+    "corrected_margin_seconds": 142,
+    "corrected_worst_case_gpu_seconds": 86258,
+    "initial_observation_kind": "operator_observed_before_correction",
+    "packet_requested": "03:59:30",
+    "post_correction_effective": "03:59:00",
+    "protocol_limit_gpu_seconds": 86400,
+    "requested_worst_case_gpu_seconds": 86348,
+    "rounded_worst_case_gpu_seconds": 86438,
+    "slurm_initial_effective_observed": "04:00:00"
+  },
+  "scontrol_post_correction_snapshot": {
+    "bytes": 290,
+    "path": "results/m6d_w3b_fit_af2_recovery_scontrol_post_correction.txt",
+    "sha256": "7650fd5c9764fe496d109c593a2ef0cd6713b60d22786ebb040e6f83909ebe4a"
+  },
+  "status": "w3b_fit_af2_recovery_completed_ready_for_matched_assembly",
+  "submission_receipt": {
+    "bytes": 1080,
+    "path": "results/m6d_w3b_fit_af2_recovery_submit_receipt.jsonl",
+    "sha256": "ac8f0e9960e25ac9c5bb20f0c7de875e9f8873ca5ec4ec438104b2d0caad378e"
+  },
+  "submission_summary": {
+    "bytes": 1026,
+    "path": "results/m6d_w3b_fit_af2_recovery_submit_summary.json",
+    "sha256": "70af258356bd48d3818facb4159e4b8ad1f3e0142ab5873ae0c4871057d2075f"
+  },
+  "targets": [
+    {
+      "failed_af2_job_id": "3085455",
+      "outputs": {
+        "n_done_markers": 60,
+        "n_records": 60,
+        "n_score_json": 300,
+        "n_unrelaxed_pdb": 300,
+        "records": {
+          "bytes": 113285,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/records_af2_multimer.jsonl",
+          "sha256": "f8a298d222d1a4d4ca0431d9dc4b6259cbf24bb520034e89038f677d4b447922"
+        },
+        "runtime_receipt": {
+          "bytes": 3270,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_multimer_runtime_receipt.json",
+          "sha256": "d5e5eee70e4adceb61c1fa2c6107d00d42af45ed6be9872edd0e6ec65b68b61a"
+        },
+        "stderr_log": {
+          "bytes": 736,
+          "path": "hpc_outputs/logs/biosfm-w3b-fit-af2r-3085544.err",
+          "sha256": "11aef7bbe40732d63e2e2957095facb5f7e6a4237cfa789b5cb55e106900846c"
+        },
+        "stdout_log": {
+          "bytes": 527570,
+          "path": "hpc_outputs/logs/biosfm-w3b-fit-af2r-3085544.out",
+          "sha256": "9100707521a013aadfdd8b83f52cbce75aa30fdf77c206e5400ce885de344d03"
+        }
+      },
+      "post_correction_slurm": {
+        "JobState": "RUNNING",
+        "Requeue": "0",
+        "TimeLimit": "03:59:00",
+        "TresPerNode": "gres/gpu:h100:1",
+        "job_id": "3085544"
+      },
+      "recovery_af2_job": {
+        "alloc_tres": "billing=8,cpu=8,gres/gpu=1,mem=128G,node=1",
+        "elapsed_seconds": 4121,
+        "exit_code": "0:0",
+        "job_id": "3085544",
+        "node_list": "g0004",
+        "state": "COMPLETED"
+      },
+      "target_id": "1FL7_DC",
+      "terminal_success": true
+    },
+    {
+      "failed_af2_job_id": "3085449",
+      "outputs": {
+        "n_done_markers": 60,
+        "n_records": 60,
+        "n_score_json": 300,
+        "n_unrelaxed_pdb": 300,
+        "records": {
+          "bytes": 117553,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/records_af2_multimer.jsonl",
+          "sha256": "937af5cffa7f37f3f78a9b6dae4c07734994096a3bf4c8bd81b14008f891ace4"
+        },
+        "runtime_receipt": {
+          "bytes": 3270,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_multimer_runtime_receipt.json",
+          "sha256": "f8e3ef8c6a3bf4ce9335a4e9bbfae881ed0f6b422bc6d8291d46ffc17e21dc24"
+        },
+        "stderr_log": {
+          "bytes": 736,
+          "path": "hpc_outputs/logs/biosfm-w3b-fit-af2r-3085545.err",
+          "sha256": "79a9a44b1c8d5d488534066ed76f74f0a53d4868c483560c55328136f3051b78"
+        },
+        "stdout_log": {
+          "bytes": 561952,
+          "path": "hpc_outputs/logs/biosfm-w3b-fit-af2r-3085545.out",
+          "sha256": "1fea4fe9f22d8c966052032f0aa57fa848acfd3af0b5d614fc8c9440ba8d2cee"
+        }
+      },
+      "post_correction_slurm": {
+        "JobState": "RUNNING",
+        "Requeue": "0",
+        "TimeLimit": "03:59:00",
+        "TresPerNode": "gres/gpu:h100:1",
+        "job_id": "3085545"
+      },
+      "recovery_af2_job": {
+        "alloc_tres": "billing=8,cpu=8,gres/gpu=1,mem=128G,node=1",
+        "elapsed_seconds": 9805,
+        "exit_code": "0:0",
+        "job_id": "3085545",
+        "node_list": "g0004",
+        "state": "COMPLETED"
+      },
+      "target_id": "1FSK_LJ",
+      "terminal_success": true
+    },
+    {
+      "failed_af2_job_id": "3085452",
+      "outputs": {
+        "n_done_markers": 60,
+        "n_records": 60,
+        "n_score_json": 300,
+        "n_unrelaxed_pdb": 300,
+        "records": {
+          "bytes": 116481,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/records_af2_multimer.jsonl",
+          "sha256": "ba205324c4b7a336543684361ed0efdc17c7dbb958c17098a3f3692dee33b087"
+        },
+        "runtime_receipt": {
+          "bytes": 3270,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_multimer_runtime_receipt.json",
+          "sha256": "2971b274fdcb74bb8834faf658b5e4cd31204d44440698235427db83b0ab792d"
+        },
+        "stderr_log": {
+          "bytes": 736,
+          "path": "hpc_outputs/logs/biosfm-w3b-fit-af2r-3085546.err",
+          "sha256": "d08624c3cd8e694318c2045c0662957c0252321e1a2b86c4b9c53a49eaa18b2e"
+        },
+        "stdout_log": {
+          "bytes": 177720,
+          "path": "hpc_outputs/logs/biosfm-w3b-fit-af2r-3085546.out",
+          "sha256": "1d946f14ae97184cd4bade26a75848d0dad0496b4530d93d52e42daaba6fb415"
+        }
+      },
+      "post_correction_slurm": {
+        "JobState": "RUNNING",
+        "Requeue": "0",
+        "TimeLimit": "03:59:00",
+        "TresPerNode": "gres/gpu:h100:1",
+        "job_id": "3085546"
+      },
+      "recovery_af2_job": {
+        "alloc_tres": "billing=8,cpu=8,gres/gpu=1,mem=128G,node=1",
+        "elapsed_seconds": 1753,
+        "exit_code": "0:0",
+        "job_id": "3085546",
+        "node_list": "g0004",
+        "state": "COMPLETED"
+      },
+      "target_id": "1FSX_BA",
+      "terminal_success": true
+    }
+  ],
+  "terminal_success": true,
+  "version": 1
+}

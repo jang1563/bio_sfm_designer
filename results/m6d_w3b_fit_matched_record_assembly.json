@@ -1,0 +1,129 @@
+{
+  "artifact": "m6d_w3b_matched_record_assembly",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "can_run_stage_evaluator": true,
+  "claim_boundary": "Matched predictor input/QC evidence only. Assembly does not authorize compute, certify a gate, establish biological success, or support a W3b claim.",
+  "execution_manifest": "configs/m6d_w3b_execution_targets.json",
+  "execution_manifest_sha256": "464ca151a242c81ca7567cd4c737240999b05ec938a6c54b048888aca4374b5b",
+  "expected_records": 180,
+  "experimental_role": "fit",
+  "failures": [],
+  "input_lock": "configs/m6d_w3b_execution_input_lock.json",
+  "input_lock_sha256": "8c2b281f1250d5d5ba72351289866bb87fd4b19bbcb2d245dc9e9c2cf8a206cf",
+  "matched_records_by_target": {
+    "1FL7_DC": 60,
+    "1FSK_LJ": 60,
+    "1FSX_BA": 60
+  },
+  "n_failures": 0,
+  "n_matched_records": 180,
+  "no_submit": true,
+  "numeric_copy_fraction": 0.0,
+  "numeric_copy_fraction_threshold": 0.95,
+  "output_records": "results/m6d_w3b_fit_matched_records.jsonl",
+  "output_records_sha256": "6850c3b067be7f7df988e367439842c36d9c155276f79e3a724e4b45f1004ffe",
+  "protocol": "configs/m6d_w3b_disagreement_gate_protocol.json",
+  "protocol_sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96",
+  "records_per_target": 60,
+  "runtime_lock": "configs/m6d_w3b_runtime_lock.json",
+  "runtime_lock_digest_sha256": "89ef3ccd7f7c361b186170c14ec21e715633fc6e94b48126bef6879058eb27c0",
+  "runtime_lock_sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28",
+  "seed_namespace": "w3b-fit-v1",
+  "stage": "fit",
+  "status": "w3b_fit_matched_records_ready",
+  "target_ids": [
+    "1FSK_LJ",
+    "1FSX_BA",
+    "1FL7_DC"
+  ],
+  "target_reports": [
+    {
+      "candidate_file": {
+        "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/candidates_proteinmpnn_complex.jsonl",
+        "sha256": "d987b6910f703a74742a9f0808ed86e087d92e23b16a866acce63715a1c6ccda"
+      },
+      "expected_records": 60,
+      "n_matched_records": 60,
+      "predictor_files": {
+        "af2_multimer_colabfold_v1": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/records_af2_multimer.jsonl",
+          "sha256": "937af5cffa7f37f3f78a9b6dae4c07734994096a3bf4c8bd81b14008f891ace4"
+        },
+        "boltz2_complex": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/records_boltz_complex.jsonl",
+          "sha256": "3983f9d6e794529d11caf4ab11439b71b6af36236487a633625e7bf161ce539c"
+        }
+      },
+      "runtime_receipts": {
+        "af2_multimer_colabfold_v1": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_multimer_runtime_receipt.json",
+          "sha256": "f8e3ef8c6a3bf4ce9335a4e9bbfae881ed0f6b422bc6d8291d46ffc17e21dc24"
+        },
+        "boltz2_complex": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/boltz2_runtime_receipt.json",
+          "sha256": "2313a33f89f000df74d169facd0d4891ce416de9f9409781b99cdc30cba889b0"
+        }
+      },
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "candidate_file": {
+        "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/candidates_proteinmpnn_complex.jsonl",
+        "sha256": "31204d42f358278015454f8c66519f4bce8895550d325c13cf7d73f2563030e1"
+      },
+      "expected_records": 60,
+      "n_matched_records": 60,
+      "predictor_files": {
+        "af2_multimer_colabfold_v1": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/records_af2_multimer.jsonl",
+          "sha256": "ba205324c4b7a336543684361ed0efdc17c7dbb958c17098a3f3692dee33b087"
+        },
+        "boltz2_complex": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/records_boltz_complex.jsonl",
+          "sha256": "b7379dd26148d997d0df99b760c5327291a15316bed1ed93c33845e0c278c9a9"
+        }
+      },
+      "runtime_receipts": {
+        "af2_multimer_colabfold_v1": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_multimer_runtime_receipt.json",
+          "sha256": "2971b274fdcb74bb8834faf658b5e4cd31204d44440698235427db83b0ab792d"
+        },
+        "boltz2_complex": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/boltz2_runtime_receipt.json",
+          "sha256": "45f6668ef209b3304c78310c4c6366971a9d60844895dc71cafba31fc05f030b"
+        }
+      },
+      "target_id": "1FSX_BA"
+    },
+    {
+      "candidate_file": {
+        "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/candidates_proteinmpnn_complex.jsonl",
+        "sha256": "5fd39d6cf92ba3091b7430c1df7c0550142040320e57768660343d2e2df4fee6"
+      },
+      "expected_records": 60,
+      "n_matched_records": 60,
+      "predictor_files": {
+        "af2_multimer_colabfold_v1": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/records_af2_multimer.jsonl",
+          "sha256": "f8a298d222d1a4d4ca0431d9dc4b6259cbf24bb520034e89038f677d4b447922"
+        },
+        "boltz2_complex": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/records_boltz_complex.jsonl",
+          "sha256": "561953545f21d4617d9acc9bb5677b0bacd23b58e00ce4484c76264d1bd0705a"
+        }
+      },
+      "runtime_receipts": {
+        "af2_multimer_colabfold_v1": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_multimer_runtime_receipt.json",
+          "sha256": "d5e5eee70e4adceb61c1fa2c6107d00d42af45ed6be9872edd0e6ec65b68b61a"
+        },
+        "boltz2_complex": {
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/boltz2_runtime_receipt.json",
+          "sha256": "5c3e3440a8f2cb8688a8773b2e876f51d49a5d1f7412aa82f0a524cb7d5b88a8"
+        }
+      },
+      "target_id": "1FL7_DC"
+    }
+  ]
+}

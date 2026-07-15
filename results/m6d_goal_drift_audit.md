@@ -1,24 +1,23 @@
 # M6d Goal Drift Audit
 
-Status: `no_major_direction_drift_w3b_af2_path_recovery_approval_wait`.
+Status: `no_major_direction_drift_w3b_fit_terminal_stop_honored`.
 Audit ok: `True`.
 Major direction drift: `False`.
 
 ## Assessment
 
 - mission: `no_drift_external_calibrated_trust_gate_north_star_preserved`
-- protocol: `no_drift_initial_failure_preserved_path_only_recovery_separately_gated`
-- claims: `no_drift_fit_incomplete_no_w3b_claim`
-- execution: `initial_9_jobs_terminal_af2_recovery_packet_ready_not_approved_no_submit`
-- operational status: `current_surfaces_reconciled_to_af2_recovery_approval_gate`
+- protocol: `no_drift_frozen_fit_stop_honored_without_retuning`
+- claims: `no_drift_terminal_negative_result_no_w3b_claim`
+- execution: `12_terminal_allocations_180_matched_rows_no_later_stage_submission`
+- operational status: `w3b_closed_at_fit_successor_question_not_yet_preregistered`
 
 ## Active Risks
 
-- `w3b_initial_approval_reuse` (managed): the consumed nine-job approval cannot authorize the three recovery jobs
-- `w3b_successful_producer_rerun` (managed): the recovery packet authorizes zero ProteinMPNN and zero Boltz jobs
-- `w3b_gpu_budget_drift` (managed): 38 failed AF2 GPU-seconds are retained and recovery walltime keeps the worst case below 24 H100 hours
-- `w3b_partial_output_overwrite` (managed): candidate, A3M, manifest, runtime, and empty-output hashes are packet-bound and fail closed on drift
+- `w3b_posthoc_rescue` (managed): the frozen fit stop is terminal; thresholds and target membership remain unchanged
+- `w3b_later_stage_leak` (managed): certification and held-out-test stages are unreachable and have zero submissions
+- `w3b_negative_result_overclaim` (managed): the result is structural-proxy evidence and cannot establish wet-lab failure or universal predictor behavior
 
 ## Next Action
 
-Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.
+Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.

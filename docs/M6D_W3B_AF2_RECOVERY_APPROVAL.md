@@ -4,6 +4,14 @@ Status: `recovery_packet_ready_awaiting_explicit_approval`.
 
 Date: 2026-07-15.
 
+> **Historical consumed snapshot:** this file preserves the immutable pre-submit approval boundary below.
+> The exact approval was later consumed once. Replacement jobs `3085544`-`3085546` completed `0:0` with
+> exactly 60 AF2 records per target. Slurm rounded the requested `03:59:30` to `04:00:00`; all three live
+> limits were corrected to `03:59:00`, restoring an 86,258-second worst case and 142-second margin. Strict
+> replay assembled 180/180 matched fit rows, after which the frozen evaluator returned
+> `w3b_fit_rule_not_found_stop`. See `docs/M6D_W3B_FIT_COMPLETION.md`. The original status, scope, and phrase
+> below are retained as historical evidence and are not reusable authority.
+
 ## Why recovery is needed
 
 The approved initial W3b fit submission completed all three ProteinMPNN jobs and all three Boltz jobs.

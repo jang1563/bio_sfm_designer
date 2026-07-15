@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3_complete_w3b_af2_recovery_approval_wait`.
+Status: `goal_active_w3b_fit_terminal_successor_preregistration_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -21,19 +21,21 @@ Can mark goal complete: `False`.
 - W3 preregistration execution-ready field: `False`
 - W3 completion: `w3_mechanism_panel_adjudicated_context_dependent_or_unresolved`
 - W3 joint outcome: `context_dependent_or_unresolved`
-- W3b: `w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait`
+- W3b: `w3b_fit_complete_rule_not_found_terminal_stop`
 - W3b initial fit approval recorded: `True`
 - W3b initial fit jobs submitted: `9`
 - W3b ProteinMPNN completed: `3`
 - W3b Boltz completed: `3`
 - W3b AF2 failed before prediction: `3`
-- W3b AF2 recovery: `w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval`
-- W3b AF2 recovery approval recorded: `False`
-- W3b AF2 recovery jobs submitted: `0`
-- remaining requirement: `W3b_AF2_fit_recovery_explicit_approval`
+- W3b AF2 recovery: `w3b_fit_af2_recovery_completed`
+- W3b AF2 recovery approval recorded: `True`
+- W3b AF2 recovery jobs submitted: `3`
+- W3b fit completion: `w3b_fit_complete_rule_not_found_terminal_stop`
+- W3b certification reachable: `False`
+- remaining requirement: `W3b_successor_scientific_question_and_preregistration`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.
+Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.

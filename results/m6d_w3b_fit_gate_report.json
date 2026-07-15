@@ -1,0 +1,26 @@
+{
+  "artifact": "m6d_w3b_disagreement_gate_report",
+  "audit_ok": true,
+  "can_claim_biological_binder_success": false,
+  "can_claim_bounded_disagreement_gate_viability": false,
+  "can_claim_population_level_independent_predictor_robustness": false,
+  "can_reopen_or_rescue_w2c": false,
+  "certification": null,
+  "claim_boundary": "Even a positive result is limited to matched-predictor structural-proxy risk under the frozen targets and runtimes; it is not wet-lab success, universal robustness, or W2c rescue.",
+  "failures": [],
+  "fit": {
+    "comparator": null,
+    "comparator_candidate_rules_considered": 0,
+    "primary": null,
+    "primary_candidate_rules_considered": 0,
+    "rules_frozen": false
+  },
+  "record_counts": {
+    "certification": 0,
+    "fit": 180,
+    "held_out_test": 0
+  },
+  "status": "w3b_fit_rule_not_found_stop",
+  "test": null,
+  "test_can_change_certificate": false
+}

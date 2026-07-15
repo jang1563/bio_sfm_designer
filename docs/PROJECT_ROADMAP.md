@@ -31,8 +31,12 @@
 > gate. The design passes at power 0.824333. Its exact Boltz/AF2 runtime identities are hash-locked. The
 > approved target-MSA stage completed 8/8 at 0.216389 A40 GPU-hours. The later initial fit approval was
 > consumed once: all three ProteinMPNN and all three Boltz jobs completed, yielding 180 candidates and
-> 180 Boltz records. All three AF2 jobs failed before prediction on a container-relative input path. The
-> AF2-only recovery packet is ready, but no recovery compute is approved or submitted.
+> 180 Boltz records. All three AF2 jobs failed before prediction on a container-relative input path, after
+> which the separate exact recovery approval was consumed once. Replacements `3085544`-`3085546` completed,
+> strict replay assembled 180/180 matched rows, and the frozen evaluator returned
+> `w3b_fit_rule_not_found_stop`. No primary or comparator rule qualified. `1FSK_LJ` was wrong for all 60
+> rows under both endpoints, making the required 15 accepts alone exceed the 0.08 global risk cap.
+> Certification and held-out test are unreachable and unsubmitted; W3b must not be rescued or retuned.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -110,10 +114,10 @@ container, all five AF2-Multimer-v3 weight hashes, and exact predictor parameter
 `configs/m6d_w3b_runtime_lock.json`; `results/m6d_w3b_runtime_lock_readiness.{json,md}` reports
 `runtime_identity_ready=true` and `fit_packet_prerequisites_ready=true`. The matched-record path now
 requires receipts to bind the exact runtime-lock SHA, lock digest, and predictor identity digest. This
-closes runtime substitution. The later initial fit approval was consumed once; it does not transfer to
-the current AF2 recovery boundary.
+closes runtime substitution. The initial fit and separate AF2-recovery approvals were each consumed once;
+neither transfers to any successor experiment.
 
-2026-07-15 W3b fit producer and initial execution: the historical W2b/W2c runners remain untouched. Dedicated W3b
+2026-07-15 W3b fit execution and terminal result: the historical W2b/W2c runners remain untouched. Dedicated W3b
 ProteinMPNN validation, Boltz, AF2, runtime re-observation, conversion, guarded submission, and append-only
 journal paths are now hash-bound by `m6d_w3b_fit_packet`. Candidate IDs and sequences must both be unique.
 The complete synthetic-lock integration test materializes the three-target packet and dry-runs exactly
@@ -121,12 +125,17 @@ The complete synthetic-lock integration test materializes the three-target packe
 writes. The exact initial fit approval was then consumed once. ProteinMPNN jobs `3085447`, `3085450`, and
 `3085453` and Boltz jobs `3085448`, `3085451`, and `3085454` completed. AF2 jobs `3085449`, `3085452`,
 and `3085455` failed before prediction because the container could not resolve a relative `af2_inputs`
-path. Exactly 180 candidates and 180 Boltz records are preserved; no AF2 records exist. The separate
-recovery packet authorizes, only after new exact approval, three AF2 replacements with absolute container
-paths, zero ProteinMPNN/Boltz jobs, `--no-requeue`, and a `03:59:30` per-job limit. Its worst-case total
-is 86,348 H100 GPU-seconds, below the 86,400-second ceiling. Local and Cayuga dry-runs revalidate all 180
-A3Ms with zero scheduler/receipt writes. No recovery compute or W3b claim is authorized. See
-`docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`.
+path. The separate exact recovery approval was then consumed once for replacements `3085544`-`3085546`.
+All three completed `0:0`, yielding 180 AF2 records. Slurm rounded the requested `03:59:30` limits up to
+`04:00:00`; all three live jobs were corrected to `03:59:00`, restoring an 86,258-second worst case and
+142-second protocol margin. Actual H100 allocation was 16,641 seconds (`4.6225` hours). Strict matched
+assembly passed 180/180 rows with local/Cayuga hash parity.
+
+The frozen fit evaluator returned `w3b_fit_rule_not_found_stop`. No primary or comparator rule qualified.
+`1FSK_LJ` was wrong on all 60 rows for both predictor endpoints, so the required 15 target accepts imply
+a best-case `15/180 = 0.08333` global false-accept rate, already above the 0.08 cap. W3b therefore stops
+before certification. No certification or held-out-test job was submitted. See
+`docs/M6D_W3B_FIT_COMPLETION.md` and `results/m6d_w3b_fit_completion.json`.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -148,7 +157,7 @@ t0.3-only production protocol is now `stop_certified` for `alpha=0.2` at 220 rec
 as separate claims: `results/m6c_project_status.json` is the full-mix status, while
 `results/m6c_project_status_t030_protocol.json` and `results/m6c_protocol_branch_summary.{json,md}`
 are the t0.3 branch certificate. That historical action ledger is superseded; resume from
-`results/m6d_goal_state_refresh_report.{json,md}` for the current W3b-first action priority.
+`results/m6d_goal_state_refresh_report.{json,md}` for the current successor-design action priority.
 
 2026-06-29 W4 update: `results/m6c_w4_round/summary.json` and
 `results/m6c_w4_round/campaign.jsonl` now give a project-status-accepted
@@ -507,26 +516,20 @@ Allowed decisions:
 
 ## Immediate Codex Cadence
 
-1. Use `docs/M6D_GOAL_MODE_ANCHOR.md` and the refreshed machine-readable goal-state artifacts as the current
-   resume surface. Preserve W2, W2b, and W2c as completed negative evidence and the 58-case W3 outcome as
-   `context_dependent_or_unresolved`; do not rescue or retune any of them.
-2. Preserve the preregistered W3b gate, 3/3/2 target roles, target-specific MSA hashes, exact Boltz/AF2
-   runtime identities, 870-slot execution lock, and stage stop rules. The consumed initial fit run produced
-   180 candidates and 180 Boltz records; AF2 remains incomplete after three pre-prediction path failures.
-3. Do not infer AF2 recovery authority from generic continuation, goal-mode resume, the consumed target-MSA
-   approval, or the consumed initial fit approval. The only next compute boundary is the exact recovery
-   approval in `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`.
-4. After that exact approval, submit only three packet-bound AF2 H100 replacements for failed jobs
-   `3085449`, `3085452`, and `3085455`. Submit zero ProteinMPNN and zero Boltz jobs; do not regenerate
-   candidates or A3Ms.
-5. Sync only receipt-bound recovery outputs, run strict runtime/MSA/provenance QC, assemble exactly 180
-   paired records, and apply the frozen fit evaluator. A fit failure terminates W3b; it is not a tuning signal.
-6. Only if fit passes, prepare a distinct certification packet for the three frozen certification targets.
-   Only if certification passes may a separate held-out-test packet be prepared. Each stage requires its
-   own review and explicit approval before compute.
+1. Use `docs/M6D_W3B_FIT_COMPLETION.md`, `docs/M6D_GOAL_MODE_ANCHOR.md`, and the refreshed goal-state
+   artifacts as the current resume surface.
+2. Preserve W2/W2b/W2c as completed negative evidence, W3 as `context_dependent_or_unresolved`, and W3b as
+   `w3b_fit_complete_rule_not_found_terminal_stop`; do not rescue or retune any branch.
+3. Submit no W3b certification, held-out-test, retry, or adaptive-top-up compute. The frozen fit stop makes
+   those stages unreachable.
+4. Preserve the 180 matched records and the all-wrong `1FSK_LJ` endpoint as evidence, not as a reason to
+   delete a target post hoc.
+5. Separate three successor hypotheses: generator failure, target-family heterogeneity, and trust-signal
+   inadequacy. Select one question before designing another panel.
+6. Preregister the successor's fresh targets, endpoints, power, stop rules, runtime identities, and compute
+   ceiling before requesting any new execution approval.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
-   resume barnase scaling or claim productive DBTL unless W3b results or a separately preregistered decision
-   justify that branch.
+   claim productive DBTL or universal robustness from the current negative sequence.
 
 ## File Map
 

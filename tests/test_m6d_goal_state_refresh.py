@@ -653,6 +653,59 @@ def _w3b_recovery_artifacts():
     return submission, observation, recovery_packet
 
 
+def _w3b_fit_terminal_artifact():
+    return {
+        "artifact": "m6d_w3b_fit_completion",
+        "status": "w3b_fit_complete_rule_not_found_terminal_stop",
+        "audit_ok": True,
+        "approval_consumed": True,
+        "initial_fit_jobs_submitted": 9,
+        "af2_recovery_jobs_submitted": 3,
+        "jobs_completed_successfully": 9,
+        "jobs_failed_before_prediction": 3,
+        "replacement_jobs_completed_successfully": 3,
+        "observed_h100_allocation_seconds": 16641,
+        "observed_h100_allocation_hours": 4.6225,
+        "h100_accounting": {
+            "corrected_worst_case_seconds": 86258,
+            "protocol_limit_seconds": 86400,
+        },
+        "n_fit_targets": 3,
+        "n_matched_records": 180,
+        "matched_records_by_target": {
+            "1FL7_DC": 60,
+            "1FSK_LJ": 60,
+            "1FSX_BA": 60,
+        },
+        "local_remote_sha256_parity": True,
+        "fit_outcome": {
+            "status": "w3b_fit_rule_not_found_stop",
+            "primary_rules_frozen": False,
+            "comparator_rules_frozen": False,
+            "primary_qualifying_rules": 0,
+            "comparator_qualifying_rules": 0,
+            "mathematically_impossible_under_frozen_constraints": True,
+            "impossibility_target": "1FSK_LJ",
+            "minimum_possible_global_false_accept_rate": 15 / 180,
+            "frozen_empirical_risk_cap": 0.08,
+        },
+        "target_endpoint_summary": {
+            "1FSK_LJ": {
+                "boltz2_complex": {"wrong": 60, "correct": 0},
+                "af2_multimer_colabfold_v1": {"wrong": 60, "correct": 0},
+            }
+        },
+        "certification_reachable": False,
+        "certification_compute_approved": False,
+        "certification_jobs_submitted": 0,
+        "held_out_test_reachable": False,
+        "held_out_test_jobs_submitted": 0,
+        "adaptive_top_up_allowed": False,
+        "can_claim_w3b": False,
+        "can_claim_biological_binder_success": False,
+    }
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -694,7 +747,9 @@ def _legacy_bundle():
     return anchor, completion, drift, actions, harness
 
 
-def _refresh_current_w3b(*, completion=None, artifacts=None, recovery=None):
+def _refresh_current_w3b(
+    *, completion=None, artifacts=None, recovery=None, fit_completion=None
+):
     gate = _w2c()
     gate["execution_readiness"] = {
         "target_manifest_present": True,
@@ -706,6 +761,8 @@ def _refresh_current_w3b(*, completion=None, artifacts=None, recovery=None):
     optional = [*(artifacts or _w3b_fit_ready_artifacts())]
     if recovery is not None:
         optional.extend(recovery)
+    if fit_completion is not None:
+        optional.append(fit_completion)
     return refresh_bundle(
         *_legacy_bundle(),
         _w2b(),
@@ -1165,6 +1222,32 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "recovery_packet_exact"):
             _refresh_current_w3b(recovery=tuple(recovery))
 
+    def test_w3b_terminal_fit_closes_certification_and_moves_to_successor_design(self):
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3b_fit_terminal_successor_preregistration_required",
+        )
+        self.assertEqual(bundle["harness"]["hpc_status"]["jobs_running"], 0)
+        self.assertEqual(
+            bundle["harness"]["hpc_status"]["w3b_af2_recovery_jobs_completed"],
+            3,
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["w3b_fit_matched_records"],
+            180,
+        )
+        self.assertFalse(
+            bundle["anchor"]["current_status"]["w3b_certification_reachable"]
+        )
+        self.assertFalse(bundle["report"]["w3b_successor"]["fit_supported"])
+        self.assertFalse(bundle["report"]["w3b_successor"]["can_claim_w3b"])
+        self.assertIn("submit no certification", bundle["report"]["next_action"])
+
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
         packet["rows"].pop()
@@ -1268,6 +1351,9 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3b_af2_recovery": os.path.join(
                     root, "missing-w3b-af2-recovery.json"
                 ),
+                "w3b_fit_completion": os.path.join(
+                    root, "missing-w3b-fit-completion.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -1299,6 +1385,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w3b-fit-initial-execution-observation",
                 paths["w3b_fit_observation"],
                 "--w3b-fit-af2-recovery-packet", paths["w3b_af2_recovery"],
+                "--w3b-fit-completion", paths["w3b_fit_completion"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -1326,6 +1413,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3b_fit_submission",
                     "w3b_fit_observation",
                     "w3b_af2_recovery",
+                    "w3b_fit_completion",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)
