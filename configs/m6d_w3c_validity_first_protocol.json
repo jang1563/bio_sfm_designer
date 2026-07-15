@@ -1,0 +1,110 @@
+{
+  "artifact": "m6d_w3c_validity_first_protocol",
+  "version": 1,
+  "status": "preregistered_target_discovery_only_no_submit",
+  "date": "2026-07-15",
+  "scientific_question": "After restricting the benchmark to complete biological target-binder dimers, can both frozen predictors recover native complexes before generated designs or a trust gate are evaluated?",
+  "historical_boundary": {
+    "w3b_remains_terminal": true,
+    "historical_24_targets_are_diagnostic_only": true,
+    "historical_predictor_outputs_may_not_select_successor_targets": true,
+    "historical_targets_may_not_enter_w3c": true,
+    "historical_claim": "W2b, W2c, and W3b remain exact prepared-two-chain structural-proxy experiments and do not estimate strict biological target-binder generalization."
+  },
+  "target_discovery": {
+    "required_targets": 8,
+    "fresh_source_required": true,
+    "exclude_all_historical_target_ids": true,
+    "exclude_all_historical_rcsb_sources": true,
+    "exclude_all_historical_target_sequence_hashes": true,
+    "selection_may_use_predictor_outputs": false,
+    "selection_may_use_generated_design_labels": false,
+    "selection_inputs": [
+      "RCSB source identity",
+      "PDB TITLE and COMPND metadata",
+      "PDB REMARK 350 author-determined assembly",
+      "selected-chain geometry",
+      "source and sequence overlap registries"
+    ]
+  },
+  "target_validity_gate": {
+    "author_determined_biological_unit": "DIMERIC",
+    "selected_pair_must_be_complete_protein_assembly": true,
+    "selected_chains_must_be_distinct_molecule_entities": true,
+    "manual_target_binder_semantic_verdict": "pass",
+    "minimum_ca_residues_per_chain": 40,
+    "ca_contact_cutoff_angstrom": 8.0,
+    "minimum_ca_contact_pairs": 20,
+    "unreviewed_numbering_gaps_allowed": false,
+    "manual_exceptions_after_predictor_output": false
+  },
+  "stages": [
+    {
+      "stage": "W3c-A",
+      "name": "fresh target discovery and representation lock",
+      "compute": "CPU and metadata only",
+      "proteinmpnn_designs": 0,
+      "predictor_evaluations": 0,
+      "approval_required": false,
+      "stop_rule": "Stop unless exactly eight fresh targets pass every target-validity and overlap check."
+    },
+    {
+      "stage": "W3c-B1",
+      "name": "target-MSA preparation",
+      "compute": "Cayuga A40",
+      "maximum_target_msa_queries": 8,
+      "proteinmpnn_designs": 0,
+      "predictor_evaluations": 0,
+      "approval_required": true,
+      "approval_status": "not_prepared",
+      "stop_rule": "Stop unless all eight target MSAs pass sequence, depth, hash, and no-truncation checks."
+    },
+    {
+      "stage": "W3c-B2",
+      "name": "native dual-predictor recoverability screen",
+      "compute": "Cayuga H100",
+      "targets": 8,
+      "native_sequences_per_target": 1,
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "maximum_predictor_evaluations": 16,
+      "proteinmpnn_designs": 0,
+      "approval_required": true,
+      "approval_status": "not_prepared",
+      "lrmsd_success_threshold_angstrom": 4.0,
+      "minimum_targets_passing": 6,
+      "target_pass_rule": "Both predictors must produce strict-QC records with finite interface pAE and L-RMSD below 4.0 A against the native complex.",
+      "stage_pass_rule": "At least six of eight targets must pass the target-level native recoverability rule.",
+      "stop_rule": "If fewer than six targets pass, stop before candidate generation and revise representation or predictor scope."
+    }
+  ],
+  "post_native_boundary": {
+    "generator_protocol_prepared": false,
+    "trust_gate_protocol_prepared": false,
+    "certification_protocol_prepared": false,
+    "native_screen_may_select_gate_thresholds": false,
+    "native_screen_may_select_generator_settings": false,
+    "next_protocol_requires_separate_preregistration": true,
+    "next_compute_requires_separate_exact_approval": true
+  },
+  "runtime_boundary": {
+    "w3b_runtime_may_transfer_only_by_exact_hash_match": true,
+    "new_runtime_observation_required": true,
+    "new_budget_lock_required_before_approval": true,
+    "prediction_time_network_allowed": false,
+    "templates_allowed": false,
+    "seed": 0
+  },
+  "claim_boundary": {
+    "target_discovery_supports_binder_design_claim": false,
+    "native_screen_supports_generator_claim": false,
+    "native_screen_supports_trust_gate_claim": false,
+    "native_screen_supports_biological_binder_success_claim": false,
+    "maximum_supported_native_screen_claim": "The frozen predictors can or cannot recover the native complexes for the prospectively valid target set under the locked representation."
+  },
+  "no_submit": true,
+  "cayuga_submission_allowed": false,
+  "next_action": "Discover and lock eight fresh strict target-binder dimers. Do not prepare MSA or H100 approval packets until the target manifest and representation audit pass exactly."
+}

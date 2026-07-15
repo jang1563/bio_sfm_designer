@@ -1,18 +1,23 @@
 {
   "active_risks": [
     {
-      "control": "the frozen fit stop is terminal; thresholds and target membership remain unchanged",
-      "id": "w3b_posthoc_rescue",
+      "control": "the 24 historical targets are diagnostic only and support no strict target-binder subgroup claim",
+      "id": "historical_target_semantic_overclaim",
       "status": "managed"
     },
     {
-      "control": "certification and held-out-test stages are unreachable and have zero submissions",
-      "id": "w3b_later_stage_leak",
+      "control": "W3c requires complete biological dimers and native dual-predictor recovery before generation",
+      "id": "representation_failure_conflated_with_generator_failure",
       "status": "managed"
     },
     {
-      "control": "the result is structural-proxy evidence and cannot establish wet-lab failure or universal predictor behavior",
-      "id": "w3b_negative_result_overclaim",
+      "control": "fresh target discovery excludes historical sources and may not use predictor or generated-design labels",
+      "id": "historical_label_leak_into_target_selection",
+      "status": "managed"
+    },
+    {
+      "control": "no MSA or native-screen approval packet exists and all later compute remains separately gated",
+      "id": "premature_compute_authority",
       "status": "managed"
     }
   ],
@@ -20,6 +25,7 @@
   "audit_ok": true,
   "can_mark_goal_complete": false,
   "claim_boundary": {
+    "historical_w2b_w2c_w3b": "structural_proxy_scope_only",
     "publication": "not_current_goal",
     "w1": "preserved_target_specific_certificate",
     "w2": "generalization_not_supported",
@@ -27,8 +33,10 @@
     "w2c": "threshold_learning_terminal_no_viability_claim",
     "w3": "completed_context_dependent_or_unresolved_no_population_claim",
     "w3b": "fit_terminal_negative_certification_unreachable_no_claim",
+    "w3c": "fresh_target_discovery_only_no_compute_no_claim",
     "w4": "closed_loop_plumbing_only"
   },
+  "claim_scope_corrected": true,
   "current_state": {
     "W1_M6c_scale_up": {
       "complete": true,
@@ -984,6 +992,55 @@
       "recovery_time_limit": "03:59:30",
       "status": "w3b_fit_af2_recovery_completed"
     },
+    "W3c_validity_first": {
+      "audit_ok": true,
+      "can_claim_target_binder_generalization": false,
+      "cayuga_submission_allowed": false,
+      "checks": {
+        "audit_checks_all_pass": true,
+        "audit_ok": true,
+        "claim_closed": true,
+        "historical_branch_counts_exact": true,
+        "historical_pool_counts_exact": true,
+        "identity_exact": true,
+        "no_submit_exact": true,
+        "public_structure_fixture_bound": true,
+        "successor_policy_exact": true,
+        "successor_protocol_bound": true
+      },
+      "historical_branch_counts": {
+        "W2b": {
+          "n_strict_target_binder_eligible": 0,
+          "n_structurally_complete_two_chain": 1,
+          "n_targets": 8
+        },
+        "W2c": {
+          "n_strict_target_binder_eligible": 2,
+          "n_structurally_complete_two_chain": 2,
+          "n_targets": 8
+        },
+        "W3b": {
+          "n_strict_target_binder_eligible": 1,
+          "n_structurally_complete_two_chain": 2,
+          "n_targets": 8
+        }
+      },
+      "historical_claim_reset": "W2b, W2c, and W3b remain valid for their exact prepared two-chain structural-proxy inputs. Because the representative pool did not prospectively require a complete author-determined dimer plus target-binder semantics, those branches do not estimate generalization to strict biological target-binder systems.",
+      "local_source_pdbs_verified": true,
+      "n_historical_targets": 24,
+      "n_strict_target_binder_eligible": 3,
+      "n_structurally_complete_two_chain": 5,
+      "next_action": "Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.",
+      "no_submit": true,
+      "protocol_sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3",
+      "status": "w3c_target_validity_reset_complete_fresh_target_discovery_required",
+      "strict_target_binder_eligible_ids": [
+        "1FFG_CD",
+        "1FR2_BA",
+        "1F3V_BA"
+      ],
+      "structure_fixture_sha256": "ba67e4c6922d580e200266b3a0531564f8fe9e76387ee46de70ec2e664f917e5"
+    },
     "W4_closed_loop_DBTL": {
       "complete": true,
       "status": "closed_loop_round_complete"
@@ -999,12 +1056,12 @@
     "remaining": 1
   },
   "drift_assessment": {
-    "claims": "no_drift_terminal_negative_result_no_w3b_claim",
-    "execution": "12_terminal_allocations_180_matched_rows_no_later_stage_submission",
+    "claims": "historical_claim_scope_narrowed_to_exact_structural_proxy_inputs",
+    "execution": "cpu_metadata_audit_only_zero_w3c_jobs_no_submit",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-    "operational_status": "w3b_closed_at_fit_successor_question_not_yet_preregistered",
-    "protocol": "no_drift_frozen_fit_stop_honored_without_retuning"
+    "operational_status": "fresh_target_discovery_required_before_msa_or_native_screen",
+    "protocol": "controlled_validity_first_successor_reset_preregistered_before_new_compute"
   },
   "failures": [],
   "inputs": {
@@ -1020,6 +1077,7 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.",
-  "status": "no_major_direction_drift_w3b_fit_terminal_stop_honored"
+  "next_action": "Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.",
+  "representation_validity_issue_detected": true,
+  "status": "no_major_direction_drift_w3c_validity_first_reset_preregistered"
 }

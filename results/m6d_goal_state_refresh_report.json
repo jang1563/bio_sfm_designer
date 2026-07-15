@@ -4,13 +4,13 @@
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
   "historical_w2c_submission_performed": true,
-  "next_action": "Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.",
+  "next_action": "Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.",
   "next_actions_ranked": [
-    "Freeze W3b as a terminal negative fit result and submit no certification or held-out-test jobs.",
-    "Preserve the 180 matched rows, the frozen evaluator, and the 1FSK_LJ impossibility proof.",
-    "Separate generator failure, target heterogeneity, and trust-signal failure as successor hypotheses.",
-    "Choose one successor question and preregister targets, endpoints, stop rules, and compute before execution.",
-    "Do not rescue W3b by retuning thresholds, dropping 1FSK_LJ, or reusing fit labels."
+    "Preserve W2b, W2c, and W3b as exact prepared-two-chain structural-proxy experiments.",
+    "Exclude every historical target, RCSB source, and target-sequence hash from W3c.",
+    "Discover exactly eight complete author-determined target-binder dimers using metadata and geometry only.",
+    "Lock the fresh target manifest and representation audit before preparing any MSA approval packet.",
+    "Run zero ProteinMPNN or predictor jobs until the separately gated native-recoverability stages."
   ],
   "no_submit": true,
   "obsolete_current_routes_removed": [
@@ -19,18 +19,18 @@
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "4ccb11a5b30b62710b91a32caba2fd243ee4e53caf7af6f4c8d4d269fa2927c8",
-    "results/m6d_followup_next_science_actions.md": "e56a23335ac3ffc96ec12452ba27866c0877a8ccb98ad06ba3c7c8b05db38d2d",
-    "results/m6d_goal_completion_audit.json": "68115ec5d2c70200e15a46e8c0fa1ddc2c777e9870d0a9c563b9968c4fc5a592",
-    "results/m6d_goal_completion_audit.md": "481efd140a984b1e5d65b5021c19cce2975e68f1b066c3be42c8bff54c6f8c83",
-    "results/m6d_goal_drift_audit.json": "074a4114e6e22bc39b6f05fbf758ce0ff5d57deb25534f06fddf56097a12c1ad",
-    "results/m6d_goal_drift_audit.md": "a537a15d5f8ba9151e99f1cd3f41300575a1d70a92cb1fb7bdb5d90781f05ac8",
-    "results/m6d_goal_mode_current_anchor.json": "17ef619b449cb9553ba84de3508d20d8b9eced47ea4026662ca2b18e09e78fcc",
-    "results/m6d_goal_mode_local_harness_status.json": "4a9902d604458ca9b4c40759532205927414043eccd255ae278c81747950801a",
-    "results/m6d_goal_mode_local_harness_status.md": "67d2356af3aaff40ced1f99c56f5d3bda1800421288677af68264970c16b1211"
+    "results/m6d_followup_next_science_actions.json": "2aa5fa06e78173b29f395e3d36ee0cf833686b7b00c64a199f07fd8d0f3727db",
+    "results/m6d_followup_next_science_actions.md": "0010a9e8247b0fc4131b6fde581c93bd47a2fa878cbea74b5d898b071c14be70",
+    "results/m6d_goal_completion_audit.json": "fc869ffc282a8ce8e5a290077a6ce30417e82bc0ac9093b9d4c08ef50c243164",
+    "results/m6d_goal_completion_audit.md": "c3b5d6aafaebab74e859b761993f56121491e013a733765d592f13a032810dee",
+    "results/m6d_goal_drift_audit.json": "d3396379cfdc4f73a22d88a00980125f9c17df7c4f4ff307e7ee077f4e140ca2",
+    "results/m6d_goal_drift_audit.md": "9b27fc7847aac78ca0d7331343c8ab66616c77426501e586549955ff56b5e73a",
+    "results/m6d_goal_mode_current_anchor.json": "5303f095ac031938a2ce0e89150dc875f914f1e017beb3b3ecfc88c87cfbc90b",
+    "results/m6d_goal_mode_local_harness_status.json": "de50d1a7babf4b0c96c59116dda9d0ae1f03f0962b26b357685a07ea4da4a48f",
+    "results/m6d_goal_mode_local_harness_status.md": "2b904d3ec0842d47d30422d90613ab05593b35ea4160fc781e6672bf96f7f0dc"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w3b_fit_terminal_successor_preregistration_required",
+  "status": "goal_state_refreshed_w3c_fresh_target_discovery_required",
   "submission_performed": false,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
@@ -41,9 +41,15 @@
     "results/m6d_followup_next_science_actions.json",
     "results/m6d_followup_next_science_actions.md",
     "results/m6d_goal_mode_local_harness_status.json",
-    "results/m6d_goal_mode_local_harness_status.md"
+    "results/m6d_goal_mode_local_harness_status.md",
+    "configs/m6d_w3c_target_semantic_annotations.json",
+    "configs/m6d_w3c_validity_first_protocol.json",
+    "docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md",
+    "tests/fixtures/m6d_w3c_historical_structure_fixture.json",
+    "results/m6d_w3c_target_validity_audit.json",
+    "results/m6d_w3c_target_validity_audit.md"
   ],
-  "updated_at": "2026-07-15T17:19:27+09:00",
+  "updated_at": "2026-07-15T18:34:43+09:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -808,5 +814,55 @@
     ],
     "target_msa_gpu_hours": 0.21638888888888888,
     "target_msa_status": "target_msa_precompute_complete_8_of_8"
+  },
+  "w3c_submission_performed": false,
+  "w3c_target_validity": {
+    "audit_ok": true,
+    "can_claim_target_binder_generalization": false,
+    "cayuga_submission_allowed": false,
+    "checks": {
+      "audit_checks_all_pass": true,
+      "audit_ok": true,
+      "claim_closed": true,
+      "historical_branch_counts_exact": true,
+      "historical_pool_counts_exact": true,
+      "identity_exact": true,
+      "no_submit_exact": true,
+      "public_structure_fixture_bound": true,
+      "successor_policy_exact": true,
+      "successor_protocol_bound": true
+    },
+    "historical_branch_counts": {
+      "W2b": {
+        "n_strict_target_binder_eligible": 0,
+        "n_structurally_complete_two_chain": 1,
+        "n_targets": 8
+      },
+      "W2c": {
+        "n_strict_target_binder_eligible": 2,
+        "n_structurally_complete_two_chain": 2,
+        "n_targets": 8
+      },
+      "W3b": {
+        "n_strict_target_binder_eligible": 1,
+        "n_structurally_complete_two_chain": 2,
+        "n_targets": 8
+      }
+    },
+    "historical_claim_reset": "W2b, W2c, and W3b remain valid for their exact prepared two-chain structural-proxy inputs. Because the representative pool did not prospectively require a complete author-determined dimer plus target-binder semantics, those branches do not estimate generalization to strict biological target-binder systems.",
+    "local_source_pdbs_verified": true,
+    "n_historical_targets": 24,
+    "n_strict_target_binder_eligible": 3,
+    "n_structurally_complete_two_chain": 5,
+    "next_action": "Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.",
+    "no_submit": true,
+    "protocol_sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3",
+    "status": "w3c_target_validity_reset_complete_fresh_target_discovery_required",
+    "strict_target_binder_eligible_ids": [
+      "1FFG_CD",
+      "1FR2_BA",
+      "1F3V_BA"
+    ],
+    "structure_fixture_sha256": "ba67e4c6922d580e200266b3a0531564f8fe9e76387ee46de70ec2e664f917e5"
   }
 }

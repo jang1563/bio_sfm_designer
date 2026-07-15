@@ -37,6 +37,12 @@
 > `w3b_fit_rule_not_found_stop`. No primary or comparator rule qualified. `1FSK_LJ` was wrong for all 60
 > rows under both endpoints, making the required 15 accepts alone exceed the 0.08 global risk cap.
 > Certification and held-out test are unreachable and unsubmitted; W3b must not be rescued or retuned.
+> W3c now freezes the distinct successor as validity-first failure localization. A CPU-only audit of all
+> 24 historical representatives found 5 complete author-determined two-chain assemblies and 3 strict
+> target-binder systems, with strict branch counts W2b `0/8`, W2c `2/8`, and W3b `1/8`. Historical branches
+> remain exact structural-proxy experiments and do not estimate strict target-binder generalization. W3c-A
+> must discover eight fresh, source-disjoint complete target-binder dimers before any MSA or predictor
+> packet is prepared. No W3c compute is currently authorized.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -136,6 +142,18 @@ The frozen fit evaluator returned `w3b_fit_rule_not_found_stop`. No primary or c
 a best-case `15/180 = 0.08333` global false-accept rate, already above the 0.08 cap. W3b therefore stops
 before certification. No certification or held-out-test job was submitted. See
 `docs/M6D_W3B_FIT_COMPLETION.md` and `results/m6d_w3b_fit_completion.json`.
+
+2026-07-15 W3c validity-first reset: `m6d_w3c_target_validity` parses local RCSB `TITLE`, `COMPND`, and
+`REMARK 350` records and checks selected-chain geometry for all 24 historical representatives. The audit
+finds 5/24 complete author-determined two-chain assemblies and 3/24 strict target-binder systems. This is
+a post-outcome diagnostic design reset, not a historical subgroup claim. The chosen successor asks whether
+both frozen predictors can recover native complexes after the benchmark is restricted to prospectively
+valid biological target-binder dimers. `configs/m6d_w3c_validity_first_protocol.json` freezes eight fresh
+targets, strict representation criteria, a later MSA-only stage, and a later native-only 16-prediction
+screen requiring at least 6/8 targets to pass both predictors at L-RMSD below 4.0 A. Each compute stage
+requires a separate exact approval; no approval packet exists. See
+`docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`, `results/m6d_w3c_target_validity_audit.{json,md}`, and the
+public CPU replay fixture `tests/fixtures/m6d_w3c_historical_structure_fixture.json`.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -516,18 +534,18 @@ Allowed decisions:
 
 ## Immediate Codex Cadence
 
-1. Use `docs/M6D_W3B_FIT_COMPLETION.md`, `docs/M6D_GOAL_MODE_ANCHOR.md`, and the refreshed goal-state
+1. Use `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`, `docs/M6D_GOAL_MODE_ANCHOR.md`, and the refreshed goal-state
    artifacts as the current resume surface.
 2. Preserve W2/W2b/W2c as completed negative evidence, W3 as `context_dependent_or_unresolved`, and W3b as
    `w3b_fit_complete_rule_not_found_terminal_stop`; do not rescue or retune any branch.
 3. Submit no W3b certification, held-out-test, retry, or adaptive-top-up compute. The frozen fit stop makes
    those stages unreachable.
-4. Preserve the 180 matched records and the all-wrong `1FSK_LJ` endpoint as evidence, not as a reason to
-   delete a target post hoc.
-5. Separate three successor hypotheses: generator failure, target-family heterogeneity, and trust-signal
-   inadequacy. Select one question before designing another panel.
-6. Preregister the successor's fresh targets, endpoints, power, stop rules, runtime identities, and compute
-   ceiling before requesting any new execution approval.
+4. Preserve the 24-target validity audit as a diagnostic claim reset: only 5 pairs are complete dimers and
+   only 3 are strict target-binder systems; do not turn those post-outcome annotations into subgroup claims.
+5. Execute W3c-A only: discover exactly eight fresh complete target-binder dimers outside every historical
+   target, RCSB source, and target-sequence registry, without predictor or generated-design labels.
+6. Lock the target manifest and representation audit before preparing a separately approved MSA-only packet.
+   ProteinMPNN, native prediction, generator, gate, and certification work remain at zero.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

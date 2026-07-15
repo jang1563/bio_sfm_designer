@@ -1,0 +1,4621 @@
+{
+  "artifact": "m6d_w3c_target_validity_audit",
+  "audit_ok": true,
+  "can_claim_target_binder_generalization": false,
+  "cayuga_submission_allowed": false,
+  "checks": {
+    "all_selected_pairs_have_ca_contacts": true,
+    "all_selected_pairs_map_to_author_assemblies": true,
+    "annotation_policy_no_historical_labels": true,
+    "annotation_post_outcome_timing_disclosed": true,
+    "annotation_public_replay_fixture_bound": true,
+    "annotation_strict_policy_exact": true,
+    "contact_cutoff_matches_protocol": true,
+    "historical_branch_sizes_exact": true,
+    "historical_branches_are_disjoint": true,
+    "historical_branches_partition_pool": true,
+    "local_source_pdbs_match_fixture": true,
+    "no_compute_authority": true,
+    "pool_size_exact": true,
+    "protocol_claim_boundary_exact": true,
+    "protocol_discovery_scope_exact": true,
+    "protocol_identity_exact": true,
+    "protocol_msa_scope_exact": true,
+    "protocol_native_scope_exact": true,
+    "protocol_no_submit_exact": true,
+    "protocol_post_native_boundary_exact": true,
+    "protocol_runtime_boundary_exact": true,
+    "protocol_stages_exact": true,
+    "protocol_target_scope_exact": true,
+    "protocol_validity_gate_exact": true,
+    "semantic_annotations_exact": true,
+    "strict_eligibility_is_policy_derived": true,
+    "structure_fixture_identity_exact": true,
+    "structure_fixture_pool_binding_exact": true,
+    "structure_fixture_rcsb_ids_exact": true,
+    "structure_fixture_targets_exact": true
+  },
+  "contact_cutoff_angstrom": 8.0,
+  "historical_branch_summary": {
+    "W2b": {
+      "n_semantic_pass": 0,
+      "n_strict_target_binder_eligible": 0,
+      "n_structurally_complete_two_chain": 1,
+      "n_targets": 8,
+      "semantic_pass_target_ids": [],
+      "strict_target_binder_eligible_fraction": 0.0,
+      "strict_target_binder_eligible_ids": [],
+      "structurally_complete_target_ids": [
+        "1FVC_DC"
+      ]
+    },
+    "W2c": {
+      "n_semantic_pass": 2,
+      "n_strict_target_binder_eligible": 2,
+      "n_structurally_complete_two_chain": 2,
+      "n_targets": 8,
+      "semantic_pass_target_ids": [
+        "1FFG_CD",
+        "1FR2_BA"
+      ],
+      "strict_target_binder_eligible_fraction": 0.25,
+      "strict_target_binder_eligible_ids": [
+        "1FFG_CD",
+        "1FR2_BA"
+      ],
+      "structurally_complete_target_ids": [
+        "1FFG_CD",
+        "1FR2_BA"
+      ]
+    },
+    "W3b": {
+      "n_semantic_pass": 1,
+      "n_strict_target_binder_eligible": 1,
+      "n_structurally_complete_two_chain": 2,
+      "n_targets": 8,
+      "semantic_pass_target_ids": [
+        "1F3V_BA"
+      ],
+      "strict_target_binder_eligible_fraction": 0.125,
+      "strict_target_binder_eligible_ids": [
+        "1F3V_BA"
+      ],
+      "structurally_complete_target_ids": [
+        "1FL7_DC",
+        "1F3V_BA"
+      ]
+    }
+  },
+  "historical_claim_reset": "W2b, W2c, and W3b remain valid for their exact prepared two-chain structural-proxy inputs. Because the representative pool did not prospectively require a complete author-determined dimer plus target-binder semantics, those branches do not estimate generalization to strict biological target-binder systems.",
+  "inputs": {
+    "historical_branch_manifests": {
+      "W2b": {
+        "bytes": 9379,
+        "path": "configs/m6d_w2b_target_adaptive_fit_targets.json",
+        "sha256": "1459d29181ff0d2c1b5fafbf57b4e3f11e1cd872749f17fe951ece96e550ef14"
+      },
+      "W2c": {
+        "bytes": 10520,
+        "path": "configs/m6d_w2c_fresh_targets.json",
+        "sha256": "94cae2712270ca3ef7d85357ce61ccf0ac9d0d8437077d543c20e3ac61d2eda2"
+      },
+      "W3b": {
+        "bytes": 12722,
+        "path": "configs/m6d_w3b_fresh_targets.json",
+        "sha256": "0e547c450f53e276fede5f1efef1405aa234ffc54f141ade82182425fa2929fc"
+      }
+    },
+    "local_source_pdbs_verified": true,
+    "pool_manifest": {
+      "bytes": 24216,
+      "path": "configs/m6d_w2b_target_adaptive_cluster_representatives.json",
+      "sha256": "ad21d62ef06357619cedc82584119596c5e00265c4bae17e18785061bb81a20c"
+    },
+    "semantic_annotations": {
+      "bytes": 8102,
+      "path": "configs/m6d_w3c_target_semantic_annotations.json",
+      "sha256": "6e01955ec187aeffc9fb2c123f6df9f65e6da734d2b0c843636eb3bd54b1d17d"
+    },
+    "structure_fixture": {
+      "bytes": 720204,
+      "path": "tests/fixtures/m6d_w3c_historical_structure_fixture.json",
+      "sha256": "ba67e4c6922d580e200266b3a0531564f8fe9e76387ee46de70ec2e664f917e5"
+    },
+    "successor_protocol": {
+      "bytes": 4903,
+      "path": "configs/m6d_w3c_validity_first_protocol.json",
+      "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+    }
+  },
+  "next_action": "Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.",
+  "no_submit": true,
+  "status": "w3c_target_validity_reset_complete_fresh_target_discovery_required",
+  "successor_policy": {
+    "minimum_ca_contact_pairs": 20,
+    "minimum_ca_residues_per_chain": 40,
+    "require_author_determined_dimer": true,
+    "require_fresh_sources_outside_historical_24": true,
+    "require_manual_target_binder_semantic_pass": true,
+    "require_native_dual_predictor_screen_before_generation": true,
+    "require_no_unreviewed_numbering_gaps": true,
+    "require_selected_chains_are_distinct_molecule_entities": true,
+    "require_selected_pair_is_complete_protein_assembly": true
+  },
+  "summary": {
+    "n_strict_target_binder_eligible": 3,
+    "n_structurally_complete_two_chain": 5,
+    "n_targets": 24,
+    "semantic_verdict_counts": {
+      "needs_reformulation": 3,
+      "out_of_scope": 18,
+      "pass": 3
+    },
+    "strict_target_binder_eligible_fraction": 0.125,
+    "strict_target_binder_eligible_ids": [
+      "1FFG_CD",
+      "1FR2_BA",
+      "1F3V_BA"
+    ],
+    "structurally_complete_target_ids": [
+      "1FL7_DC",
+      "1FVC_DC",
+      "1FFG_CD",
+      "1FR2_BA",
+      "1F3V_BA"
+    ]
+  },
+  "targets": [
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "DECAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 80,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "3",
+        "molecule_name": "HISTONE H4",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "C",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 12.822,
+          "molecule": {
+            "ca_residues": 103,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "4",
+            "molecule_name": "HISTONE H2A.Z",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 9,
+          "chain": "D",
+          "first_interface_residue_ids": [
+            "68",
+            "71",
+            "72",
+            "75",
+            "76"
+          ],
+          "first_interface_residues": 5,
+          "minimum_ca_distance": 6.41,
+          "molecule": {
+            "ca_residues": 95,
+            "chain": "D",
+            "has_numbering_gaps": false,
+            "molecule_id": "5",
+            "molecule_name": "HISTONE H2B",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 6
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "E",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 13.091,
+          "molecule": {
+            "ca_residues": 103,
+            "chain": "E",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HISTONE H3",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "F",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 11.16,
+          "molecule": {
+            "ca_residues": 86,
+            "chain": "F",
+            "has_numbering_gaps": false,
+            "molecule_id": "3",
+            "molecule_name": "HISTONE H4",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 20,
+          "chain": "G",
+          "first_interface_residue_ids": [
+            "40",
+            "42",
+            "44",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99"
+          ],
+          "first_interface_residues": 8,
+          "minimum_ca_distance": 4.691,
+          "molecule": {
+            "ca_residues": 107,
+            "chain": "G",
+            "has_numbering_gaps": false,
+            "molecule_id": "4",
+            "molecule_name": "HISTONE H2A.Z",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 10
+        },
+        {
+          "ca_contact_pairs": 18,
+          "chain": "H",
+          "first_interface_residue_ids": [
+            "100",
+            "101",
+            "102",
+            "98",
+            "99"
+          ],
+          "first_interface_residues": 5,
+          "minimum_ca_distance": 4.345,
+          "molecule": {
+            "ca_residues": 95,
+            "chain": "H",
+            "has_numbering_gaps": false,
+            "molecule_id": "5",
+            "molecule_name": "HISTONE H2B",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 9
+        }
+      ],
+      "omitted_protein_chains": [
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "rcsb_id": "1F66",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "DECAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.803922,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 131,
+        "first_interface_residue_ids": [
+          "100",
+          "25",
+          "26",
+          "28",
+          "29",
+          "33",
+          "34",
+          "36",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "47",
+          "49",
+          "50",
+          "53",
+          "58",
+          "61",
+          "62",
+          "63",
+          "66",
+          "67",
+          "70",
+          "79",
+          "80",
+          "81",
+          "82",
+          "83",
+          "84",
+          "85",
+          "86",
+          "87",
+          "90",
+          "95",
+          "97"
+        ],
+        "first_interface_residues": 41,
+        "minimum_ca_distance": 3.752,
+        "second_interface_residues": 47
+      },
+      "semantic_context": "nucleosome_internal_subunit_pair",
+      "semantic_rationale": "The selected histone H3 and H4 chains are internal subunits of a decameric nucleosome assembly, not a standalone target-binder system.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 1089126,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F66.pdb",
+        "sha256": "8d1ab1bf5a17f0558b275ed2c434bcc85a30bce6535307b52194212c7da3320d"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 100,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "HISTONE H3",
+        "numbering_gaps": []
+      },
+      "target_id": "1F66_AB",
+      "title": "2.6 A CRYSTAL STRUCTURE OF A NUCLEOSOME CORE PARTICLE CONTAINING THE VARIANT HISTONE H2A.Z"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "2",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "C",
+            "D",
+            "G",
+            "H"
+          ],
+          "protein_chains": [
+            "C",
+            "D",
+            "G",
+            "H"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 99,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "DIMERIZATION COFACTOR OF HEPATOCYTE NUCLEAR FACTOR 1-ALPHA",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 17,
+          "chain": "G",
+          "first_interface_residue_ids": [
+            "44",
+            "45",
+            "47",
+            "48",
+            "51",
+            "52",
+            "55",
+            "56"
+          ],
+          "first_interface_residues": 8,
+          "minimum_ca_distance": 5.154,
+          "molecule": {
+            "ca_residues": 27,
+            "chain": "G",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEPATOCYTE NUCLEAR FACTOR 1-ALPHA",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 7
+        },
+        {
+          "ca_contact_pairs": 3,
+          "chain": "H",
+          "first_interface_residue_ids": [
+            "55",
+            "58"
+          ],
+          "first_interface_residues": 2,
+          "minimum_ca_distance": 7.115,
+          "molecule": {
+            "ca_residues": 26,
+            "chain": "H",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEPATOCYTE NUCLEAR FACTOR 1-ALPHA",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 2
+        }
+      ],
+      "omitted_protein_chains": [
+        "G",
+        "H"
+      ],
+      "rcsb_id": "1F93",
+      "selected_author_assembly": {
+        "assembly_id": "2",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "C",
+          "D",
+          "G",
+          "H"
+        ],
+        "protein_chains": [
+          "C",
+          "D",
+          "G",
+          "H"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.611111,
+      "selected_chains_share_molecule_entity": true,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 28,
+        "first_interface_residue_ids": [
+          "47",
+          "54",
+          "58",
+          "63",
+          "64",
+          "65",
+          "66",
+          "67",
+          "68",
+          "69",
+          "70"
+        ],
+        "first_interface_residues": 11,
+        "minimum_ca_distance": 4.771,
+        "second_interface_residues": 12
+      },
+      "semantic_context": "cofactor_homooligomer_internal_pair",
+      "semantic_rationale": "Both selected chains are DCoH molecules within a tetrameric HNF-1/DCoH complex rather than distinct target and binder entities.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 383049,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F93.pdb",
+        "sha256": "aa44f920337ca8de3d0ff0d904a6b1edb9c7724a8c9707b879cd6a762de68eec"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 100,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "DIMERIZATION COFACTOR OF HEPATOCYTE NUCLEAR FACTOR 1-ALPHA",
+        "numbering_gaps": []
+      },
+      "target_id": "1F93_DC",
+      "title": "CRYSTAL STRUCTURE OF A COMPLEX BETWEEN THE DIMERIZATION DOMAIN OF HNF- 1 ALPHA AND THE COACTIVATOR DCOH"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "22-MERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "V",
+            "X"
+          ],
+          "protein_chains": [
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "V"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 73,
+        "chain": "R",
+        "has_numbering_gaps": false,
+        "molecule_id": "19",
+        "molecule_name": "30S RIBOSOMAL PROTEIN S18",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "B",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 27.797,
+          "molecule": {
+            "ca_residues": 237,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "3",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S2",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "C",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 61.869,
+          "molecule": {
+            "ca_residues": 206,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "4",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S3",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "D",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 74.376,
+          "molecule": {
+            "ca_residues": 208,
+            "chain": "D",
+            "has_numbering_gaps": false,
+            "molecule_id": "5",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S4",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "E",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 48.945,
+          "molecule": {
+            "ca_residues": 150,
+            "chain": "E",
+            "has_numbering_gaps": false,
+            "molecule_id": "6",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S5",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "G",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 20.648,
+          "molecule": {
+            "ca_residues": 155,
+            "chain": "G",
+            "has_numbering_gaps": false,
+            "molecule_id": "8",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S7",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "H",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 36.024,
+          "molecule": {
+            "ca_residues": 138,
+            "chain": "H",
+            "has_numbering_gaps": false,
+            "molecule_id": "9",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S8",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "I",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 56.952,
+          "molecule": {
+            "ca_residues": 127,
+            "chain": "I",
+            "has_numbering_gaps": false,
+            "molecule_id": "10",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S9",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "J",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 68.178,
+          "molecule": {
+            "ca_residues": 98,
+            "chain": "J",
+            "has_numbering_gaps": false,
+            "molecule_id": "11",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S10",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 16,
+          "chain": "K",
+          "first_interface_residue_ids": [
+            "84",
+            "85",
+            "86",
+            "87",
+            "88"
+          ],
+          "first_interface_residues": 5,
+          "minimum_ca_distance": 4.432,
+          "molecule": {
+            "ca_residues": 119,
+            "chain": "K",
+            "has_numbering_gaps": false,
+            "molecule_id": "12",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S11",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 5
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "L",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 47.655,
+          "molecule": {
+            "ca_residues": 125,
+            "chain": "L",
+            "has_numbering_gaps": false,
+            "molecule_id": "13",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S12",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "M",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 67.968,
+          "molecule": {
+            "ca_residues": 125,
+            "chain": "M",
+            "has_numbering_gaps": false,
+            "molecule_id": "14",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S13",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "N",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 68.048,
+          "molecule": {
+            "ca_residues": 60,
+            "chain": "N",
+            "has_numbering_gaps": false,
+            "molecule_id": "15",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S14",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "O",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 25.216,
+          "molecule": {
+            "ca_residues": 88,
+            "chain": "O",
+            "has_numbering_gaps": false,
+            "molecule_id": "16",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S15",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "P",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 96.506,
+          "molecule": {
+            "ca_residues": 83,
+            "chain": "P",
+            "has_numbering_gaps": false,
+            "molecule_id": "17",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S16",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "Q",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 43.297,
+          "molecule": {
+            "ca_residues": 104,
+            "chain": "Q",
+            "has_numbering_gaps": false,
+            "molecule_id": "18",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S17",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "S",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 83.665,
+          "molecule": {
+            "ca_residues": 84,
+            "chain": "S",
+            "has_numbering_gaps": false,
+            "molecule_id": "20",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S19",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "T",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 102.82,
+          "molecule": {
+            "ca_residues": 99,
+            "chain": "T",
+            "has_numbering_gaps": false,
+            "molecule_id": "21",
+            "molecule_name": "30S RIBOSOMAL PROTEIN S20",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "V",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 75.329,
+          "molecule": {
+            "ca_residues": 24,
+            "chain": "V",
+            "has_numbering_gaps": false,
+            "molecule_id": "22",
+            "molecule_name": "30S RIBOSOMAL PROTEIN THX",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        }
+      ],
+      "omitted_protein_chains": [
+        "B",
+        "C",
+        "D",
+        "E",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "S",
+        "T",
+        "V"
+      ],
+      "rcsb_id": "1FJG",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "22-MERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "V",
+          "X"
+        ],
+        "protein_chains": [
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "V"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.772727,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 44,
+        "first_interface_residue_ids": [
+          "23",
+          "24",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "62",
+          "74",
+          "76",
+          "77",
+          "78",
+          "79",
+          "80"
+        ],
+        "first_interface_residues": 17,
+        "minimum_ca_distance": 4.036,
+        "second_interface_residues": 16
+      },
+      "semantic_context": "ribosome_internal_subunit_pair",
+      "semantic_rationale": "The selected S6 and S18 chains are internal components of a 30S ribosomal assembly.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 4452327,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FJG.pdb",
+        "sha256": "6d4176e0289e106d38d49f8a6359fcb024530838a0a5451a974247ea5d9a200f"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 101,
+        "chain": "F",
+        "has_numbering_gaps": false,
+        "molecule_id": "7",
+        "molecule_name": "30S RIBOSOMAL PROTEIN S6",
+        "numbering_gaps": []
+      },
+      "target_id": "1FJG_FR",
+      "title": "STRUCTURE OF THE THERMUS THERMOPHILUS 30S RIBOSOMAL SUBUNIT IN COMPLEX WITH THE ANTIBIOTICS STREPTOMYCIN, SPECTINOMYCIN, AND PAROMOMYCIN"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "2",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "C",
+            "D",
+            "K",
+            "L"
+          ],
+          "protein_chains": [
+            "C",
+            "D",
+            "K",
+            "L"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 95,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "GROWTH FACTOR RECEPTOR-BOUND PROTEIN 2",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "K",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 8.527,
+          "molecule": {
+            "ca_residues": 4,
+            "chain": "K",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEPATOCYTE GROWTH FACTOR RECEPTOR PEPTIDE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 14,
+          "chain": "L",
+          "first_interface_residue_ids": [
+            "106",
+            "107",
+            "108",
+            "109",
+            "120",
+            "121"
+          ],
+          "first_interface_residues": 6,
+          "minimum_ca_distance": 4.902,
+          "molecule": {
+            "ca_residues": 4,
+            "chain": "L",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEPATOCYTE GROWTH FACTOR RECEPTOR PEPTIDE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 4
+        }
+      ],
+      "omitted_protein_chains": [
+        "K",
+        "L"
+      ],
+      "rcsb_id": "1FYR",
+      "selected_author_assembly": {
+        "assembly_id": "2",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "C",
+          "D",
+          "K",
+          "L"
+        ],
+        "protein_chains": [
+          "C",
+          "D",
+          "K",
+          "L"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.902439,
+      "selected_chains_share_molecule_entity": true,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 100,
+        "first_interface_residue_ids": [
+          "101",
+          "116",
+          "117",
+          "118",
+          "119",
+          "120",
+          "121",
+          "122",
+          "123",
+          "124",
+          "125",
+          "126",
+          "127",
+          "128",
+          "131",
+          "138",
+          "139",
+          "140",
+          "142",
+          "146",
+          "147",
+          "148",
+          "149",
+          "150",
+          "151",
+          "152",
+          "59",
+          "60",
+          "74",
+          "77",
+          "79",
+          "80",
+          "81",
+          "82",
+          "83",
+          "84",
+          "99"
+        ],
+        "first_interface_residues": 37,
+        "minimum_ca_distance": 4.463,
+        "second_interface_residues": 37
+      },
+      "semantic_context": "domain_swapped_homooligomer_pair",
+      "semantic_rationale": "Both selected chains are GRB2 SH2 domains in a domain-swapped tetramer that also contains receptor peptides.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 343521,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FYR.pdb",
+        "sha256": "9a3ce1158b0099cff4a93e8f1ea12ff9669beaaa8949308b3c032f18a1d82c19"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 98,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "GROWTH FACTOR RECEPTOR-BOUND PROTEIN 2",
+        "numbering_gaps": []
+      },
+      "target_id": "1FYR_CD",
+      "title": "DIMER FORMATION THROUGH DOMAIN SWAPPING IN THE CRYSTAL STRUCTURE OF THE GRB2-SH2 AC-PYVNV COMPLEX"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "V",
+            "W",
+            "X",
+            "Y"
+          ],
+          "protein_chains": [
+            "V",
+            "W",
+            "X",
+            "Y"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 95,
+        "chain": "V",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "VASCULAR ENDOTHELIAL GROWTH FACTOR",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 2,
+          "chain": "X",
+          "first_interface_residue_ids": [
+            "85",
+            "86"
+          ],
+          "first_interface_residues": 2,
+          "minimum_ca_distance": 6.937,
+          "molecule": {
+            "ca_residues": 95,
+            "chain": "X",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "FMS-LIKE TYROSINE KINASE 1",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 2
+        },
+        {
+          "ca_contact_pairs": 12,
+          "chain": "Y",
+          "first_interface_residue_ids": [
+            "104",
+            "105",
+            "106",
+            "17",
+            "18",
+            "62",
+            "63",
+            "66"
+          ],
+          "first_interface_residues": 8,
+          "minimum_ca_distance": 6.909,
+          "molecule": {
+            "ca_residues": 94,
+            "chain": "Y",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "FMS-LIKE TYROSINE KINASE 1",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 8
+        }
+      ],
+      "omitted_protein_chains": [
+        "X",
+        "Y"
+      ],
+      "rcsb_id": "1FLT",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "V",
+          "W",
+          "X",
+          "Y"
+        ],
+        "protein_chains": [
+          "V",
+          "W",
+          "X",
+          "Y"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.789474,
+      "selected_chains_share_molecule_entity": true,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 88,
+        "first_interface_residue_ids": [
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "20",
+          "21",
+          "23",
+          "24",
+          "25",
+          "32",
+          "47",
+          "48",
+          "49",
+          "50",
+          "51",
+          "52",
+          "53",
+          "58",
+          "59",
+          "60",
+          "61",
+          "62",
+          "76",
+          "77",
+          "78",
+          "79",
+          "80",
+          "81",
+          "93"
+        ],
+        "first_interface_residues": 30,
+        "minimum_ca_distance": 4.466,
+        "second_interface_residues": 29
+      },
+      "semantic_context": "ligand_homodimer_internal_pair",
+      "semantic_rationale": "Both selected chains are VEGF molecules from a tetrameric VEGF-receptor assembly; the receptor chains are omitted.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 325134,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FLT.pdb",
+        "sha256": "04c59e7cc91a745b953f4c48b304d2a0cdbb552c19d33e7bde83a56113b1be4a"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 98,
+        "chain": "W",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "VASCULAR ENDOTHELIAL GROWTH FACTOR",
+        "numbering_gaps": []
+      },
+      "target_id": "1FLT_WV",
+      "title": "VEGF IN COMPLEX WITH DOMAIN 2 OF THE FLT-1 RECEPTOR"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "2",
+          "author_unit": "DIMERIC",
+          "chains": [
+            "C",
+            "D",
+            "H",
+            "I",
+            "J"
+          ],
+          "protein_chains": [
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 88,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "FOLLICLE STIMULATING PROTEIN ALPHA CHAIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [],
+      "omitted_protein_chains": [],
+      "rcsb_id": "1FL7",
+      "selected_author_assembly": {
+        "assembly_id": "2",
+        "author_unit": "DIMERIC",
+        "chains": [
+          "C",
+          "D",
+          "H",
+          "I",
+          "J"
+        ],
+        "protein_chains": [
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 1.0,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 141,
+        "first_interface_residue_ids": [
+          "15",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42",
+          "43",
+          "51",
+          "52",
+          "53",
+          "54",
+          "55",
+          "56",
+          "57",
+          "58",
+          "59",
+          "60",
+          "61",
+          "62",
+          "7",
+          "75",
+          "76",
+          "77",
+          "78",
+          "79",
+          "8",
+          "86",
+          "87",
+          "88"
+        ],
+        "first_interface_residues": 40,
+        "minimum_ca_distance": 3.944,
+        "second_interface_residues": 46
+      },
+      "semantic_context": "complete_natural_hormone_heterodimer",
+      "semantic_rationale": "The selected FSH alpha and beta chains form a complete natural hormone heterodimer, but neither chain is a target-directed binder in the strict successor regime.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 325539,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FL7.pdb",
+        "sha256": "5e60b90f8682dd37cca3ca62e1b7b4e9195eddf552a395b1161311ecbb20d7d6"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": true,
+      "target": {
+        "ca_residues": 106,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "FOLLICLE STIMULATING PROTEIN BETA CHAIN",
+        "numbering_gaps": []
+      },
+      "target_id": "1FL7_DC",
+      "title": "HUMAN FOLLICLE STIMULATING HORMONE"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "HEXAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 116,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "HOLO-(ACYL CARRIER PROTEIN) SYNTHASE",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 30,
+          "chain": "A",
+          "first_interface_residue_ids": [
+            "10",
+            "11",
+            "4",
+            "5",
+            "6",
+            "62",
+            "63",
+            "65",
+            "66",
+            "67",
+            "7",
+            "8",
+            "9"
+          ],
+          "first_interface_residues": 13,
+          "minimum_ca_distance": 5.422,
+          "molecule": {
+            "ca_residues": 118,
+            "chain": "A",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "HOLO-(ACYL CARRIER PROTEIN) SYNTHASE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 12
+        },
+        {
+          "ca_contact_pairs": 1,
+          "chain": "D",
+          "first_interface_residue_ids": [
+            "45"
+          ],
+          "first_interface_residues": 1,
+          "minimum_ca_distance": 7.485,
+          "molecule": {
+            "ca_residues": 73,
+            "chain": "D",
+            "has_numbering_gaps": true,
+            "molecule_id": "2",
+            "molecule_name": "ACYL CARRIER PROTEIN",
+            "numbering_gaps": [
+              {
+                "after": 35,
+                "before": 37,
+                "missing_residues": 1
+              }
+            ]
+          },
+          "second_interface_residues": 1
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "E",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 21.209,
+          "molecule": {
+            "ca_residues": 73,
+            "chain": "E",
+            "has_numbering_gaps": true,
+            "molecule_id": "2",
+            "molecule_name": "ACYL CARRIER PROTEIN",
+            "numbering_gaps": [
+              {
+                "after": 35,
+                "before": 37,
+                "missing_residues": 1
+              }
+            ]
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 14,
+          "chain": "F",
+          "first_interface_residue_ids": [
+            "25",
+            "68",
+            "69",
+            "70",
+            "73"
+          ],
+          "first_interface_residues": 5,
+          "minimum_ca_distance": 4.105,
+          "molecule": {
+            "ca_residues": 72,
+            "chain": "F",
+            "has_numbering_gaps": true,
+            "molecule_id": "2",
+            "molecule_name": "ACYL CARRIER PROTEIN",
+            "numbering_gaps": [
+              {
+                "after": 35,
+                "before": 37,
+                "missing_residues": 1
+              }
+            ]
+          },
+          "second_interface_residues": 7
+        }
+      ],
+      "omitted_protein_chains": [
+        "A",
+        "D",
+        "E",
+        "F"
+      ],
+      "rcsb_id": "1F80",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "HEXAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.424242,
+      "selected_chains_share_molecule_entity": true,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 33,
+        "first_interface_residue_ids": [
+          "100",
+          "101",
+          "102",
+          "103",
+          "104",
+          "105",
+          "106",
+          "107",
+          "111",
+          "112",
+          "113",
+          "84",
+          "85",
+          "86"
+        ],
+        "first_interface_residues": 14,
+        "minimum_ca_distance": 4.984,
+        "second_interface_residues": 13
+      },
+      "semantic_context": "enzyme_homooligomer_internal_pair",
+      "semantic_rationale": "Both selected chains are holo-ACP synthase subunits inside a hexameric assembly rather than an enzyme-carrier target-binder pair.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 424926,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F80.pdb",
+        "sha256": "5db9381930305d17941d354dc241deefc8792cc9a82109bf8bae1e4953bee1c3"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 118,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "HOLO-(ACYL CARRIER PROTEIN) SYNTHASE",
+        "numbering_gaps": []
+      },
+      "target_id": "1F80_BC",
+      "title": "HOLO-(ACYL CARRIER PROTEIN) SYNTHASE IN COMPLEX WITH HOLO-(ACYL CARRIER PROTEIN)"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "2",
+          "author_unit": "DIMERIC",
+          "chains": [
+            "C",
+            "D"
+          ],
+          "protein_chains": [
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 108,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "IGG1-KAPPA 4D5 FV (LIGHT CHAIN)",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [],
+      "omitted_protein_chains": [],
+      "rcsb_id": "1FVC",
+      "selected_author_assembly": {
+        "assembly_id": "2",
+        "author_unit": "DIMERIC",
+        "chains": [
+          "C",
+          "D"
+        ],
+        "protein_chains": [
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 1.0,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 39,
+        "first_interface_residue_ids": [
+          "100",
+          "101",
+          "32",
+          "33",
+          "34",
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "49",
+          "50",
+          "91",
+          "94",
+          "95",
+          "96",
+          "97",
+          "98",
+          "99"
+        ],
+        "first_interface_residues": 19,
+        "minimum_ca_distance": 5.396,
+        "second_interface_residues": 20
+      },
+      "semantic_context": "antibody_internal_heavy_light_pair",
+      "semantic_rationale": "The selected chains are the internal heavy and light variable domains of one antibody Fv, not an antibody-antigen target-binder pair.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 343359,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FVC.pdb",
+        "sha256": "e8caa952e5ac39f92078fc5bf63eb3165d9092ea3cd0c9021e90ba54b4c4b550"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": true,
+      "target": {
+        "ca_residues": 120,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "IGG1-KAPPA 4D5 FV (HEAVY CHAIN)",
+        "numbering_gaps": []
+      },
+      "target_id": "1FVC_DC",
+      "title": "X-RAY STRUCTURES OF THE ANTIGEN-BINDING DOMAINS FROM THREE VARIANTS OF HUMANIZED ANTI-P185-HER2 ANTIBODY 4D5 AND COMPARISON WITH MOLECULAR MODELING"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "EICOSAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "X",
+            "Y"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "X",
+            "Y"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 107,
+        "chain": "Y",
+        "has_numbering_gaps": false,
+        "molecule_id": "11",
+        "molecule_name": "LIGHT CHAIN (VL) OF FV-FRAGMENT",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "A",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 68.432,
+          "molecule": {
+            "ca_residues": 430,
+            "chain": "A",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE COMPLEX CORE PROTEIN I",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "B",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 92.273,
+          "molecule": {
+            "ca_residues": 352,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE COMPLEX CORE PROTEIN 2",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "C",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 50.753,
+          "molecule": {
+            "ca_residues": 385,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "3",
+            "molecule_name": "CYTOCHROME B",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "D",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 28.338,
+          "molecule": {
+            "ca_residues": 245,
+            "chain": "D",
+            "has_numbering_gaps": false,
+            "molecule_id": "4",
+            "molecule_name": "CYTOCHROME C1",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 9,
+          "chain": "E",
+          "first_interface_residue_ids": [
+            "54",
+            "55",
+            "56",
+            "57"
+          ],
+          "first_interface_residues": 4,
+          "minimum_ca_distance": 4.72,
+          "molecule": {
+            "ca_residues": 185,
+            "chain": "E",
+            "has_numbering_gaps": false,
+            "molecule_id": "5",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE IRON-SULFUR SUBUNIT",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 4
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "F",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 96.43,
+          "molecule": {
+            "ca_residues": 125,
+            "chain": "F",
+            "has_numbering_gaps": false,
+            "molecule_id": "7",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE COMPLEX 14 KD PROTEIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "G",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 87.311,
+          "molecule": {
+            "ca_residues": 93,
+            "chain": "G",
+            "has_numbering_gaps": false,
+            "molecule_id": "8",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE COMPLEX UBIQUINONE-BINDING PROTEIN QP-C",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "H",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 62.348,
+          "molecule": {
+            "ca_residues": 74,
+            "chain": "H",
+            "has_numbering_gaps": false,
+            "molecule_id": "6",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE COMPLEX 17 KD PROTEIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "I",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 39.77,
+          "molecule": {
+            "ca_residues": 55,
+            "chain": "I",
+            "has_numbering_gaps": false,
+            "molecule_id": "9",
+            "molecule_name": "UBIQUINOL-CYTOCHROME C REDUCTASE COMPLEX 7.3 KD PROTEIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        }
+      ],
+      "omitted_protein_chains": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "rcsb_id": "1EZV",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "EICOSAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "X",
+          "Y"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "X",
+          "Y"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.826087,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 43,
+        "first_interface_residue_ids": [
+          "100",
+          "101",
+          "32",
+          "34",
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "49",
+          "50",
+          "91",
+          "92",
+          "94",
+          "95",
+          "96",
+          "97",
+          "98",
+          "99"
+        ],
+        "first_interface_residues": 19,
+        "minimum_ca_distance": 5.546,
+        "second_interface_residues": 18
+      },
+      "semantic_context": "antibody_internal_heavy_light_pair_in_large_assembly",
+      "semantic_rationale": "The selected chains are the heavy and light variable domains of an Fv embedded in an eicosameric cytochrome bc1-antibody assembly.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 1542483,
+        "rcsb_download_url": "https://files.rcsb.org/download/1EZV.pdb",
+        "sha256": "3afe2d9e300b24e45945cd25d9254a82b4c9a90213076e83c14b7862d2b22d7a"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 127,
+        "chain": "X",
+        "has_numbering_gaps": false,
+        "molecule_id": "10",
+        "molecule_name": "HEAVY CHAIN (VH) OF FV-FRAGMENT",
+        "numbering_gaps": []
+      },
+      "target_id": "1EZV_XY",
+      "title": "STRUCTURE OF THE YEAST CYTOCHROME BC1 COMPLEX CO-CRYSTALLIZED WITH AN ANTIBODY FV-FRAGMENT"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "2",
+          "author_unit": "DIMERIC",
+          "chains": [
+            "C",
+            "D"
+          ],
+          "protein_chains": [
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 68,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "CHEMOTAXIS PROTEIN CHEA",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [],
+      "omitted_protein_chains": [],
+      "rcsb_id": "1FFG",
+      "selected_author_assembly": {
+        "assembly_id": "2",
+        "author_unit": "DIMERIC",
+        "chains": [
+          "C",
+          "D"
+        ],
+        "protein_chains": [
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 1.0,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 22,
+        "first_interface_residue_ids": [
+          "181",
+          "182",
+          "207",
+          "208",
+          "210",
+          "211",
+          "214",
+          "215"
+        ],
+        "first_interface_residues": 8,
+        "minimum_ca_distance": 5.186,
+        "second_interface_residues": 12
+      },
+      "semantic_context": "target_binder_like_signaling_partner_dimer",
+      "semantic_rationale": "The selected CheY and CheA domains are distinct interacting proteins in a complete author-determined dimer.",
+      "semantic_verdict": "pass",
+      "source": {
+        "bytes": 311202,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FFG.pdb",
+        "sha256": "df6b13ddaffc36a3318f2e5117c0e894222b3684396d07a746f5881c31634afc"
+      },
+      "strict_target_binder_eligible": true,
+      "structural_pair_complete": true,
+      "target": {
+        "ca_residues": 128,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "CHEMOTAXIS PROTEIN CHEY",
+        "numbering_gaps": []
+      },
+      "target_id": "1FFG_CD",
+      "title": "CHEY-BINDING DOMAIN OF CHEA IN COMPLEX WITH CHEY AT 2.1 A RESOLUTION"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "DIMERIC",
+          "chains": [
+            "A",
+            "B"
+          ],
+          "protein_chains": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 83,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "COLICIN E9 IMMUNITY PROTEIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [],
+      "omitted_protein_chains": [],
+      "rcsb_id": "1FR2",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "DIMERIC",
+        "chains": [
+          "A",
+          "B"
+        ],
+        "protein_chains": [
+          "A",
+          "B"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 1.0,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 38,
+        "first_interface_residue_ids": [
+          "22",
+          "23",
+          "24",
+          "25",
+          "29",
+          "30",
+          "34",
+          "35",
+          "38",
+          "48",
+          "49",
+          "50",
+          "51",
+          "53",
+          "54",
+          "55",
+          "62"
+        ],
+        "first_interface_residues": 17,
+        "minimum_ca_distance": 4.502,
+        "second_interface_residues": 17
+      },
+      "semantic_context": "target_binder_like_toxin_immunity_dimer",
+      "semantic_rationale": "The selected colicin E9 DNase and Im9 immunity protein are distinct target-binder-like partners in a complete author-determined dimer.",
+      "semantic_verdict": "pass",
+      "source": {
+        "bytes": 183789,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FR2.pdb",
+        "sha256": "3a9fddcec3db8ba2e726c090e23c5d5e9e6b0b5da844854a004fa2acaf49e236"
+      },
+      "strict_target_binder_eligible": true,
+      "structural_pair_complete": true,
+      "target": {
+        "ca_residues": 131,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "COLICIN E9",
+        "numbering_gaps": []
+      },
+      "target_id": "1FR2_BA",
+      "title": "CRYSTAL STRUCTURE OF THE E9 DNASE DOMAIN WITH A MUTANT IMMUNITY PROTEIN IM9(E41A)"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "29-MERIC",
+          "chains": [
+            "0",
+            "1",
+            "9",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z"
+          ],
+          "protein_chains": [
+            "1",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 53,
+        "chain": "R",
+        "has_numbering_gaps": false,
+        "molecule_id": "20",
+        "molecule_name": "RIBOSOMAL PROTEIN L24E",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "1",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 41.798,
+          "molecule": {
+            "ca_residues": 172,
+            "chain": "1",
+            "has_numbering_gaps": false,
+            "molecule_id": "29",
+            "molecule_name": "RIBOSOMAL PROTEIN L6",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "A",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 60.474,
+          "molecule": {
+            "ca_residues": 237,
+            "chain": "A",
+            "has_numbering_gaps": false,
+            "molecule_id": "3",
+            "molecule_name": "RIBOSOMAL PROTEIN L2",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 5,
+          "chain": "B",
+          "first_interface_residue_ids": [
+            "14",
+            "15",
+            "16"
+          ],
+          "first_interface_residues": 3,
+          "minimum_ca_distance": 5.825,
+          "molecule": {
+            "ca_residues": 337,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "4",
+            "molecule_name": "RIBOSOMAL PROTEIN L3",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 4
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "C",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 68.408,
+          "molecule": {
+            "ca_residues": 246,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "5",
+            "molecule_name": "RIBOSOMAL PROTEIN L4",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "D",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 119.414,
+          "molecule": {
+            "ca_residues": 140,
+            "chain": "D",
+            "has_numbering_gaps": true,
+            "molecule_id": "6",
+            "molecule_name": "RIBOSOMAL PROTEIN L5",
+            "numbering_gaps": [
+              {
+                "after": 29,
+                "before": 35,
+                "missing_residues": 5
+              },
+              {
+                "after": 107,
+                "before": 128,
+                "missing_residues": 20
+              }
+            ]
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "E",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 128.828,
+          "molecule": {
+            "ca_residues": 118,
+            "chain": "E",
+            "has_numbering_gaps": false,
+            "molecule_id": "7",
+            "molecule_name": "RIBOSOMAL PROTEIN L7AE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "F",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 76.053,
+          "molecule": {
+            "ca_residues": 157,
+            "chain": "F",
+            "has_numbering_gaps": false,
+            "molecule_id": "8",
+            "molecule_name": "RIBOSOMAL PROTEIN L10E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "G",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 50.153,
+          "molecule": {
+            "ca_residues": 142,
+            "chain": "G",
+            "has_numbering_gaps": false,
+            "molecule_id": "9",
+            "molecule_name": "RIBOSOMAL PROTEIN L13",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "I",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 88.173,
+          "molecule": {
+            "ca_residues": 194,
+            "chain": "I",
+            "has_numbering_gaps": false,
+            "molecule_id": "11",
+            "molecule_name": "RIBOSOMAL PROTEIN L15E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "J",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 89.545,
+          "molecule": {
+            "ca_residues": 143,
+            "chain": "J",
+            "has_numbering_gaps": true,
+            "molecule_id": "12",
+            "molecule_name": "RIBOSOMAL PROTEIN L15",
+            "numbering_gaps": [
+              {
+                "after": 83,
+                "before": 92,
+                "missing_residues": 8
+              }
+            ]
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "K",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 122.557,
+          "molecule": {
+            "ca_residues": 186,
+            "chain": "K",
+            "has_numbering_gaps": false,
+            "molecule_id": "13",
+            "molecule_name": "RIBOSOMAL PROTEIN L18",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "L",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 122.422,
+          "molecule": {
+            "ca_residues": 115,
+            "chain": "L",
+            "has_numbering_gaps": false,
+            "molecule_id": "14",
+            "molecule_name": "RIBOSOMAL PROTEIN L18E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "M",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 23.377,
+          "molecule": {
+            "ca_residues": 143,
+            "chain": "M",
+            "has_numbering_gaps": false,
+            "molecule_id": "15",
+            "molecule_name": "RIBOSOMAL PROTEIN L19",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "N",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 103.286,
+          "molecule": {
+            "ca_residues": 95,
+            "chain": "N",
+            "has_numbering_gaps": false,
+            "molecule_id": "16",
+            "molecule_name": "RIBOSOMAL PROTEIN L21E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "O",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 48.396,
+          "molecule": {
+            "ca_residues": 150,
+            "chain": "O",
+            "has_numbering_gaps": false,
+            "molecule_id": "17",
+            "molecule_name": "RIBOSOMAL PROTEIN L22",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "P",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 80.658,
+          "molecule": {
+            "ca_residues": 78,
+            "chain": "P",
+            "has_numbering_gaps": false,
+            "molecule_id": "18",
+            "molecule_name": "RIBOSOMAL PROTEIN L23",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "Q",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 97.62,
+          "molecule": {
+            "ca_residues": 119,
+            "chain": "Q",
+            "has_numbering_gaps": false,
+            "molecule_id": "19",
+            "molecule_name": "RIBOSOMAL PROTEIN L24",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "S",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 92.354,
+          "molecule": {
+            "ca_residues": 65,
+            "chain": "S",
+            "has_numbering_gaps": false,
+            "molecule_id": "21",
+            "molecule_name": "RIBOSOMAL PROTEIN L29",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "T",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 98.1,
+          "molecule": {
+            "ca_residues": 154,
+            "chain": "T",
+            "has_numbering_gaps": false,
+            "molecule_id": "22",
+            "molecule_name": "RIBOSOMAL PROTEIN L30",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "U",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 25.87,
+          "molecule": {
+            "ca_residues": 85,
+            "chain": "U",
+            "has_numbering_gaps": false,
+            "molecule_id": "23",
+            "molecule_name": "RIBOSOMAL PROTEIN L31E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "V",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 79.589,
+          "molecule": {
+            "ca_residues": 143,
+            "chain": "V",
+            "has_numbering_gaps": false,
+            "molecule_id": "24",
+            "molecule_name": "RIBOSOMAL PROTEIN L32E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "W",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 50.862,
+          "molecule": {
+            "ca_residues": 73,
+            "chain": "W",
+            "has_numbering_gaps": false,
+            "molecule_id": "25",
+            "molecule_name": "RIBOSOMAL PROTEIN L37AE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "X",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 55.8,
+          "molecule": {
+            "ca_residues": 56,
+            "chain": "X",
+            "has_numbering_gaps": false,
+            "molecule_id": "26",
+            "molecule_name": "RIBOSOMAL PROTEIN L37E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "Y",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 70.867,
+          "molecule": {
+            "ca_residues": 31,
+            "chain": "Y",
+            "has_numbering_gaps": true,
+            "molecule_id": "27",
+            "molecule_name": "RIBOSOMAL PROTEIN L39E",
+            "numbering_gaps": [
+              {
+                "after": 28,
+                "before": 47,
+                "missing_residues": 18
+              }
+            ]
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "Z",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 101.306,
+          "molecule": {
+            "ca_residues": 92,
+            "chain": "Z",
+            "has_numbering_gaps": false,
+            "molecule_id": "28",
+            "molecule_name": "RIBOSOMAL PROTEIN L44E",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        }
+      ],
+      "omitted_protein_chains": [
+        "1",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z"
+      ],
+      "rcsb_id": "1FFK",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "29-MERIC",
+        "chains": [
+          "0",
+          "1",
+          "9",
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "U",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z"
+        ],
+        "protein_chains": [
+          "1",
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "U",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.923077,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 40,
+        "first_interface_residue_ids": [
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26"
+        ],
+        "first_interface_residues": 12,
+        "minimum_ca_distance": 4.534,
+        "second_interface_residues": 14
+      },
+      "semantic_context": "ribosome_internal_subunit_pair",
+      "semantic_rationale": "The selected L14 and L24E chains are internal components of a large ribosomal assembly.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 5343975,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FFK.pdb",
+        "sha256": "49d9f722d42451808792500ec4ca6cf9cf19d92f58fa4c7cc19fccd4a3356d92"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 132,
+        "chain": "H",
+        "has_numbering_gaps": false,
+        "molecule_id": "10",
+        "molecule_name": "RIBOSOMAL PROTEIN L14",
+        "numbering_gaps": []
+      },
+      "target_id": "1FFK_HR",
+      "title": "CRYSTAL STRUCTURE OF THE LARGE RIBOSOMAL SUBUNIT FROM HALOARCULA MARISMORTUI AT 2.4 ANGSTROM RESOLUTION"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "HEXAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 107,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "PREFOLDIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "B",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 19.705,
+          "molecule": {
+            "ca_residues": 109,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "PREFOLDIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        }
+      ],
+      "omitted_protein_chains": [
+        "B"
+      ],
+      "rcsb_id": "1FXK",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "HEXAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 1.0,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 31,
+        "first_interface_residue_ids": [
+          "55",
+          "58",
+          "59",
+          "60",
+          "61",
+          "62",
+          "63",
+          "64",
+          "65"
+        ],
+        "first_interface_residues": 9,
+        "minimum_ca_distance": 4.496,
+        "second_interface_residues": 12
+      },
+      "semantic_context": "prefoldin_internal_subunit_pair",
+      "semantic_rationale": "The selected chains are prefoldin subunits inside a hexameric chaperone assembly.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 287226,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FXK.pdb",
+        "sha256": "4687cb62de557057aa0713ec07abf56bb2a48d5c56def03936b575c4fe67c0ea"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 133,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "3",
+        "molecule_name": "PROTEIN (PREFOLDIN)",
+        "numbering_gaps": []
+      },
+      "target_id": "1FXK_CA",
+      "title": "CRYSTAL STRUCTURE OF ARCHAEAL PREFOLDIN (GIMC)."
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 141,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "HEMOGLOBIN ALPHA CHAIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 8,
+          "chain": "C",
+          "first_interface_residue_ids": [
+            "1",
+            "127",
+            "130",
+            "140",
+            "141"
+          ],
+          "first_interface_residues": 5,
+          "minimum_ca_distance": 5.073,
+          "molecule": {
+            "ca_residues": 141,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "HEMOGLOBIN ALPHA CHAIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 5
+        },
+        {
+          "ca_contact_pairs": 16,
+          "chain": "D",
+          "first_interface_residue_ids": [
+            "140",
+            "141",
+            "38",
+            "41",
+            "88",
+            "91",
+            "92",
+            "93",
+            "94",
+            "96"
+          ],
+          "first_interface_residues": 10,
+          "minimum_ca_distance": 4.547,
+          "molecule": {
+            "ca_residues": 145,
+            "chain": "D",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEMOGLOBIN BETA CHAIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 8
+        }
+      ],
+      "omitted_protein_chains": [
+        "C",
+        "D"
+      ],
+      "rcsb_id": "1FSX",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.617647,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 55,
+        "first_interface_residue_ids": [
+          "103",
+          "106",
+          "107",
+          "108",
+          "110",
+          "111",
+          "112",
+          "113",
+          "114",
+          "117",
+          "119",
+          "120",
+          "122",
+          "123",
+          "126",
+          "27",
+          "30",
+          "31",
+          "34",
+          "35",
+          "36"
+        ],
+        "first_interface_residues": 21,
+        "minimum_ca_distance": 4.267,
+        "second_interface_residues": 22
+      },
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_rationale": "The selected alpha and beta globin chains are internal subunits of tetrameric hemoglobin.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 440235,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FSX.pdb",
+        "sha256": "189c02c3bd29c386c1c9ab1d54b4f3253e57c3bfbe4375f17213ed4c809ac717"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 145,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "HEMOGLOBIN BETA CHAIN",
+        "numbering_gaps": []
+      },
+      "target_id": "1FSX_BA",
+      "title": "THE X-RAY STRUCTURE DETERMINATION OF BOVINE CARBONMONOXY HB AT 2.1 A RESOLUTION AND ITS RELATIONSHIP TO THE QUATERNARY STRUCTURE OF OTHER HB CRYSTAL FORMS"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "G",
+            "H"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "G",
+            "H"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 141,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "HEMOGLOBIN F (DEOXY) (ALPHA CHAIN)",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 6,
+          "chain": "B",
+          "first_interface_residue_ids": [
+            "1",
+            "127",
+            "138",
+            "139",
+            "141"
+          ],
+          "first_interface_residues": 5,
+          "minimum_ca_distance": 7.503,
+          "molecule": {
+            "ca_residues": 141,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "HEMOGLOBIN F (DEOXY) (ALPHA CHAIN)",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 5
+        },
+        {
+          "ca_contact_pairs": 30,
+          "chain": "H",
+          "first_interface_residue_ids": [
+            "140",
+            "141",
+            "37",
+            "38",
+            "39",
+            "41",
+            "42",
+            "44",
+            "88",
+            "89",
+            "91",
+            "92",
+            "93",
+            "94",
+            "96"
+          ],
+          "first_interface_residues": 15,
+          "minimum_ca_distance": 4.751,
+          "molecule": {
+            "ca_residues": 146,
+            "chain": "H",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEMOGLOBIN F (DEOXY) (GAMMA CHAIN)",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 14
+        }
+      ],
+      "omitted_protein_chains": [
+        "B",
+        "H"
+      ],
+      "rcsb_id": "1FDH",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "G",
+          "H"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "G",
+          "H"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.536585,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 56,
+        "first_interface_residue_ids": [
+          "106",
+          "107",
+          "108",
+          "110",
+          "111",
+          "112",
+          "113",
+          "114",
+          "115",
+          "117",
+          "119",
+          "120",
+          "122",
+          "123",
+          "124",
+          "126",
+          "27",
+          "30",
+          "31",
+          "34",
+          "35",
+          "36"
+        ],
+        "first_interface_residues": 22,
+        "minimum_ca_distance": 4.222,
+        "second_interface_residues": 22
+      },
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_rationale": "The selected gamma and alpha globin chains are internal subunits of tetrameric fetal hemoglobin.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 423063,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FDH.pdb",
+        "sha256": "641768e5396084ce12352d99ad032e000040b9de80acc116aac4f3cd08b136bf"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 146,
+        "chain": "G",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "HEMOGLOBIN F (DEOXY) (GAMMA CHAIN)",
+        "numbering_gaps": []
+      },
+      "target_id": "1FDH_GA",
+      "title": "STRUCTURE OF HUMAN FOETAL DEOXYHAEMOGLOBIN"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 141,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "HEMOGLOBIN ALPHA CHAIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 10,
+          "chain": "A",
+          "first_interface_residue_ids": [
+            "1",
+            "127",
+            "138",
+            "139",
+            "141",
+            "2"
+          ],
+          "first_interface_residues": 6,
+          "minimum_ca_distance": 6.613,
+          "molecule": {
+            "ca_residues": 141,
+            "chain": "A",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "HEMOGLOBIN ALPHA CHAIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 6
+        },
+        {
+          "ca_contact_pairs": 24,
+          "chain": "B",
+          "first_interface_residue_ids": [
+            "140",
+            "141",
+            "37",
+            "38",
+            "39",
+            "41",
+            "42",
+            "44",
+            "88",
+            "91",
+            "92",
+            "93",
+            "94"
+          ],
+          "first_interface_residues": 13,
+          "minimum_ca_distance": 5.155,
+          "molecule": {
+            "ca_residues": 146,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEMOGLOBIN BETA CHAIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 11
+        }
+      ],
+      "omitted_protein_chains": [
+        "A",
+        "B"
+      ],
+      "rcsb_id": "1FN3",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.513514,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 54,
+        "first_interface_residue_ids": [
+          "106",
+          "107",
+          "110",
+          "111",
+          "112",
+          "113",
+          "114",
+          "117",
+          "119",
+          "120",
+          "122",
+          "123",
+          "126",
+          "27",
+          "30",
+          "31",
+          "34",
+          "35",
+          "36"
+        ],
+        "first_interface_residues": 19,
+        "minimum_ca_distance": 3.701,
+        "second_interface_residues": 22
+      },
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_rationale": "The selected beta and alpha globin chains are internal subunits of tetrameric hemoglobin.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 436671,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FN3.pdb",
+        "sha256": "243960e833648fd404de8481ee1e310a721b8b19a2e65a26a2b4dc6f133e9094"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 146,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "HEMOGLOBIN BETA CHAIN",
+        "numbering_gaps": []
+      },
+      "target_id": "1FN3_DC",
+      "title": "CRYSTAL STRUCTURE OF NICKEL RECONSTITUTED HEMOGLOBIN-A CASE FOR PERMANENT, T-STATE HEMOGLOBIN"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 141,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "HEMOGLOBIN (ALPHA CHAIN)",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 13,
+          "chain": "C",
+          "first_interface_residue_ids": [
+            "1",
+            "127",
+            "130",
+            "138",
+            "139",
+            "141",
+            "2"
+          ],
+          "first_interface_residues": 7,
+          "minimum_ca_distance": 5.608,
+          "molecule": {
+            "ca_residues": 141,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "HEMOGLOBIN (ALPHA CHAIN)",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 8
+        },
+        {
+          "ca_contact_pairs": 17,
+          "chain": "D",
+          "first_interface_residue_ids": [
+            "140",
+            "38",
+            "41",
+            "88",
+            "92",
+            "93",
+            "94",
+            "96"
+          ],
+          "first_interface_residues": 8,
+          "minimum_ca_distance": 4.752,
+          "molecule": {
+            "ca_residues": 146,
+            "chain": "D",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "HEMOGLOBIN (BETA CHAIN)",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 9
+        }
+      ],
+      "omitted_protein_chains": [
+        "C",
+        "D"
+      ],
+      "rcsb_id": "1FHJ",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.571429,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 51,
+        "first_interface_residue_ids": [
+          "103",
+          "106",
+          "107",
+          "108",
+          "110",
+          "111",
+          "112",
+          "113",
+          "114",
+          "117",
+          "119",
+          "120",
+          "122",
+          "123",
+          "126",
+          "30",
+          "31",
+          "34",
+          "35",
+          "36"
+        ],
+        "first_interface_residues": 20,
+        "minimum_ca_distance": 4.04,
+        "second_interface_residues": 22
+      },
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_rationale": "The selected beta and alpha globin chains are internal subunits of tetrameric hemoglobin.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 453276,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FHJ.pdb",
+        "sha256": "73947b50f88894aa4a72665ee3dfdaad8a2fc0b2f97ed92b69b56d0d94d3a724"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 146,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "HEMOGLOBIN (BETA CHAIN)",
+        "numbering_gaps": []
+      },
+      "target_id": "1FHJ_BA",
+      "title": "CRYSTAL STRUCTURE OF AQUOMET HEMOGLOBIN-I OF THE MANED WOLF (CHRYSOCYON BRACHYURUS) AT 2.0 RESOLUTION."
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 142,
+        "chain": "D",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "RAD50 ABC-ATPASE",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 17,
+          "chain": "A",
+          "first_interface_residue_ids": [
+            "790",
+            "791",
+            "792",
+            "793",
+            "794",
+            "795",
+            "796",
+            "828",
+            "829",
+            "832"
+          ],
+          "first_interface_residues": 10,
+          "minimum_ca_distance": 5.369,
+          "molecule": {
+            "ca_residues": 149,
+            "chain": "A",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "RAD50 ABC-ATPASE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 8
+        },
+        {
+          "ca_contact_pairs": 10,
+          "chain": "B",
+          "first_interface_residue_ids": [
+            "823",
+            "826",
+            "827",
+            "829",
+            "855",
+            "856"
+          ],
+          "first_interface_residues": 6,
+          "minimum_ca_distance": 4.795,
+          "molecule": {
+            "ca_residues": 145,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "RAD50 ABC-ATPASE",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 7
+        }
+      ],
+      "omitted_protein_chains": [
+        "A",
+        "B"
+      ],
+      "rcsb_id": "1F2U",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.806452,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 149,
+        "first_interface_residue_ids": [
+          "778",
+          "797",
+          "798",
+          "800",
+          "801",
+          "802",
+          "804",
+          "805",
+          "808",
+          "809",
+          "816",
+          "817",
+          "818",
+          "819",
+          "820",
+          "821",
+          "822",
+          "823",
+          "824",
+          "844",
+          "845",
+          "846",
+          "847",
+          "848",
+          "849",
+          "850",
+          "851",
+          "852",
+          "853",
+          "854",
+          "855",
+          "856",
+          "857",
+          "859",
+          "860",
+          "862",
+          "863",
+          "864",
+          "865",
+          "866",
+          "867",
+          "868",
+          "869",
+          "870",
+          "871",
+          "874",
+          "875",
+          "876",
+          "877",
+          "878"
+        ],
+        "first_interface_residues": 50,
+        "minimum_ca_distance": 4.493,
+        "second_interface_residues": 37
+      },
+      "semantic_context": "same_protein_fragment_assembly_pair",
+      "semantic_rationale": "Both selected chains are RAD50 ATPase fragments in a tetrameric construct rather than distinct target and binder proteins.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 469395,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F2U.pdb",
+        "sha256": "cdddf979ccd9b543bd60c7f20a191a96068467f71f6b3698cda13cad9ab9d14d"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 148,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "RAD50 ABC-ATPASE",
+        "numbering_gaps": []
+      },
+      "target_id": "1F2U_CD",
+      "title": "CRYSTAL STRUCTURE OF RAD50 ABC-ATPASE"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "DIMERIC",
+          "chains": [
+            "A",
+            "B"
+          ],
+          "protein_chains": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 158,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "TUMOR NECROSIS FACTOR RECEPTOR TYPE 1 ASSOCIATED DEATH DOMAIN PROTEIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [],
+      "omitted_protein_chains": [],
+      "rcsb_id": "1F3V",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "DIMERIC",
+        "chains": [
+          "A",
+          "B"
+        ],
+        "protein_chains": [
+          "A",
+          "B"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 1.0,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 39,
+        "first_interface_residue_ids": [
+          "119",
+          "120",
+          "121",
+          "122",
+          "123",
+          "143",
+          "144",
+          "145",
+          "146",
+          "147",
+          "148",
+          "149",
+          "16",
+          "65",
+          "67",
+          "68"
+        ],
+        "first_interface_residues": 16,
+        "minimum_ca_distance": 4.217,
+        "second_interface_residues": 19
+      },
+      "semantic_context": "target_binder_like_signaling_partner_dimer",
+      "semantic_rationale": "The selected TRAF2 and TRADD domains are distinct interacting proteins in a complete author-determined dimer.",
+      "semantic_verdict": "pass",
+      "source": {
+        "bytes": 269730,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F3V.pdb",
+        "sha256": "06ffa3086435fb55764c80cc444f8ec5a0873b66b1f46ca8db3fe38a4d72cde9"
+      },
+      "strict_target_binder_eligible": true,
+      "structural_pair_complete": true,
+      "target": {
+        "ca_residues": 171,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "TUMOR NECROSIS FACTOR RECEPTOR-ASSOCIATED PROTEIN",
+        "numbering_gaps": []
+      },
+      "target_id": "1F3V_BA",
+      "title": "CRYSTAL STRUCTURE OF THE COMPLEX BETWEEN THE N-TERMINAL DOMAIN OF TRADD AND THE TRAF DOMAIN OF TRAF2"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "DODECAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "K",
+            "L",
+            "M",
+            "N"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "K",
+            "L",
+            "M",
+            "N"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 162,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "R-PHYCOCYANIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "K",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 15.245,
+          "molecule": {
+            "ca_residues": 162,
+            "chain": "K",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "R-PHYCOCYANIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 27,
+          "chain": "L",
+          "first_interface_residue_ids": [
+            "109",
+            "110",
+            "111",
+            "112",
+            "113",
+            "114",
+            "115",
+            "117",
+            "118",
+            "121",
+            "122"
+          ],
+          "first_interface_residues": 11,
+          "minimum_ca_distance": 4.603,
+          "molecule": {
+            "ca_residues": 172,
+            "chain": "L",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "R-PHYCOCYANIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 9
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "M",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 15.657,
+          "molecule": {
+            "ca_residues": 162,
+            "chain": "M",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "R-PHYCOCYANIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "N",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 31.566,
+          "molecule": {
+            "ca_residues": 172,
+            "chain": "N",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "R-PHYCOCYANIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        }
+      ],
+      "omitted_protein_chains": [
+        "K",
+        "L",
+        "M",
+        "N"
+      ],
+      "rcsb_id": "1F99",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "DODECAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "K",
+          "L",
+          "M",
+          "N"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "K",
+          "L",
+          "M",
+          "N"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.685714,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 44,
+        "first_interface_residue_ids": [
+          "1",
+          "100",
+          "101",
+          "106",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "24",
+          "28",
+          "3",
+          "31",
+          "34",
+          "35",
+          "38",
+          "42",
+          "45",
+          "5",
+          "6",
+          "9",
+          "93",
+          "96",
+          "97"
+        ],
+        "first_interface_residues": 24,
+        "minimum_ca_distance": 5.617,
+        "second_interface_residues": 22
+      },
+      "semantic_context": "phycocyanin_internal_subunit_pair",
+      "semantic_rationale": "The selected phycocyanin chains are internal subunits of a dodecameric photosynthetic assembly.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 749169,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F99.pdb",
+        "sha256": "88404777288af12dd4468210fdce0fa4a728557ae022ac9e32c815d9d9fad8ef"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 172,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "R-PHYCOCYANIN",
+        "numbering_gaps": []
+      },
+      "target_id": "1F99_BA",
+      "title": "CRYSTAL STRUCTURE OF R-PHYCOCYANIN FROM POLYSIPHONIA AT 2.4 A RESOLUTION"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "E",
+            "F"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "E",
+            "F"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 119,
+        "chain": "E",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "SPORULATION INITIATION PHOSPHOTRANSFERASE F",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 7,
+          "chain": "B",
+          "first_interface_residue_ids": [
+            "1284",
+            "1285",
+            "1305"
+          ],
+          "first_interface_residues": 3,
+          "minimum_ca_distance": 6.209,
+          "molecule": {
+            "ca_residues": 182,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "SPORULATION INITIATION PHOSPHOTRANSFERASE B",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 5
+        },
+        {
+          "ca_contact_pairs": 0,
+          "chain": "F",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 21.583,
+          "molecule": {
+            "ca_residues": 119,
+            "chain": "F",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "SPORULATION INITIATION PHOSPHOTRANSFERASE F",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        }
+      ],
+      "omitted_protein_chains": [
+        "B",
+        "F"
+      ],
+      "rcsb_id": "1F51",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "E",
+          "F"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "E",
+          "F"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.894737,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 40,
+        "first_interface_residue_ids": [
+          "1214",
+          "1215",
+          "1218",
+          "1234",
+          "1235",
+          "1236",
+          "1237",
+          "1238",
+          "1258",
+          "1259",
+          "1260",
+          "1283",
+          "1304",
+          "1305",
+          "1306",
+          "1307",
+          "1308"
+        ],
+        "first_interface_residues": 17,
+        "minimum_ca_distance": 4.494,
+        "second_interface_residues": 21
+      },
+      "semantic_context": "target_binder_like_phosphorelay_in_multichain_context",
+      "semantic_rationale": "The selected phosphorelay proteins are biologically meaningful interaction partners, but their author-determined assembly contains four protein chains rather than the isolated selected pair.",
+      "semantic_verdict": "needs_reformulation",
+      "source": {
+        "bytes": 851553,
+        "rcsb_download_url": "https://files.rcsb.org/download/1F51.pdb",
+        "sha256": "e77c54f2dcfd384e7c9804be612c2fa3df89722dd6c0c90f1eb1e7e67e7bc706"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 181,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "SPORULATION INITIATION PHOSPHOTRANSFERASE B",
+        "numbering_gaps": []
+      },
+      "target_id": "1F51_AE",
+      "title": "A TRANSIENT INTERACTION BETWEEN TWO PHOSPHORELAY PROTEINS TRAPPED IN A CRYSTAL LATTICE REVEALS THE MECHANISM OF MOLECULAR RECOGNITION AND PHOSPHOTRANSFER IN SINGAL TRANSDUCTION"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TRIMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 179,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "MAJOR HISTOCOMPATIBILITY COMPLEX ALPHA CHAIN",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 32,
+          "chain": "C",
+          "first_interface_residue_ids": [
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "58",
+            "59",
+            "62",
+            "65",
+            "66",
+            "68",
+            "69",
+            "72",
+            "9"
+          ],
+          "first_interface_residues": 14,
+          "minimum_ca_distance": 4.471,
+          "molecule": {
+            "ca_residues": 20,
+            "chain": "C",
+            "has_numbering_gaps": false,
+            "molecule_id": "3",
+            "molecule_name": "MYELIN BASIC PROTEIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 13
+        }
+      ],
+      "omitted_protein_chains": [
+        "C"
+      ],
+      "rcsb_id": "1FV1",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TRIMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.839286,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 110,
+        "first_interface_residue_ids": [
+          "10",
+          "106",
+          "11",
+          "114",
+          "12",
+          "13",
+          "135",
+          "14",
+          "142",
+          "143",
+          "144",
+          "148",
+          "15",
+          "16",
+          "168",
+          "17",
+          "181",
+          "26",
+          "29",
+          "3",
+          "30",
+          "4",
+          "44",
+          "45",
+          "48",
+          "5",
+          "51",
+          "52",
+          "6",
+          "66",
+          "67",
+          "69",
+          "7",
+          "70",
+          "73",
+          "74",
+          "76",
+          "77",
+          "8",
+          "80",
+          "81",
+          "82",
+          "83",
+          "9",
+          "94",
+          "95",
+          "96"
+        ],
+        "first_interface_residues": 47,
+        "minimum_ca_distance": 4.324,
+        "second_interface_residues": 37
+      },
+      "semantic_context": "mhc_internal_subunit_pair_with_omitted_peptide",
+      "semantic_rationale": "The selected MHC alpha and beta chains are internal receptor subunits and the bound peptide chain is omitted.",
+      "semantic_verdict": "out_of_scope",
+      "source": {
+        "bytes": 600615,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FV1.pdb",
+        "sha256": "2a37a6b825aaffcbc927347a3e2f4e5101989d2d39fd7f952c2b4f597f41473b"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 190,
+        "chain": "B",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "MAJOR HISTOCOMPATIBILITY COMPLEX BETA CHAIN",
+        "numbering_gaps": []
+      },
+      "target_id": "1FV1_BA",
+      "title": "STRUCTURAL BASIS FOR THE BINDING OF AN IMMUNODOMINANT PEPTIDE FROM MYELIN BASIC PROTEIN IN DIFFERENT REGISTERS BY TWO HLA-DR2 ALLELES"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "1",
+          "author_unit": "TETRAMERIC",
+          "chains": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F"
+          ],
+          "protein_chains": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 129,
+        "chain": "A",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "FIBROBLAST GROWTH FACTOR 2",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W2c",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 0,
+          "chain": "B",
+          "first_interface_residue_ids": [],
+          "first_interface_residues": 0,
+          "minimum_ca_distance": 15.636,
+          "molecule": {
+            "ca_residues": 129,
+            "chain": "B",
+            "has_numbering_gaps": false,
+            "molecule_id": "1",
+            "molecule_name": "FIBROBLAST GROWTH FACTOR 2",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 0
+        },
+        {
+          "ca_contact_pairs": 28,
+          "chain": "D",
+          "first_interface_residue_ids": [
+            "100",
+            "101",
+            "131",
+            "132",
+            "133",
+            "134",
+            "135",
+            "138"
+          ],
+          "first_interface_residues": 8,
+          "minimum_ca_distance": 3.476,
+          "molecule": {
+            "ca_residues": 196,
+            "chain": "D",
+            "has_numbering_gaps": true,
+            "molecule_id": "2",
+            "molecule_name": "FIBROBLAST GROWTH FACTOR RECEPTOR 1",
+            "numbering_gaps": [
+              {
+                "after": 292,
+                "before": 308,
+                "missing_residues": 15
+              }
+            ]
+          },
+          "second_interface_residues": 11
+        }
+      ],
+      "omitted_protein_chains": [
+        "B",
+        "D"
+      ],
+      "rcsb_id": "1FQ9",
+      "selected_author_assembly": {
+        "assembly_id": "1",
+        "author_unit": "TETRAMERIC",
+        "chains": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F"
+        ],
+        "protein_chains": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.741935,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 67,
+        "first_interface_residue_ids": [
+          "102",
+          "103",
+          "140",
+          "142",
+          "16",
+          "17",
+          "18",
+          "24",
+          "28",
+          "29",
+          "44",
+          "55",
+          "56",
+          "57",
+          "58",
+          "59",
+          "60",
+          "61",
+          "63",
+          "64",
+          "96",
+          "97",
+          "98"
+        ],
+        "first_interface_residues": 23,
+        "minimum_ca_distance": 4.432,
+        "second_interface_residues": 25
+      },
+      "semantic_context": "target_binder_like_receptor_ligand_with_cofactor_context",
+      "semantic_rationale": "FGFR1 and FGF2 are meaningful interaction partners, but the biological assembly is a tetrameric receptor-ligand-heparin complex and the selected pair is incomplete.",
+      "semantic_verdict": "needs_reformulation",
+      "source": {
+        "bytes": 515241,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FQ9.pdb",
+        "sha256": "797e50f19a790d8aef24ae647d507c3f4eb6b35000a5f0e64442d014d97e8916"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 211,
+        "chain": "C",
+        "has_numbering_gaps": false,
+        "molecule_id": "2",
+        "molecule_name": "FIBROBLAST GROWTH FACTOR RECEPTOR 1",
+        "numbering_gaps": []
+      },
+      "target_id": "1FQ9_CA",
+      "title": "CRYSTAL STRUCTURE OF A TERNARY FGF2-FGFR1-HEPARIN COMPLEX"
+    },
+    {
+      "author_assemblies_containing_pair": [
+        {
+          "assembly_id": "4",
+          "author_unit": "TRIMERIC",
+          "chains": [
+            "J",
+            "K",
+            "L"
+          ],
+          "protein_chains": [
+            "J",
+            "K",
+            "L"
+          ]
+        }
+      ],
+      "binder": {
+        "ca_residues": 159,
+        "chain": "J",
+        "has_numbering_gaps": false,
+        "molecule_id": "1",
+        "molecule_name": "MAJOR POLLEN ALLERGEN BET V 1-A",
+        "numbering_gaps": []
+      },
+      "historical_branch": "W3b",
+      "historical_role": "fit",
+      "omitted_chain_interfaces": [
+        {
+          "ca_contact_pairs": 12,
+          "chain": "K",
+          "first_interface_residue_ids": [
+            "47",
+            "48",
+            "49",
+            "50"
+          ],
+          "first_interface_residues": 4,
+          "minimum_ca_distance": 5.461,
+          "molecule": {
+            "ca_residues": 214,
+            "chain": "K",
+            "has_numbering_gaps": false,
+            "molecule_id": "2",
+            "molecule_name": "IMMUNOGLOBULIN KAPPA LIGHT CHAIN",
+            "numbering_gaps": []
+          },
+          "second_interface_residues": 6
+        }
+      ],
+      "omitted_protein_chains": [
+        "K"
+      ],
+      "rcsb_id": "1FSK",
+      "selected_author_assembly": {
+        "assembly_id": "4",
+        "author_unit": "TRIMERIC",
+        "chains": [
+          "J",
+          "K",
+          "L"
+        ],
+        "protein_chains": [
+          "J",
+          "K",
+          "L"
+        ]
+      },
+      "selected_binder_interface_fraction_within_assembly": 0.818182,
+      "selected_chains_share_molecule_entity": false,
+      "selected_pair_interface": {
+        "ca_contact_pairs": 28,
+        "first_interface_residue_ids": [
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "47",
+          "48",
+          "51",
+          "53"
+        ],
+        "first_interface_residues": 9,
+        "minimum_ca_distance": 3.733,
+        "second_interface_residues": 8
+      },
+      "semantic_context": "target_binder_like_antibody_antigen_with_incomplete_fab_target",
+      "semantic_rationale": "The allergen and antibody heavy chain are meaningful partners, but the trimeric Fab-antigen assembly also requires the omitted antibody light chain.",
+      "semantic_verdict": "needs_reformulation",
+      "source": {
+        "bytes": 1563705,
+        "rcsb_download_url": "https://files.rcsb.org/download/1FSK.pdb",
+        "sha256": "559a431474bbb4c29b89de07cb679e158a5d115eca9ff0a70e49da5f842a8684"
+      },
+      "strict_target_binder_eligible": false,
+      "structural_pair_complete": false,
+      "target": {
+        "ca_residues": 220,
+        "chain": "L",
+        "has_numbering_gaps": false,
+        "molecule_id": "3",
+        "molecule_name": "ANTIBODY HEAVY CHAIN FAB",
+        "numbering_gaps": []
+      },
+      "target_id": "1FSK_LJ",
+      "title": "COMPLEX FORMATION BETWEEN A FAB FRAGMENT OF A MONOCLONAL IGG ANTIBODY AND THE MAJOR ALLERGEN FROM BIRCH POLLEN BET V 1"
+    }
+  ],
+  "version": 1
+}

@@ -100,8 +100,17 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > requires at least 15 accepts per target, even accepting all 180 rows gives a false-accept lower bound of
 > `15/180 = 0.08333`, above the frozen 0.08 cap. W3b is terminal before certification; certification and
 > held-out-test jobs remain zero, and no target or threshold may be changed post hoc. Resume from
-> `docs/M6D_W3B_FIT_COMPLETION.md` and `results/m6d_w3b_fit_completion.json`. The next task is to choose and
-> preregister a distinct successor question, not to rescue W3b.
+> `docs/M6D_W3B_FIT_COMPLETION.md` and `results/m6d_w3b_fit_completion.json`.
+> The distinct successor is now frozen as W3c validity-first failure localization. A deterministic CPU
+> audit of all 24 historical representatives found 5 complete author-determined two-chain assemblies and
+> only 3 strict target-binder systems; branch-level strict counts are W2b `0/8`, W2c `2/8`, and W3b `1/8`.
+> Historical results remain valid for their exact prepared structural-proxy inputs but do not establish
+> strict target-binder generalization. Read `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md` and
+> `results/m6d_w3c_target_validity_audit.json`; the tracked
+> `tests/fixtures/m6d_w3c_historical_structure_fixture.json` supports public CPU replay without local raw
+> PDB files. The immediate task is to discover and representation-lock
+> eight fresh, source-disjoint complete target-binder dimers using metadata and geometry only. No MSA or
+> H100 approval packet exists, and zero W3c ProteinMPNN or predictor jobs are authorized.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

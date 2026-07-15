@@ -92,6 +92,13 @@ unsuccessful under both predictors, and another shows large endpoint disagreemen
 generator failure, target-family heterogeneity, or a different trust signal, but it must be a distinct
 prospectively preregistered experiment.
 
+The chosen successor is now W3c validity-first failure localization. The follow-up historical-pool audit
+found that the 24-target representative set did not prospectively require complete biological dimers or
+strict target-binder semantics. This narrows the scope of W3b without changing its terminal fit decision:
+W3b remains valid for its exact prepared structural-proxy inputs, while W3c starts from fresh targets and
+tests representation validity and native predictor recoverability before any new generator or gate study.
+See `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`.
+
 ## Claim boundary
 
 This result supports only a terminal negative conclusion for the preregistered matched-predictor

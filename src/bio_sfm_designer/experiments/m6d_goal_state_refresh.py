@@ -82,6 +82,9 @@ _W3B_FIT_TERMINAL_NEXT_ACTION = (
     "compute. Use the target-level failure pattern only to choose and preregister a distinct successor "
     "question; do not retune the frozen W3b thresholds or rescue this experiment."
 )
+_W3C_TARGET_VALIDITY_STATUS = (
+    "w3c_target_validity_reset_complete_fresh_target_discovery_required"
+)
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
     "candidates. Require a new explicit approval before compute and do not retune any learned threshold."
@@ -1246,6 +1249,128 @@ def _w3b_fit_terminal_summary(report: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _w3c_target_validity_summary(report: Dict[str, Any]) -> Dict[str, Any]:
+    summary = report.get("summary") if isinstance(report.get("summary"), dict) else {}
+    branches = (
+        report.get("historical_branch_summary")
+        if isinstance(report.get("historical_branch_summary"), dict)
+        else {}
+    )
+    inputs = report.get("inputs") if isinstance(report.get("inputs"), dict) else {}
+    protocol = (
+        inputs.get("successor_protocol")
+        if isinstance(inputs.get("successor_protocol"), dict)
+        else {}
+    )
+    structure_fixture = (
+        inputs.get("structure_fixture")
+        if isinstance(inputs.get("structure_fixture"), dict)
+        else {}
+    )
+    successor_policy = (
+        report.get("successor_policy")
+        if isinstance(report.get("successor_policy"), dict)
+        else {}
+    )
+    expected_branches = {
+        "W2b": (8, 1, 0),
+        "W2c": (8, 2, 2),
+        "W3b": (8, 2, 1),
+    }
+    checks = {
+        "identity_exact": (
+            report.get("artifact") == "m6d_w3c_target_validity_audit"
+            and report.get("version") == 1
+            and report.get("status") == _W3C_TARGET_VALIDITY_STATUS
+        ),
+        "audit_ok": report.get("audit_ok") is True,
+        "historical_pool_counts_exact": (
+            summary.get("n_targets") == 24
+            and summary.get("n_structurally_complete_two_chain") == 5
+            and summary.get("n_strict_target_binder_eligible") == 3
+            and summary.get("strict_target_binder_eligible_ids")
+            == ["1FFG_CD", "1FR2_BA", "1F3V_BA"]
+            and summary.get("semantic_verdict_counts")
+            == {"needs_reformulation": 3, "out_of_scope": 18, "pass": 3}
+        ),
+        "historical_branch_counts_exact": all(
+            isinstance(branches.get(branch), dict)
+            and (
+                branches[branch].get("n_targets"),
+                branches[branch].get("n_structurally_complete_two_chain"),
+                branches[branch].get("n_strict_target_binder_eligible"),
+            )
+            == expected
+            for branch, expected in expected_branches.items()
+        ),
+        "successor_protocol_bound": (
+            protocol.get("path") == "configs/m6d_w3c_validity_first_protocol.json"
+            and _is_sha256(protocol.get("sha256"))
+        ),
+        "public_structure_fixture_bound": (
+            structure_fixture.get("path")
+            == "tests/fixtures/m6d_w3c_historical_structure_fixture.json"
+            and _is_sha256(structure_fixture.get("sha256"))
+            and isinstance(inputs.get("local_source_pdbs_verified"), bool)
+        ),
+        "audit_checks_all_pass": (
+            isinstance(report.get("checks"), dict)
+            and bool(report["checks"])
+            and all(value is True for value in report["checks"].values())
+        ),
+        "successor_policy_exact": (
+            successor_policy.get("require_fresh_sources_outside_historical_24") is True
+            and successor_policy.get("require_author_determined_dimer") is True
+            and successor_policy.get("require_selected_pair_is_complete_protein_assembly") is True
+            and successor_policy.get("require_selected_chains_are_distinct_molecule_entities") is True
+            and successor_policy.get("require_manual_target_binder_semantic_pass") is True
+            and successor_policy.get("minimum_ca_residues_per_chain") == 40
+            and successor_policy.get("minimum_ca_contact_pairs") == 20
+            and successor_policy.get("require_no_unreviewed_numbering_gaps") is True
+            and successor_policy.get("require_native_dual_predictor_screen_before_generation") is True
+        ),
+        "no_submit_exact": (
+            report.get("no_submit") is True
+            and report.get("cayuga_submission_allowed") is False
+        ),
+        "claim_closed": report.get("can_claim_target_binder_generalization") is False,
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3c target-validity invariants failed: {', '.join(failed)}")
+    return {
+        "status": report["status"],
+        "audit_ok": True,
+        "n_historical_targets": 24,
+        "n_structurally_complete_two_chain": 5,
+        "n_strict_target_binder_eligible": 3,
+        "strict_target_binder_eligible_ids": summary[
+            "strict_target_binder_eligible_ids"
+        ],
+        "historical_branch_counts": {
+            branch: {
+                "n_targets": branches[branch]["n_targets"],
+                "n_structurally_complete_two_chain": branches[branch][
+                    "n_structurally_complete_two_chain"
+                ],
+                "n_strict_target_binder_eligible": branches[branch][
+                    "n_strict_target_binder_eligible"
+                ],
+            }
+            for branch in ("W2b", "W2c", "W3b")
+        },
+        "protocol_sha256": protocol["sha256"],
+        "structure_fixture_sha256": structure_fixture["sha256"],
+        "local_source_pdbs_verified": inputs["local_source_pdbs_verified"],
+        "historical_claim_reset": report["historical_claim_reset"],
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_target_binder_generalization": False,
+        "next_action": report["next_action"],
+        "checks": checks,
+    }
+
+
 def _apply_w3b_fit_ready_state(
     bundle: Dict[str, Dict[str, Any]],
     w3_completion: Dict[str, Any],
@@ -2037,6 +2162,227 @@ def _apply_w3b_fit_terminal_state(
     })
 
 
+def _apply_w3c_target_validity_state(
+    bundle: Dict[str, Dict[str, Any]],
+    w3c: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3c_fresh_valid_target_manifest_and_representation_lock"
+    next_action = w3c["next_action"]
+    ranked_actions = [
+        "Preserve W2b, W2c, and W3b as exact prepared-two-chain structural-proxy experiments.",
+        "Exclude every historical target, RCSB source, and target-sequence hash from W3c.",
+        "Discover exactly eight complete author-determined target-binder dimers using metadata and geometry only.",
+        "Lock the fresh target manifest and representation audit before preparing any MSA approval packet.",
+        "Run zero ProteinMPNN or predictor jobs until the separately gated native-recoverability stages.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor["objective"] = (
+        "Localize failure in the correct order: first establish complete biological target-binder "
+        "representations, then verify native recoverability with both frozen predictors, and only "
+        "afterward consider generator yield or trust-signal calibration."
+    )
+    anchor.setdefault("claim_boundaries", {}).update({
+        "historical_w2b_w2c_w3b": "exact_prepared_two_chain_structural_proxy_only",
+        "strict_target_binder_generalization": "not_established",
+        "w3c": "target_validity_audit_only_no_fresh_targets_no_compute_no_claim",
+    })
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_semantic_annotations": "configs/m6d_w3c_target_semantic_annotations.json",
+        "w3c_validity_first_protocol": "configs/m6d_w3c_validity_first_protocol.json",
+        "w3c_target_validity_audit": "results/m6d_w3c_target_validity_audit.json",
+        "w3c_target_validity_audit_markdown": "results/m6d_w3c_target_validity_audit.md",
+        "w3c_public_structure_fixture": (
+            "tests/fixtures/m6d_w3c_historical_structure_fixture.json"
+        ),
+        "w3c_protocol_document": "docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md",
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_target_validity_reset_fresh_target_discovery_required_no_submit",
+        "goal_progress": w3c["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3c": w3c["status"],
+        "w3c_historical_targets_audited": w3c["n_historical_targets"],
+        "w3c_historical_complete_two_chain": w3c[
+            "n_structurally_complete_two_chain"
+        ],
+        "w3c_historical_strict_target_binder": w3c[
+            "n_strict_target_binder_eligible"
+        ],
+        "w3c_fresh_targets_locked": 0,
+        "w3c_target_msa_packet_prepared": False,
+        "w3c_native_screen_packet_prepared": False,
+        "w3c_proteinmpnn_designs": 0,
+        "w3c_predictor_evaluations": 0,
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3c_target_validity"] = w3c
+    anchor["next_resume_steps"] = [
+        "read docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md and preserve the W3b terminal stop",
+        "treat the historical 24-target audit as a diagnostic design reset, not a subgroup result",
+        "discover eight source-disjoint complete biological target-binder dimers without predictor labels",
+        "run the frozen representation and overlap checks before locking any target",
+        "prepare no MSA, H100, ProteinMPNN, gate, or certification packet during target discovery",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_status": w3c["status"],
+        "w3c_fresh_targets_locked": 0,
+        "w3c_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_fresh_target_discovery_required",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_target_validity": w3c,
+    })
+    completion.setdefault("claim_boundary", {}).update({
+        "historical_w2b_w2c_w3b": (
+            "valid only for exact prepared two-chain structural-proxy inputs"
+        ),
+        "w3c": "historical validity audit complete; no fresh target, native screen, generator, gate, or claim",
+    })
+    completion.setdefault("workstream_status", {})["W3c_validity_first"] = {
+        "complete": False,
+        "scientific_success": None,
+        "status": w3c["status"],
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_validity_first_reset_preregistered",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "representation_validity_issue_detected": True,
+        "claim_scope_corrected": True,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {}).update({
+        "historical_w2b_w2c_w3b": "structural_proxy_scope_only",
+        "w3c": "fresh_target_discovery_only_no_compute_no_claim",
+    })
+    drift["active_risks"] = [
+        {
+            "id": "historical_target_semantic_overclaim",
+            "status": "managed",
+            "control": "the 24 historical targets are diagnostic only and support no strict target-binder subgroup claim",
+        },
+        {
+            "id": "representation_failure_conflated_with_generator_failure",
+            "status": "managed",
+            "control": "W3c requires complete biological dimers and native dual-predictor recovery before generation",
+        },
+        {
+            "id": "historical_label_leak_into_target_selection",
+            "status": "managed",
+            "control": "fresh target discovery excludes historical sources and may not use predictor or generated-design labels",
+        },
+        {
+            "id": "premature_compute_authority",
+            "status": "managed",
+            "control": "no MSA or native-screen approval packet exists and all later compute remains separately gated",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "controlled_validity_first_successor_reset_preregistered_before_new_compute",
+        "claims": "historical_claim_scope_narrowed_to_exact_structural_proxy_inputs",
+        "execution": "cpu_metadata_audit_only_zero_w3c_jobs_no_submit",
+        "operational_status": "fresh_target_discovery_required_before_msa_or_native_screen",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {})["W3c_validity_first"] = w3c
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_validity_first_fresh_target_discovery_required_no_submit",
+        "w3c_target_validity": w3c,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "historical_diagnostic_audit_only_no_fresh_target_or_compute_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_fresh_target_discovery_required"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3c biological target validity and native-recoverability ordering",
+        "w3c_target_validity": w3c,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3c_target_validity_audit": "24_targets_5_complete_dimers_3_strict_target_binders",
+        "w3c_protocol_binding": w3c["protocol_sha256"],
+        "w3c_structure_fixture_binding": w3c["structure_fixture_sha256"],
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "w3c_stage": "W3c-A_fresh_target_discovery",
+        "w3c_fresh_targets_locked": 0,
+        "w3c_msa_jobs_submitted": 0,
+        "w3c_predictor_jobs_submitted": 0,
+        "w3c_proteinmpnn_jobs_submitted": 0,
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "target_validity_reset_only_no_compute_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_fresh_target_discovery_required",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_target_validity": w3c,
+        "submission_performed": False,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "configs/m6d_w3c_target_semantic_annotations.json",
+        "configs/m6d_w3c_validity_first_protocol.json",
+        "docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md",
+        "tests/fixtures/m6d_w3c_historical_structure_fixture.json",
+        "results/m6d_w3c_target_validity_audit.json",
+        "results/m6d_w3c_target_validity_audit.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -2064,6 +2410,7 @@ def refresh_bundle(
     w3b_fit_initial_execution_observation: Optional[Dict[str, Any]] = None,
     w3b_fit_af2_recovery_packet: Optional[Dict[str, Any]] = None,
     w3b_fit_completion: Optional[Dict[str, Any]] = None,
+    w3c_target_validity_audit: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -2127,6 +2474,11 @@ def refresh_bundle(
         if isinstance(w3b_fit_completion, dict)
         else None
     )
+    w3c_target_validity = (
+        _w3c_target_validity_summary(w3c_target_validity_audit)
+        if isinstance(w3c_target_validity_audit, dict)
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -2145,6 +2497,8 @@ def refresh_bundle(
         raise ValueError("W3b AF2 recovery state requires the validated initial fit packet")
     if w3b_terminal is not None and w3b_recovery is None:
         raise ValueError("W3b terminal fit state requires the validated recovery evidence chain")
+    if w3c_target_validity is not None and w3b_terminal is None:
+        raise ValueError("W3c target-validity state requires the terminal W3b fit evidence chain")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -3024,6 +3378,12 @@ def refresh_bundle(
             w3b_terminal,
             runtime_goal_active=runtime_goal_active,
         )
+    if w3c_target_validity is not None:
+        _apply_w3c_target_validity_state(
+            bundle,
+            w3c_target_validity,
+            runtime_goal_active=runtime_goal_active,
+        )
     return bundle
 
 
@@ -3052,6 +3412,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
+    w3c = report.get("w3c_target_validity") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -3092,6 +3453,9 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
         f"W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`.",
         f"W3b certification reachable: `{w3b_fit_completion.get('certification_reachable', False)}`.",
+        f"W3c target validity: `{w3c.get('status', 'not_audited')}`.",
+        f"W3c historical complete dimers: `{w3c.get('n_structurally_complete_two_chain', 'not_audited')}`.",
+        f"W3c historical strict target-binders: `{w3c.get('n_strict_target_binder_eligible', 'not_audited')}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -3116,6 +3480,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
+    w3c = report.get("w3c_target_validity") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -3160,6 +3525,9 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`",
         f"- W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`",
         f"- W3b certification reachable: `{w3b_fit_completion.get('certification_reachable', False)}`",
+        f"- W3c target validity: `{w3c.get('status', 'not_audited')}`",
+        f"- W3c historical complete dimers: `{w3c.get('n_structurally_complete_two_chain', 'not_audited')}`",
+        f"- W3c historical strict target-binders: `{w3c.get('n_strict_target_binder_eligible', 'not_audited')}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -3209,6 +3577,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
+    w3c = report.get("w3c_target_validity") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -3232,6 +3601,8 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`.",
         f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
         f"W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`.",
+        f"W3c target validity: `{w3c.get('status', 'not_audited')}`.",
+        f"W3c fresh targets locked: `{0 if w3c else 'not_started'}`.",
         "",
         "## Ranked Actions",
         "",
@@ -3251,6 +3622,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3b = report.get("w3b_successor") or {}
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
+    w3c = report.get("w3c_target_validity") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -3291,6 +3663,10 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3b AF2 recovery jobs submitted: `{hpc.get('w3b_af2_recovery_jobs_submitted', 0)}`",
         f"- W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`",
         f"- W3b certification reachable: `{hpc.get('w3b_certification_reachable', False)}`",
+        f"- W3c target validity: `{w3c.get('status', 'not_audited')}`",
+        f"- W3c fresh targets locked: `{hpc.get('w3c_fresh_targets_locked', 'not_started')}`",
+        f"- W3c MSA jobs submitted: `{hpc.get('w3c_msa_jobs_submitted', 0)}`",
+        f"- W3c predictor jobs submitted: `{hpc.get('w3c_predictor_jobs_submitted', 0)}`",
         "",
         "## Next Action",
         "",
@@ -3421,6 +3797,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3b-fit-completion",
         default="results/m6d_w3b_fit_completion.json",
+    )
+    parser.add_argument(
+        "--w3c-target-validity-audit",
+        default="results/m6d_w3c_target_validity_audit.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -3567,6 +3947,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3b_fit_completion)
             if os.path.exists(args.w3b_fit_completion)
+            else None
+        ),
+        (
+            _load_json(args.w3c_target_validity_audit)
+            if os.path.exists(args.w3c_target_validity_audit)
             else None
         ),
         updated_at=args.updated_at,

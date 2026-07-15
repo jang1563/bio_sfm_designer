@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3b_fit_terminal_successor_preregistration_required`.
+Status: `goal_active_w3c_fresh_target_discovery_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -32,10 +32,13 @@ Can mark goal complete: `False`.
 - W3b AF2 recovery jobs submitted: `3`
 - W3b fit completion: `w3b_fit_complete_rule_not_found_terminal_stop`
 - W3b certification reachable: `False`
-- remaining requirement: `W3b_successor_scientific_question_and_preregistration`
+- W3c target validity: `w3c_target_validity_reset_complete_fresh_target_discovery_required`
+- W3c historical complete dimers: `5`
+- W3c historical strict target-binders: `3`
+- remaining requirement: `W3c_fresh_valid_target_manifest_and_representation_lock`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.
+Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.

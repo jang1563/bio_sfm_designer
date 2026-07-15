@@ -9,8 +9,10 @@
 > The frozen evaluator returned `w3b_fit_rule_not_found_stop`. `1FSK_LJ` was wrong for all 60 candidates
 > under both endpoints, so the required 15 target accepts imply a minimum global risk of
 > `15/180 = 0.08333`, above the 0.08 cap. No certification or held-out-test job was submitted. Resume from
-> `docs/M6D_W3B_FIT_COMPLETION.md` and preregister a scientifically distinct successor rather than rescuing
-> W3b.
+> `docs/M6D_W3B_FIT_COMPLETION.md`. The chosen successor is W3c validity-first failure localization. Its
+> historical-pool audit found only 5/24 complete two-chain assemblies and 3/24 strict target-binder systems.
+> Resume from `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`; execute fresh-target discovery only, with no W3c
+> MSA or predictor compute authorized.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -26,8 +28,9 @@ Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mo
 preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
 post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result and its
 input, runtime, approval, and adjudication locks; preserve the terminal W3b fit result without
-threshold rescue, target substitution, certification, or held-out testing; define and preregister a
-scientifically distinct successor before any new predictor compute and require a new exact approval;
+threshold rescue, target substitution, certification, or held-out testing; execute the preregistered W3c
+validity-first successor in order, beginning with eight fresh complete target-binder dimers and no compute,
+then require separate exact approvals for MSA and native dual-predictor recovery before any generator work;
 preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep
 all status artifacts honest and reproducible.
 ```
@@ -101,6 +104,16 @@ evaluator found no qualifying primary or comparator rule and returned `w3b_fit_r
 Certification and held-out test are unreachable, unsubmitted, and not authorized. The terminal anchor is
 `docs/M6D_W3B_FIT_COMPLETION.md`. Do not reuse consumed approvals, retune W3b, substitute targets, or run
 later stages.
+
+Current W3c successor: `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`,
+`configs/m6d_w3c_validity_first_protocol.json`, and
+`results/m6d_w3c_target_validity_audit.{json,md}`. The tracked public replay fixture is
+`tests/fixtures/m6d_w3c_historical_structure_fixture.json`. The deterministic 24-target audit finds 5 complete
+author-determined two-chain assemblies and 3 strict target-binder systems; branch-level strict counts are
+W2b `0/8`, W2c `2/8`, and W3b `1/8`. Historical results therefore retain only their exact prepared
+structural-proxy scope. W3c-A must discover and representation-lock eight fresh, source-disjoint complete
+target-binder dimers without predictor or generated-design labels. No W3c target-MSA packet, native-screen
+packet, ProteinMPNN job, predictor job, or later protocol exists yet.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -705,9 +718,9 @@ Use this order unless the user gives a newer instruction:
    new alpha target or target-specific stress test is explicitly chosen.
 3. W2/W2b/W2c/W3b - Preserve the completed negative evidence and frozen stop decisions. Do not rescue,
    retune, substitute targets, or spend on stages made unreachable by their protocols.
-4. Successor design - Choose a scientifically distinct question that addresses the observed target-regime
-   heterogeneity, preregister it without using held-out W3b labels, and require a new exact approval before
-   any MSA query, candidate generation, or predictor compute.
+4. W3c-A - Discover exactly eight fresh complete biological target-binder dimers outside every historical
+   target, RCSB source, and target-sequence registry. Use metadata and geometry only; lock the manifest and
+   representation audit before preparing any MSA approval packet.
 5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

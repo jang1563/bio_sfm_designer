@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3b_fit_terminal_successor_preregistration_required`.
+Status: `goal_state_refreshed_w3c_fresh_target_discovery_required`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -28,6 +28,9 @@ W3b AF2 recovery approval recorded: `True`.
 W3b AF2 recovery jobs submitted: `3`.
 W3b fit completion: `w3b_fit_complete_rule_not_found_terminal_stop`.
 W3b certification reachable: `False`.
+W3c target validity: `w3c_target_validity_reset_complete_fresh_target_discovery_required`.
+W3c historical complete dimers: `5`.
+W3c historical strict target-binders: `3`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -41,7 +44,13 @@ Cayuga submission allowed: `False`.
 - `results/m6d_followup_next_science_actions.md`
 - `results/m6d_goal_mode_local_harness_status.json`
 - `results/m6d_goal_mode_local_harness_status.md`
+- `configs/m6d_w3c_target_semantic_annotations.json`
+- `configs/m6d_w3c_validity_first_protocol.json`
+- `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`
+- `tests/fixtures/m6d_w3c_historical_structure_fixture.json`
+- `results/m6d_w3c_target_validity_audit.json`
+- `results/m6d_w3c_target_validity_audit.md`
 
 ## Next Action
 
-Preserve W3b as a terminal negative fit result and submit no certification or held-out-test compute. Use the target-level failure pattern only to choose and preregister a distinct successor question; do not retune the frozen W3b thresholds or rescue this experiment.
+Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.

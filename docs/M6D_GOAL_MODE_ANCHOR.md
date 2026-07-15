@@ -9,8 +9,9 @@
 > replacements `3085544`-`3085546` completed and strict assembly produced 180/180 matched Boltz/AF2 rows.
 > The evaluator returned `w3b_fit_rule_not_found_stop`. `1FSK_LJ` was wrong for all 60 candidates under
 > both endpoints, so the required 15 target accepts imply `15/180 = 0.08333`, above the 0.08 risk cap.
-> Certification and held-out test are unreachable and have zero submissions. Resume from
-> `docs/M6D_W3B_FIT_COMPLETION.md`; choose a distinct successor rather than rescuing W3b.
+> Certification and held-out test are unreachable and have zero submissions. The distinct successor is
+> now W3c validity-first failure localization. Resume from `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md` and
+> discover fresh valid target-binder dimers; do not rescue W3b or infer compute approval.
 
 Date: 2026-07-15
 
@@ -25,7 +26,7 @@ Four `trust_all` targets certified, but the sole `selective_pae` target failed e
 locked panel requires one selective certificate, so W2b v1 is terminally not supported and no test compute
 was submitted. The authoritative result artifact is `docs/M6D_W2B_CERTIFICATION_COMPLETION.md`.
 
-Latest successor override: 2026-07-14. W2c is a new selective-pAE-only one-shot
+Historical W2c successor override: 2026-07-14. W2c is a selective-pAE-only one-shot
 experiment with an exact prospective power gate. Its design qualifies at 90 certification
 accepts with conditional power 0.817860 under design risk 0.08. Its locked evaluator is
 implemented, and eight label-blind fresh targets are now selected with zero historical/W2b target,
@@ -44,6 +45,15 @@ chronological ledger are historical even where their original labels say `curren
 assembly produced 180/180 matched fit rows, and the frozen evaluator found no qualifying primary or
 comparator rule. Certification and held-out test remain unsubmitted and unreachable under this protocol.
 
+Latest successor override: 2026-07-15. A deterministic CPU audit of all 24 historical W2b/W2c/W3b
+representatives found 5 complete author-determined two-chain assemblies and 3 strict target-binder systems.
+Strict branch counts are W2b `0/8`, W2c `2/8`, and W3b `1/8`. This is a post-outcome diagnostic design
+reset, not a subgroup claim: historical experiments remain valid only for their exact prepared structural-
+proxy inputs. W3c freezes the failure order as representation validity, native dual-predictor recovery,
+generator yield, then trust-signal calibration. Current work is W3c-A discovery of eight fresh,
+source-disjoint complete target-binder dimers. No MSA, H100, ProteinMPNN, gate, or certification packet
+exists or is authorized.
+
 ## Active Objective
 
 Continue the M6d science-result program in Cayuga-first goal mode:
@@ -52,7 +62,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
 - preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
   certification and held-out-test roles;
-- define and preregister a scientifically distinct successor before requesting any new predictor compute;
+- execute only the preregistered W3c-A fresh-target discovery and representation lock before any MSA or
+  predictor compute;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -88,6 +99,10 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   rows under both predictors, making the best possible global risk with its required 15 accepts
   `15/180 = 0.08333`, above the 0.08 cap. Certification and held-out test have zero submissions, and W3b
   supports no gate or biological-success claim.
+- W3c: the historical-pool validity audit passes its deterministic checks but finds only 5/24 complete
+  two-chain assemblies and 3/24 strict target-binder systems. The successor protocol is hash-bound and
+  preregistered for target discovery only. Zero fresh targets are locked, zero W3c jobs are submitted, and
+  strict target-binder generalization remains unsupported.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -165,6 +180,11 @@ from Chai records alone.
 - W3b terminal fit completion, strict matched records, and descriptive diagnostics:
   `docs/M6D_W3B_FIT_COMPLETION.md`, `results/m6d_w3b_fit_completion.json`,
   `results/m6d_w3b_fit_matched_records.jsonl`, and `results/m6d_w3b_fit_diagnostics.json`
+- W3c validity-first protocol, semantic annotations, and deterministic historical-pool audit:
+  `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`, `configs/m6d_w3c_validity_first_protocol.json`,
+  `configs/m6d_w3c_target_semantic_annotations.json`, and
+  `results/m6d_w3c_target_validity_audit.{json,md}`; public replay uses
+  `tests/fixtures/m6d_w3c_historical_structure_fixture.json`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and

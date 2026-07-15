@@ -706,6 +706,71 @@ def _w3b_fit_terminal_artifact():
     }
 
 
+def _w3c_target_validity_artifact():
+    return {
+        "artifact": "m6d_w3c_target_validity_audit",
+        "version": 1,
+        "status": "w3c_target_validity_reset_complete_fresh_target_discovery_required",
+        "audit_ok": True,
+        "inputs": {
+            "successor_protocol": {
+                "path": "configs/m6d_w3c_validity_first_protocol.json",
+                "sha256": "8" * 64,
+            },
+            "structure_fixture": {
+                "path": "tests/fixtures/m6d_w3c_historical_structure_fixture.json",
+                "sha256": "9" * 64,
+            },
+            "local_source_pdbs_verified": True,
+        },
+        "checks": {"all_inputs_valid": True},
+        "summary": {
+            "n_targets": 24,
+            "n_structurally_complete_two_chain": 5,
+            "n_strict_target_binder_eligible": 3,
+            "strict_target_binder_eligible_ids": ["1FFG_CD", "1FR2_BA", "1F3V_BA"],
+            "semantic_verdict_counts": {
+                "needs_reformulation": 3,
+                "out_of_scope": 18,
+                "pass": 3,
+            },
+        },
+        "historical_branch_summary": {
+            "W2b": {
+                "n_targets": 8,
+                "n_structurally_complete_two_chain": 1,
+                "n_strict_target_binder_eligible": 0,
+            },
+            "W2c": {
+                "n_targets": 8,
+                "n_structurally_complete_two_chain": 2,
+                "n_strict_target_binder_eligible": 2,
+            },
+            "W3b": {
+                "n_targets": 8,
+                "n_structurally_complete_two_chain": 2,
+                "n_strict_target_binder_eligible": 1,
+            },
+        },
+        "successor_policy": {
+            "require_fresh_sources_outside_historical_24": True,
+            "require_author_determined_dimer": True,
+            "require_selected_pair_is_complete_protein_assembly": True,
+            "require_selected_chains_are_distinct_molecule_entities": True,
+            "require_manual_target_binder_semantic_pass": True,
+            "minimum_ca_residues_per_chain": 40,
+            "minimum_ca_contact_pairs": 20,
+            "require_no_unreviewed_numbering_gaps": True,
+            "require_native_dual_predictor_screen_before_generation": True,
+        },
+        "historical_claim_reset": "Historical branches estimate exact prepared structural proxies only.",
+        "next_action": "Discover and preregister eight fresh valid target-binder dimers.",
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_target_binder_generalization": False,
+    }
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -748,7 +813,12 @@ def _legacy_bundle():
 
 
 def _refresh_current_w3b(
-    *, completion=None, artifacts=None, recovery=None, fit_completion=None
+    *,
+    completion=None,
+    artifacts=None,
+    recovery=None,
+    fit_completion=None,
+    target_validity=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -775,6 +845,7 @@ def _refresh_current_w3b(
         _w3_mechanism_packet(),
         completion or _w3_completion(),
         *optional,
+        w3c_target_validity_audit=target_validity,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1248,6 +1319,37 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertFalse(bundle["report"]["w3b_successor"]["can_claim_w3b"])
         self.assertIn("submit no certification", bundle["report"]["next_action"])
 
+    def test_w3c_target_validity_reset_becomes_current_no_submit_state(self):
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_fresh_target_discovery_required",
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["remaining_requirements"],
+            ["W3c_fresh_valid_target_manifest_and_representation_lock"],
+        )
+        self.assertEqual(
+            bundle["report"]["w3c_target_validity"][
+                "n_strict_target_binder_eligible"
+            ],
+            3,
+        )
+        self.assertFalse(bundle["drift"]["major_direction_drift"])
+        self.assertTrue(bundle["drift"]["representation_validity_issue_detected"])
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_predictor_jobs_submitted"], 0)
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertFalse(bundle["report"]["w3b_successor"]["fit_supported"])
+
+    def test_w3c_target_validity_requires_terminal_w3b_evidence(self):
+        with self.assertRaisesRegex(ValueError, "terminal W3b fit"):
+            _refresh_current_w3b(target_validity=_w3c_target_validity_artifact())
+
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
         packet["rows"].pop()
@@ -1354,6 +1456,9 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3b_fit_completion": os.path.join(
                     root, "missing-w3b-fit-completion.json"
                 ),
+                "w3c_target_validity": os.path.join(
+                    root, "missing-w3c-target-validity.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -1386,6 +1491,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 paths["w3b_fit_observation"],
                 "--w3b-fit-af2-recovery-packet", paths["w3b_af2_recovery"],
                 "--w3b-fit-completion", paths["w3b_fit_completion"],
+                "--w3c-target-validity-audit", paths["w3c_target_validity"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -1414,6 +1520,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3b_fit_observation",
                     "w3b_af2_recovery",
                     "w3b_fit_completion",
+                    "w3c_target_validity",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)

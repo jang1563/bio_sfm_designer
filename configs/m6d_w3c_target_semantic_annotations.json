@@ -1,0 +1,171 @@
+{
+  "artifact": "m6d_w3c_target_semantic_annotations",
+  "version": 1,
+  "status": "frozen_for_historical_pool_audit_no_submit",
+  "created_after_historical_outcomes_observed": true,
+  "historical_predictor_labels_used": false,
+  "public_replay_structure_fixture": "tests/fixtures/m6d_w3c_historical_structure_fixture.json",
+  "annotation_evidence": [
+    "local RCSB PDB TITLE records",
+    "local RCSB PDB COMPND molecule and chain records",
+    "local RCSB PDB REMARK 350 author-determined biological assemblies",
+    "historically selected target and binder chain IDs"
+  ],
+  "policy": {
+    "expected_representative_pool_targets": 24,
+    "expected_targets_per_historical_branch": 8,
+    "expected_successor_targets": 8,
+    "semantic_pass_definition": "The selected chains are distinct biological interaction partners that form a defensible target-binder-like system rather than internal subunits of a larger obligate assembly.",
+    "strict_eligibility_requires_semantic_pass": true,
+    "strict_eligibility_also_requires_complete_author_determined_dimer": true,
+    "historical_targets_are_diagnostic_only": true,
+    "successor_targets_must_be_screened_prospectively": true
+  },
+  "cayuga_submission_allowed": false,
+  "targets": [
+    {
+      "id": "1F66_AB",
+      "semantic_context": "nucleosome_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected histone H3 and H4 chains are internal subunits of a decameric nucleosome assembly, not a standalone target-binder system."
+    },
+    {
+      "id": "1F93_DC",
+      "semantic_context": "cofactor_homooligomer_internal_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "Both selected chains are DCoH molecules within a tetrameric HNF-1/DCoH complex rather than distinct target and binder entities."
+    },
+    {
+      "id": "1FJG_FR",
+      "semantic_context": "ribosome_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected S6 and S18 chains are internal components of a 30S ribosomal assembly."
+    },
+    {
+      "id": "1FYR_CD",
+      "semantic_context": "domain_swapped_homooligomer_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "Both selected chains are GRB2 SH2 domains in a domain-swapped tetramer that also contains receptor peptides."
+    },
+    {
+      "id": "1FLT_WV",
+      "semantic_context": "ligand_homodimer_internal_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "Both selected chains are VEGF molecules from a tetrameric VEGF-receptor assembly; the receptor chains are omitted."
+    },
+    {
+      "id": "1FL7_DC",
+      "semantic_context": "complete_natural_hormone_heterodimer",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected FSH alpha and beta chains form a complete natural hormone heterodimer, but neither chain is a target-directed binder in the strict successor regime."
+    },
+    {
+      "id": "1F80_BC",
+      "semantic_context": "enzyme_homooligomer_internal_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "Both selected chains are holo-ACP synthase subunits inside a hexameric assembly rather than an enzyme-carrier target-binder pair."
+    },
+    {
+      "id": "1FVC_DC",
+      "semantic_context": "antibody_internal_heavy_light_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected chains are the internal heavy and light variable domains of one antibody Fv, not an antibody-antigen target-binder pair."
+    },
+    {
+      "id": "1EZV_XY",
+      "semantic_context": "antibody_internal_heavy_light_pair_in_large_assembly",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected chains are the heavy and light variable domains of an Fv embedded in an eicosameric cytochrome bc1-antibody assembly."
+    },
+    {
+      "id": "1FFG_CD",
+      "semantic_context": "target_binder_like_signaling_partner_dimer",
+      "semantic_verdict": "pass",
+      "rationale": "The selected CheY and CheA domains are distinct interacting proteins in a complete author-determined dimer."
+    },
+    {
+      "id": "1FR2_BA",
+      "semantic_context": "target_binder_like_toxin_immunity_dimer",
+      "semantic_verdict": "pass",
+      "rationale": "The selected colicin E9 DNase and Im9 immunity protein are distinct target-binder-like partners in a complete author-determined dimer."
+    },
+    {
+      "id": "1FFK_HR",
+      "semantic_context": "ribosome_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected L14 and L24E chains are internal components of a large ribosomal assembly."
+    },
+    {
+      "id": "1FXK_CA",
+      "semantic_context": "prefoldin_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected chains are prefoldin subunits inside a hexameric chaperone assembly."
+    },
+    {
+      "id": "1FSX_BA",
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected alpha and beta globin chains are internal subunits of tetrameric hemoglobin."
+    },
+    {
+      "id": "1FDH_GA",
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected gamma and alpha globin chains are internal subunits of tetrameric fetal hemoglobin."
+    },
+    {
+      "id": "1FN3_DC",
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected beta and alpha globin chains are internal subunits of tetrameric hemoglobin."
+    },
+    {
+      "id": "1FHJ_BA",
+      "semantic_context": "hemoglobin_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected beta and alpha globin chains are internal subunits of tetrameric hemoglobin."
+    },
+    {
+      "id": "1F2U_CD",
+      "semantic_context": "same_protein_fragment_assembly_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "Both selected chains are RAD50 ATPase fragments in a tetrameric construct rather than distinct target and binder proteins."
+    },
+    {
+      "id": "1F3V_BA",
+      "semantic_context": "target_binder_like_signaling_partner_dimer",
+      "semantic_verdict": "pass",
+      "rationale": "The selected TRAF2 and TRADD domains are distinct interacting proteins in a complete author-determined dimer."
+    },
+    {
+      "id": "1F99_BA",
+      "semantic_context": "phycocyanin_internal_subunit_pair",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected phycocyanin chains are internal subunits of a dodecameric photosynthetic assembly."
+    },
+    {
+      "id": "1F51_AE",
+      "semantic_context": "target_binder_like_phosphorelay_in_multichain_context",
+      "semantic_verdict": "needs_reformulation",
+      "rationale": "The selected phosphorelay proteins are biologically meaningful interaction partners, but their author-determined assembly contains four protein chains rather than the isolated selected pair."
+    },
+    {
+      "id": "1FV1_BA",
+      "semantic_context": "mhc_internal_subunit_pair_with_omitted_peptide",
+      "semantic_verdict": "out_of_scope",
+      "rationale": "The selected MHC alpha and beta chains are internal receptor subunits and the bound peptide chain is omitted."
+    },
+    {
+      "id": "1FQ9_CA",
+      "semantic_context": "target_binder_like_receptor_ligand_with_cofactor_context",
+      "semantic_verdict": "needs_reformulation",
+      "rationale": "FGFR1 and FGF2 are meaningful interaction partners, but the biological assembly is a tetrameric receptor-ligand-heparin complex and the selected pair is incomplete."
+    },
+    {
+      "id": "1FSK_LJ",
+      "semantic_context": "target_binder_like_antibody_antigen_with_incomplete_fab_target",
+      "semantic_verdict": "needs_reformulation",
+      "rationale": "The allergen and antibody heavy chain are meaningful partners, but the trimeric Fab-antigen assembly also requires the omitted antibody light chain."
+    }
+  ]
+}
