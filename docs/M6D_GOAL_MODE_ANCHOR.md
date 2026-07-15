@@ -149,8 +149,10 @@ from Chai records alone.
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
   `src/bio_sfm_designer/experiments/m6d_w3_mechanism_adjudication.py`
-- Current goal-state refresh audit: `results/m6d_goal_state_refresh_report.{json,md}`
-- Science-action anchor: `results/m6d_followup_next_science_actions.{json,md}`
+- Current tracked goal-state and ranked science-action anchor:
+  `results/m6d_goal_state_refresh_report.{json,md}`
+- Local extended science-action ledger, when present:
+  `results/m6d_followup_next_science_actions.{json,md}`
 - Compact tracked machine-readable goal state: `results/m6d_goal_state_refresh_report.json`
 - Local extended machine-readable goal anchor, when present:
   `results/m6d_goal_mode_current_anchor.json`
@@ -1257,108 +1259,19 @@ Do not submit new Cayuga jobs from stale readiness or status commands.
 Start with a no-spend status/decision refresh:
 
 ```sh
-jq '{status, ok, complete, goal_progress, remaining, w1: .workstreams.W1_M6c_scale_up.status, w2: .workstreams.W2_multi_target_panel.status, w3: .workstreams.W3_independent_predictor.status, w4: .workstreams.W4_closed_loop_DBTL.status}' \
-  results/m6c_project_status_w2_followup.json
+jq '{status, audit_ok, runtime_goal_active, w3: .w3_mechanism_completion.status, w3_outcome: .w3_mechanism_completion.joint_outcome, w3b: .w3b_successor.status, fit_scope: .w3b_successor.fit_scope, approval_recorded: .w3b_successor.approval_recorded, submitted_jobs: .w3b_successor.submitted_jobs, no_submit, cayuga_submission_allowed, next_actions_ranked, next_action}' \
+  results/m6d_goal_state_refresh_report.json
 
-jq '{claim_boundary, w3_independent_predictor_readout, next_actions_ranked}' \
-  results/m6d_followup_next_science_actions.json
+jq '{status, audit_ok, completion_ok, n_targets, gpu_allocation_hours, within_gpu_budget, n_failures}' \
+  results/m6d_w3b_target_msa_lifecycle.json
 
-jq '{overall_status, w2: .w2.status, w3_verdict: .w3.current_protocol_verdict, w3_protocol: .w3.selected_protocol, complete: .can_mark_goal_complete}' \
-  results/m6d_w2_w3_decision_protocol.json
+jq '{status, audit_ok, fit_packet_ready, explicit_fit_approval_recorded, submitted_jobs, can_submit_fit_stage, no_submit, next_action}' \
+  results/m6d_w3b_fit_packet_readiness.json
 
-jq '{status, ready_for_cayuga_submission, target_sets, can_mark_goal_complete}' \
-  results/m6d_w2_revised_branch.json
+jq '{status, audit_ok, approval_recorded, submitted_jobs, candidate_designs: .approval_contract.candidate_designs, matched_evaluations: .approval_contract.matched_predictor_evaluations, authorizes_certification: .approval_contract.authorizes_certification, authorizes_held_out_test: .approval_contract.authorizes_held_out_test, can_claim_w3b, no_submit}' \
+  results/m6d_w3b_fit_approval_packet.json
 
-jq '{status, n_candidates, n_admitted_for_pilot, ready_for_revised_manifest, ready_for_cayuga_submission}' \
-  results/m6d_w2_candidate_pool_screen.json
-
-jq '{status, ready_for_target_msa_precompute, ready_for_cayuga_submission, n_selected_for_manifest, n_unique_selected_rcsb_ids, unique_selected_rcsb_ids, selected_source_redundancy_note}' \
-  results/m6d_w2_fresh_discovery_pool.json
-
-jq '{ok, n_targets, n_ready_targets, failures_by_kind}' \
-  results/m6d_w2_fresh_discovery_targets_manifest.json
-
-jq '{ok, n_targets, n_ready_targets, ready_targets, failures_by_kind}' \
-  results/m6d_w2_fresh_discovery_unique_source_pilot_manifest.json
-
-jq '{status, ok, n_completed_targets, n_manifest_targets, next_action}' \
-  results/m6d_w2_fresh_discovery_unique_source_pilot_completion.json
-
-jq '{panel_status, ok, n_targets, n_records, pooled: .pooled_diagnostic.alphas[0], targets: [.targets[] | {target:.complex_target_id,status,success,failure,trusted,tau}]}' \
-  results/m6d_w2_fresh_discovery_unique_source_pilot_panel_report.json
-
-jq '{recommendation:.summary.recommendation,next_action,gpu_spend_gate:.summary.gpu_spend_gate,targets:[.targets[] | {target:.complex_target_id,classification:.classification,success_rate:.success_rate,protocol_cutoff_accepts:.protocol_cutoff_accepts}]}' \
-  results/m6d_w2_fresh_discovery_unique_source_pilot_diagnostic.json
-
-jq '{status, selected_design, ready_for_revised_manifest, ready_for_cayuga_submission, known_pool, blocked_reasons, next_action, generated_artifacts}' \
-  results/m6d_w2_next_branch_design.json
-
-jq '{protocol_id, excluded_targets_under_current_protocol, candidate_requirements, panel_contract, spend_gate}' \
-  configs/m6d_w2_next_branch_candidate_rules.json
-
-jq '{status, ready_for_revised_manifest, ready_for_cayuga_submission, n_candidates, n_admitted_for_next_branch, n_source_redundancy_audit_only, n_target_msa_precompute_blocked, target_msa_precompute_blocked_targets, source_redundancy_audit_targets, next_action}' \
-  results/m6d_w2_next_branch_candidate_pool.json
-
-jq '{status, n_selected_targets, n_unique_selected_sources, selected_targets, ready_for_strict_preflight, ready_for_cayuga_submission, next_action}' \
-  results/m6d_w2_next_branch_manifest_design.json
-
-jq '{ok, n_targets, n_ready_targets, failures_by_kind, ready_targets}' \
-  results/m6d_w2_expanded_next_branch_manifest.json
-
-jq '{status, ok, n_manifest_targets, n_completed_targets, next_action}' \
-  results/m6d_w2_expanded_next_branch_completion.json
-
-jq '{status, ready_for_cayuga_submission, ready_for_w2_generalization_claim, n_sources, n_audit_targets, audit_targets, claim_boundary, next_action}' \
-  results/m6d_w2_source_redundancy_audit_plan.json
-
-jq '{status, ready_for_target_msa_precompute, ready_for_cayuga_submission, n_seed_pdbs, n_chain_pairs_screened, n_structural_admitted, n_selected_for_manifest, n_unique_selected_rcsb_ids, unique_selected_rcsb_ids, source_diverse_selection}' \
-  results/m6d_w2_expanded_discovery_pool.json
-
-jq '{ok, n_targets, n_ready_targets, failures_by_kind}' \
-  results/m6d_w2_expanded_discovery_targets_manifest.json
-
-python - <<'PY'
-import json
-from pathlib import Path
-for line in Path("results/m6d_w2_expanded_discovery_target_msa_precompute_receipt.jsonl").read_text().splitlines():
-    row = json.loads(line)
-    print(row["target_id"], row["job_id"], row["status"])
-PY
-
-jq '{status, complete, w2: .workstreams.W2_multi_target_panel.status, w2_next: .workstreams.W2_multi_target_panel.next_action, note: "W2 pilot snapshot; canonical W1/W3/W4 boundaries are in the main anchor"}' \
-  results/m6d_project_status_w2_fresh_discovery_pilot.json
-
-jq '{status, branch_id, spend_gate, gate_strategy_groups, claim_boundary}' \
-  results/m6d_w2_target_family_redesign_v5_gate_strategy.json
-
-jq '{protocol_id, gate_strategy_report, gate_strategy_preconditions, ready_for_cayuga_submission, spend_gate}' \
-  configs/m6d_w2_target_family_redesign_v6_candidate_rules.json
-
-jq '{status, n_candidates, n_admitted_for_next_branch, n_source_redundancy_audit_only, source_redundancy_audit_targets, ready_for_revised_manifest, ready_for_cayuga_submission, next_action}' \
-  results/m6d_w2_target_family_redesign_v6_candidate_pool.json
-
-jq '{status, branch_id, ready_for_revised_manifest, ready_for_target_msa_precompute, ready_for_cayuga_submission, candidate_pool_readout, next_branch_protocol}' \
-  results/m6d_w2_target_family_redesign_v6_gate_strategy_resolution.json
-
-jq '{protocol_id, ready_for_cayuga_submission, candidate_pool_readout, cayuga_unlock_conditions}' \
-  configs/m6d_w2_target_family_redesign_v7_protocol.json
-
-jq '{status, n_response_ids, n_selected_seeds, ready_for_local_structural_intake, ready_for_cayuga_submission}' \
-  results/m6d_w2_target_family_redesign_v7_seed_expansion.json
-
-jq '{status, n_seed_pdbs, n_fetch_failures, n_chain_pairs_screened, n_structural_admitted, n_selected_for_manifest, n_unique_selected_rcsb_ids, ready_for_target_msa_precompute, ready_for_cayuga_submission}' \
-  results/m6d_w2_target_family_redesign_v7_discovery_pool.json
-
-jq '{status, ready_for_broad_w2_panel, n_targets, n_sequence_clusters, largest_cluster_fraction, representative_target_ids}' \
-  results/m6d_w2_target_family_redesign_v7_sequence_diversity.json
-
-jq '{status, ready_for_broad_w2_panel, n_targets, n_sequence_clusters, largest_cluster_fraction}' \
-  results/m6d_w2_target_family_redesign_v7_representative_sequence_diversity.json
-
-jq '{ok, n_targets, n_ready_targets, ready_targets, failures_by_kind}' \
-  results/m6d_w2_target_family_redesign_v7_representative_manifest_pre_msa.json
-
-wc -l results/m6d_w2_target_family_redesign_v7_target_msa_precompute_receipt.jsonl
+git status --short --branch
 ```
 
 Then choose the next science branch:

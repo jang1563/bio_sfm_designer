@@ -826,15 +826,17 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 
 | milestone | status | what |
 |---|---|---|
-| M0–M2 | ✅ | scaffold, offline gate on real PDBs, per-regime calibration, live-Claude seam, **biosafety screen** (+HPC head training) |
-| M3 | ✅ | DBTL loop **closed on CPU** (heritable feedback, pluggable acquisition, causal orchestration) |
-| M4 | ✅ | first real backend: **ProteinMPNN → ESMFold** refold; pLDDT→self-consistency AUROC (single-model caveat) |
-| M5a/M5b | ✅ | **conformal risk control** (RCPS/Hoeffding) + the conformal gate on real designs |
-| M6a | ✅ | independent **Boltz-2** refold → honest cross-model AUROC (monomer) |
-| M6b | ✅ | **clean within-regime test** → monomer pLDDT signal is **chance** at fixed difficulty |
-| M6c-lite | ✅ | **complex/binder de-risk** → **pAE_interaction discriminates** (the regime where the gate works) |
-| **M6c (live frontier)** | 🔨 | gate on the complex regime: **RCPS certifies α=0.3 at n=192**. Remaining = §8 |
-| M6d/M6e/M6f | ⬜ | RFdiffusion de-novo binders · live Claude (blocked on P0 key) · DX one-command campaign |
+| M0-M2 | complete | scaffold, offline gate on real PDBs, per-regime calibration, provider seam, and fail-closed biosafety screen |
+| M3 | engineering complete | CPU DBTL loop with heritable feedback, pluggable acquisition, and causal orchestration |
+| M4 | complete | first real ProteinMPNN-to-ESMFold backend and the documented single-model caveat |
+| M5a/M5b | complete | conformal/RCPS risk control and a gate over real design records |
+| M6a/M6b | complete negative result | independent Boltz-2 monomer refold; clean within-regime testing shows monomer confidence is chance-level as a fine trust signal |
+| M6c | bounded positive anchor | complex `pAE_interaction` discriminates target-wise; the canonical split-LTT reanalysis does not support a universal alpha=0.3 claim |
+| M6d / W2-W2c | complete negative result | multi-target and target-adaptive panels completed; universal and selective-pAE viability claims are not supported |
+| M6e / W3 | complete unresolved result | the frozen 58-case AF2 mechanism panel completed; the joint outcome is `context_dependent_or_unresolved` |
+| M6e successor / W3b | fit-ready, no submit | eight fresh roles, MSAs, execution/runtime locks, matched-record contract, and fit packet are ready; zero fit jobs or W3b records exist |
+| M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
+| M7/M8 | future | live gated orchestration and a new de-novo generator remain downstream of W3b and productive W4 evidence |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
 Claude plan (`~/.claude/plans/velvety-greeting-dijkstra.md`) is historical context only.
@@ -1075,8 +1077,9 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
    `1MEL_MB`, `1GCQ_CB`, and `2IDO_CD`, and completed 500 records total. It is still
    `multi_target_evaluable_not_certified` at alpha=0.2. Seed sensitivity makes only
    `3PC8_AB` near alpha=0.2: alpha=0.3 certifies in 100/100 split seeds, alpha=0.2 in
-   4/100 split seeds, with estimated extra records median 22. The current next-action
-   artifact is `results/m6d_followup_next_science_actions.{json,md}`. A target-specific
+   4/100 split seeds, with estimated extra records median 22. The historical local next-action
+   artifact was `results/m6d_followup_next_science_actions.{json,md}`; the current tracked resume
+   surface is `results/m6d_goal_state_refresh_report.{json,md}`. A target-specific
    `3PC8_AB` t0.3 mini-scale from `results/m6d_followup_3PC8_AB_next_batch.{json,sh}`
    completed on Cayuga (jobs 3056320/3056321), wrote 50 new records to
    `hpc_outputs/m6d_followup_3PC8_AB_scale_t030`, and

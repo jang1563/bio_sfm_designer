@@ -22,9 +22,10 @@ Current status:
   `1BRS_AD`/`3PC8_AB` and adding `1MEL_MB`, `1GCQ_CB`, and `2IDO_CD`
   completed with 5/5 targets and 500 records, but remains
   `multi_target_evaluable_not_certified` at alpha=0.2
-- `results/m6d_followup_next_science_actions.{json,md}`: current resume
-  anchor; `3PC8_AB` is now alpha=0.2 certified after target-specific mini-scale,
-  but this is target-specific rather than W2 generalization
+- `results/m6d_followup_next_science_actions.{json,md}`: historical local
+  action ledger for this panel; `3PC8_AB` became alpha=0.2 certified after
+  target-specific mini-scale, but this is not W2 generalization. The current
+  tracked project resume anchor is `results/m6d_goal_state_refresh_report.{json,md}`.
 
 Do not submit another identical W2 panel before replacing the low-success targets
 or redesigning the generation/evaluation protocol for them.

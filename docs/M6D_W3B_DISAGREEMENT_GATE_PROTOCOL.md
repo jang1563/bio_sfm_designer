@@ -1,8 +1,14 @@
 # M6d W3b predictor-disagreement-aware gate
 
-Status: `w3b_design_power_qualified_inputs_incomplete_no_submit`.
+Frozen preregistration status: `w3b_design_power_qualified_inputs_incomplete_no_submit`.
 
 Date: 2026-07-14.
+
+Operational update, 2026-07-15: the frozen protocol below is unchanged. The separately approved target-MSA
+stage completed 8/8, the post-MSA design audit and immutable execution/runtime locks pass, and the fit
+approval packet is `w3b_fit_packet_ready_awaiting_explicit_approval`. No W3b candidate, predictor,
+certification, held-out-test, or claim output exists. See `docs/M6D_W3B_TARGET_MSA_COMPLETION.md` and
+`docs/M6D_W3B_FIT_APPROVAL.md` for the current execution boundary.
 
 ## Scientific question
 
@@ -115,11 +121,12 @@ seed `0`, and reject duplicate candidate sequences. Six H100 fit jobs receive fo
 `--no-requeue`, so fit cannot allocate more than the protocol-wide 24 H100 GPU-hour ceiling. Historical
 approval snapshots were not rewritten.
 
-Current target-MSA readiness is 0/8. No target-MSA query, candidate generation, predictor run,
-scheduler submission, API request, or GPU spend is authorized. The hash-bound MSA-only packet is ready
-in `docs/M6D_W3B_TARGET_MSA_APPROVAL.md` and awaits separate exact approval. The downstream fit producer
-contract is documented in `docs/M6D_W3B_FIT_APPROVAL.md`; its readiness is audit-clean but cannot emit an
-approval packet until the target-MSA-derived execution lock exists.
+At preregistration, target-MSA readiness was 0/8 and the MSA-only packet authorized nothing. That historical
+packet was later consumed exactly once: all eight jobs completed, strict replay passed, and the
+target-MSA-derived execution lock was materialized. Those later operational facts do not modify this frozen
+scientific protocol. The downstream fit producer contract and current no-submit approval packet are in
+`docs/M6D_W3B_FIT_APPROVAL.md`; fit compute still requires its separate exact approval and cannot authorize
+certification, held-out test, adaptive top-up, or claims.
 
 ## Reproducibility
 

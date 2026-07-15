@@ -1,9 +1,9 @@
-"""Refresh current M6d goal artifacts from terminal W2b and prospective W2c evidence.
+"""Refresh current M6d goal artifacts from the ordered W2b-W3b evidence chain.
 
-The older goal audits contain useful historical detail but predate W2b.  This
-refresh layer preserves that detail, marks obsolete W2 execution branches as
-historical, and replaces every current-status and next-action surface with one
-consistent terminal-W2b / prospective-W2c state.
+The older goal audits contain useful historical detail but predate later W2c,
+W3, and W3b results. This refresh layer preserves that detail, marks obsolete
+execution branches as historical, and replaces every current-status and
+next-action surface with one fail-closed state derived from validated evidence.
 """
 
 from __future__ import annotations
@@ -62,6 +62,14 @@ _W3_MECHANISM_NEXT_ACTION = (
     "Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without "
     "prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before "
     "executing the frozen 58-case W3 mechanism panel."
+)
+_W3B_FIT_APPROVAL_PHRASE = (
+    "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100"
+)
+_W3B_FIT_NEXT_ACTION = (
+    "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. "
+    "Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; "
+    "no certification, held-out-test, or claim authority is included."
 )
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
@@ -606,6 +614,643 @@ def _w3_mechanism_summary(packet: Optional[Dict[str, Any]]) -> Optional[Dict[str
     }
 
 
+def _w3_completion_summary(report: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    if not isinstance(report, dict):
+        return None
+    three_pc8 = report.get("three_pc8") if isinstance(report.get("three_pc8"), dict) else {}
+    w2c = report.get("w2c") if isinstance(report.get("w2c"), dict) else {}
+    checks = {
+        "artifact_exact": report.get("artifact") == "m6d_w3_mechanism_panel_adjudication",
+        "status_exact": report.get("status") == "adjudicated",
+        "audit_ok": report.get("audit_ok") is True and report.get("failures") == [],
+        "joint_outcome_exact": report.get("joint_outcome") == "context_dependent_or_unresolved",
+        "three_pc8_counts_exact": (
+            three_pc8.get("n_discordant") == 12
+            and three_pc8.get("aligns_with_chai") == 12
+            and three_pc8.get("aligns_with_boltz") == 0
+            and three_pc8.get("n_controls") == 6
+            and three_pc8.get("control_successes") == 6
+            and three_pc8.get("outcome") == "chai_supported_on_challenge_panel"
+        ),
+        "w2c_counts_exact": (
+            w2c.get("n_rows") == 40
+            and w2c.get("n_targets") == 8
+            and w2c.get("label_agreement_with_boltz") == 30
+            and w2c.get("targets_with_at_least_4_of_5_agreement") == 5
+            and w2c.get("label_agreement_fraction") == 0.75
+            and w2c.get("outcome") == "mixed_or_contract_blocked"
+        ),
+        "population_claim_false": (
+            report.get("can_claim_population_level_independent_predictor_robustness") is False
+        ),
+        "w2c_rescue_false": report.get("can_reopen_or_rescue_w2c") is False,
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3 completion invariants failed: {', '.join(failed)}")
+    return {
+        "status": "w3_mechanism_panel_adjudicated_context_dependent_or_unresolved",
+        "audit_ok": True,
+        "n_cases": 58,
+        "joint_outcome": report.get("joint_outcome"),
+        "three_pc8": three_pc8,
+        "w2c": w2c,
+        "can_claim_population_level_independent_predictor_robustness": False,
+        "can_reopen_or_rescue_w2c": False,
+        "claim_boundary": report.get("claim_boundary"),
+        "checks": checks,
+    }
+
+
+def _w3b_fit_ready_summary(
+    design_gate: Dict[str, Any],
+    target_msa_lifecycle: Dict[str, Any],
+    execution_manifest: Dict[str, Any],
+    execution_input_lock: Dict[str, Any],
+    runtime_readiness: Dict[str, Any],
+    matched_record_contract: Dict[str, Any],
+    fit_packet_readiness: Dict[str, Any],
+    fit_approval_packet: Dict[str, Any],
+) -> Dict[str, Any]:
+    fresh = (
+        design_gate.get("fresh_target_contract")
+        if isinstance(design_gate.get("fresh_target_contract"), dict)
+        else {}
+    )
+    power = (
+        design_gate.get("certification_power")
+        if isinstance(design_gate.get("certification_power"), dict)
+        else {}
+    )
+    budget = (
+        design_gate.get("compute_budget")
+        if isinstance(design_gate.get("compute_budget"), dict)
+        else {}
+    )
+    lifecycle_manifest = (
+        target_msa_lifecycle.get("strict_manifest")
+        if isinstance(target_msa_lifecycle.get("strict_manifest"), dict)
+        else {}
+    )
+    reconciliation = (
+        target_msa_lifecycle.get("allocation_telemetry_reconciliation")
+        if isinstance(target_msa_lifecycle.get("allocation_telemetry_reconciliation"), dict)
+        else {}
+    )
+    manifest_targets = [
+        target for target in execution_manifest.get("targets", []) if isinstance(target, dict)
+    ]
+    input_targets = [
+        target
+        for target in execution_input_lock.get("binding", {}).get("targets", [])
+        if isinstance(target, dict)
+    ]
+    lifecycle_targets = [
+        target for target in target_msa_lifecycle.get("target_artifacts", []) if isinstance(target, dict)
+    ]
+    fit_targets = [
+        target for target in fit_packet_readiness.get("fit_targets", []) if isinstance(target, dict)
+    ]
+    approval_targets = [
+        target for target in fit_approval_packet.get("fit_targets", []) if isinstance(target, dict)
+    ]
+    target_ids = [str(value) for value in fresh.get("target_ids", [])]
+    manifest_ids = [str(value) for value in execution_manifest.get("target_ids", [])]
+    input_ids = [str(target.get("target_id")) for target in input_targets]
+    lifecycle_ids = [str(value) for value in target_msa_lifecycle.get("target_ids", [])]
+    fit_ids = [str(target.get("target_id")) for target in fit_targets]
+    approval_fit_ids = [str(target.get("target_id")) for target in approval_targets]
+    manifest_fit_ids = [
+        str(target.get("id"))
+        for target in manifest_targets
+        if target.get("experimental_role") == "fit"
+    ]
+    lifecycle_msa = {
+        str(target.get("target_id")): target.get("target_msa_sha256")
+        for target in lifecycle_targets
+    }
+    manifest_msa = {
+        str(target.get("id")): target.get("target_msa_sha256") for target in manifest_targets
+    }
+    input_msa = {
+        str(target.get("target_id")): target.get("target_msa_sha256") for target in input_targets
+    }
+    approval_contract = (
+        fit_packet_readiness.get("approval_contract")
+        if isinstance(fit_packet_readiness.get("approval_contract"), dict)
+        else {}
+    )
+    approval_contract_copy = (
+        fit_approval_packet.get("approval_contract")
+        if isinstance(fit_approval_packet.get("approval_contract"), dict)
+        else {}
+    )
+    bound_paths = {
+        str(item.get("path"))
+        for item in fit_packet_readiness.get("bound_artifacts", [])
+        if isinstance(item, dict)
+    }
+    expected_roles = {"fit": 3, "certification": 3, "held_out_test": 2}
+    checks = {
+        "design_gate_exact": (
+            design_gate.get("artifact") == "m6d_w3b_disagreement_design_gate"
+            and design_gate.get("status") == "w3b_design_power_qualified_inputs_ready_no_submit"
+            and design_gate.get("audit_ok") is True
+            and design_gate.get("failures") == []
+            and design_gate.get("design_power_qualified") is True
+            and design_gate.get("inputs_ready") is True
+            and design_gate.get("execution_ready") is False
+            and design_gate.get("no_submit") is True
+            and design_gate.get("cayuga_submission_allowed") is False
+            and design_gate.get("can_claim_w3b") is False
+        ),
+        "design_scope_exact": (
+            fresh.get("n_targets") == 8
+            and fresh.get("role_counts") == expected_roles
+            and fresh.get("target_msa_ready") is True
+            and fresh.get("missing_target_msa_targets") == []
+            and len(target_ids) == len(set(target_ids)) == 8
+            and _is_sha256(design_gate.get("locked_scientific_digest"))
+        ),
+        "power_and_budget_exact": (
+            power.get("accepted_rows") == 100
+            and power.get("conditional_certification_power", 0.0) >= 0.8
+            and power.get("maximum_certifiable_false_accepts") == 10
+            and budget.get("maximum_candidate_designs") == 870
+            and budget.get("maximum_predictor_evaluations") == 1740
+            and budget.get("maximum_h100_gpu_hours") == 24.0
+        ),
+        "target_msa_lifecycle_complete": (
+            target_msa_lifecycle.get("artifact") == "m6d_w3b_target_msa_lifecycle"
+            and target_msa_lifecycle.get("status") == "target_msa_precompute_complete_8_of_8"
+            and target_msa_lifecycle.get("audit_ok") is True
+            and target_msa_lifecycle.get("completion_ok") is True
+            and target_msa_lifecycle.get("failures") == []
+            and target_msa_lifecycle.get("n_failures") == 0
+            and target_msa_lifecycle.get("n_targets") == 8
+            and target_msa_lifecycle.get("jobs_terminal_success") is True
+            and target_msa_lifecycle.get("receipt_present") is True
+            and target_msa_lifecycle.get("summary_present") is True
+            and target_msa_lifecycle.get("within_gpu_budget") is True
+            and target_msa_lifecycle.get("gpu_allocation_hours", 9.0)
+            <= target_msa_lifecycle.get("maximum_a40_gpu_hours", 8.0)
+            and target_msa_lifecycle.get("can_submit_candidate_generation_or_candidate_level_prediction")
+            is False
+            and target_msa_lifecycle.get("can_claim_w3b") is False
+        ),
+        "target_msa_strict_replay": (
+            lifecycle_manifest.get("ok") is True
+            and lifecycle_manifest.get("n_targets") == 8
+            and lifecycle_manifest.get("n_ready_targets") == 8
+            and lifecycle_manifest.get("failures") == []
+            and len(lifecycle_targets) == 8
+            and all(
+                target.get("target_msa_report_ok") is True
+                and target.get("target_sequence_sha256")
+                == target.get("expected_target_sequence_sha256")
+                and _is_sha256(target.get("target_msa_sha256"))
+                and _is_sha256(target.get("target_msa_report_sha256"))
+                for target in lifecycle_targets
+            )
+        ),
+        "telemetry_reconciliation_scoped": (
+            target_msa_lifecycle.get("telemetry_reconciliation_applied") is True
+            and reconciliation.get("status") == "allocation_telemetry_reconciled"
+            and reconciliation.get("audit_ok") is True
+            and reconciliation.get("failures") == []
+            and len(reconciliation.get("normalized_job_ids", [])) == 8
+        ),
+        "execution_manifest_exact": (
+            execution_manifest.get("artifact") == "m6d_w3b_execution_target_manifest"
+            and execution_manifest.get("status") == "w3b_execution_inputs_locked_no_submit"
+            and execution_manifest.get("no_submit") is True
+            and execution_manifest.get("cayuga_submission_allowed") is False
+            and execution_manifest.get("can_generate_candidates_or_run_predictors") is False
+            and execution_manifest.get("role_counts") == expected_roles
+            and execution_manifest.get("total_candidate_designs") == 870
+            and execution_manifest.get("total_matched_predictor_evaluations") == 1740
+            and len(manifest_targets) == 8
+        ),
+        "execution_input_lock_exact": (
+            execution_input_lock.get("artifact") == "m6d_w3b_execution_input_lock"
+            and execution_input_lock.get("status") == "w3b_execution_input_locked_no_submit"
+            and execution_input_lock.get("audit_ok") is True
+            and execution_input_lock.get("failures") == []
+            and execution_input_lock.get("no_submit") is True
+            and execution_input_lock.get("n_targets") == 8
+            and execution_input_lock.get("n_artifacts") == 56
+            and execution_input_lock.get("can_generate_candidates_or_run_predictors") is False
+            and execution_input_lock.get("can_claim_w3b") is False
+            and _is_sha256(execution_input_lock.get("lock_digest_sha256"))
+        ),
+        "target_and_msa_locks_match": (
+            target_ids == manifest_ids == lifecycle_ids == input_ids
+            and lifecycle_msa == manifest_msa == input_msa
+            and all(_is_sha256(value) for value in lifecycle_msa.values())
+            and execution_manifest.get("locked_scientific_digest")
+            == design_gate.get("locked_scientific_digest")
+            == execution_input_lock.get("binding", {}).get("locked_scientific_digest")
+            and execution_manifest.get("target_msa_lifecycle_sha256")
+            == execution_input_lock.get("binding", {}).get("target_msa_lifecycle_sha256")
+        ),
+        "runtime_lock_ready": (
+            runtime_readiness.get("artifact") == "m6d_w3b_runtime_lock_readiness"
+            and runtime_readiness.get("status")
+            == "w3b_runtime_lock_ready_for_separate_fit_approval_packet"
+            and runtime_readiness.get("audit_ok") is True
+            and runtime_readiness.get("failures") == []
+            and runtime_readiness.get("n_failures") == 0
+            and runtime_readiness.get("execution_lock_ready") is True
+            and runtime_readiness.get("runtime_identity_ready") is True
+            and runtime_readiness.get("fit_packet_prerequisites_ready") is True
+            and runtime_readiness.get("can_submit_fit_stage") is False
+            and runtime_readiness.get("can_generate_candidates_or_run_predictors") is False
+            and runtime_readiness.get("can_claim_w3b") is False
+            and runtime_readiness.get("no_submit") is True
+            and _is_sha256(runtime_readiness.get("runtime_lock_sha256"))
+            and _is_sha256(runtime_readiness.get("runtime_lock_digest_sha256"))
+        ),
+        "matched_record_contract_ready": (
+            matched_record_contract.get("artifact") == "m6d_w3b_matched_record_contract"
+            and matched_record_contract.get("status")
+            == "w3b_matched_record_contract_ready_for_stage_inputs"
+            and matched_record_contract.get("audit_ok") is True
+            and matched_record_contract.get("failures") == []
+            and matched_record_contract.get("n_failures") == 0
+            and matched_record_contract.get("execution_lock_ready") is True
+            and matched_record_contract.get("runtime_identity_ready") is True
+            and matched_record_contract.get("assembly_ready") is True
+            and matched_record_contract.get("can_run_candidate_generation_or_prediction") is False
+            and matched_record_contract.get("can_claim_w3b") is False
+            and matched_record_contract.get("no_submit") is True
+            and matched_record_contract.get("required_predictors")
+            == ["boltz2_complex", "af2_multimer_colabfold_v1"]
+            and matched_record_contract.get("stage_records_per_target")
+            == {"fit": 60, "certification": 150, "held_out_test": 120}
+            and matched_record_contract.get("runtime_lock_sha256")
+            == runtime_readiness.get("runtime_lock_sha256")
+            and matched_record_contract.get("runtime_lock_digest_sha256")
+            == runtime_readiness.get("runtime_lock_digest_sha256")
+        ),
+        "fit_packet_ready_no_submit": (
+            fit_packet_readiness.get("artifact") == "m6d_w3b_fit_packet_readiness"
+            and fit_packet_readiness.get("status")
+            == "w3b_fit_packet_ready_awaiting_explicit_approval"
+            and fit_packet_readiness.get("audit_ok") is True
+            and fit_packet_readiness.get("failures") == []
+            and fit_packet_readiness.get("n_failures") == 0
+            and fit_packet_readiness.get("fit_packet_ready") is True
+            and fit_packet_readiness.get("execution_lock_ready") is True
+            and fit_packet_readiness.get("runtime_identity_ready") is True
+            and fit_packet_readiness.get("matched_record_contract_ready") is True
+            and fit_packet_readiness.get("explicit_fit_approval_recorded") is False
+            and fit_packet_readiness.get("can_submit_fit_stage") is False
+            and fit_packet_readiness.get("can_run_candidate_generation_or_prediction") is False
+            and fit_packet_readiness.get("submitted_jobs") == 0
+            and fit_packet_readiness.get("can_claim_w3b") is False
+            and fit_packet_readiness.get("no_submit") is True
+            and _is_sha256(fit_packet_readiness.get("packet_digest_sha256"))
+        ),
+        "fit_scope_exact": (
+            manifest_fit_ids == fit_ids == approval_fit_ids
+            and len(fit_ids) == len(set(fit_ids)) == 3
+            and all(target.get("records_planned") == 60 for target in fit_targets)
+            and approval_contract.get("stage") == "fit"
+            and approval_contract.get("target_count") == 3
+            and approval_contract.get("records_per_target") == 60
+            and approval_contract.get("candidate_designs") == 180
+            and approval_contract.get("matched_predictor_evaluations") == 360
+            and approval_contract.get("proteinmpnn_cpu_jobs") == 3
+            and approval_contract.get("boltz_h100_jobs") == 3
+            and approval_contract.get("af2_h100_jobs") == 3
+            and approval_contract.get("user_phrase") == _W3B_FIT_APPROVAL_PHRASE
+            and approval_contract.get("authorizes_certification") is False
+            and approval_contract.get("authorizes_held_out_test") is False
+            and approval_contract.get("authorizes_claim") is False
+        ),
+        "fit_approval_packet_exact": (
+            fit_approval_packet.get("artifact") == "m6d_w3b_fit_approval_packet"
+            and fit_approval_packet.get("status") == "w3b_fit_approval_packet_ready_no_submit"
+            and fit_approval_packet.get("audit_ok") is True
+            and fit_approval_packet.get("approval_recorded") is False
+            and fit_approval_packet.get("submitted_jobs") == 0
+            and fit_approval_packet.get("can_claim_w3b") is False
+            and fit_approval_packet.get("no_submit") is True
+            and approval_contract_copy == approval_contract
+            and fit_approval_packet.get("bound_artifacts")
+            == fit_packet_readiness.get("bound_artifacts")
+            and fit_approval_packet.get("readiness_packet_digest_sha256")
+            == fit_packet_readiness.get("packet_digest_sha256")
+        ),
+        "fit_packet_binds_execution_locks": {
+            "configs/m6d_w3b_execution_targets.json",
+            "configs/m6d_w3b_execution_input_lock.json",
+            "configs/m6d_w3b_runtime_lock.json",
+            "results/m6d_w3b_runtime_lock_readiness.json",
+            "results/m6d_w3b_matched_record_contract.json",
+        }.issubset(bound_paths),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3b fit-ready invariants failed: {', '.join(failed)}")
+    return {
+        "status": "w3b_fit_packet_ready_awaiting_explicit_approval",
+        "audit_ok": True,
+        "target_msa_status": target_msa_lifecycle.get("status"),
+        "target_ids": target_ids,
+        "role_counts": expected_roles,
+        "fit_target_ids": fit_ids,
+        "certification_power": power.get("conditional_certification_power"),
+        "target_msa_gpu_hours": target_msa_lifecycle.get("gpu_allocation_hours"),
+        "execution_lock": {
+            "n_targets": 8,
+            "n_artifacts": 56,
+            "candidate_designs": 870,
+            "matched_predictor_evaluations": 1740,
+            "lock_digest_sha256": execution_input_lock.get("lock_digest_sha256"),
+        },
+        "fit_scope": {
+            "candidate_designs": 180,
+            "matched_predictor_evaluations": 360,
+            "proteinmpnn_cpu_jobs": 3,
+            "boltz_h100_jobs": 3,
+            "af2_h100_jobs": 3,
+        },
+        "runtime_identity_ready": True,
+        "matched_record_contract_ready": True,
+        "fit_packet_ready": True,
+        "approval_recorded": False,
+        "submitted_jobs": 0,
+        "no_submit": True,
+        "can_claim_w3b": False,
+        "approval_phrase": _W3B_FIT_APPROVAL_PHRASE,
+        "packet_digest_sha256": fit_packet_readiness.get("packet_digest_sha256"),
+        "claim_boundary": fit_packet_readiness.get("claim_boundary"),
+        "next_action": _W3B_FIT_NEXT_ACTION,
+        "checks": checks,
+    }
+
+
+def _apply_w3b_fit_ready_state(
+    bundle: Dict[str, Dict[str, Any]],
+    w3_completion: Dict[str, Any],
+    w3b: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3b_fit_stage_explicit_approval"
+    next_action = _W3B_FIT_NEXT_ACTION
+    ranked_actions = [
+        "Preserve the completed 58-case W3 adjudication and the frozen W3b protocol without retuning.",
+        "Wait for the exact W3b fit-stage approval; generic continuation does not authorize compute.",
+        "After approval, submit only the packet-bound 3 CPU and 6 H100 fit jobs.",
+        "Sync and assemble exactly 180 candidates and 360 matched predictor evaluations.",
+        "Apply the frozen fit stop rule before preparing any separately approved certification stage.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor["objective"] = (
+        "Advance the completed W3 result into the preregistered W3b matched-predictor experiment: "
+        "preserve terminal W2c and context-dependent W3 evidence, execute only the fit stage after exact "
+        "approval, and keep certification, held-out test, and claims separately gated."
+    )
+    anchor.setdefault("claim_boundaries", {}).update({
+        "w2_multi_target_generalization": "not_supported",
+        "w2b_target_adaptive_viability": "terminal_not_supported",
+        "w2c_selective_target_adaptive_viability": "terminal_not_supported",
+        "w3_independent_predictor_robustness": "context_dependent_or_unresolved",
+        "w3b_disagreement_aware_gate": "not_tested_fit_packet_ready",
+    })
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3_mechanism_adjudication": "results/m6d_w3_mechanism_panel_adjudication.json",
+        "w3_mechanism_completion": "docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md",
+        "w3b_protocol": "configs/m6d_w3b_disagreement_gate_protocol.json",
+        "w3b_design_gate_post_msa": "results/m6d_w3b_disagreement_design_gate_post_msa.json",
+        "w3b_target_msa_completion": "results/m6d_w3b_target_msa_lifecycle.json",
+        "w3b_execution_manifest": "configs/m6d_w3b_execution_targets.json",
+        "w3b_execution_input_lock": "configs/m6d_w3b_execution_input_lock.json",
+        "w3b_runtime_lock": "configs/m6d_w3b_runtime_lock.json",
+        "w3b_matched_record_contract": "results/m6d_w3b_matched_record_contract.json",
+        "w3b_fit_packet_readiness": "results/m6d_w3b_fit_packet_readiness.json",
+        "w3b_fit_approval_packet": "results/m6d_w3b_fit_approval_packet.json",
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_in_progress_w3_complete_w3b_fit_packet_ready_no_submit",
+        "goal_progress": "w3b_fit_packet_ready_awaiting_explicit_approval",
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3": w3_completion["status"],
+        "w3_joint_outcome": w3_completion["joint_outcome"],
+        "w3_execution_complete": True,
+        "w3_population_robustness_claim_supported": False,
+        "w3b": w3b["status"],
+        "w3b_target_msa_status": w3b["target_msa_status"],
+        "w3b_target_count": len(w3b["target_ids"]),
+        "w3b_fit_target_count": len(w3b["fit_target_ids"]),
+        "w3b_runtime_identity_ready": True,
+        "w3b_matched_record_contract_ready": True,
+        "w3b_fit_packet_ready": True,
+        "w3b_fit_approval_recorded": False,
+        "w3b_fit_jobs_submitted": 0,
+        "w3b_cayuga_submission_allowed": False,
+        "w3b_can_claim": False,
+        "next_action": next_action,
+    })
+    for key in ("w3_runtime_ready", "w3_execution_ready", "w3_compute_approval_recorded"):
+        current.pop(key, None)
+    anchor["w3_mechanism_completion"] = w3_completion
+    anchor["w3b_successor"] = w3b
+    anchor["next_resume_steps"] = [
+        "read docs/M6D_W3_MECHANISM_PANEL_COMPLETION.md and preserve the terminal W3 outcome",
+        "read docs/M6D_W3B_FIT_APPROVAL.md and the hash-bound fit approval packet",
+        "do not infer fit approval from continue, go ahead, or goal-mode resume",
+        "after exact approval, submit only the 3 CPU plus 6 H100 fit jobs bound to the packet",
+        "stop after fit evaluation unless the frozen fit gate passes and a new stage is approved",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3_status": w3_completion["status"],
+        "w3b_status": w3b["status"],
+        "w3b_fit_approval_recorded": False,
+        "w3b_fit_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3_complete_w3b_fit_approval_wait",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": w3b,
+    })
+    completion["claim_boundary"] = {
+        "w1": "target-specific certified evidence preserved",
+        "w2": "universal multi-target generalization not supported",
+        "w2b": "terminally not supported; no test compute and no extension",
+        "w2c": "threshold learning terminally retained zero eligible targets; no later-stage compute",
+        "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
+        "w3b": "fit packet ready without approval, candidate generation, prediction, certification, or claim",
+        "w4": "closed-loop plumbing evidence preserved as fail-closed only",
+    }
+    completion.setdefault("workstream_status", {}).update({
+        "W3_mechanism_panel": {
+            "complete": True,
+            "scientific_success": False,
+            "status": w3_completion["status"],
+        },
+        "W3b_disagreement_gate": {
+            "complete": False,
+            "scientific_success": None,
+            "status": w3b["status"],
+            "remaining_requirement": requirement,
+        },
+    })
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3_complete_w3b_fit_packet_ready_approval_wait",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift["claim_boundary"] = {
+        "publication": "not_current_goal",
+        "w1": "preserved_target_specific_certificate",
+        "w2": "generalization_not_supported",
+        "w2b": "terminal_not_supported_no_extension",
+        "w2c": "threshold_learning_terminal_no_viability_claim",
+        "w3": "completed_context_dependent_or_unresolved_no_population_claim",
+        "w3b": "fit_packet_ready_no_records_no_claim",
+        "w4": "closed_loop_plumbing_only",
+    }
+    drift["active_risks"] = [
+        {
+            "id": "w3_result_reinterpretation",
+            "status": "managed",
+            "control": "W3 remains context-dependent or unresolved and cannot rescue W2c",
+        },
+        {
+            "id": "w3b_stage_authority_leak",
+            "status": "managed",
+            "control": "fit approval cannot authorize certification, held-out test, adaptive top-up, or claims",
+        },
+        {
+            "id": "runtime_or_msa_substitution",
+            "status": "managed",
+            "control": "fit records must match the frozen runtime identities, execution lock, and per-target MSA hashes",
+        },
+        {
+            "id": "verification_instead_of_science",
+            "status": "managed",
+            "control": "the next scientific action is the bounded fit stage after approval, not another W2 or W3 rescue audit",
+        },
+    ]
+    drift["drift_assessment"] = {
+        "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
+        "protocol": "no_drift_terminal_w2c_and_completed_w3_preserved_w3b_preregistered",
+        "claims": "no_drift_negative_and_context_dependent_boundaries_preserved",
+        "execution": "w3b_fit_packet_ready_compute_not_approved_no_submit",
+        "operational_status": "current_surfaces_reconciled_to_w3b_fit_approval_gate",
+        "major_direction_drift": False,
+    }
+    drift.setdefault("current_state", {}).update({
+        "W3_mechanism_completion": w3_completion,
+        "W3b_disagreement_gate": w3b,
+    })
+    drift["current_state"].setdefault("completion_audit", {}).update({
+        "status": completion["status"],
+        "can_mark_goal_complete": False,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3_complete_w3b_fit_packet_ready_awaiting_explicit_approval",
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": w3b,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "historical_w2c_submission_performed": True,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions["claim_boundary"] = {
+        "w1_target_specific": "supported",
+        "w2_multi_target_generalization": "not_supported",
+        "w2b_target_adaptive_viability": "terminal_not_supported",
+        "w2c_selective_target_adaptive_viability": "terminal_not_supported",
+        "w3_independent_predictor_robustness": "context_dependent_or_unresolved",
+        "w3b_disagreement_aware_gate": "not_tested_fit_packet_ready",
+        "w4_closed_loop": "fail_closed_plumbing_only",
+    }
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3_complete_w3b_fit_approval_wait"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3b matched-predictor fit-stage approval boundary",
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": w3b,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3_mechanism_completion": w3_completion["status"],
+        "w3b_fit_packet": w3b["status"],
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_submitted": 0,
+        "jobs_completed": 0,
+        "jobs_running": 0,
+        "job_state": "w3b_fit_packet_ready_not_approved_no_submit",
+        "w3_execution_complete": True,
+        "w3b_target_msa_status": w3b["target_msa_status"],
+        "w3b_target_msa_jobs_completed": 8,
+        "w3b_fit_packet_status": w3b["status"],
+        "w3b_fit_approval_recorded": False,
+        "w3b_fit_jobs_submitted": 0,
+        "w3b_submission_allowed": False,
+        "next_action": next_action,
+    })
+    for key in ("w3_runtime_ready", "w3_execution_ready", "w3_compute_approval_recorded"):
+        hpc.pop(key, None)
+    harness["claim_boundary"] = {
+        "w2b": "terminal_not_supported",
+        "w2c": "threshold_learning_terminal_no_viability_claim",
+        "w3": "completed_context_dependent_or_unresolved",
+        "w3b": "fit_packet_ready_no_records_no_claim",
+    }
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3_complete_w3b_fit_packet_ready_approval_wait",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": w3b,
+        "submission_performed": False,
+        "historical_w2c_submission_performed": True,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -620,6 +1265,15 @@ def refresh_bundle(
     w2c_fit_learn_submission: Optional[Dict[str, Any]] = None,
     w2c_threshold_learning_report: Optional[Dict[str, Any]] = None,
     w3_mechanism_packet: Optional[Dict[str, Any]] = None,
+    w3_mechanism_completion: Optional[Dict[str, Any]] = None,
+    w3b_design_gate: Optional[Dict[str, Any]] = None,
+    w3b_target_msa_lifecycle: Optional[Dict[str, Any]] = None,
+    w3b_execution_manifest: Optional[Dict[str, Any]] = None,
+    w3b_execution_input_lock: Optional[Dict[str, Any]] = None,
+    w3b_runtime_readiness: Optional[Dict[str, Any]] = None,
+    w3b_matched_record_contract: Optional[Dict[str, Any]] = None,
+    w3b_fit_packet_readiness: Optional[Dict[str, Any]] = None,
+    w3b_fit_approval_packet: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -634,6 +1288,26 @@ def refresh_bundle(
     w2c_fit_submitted = _fit_learn_submission_summary(w2c_fit_learn_submission)
     w2c_fit_result = _fit_learn_result_summary(w2c_threshold_learning_report)
     w3_mechanism = _w3_mechanism_summary(w3_mechanism_packet)
+    w3_completion = _w3_completion_summary(w3_mechanism_completion)
+    w3b_inputs = (
+        w3b_design_gate,
+        w3b_target_msa_lifecycle,
+        w3b_execution_manifest,
+        w3b_execution_input_lock,
+        w3b_runtime_readiness,
+        w3b_matched_record_contract,
+        w3b_fit_packet_readiness,
+        w3b_fit_approval_packet,
+    )
+    if any(value is not None for value in w3b_inputs) and not all(
+        isinstance(value, dict) for value in w3b_inputs
+    ):
+        raise ValueError("W3b fit-ready state requires all eight bound readiness artifacts")
+    w3b = (
+        _w3b_fit_ready_summary(*w3b_inputs)  # type: ignore[arg-type]
+        if all(isinstance(value, dict) for value in w3b_inputs)
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -644,6 +1318,10 @@ def refresh_bundle(
         w2c_fit_result and w2c_fit_result["terminal_after_threshold_learning"]
     ):
         raise ValueError("W3 mechanism packet requires the terminal W2c threshold-learning result")
+    if w3_completion is not None and w3_mechanism is None:
+        raise ValueError("W3 completion requires the validated preregistered mechanism packet")
+    if w3b is not None and w3_completion is None:
+        raise ValueError("W3b fit-ready state requires the validated completed W3 adjudication")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -1481,7 +2159,7 @@ def refresh_bundle(
         "cayuga_submission_allowed": False,
         "next_action": next_action,
     }
-    return {
+    bundle = {
         "anchor": refreshed_anchor,
         "completion": refreshed_completion,
         "drift": refreshed_drift,
@@ -1489,12 +2167,27 @@ def refresh_bundle(
         "harness": refreshed_harness,
         "report": report,
     }
+    if w3b is not None and w3_completion is not None:
+        _apply_w3b_fit_ready_state(
+            bundle,
+            w3_completion,
+            w3b,
+            runtime_goal_active=runtime_goal_active,
+        )
+    return bundle
 
 
 def _target_msa_packet_status_label(status: Any, historical: bool) -> str:
     label = str(status or "not_ready")
     if historical:
         return f"{label} (historical; superseded by completion)"
+    return label
+
+
+def _w3_packet_status_label(status: Any, completed: bool) -> str:
+    label = str(status or "not_preregistered")
+    if completed:
+        return f"{label} (historical; superseded by completed adjudication)"
     return label
 
 
@@ -1505,9 +2198,16 @@ def render_markdown(report: Dict[str, Any]) -> str:
     fit_submission = report.get("w2c_fit_learn_submission") or {}
     fit_result = report.get("w2c_threshold_learning_result") or {}
     w3_mechanism = report.get("w3_mechanism_panel") or {}
+    w3_completion = report.get("w3_mechanism_completion") or {}
+    w3b = report.get("w3b_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
+    )
+    w2c_current_status = fit_result.get("status", report["w2c"]["status"])
+    w3_packet_status = _w3_packet_status_label(
+        w3_mechanism.get("status"),
+        bool(w3_completion),
     )
     return "\n".join([
         "# M6d Goal-State Refresh",
@@ -1516,16 +2216,22 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"Audit ok: `{report['audit_ok']}`.",
         f"Runtime goal active: `{report['runtime_goal_active']}`.",
         f"W2b: `{report['w2b']['status']}`.",
-        f"W2c: `{report['w2c']['status']}`.",
+        f"W2c current: `{w2c_current_status}`.",
+        f"W2c design-gate snapshot: `{report['w2c']['status']}`.",
         f"W2c target-MSA packet: `{target_msa_status}`.",
         f"W2c target-MSA completion: `{target_msa_completion.get('status', 'not_complete')}`.",
         f"W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`.",
         f"W2c fit-learn submission: `{fit_submission.get('status', 'not_submitted')}`.",
         f"W2c threshold-learning result: `{fit_result.get('status', 'not_evaluated')}`.",
-        f"W3 mechanism panel: `{w3_mechanism.get('status', 'not_preregistered')}`.",
+        f"W3 preregistration packet: `{w3_packet_status}`.",
         f"W3 cases: `{w3_mechanism.get('n_cases', 0)}`.",
-        f"W3 runtime ready: `{w3_mechanism.get('runtime_ready', False)}`.",
-        f"W3 execution ready: `{w3_mechanism.get('execution_ready', False)}`.",
+        f"W3 preregistration runtime-ready field: `{w3_mechanism.get('runtime_ready', False)}`.",
+        f"W3 preregistration execution-ready field: `{w3_mechanism.get('execution_ready', False)}`.",
+        f"W3 completion: `{w3_completion.get('status', 'not_complete')}`.",
+        f"W3 joint outcome: `{w3_completion.get('joint_outcome', 'not_adjudicated')}`.",
+        f"W3b: `{w3b.get('status', 'not_ready')}`.",
+        f"W3b fit approval recorded: `{w3b.get('approval_recorded', False)}`.",
+        f"W3b fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -1546,9 +2252,16 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     fit_submission = report.get("w2c_fit_learn_submission") or {}
     fit_result = report.get("w2c_threshold_learning_result") or {}
     w3_mechanism = report.get("w3_mechanism_panel") or {}
+    w3_completion = report.get("w3_mechanism_completion") or {}
+    w3b = report.get("w3b_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
+    )
+    w2c_current_status = fit_result.get("status", report["w2c_successor"]["status"])
+    w3_packet_status = _w3_packet_status_label(
+        w3_mechanism.get("status"),
+        bool(w3_completion),
     )
     return "\n".join([
         "# M6d Goal Completion Audit",
@@ -1560,7 +2273,8 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         "## Current Boundary",
         "",
         f"- W2b: `{report['w2b_terminal_result']['status']}`",
-        f"- W2c: `{report['w2c_successor']['status']}`",
+        f"- W2c current: `{w2c_current_status}`",
+        f"- W2c design-gate snapshot: `{report['w2c_successor']['status']}`",
         f"- W2c execution ready: `{report['w2c_successor']['execution_ready']}`",
         f"- W2c Cayuga submission allowed: `{report['w2c_successor']['cayuga_submission_allowed']}`",
         f"- W2c target-MSA packet: `{target_msa_status}`",
@@ -1568,9 +2282,14 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`",
         f"- W2c fit-learn submission: `{fit_submission.get('status', 'not_submitted')}`",
         f"- W2c threshold-learning result: `{fit_result.get('status', 'not_evaluated')}`",
-        f"- W3 mechanism panel: `{w3_mechanism.get('status', 'not_preregistered')}`",
-        f"- W3 runtime ready: `{w3_mechanism.get('runtime_ready', False)}`",
-        f"- W3 execution ready: `{w3_mechanism.get('execution_ready', False)}`",
+        f"- W3 preregistration packet: `{w3_packet_status}`",
+        f"- W3 preregistration runtime-ready field: `{w3_mechanism.get('runtime_ready', False)}`",
+        f"- W3 preregistration execution-ready field: `{w3_mechanism.get('execution_ready', False)}`",
+        f"- W3 completion: `{w3_completion.get('status', 'not_complete')}`",
+        f"- W3 joint outcome: `{w3_completion.get('joint_outcome', 'not_adjudicated')}`",
+        f"- W3b: `{w3b.get('status', 'not_ready')}`",
+        f"- W3b fit approval recorded: `{w3b.get('approval_recorded', False)}`",
+        f"- W3b fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -1616,6 +2335,8 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     fit_learn = report.get("w2c_fit_learn_approval") or {}
     fit_submission = report.get("w2c_fit_learn_submission") or {}
     fit_result = report.get("w2c_threshold_learning_result") or {}
+    w3_completion = report.get("w3_mechanism_completion") or {}
+    w3b = report.get("w3b_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -1631,6 +2352,10 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W2c fit-learn packet: `{fit_learn.get('status', 'not_ready')}`.",
         f"W2c fit-learn submission: `{fit_submission.get('status', 'not_submitted')}`.",
         f"W2c threshold-learning result: `{fit_result.get('status', 'not_evaluated')}`.",
+        f"W3 completion: `{w3_completion.get('status', 'not_complete')}`.",
+        f"W3b: `{w3b.get('status', 'not_ready')}`.",
+        f"W3b fit approval recorded: `{w3b.get('approval_recorded', False)}`.",
+        f"W3b fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -1646,6 +2371,8 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
 def render_harness_markdown(report: Dict[str, Any]) -> str:
     verification = report["local_verification"]
     hpc = report["hpc_status"]
+    w3_completion = report.get("w3_mechanism_completion") or {}
+    w3b = report.get("w3b_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -1674,6 +2401,10 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W2c fit-learn approval consumed: `{hpc.get('w2c_fit_learn_approval_consumed', False)}`",
         f"- W2c additional submission allowed: `{hpc.get('w2c_additional_submission_allowed', False)}`",
         f"- W2c record generation approved: `{hpc.get('w2c_record_generation_approved', False)}`",
+        f"- W3 completion: `{w3_completion.get('status', 'not_complete')}`",
+        f"- W3b: `{w3b.get('status', 'not_ready')}`",
+        f"- W3b fit approval recorded: `{hpc.get('w3b_fit_approval_recorded', False)}`",
+        f"- W3b fit jobs submitted: `{hpc.get('w3b_fit_jobs_submitted', 0)}`",
         "",
         "## Next Action",
         "",
@@ -1753,6 +2484,42 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w3-mechanism-packet",
         default="configs/m6d_w3_mechanism_panel_protocol.json",
     )
+    parser.add_argument(
+        "--w3-mechanism-completion",
+        default="results/m6d_w3_mechanism_panel_adjudication.json",
+    )
+    parser.add_argument(
+        "--w3b-design-gate",
+        default="results/m6d_w3b_disagreement_design_gate_post_msa.json",
+    )
+    parser.add_argument(
+        "--w3b-target-msa-lifecycle",
+        default="results/m6d_w3b_target_msa_lifecycle.json",
+    )
+    parser.add_argument(
+        "--w3b-execution-manifest",
+        default="configs/m6d_w3b_execution_targets.json",
+    )
+    parser.add_argument(
+        "--w3b-execution-input-lock",
+        default="configs/m6d_w3b_execution_input_lock.json",
+    )
+    parser.add_argument(
+        "--w3b-runtime-readiness",
+        default="results/m6d_w3b_runtime_lock_readiness.json",
+    )
+    parser.add_argument(
+        "--w3b-matched-record-contract",
+        default="results/m6d_w3b_matched_record_contract.json",
+    )
+    parser.add_argument(
+        "--w3b-fit-packet-readiness",
+        default="results/m6d_w3b_fit_packet_readiness.json",
+    )
+    parser.add_argument(
+        "--w3b-fit-approval-packet",
+        default="results/m6d_w3b_fit_approval_packet.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -1820,6 +2587,47 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
                 os.path.exists(args.w3_mechanism_packet)
                 and os.path.exists(args.w2c_threshold_learning_report)
             )
+            else None
+        ),
+        (
+            _load_json(args.w3_mechanism_completion)
+            if os.path.exists(args.w3_mechanism_completion)
+            else None
+        ),
+        _load_json(args.w3b_design_gate) if os.path.exists(args.w3b_design_gate) else None,
+        (
+            _load_json(args.w3b_target_msa_lifecycle)
+            if os.path.exists(args.w3b_target_msa_lifecycle)
+            else None
+        ),
+        (
+            _load_json(args.w3b_execution_manifest)
+            if os.path.exists(args.w3b_execution_manifest)
+            else None
+        ),
+        (
+            _load_json(args.w3b_execution_input_lock)
+            if os.path.exists(args.w3b_execution_input_lock)
+            else None
+        ),
+        (
+            _load_json(args.w3b_runtime_readiness)
+            if os.path.exists(args.w3b_runtime_readiness)
+            else None
+        ),
+        (
+            _load_json(args.w3b_matched_record_contract)
+            if os.path.exists(args.w3b_matched_record_contract)
+            else None
+        ),
+        (
+            _load_json(args.w3b_fit_packet_readiness)
+            if os.path.exists(args.w3b_fit_packet_readiness)
+            else None
+        ),
+        (
+            _load_json(args.w3b_fit_approval_packet)
+            if os.path.exists(args.w3b_fit_approval_packet)
             else None
         ),
         updated_at=args.updated_at,

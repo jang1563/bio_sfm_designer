@@ -243,8 +243,9 @@ Current W2 expanded-discovery branch:
 `results/m6d_w2_expanded_discovery_target_msa_precompute_receipt.jsonl`; the post-job sync/replay plan is
 `results/m6d_w2_expanded_discovery_sync_back.sh`.
 
-Current science-action artifact:
-`results/m6d_followup_next_science_actions.{json,md}`.
+Current tracked goal-state and ranked science-action artifact:
+`results/m6d_goal_state_refresh_report.{json,md}`. The older
+`results/m6d_followup_next_science_actions.{json,md}` files are a local historical ledger.
 
 Current state:
 
@@ -590,11 +591,12 @@ At the start of each goal-mode turn:
    - `results/m6d_w2_fresh_discovery_unique_source_pilot_diagnostic.{json,md}`
    - `results/m6d_project_status_w2_fresh_discovery_pilot.json`
    - `results/m6d_w2_revised_branch.{json,md}`
-	   - `results/m6d_w2_w3_decision_protocol.{json,md}`
-	   - `results/m6d_goal_drift_audit.{json,md}`
-	   - `results/m6d_followup_next_science_actions.{json,md}`
-	   - the latest relevant `results/*readiness*.json`
-	   - the latest relevant `results/*project_status*.json`
+   - `results/m6d_w2_w3_decision_protocol.{json,md}`
+   - `results/m6d_goal_state_refresh_report.{json,md}`
+   - `results/m6d_goal_drift_audit.{json,md}`
+   - local historical `results/m6d_followup_next_science_actions.{json,md}`, when present
+   - the latest relevant `results/*readiness*.json`
+   - the latest relevant `results/*project_status*.json`
 2. Check current git status without reverting unrelated work.
 3. Refresh the live readiness artifact before choosing expensive or stateful work.
 4. Let the JSON artifacts choose the next action. Do not choose by intuition when a status artifact

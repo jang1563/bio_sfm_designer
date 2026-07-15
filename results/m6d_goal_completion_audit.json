@@ -8,19 +8,20 @@
     "w1": "target-specific certified evidence preserved",
     "w2": "universal multi-target generalization not supported",
     "w2b": "terminally not supported; no test compute and no extension",
-    "w2c": "threshold learning terminally retained zero eligible targets; no W2c viability claim or later-stage compute",
-    "w3": "58-case mechanism panel preregistered; runtime and compute approval absent; no positive claim",
+    "w2c": "threshold learning terminally retained zero eligible targets; no later-stage compute",
+    "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
+    "w3b": "fit packet ready without approval, candidate generation, prediction, certification, or claim",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before executing the frozen 58-case W3 mechanism panel.",
+  "next_action": "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3_colabfold_runtime_receipt_then_separate_compute_approval"
+    "W3b_fit_stage_explicit_approval"
   ],
-  "status": "goal_active_w3_mechanism_runtime_gate",
+  "status": "goal_active_w3_complete_w3b_fit_approval_wait",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -974,6 +975,75 @@
     "positive_claim_supported": false,
     "status": "negative_robustness_result_adjudicated"
   },
+  "w3_mechanism_completion": {
+    "audit_ok": true,
+    "can_claim_population_level_independent_predictor_robustness": false,
+    "can_reopen_or_rescue_w2c": false,
+    "checks": {
+      "artifact_exact": true,
+      "audit_ok": true,
+      "joint_outcome_exact": true,
+      "population_claim_false": true,
+      "status_exact": true,
+      "three_pc8_counts_exact": true,
+      "w2c_counts_exact": true,
+      "w2c_rescue_false": true
+    },
+    "claim_boundary": "This adjudicates only the preregistered 58-case mechanism panel. It can support a bounded failure-mechanism interpretation but not population-level robustness or W2c rescue.",
+    "joint_outcome": "context_dependent_or_unresolved",
+    "n_cases": 58,
+    "status": "w3_mechanism_panel_adjudicated_context_dependent_or_unresolved",
+    "three_pc8": {
+      "aligns_with_boltz": 0,
+      "aligns_with_chai": 12,
+      "control_successes": 6,
+      "n_controls": 6,
+      "n_discordant": 12,
+      "outcome": "chai_supported_on_challenge_panel"
+    },
+    "w2c": {
+      "agreement_by_target": {
+        "1EZV_XY": {
+          "agrees": 4,
+          "n": 5
+        },
+        "1F80_BC": {
+          "agrees": 2,
+          "n": 5
+        },
+        "1F99_BA": {
+          "agrees": 2,
+          "n": 5
+        },
+        "1FFG_CD": {
+          "agrees": 4,
+          "n": 5
+        },
+        "1FFK_HR": {
+          "agrees": 5,
+          "n": 5
+        },
+        "1FQ9_CA": {
+          "agrees": 5,
+          "n": 5
+        },
+        "1FR2_BA": {
+          "agrees": 3,
+          "n": 5
+        },
+        "1FYR_CD": {
+          "agrees": 5,
+          "n": 5
+        }
+      },
+      "label_agreement_fraction": 0.75,
+      "label_agreement_with_boltz": 30,
+      "n_rows": 40,
+      "n_targets": 8,
+      "outcome": "mixed_or_contract_blocked",
+      "targets_with_at_least_4_of_5_agreement": 5
+    }
+  },
   "w3_mechanism_panel": {
     "approval_consumed": false,
     "approval_recorded": false,
@@ -1005,6 +1075,75 @@
     "runtime_ready": false,
     "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
   },
+  "w3b_successor": {
+    "approval_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100",
+    "approval_recorded": false,
+    "audit_ok": true,
+    "can_claim_w3b": false,
+    "certification_power": 0.8243330044654517,
+    "checks": {
+      "design_gate_exact": true,
+      "design_scope_exact": true,
+      "execution_input_lock_exact": true,
+      "execution_manifest_exact": true,
+      "fit_approval_packet_exact": true,
+      "fit_packet_binds_execution_locks": true,
+      "fit_packet_ready_no_submit": true,
+      "fit_scope_exact": true,
+      "matched_record_contract_ready": true,
+      "power_and_budget_exact": true,
+      "runtime_lock_ready": true,
+      "target_and_msa_locks_match": true,
+      "target_msa_lifecycle_complete": true,
+      "target_msa_strict_replay": true,
+      "telemetry_reconciliation_scoped": true
+    },
+    "claim_boundary": "Fit-stage packet readiness only. This artifact submits no job, records no approval, runs no candidate or predictor, and supports no W3b or biological-success claim.",
+    "execution_lock": {
+      "candidate_designs": 870,
+      "lock_digest_sha256": "44f8acfbdda7bd42c7acce3b1aadaa111f862efb3b68f15da79d752dcaeb2b37",
+      "matched_predictor_evaluations": 1740,
+      "n_artifacts": 56,
+      "n_targets": 8
+    },
+    "fit_packet_ready": true,
+    "fit_scope": {
+      "af2_h100_jobs": 3,
+      "boltz_h100_jobs": 3,
+      "candidate_designs": 180,
+      "matched_predictor_evaluations": 360,
+      "proteinmpnn_cpu_jobs": 3
+    },
+    "fit_target_ids": [
+      "1FSK_LJ",
+      "1FSX_BA",
+      "1FL7_DC"
+    ],
+    "matched_record_contract_ready": true,
+    "next_action": "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.",
+    "no_submit": true,
+    "packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
+    "role_counts": {
+      "certification": 3,
+      "fit": 3,
+      "held_out_test": 2
+    },
+    "runtime_identity_ready": true,
+    "status": "w3b_fit_packet_ready_awaiting_explicit_approval",
+    "submitted_jobs": 0,
+    "target_ids": [
+      "1FSK_LJ",
+      "1FSX_BA",
+      "1FL7_DC",
+      "1F2U_CD",
+      "1FV1_BA",
+      "1FN3_DC",
+      "1FHJ_BA",
+      "1F3V_BA"
+    ],
+    "target_msa_gpu_hours": 0.21638888888888888,
+    "target_msa_status": "target_msa_precompute_complete_8_of_8"
+  },
   "workstream_status": {
     "W1_M6c_scale_up": {
       "complete": true,
@@ -1020,6 +1159,17 @@
       "complete": true,
       "positive_claim_supported": false,
       "status": "negative_robustness_result_adjudicated"
+    },
+    "W3_mechanism_panel": {
+      "complete": true,
+      "scientific_success": false,
+      "status": "w3_mechanism_panel_adjudicated_context_dependent_or_unresolved"
+    },
+    "W3b_disagreement_gate": {
+      "complete": false,
+      "remaining_requirement": "W3b_fit_stage_explicit_approval",
+      "scientific_success": null,
+      "status": "w3b_fit_packet_ready_awaiting_explicit_approval"
     },
     "W4_closed_loop_DBTL": {
       "complete": true,

@@ -1,24 +1,24 @@
 # M6d Goal Drift Audit
 
-Status: `no_major_direction_drift_w3_mechanism_preregistered_runtime_gate`.
+Status: `no_major_direction_drift_w3_complete_w3b_fit_packet_ready_approval_wait`.
 Audit ok: `True`.
 Major direction drift: `False`.
 
 ## Assessment
 
 - mission: `no_drift_external_calibrated_trust_gate_north_star_preserved`
-- protocol: `no_drift_terminal_w2_locks_preserved_w3_mechanism_panel_preregistered`
-- claims: `no_drift_negative_boundaries_preserved`
-- execution: `w3_inputs_ready_runtime_blocked_compute_not_approved_no_submit`
-- operational status: `stale_current_surfaces_replaced_historical_detail_retained`
+- protocol: `no_drift_terminal_w2c_and_completed_w3_preserved_w3b_preregistered`
+- claims: `no_drift_negative_and_context_dependent_boundaries_preserved`
+- execution: `w3b_fit_packet_ready_compute_not_approved_no_submit`
+- operational status: `current_surfaces_reconciled_to_w3b_fit_approval_gate`
 
 ## Active Risks
 
-- `w2b_result_reinterpretation` (managed): W2b is terminal and its rows are planning-only for W2c
-- `trust_all_overclaim` (managed): W2c permits selective_pae only and trust_all cannot satisfy panel success
-- `underpowered_or_adaptive_w2c` (managed): exact power floor, fixed sample sizes, and no adaptive top-up are locked before compute
-- `verification_instead_of_science` (managed): W3 is frozen to one 58-case panel; next work is runtime validation then a separate approval
+- `w3_result_reinterpretation` (managed): W3 remains context-dependent or unresolved and cannot rescue W2c
+- `w3b_stage_authority_leak` (managed): fit approval cannot authorize certification, held-out test, adaptive top-up, or claims
+- `runtime_or_msa_substitution` (managed): fit records must match the frozen runtime identities, execution lock, and per-target MSA hashes
+- `verification_instead_of_science` (managed): the next scientific action is the bounded fit stage after approval, not another W2 or W3 rescue audit
 
 ## Next Action
 
-Validate or provision the exact ColabFold 1.6.1 runtime and local AF2-Multimer v3 weights without prediction, write the hash-bound runtime receipt, and stop for a separate exact approval before executing the frozen 58-case W3 mechanism panel.
+Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.

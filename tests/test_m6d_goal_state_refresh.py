@@ -1,5 +1,6 @@
 """Tests for terminal-W2b / prospective-W2c goal-state refresh."""
 
+import copy
 import json
 import os
 import tempfile
@@ -278,6 +279,279 @@ def _w3_mechanism_packet():
     }
 
 
+def _w3_completion():
+    return {
+        "artifact": "m6d_w3_mechanism_panel_adjudication",
+        "status": "adjudicated",
+        "audit_ok": True,
+        "failures": [],
+        "joint_outcome": "context_dependent_or_unresolved",
+        "can_claim_population_level_independent_predictor_robustness": False,
+        "can_reopen_or_rescue_w2c": False,
+        "three_pc8": {
+            "n_discordant": 12,
+            "aligns_with_chai": 12,
+            "aligns_with_boltz": 0,
+            "n_controls": 6,
+            "control_successes": 6,
+            "outcome": "chai_supported_on_challenge_panel",
+        },
+        "w2c": {
+            "n_rows": 40,
+            "n_targets": 8,
+            "label_agreement_with_boltz": 30,
+            "targets_with_at_least_4_of_5_agreement": 5,
+            "label_agreement_fraction": 0.75,
+            "outcome": "mixed_or_contract_blocked",
+        },
+        "claim_boundary": "bounded completed W3 mechanism panel only",
+    }
+
+
+def _w3b_fit_ready_artifacts():
+    target_ids = [f"w3b-{index}" for index in range(8)]
+    roles = ["fit"] * 3 + ["certification"] * 3 + ["held_out_test"] * 2
+    records = [60] * 3 + [150] * 3 + [120] * 2
+    msa_hashes = {target_id: f"{index + 1:064x}" for index, target_id in enumerate(target_ids)}
+    role_counts = {"fit": 3, "certification": 3, "held_out_test": 2}
+    scientific_digest = "a" * 64
+    lifecycle_sha = "b" * 64
+    runtime_sha = "c" * 64
+    runtime_digest = "d" * 64
+    packet_digest = "e" * 64
+    design_gate = {
+        "artifact": "m6d_w3b_disagreement_design_gate",
+        "status": "w3b_design_power_qualified_inputs_ready_no_submit",
+        "audit_ok": True,
+        "failures": [],
+        "design_power_qualified": True,
+        "inputs_ready": True,
+        "execution_ready": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_w3b": False,
+        "locked_scientific_digest": scientific_digest,
+        "fresh_target_contract": {
+            "n_targets": 8,
+            "target_ids": target_ids,
+            "role_counts": role_counts,
+            "target_msa_ready": True,
+            "missing_target_msa_targets": [],
+        },
+        "certification_power": {
+            "accepted_rows": 100,
+            "conditional_certification_power": 0.824333,
+            "maximum_certifiable_false_accepts": 10,
+        },
+        "compute_budget": {
+            "maximum_candidate_designs": 870,
+            "maximum_predictor_evaluations": 1740,
+            "maximum_h100_gpu_hours": 24.0,
+        },
+    }
+    lifecycle = {
+        "artifact": "m6d_w3b_target_msa_lifecycle",
+        "status": "target_msa_precompute_complete_8_of_8",
+        "audit_ok": True,
+        "completion_ok": True,
+        "failures": [],
+        "n_failures": 0,
+        "n_targets": 8,
+        "target_ids": target_ids,
+        "jobs_terminal_success": True,
+        "receipt_present": True,
+        "summary_present": True,
+        "within_gpu_budget": True,
+        "gpu_allocation_hours": 0.25,
+        "maximum_a40_gpu_hours": 8.0,
+        "can_submit_candidate_generation_or_candidate_level_prediction": False,
+        "can_claim_w3b": False,
+        "strict_manifest": {
+            "ok": True,
+            "n_targets": 8,
+            "n_ready_targets": 8,
+            "failures": [],
+        },
+        "target_artifacts": [
+            {
+                "target_id": target_id,
+                "target_msa_sha256": msa_hashes[target_id],
+                "target_msa_report_sha256": "f" * 64,
+                "target_msa_report_ok": True,
+                "target_sequence_sha256": "1" * 64,
+                "expected_target_sequence_sha256": "1" * 64,
+            }
+            for target_id in target_ids
+        ],
+        "telemetry_reconciliation_applied": True,
+        "allocation_telemetry_reconciliation": {
+            "status": "allocation_telemetry_reconciled",
+            "audit_ok": True,
+            "failures": [],
+            "normalized_job_ids": [str(1000 + index) for index in range(8)],
+        },
+    }
+    manifest_targets = [
+        {
+            "id": target_id,
+            "experimental_role": role,
+            "num_seq": n_records,
+            "target_msa_sha256": msa_hashes[target_id],
+        }
+        for target_id, role, n_records in zip(target_ids, roles, records)
+    ]
+    execution_manifest = {
+        "artifact": "m6d_w3b_execution_target_manifest",
+        "status": "w3b_execution_inputs_locked_no_submit",
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_generate_candidates_or_run_predictors": False,
+        "role_counts": role_counts,
+        "target_ids": target_ids,
+        "targets": manifest_targets,
+        "total_candidate_designs": 870,
+        "total_matched_predictor_evaluations": 1740,
+        "locked_scientific_digest": scientific_digest,
+        "target_msa_lifecycle_sha256": lifecycle_sha,
+    }
+    input_targets = [
+        {
+            "target_id": target_id,
+            "experimental_role": role,
+            "records_planned": n_records,
+            "target_msa_sha256": msa_hashes[target_id],
+        }
+        for target_id, role, n_records in zip(target_ids, roles, records)
+    ]
+    execution_input_lock = {
+        "artifact": "m6d_w3b_execution_input_lock",
+        "status": "w3b_execution_input_locked_no_submit",
+        "audit_ok": True,
+        "failures": [],
+        "no_submit": True,
+        "n_targets": 8,
+        "n_artifacts": 56,
+        "can_generate_candidates_or_run_predictors": False,
+        "can_claim_w3b": False,
+        "lock_digest_sha256": "2" * 64,
+        "binding": {
+            "targets": input_targets,
+            "locked_scientific_digest": scientific_digest,
+            "target_msa_lifecycle_sha256": lifecycle_sha,
+        },
+    }
+    runtime_readiness = {
+        "artifact": "m6d_w3b_runtime_lock_readiness",
+        "status": "w3b_runtime_lock_ready_for_separate_fit_approval_packet",
+        "audit_ok": True,
+        "failures": [],
+        "n_failures": 0,
+        "execution_lock_ready": True,
+        "runtime_identity_ready": True,
+        "fit_packet_prerequisites_ready": True,
+        "can_submit_fit_stage": False,
+        "can_generate_candidates_or_run_predictors": False,
+        "can_claim_w3b": False,
+        "no_submit": True,
+        "runtime_lock_sha256": runtime_sha,
+        "runtime_lock_digest_sha256": runtime_digest,
+    }
+    matched_record_contract = {
+        "artifact": "m6d_w3b_matched_record_contract",
+        "status": "w3b_matched_record_contract_ready_for_stage_inputs",
+        "audit_ok": True,
+        "failures": [],
+        "n_failures": 0,
+        "execution_lock_ready": True,
+        "runtime_identity_ready": True,
+        "assembly_ready": True,
+        "can_run_candidate_generation_or_prediction": False,
+        "can_claim_w3b": False,
+        "no_submit": True,
+        "required_predictors": ["boltz2_complex", "af2_multimer_colabfold_v1"],
+        "stage_records_per_target": {"fit": 60, "certification": 150, "held_out_test": 120},
+        "runtime_lock_sha256": runtime_sha,
+        "runtime_lock_digest_sha256": runtime_digest,
+    }
+    fit_targets = [
+        {
+            "target_id": target_id,
+            "records_planned": 60,
+            "target_msa_sha256": msa_hashes[target_id],
+        }
+        for target_id in target_ids[:3]
+    ]
+    approval_contract = {
+        "stage": "fit",
+        "target_count": 3,
+        "records_per_target": 60,
+        "candidate_designs": 180,
+        "matched_predictor_evaluations": 360,
+        "proteinmpnn_cpu_jobs": 3,
+        "boltz_h100_jobs": 3,
+        "af2_h100_jobs": 3,
+        "user_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100",
+        "authorizes_certification": False,
+        "authorizes_held_out_test": False,
+        "authorizes_claim": False,
+    }
+    bound_artifacts = [
+        {"path": path, "sha256": "3" * 64}
+        for path in (
+            "configs/m6d_w3b_execution_targets.json",
+            "configs/m6d_w3b_execution_input_lock.json",
+            "configs/m6d_w3b_runtime_lock.json",
+            "results/m6d_w3b_runtime_lock_readiness.json",
+            "results/m6d_w3b_matched_record_contract.json",
+        )
+    ]
+    fit_packet_readiness = {
+        "artifact": "m6d_w3b_fit_packet_readiness",
+        "status": "w3b_fit_packet_ready_awaiting_explicit_approval",
+        "audit_ok": True,
+        "failures": [],
+        "n_failures": 0,
+        "fit_packet_ready": True,
+        "execution_lock_ready": True,
+        "runtime_identity_ready": True,
+        "matched_record_contract_ready": True,
+        "explicit_fit_approval_recorded": False,
+        "can_submit_fit_stage": False,
+        "can_run_candidate_generation_or_prediction": False,
+        "submitted_jobs": 0,
+        "can_claim_w3b": False,
+        "no_submit": True,
+        "packet_digest_sha256": packet_digest,
+        "fit_targets": fit_targets,
+        "approval_contract": approval_contract,
+        "bound_artifacts": bound_artifacts,
+        "claim_boundary": "fit packet readiness only",
+    }
+    fit_approval_packet = {
+        "artifact": "m6d_w3b_fit_approval_packet",
+        "status": "w3b_fit_approval_packet_ready_no_submit",
+        "audit_ok": True,
+        "approval_recorded": False,
+        "submitted_jobs": 0,
+        "can_claim_w3b": False,
+        "no_submit": True,
+        "readiness_packet_digest_sha256": packet_digest,
+        "fit_targets": copy.deepcopy(fit_targets),
+        "approval_contract": copy.deepcopy(approval_contract),
+        "bound_artifacts": copy.deepcopy(bound_artifacts),
+    }
+    return (
+        design_gate,
+        lifecycle,
+        execution_manifest,
+        execution_input_lock,
+        runtime_readiness,
+        matched_record_contract,
+        fit_packet_readiness,
+        fit_approval_packet,
+    )
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -317,6 +591,34 @@ def _legacy_bundle():
         "w3_runtime_provision": {"status": "preserved"},
     }
     return anchor, completion, drift, actions, harness
+
+
+def _refresh_current_w3b(*, completion=None, artifacts=None):
+    gate = _w2c()
+    gate["execution_readiness"] = {
+        "target_manifest_present": True,
+        "target_manifest_integrity_ok": True,
+        "target_manifest_ids": [f"fresh-{index}" for index in range(8)],
+        "target_msa_ready": False,
+        "evaluator_implemented": True,
+    }
+    return refresh_bundle(
+        *_legacy_bundle(),
+        _w2b(),
+        gate,
+        _target_msa_packet(),
+        _target_msa_completion(),
+        _fit_learn_packet(),
+        _fit_learn_submission(),
+        _threshold_learning_result(),
+        _w3_mechanism_packet(),
+        completion or _w3_completion(),
+        *(artifacts or _w3b_fit_ready_artifacts()),
+        updated_at="2026-07-15T18:00:00+09:00",
+        test_command="pytest -q",
+        test_result="passed",
+        runtime_goal_active=True,
+    )
 
 
 class M6DGoalStateRefreshTests(unittest.TestCase):
@@ -680,6 +982,54 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertEqual(bundle["harness"]["hpc_status"]["w3_jobs_submitted"], 0)
         self.assertIn("ColabFold 1.6.1", bundle["completion"]["next_action"])
 
+    def test_completed_w3_and_w3b_fit_packet_become_current_boundary(self):
+        bundle = _refresh_current_w3b()
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3_complete_w3b_fit_packet_ready_approval_wait",
+        )
+        self.assertEqual(
+            bundle["report"]["w3_mechanism_completion"]["joint_outcome"],
+            "context_dependent_or_unresolved",
+        )
+        self.assertEqual(
+            bundle["completion"]["remaining_requirements"],
+            ["W3b_fit_stage_explicit_approval"],
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["w3b"],
+            "w3b_fit_packet_ready_awaiting_explicit_approval",
+        )
+        self.assertTrue(bundle["anchor"]["current_status"]["w3_execution_complete"])
+        self.assertFalse(bundle["anchor"]["current_status"]["w3b_fit_approval_recorded"])
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3b_fit_jobs_submitted"], 0)
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertTrue(bundle["report"]["no_submit"])
+        self.assertEqual(len(bundle["report"]["next_actions_ranked"]), 5)
+        self.assertIn(
+            "W3b fit approval recorded: `False`",
+            render_completion_markdown(bundle["completion"]),
+        )
+
+    def test_w3_completion_rejects_positive_population_claim_drift(self):
+        completion = _w3_completion()
+        completion["can_claim_population_level_independent_predictor_robustness"] = True
+        with self.assertRaisesRegex(ValueError, "population_claim_false"):
+            _refresh_current_w3b(completion=completion)
+
+    def test_w3b_fit_ready_rejects_msa_hash_lock_drift(self):
+        artifacts = list(_w3b_fit_ready_artifacts())
+        artifacts[2]["targets"][0]["target_msa_sha256"] = "9" * 64
+        with self.assertRaisesRegex(ValueError, "target_and_msa_locks_match"):
+            _refresh_current_w3b(artifacts=tuple(artifacts))
+
+    def test_w3b_fit_ready_rejects_nonzero_submission(self):
+        artifacts = list(_w3b_fit_ready_artifacts())
+        artifacts[6]["submitted_jobs"] = 1
+        with self.assertRaisesRegex(ValueError, "fit_packet_ready_no_submit"):
+            _refresh_current_w3b(artifacts=tuple(artifacts))
+
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
         packet["rows"].pop()
@@ -761,6 +1111,19 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "threshold_learning_result": os.path.join(
                     root, "missing-threshold-learning-result.json"
                 ),
+                "w3_completion": os.path.join(root, "missing-w3-completion.json"),
+                "w3b_design_gate": os.path.join(root, "missing-w3b-design-gate.json"),
+                "w3b_target_msa": os.path.join(root, "missing-w3b-target-msa.json"),
+                "w3b_execution_manifest": os.path.join(
+                    root, "missing-w3b-execution-manifest.json"
+                ),
+                "w3b_execution_input_lock": os.path.join(
+                    root, "missing-w3b-execution-input-lock.json"
+                ),
+                "w3b_runtime": os.path.join(root, "missing-w3b-runtime.json"),
+                "w3b_matched": os.path.join(root, "missing-w3b-matched.json"),
+                "w3b_fit_readiness": os.path.join(root, "missing-w3b-fit-readiness.json"),
+                "w3b_fit_approval": os.path.join(root, "missing-w3b-fit-approval.json"),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -779,6 +1142,15 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w2c-fit-learn-packet", paths["fit_learn_packet"],
                 "--w2c-fit-learn-submission-summary", paths["fit_learn_submission"],
                 "--w2c-threshold-learning-report", paths["threshold_learning_result"],
+                "--w3-mechanism-completion", paths["w3_completion"],
+                "--w3b-design-gate", paths["w3b_design_gate"],
+                "--w3b-target-msa-lifecycle", paths["w3b_target_msa"],
+                "--w3b-execution-manifest", paths["w3b_execution_manifest"],
+                "--w3b-execution-input-lock", paths["w3b_execution_input_lock"],
+                "--w3b-runtime-readiness", paths["w3b_runtime"],
+                "--w3b-matched-record-contract", paths["w3b_matched"],
+                "--w3b-fit-packet-readiness", paths["w3b_fit_readiness"],
+                "--w3b-fit-approval-packet", paths["w3b_fit_approval"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -794,6 +1166,15 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "fit_learn_packet",
                     "fit_learn_submission",
                     "threshold_learning_result",
+                    "w3_completion",
+                    "w3b_design_gate",
+                    "w3b_target_msa",
+                    "w3b_execution_manifest",
+                    "w3b_execution_input_lock",
+                    "w3b_runtime",
+                    "w3b_matched",
+                    "w3b_fit_readiness",
+                    "w3b_fit_approval",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)

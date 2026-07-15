@@ -140,8 +140,8 @@ trust-gate result:
 t0.3-only production protocol is now `stop_certified` for `alpha=0.2` at 220 records. Keep these
 as separate claims: `results/m6c_project_status.json` is the full-mix status, while
 `results/m6c_project_status_t030_protocol.json` and `results/m6c_protocol_branch_summary.{json,md}`
-are the t0.3 branch certificate. Resume from `results/m6d_followup_next_science_actions.{json,md}`
-for the current W1/W2/W3/W4 action priority.
+are the t0.3 branch certificate. That historical action ledger is superseded; resume from
+`results/m6d_goal_state_refresh_report.{json,md}` for the current W3b-first action priority.
 
 2026-06-29 W4 update: `results/m6c_w4_round/summary.json` and
 `results/m6c_w4_round/campaign.jsonl` now give a project-status-accepted
@@ -500,56 +500,26 @@ Allowed decisions:
 
 ## Immediate Codex Cadence
 
-1. Stabilize the current branch: keep the pAE plumbing, cached target FASTA/MSA report paths,
-   strict complex-record provenance, panel checks, and cross-predictor bridge covered by tests.
-2. Use `docs/M6C_RUNBOOK.md` on Cayuga to write the barnase target FASTA report, precompute the
-   barnase target MSA once, generate the next barnase-barstar batch, and refold with `TARGET_MSA`.
-3. Run `complex_posthoc_bundle.py --require-complex-target-id --require-provenance --require-chain-ids`
-   on old plus new records and follow the emitted alpha decision and `next_batch` settings instead of
-   deciding by inspection.
-4. Use `complex_next_batch_plan.py` or `complex_readiness.py` to render the actual Cayuga commands so each
-   temperature writes distinct JSONL outputs and each Boltz job depends on its
-   corresponding ProteinMPNN job. Confirm the generated ProteinMPNN commands carry `COMPLEX_ID`,
-   `SEED`, and `OBJECTIVE` from the manifest. Treat a strict-QC refusal here as a signal to rerun the posthoc
-   bundle, not as a reason to hand-edit commands.
-5. Run `complex_readiness.py --require-files --emit-plan ... --emit-scale-plan ...` before W1 submission,
-   follow its `ordered_steps`/plan sections in order. After scale jobs finish and records are synced,
-   run `complex_scale_completion.py --plan <next_batch_plan.json>` before the posthoc bundle, then
-   `complex_project_status.py` after posthoc/panel/cross-predictor/W4 artifacts are written so the
-   roadmap status, W3/W4 sync pointers, combined external-artifact checklist, recommended next script,
-   and next action stay explicit.
-6. Treat the current W2 panels as completed negative evidence, not missing runs. The latest durable
-   anchor is `docs/M6D_GOAL_MODE_ANCHOR.md`: `3PC8_AB` remains target-specific alpha=0.2 evidence, while
-   W2 generalization remains negative. The latest v10 target-family panel is complete and synced back:
-   `results/m6d_w2_target_family_redesign_v10_panel_report_alpha02.json` is
-   `multi_target_evaluable_not_certified` at alpha=0.2 with 15 targets and 1500 records. The pooled
-   diagnostic certifies alpha=0.2, but pooled-only evidence remains diagnostic; only `1DXU_DC` certifies
-   target-wise at alpha=0.2. W2 then moved to a historical-exclusion reset branch. Fresh discovery selected
-   20 structurally admissible candidates and 11 alignment-based sequence-cluster representatives in
-   `configs/m6d_w2_target_family_redesign_v11_new_representative_targets.json`. After target-MSA prep and
-   explicit approval, all 11 ProteinMPNN jobs and 11 dependent Boltz jobs completed on Cayuga with exit
-   code `0:0`; the records were synced and validated at 100 per target. The final report
-   `results/m6d_w2_target_family_redesign_v11_new_representative_panel_report_alpha02.json` is
-   `multi_target_evaluable_not_certified` with 11 targets and 1,100 records. The decision protocol and
-   post-sync interpretation both keep `can_claim_w2_generalization=false`.
-
-   This result has two distinct limits. First, target success rates span 0% to 100% and defined pAE AUROCs
-   span approximately 0.24 to 1.00, so a universal pAE rule is not supported. Second, the post-hoc power
-   diagnostic shows that the predeclared 100-record split was structurally unable to certify alpha=0.2:
-   with 33 certification rows and Bonferroni `delta=0.1/11`, the zero-error Hoeffding UCB floor is 0.2669.
-   At least 176 total records per target are needed for best-case zero-error feasibility under the same
-   split. This cannot recertify the completed panel. The next W2 action is protocol redesign and
-   predeclaration on new held-out targets, not automatic submission of 836 additional folds.
-7. Treat both the Chai-1 scale-up and the later AF2 W3 mechanism panel as completed. The AF2 panel
-   resolves the old third-predictor fork but not the robustness claim: 3PC8 supports Chai, W2c is mixed,
-   and the joint result is context-dependent or unresolved.
-8. For W3b, preserve the now-preregistered matched-protocol disagreement gate and 3/3/2 target roles.
-   The approved eight-target MSA-only packet is consumed and complete, the execution input lock is verified,
-   and the fit approval packet is ready. Do not generate candidates, run predictors, tune on the completed
-   58 cases, or spend beyond the completed MSA stage until the exact fit-stage approval is recorded.
-9. Keep W4 in fail-closed mode until the screen head is replaced or trained. The current W4 artifact proves
-   strict closed-loop plumbing and conservative safety behavior, but all candidate verdicts were non-finite
-   DeBERTa outputs and therefore deferred; do not use it as a productive route-to-build policy.
+1. Use `docs/M6D_GOAL_MODE_ANCHOR.md` and the refreshed machine-readable goal-state artifacts as the current
+   resume surface. Preserve W2, W2b, and W2c as completed negative evidence and the 58-case W3 outcome as
+   `context_dependent_or_unresolved`; do not rescue or retune any of them.
+2. Preserve the preregistered W3b gate, 3/3/2 target roles, target-specific MSA hashes, exact Boltz/AF2
+   runtime identities, 870-slot execution lock, and stage stop rules. The fit packet is ready but records
+   no approval and has submitted zero jobs.
+3. Do not infer W3b fit authority from generic continuation, goal-mode resume, the consumed target-MSA
+   approval, or packet preparation. The only next compute boundary is the exact fit-stage approval in
+   `docs/M6D_W3B_FIT_APPROVAL.md`.
+4. After that exact approval, submit only the packet-bound three ProteinMPNN CPU jobs, three Boltz H100
+   jobs, and three AF2 H100 jobs. The fit stage is exactly 180 unique candidates and 360 matched predictor
+   evaluations; it cannot authorize certification, held-out test, adaptive top-up, or a claim.
+5. Sync the receipt-bound fit outputs, run strict candidate/runtime/MSA/provenance QC, assemble paired
+   records, and apply the frozen fit evaluator. A fit failure terminates W3b; it is not a tuning signal.
+6. Only if fit passes, prepare a distinct certification packet for the three frozen certification targets.
+   Only if certification passes may a separate held-out-test packet be prepared. Each stage requires its
+   own review and explicit approval before compute.
+7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
+   resume barnase scaling or claim productive DBTL unless W3b results or a separately preregistered decision
+   justify that branch.
 
 ## File Map
 
