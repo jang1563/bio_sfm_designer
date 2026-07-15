@@ -8,8 +8,10 @@
 > W3b successor is prospectively locked with eight label-blind fresh target roles, exact endpoint power
 > 0.824333, a frozen matched-predictor evaluator, and an exact dual-predictor runtime lock. The separately
 > approved target-MSA stage completed 8/8 at 0.216389 A40 GPU-hours, strict replay passed, and the immutable
-> 870-slot execution lock now exists. The fit approval packet and zero-submit dry-run are ready, but no fit
-> candidate generation or predictor compute is approved.
+> 870-slot execution lock now exists. The later exact initial fit approval was consumed once. ProteinMPNN
+> and Boltz completed all three fit targets, producing 180 candidates and 180 Boltz records. All three AF2
+> jobs failed before prediction on a container-relative input path. A separate AF2-only recovery packet is
+> ready, but no recovery compute is approved or submitted.
 
 Date: 2026-07-15
 
@@ -39,8 +41,9 @@ then completed under its frozen 58-case protocol. The 3PC8 block supports Chai (
 `6/6` controls), while the W2c block is mixed (`30/40` Boltz agreement; `5/8` targets at least `4/5`).
 The joint result is `context_dependent_or_unresolved`. All W2 v1-v11 execution entries later in this
 chronological ledger are historical even where their original labels say `current`. W3b is now
-`w3b_fit_packet_ready_awaiting_explicit_approval`: eight unused targets are locked to 3 fit,
-3 certification, and 2 held-out-test roles; their MSAs, strict lifecycle, and execution lock are complete.
+`w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait`: eight unused targets remain locked
+to 3 fit, 3 certification, and 2 held-out-test roles. The initial fit approval is consumed; 180 candidates
+and 180 Boltz records are ready, while AF2 is incomplete and separately gated.
 
 ## Active Objective
 
@@ -73,10 +76,13 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   cannot suppress any non-telemetry failure. The resulting lifecycle is
   `target_msa_precompute_complete_8_of_8`, and the verified execution lock binds eight MSA hashes and 870
   design slots. Boltz `2.2.1` and AF2-Multimer/ColabFold `1.6.1` remain frozen by exact package/container/
-  checkpoint/weight hashes. The downstream fit packet is emitted and its guarded dry-run proves exactly
-  3 CPU plus 6 H100 jobs, 180 candidates, and 360 matched evaluations with zero scheduler or receipt
-  writes. No fit approval, candidate generation, predictor run, gate claim, or biological-success claim
-  exists.
+  checkpoint/weight hashes. The exact initial fit approval submitted nine jobs once. All three ProteinMPNN
+  and all three Boltz jobs completed, producing 180 candidates and 180 Boltz records. AF2 jobs `3085449`,
+  `3085452`, and `3085455` failed before prediction on a relative container input path after 38 combined
+  H100 GPU-seconds; no AF2 records or runtime receipts exist. The separately hash-bound recovery uses
+  absolute paths, revalidates all 180 A3Ms before submission, permits exactly three AF2 replacements and
+  zero ProteinMPNN/Boltz jobs, and remains no-submit pending exact new approval. No fit result, gate claim,
+  or biological-success claim exists.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -145,6 +151,12 @@ from Chai records alone.
 - W3b dedicated fit producer and approval boundary:
   `docs/M6D_W3B_FIT_APPROVAL.md`, `results/m6d_w3b_fit_packet_readiness.{json,md}`,
   `bio_sfm_designer.experiments.m6d_w3b_fit_packet`, and `hpc/run_w3b_fit_guarded.sh`
+- W3b initial fit execution and separate AF2 recovery boundary:
+  `results/m6d_w3b_fit_submit_receipt.jsonl`, `results/m6d_w3b_fit_submit_receipt_summary.json`,
+  `results/m6d_w3b_fit_initial_execution_observation.json`,
+  `results/m6d_w3b_fit_af2_recovery_approval_packet.json`,
+  `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`, and
+  `bio_sfm_designer.experiments.m6d_w3b_fit_af2_recovery`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -1259,30 +1271,20 @@ Do not submit new Cayuga jobs from stale readiness or status commands.
 Start with a no-spend status/decision refresh:
 
 ```sh
-jq '{status, audit_ok, runtime_goal_active, w3: .w3_mechanism_completion.status, w3_outcome: .w3_mechanism_completion.joint_outcome, w3b: .w3b_successor.status, fit_scope: .w3b_successor.fit_scope, approval_recorded: .w3b_successor.approval_recorded, submitted_jobs: .w3b_successor.submitted_jobs, no_submit, cayuga_submission_allowed, next_actions_ranked, next_action}' \
+jq '{status, audit_ok, runtime_goal_active, w3: .w3_mechanism_completion.status, w3_outcome: .w3_mechanism_completion.joint_outcome, w3b: .w3b_successor.status, recovery: .w3b_fit_recovery.recovery_packet_status, initial_jobs: .w3b_fit_recovery.initial_fit_jobs_submitted, recovery_approval: .w3b_fit_recovery.recovery_approval_recorded, recovery_jobs: .w3b_fit_recovery.recovery_jobs_submitted, no_submit, cayuga_submission_allowed, next_action}' \
   results/m6d_goal_state_refresh_report.json
 
-jq '{status, audit_ok, completion_ok, n_targets, gpu_allocation_hours, within_gpu_budget, n_failures}' \
-  results/m6d_w3b_target_msa_lifecycle.json
+jq '{status, audit_ok, n_initial_jobs, n_proteinmpnn_completed, n_af2_failed_before_prediction, initial_failed_af2_gpu_seconds, recovery_submission_performed, no_submit, can_claim_w3b}' \
+  results/m6d_w3b_fit_initial_execution_observation.json
 
-jq '{status, audit_ok, fit_packet_ready, explicit_fit_approval_recorded, submitted_jobs, can_submit_fit_stage, no_submit, next_action}' \
-  results/m6d_w3b_fit_packet_readiness.json
-
-jq '{status, audit_ok, approval_recorded, submitted_jobs, candidate_designs: .approval_contract.candidate_designs, matched_evaluations: .approval_contract.matched_predictor_evaluations, authorizes_certification: .approval_contract.authorizes_certification, authorizes_held_out_test: .approval_contract.authorizes_held_out_test, can_claim_w3b, no_submit}' \
-  results/m6d_w3b_fit_approval_packet.json
+jq '{status, audit_ok, approval_recorded, submitted_jobs, recovery_jobs: .approval_contract.af2_h100_recovery_jobs, proteinmpnn_jobs: .approval_contract.proteinmpnn_jobs_authorized, boltz_jobs: .approval_contract.boltz_jobs_authorized, failed_jobs: .approval_contract.failed_af2_job_ids, maximum_gpu_seconds: .approval_contract.maximum_protocol_gpu_seconds_after_recovery, phrase: .approval_contract.user_phrase, no_submit, can_claim_w3b}' \
+  results/m6d_w3b_fit_af2_recovery_approval_packet.json
 
 git status --short --branch
 ```
 
-Then choose the next science branch:
-
-- W2 branch: `w2_target_family_redesign_v2_rcsb`, v3, v4, v5, and v7 are completed negative/evaluable for
-  broad generalization. V8 is now completed and evaluable but not certified for broad W2 generalization:
-  `results/m6d_w2_target_family_redesign_v8_panel_report.json` has 12 targets, 1200 records, and
-  `panel_status=multi_target_evaluable_not_certified` at α=0.2. `1CG5_AB` and `1COH_BA` are target-specific
-  certified controls; the other 10 targets are not certified. The pooled diagnostic certifies α=0.2, but
-  pooled-only evidence is not W2 generalization. Before any more W2 panel GPU, use
-  `results/m6d_w2_target_family_redesign_v8_redesign_diagnostic.{json,md}`: retain the two positives,
-  replace low-success `1CA0_HI`/`1CBW_CD`, and predeclare a low-pAE acceptance or target-specific
-  calibration strategy.
-- W3 branch: third predictor, stronger Chai rerun, or formal negative robustness result.
+The current science branch is fixed: wait for the exact AF2-only recovery approval in
+`docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`. After that approval, run only the packet-bound recovery bridge on
+Cayuga, capture exactly three AF2 replacement job IDs, and monitor them to terminal state. Do not submit
+ProteinMPNN or Boltz, assemble partial matched records, or prepare certification until all three recovery
+outputs pass strict sync and provenance replay.

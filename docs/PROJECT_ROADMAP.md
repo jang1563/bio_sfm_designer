@@ -29,8 +29,10 @@
 > W3b now prospectively locks the successor: eight unused source/sequence-unique targets, a label-blind
 > 3 fit / 3 certification / 2 held-out-test split, matched Boltz-2/AF2 inputs, and an exact endpoint-power
 > gate. The design passes at power 0.824333. Its exact Boltz/AF2 runtime identities are hash-locked. The
-> approved target-MSA stage completed 8/8 at 0.216389 A40 GPU-hours, strict replay and the immutable
-> execution lock pass, and the separate fit packet/dry-run are ready. Fit compute remains unapproved.
+> approved target-MSA stage completed 8/8 at 0.216389 A40 GPU-hours. The later initial fit approval was
+> consumed once: all three ProteinMPNN and all three Boltz jobs completed, yielding 180 candidates and
+> 180 Boltz records. All three AF2 jobs failed before prediction on a container-relative input path. The
+> AF2-only recovery packet is ready, but no recovery compute is approved or submitted.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -108,18 +110,23 @@ container, all five AF2-Multimer-v3 weight hashes, and exact predictor parameter
 `configs/m6d_w3b_runtime_lock.json`; `results/m6d_w3b_runtime_lock_readiness.{json,md}` reports
 `runtime_identity_ready=true` and `fit_packet_prerequisites_ready=true`. The matched-record path now
 requires receipts to bind the exact runtime-lock SHA, lock digest, and predictor identity digest. This
-closes runtime substitution but does not authorize the still-unapproved fit predictor stage.
+closes runtime substitution. The later initial fit approval was consumed once; it does not transfer to
+the current AF2 recovery boundary.
 
-2026-07-15 W3b fit producer lock: the historical W2b/W2c runners remain untouched. Dedicated W3b
+2026-07-15 W3b fit producer and initial execution: the historical W2b/W2c runners remain untouched. Dedicated W3b
 ProteinMPNN validation, Boltz, AF2, runtime re-observation, conversion, guarded submission, and append-only
 journal paths are now hash-bound by `m6d_w3b_fit_packet`. Candidate IDs and sequences must both be unique.
 The complete synthetic-lock integration test materializes the three-target packet and dry-runs exactly
 3 CPU plus 6 H100 jobs, 180 candidates, and 360 matched evaluations with zero scheduler calls or receipt
-writes. The six H100 jobs are hard-limited to four hours each and `--no-requeue`, bounding fit allocation
-by the protocol-wide 24 H100 GPU-hour ceiling. Current tracked readiness is
-`w3b_fit_packet_ready_awaiting_explicit_approval`; the immutable packet exists and the real guarded bridge
-dry-run enumerates the exact 3 CPU + 6 H100 scope with zero scheduler calls or receipt writes. No fit
-approval or W3b compute is authorized. See `docs/M6D_W3B_FIT_APPROVAL.md`.
+writes. The exact initial fit approval was then consumed once. ProteinMPNN jobs `3085447`, `3085450`, and
+`3085453` and Boltz jobs `3085448`, `3085451`, and `3085454` completed. AF2 jobs `3085449`, `3085452`,
+and `3085455` failed before prediction because the container could not resolve a relative `af2_inputs`
+path. Exactly 180 candidates and 180 Boltz records are preserved; no AF2 records exist. The separate
+recovery packet authorizes, only after new exact approval, three AF2 replacements with absolute container
+paths, zero ProteinMPNN/Boltz jobs, `--no-requeue`, and a `03:59:30` per-job limit. Its worst-case total
+is 86,348 H100 GPU-seconds, below the 86,400-second ceiling. Local and Cayuga dry-runs revalidate all 180
+A3Ms with zero scheduler/receipt writes. No recovery compute or W3b claim is authorized. See
+`docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -504,16 +511,16 @@ Allowed decisions:
    resume surface. Preserve W2, W2b, and W2c as completed negative evidence and the 58-case W3 outcome as
    `context_dependent_or_unresolved`; do not rescue or retune any of them.
 2. Preserve the preregistered W3b gate, 3/3/2 target roles, target-specific MSA hashes, exact Boltz/AF2
-   runtime identities, 870-slot execution lock, and stage stop rules. The fit packet is ready but records
-   no approval and has submitted zero jobs.
-3. Do not infer W3b fit authority from generic continuation, goal-mode resume, the consumed target-MSA
-   approval, or packet preparation. The only next compute boundary is the exact fit-stage approval in
-   `docs/M6D_W3B_FIT_APPROVAL.md`.
-4. After that exact approval, submit only the packet-bound three ProteinMPNN CPU jobs, three Boltz H100
-   jobs, and three AF2 H100 jobs. The fit stage is exactly 180 unique candidates and 360 matched predictor
-   evaluations; it cannot authorize certification, held-out test, adaptive top-up, or a claim.
-5. Sync the receipt-bound fit outputs, run strict candidate/runtime/MSA/provenance QC, assemble paired
-   records, and apply the frozen fit evaluator. A fit failure terminates W3b; it is not a tuning signal.
+   runtime identities, 870-slot execution lock, and stage stop rules. The consumed initial fit run produced
+   180 candidates and 180 Boltz records; AF2 remains incomplete after three pre-prediction path failures.
+3. Do not infer AF2 recovery authority from generic continuation, goal-mode resume, the consumed target-MSA
+   approval, or the consumed initial fit approval. The only next compute boundary is the exact recovery
+   approval in `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`.
+4. After that exact approval, submit only three packet-bound AF2 H100 replacements for failed jobs
+   `3085449`, `3085452`, and `3085455`. Submit zero ProteinMPNN and zero Boltz jobs; do not regenerate
+   candidates or A3Ms.
+5. Sync only receipt-bound recovery outputs, run strict runtime/MSA/provenance QC, assemble exactly 180
+   paired records, and apply the frozen fit evaluator. A fit failure terminates W3b; it is not a tuning signal.
 6. Only if fit passes, prepare a distinct certification packet for the three frozen certification targets.
    Only if certification passes may a separate held-out-test packet be prepared. Each stage requires its
    own review and explicit approval before compute.

@@ -4,13 +4,13 @@
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
   "historical_w2c_submission_performed": true,
-  "next_action": "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.",
+  "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
   "next_actions_ranked": [
-    "Preserve the completed 58-case W3 adjudication and the frozen W3b protocol without retuning.",
-    "Wait for the exact W3b fit-stage approval; generic continuation does not authorize compute.",
-    "After approval, submit only the packet-bound 3 CPU and 6 H100 fit jobs.",
-    "Sync and assemble exactly 180 candidates and 360 matched predictor evaluations.",
-    "Apply the frozen fit stop rule before preparing any separately approved certification stage."
+    "Preserve the completed W3 result and the immutable initial W3b fit submission receipt.",
+    "Preserve 3/3 ProteinMPNN and 3/3 Boltz successes; do not rerun either producer.",
+    "Wait for the exact packet-bound approval for the three AF2 path-only recovery jobs.",
+    "After approval, submit only three AF2 H100 recovery jobs with the reduced 03:59:30 limit.",
+    "After terminal success, sync AF2 records, assemble exactly 180 matched rows, and apply the frozen fit stop rule."
   ],
   "no_submit": true,
   "obsolete_current_routes_removed": [
@@ -19,18 +19,18 @@
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "2f59b0e620cfacabf8e7e550186a23cf66968d8a75b58c83b5d7b1ed6f1dd9b4",
-    "results/m6d_followup_next_science_actions.md": "5bee2f9d6ead9d886ace5420d8dd2749b59811ed6853858189f22c85e3c25d68",
-    "results/m6d_goal_completion_audit.json": "6affd22a79804fb2d3d5ac54679216f164ad60de56efe2955949ffe5ba2efc82",
-    "results/m6d_goal_completion_audit.md": "434d39fb5cfd539d4456f593d839354d010f864e9fa9558d0b88e1dd83f32949",
-    "results/m6d_goal_drift_audit.json": "bd704906dba446b71142a58363df53e977c232fdfb6d342b36598b3813f5c289",
-    "results/m6d_goal_drift_audit.md": "5f2009eb328cfabc4d5184964f3720c2ee95b34f6f86717c524d34a863055650",
-    "results/m6d_goal_mode_current_anchor.json": "a3baaea01f9dd1e8daf79201f810f7e540c3d01b23930ddd6a30ec56f0ab4448",
-    "results/m6d_goal_mode_local_harness_status.json": "a398599dec93c9e1155ef92c767eabfb7bb04cf7e0504d025b4b16e61df400a9",
-    "results/m6d_goal_mode_local_harness_status.md": "c560496f724a15475e14b663ce63028aa89d3e372d245a2417462322be2aa32a"
+    "results/m6d_followup_next_science_actions.json": "5cb4fd557bcc9575b824ffd20044e3d130cc9c0ba673d9325468665840259ac6",
+    "results/m6d_followup_next_science_actions.md": "a5b45e66f35c71cd70787e75836544c2a81b7fe1fb33557996d298e67cc470b4",
+    "results/m6d_goal_completion_audit.json": "c4072f6714d764462d1db4b04bd9016ea8ae86902cf102c7a16130208ad3b475",
+    "results/m6d_goal_completion_audit.md": "2d63669edc413c488b1d1abac0691b3cba282d2cf7d5efce73ed2c955767e05b",
+    "results/m6d_goal_drift_audit.json": "09dd869a559aad32d2d57344e557fe2f0278e2b7d90e883f81a6372da63de391",
+    "results/m6d_goal_drift_audit.md": "5f88b51a3ddac762132e48416abf5afe2cf238e6b5dccd89bc02360764f17465",
+    "results/m6d_goal_mode_current_anchor.json": "2f4ed5d368fb3ab98ef81b4ac41f75aac670f4bb8a7bb163510381bc57982472",
+    "results/m6d_goal_mode_local_harness_status.json": "bb9622896a8150f669fffd26bdc3b2d5f8ae7179ec9f683ec972140401d2e94e",
+    "results/m6d_goal_mode_local_harness_status.md": "e5b3d77d5e7d81b9ced07fd1ad59c6b82548c04fb92646867881b9f121bb3019"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w3_complete_w3b_fit_packet_ready_approval_wait",
+  "status": "goal_state_refreshed_w3_complete_w3b_af2_recovery_approval_wait",
   "submission_performed": false,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
@@ -43,7 +43,7 @@
     "results/m6d_goal_mode_local_harness_status.json",
     "results/m6d_goal_mode_local_harness_status.md"
   ],
-  "updated_at": "2026-07-15T12:14:09+09:00",
+  "updated_at": "2026-07-15T13:22:38+09:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -649,10 +649,48 @@
     "runtime_ready": false,
     "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
   },
-  "w3b_successor": {
-    "approval_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100",
-    "approval_recorded": false,
+  "w3b_fit_recovery": {
+    "af2_failed_before_prediction": 3,
+    "approval_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100",
+    "approval_token": "approve-w3b-af2-fit-recovery-3085449-3085452-3085455-h100",
     "audit_ok": true,
+    "boltz_completed": 3,
+    "can_claim_w3b": false,
+    "checks": {
+      "observation_exact": true,
+      "recovery_packet_exact": true,
+      "recovery_scope_exact": true,
+      "submission_scope_exact": true,
+      "target_job_bindings_exact": true
+    },
+    "failed_af2_job_ids": [
+      "3085449",
+      "3085452",
+      "3085455"
+    ],
+    "fit_records_ready": false,
+    "initial_failed_af2_gpu_seconds": 38,
+    "initial_fit_approval_recorded": true,
+    "initial_fit_jobs_submitted": 9,
+    "maximum_protocol_gpu_seconds_after_recovery": 86348,
+    "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
+    "no_submit": true,
+    "proteinmpnn_completed": 3,
+    "recovery_approval_recorded": false,
+    "recovery_jobs_submitted": 0,
+    "recovery_packet_ready": true,
+    "recovery_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+    "recovery_time_limit": "03:59:30",
+    "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait"
+  },
+  "w3b_initial_submission_performed": true,
+  "w3b_recovery_submission_performed": false,
+  "w3b_successor": {
+    "af2_failed_before_prediction": 3,
+    "approval_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100",
+    "approval_recorded": true,
+    "audit_ok": true,
+    "boltz_completed": 3,
     "can_claim_w3b": false,
     "certification_power": 0.8243330044654517,
     "checks": {
@@ -672,7 +710,7 @@
       "target_msa_strict_replay": true,
       "telemetry_reconciliation_scoped": true
     },
-    "claim_boundary": "Fit-stage packet readiness only. This artifact submits no job, records no approval, runs no candidate or predictor, and supports no W3b or biological-success claim.",
+    "claim_boundary": "The initial fit is incomplete: 180 candidates and 180 Boltz records exist, but all three AF2 jobs failed before prediction. Recovery is not approved or submitted, so no fit result, gate, certification, held-out test, or biological-success claim is supported.",
     "execution_lock": {
       "candidate_designs": 870,
       "lock_digest_sha256": "44f8acfbdda7bd42c7acce3b1aadaa111f862efb3b68f15da79d752dcaeb2b37",
@@ -681,6 +719,7 @@
       "n_targets": 8
     },
     "fit_packet_ready": true,
+    "fit_records_ready": false,
     "fit_scope": {
       "af2_h100_jobs": 3,
       "boltz_h100_jobs": 3,
@@ -693,18 +732,29 @@
       "1FSX_BA",
       "1FL7_DC"
     ],
+    "initial_failed_af2_gpu_seconds": 38,
+    "initial_fit_approval_recorded": true,
+    "initial_fit_jobs_submitted": 9,
     "matched_record_contract_ready": true,
-    "next_action": "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.",
+    "maximum_protocol_gpu_seconds_after_recovery": 86348,
+    "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
     "no_submit": true,
     "packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
+    "proteinmpnn_completed": 3,
+    "recovery_approval_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100",
+    "recovery_approval_recorded": false,
+    "recovery_jobs_submitted": 0,
+    "recovery_packet_ready": true,
+    "recovery_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+    "recovery_time_limit": "03:59:30",
     "role_counts": {
       "certification": 3,
       "fit": 3,
       "held_out_test": 2
     },
     "runtime_identity_ready": true,
-    "status": "w3b_fit_packet_ready_awaiting_explicit_approval",
-    "submitted_jobs": 0,
+    "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait",
+    "submitted_jobs": 9,
     "target_ids": [
       "1FSK_LJ",
       "1FSX_BA",

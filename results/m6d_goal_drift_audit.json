@@ -1,23 +1,23 @@
 {
   "active_risks": [
     {
-      "control": "W3 remains context-dependent or unresolved and cannot rescue W2c",
-      "id": "w3_result_reinterpretation",
+      "control": "the consumed nine-job approval cannot authorize the three recovery jobs",
+      "id": "w3b_initial_approval_reuse",
       "status": "managed"
     },
     {
-      "control": "fit approval cannot authorize certification, held-out test, adaptive top-up, or claims",
-      "id": "w3b_stage_authority_leak",
+      "control": "the recovery packet authorizes zero ProteinMPNN and zero Boltz jobs",
+      "id": "w3b_successful_producer_rerun",
       "status": "managed"
     },
     {
-      "control": "fit records must match the frozen runtime identities, execution lock, and per-target MSA hashes",
-      "id": "runtime_or_msa_substitution",
+      "control": "38 failed AF2 GPU-seconds are retained and recovery walltime keeps the worst case below 24 H100 hours",
+      "id": "w3b_gpu_budget_drift",
       "status": "managed"
     },
     {
-      "control": "the next scientific action is the bounded fit stage after approval, not another W2 or W3 rescue audit",
-      "id": "verification_instead_of_science",
+      "control": "candidate, A3M, manifest, runtime, and empty-output hashes are packet-bound and fail closed on drift",
+      "id": "w3b_partial_output_overwrite",
       "status": "managed"
     }
   ],
@@ -31,7 +31,7 @@
     "w2b": "terminal_not_supported_no_extension",
     "w2c": "threshold_learning_terminal_no_viability_claim",
     "w3": "completed_context_dependent_or_unresolved_no_population_claim",
-    "w3b": "fit_packet_ready_no_records_no_claim",
+    "w3b": "fit_incomplete_af2_path_failure_recovery_not_approved_no_claim",
     "w4": "closed_loop_plumbing_only"
   },
   "current_state": {
@@ -832,9 +832,11 @@
       "status": "w3_mechanism_panel_preregistered_inputs_ready_runtime_blocked_no_submit"
     },
     "W3b_disagreement_gate": {
+      "af2_failed_before_prediction": 3,
       "approval_phrase": "approve W3b fit-stage 180-design matched Boltz-AF2 generation on H100",
-      "approval_recorded": false,
+      "approval_recorded": true,
       "audit_ok": true,
+      "boltz_completed": 3,
       "can_claim_w3b": false,
       "certification_power": 0.8243330044654517,
       "checks": {
@@ -854,7 +856,7 @@
         "target_msa_strict_replay": true,
         "telemetry_reconciliation_scoped": true
       },
-      "claim_boundary": "Fit-stage packet readiness only. This artifact submits no job, records no approval, runs no candidate or predictor, and supports no W3b or biological-success claim.",
+      "claim_boundary": "The initial fit is incomplete: 180 candidates and 180 Boltz records exist, but all three AF2 jobs failed before prediction. Recovery is not approved or submitted, so no fit result, gate, certification, held-out test, or biological-success claim is supported.",
       "execution_lock": {
         "candidate_designs": 870,
         "lock_digest_sha256": "44f8acfbdda7bd42c7acce3b1aadaa111f862efb3b68f15da79d752dcaeb2b37",
@@ -863,6 +865,7 @@
         "n_targets": 8
       },
       "fit_packet_ready": true,
+      "fit_records_ready": false,
       "fit_scope": {
         "af2_h100_jobs": 3,
         "boltz_h100_jobs": 3,
@@ -875,18 +878,29 @@
         "1FSX_BA",
         "1FL7_DC"
       ],
+      "initial_failed_af2_gpu_seconds": 38,
+      "initial_fit_approval_recorded": true,
+      "initial_fit_jobs_submitted": 9,
       "matched_record_contract_ready": true,
-      "next_action": "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.",
+      "maximum_protocol_gpu_seconds_after_recovery": 86348,
+      "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
       "no_submit": true,
       "packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
+      "proteinmpnn_completed": 3,
+      "recovery_approval_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100",
+      "recovery_approval_recorded": false,
+      "recovery_jobs_submitted": 0,
+      "recovery_packet_ready": true,
+      "recovery_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+      "recovery_time_limit": "03:59:30",
       "role_counts": {
         "certification": 3,
         "fit": 3,
         "held_out_test": 2
       },
       "runtime_identity_ready": true,
-      "status": "w3b_fit_packet_ready_awaiting_explicit_approval",
-      "submitted_jobs": 0,
+      "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait",
+      "submitted_jobs": 9,
       "target_ids": [
         "1FSK_LJ",
         "1FSX_BA",
@@ -899,6 +913,40 @@
       ],
       "target_msa_gpu_hours": 0.21638888888888888,
       "target_msa_status": "target_msa_precompute_complete_8_of_8"
+    },
+    "W3b_fit_recovery": {
+      "af2_failed_before_prediction": 3,
+      "approval_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100",
+      "approval_token": "approve-w3b-af2-fit-recovery-3085449-3085452-3085455-h100",
+      "audit_ok": true,
+      "boltz_completed": 3,
+      "can_claim_w3b": false,
+      "checks": {
+        "observation_exact": true,
+        "recovery_packet_exact": true,
+        "recovery_scope_exact": true,
+        "submission_scope_exact": true,
+        "target_job_bindings_exact": true
+      },
+      "failed_af2_job_ids": [
+        "3085449",
+        "3085452",
+        "3085455"
+      ],
+      "fit_records_ready": false,
+      "initial_failed_af2_gpu_seconds": 38,
+      "initial_fit_approval_recorded": true,
+      "initial_fit_jobs_submitted": 9,
+      "maximum_protocol_gpu_seconds_after_recovery": 86348,
+      "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
+      "no_submit": true,
+      "proteinmpnn_completed": 3,
+      "recovery_approval_recorded": false,
+      "recovery_jobs_submitted": 0,
+      "recovery_packet_ready": true,
+      "recovery_packet_status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+      "recovery_time_limit": "03:59:30",
+      "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait"
     },
     "W4_closed_loop_DBTL": {
       "complete": true,
@@ -915,12 +963,12 @@
     "remaining": 1
   },
   "drift_assessment": {
-    "claims": "no_drift_negative_and_context_dependent_boundaries_preserved",
-    "execution": "w3b_fit_packet_ready_compute_not_approved_no_submit",
+    "claims": "no_drift_fit_incomplete_no_w3b_claim",
+    "execution": "initial_9_jobs_terminal_af2_recovery_packet_ready_not_approved_no_submit",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-    "operational_status": "current_surfaces_reconciled_to_w3b_fit_approval_gate",
-    "protocol": "no_drift_terminal_w2c_and_completed_w3_preserved_w3b_preregistered"
+    "operational_status": "current_surfaces_reconciled_to_af2_recovery_approval_gate",
+    "protocol": "no_drift_initial_failure_preserved_path_only_recovery_separately_gated"
   },
   "failures": [],
   "inputs": {
@@ -936,6 +984,6 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Wait for exact user approval naming W3b fit-stage 180-design matched Boltz-AF2 generation on H100. Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; no certification, held-out-test, or claim authority is included.",
-  "status": "no_major_direction_drift_w3_complete_w3b_fit_packet_ready_approval_wait"
+  "next_action": "Wait for exact user approval: approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100. Generic continuation and the consumed initial fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, adaptive-top-up, or claim authority is included.",
+  "status": "no_major_direction_drift_w3b_af2_path_recovery_approval_wait"
 }

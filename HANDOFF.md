@@ -88,14 +88,20 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > ColabFold container, all five AF2-Multimer-v3 parameter hashes, and exact predictor settings. The lock and
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}` are audit-clean and no-submit. Matched-record receipts
 > must bind the exact runtime-lock file SHA, lock digest, and predictor identity digest; recomputing internally
-> consistent hashes for an alternate runtime does not pass. No W3b fit predictor compute is approved.
-> The downstream W3b fit execution surface is also implemented without touching historical W2b/W2c runners.
-> `m6d_w3b_fit_packet` hash-binds unique-candidate validation, actual-runtime re-observation, dedicated
-> Boltz/AF2 producers, strict conversion, a guarded 3 CPU + 6 H100 submit bridge, and an append-only journal.
-> Six predictor jobs are limited to four hours each with no requeue. The tracked readiness is audit-clean with
-> `fit_packet_ready=true`; the immutable approval packet exists, and the guarded dry-run enumerates exactly
-> 3 CPU plus 6 H100 jobs, 180 candidates, and 360 evaluations with zero scheduler or receipt writes. Resume
-> from `docs/M6D_W3B_FIT_APPROVAL.md` and wait for the separate exact fit approval.
+> consistent hashes for an alternate runtime does not pass. The exact initial fit approval was consumed once.
+> Jobs `3085447`, `3085450`, and `3085453` completed ProteinMPNN; jobs `3085448`, `3085451`, and `3085454`
+> completed Boltz; AF2 jobs `3085449`, `3085452`, and `3085455` failed before prediction after successful
+> GPU/runtime preflight because the container could not resolve a relative input path. Their total failed
+> H100 allocation was 38 seconds. Exactly 180 candidates and 180 Boltz records exist; all 180 AF2 A3Ms and
+> manifests remain intact, output directories are empty, and no AF2 records or runtime receipts exist. This
+> is an incomplete fit stage and supports no W3b or biological-success claim.
+> The path-only AF2 recovery surface is separate: `m6d_w3b_fit_af2_recovery`,
+> `hpc/m6d_w3b_fit_af2_recovery_with_receipt.sh`, and
+> `hpc/run_predict_af2_w3b_fit_recovery.sbatch`. It revalidates all 180 A3Ms before any scheduler call,
+> uses absolute container paths, allows exactly three AF2 replacements, allows zero ProteinMPNN/Boltz jobs,
+> and remains below the 24 H100 GPU-hour ceiling at a worst-case 86,348 seconds. Local and Cayuga dry-runs
+> pass with zero scheduler or receipt writes. Resume from `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md`; only the
+> exact new recovery phrase can authorize those three retries. Do not reuse the consumed initial fit approval.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

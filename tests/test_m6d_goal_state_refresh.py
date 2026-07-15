@@ -552,6 +552,107 @@ def _w3b_fit_ready_artifacts():
     )
 
 
+def _w3b_recovery_artifacts():
+    targets = ["w3b-0", "w3b-1", "w3b-2"]
+    jobs = {
+        "w3b-0": ("101", "102", "103"),
+        "w3b-1": ("104", "105", "106"),
+        "w3b-2": ("107", "108", "109"),
+    }
+    submission_targets = [
+        {
+            "target_id": target_id,
+            "proteinmpnn_job_id": jobs[target_id][0],
+            "boltz_job_id": jobs[target_id][1],
+            "af2_job_id": jobs[target_id][2],
+        }
+        for target_id in targets
+    ]
+    submission = {
+        "artifact": "m6d_w3b_fit_submit_receipt_summary",
+        "status": "w3b_fit_jobs_submitted_awaiting_completion",
+        "n_targets": 3,
+        "n_candidate_designs": 180,
+        "n_predictor_evaluations_planned": 360,
+        "n_jobs": 9,
+        "n_proteinmpnn_jobs": 3,
+        "n_boltz_h100_jobs": 3,
+        "n_af2_h100_jobs": 3,
+        "targets": submission_targets,
+        "can_claim_w3b": False,
+    }
+    observation_targets = [
+        {
+            "target_id": target_id,
+            "proteinmpnn": {"job_id": jobs[target_id][0], "state": "COMPLETED", "exit_code": "0:0"},
+            "boltz": {"job_id": jobs[target_id][1], "state": "COMPLETED", "exit_code": "0:0"},
+            "failed_af2": {"job_id": jobs[target_id][2], "state": "FAILED", "exit_code": "1:0"},
+            "failure_kind": "container_relative_input_path_not_found_before_prediction",
+            "partial_state": {"terminal_af2_outputs_absent": True},
+        }
+        for target_id in targets
+    ]
+    observation = {
+        "artifact": "m6d_w3b_fit_initial_execution_observation",
+        "status": "w3b_fit_af2_path_failure_recovery_eligible_no_submit",
+        "audit_ok": True,
+        "n_targets": 3,
+        "n_initial_jobs": 9,
+        "n_proteinmpnn_completed": 3,
+        "n_af2_failed_before_prediction": 3,
+        "initial_failed_af2_gpu_seconds": 38,
+        "target_reports": observation_targets,
+        "recovery_submission_performed": False,
+        "no_submit": True,
+        "can_claim_w3b": False,
+    }
+    failed_ids = sorted((jobs[target_id][2] for target_id in targets), key=int)
+    recovery_packet = {
+        "artifact": "m6d_w3b_fit_af2_recovery_approval_packet",
+        "status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+        "audit_ok": True,
+        "approval_recorded": False,
+        "submitted_jobs": 0,
+        "no_submit": True,
+        "can_claim_w3b": False,
+        "packet_digest_sha256": "7" * 64,
+        "targets": [
+            {
+                "target_id": target_id,
+                "failed_af2_job_id": jobs[target_id][2],
+            }
+            for target_id in targets
+        ],
+        "approval_contract": {
+            "stage": "fit_af2_path_recovery",
+            "failed_af2_job_ids": failed_ids,
+            "target_count": 3,
+            "af2_h100_recovery_jobs": 3,
+            "proteinmpnn_jobs_authorized": 0,
+            "boltz_jobs_authorized": 0,
+            "recovery_time_limit": "03:59:30",
+            "requeue": False,
+            "initial_failed_af2_gpu_seconds": 38,
+            "maximum_protocol_gpu_seconds_after_recovery": 86348,
+            "maximum_protocol_h100_gpu_hours": 24.0,
+            "authorizes_certification": False,
+            "authorizes_held_out_test": False,
+            "authorizes_adaptive_top_up": False,
+            "authorizes_claim": False,
+            "user_phrase": (
+                "approve W3b AF2 fit recovery for failed jobs "
+                + ",".join(failed_ids)
+                + " on H100"
+            ),
+            "environment_variable": "BIO_SFM_APPROVE_W3B_AF2_RECOVERY",
+            "environment_value": (
+                "approve-w3b-af2-fit-recovery-" + "-".join(failed_ids) + "-h100"
+            ),
+        },
+    }
+    return submission, observation, recovery_packet
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -593,7 +694,7 @@ def _legacy_bundle():
     return anchor, completion, drift, actions, harness
 
 
-def _refresh_current_w3b(*, completion=None, artifacts=None):
+def _refresh_current_w3b(*, completion=None, artifacts=None, recovery=None):
     gate = _w2c()
     gate["execution_readiness"] = {
         "target_manifest_present": True,
@@ -602,6 +703,9 @@ def _refresh_current_w3b(*, completion=None, artifacts=None):
         "target_msa_ready": False,
         "evaluator_implemented": True,
     }
+    optional = [*(artifacts or _w3b_fit_ready_artifacts())]
+    if recovery is not None:
+        optional.extend(recovery)
     return refresh_bundle(
         *_legacy_bundle(),
         _w2b(),
@@ -613,7 +717,7 @@ def _refresh_current_w3b(*, completion=None, artifacts=None):
         _threshold_learning_result(),
         _w3_mechanism_packet(),
         completion or _w3_completion(),
-        *(artifacts or _w3b_fit_ready_artifacts()),
+        *optional,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1008,7 +1112,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertTrue(bundle["report"]["no_submit"])
         self.assertEqual(len(bundle["report"]["next_actions_ranked"]), 5)
         self.assertIn(
-            "W3b fit approval recorded: `False`",
+            "W3b initial fit approval recorded: `False`",
             render_completion_markdown(bundle["completion"]),
         )
 
@@ -1029,6 +1133,37 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         artifacts[6]["submitted_jobs"] = 1
         with self.assertRaisesRegex(ValueError, "fit_packet_ready_no_submit"):
             _refresh_current_w3b(artifacts=tuple(artifacts))
+
+    def test_w3b_initial_fit_failure_advances_to_separate_af2_recovery_gate(self):
+        bundle = _refresh_current_w3b(recovery=_w3b_recovery_artifacts())
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3_complete_w3b_af2_recovery_approval_wait",
+        )
+        self.assertEqual(bundle["harness"]["hpc_status"]["jobs_submitted"], 9)
+        self.assertEqual(bundle["harness"]["hpc_status"]["jobs_completed"], 6)
+        self.assertEqual(bundle["harness"]["hpc_status"]["jobs_failed"], 3)
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["w3b_af2_recovery_jobs_submitted"],
+            0,
+        )
+        self.assertFalse(
+            bundle["anchor"]["current_status"]["w3b_af2_recovery_approval_recorded"]
+        )
+        self.assertIn("approve W3b AF2 fit recovery", bundle["report"]["next_action"])
+        self.assertFalse(bundle["report"]["cayuga_submission_allowed"])
+        self.assertFalse(bundle["report"]["w3b_successor"]["can_claim_w3b"])
+        self.assertIn(
+            "initial fit is incomplete",
+            bundle["report"]["w3b_successor"]["claim_boundary"].lower(),
+        )
+
+    def test_w3b_af2_recovery_rejects_any_recorded_recovery_submission(self):
+        recovery = list(_w3b_recovery_artifacts())
+        recovery[2]["submitted_jobs"] = 1
+        with self.assertRaisesRegex(ValueError, "recovery_packet_exact"):
+            _refresh_current_w3b(recovery=tuple(recovery))
 
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
@@ -1124,6 +1259,15 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3b_matched": os.path.join(root, "missing-w3b-matched.json"),
                 "w3b_fit_readiness": os.path.join(root, "missing-w3b-fit-readiness.json"),
                 "w3b_fit_approval": os.path.join(root, "missing-w3b-fit-approval.json"),
+                "w3b_fit_submission": os.path.join(
+                    root, "missing-w3b-fit-submission.json"
+                ),
+                "w3b_fit_observation": os.path.join(
+                    root, "missing-w3b-fit-observation.json"
+                ),
+                "w3b_af2_recovery": os.path.join(
+                    root, "missing-w3b-af2-recovery.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -1151,6 +1295,10 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w3b-matched-record-contract", paths["w3b_matched"],
                 "--w3b-fit-packet-readiness", paths["w3b_fit_readiness"],
                 "--w3b-fit-approval-packet", paths["w3b_fit_approval"],
+                "--w3b-fit-submission-summary", paths["w3b_fit_submission"],
+                "--w3b-fit-initial-execution-observation",
+                paths["w3b_fit_observation"],
+                "--w3b-fit-af2-recovery-packet", paths["w3b_af2_recovery"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -1175,6 +1323,9 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3b_matched",
                     "w3b_fit_readiness",
                     "w3b_fit_approval",
+                    "w3b_fit_submission",
+                    "w3b_fit_observation",
+                    "w3b_af2_recovery",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)

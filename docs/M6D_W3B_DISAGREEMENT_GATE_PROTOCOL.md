@@ -5,10 +5,11 @@ Frozen preregistration status: `w3b_design_power_qualified_inputs_incomplete_no_
 Date: 2026-07-14.
 
 Operational update, 2026-07-15: the frozen protocol below is unchanged. The separately approved target-MSA
-stage completed 8/8, the post-MSA design audit and immutable execution/runtime locks pass, and the fit
-approval packet is `w3b_fit_packet_ready_awaiting_explicit_approval`. No W3b candidate, predictor,
-certification, held-out-test, or claim output exists. See `docs/M6D_W3B_TARGET_MSA_COMPLETION.md` and
-`docs/M6D_W3B_FIT_APPROVAL.md` for the current execution boundary.
+stage completed 8/8, and the later exact initial fit approval was consumed once. ProteinMPNN and Boltz
+completed all three fit targets, producing 180 candidates and 180 Boltz records. All three AF2 jobs failed
+before prediction because the container could not resolve a relative input path. The separate AF2-only
+recovery packet is ready, with no retry submitted and no fit, certification, held-out-test, or claim result.
+See `docs/M6D_W3B_FIT_APPROVAL.md` and `docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md` for the current boundary.
 
 ## Scientific question
 

@@ -1,0 +1,175 @@
+{
+  "approval_contract": {
+    "af2_h100_recovery_jobs": 3,
+    "authorizes_adaptive_top_up": false,
+    "authorizes_certification": false,
+    "authorizes_claim": false,
+    "authorizes_held_out_test": false,
+    "boltz_jobs_authorized": 0,
+    "environment_value": "approve-w3b-af2-fit-recovery-3085449-3085452-3085455-h100",
+    "environment_variable": "BIO_SFM_APPROVE_W3B_AF2_RECOVERY",
+    "failed_af2_job_ids": [
+      "3085449",
+      "3085452",
+      "3085455"
+    ],
+    "initial_failed_af2_gpu_seconds": 38,
+    "maximum_original_boltz_gpu_seconds": 43200,
+    "maximum_protocol_gpu_seconds_after_recovery": 86348,
+    "maximum_protocol_h100_gpu_hours": 24.0,
+    "maximum_recovery_af2_gpu_seconds": 43110,
+    "proteinmpnn_jobs_authorized": 0,
+    "recovery_time_limit": "03:59:30",
+    "requeue": false,
+    "stage": "fit_af2_path_recovery",
+    "target_count": 3,
+    "user_phrase": "approve W3b AF2 fit recovery for failed jobs 3085449,3085452,3085455 on H100"
+  },
+  "approval_recorded": false,
+  "artifact": "m6d_w3b_fit_af2_recovery_approval_packet",
+  "audit_ok": true,
+  "bound_artifacts": [
+    {
+      "bytes": 8876,
+      "path": "results/m6d_w3b_fit_initial_execution_observation.json",
+      "sha256": "c3de8eb98191e335afa585261a2a5f62d6ba120793b402c5405fb140b6192821"
+    },
+    {
+      "bytes": 5327,
+      "path": "hpc/run_predict_af2_w3b_fit_recovery.sbatch",
+      "sha256": "f84f1fd23d588cbbe5522cbceaf0427aead63dcb6f726d6bf1e3ce4ef0af5618"
+    },
+    {
+      "bytes": 5230,
+      "path": "hpc/m6d_w3b_fit_af2_recovery_with_receipt.sh",
+      "sha256": "8c5d1061b65da6510b05bbb0c3a9ed5ad5eeff1c1d3617ae8aaf09db882b92cd"
+    },
+    {
+      "bytes": 30422,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_fit_af2_recovery.py",
+      "sha256": "bc69c1251128cb606a5dcfa71aaa3a094670156a8ca84f52339d819b86195cc7"
+    },
+    {
+      "bytes": 12311,
+      "path": "hpc/convert_w3b_af2_outputs.py",
+      "sha256": "22db9bf3a77f3b892fd70c1b4b6e072b27466734932f6f52b20841c3bbaa6870"
+    },
+    {
+      "bytes": 38029,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_matched_records.py",
+      "sha256": "6628973a2eefc9517b8bd8c68debb27924d4403964e150e97a78bd34aeb7cf6a"
+    },
+    {
+      "bytes": 18548,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_producer_contract.py",
+      "sha256": "5ebf85ef2263f7664ba4acda6d1e7cc6a782b9f40b4247704349724ef43f4a16"
+    },
+    {
+      "bytes": 8205,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3b_runtime_observation.py",
+      "sha256": "cc4daa5445c725566b73875552f5b083f4cb44bc4c4e4be063b3fd5f0fd7ae93"
+    }
+  ],
+  "can_claim_w3b": false,
+  "claim_boundary": "Recovery of the three path-failed AF2 fit jobs only. It cannot rerun ProteinMPNN or Boltz, change candidates or MSAs, authorize later stages, or support a claim.",
+  "next_action": "wait for the exact recovery approval phrase; generic continuation is insufficient",
+  "no_submit": true,
+  "observation": {
+    "bytes": 8876,
+    "path": "results/m6d_w3b_fit_initial_execution_observation.json",
+    "sha256": "c3de8eb98191e335afa585261a2a5f62d6ba120793b402c5405fb140b6192821"
+  },
+  "packet_digest_sha256": "6da6506d6cb314149167c0709f19880d6a14bbc23b8de305c3a37402eda20672",
+  "status": "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval",
+  "submitted_jobs": 0,
+  "targets": [
+    {
+      "failed_af2_job_id": "3085455",
+      "partial_state": {
+        "af2_input_count": 60,
+        "af2_input_digest_sha256": "678d725726c0dffaab1a62b8c97c785dcb0b796a33bd8e6baf0055d0bb7e5f3d",
+        "af2_input_manifest": {
+          "bytes": 76654,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_input_manifest.json",
+          "sha256": "8fcf1b83d270ca7a1bc7dbdabe571b4b061081c84ef6569eac20258ff0e8f6e0"
+        },
+        "af2_output_dir": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_predictions",
+        "af2_output_dir_empty": true,
+        "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/records_af2_multimer.jsonl",
+        "af2_runtime_identity": {
+          "bytes": 1728,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_observed_runtime_identity.json",
+          "sha256": "128c4211664b5d3ae86de06bbeac2983bdfde8ae6cfd4f2f1e1ff85b4265b0d8"
+        },
+        "af2_runtime_receipt": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_multimer_runtime_receipt.json",
+        "candidates": {
+          "bytes": 35907,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/candidates_proteinmpnn_complex.jsonl",
+          "sha256": "5fd39d6cf92ba3091b7430c1df7c0550142040320e57768660343d2e2df4fee6"
+        },
+        "target_id": "1FL7_DC",
+        "terminal_af2_outputs_absent": true
+      },
+      "target_id": "1FL7_DC"
+    },
+    {
+      "failed_af2_job_id": "3085449",
+      "partial_state": {
+        "af2_input_count": 60,
+        "af2_input_digest_sha256": "e537962932020e3926fb4b3da3409543981e3cc6398123c63cbaeeb1cfdde592",
+        "af2_input_manifest": {
+          "bytes": 87754,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_input_manifest.json",
+          "sha256": "cd5fabbab1ea41cbf4fca546e0a083b9f8d2b3618d1e1633bde4a465184f4c89"
+        },
+        "af2_output_dir": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_predictions",
+        "af2_output_dir_empty": true,
+        "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/records_af2_multimer.jsonl",
+        "af2_runtime_identity": {
+          "bytes": 1728,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_observed_runtime_identity.json",
+          "sha256": "128c4211664b5d3ae86de06bbeac2983bdfde8ae6cfd4f2f1e1ff85b4265b0d8"
+        },
+        "af2_runtime_receipt": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_multimer_runtime_receipt.json",
+        "candidates": {
+          "bytes": 47006,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/candidates_proteinmpnn_complex.jsonl",
+          "sha256": "d987b6910f703a74742a9f0808ed86e087d92e23b16a866acce63715a1c6ccda"
+        },
+        "target_id": "1FSK_LJ",
+        "terminal_af2_outputs_absent": true
+      },
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "failed_af2_job_id": "3085452",
+      "partial_state": {
+        "af2_input_count": 60,
+        "af2_input_digest_sha256": "ca69c6a4706502fbd67c08a7b816bbb4dcb95f89097a2a0ae2b67fdb403e33d3",
+        "af2_input_manifest": {
+          "bytes": 82174,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_input_manifest.json",
+          "sha256": "cd47336f5f36a06b32f4075331854a62efcafae12511af2c62d90e76278f5e4e"
+        },
+        "af2_output_dir": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_predictions",
+        "af2_output_dir_empty": true,
+        "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/records_af2_multimer.jsonl",
+        "af2_runtime_identity": {
+          "bytes": 1728,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_observed_runtime_identity.json",
+          "sha256": "128c4211664b5d3ae86de06bbeac2983bdfde8ae6cfd4f2f1e1ff85b4265b0d8"
+        },
+        "af2_runtime_receipt": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_multimer_runtime_receipt.json",
+        "candidates": {
+          "bytes": 41422,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/candidates_proteinmpnn_complex.jsonl",
+          "sha256": "31204d42f358278015454f8c66519f4bce8895550d325c13cf7d73f2563030e1"
+        },
+        "target_id": "1FSX_BA",
+        "terminal_af2_outputs_absent": true
+      },
+      "target_id": "1FSX_BA"
+    }
+  ],
+  "version": 1
+}

@@ -15,6 +15,10 @@ import json
 import os
 from typing import Any, Dict, Iterable, Optional
 
+from bio_sfm_designer.experiments.m6d_w3b_fit_af2_recovery import (
+    verify_recovery_packet,
+)
+
 
 _W2B_TERMINAL_STATUS = "w2b_certification_terminal_not_supported"
 _W2C_DESIGN_STATUS = "w2c_design_power_qualified_no_submit"
@@ -71,6 +75,7 @@ _W3B_FIT_NEXT_ACTION = (
     "Generic continuation, goal-mode resume, target-MSA approval, and packet preparation do not transfer; "
     "no certification, held-out-test, or claim authority is included."
 )
+_W3B_AF2_RECOVERY_STATUS = "w3b_fit_af2_recovery_packet_ready_awaiting_explicit_approval"
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
     "candidates. Require a new explicit approval before compute and do not retune any learned threshold."
@@ -991,6 +996,157 @@ def _w3b_fit_ready_summary(
     }
 
 
+def _w3b_fit_recovery_summary(
+    w3b: Dict[str, Any],
+    submission: Dict[str, Any],
+    observation: Dict[str, Any],
+    recovery_packet: Dict[str, Any],
+) -> Dict[str, Any]:
+    submission_targets = {
+        str(row.get("target_id")): row
+        for row in submission.get("targets", [])
+        if isinstance(row, dict)
+    }
+    observation_targets = {
+        str(row.get("target_id")): row
+        for row in observation.get("target_reports", [])
+        if isinstance(row, dict)
+    }
+    recovery_targets = {
+        str(row.get("target_id")): row
+        for row in recovery_packet.get("targets", [])
+        if isinstance(row, dict)
+    }
+    fit_target_ids = sorted(str(value) for value in w3b.get("fit_target_ids", []))
+    contract = (
+        recovery_packet.get("approval_contract")
+        if isinstance(recovery_packet.get("approval_contract"), dict)
+        else {}
+    )
+    failed_job_ids = sorted(
+        (str(row.get("failed_af2", {}).get("job_id")) for row in observation_targets.values()),
+        key=int,
+    )
+    checks = {
+        "submission_scope_exact": (
+            submission.get("artifact") == "m6d_w3b_fit_submit_receipt_summary"
+            and submission.get("status") == "w3b_fit_jobs_submitted_awaiting_completion"
+            and submission.get("n_targets") == 3
+            and submission.get("n_candidate_designs") == 180
+            and submission.get("n_predictor_evaluations_planned") == 360
+            and submission.get("n_jobs") == 9
+            and submission.get("n_proteinmpnn_jobs") == 3
+            and submission.get("n_boltz_h100_jobs") == 3
+            and submission.get("n_af2_h100_jobs") == 3
+            and submission.get("can_claim_w3b") is False
+            and sorted(submission_targets) == fit_target_ids
+        ),
+        "observation_exact": (
+            observation.get("artifact") == "m6d_w3b_fit_initial_execution_observation"
+            and observation.get("status")
+            == "w3b_fit_af2_path_failure_recovery_eligible_no_submit"
+            and observation.get("audit_ok") is True
+            and observation.get("n_targets") == 3
+            and observation.get("n_initial_jobs") == 9
+            and observation.get("n_proteinmpnn_completed") == 3
+            and observation.get("n_af2_failed_before_prediction") == 3
+            and observation.get("initial_failed_af2_gpu_seconds") == 38
+            and observation.get("recovery_submission_performed") is False
+            and observation.get("no_submit") is True
+            and observation.get("can_claim_w3b") is False
+            and sorted(observation_targets) == fit_target_ids
+            and all(
+                row.get("proteinmpnn", {}).get("state") == "COMPLETED"
+                and row.get("proteinmpnn", {}).get("exit_code") == "0:0"
+                and row.get("boltz", {}).get("state") == "COMPLETED"
+                and row.get("boltz", {}).get("exit_code") == "0:0"
+                and row.get("failed_af2", {}).get("state") == "FAILED"
+                and row.get("failed_af2", {}).get("exit_code") == "1:0"
+                and row.get("failure_kind")
+                == "container_relative_input_path_not_found_before_prediction"
+                and row.get("partial_state", {}).get("terminal_af2_outputs_absent") is True
+                for row in observation_targets.values()
+            )
+        ),
+        "recovery_packet_exact": (
+            recovery_packet.get("artifact")
+            == "m6d_w3b_fit_af2_recovery_approval_packet"
+            and recovery_packet.get("status") == _W3B_AF2_RECOVERY_STATUS
+            and recovery_packet.get("audit_ok") is True
+            and recovery_packet.get("approval_recorded") is False
+            and recovery_packet.get("submitted_jobs") == 0
+            and recovery_packet.get("no_submit") is True
+            and recovery_packet.get("can_claim_w3b") is False
+            and _is_sha256(recovery_packet.get("packet_digest_sha256"))
+            and sorted(recovery_targets) == fit_target_ids
+        ),
+        "recovery_scope_exact": (
+            contract.get("stage") == "fit_af2_path_recovery"
+            and contract.get("failed_af2_job_ids") == failed_job_ids
+            and contract.get("target_count") == 3
+            and contract.get("af2_h100_recovery_jobs") == 3
+            and contract.get("proteinmpnn_jobs_authorized") == 0
+            and contract.get("boltz_jobs_authorized") == 0
+            and contract.get("recovery_time_limit") == "03:59:30"
+            and contract.get("requeue") is False
+            and contract.get("initial_failed_af2_gpu_seconds") == 38
+            and contract.get("maximum_protocol_gpu_seconds_after_recovery", 86400) < 86400
+            and contract.get("maximum_protocol_h100_gpu_hours") == 24.0
+            and contract.get("authorizes_certification") is False
+            and contract.get("authorizes_held_out_test") is False
+            and contract.get("authorizes_adaptive_top_up") is False
+            and contract.get("authorizes_claim") is False
+            and isinstance(contract.get("user_phrase"), str)
+            and contract.get("user_phrase", "").startswith(
+                "approve W3b AF2 fit recovery for failed jobs "
+            )
+            and isinstance(contract.get("environment_value"), str)
+            and contract.get("environment_variable")
+            == "BIO_SFM_APPROVE_W3B_AF2_RECOVERY"
+        ),
+        "target_job_bindings_exact": all(
+            submission_targets[target_id].get("af2_job_id")
+            == observation_targets[target_id].get("failed_af2", {}).get("job_id")
+            == recovery_targets[target_id].get("failed_af2_job_id")
+            for target_id in fit_target_ids
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3b fit recovery invariants failed: {', '.join(failed)}")
+    phrase = str(contract["user_phrase"])
+    return {
+        "status": "w3b_fit_initial_execution_af2_path_failure_recovery_approval_wait",
+        "audit_ok": True,
+        "initial_fit_approval_recorded": True,
+        "initial_fit_jobs_submitted": 9,
+        "proteinmpnn_completed": 3,
+        "boltz_completed": 3,
+        "af2_failed_before_prediction": 3,
+        "failed_af2_job_ids": failed_job_ids,
+        "initial_failed_af2_gpu_seconds": 38,
+        "fit_records_ready": False,
+        "recovery_packet_status": recovery_packet["status"],
+        "recovery_packet_ready": True,
+        "recovery_approval_recorded": False,
+        "recovery_jobs_submitted": 0,
+        "recovery_time_limit": contract["recovery_time_limit"],
+        "maximum_protocol_gpu_seconds_after_recovery": contract[
+            "maximum_protocol_gpu_seconds_after_recovery"
+        ],
+        "approval_phrase": phrase,
+        "approval_token": contract["environment_value"],
+        "no_submit": True,
+        "can_claim_w3b": False,
+        "next_action": (
+            f"Wait for exact user approval: {phrase}. Generic continuation and the consumed initial "
+            "fit approval do not authorize recovery; no ProteinMPNN, Boltz, certification, held-out-test, "
+            "adaptive-top-up, or claim authority is included."
+        ),
+        "checks": checks,
+    }
+
+
 def _apply_w3b_fit_ready_state(
     bundle: Dict[str, Dict[str, Any]],
     w3_completion: Dict[str, Any],
@@ -1251,6 +1407,259 @@ def _apply_w3b_fit_ready_state(
     })
 
 
+def _apply_w3b_fit_recovery_state(
+    bundle: Dict[str, Dict[str, Any]],
+    w3_completion: Dict[str, Any],
+    w3b: Dict[str, Any],
+    recovery: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3b_AF2_fit_recovery_explicit_approval"
+    next_action = recovery["next_action"]
+    ranked_actions = [
+        "Preserve the completed W3 result and the immutable initial W3b fit submission receipt.",
+        "Preserve 3/3 ProteinMPNN and 3/3 Boltz successes; do not rerun either producer.",
+        "Wait for the exact packet-bound approval for the three AF2 path-only recovery jobs.",
+        "After approval, submit only three AF2 H100 recovery jobs with the reduced 03:59:30 limit.",
+        "After terminal success, sync AF2 records, assemble exactly 180 matched rows, and apply the frozen fit stop rule.",
+    ]
+    successor = copy.deepcopy(w3b)
+    successor.update({
+        "status": recovery["status"],
+        "approval_recorded": True,
+        "submitted_jobs": 9,
+        "initial_fit_approval_recorded": True,
+        "initial_fit_jobs_submitted": 9,
+        "proteinmpnn_completed": 3,
+        "boltz_completed": 3,
+        "af2_failed_before_prediction": 3,
+        "fit_records_ready": False,
+        "recovery_packet_status": recovery["recovery_packet_status"],
+        "recovery_packet_ready": True,
+        "recovery_approval_recorded": False,
+        "recovery_jobs_submitted": 0,
+        "recovery_time_limit": recovery["recovery_time_limit"],
+        "recovery_approval_phrase": recovery["approval_phrase"],
+        "initial_failed_af2_gpu_seconds": recovery["initial_failed_af2_gpu_seconds"],
+        "maximum_protocol_gpu_seconds_after_recovery": recovery[
+            "maximum_protocol_gpu_seconds_after_recovery"
+        ],
+        "claim_boundary": (
+            "The initial fit is incomplete: 180 candidates and 180 Boltz records exist, but all three "
+            "AF2 jobs failed before prediction. Recovery is not approved or submitted, so no fit result, "
+            "gate, certification, held-out test, or biological-success claim is supported."
+        ),
+        "no_submit": True,
+        "can_claim_w3b": False,
+        "next_action": next_action,
+    })
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor["objective"] = (
+        "Complete the preregistered W3b fit stage without changing candidates, MSAs, runtimes, or rules: "
+        "preserve the successful ProteinMPNN/Boltz outputs, recover only the three AF2 jobs that failed "
+        "before prediction after separate approval, then apply the frozen fit stop rule."
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3b_fit_submission_receipt": "results/m6d_w3b_fit_submit_receipt.jsonl",
+        "w3b_fit_submission_summary": "results/m6d_w3b_fit_submit_receipt_summary.json",
+        "w3b_fit_initial_execution_observation": (
+            "results/m6d_w3b_fit_initial_execution_observation.json"
+        ),
+        "w3b_af2_recovery_packet": (
+            "results/m6d_w3b_fit_af2_recovery_approval_packet.json"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_in_progress_w3_complete_w3b_af2_recovery_approval_wait",
+        "goal_progress": recovery["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3": w3_completion["status"],
+        "w3b": successor["status"],
+        "w3b_initial_fit_approval_recorded": True,
+        "w3b_initial_fit_jobs_submitted": 9,
+        "w3b_proteinmpnn_completed": 3,
+        "w3b_boltz_completed": 3,
+        "w3b_af2_failed_before_prediction": 3,
+        "w3b_fit_records_ready": False,
+        "w3b_af2_recovery_packet_ready": True,
+        "w3b_af2_recovery_approval_recorded": False,
+        "w3b_af2_recovery_jobs_submitted": 0,
+        "w3b_cayuga_submission_allowed": False,
+        "w3b_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3b_successor"] = successor
+    anchor["w3b_fit_recovery"] = recovery
+    anchor["next_resume_steps"] = [
+        "read the initial nine-job receipt and preserve all original job IDs",
+        "preserve the 180 candidates and 180 completed Boltz records without rerunning them",
+        "read the hash-bound AF2 recovery observation and approval packet",
+        "do not infer recovery approval from the consumed initial fit approval or generic continuation",
+        "after exact approval, submit only the three packet-bound AF2 recovery jobs",
+        "after recovery success, assemble 180 matched rows and apply the frozen fit stop rule",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3_status": w3_completion["status"],
+        "w3b_status": successor["status"],
+        "w3b_initial_fit_jobs_submitted": 9,
+        "w3b_af2_recovery_approval_recorded": False,
+        "w3b_af2_recovery_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3_complete_w3b_af2_recovery_approval_wait",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery,
+    })
+    completion["claim_boundary"]["w3b"] = (
+        "initial fit submitted; ProteinMPNN and Boltz complete, AF2 failed before prediction, "
+        "recovery packet ready without approval or recovery submission"
+    )
+    completion.setdefault("workstream_status", {}).update({
+        "W3b_disagreement_gate": {
+            "complete": False,
+            "scientific_success": None,
+            "status": successor["status"],
+            "remaining_requirement": requirement,
+        },
+    })
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3b_af2_path_recovery_approval_wait",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift["claim_boundary"]["w3b"] = (
+        "fit_incomplete_af2_path_failure_recovery_not_approved_no_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3b_initial_approval_reuse",
+            "status": "managed",
+            "control": "the consumed nine-job approval cannot authorize the three recovery jobs",
+        },
+        {
+            "id": "w3b_successful_producer_rerun",
+            "status": "managed",
+            "control": "the recovery packet authorizes zero ProteinMPNN and zero Boltz jobs",
+        },
+        {
+            "id": "w3b_gpu_budget_drift",
+            "status": "managed",
+            "control": "38 failed AF2 GPU-seconds are retained and recovery walltime keeps the worst case below 24 H100 hours",
+        },
+        {
+            "id": "w3b_partial_output_overwrite",
+            "status": "managed",
+            "control": "candidate, A3M, manifest, runtime, and empty-output hashes are packet-bound and fail closed on drift",
+        },
+    ]
+    drift["drift_assessment"].update({
+        "protocol": "no_drift_initial_failure_preserved_path_only_recovery_separately_gated",
+        "claims": "no_drift_fit_incomplete_no_w3b_claim",
+        "execution": "initial_9_jobs_terminal_af2_recovery_packet_ready_not_approved_no_submit",
+        "operational_status": "current_surfaces_reconciled_to_af2_recovery_approval_gate",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).update({
+        "W3b_disagreement_gate": successor,
+        "W3b_fit_recovery": recovery,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3b_initial_fit_terminal_af2_recovery_awaiting_explicit_approval",
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3b_initial_submission_performed": True,
+        "w3b_recovery_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions["claim_boundary"]["w3b_disagreement_aware_gate"] = (
+        "not_tested_fit_incomplete_af2_recovery_wait"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3b_af2_recovery_approval_wait"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3b fit AF2 path-only recovery approval boundary",
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3b_initial_fit_submission": "9_jobs_terminal",
+        "w3b_af2_recovery_packet": recovery["recovery_packet_status"],
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_submitted": 9,
+        "jobs_completed": 6,
+        "jobs_failed": 3,
+        "jobs_running": 0,
+        "job_state": "initial_fit_terminal_af2_path_failure_recovery_not_approved",
+        "w3b_fit_approval_recorded": True,
+        "w3b_fit_jobs_submitted": 9,
+        "w3b_proteinmpnn_jobs_completed": 3,
+        "w3b_boltz_jobs_completed": 3,
+        "w3b_af2_jobs_failed_before_prediction": 3,
+        "w3b_af2_recovery_packet_status": recovery["recovery_packet_status"],
+        "w3b_af2_recovery_approval_recorded": False,
+        "w3b_af2_recovery_jobs_submitted": 0,
+        "w3b_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness["claim_boundary"]["w3b"] = (
+        "fit_incomplete_af2_recovery_not_approved_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3_complete_w3b_af2_recovery_approval_wait",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3_mechanism_completion": w3_completion,
+        "w3b_successor": successor,
+        "w3b_fit_recovery": recovery,
+        "submission_performed": False,
+        "w3b_initial_submission_performed": True,
+        "w3b_recovery_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -1274,6 +1683,9 @@ def refresh_bundle(
     w3b_matched_record_contract: Optional[Dict[str, Any]] = None,
     w3b_fit_packet_readiness: Optional[Dict[str, Any]] = None,
     w3b_fit_approval_packet: Optional[Dict[str, Any]] = None,
+    w3b_fit_submission_summary: Optional[Dict[str, Any]] = None,
+    w3b_fit_initial_execution_observation: Optional[Dict[str, Any]] = None,
+    w3b_fit_af2_recovery_packet: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -1308,6 +1720,30 @@ def refresh_bundle(
         if all(isinstance(value, dict) for value in w3b_inputs)
         else None
     )
+    w3b_recovery_inputs = (
+        w3b_fit_submission_summary,
+        w3b_fit_initial_execution_observation,
+        w3b_fit_af2_recovery_packet,
+    )
+    if any(value is not None for value in w3b_recovery_inputs) and not all(
+        isinstance(value, dict) for value in w3b_recovery_inputs
+    ):
+        raise ValueError("W3b AF2 recovery state requires all three bound execution artifacts")
+    w3b_recovery = (
+        _w3b_fit_recovery_summary(
+            w3b,
+            w3b_fit_submission_summary,
+            w3b_fit_initial_execution_observation,
+            w3b_fit_af2_recovery_packet,
+        )
+        if (
+            isinstance(w3b, dict)
+            and isinstance(w3b_fit_submission_summary, dict)
+            and isinstance(w3b_fit_initial_execution_observation, dict)
+            and isinstance(w3b_fit_af2_recovery_packet, dict)
+        )
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -1322,6 +1758,8 @@ def refresh_bundle(
         raise ValueError("W3 completion requires the validated preregistered mechanism packet")
     if w3b is not None and w3_completion is None:
         raise ValueError("W3b fit-ready state requires the validated completed W3 adjudication")
+    if any(value is not None for value in w3b_recovery_inputs) and w3b is None:
+        raise ValueError("W3b AF2 recovery state requires the validated initial fit packet")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -2174,6 +2612,14 @@ def refresh_bundle(
             w3b,
             runtime_goal_active=runtime_goal_active,
         )
+    if w3b_recovery is not None and w3b is not None and w3_completion is not None:
+        _apply_w3b_fit_recovery_state(
+            bundle,
+            w3_completion,
+            w3b,
+            w3b_recovery,
+            runtime_goal_active=runtime_goal_active,
+        )
     return bundle
 
 
@@ -2200,6 +2646,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3_mechanism = report.get("w3_mechanism_panel") or {}
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
+    w3b_recovery = report.get("w3b_fit_recovery") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -2230,8 +2677,14 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3 completion: `{w3_completion.get('status', 'not_complete')}`.",
         f"W3 joint outcome: `{w3_completion.get('joint_outcome', 'not_adjudicated')}`.",
         f"W3b: `{w3b.get('status', 'not_ready')}`.",
-        f"W3b fit approval recorded: `{w3b.get('approval_recorded', False)}`.",
-        f"W3b fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`.",
+        f"W3b initial fit approval recorded: `{w3b.get('approval_recorded', False)}`.",
+        f"W3b initial fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`.",
+        f"W3b ProteinMPNN completed: `{w3b.get('proteinmpnn_completed', 0)}`.",
+        f"W3b Boltz completed: `{w3b.get('boltz_completed', 0)}`.",
+        f"W3b AF2 failed before prediction: `{w3b.get('af2_failed_before_prediction', 0)}`.",
+        f"W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`.",
+        f"W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`.",
+        f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -2254,6 +2707,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3_mechanism = report.get("w3_mechanism_panel") or {}
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
+    w3b_recovery = report.get("w3b_fit_recovery") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -2288,8 +2742,14 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3 completion: `{w3_completion.get('status', 'not_complete')}`",
         f"- W3 joint outcome: `{w3_completion.get('joint_outcome', 'not_adjudicated')}`",
         f"- W3b: `{w3b.get('status', 'not_ready')}`",
-        f"- W3b fit approval recorded: `{w3b.get('approval_recorded', False)}`",
-        f"- W3b fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`",
+        f"- W3b initial fit approval recorded: `{w3b.get('approval_recorded', False)}`",
+        f"- W3b initial fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`",
+        f"- W3b ProteinMPNN completed: `{w3b.get('proteinmpnn_completed', 0)}`",
+        f"- W3b Boltz completed: `{w3b.get('boltz_completed', 0)}`",
+        f"- W3b AF2 failed before prediction: `{w3b.get('af2_failed_before_prediction', 0)}`",
+        f"- W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`",
+        f"- W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`",
+        f"- W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -2337,6 +2797,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     fit_result = report.get("w2c_threshold_learning_result") or {}
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
+    w3b_recovery = report.get("w3b_fit_recovery") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -2354,8 +2815,11 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W2c threshold-learning result: `{fit_result.get('status', 'not_evaluated')}`.",
         f"W3 completion: `{w3_completion.get('status', 'not_complete')}`.",
         f"W3b: `{w3b.get('status', 'not_ready')}`.",
-        f"W3b fit approval recorded: `{w3b.get('approval_recorded', False)}`.",
-        f"W3b fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`.",
+        f"W3b initial fit approval recorded: `{w3b.get('approval_recorded', False)}`.",
+        f"W3b initial fit jobs submitted: `{w3b.get('submitted_jobs', 0)}`.",
+        f"W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`.",
+        f"W3b AF2 recovery approval recorded: `{w3b_recovery.get('recovery_approval_recorded', False)}`.",
+        f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -2373,6 +2837,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     hpc = report["hpc_status"]
     w3_completion = report.get("w3_mechanism_completion") or {}
     w3b = report.get("w3b_successor") or {}
+    w3b_recovery = report.get("w3b_fit_recovery") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -2403,8 +2868,14 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W2c record generation approved: `{hpc.get('w2c_record_generation_approved', False)}`",
         f"- W3 completion: `{w3_completion.get('status', 'not_complete')}`",
         f"- W3b: `{w3b.get('status', 'not_ready')}`",
-        f"- W3b fit approval recorded: `{hpc.get('w3b_fit_approval_recorded', False)}`",
-        f"- W3b fit jobs submitted: `{hpc.get('w3b_fit_jobs_submitted', 0)}`",
+        f"- W3b initial fit approval recorded: `{hpc.get('w3b_fit_approval_recorded', False)}`",
+        f"- W3b initial fit jobs submitted: `{hpc.get('w3b_fit_jobs_submitted', 0)}`",
+        f"- W3b ProteinMPNN completed: `{hpc.get('w3b_proteinmpnn_jobs_completed', 0)}`",
+        f"- W3b Boltz completed: `{hpc.get('w3b_boltz_jobs_completed', 0)}`",
+        f"- W3b AF2 failed before prediction: `{hpc.get('w3b_af2_jobs_failed_before_prediction', 0)}`",
+        f"- W3b AF2 recovery: `{w3b_recovery.get('recovery_packet_status', 'not_needed')}`",
+        f"- W3b AF2 recovery approval recorded: `{hpc.get('w3b_af2_recovery_approval_recorded', False)}`",
+        f"- W3b AF2 recovery jobs submitted: `{hpc.get('w3b_af2_recovery_jobs_submitted', 0)}`",
         "",
         "## Next Action",
         "",
@@ -2520,6 +2991,18 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w3b-fit-approval-packet",
         default="results/m6d_w3b_fit_approval_packet.json",
     )
+    parser.add_argument(
+        "--w3b-fit-submission-summary",
+        default="results/m6d_w3b_fit_submit_receipt_summary.json",
+    )
+    parser.add_argument(
+        "--w3b-fit-initial-execution-observation",
+        default="results/m6d_w3b_fit_initial_execution_observation.json",
+    )
+    parser.add_argument(
+        "--w3b-fit-af2-recovery-packet",
+        default="results/m6d_w3b_fit_af2_recovery_approval_packet.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -2527,6 +3010,23 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument("--out-json", default="results/m6d_goal_state_refresh_report.json")
     parser.add_argument("--out-md", default="results/m6d_goal_state_refresh_report.md")
     args = parser.parse_args(argv)
+
+    recovery_paths = (
+        args.w3b_fit_submission_summary,
+        args.w3b_fit_initial_execution_observation,
+        args.w3b_fit_af2_recovery_packet,
+    )
+    if any(os.path.exists(path) for path in recovery_paths) and not all(
+        os.path.exists(path) for path in recovery_paths
+    ):
+        parser.error("W3b AF2 recovery refresh requires all three execution artifacts")
+    if all(os.path.exists(path) for path in recovery_paths):
+        verification = verify_recovery_packet(
+            args.w3b_fit_initial_execution_observation,
+            args.w3b_fit_af2_recovery_packet,
+        )
+        if verification.get("verified") is not True:
+            parser.error("W3b AF2 recovery approval packet failed exact hash verification")
 
     if not os.path.exists(args.w2c_threshold_learning_report) and os.path.exists(args.out_json):
         existing_report = _load_json(args.out_json)
@@ -2628,6 +3128,21 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3b_fit_approval_packet)
             if os.path.exists(args.w3b_fit_approval_packet)
+            else None
+        ),
+        (
+            _load_json(args.w3b_fit_submission_summary)
+            if os.path.exists(args.w3b_fit_submission_summary)
+            else None
+        ),
+        (
+            _load_json(args.w3b_fit_initial_execution_observation)
+            if os.path.exists(args.w3b_fit_initial_execution_observation)
+            else None
+        ),
+        (
+            _load_json(args.w3b_fit_af2_recovery_packet)
+            if os.path.exists(args.w3b_fit_af2_recovery_packet)
             else None
         ),
         updated_at=args.updated_at,

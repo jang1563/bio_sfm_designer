@@ -1,0 +1,221 @@
+{
+  "approval_packet": {
+    "bytes": 8409,
+    "path": "results/m6d_w3b_fit_approval_packet.json",
+    "sha256": "2a9aa53f577cee13726b4c4eace5a9e48c5d7d328871b4f1024bcb7e3fa3e3e7"
+  },
+  "artifact": "m6d_w3b_fit_initial_execution_observation",
+  "audit_ok": true,
+  "can_claim_w3b": false,
+  "claim_boundary": "Operational failure evidence only. The initial AF2 jobs failed before prediction; no recovery compute, fit result, certification, held-out test, or claim is authorized.",
+  "initial_failed_af2_gpu_seconds": 38,
+  "n_af2_failed_before_prediction": 3,
+  "n_initial_jobs": 9,
+  "n_proteinmpnn_completed": 3,
+  "n_targets": 3,
+  "no_submit": true,
+  "recovery_submission_performed": false,
+  "status": "w3b_fit_af2_path_failure_recovery_eligible_no_submit",
+  "submission_receipt": {
+    "bytes": 6213,
+    "path": "results/m6d_w3b_fit_submit_receipt.jsonl",
+    "sha256": "a07103de3b9f2b3c65b314886633849475b5fad5b5d8a8c82763c7724c5bd64b"
+  },
+  "submission_summary": {
+    "bytes": 1536,
+    "path": "results/m6d_w3b_fit_submit_receipt_summary.json",
+    "sha256": "7a3c8ec799fa70aaeb77d8fc58933bc4d2c5bda5fbe82675e01be209f64ffa90"
+  },
+  "target_reports": [
+    {
+      "boltz": {
+        "alloc_tres": "billing=4,cpu=4,gres/gpu=1,mem=64G,node=1",
+        "elapsed_seconds": 207,
+        "exit_code": "0:0",
+        "job_id": "3085454",
+        "node_list": "g0004",
+        "state": "COMPLETED"
+      },
+      "error_log": {
+        "bytes": 596,
+        "path": "hpc_outputs/logs/biosfm-w3b-fit-af2-3085455.err",
+        "sha256": "69bba361adeca7c624506a330c97831d80d270bf8a028bd26e34ff5142cb4af6"
+      },
+      "failed_af2": {
+        "alloc_tres": "billing=8,cpu=8,gres/gpu=1,mem=128G,node=1",
+        "elapsed_seconds": 13,
+        "exit_code": "1:0",
+        "job_id": "3085455",
+        "node_list": "g0004",
+        "state": "FAILED"
+      },
+      "failure_kind": "container_relative_input_path_not_found_before_prediction",
+      "output_log": {
+        "bytes": 286,
+        "path": "hpc_outputs/logs/biosfm-w3b-fit-af2-3085455.out",
+        "sha256": "e4602f0e7e48bace1ce777514333dfb9085a17287159988d488b8f3c3124486e"
+      },
+      "partial_state": {
+        "af2_input_count": 60,
+        "af2_input_digest_sha256": "678d725726c0dffaab1a62b8c97c785dcb0b796a33bd8e6baf0055d0bb7e5f3d",
+        "af2_input_manifest": {
+          "bytes": 76654,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_input_manifest.json",
+          "sha256": "8fcf1b83d270ca7a1bc7dbdabe571b4b061081c84ef6569eac20258ff0e8f6e0"
+        },
+        "af2_output_dir": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_predictions",
+        "af2_output_dir_empty": true,
+        "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/records_af2_multimer.jsonl",
+        "af2_runtime_identity": {
+          "bytes": 1728,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_observed_runtime_identity.json",
+          "sha256": "128c4211664b5d3ae86de06bbeac2983bdfde8ae6cfd4f2f1e1ff85b4265b0d8"
+        },
+        "af2_runtime_receipt": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/af2_multimer_runtime_receipt.json",
+        "candidates": {
+          "bytes": 35907,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FL7_DC/candidates_proteinmpnn_complex.jsonl",
+          "sha256": "5fd39d6cf92ba3091b7430c1df7c0550142040320e57768660343d2e2df4fee6"
+        },
+        "target_id": "1FL7_DC",
+        "terminal_af2_outputs_absent": true
+      },
+      "proteinmpnn": {
+        "alloc_tres": "billing=4,cpu=4,mem=16G,node=1",
+        "elapsed_seconds": 132,
+        "exit_code": "0:0",
+        "job_id": "3085453",
+        "node_list": "c0004",
+        "state": "COMPLETED"
+      },
+      "target_id": "1FL7_DC"
+    },
+    {
+      "boltz": {
+        "alloc_tres": "billing=4,cpu=4,gres/gpu=1,mem=64G,node=1",
+        "elapsed_seconds": 430,
+        "exit_code": "0:0",
+        "job_id": "3085448",
+        "node_list": "g0004",
+        "state": "COMPLETED"
+      },
+      "error_log": {
+        "bytes": 596,
+        "path": "hpc_outputs/logs/biosfm-w3b-fit-af2-3085449.err",
+        "sha256": "2a7c1dd54e13af78d0a50126860d239f590501695b275ad4c2246369e9aade9c"
+      },
+      "failed_af2": {
+        "alloc_tres": "billing=8,cpu=8,gres/gpu=1,mem=128G,node=1",
+        "elapsed_seconds": 14,
+        "exit_code": "1:0",
+        "job_id": "3085449",
+        "node_list": "g0004",
+        "state": "FAILED"
+      },
+      "failure_kind": "container_relative_input_path_not_found_before_prediction",
+      "output_log": {
+        "bytes": 286,
+        "path": "hpc_outputs/logs/biosfm-w3b-fit-af2-3085449.out",
+        "sha256": "03cc1367e3b3dd177218d76234aa651351e5b10baff1be412090b7fdf0601bb5"
+      },
+      "partial_state": {
+        "af2_input_count": 60,
+        "af2_input_digest_sha256": "e537962932020e3926fb4b3da3409543981e3cc6398123c63cbaeeb1cfdde592",
+        "af2_input_manifest": {
+          "bytes": 87754,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_input_manifest.json",
+          "sha256": "cd5fabbab1ea41cbf4fca546e0a083b9f8d2b3618d1e1633bde4a465184f4c89"
+        },
+        "af2_output_dir": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_predictions",
+        "af2_output_dir_empty": true,
+        "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/records_af2_multimer.jsonl",
+        "af2_runtime_identity": {
+          "bytes": 1728,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_observed_runtime_identity.json",
+          "sha256": "128c4211664b5d3ae86de06bbeac2983bdfde8ae6cfd4f2f1e1ff85b4265b0d8"
+        },
+        "af2_runtime_receipt": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/af2_multimer_runtime_receipt.json",
+        "candidates": {
+          "bytes": 47006,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSK_LJ/candidates_proteinmpnn_complex.jsonl",
+          "sha256": "d987b6910f703a74742a9f0808ed86e087d92e23b16a866acce63715a1c6ccda"
+        },
+        "target_id": "1FSK_LJ",
+        "terminal_af2_outputs_absent": true
+      },
+      "proteinmpnn": {
+        "alloc_tres": "billing=4,cpu=4,mem=16G,node=1",
+        "elapsed_seconds": 193,
+        "exit_code": "0:0",
+        "job_id": "3085447",
+        "node_list": "c0007",
+        "state": "COMPLETED"
+      },
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "boltz": {
+        "alloc_tres": "billing=4,cpu=4,gres/gpu=1,mem=64G,node=1",
+        "elapsed_seconds": 287,
+        "exit_code": "0:0",
+        "job_id": "3085451",
+        "node_list": "g0004",
+        "state": "COMPLETED"
+      },
+      "error_log": {
+        "bytes": 596,
+        "path": "hpc_outputs/logs/biosfm-w3b-fit-af2-3085452.err",
+        "sha256": "d5d4a2e8b1120f84eb3971f2ee02c93d42d4ae47a875c18c0db6d12882a4f967"
+      },
+      "failed_af2": {
+        "alloc_tres": "billing=8,cpu=8,gres/gpu=1,mem=128G,node=1",
+        "elapsed_seconds": 11,
+        "exit_code": "1:0",
+        "job_id": "3085452",
+        "node_list": "g0004",
+        "state": "FAILED"
+      },
+      "failure_kind": "container_relative_input_path_not_found_before_prediction",
+      "output_log": {
+        "bytes": 286,
+        "path": "hpc_outputs/logs/biosfm-w3b-fit-af2-3085452.out",
+        "sha256": "deb5b237ea4ea045b1ecdb10bb461d8d6e121b6c71a1e9b188731c72c1517fa9"
+      },
+      "partial_state": {
+        "af2_input_count": 60,
+        "af2_input_digest_sha256": "ca69c6a4706502fbd67c08a7b816bbb4dcb95f89097a2a0ae2b67fdb403e33d3",
+        "af2_input_manifest": {
+          "bytes": 82174,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_input_manifest.json",
+          "sha256": "cd47336f5f36a06b32f4075331854a62efcafae12511af2c62d90e76278f5e4e"
+        },
+        "af2_output_dir": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_predictions",
+        "af2_output_dir_empty": true,
+        "af2_records": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/records_af2_multimer.jsonl",
+        "af2_runtime_identity": {
+          "bytes": 1728,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_observed_runtime_identity.json",
+          "sha256": "128c4211664b5d3ae86de06bbeac2983bdfde8ae6cfd4f2f1e1ff85b4265b0d8"
+        },
+        "af2_runtime_receipt": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/af2_multimer_runtime_receipt.json",
+        "candidates": {
+          "bytes": 41422,
+          "path": "hpc_outputs/m6d_w3b_matched/fit/1FSX_BA/candidates_proteinmpnn_complex.jsonl",
+          "sha256": "31204d42f358278015454f8c66519f4bce8895550d325c13cf7d73f2563030e1"
+        },
+        "target_id": "1FSX_BA",
+        "terminal_af2_outputs_absent": true
+      },
+      "proteinmpnn": {
+        "alloc_tres": "billing=4,cpu=4,mem=16G,node=1",
+        "elapsed_seconds": 165,
+        "exit_code": "0:0",
+        "job_id": "3085450",
+        "node_list": "c0004",
+        "state": "COMPLETED"
+      },
+      "target_id": "1FSX_BA"
+    }
+  ],
+  "version": 1
+}

@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 from bio_sfm_designer.experiments.m6d_w3b_fit_packet import (
     build_approval_packet,
@@ -168,15 +169,26 @@ def _ready_fixture(tmp_path: Path, monkeypatch):
 
 
 def _current():
-    return build_readiness(
-        "configs/m6d_w3b_disagreement_gate_protocol.json",
-        "results/m6d_w3b_execution_lock_readiness.json",
-        "results/m6d_w3b_runtime_lock_readiness.json",
-        "results/m6d_w3b_matched_record_contract.json",
-        "configs/m6d_w3b_runtime_lock.json",
-        "configs/m6d_w3b_execution_targets.json",
-        "configs/m6d_w3b_execution_input_lock.json",
-    )
+    original_exists = os.path.exists
+
+    def clean_checkout_exists(path):
+        if str(path).startswith("hpc_outputs/m6d_w3b_matched/fit/"):
+            return False
+        return original_exists(path)
+
+    with patch(
+        "bio_sfm_designer.experiments.m6d_w3b_fit_packet.os.path.exists",
+        side_effect=clean_checkout_exists,
+    ):
+        return build_readiness(
+            "configs/m6d_w3b_disagreement_gate_protocol.json",
+            "results/m6d_w3b_execution_lock_readiness.json",
+            "results/m6d_w3b_runtime_lock_readiness.json",
+            "results/m6d_w3b_matched_record_contract.json",
+            "configs/m6d_w3b_runtime_lock.json",
+            "configs/m6d_w3b_execution_targets.json",
+            "configs/m6d_w3b_execution_input_lock.json",
+        )
 
 
 def test_current_packet_is_clean_and_ready_for_explicit_fit_approval(monkeypatch):
@@ -233,6 +245,34 @@ def test_approval_packet_preserves_exact_fit_scope(monkeypatch):
     assert packet["approval_contract"]["environment_value"] == "approve-w3b-fit-180-matched-h100"
     assert packet["approval_contract"]["candidate_designs"] == 180
     assert packet["approval_contract"]["matched_predictor_evaluations"] == 360
+
+
+def test_existing_fit_output_blocks_new_initial_packet(tmp_path, monkeypatch):
+    monkeypatch.chdir(ROOT)
+    paths = _ready_fixture(tmp_path, monkeypatch)
+    execution = json.loads(paths["execution_manifest"].read_text())
+    fit_target = next(
+        row for row in execution["targets"] if row["experimental_role"] == "fit"
+    )
+    candidate_path = Path(fit_target["candidates"])
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text('{"id":"existing"}\n')
+
+    readiness = build_readiness(
+        str(paths["protocol"]),
+        str(paths["execution_readiness"]),
+        str(paths["runtime_readiness"]),
+        str(paths["matched_readiness"]),
+        str(paths["runtime_lock"]),
+        str(paths["execution_manifest"]),
+        str(paths["input_lock"]),
+    )
+
+    assert readiness["status"] == "w3b_fit_packet_readiness_blocked"
+    assert readiness["fit_packet_ready"] is False
+    assert [row["kind"] for row in readiness["failures"]] == [
+        "fit_packet_initial_output_already_exists"
+    ]
 
 
 def test_complete_locks_emit_packet_and_bridge_dry_run_without_submit(tmp_path, monkeypatch):

@@ -1,0 +1,41 @@
+{
+  "approval_packet": "results/m6d_w3b_fit_approval_packet.json",
+  "approval_packet_sha256": "2a9aa53f577cee13726b4c4eace5a9e48c5d7d328871b4f1024bcb7e3fa3e3e7",
+  "artifact": "m6d_w3b_fit_submit_receipt_summary",
+  "can_claim_w3b": false,
+  "claim_boundary": "Scheduler provenance only. Submission and job completion are not fit evidence, do not freeze a gate, and support no W3b or biological-success claim.",
+  "n_af2_h100_jobs": 3,
+  "n_boltz_h100_jobs": 3,
+  "n_candidate_designs": 180,
+  "n_jobs": 9,
+  "n_predictor_evaluations_planned": 360,
+  "n_proteinmpnn_jobs": 3,
+  "n_targets": 3,
+  "next_action": "query all nine jobs, enforce cumulative GPU accounting, and sync only after terminal success",
+  "readiness_packet_digest_sha256": "74cb2c841665b34e3d6acab96fa22073266551091a9f80fac36e92f3a3814e34",
+  "receipt": "results/m6d_w3b_fit_submit_receipt.jsonl",
+  "receipt_sha256": "a07103de3b9f2b3c65b314886633849475b5fad5b5d8a8c82763c7724c5bd64b",
+  "status": "w3b_fit_jobs_submitted_awaiting_completion",
+  "targets": [
+    {
+      "af2_job_id": "3085455",
+      "boltz_job_id": "3085454",
+      "proteinmpnn_job_id": "3085453",
+      "target_id": "1FL7_DC"
+    },
+    {
+      "af2_job_id": "3085449",
+      "boltz_job_id": "3085448",
+      "proteinmpnn_job_id": "3085447",
+      "target_id": "1FSK_LJ"
+    },
+    {
+      "af2_job_id": "3085452",
+      "boltz_job_id": "3085451",
+      "proteinmpnn_job_id": "3085450",
+      "target_id": "1FSX_BA"
+    }
+  ],
+  "version": 1,
+  "workstream": "m6d_w3b_fit_matched_predictors"
+}

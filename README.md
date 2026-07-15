@@ -53,7 +53,7 @@
 > [docs/M6D_W3_MECHANISM_PANEL.md](docs/M6D_W3_MECHANISM_PANEL.md), and
 > [configs/m6d_w3_mechanism_panel_protocol.json](configs/m6d_w3_mechanism_panel_protocol.json).
 
-> **Current W3b input completion (2026-07-15):** the next experiment is prospectively locked as a
+> **Current W3b initial fit boundary (2026-07-15):** the next experiment is prospectively locked as a
 > predictor-disagreement-aware gate on eight unused, source- and sequence-unique targets. Label-blind
 > hashing fixed target-level roles at 3 fit, 3 certification, and 2 held-out test targets before any
 > W3b predictor output exists. Each candidate will be evaluated by matched Boltz-2 and AF2-Multimer
@@ -80,15 +80,18 @@
 > is audit-clean, no-submit, and ready against the target-MSA-derived execution lock in
 > `results/m6d_w3b_runtime_lock_readiness.{json,md}`. Runtime receipts must match the frozen per-predictor
 > identity and runtime-lock file/digest exactly; a self-consistent alternate runtime fails closed.
-> The W3b-only fit execution surface is now separately implemented and hash-bound: it rejects duplicate
-> candidate sequences, re-observes both runtimes, converts complete matched outputs, and limits submission
-> to 3 CPU plus 6 H100 jobs for 180 candidates/360 evaluations with an append-only journal. The H100 jobs
-> have four-hour hard limits and no requeue. The immutable fit packet now exists and the guarded bridge
-> dry-run proves the exact 3 CPU + 6 H100, 180-candidate, 360-evaluation scope with zero scheduler calls
-> and zero receipt writes. Fit compute remains separately unapproved. See
+> The exact initial fit approval was consumed once for 3 CPU plus 6 H100 jobs. All three ProteinMPNN and
+> all three Boltz jobs completed, producing 180 candidates and 180 Boltz records. AF2 jobs `3085449`,
+> `3085452`, and `3085455` failed before prediction after 38 combined H100 GPU-seconds because the
+> container could not resolve a relative input path. Their 180 A3Ms and manifests remain intact, output
+> directories are empty, and no AF2 record or runtime receipt exists. A separate hash-bound recovery uses
+> absolute container paths, revalidates all 180 A3Ms before any scheduler call, and permits exactly three
+> AF2 replacements with zero ProteinMPNN/Boltz jobs. Local and Cayuga dry-runs pass with zero scheduler or
+> receipt writes; no recovery compute or W3b claim is authorized. See
 > [docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md](docs/M6D_W3B_DISAGREEMENT_GATE_PROTOCOL.md),
 > [docs/M6D_W3B_TARGET_MSA_APPROVAL.md](docs/M6D_W3B_TARGET_MSA_APPROVAL.md),
 > [docs/M6D_W3B_FIT_APPROVAL.md](docs/M6D_W3B_FIT_APPROVAL.md),
+> [docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md](docs/M6D_W3B_AF2_RECOVERY_APPROVAL.md),
 > [configs/m6d_w3b_disagreement_gate_protocol.json](configs/m6d_w3b_disagreement_gate_protocol.json), and
 > [configs/m6d_w3b_fresh_targets.json](configs/m6d_w3b_fresh_targets.json).
 
