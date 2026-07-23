@@ -1,0 +1,188 @@
+{
+  "schema_version": "w6_v2_shadow_review_annotations_v1",
+  "source_responses_sha256": "9f27b5c4439c2f0f0e6c0670184d4cad344e5db374305438a608386830871ac5",
+  "reviewer": {
+    "identity": "OpenAI Codex",
+    "type": "provider-independent offline model review",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-23"
+  },
+  "records": [
+    {
+      "case_id": "w1_full_mix_continue_scale",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Concrete and state-grounded, but it restates the frozen scale estimate."
+      }
+    },
+    {
+      "case_id": "w1_t030_stop_certified",
+      "review": {
+        "status": "complete",
+        "scope_tag": "protocol_broadening",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds explicit target-pair or protocol-parameter broadening beyond the certified scope."
+      }
+    },
+    {
+      "case_id": "w2_v11_underpowered_terminal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds stratified per-target sampling to the prospectively powered successor."
+      }
+    },
+    {
+      "case_id": "w2b_fit_continue_certification",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Correctly requests independent certification but does not add beyond the baseline plan."
+      }
+    },
+    {
+      "case_id": "w2b_certification_terminal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Selects a distinct predictor-signal axis instead of continuing the failed frozen rule."
+      }
+    },
+    {
+      "case_id": "w2c_design_discovery",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds an explicit check that fresh excluded samples preserve prospective power assumptions."
+      }
+    },
+    {
+      "case_id": "w2c_msa_continue_fit_learn",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Concrete, but equivalent to the frozen 8-by-60 next evidence stage."
+      }
+    },
+    {
+      "case_id": "w2c_threshold_learning_terminal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Proposes a bounded representation diagnostic rather than adaptive threshold rescue."
+      }
+    },
+    {
+      "case_id": "w3_mechanism_context_unresolved",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds per-case structural and interface disagreement localization."
+      }
+    },
+    {
+      "case_id": "w3b_design_continue_msa",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Faithfully restates the frozen target-MSA prerequisite."
+      }
+    },
+    {
+      "case_id": "w3b_msa_continue_post_msa_gate",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The MSA depth and coverage checks are part of the already required post-MSA audit."
+      }
+    },
+    {
+      "case_id": "w3b_fit_terminal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Moves to an alternative representation or endpoint for the consistently failing target."
+      }
+    },
+    {
+      "case_id": "w3c_validity_discovery",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Correctly asks for fresh valid target-binder systems but largely restates the baseline."
+      }
+    },
+    {
+      "case_id": "w3c_lock_continue_msa_packet",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Extends the packet step into the explicitly required native-recoverability evidence question."
+      }
+    },
+    {
+      "case_id": "w3c_b1_continue_no_submit_validation",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Correctly specifies hash parity and zero-job dry-run but adds little beyond the baseline."
+      }
+    },
+    {
+      "case_id": "w4_fail_closed_stop_and_replace_screen",
+      "review": {
+        "status": "complete",
+        "scope_tag": "screen_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds known-good reference inputs to localize the non-finite screen failure before re-entry."
+      }
+    }
+  ]
+}

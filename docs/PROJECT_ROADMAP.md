@@ -321,9 +321,22 @@ predeclared pass thresholds. The provider-free replay accepts the valid
 synthetic fixture 16/16 with zero authority violations and rejects the
 adversarial fixture with eight violations. API calls, provider calls, compute
 submissions, and applied recommendations are all zero. This completes the
-offline panel harness only; a live shadow panel still requires separate exact
-approval and does not by itself complete M7. See
+offline panel harness only; it did not authorize a live run or complete M7.
+The later separately approved live result is recorded below. See
 `docs/W6_V2_FROZEN_SHADOW_PANEL.md`.
+
+W6-v2 live-panel update (2026-07-23): the separately approved Anthropic
+`claude-opus-4-8` run consumed exactly 16 calls over the frozen panel. All 16
+transport and schema checks passed, explicit control-plane violations were
+zero, retries were zero, and shadow mode applied nothing. The preregistered
+decision contract failed: stop accuracy `0.6875`, explore accuracy `0.75`, and
+exact pair accuracy `0.50`. Provider-independent offline review found grounded
+and actionable recommendations in 16/16 and incremental value in 9/16. Preserve
+the useful hypothesis-generation signal, but do not grant stop/explore
+authority. Do not repeat or retune this frozen panel. A reduced hypothesis-only
+successor must be validated offline before any separately approved future
+provider call. M7 remains incomplete. See
+`docs/W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`.
 
 ## Milestone Ladder
 

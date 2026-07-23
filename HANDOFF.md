@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | live smoke negative; W6-v2 offline panel ready | one authorized Anthropic call passed transport/routing/no-effect checks but recommended changing the trust threshold; contract v2 rejects it, and the new 16-case offline panel passes valid/adversarial harness replay with zero provider calls; no M7 completion is claimed |
+| M7 | 16-case live shadow panel complete; decision boundary negative | Anthropic passed 16/16 schema and zero authority violations, but stop/explore exact-pair accuracy was 8/16; qualitative hypotheses were useful, shadow applied nothing, active authority remains blocked, and no M7 completion is claimed |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1169,7 +1169,14 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
    remain shadow-only.
 8. **W6-v2 offline shadow panel:** `docs/W6_V2_FROZEN_SHADOW_PANEL.md` freezes 16 aggregate W2-W4
    states and their scoring rubric. Valid synthetic replay is 16/16 with zero authority violations;
-   adversarial replay fails with eight. This used zero API/provider calls and authorizes no live run.
+   adversarial replay fails with eight. The offline freeze itself used zero API/provider calls and
+   granted no live authority; the later separately approved execution is recorded next.
+9. **W6-v2 live shadow result:** the separately approved Anthropic `claude-opus-4-8` panel consumed
+   exactly 16 calls with 16 successes, zero retries, zero authority violations, and zero applied
+   recommendations. Exact stop/explore pairs were correct in only 8/16, so the live decision contract
+   fails. Preserve deterministic stop/explore and test only a reduced hypothesis-advice contract offline.
+   The approval is consumed; no additional call is authorized. See
+   `docs/W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

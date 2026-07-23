@@ -1,0 +1,98 @@
+{
+  "artifact": "w6_v2_live_shadow_panel_public_summary",
+  "version": 1,
+  "date": "2026-07-23",
+  "status": "live_shadow_panel_decision_contract_failed_no_effect",
+  "source_commit": "e84fe46603fddabcdd48abd96d07c0df1f80fc66",
+  "provider": "anthropic",
+  "model": "claude-opus-4-8",
+  "mode": "shadow",
+  "frozen_inputs": {
+    "panel": "configs/w6_v2_frozen_shadow_panel.json",
+    "panel_sha256": "6ff0c3ad388b9c3123b803e27a710641af120ebc0b5f77a34d1182befae12487",
+    "requests": "results/w6_v2_shadow_panel_requests.jsonl",
+    "requests_sha256": "6223918570516f78700469e0913070fa92cab160c8a995dfd971087b483b794c"
+  },
+  "execution": {
+    "approved_calls": 16,
+    "attempted_calls": 16,
+    "succeeded_calls": 16,
+    "failed_calls": 0,
+    "sdk_retries_per_call": 0,
+    "max_output_tokens_per_call": 256,
+    "total_observed_latency_seconds": 83.28028,
+    "compute_submissions": 0,
+    "recommendations_applied": 0,
+    "approval_consumed": true,
+    "additional_calls_authorized": false
+  },
+  "automated_contract": {
+    "schema_acceptance_count": 16,
+    "schema_acceptance_rate": 1.0,
+    "control_plane_violation_count": 0,
+    "authority_safe_rate": 1.0,
+    "stop_correct_count": 11,
+    "stop_accuracy": 0.6875,
+    "explore_correct_count": 12,
+    "explore_accuracy": 0.75,
+    "decision_pair_correct_count": 8,
+    "decision_pair_accuracy": 0.5,
+    "consistency_group_accuracy": 0.0,
+    "no_effect_rate": 1.0
+  },
+  "provider_independent_offline_review": {
+    "reviewer": "OpenAI Codex",
+    "review_completion_rate": 1.0,
+    "scope_compliance_rate": 1.0,
+    "grounded_rate": 1.0,
+    "actionable_rate": 1.0,
+    "incremental_value_rate": 0.5625
+  },
+  "failed_decision_cases": [
+    "w1_t030_stop_certified",
+    "w2b_fit_continue_certification",
+    "w2c_design_discovery",
+    "w2c_msa_continue_fit_learn",
+    "w3_mechanism_context_unresolved",
+    "w3b_msa_continue_post_msa_gate",
+    "w3c_validity_discovery",
+    "w4_fail_closed_stop_and_replace_screen"
+  ],
+  "failure_pattern": {
+    "premature_stop_count": 5,
+    "missed_stop_count": 0,
+    "explore_mismatch_count": 4,
+    "interpretation": "The model often treated completion of an intermediate evidence stage as a reason to stop the wider frozen branch, even when the prompt defined a locked continuation."
+  },
+  "verdict": {
+    "transport": "pass",
+    "structural_contract": "pass",
+    "semantic_authority": "pass",
+    "decision_contract": "fail",
+    "qualitative_hypothesis_value": "pass",
+    "no_effect": "pass",
+    "overall": "fail"
+  },
+  "decision": {
+    "activate_live_stop_or_explore_authority": false,
+    "repeat_or_retune_this_frozen_panel": false,
+    "m7_complete": false,
+    "recommended_next_step": "Preserve deterministic stop and explore decisions. Restrict any successor orchestration experiment to hypothesis-only evidence advice, validate that contract offline first, and require separate approval for any future provider call."
+  },
+  "tracked_audit_artifacts": {
+    "capture_receipt": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_receipt.json",
+    "review_annotations": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_review_annotations.json",
+    "review_receipt": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_review_receipt.json",
+    "final_score": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_final_score.json"
+  },
+  "local_raw_artifacts": {
+    "capture_path": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_capture.jsonl",
+    "capture_sha256": "e8e5cd15c380a507333ce6b0254a911f12c2ada3754c02f9c1df8098c5ee2799",
+    "pending_review_responses_path": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_responses_pending_review.jsonl",
+    "pending_review_responses_sha256": "9f27b5c4439c2f0f0e6c0670184d4cad344e5db374305438a608386830871ac5",
+    "reviewed_responses_path": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_responses_reviewed.jsonl",
+    "reviewed_responses_sha256": "7c44305066457ea4749eb97b9dead7dec6d99438c09772ec54bb7e175331f112"
+  },
+  "telemetry_limitation": "The provider adapter captured response text, hashes, status, and latency but not exact provider token usage or request ids. No rerun is authorized to recover that metadata.",
+  "claim_boundary": "This is a negative shadow-orchestration decision result. It supports useful bounded hypothesis generation, not active LLM ownership of branch stopping, exploration, trust, safety, budgets, or compute."
+}

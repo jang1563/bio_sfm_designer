@@ -118,3 +118,18 @@ effect. The exact bounded result and hashes are recorded in
 That one-call approval is consumed. Contract v2 was hardened offline; another
 live invocation requires a new explicit approval. A failed or semantically
 invalid response is not permission to change routing or retry automatically.
+
+## W6-v2 live panel result
+
+A separately approved 16-call Anthropic `claude-opus-4-8` shadow panel ran on
+the frozen W6-v2 requests on 2026-07-23. All calls succeeded with zero retries,
+all 16 responses passed the exact schema, and zero control-plane mutations were
+detected. Shadow mode applied nothing.
+
+The model failed the preregistered branch-decision contract: stop accuracy was
+0.6875, explore accuracy 0.75, and exact pair accuracy 0.50. Provider-independent
+offline review still found all recommendations grounded and actionable, with
+incremental value in 9/16. This supports a narrower hypothesis-generation role,
+not live ownership of stop/explore. See
+[`W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`](W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md).
+The 16-call approval is consumed; no retry or additional call is authorized.

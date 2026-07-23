@@ -1,0 +1,21 @@
+{
+  "annotations_path": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_review_annotations.json",
+  "annotations_sha256": "4d6a1e73def3e757be0245a8acd1ae4898ed68fa12acef385382c8c241a27130",
+  "api_calls": 0,
+  "case_count": 16,
+  "provider_calls": 0,
+  "raw_responses_modified": false,
+  "recommendations_applied": 0,
+  "reviewed_responses_path": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_responses_reviewed.jsonl",
+  "reviewed_responses_sha256": "7c44305066457ea4749eb97b9dead7dec6d99438c09772ec54bb7e175331f112",
+  "reviewer": {
+    "identity": "OpenAI Codex",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-23",
+    "type": "provider-independent offline model review"
+  },
+  "schema_version": "w6_v2_shadow_review_receipt_v1",
+  "source_responses_path": "results/w6_v2_live_shadow_anthropic_claude_opus_4_8_20260723_responses_pending_review.jsonl",
+  "source_responses_sha256": "9f27b5c4439c2f0f0e6c0670184d4cad344e5db374305438a608386830871ac5",
+  "status": "offline_independent_review_complete"
+}

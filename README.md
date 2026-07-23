@@ -137,7 +137,9 @@ fallback until the coordinated trust-core release is published:
   after recommending a trust-threshold change; contract v2 rejects that behavior offline.
   W6-v2 now freezes 16 aggregate W2-W4 states in a hash-bound, provider-free shadow panel:
   the valid synthetic replay passes 16/16 with zero authority violations, while the
-  adversarial replay fails with eight detected violations. No new API call was made.
+  adversarial replay fails with eight detected violations. A separately approved 16-call
+  Anthropic live panel then passed schema and authority checks but failed stop/explore
+  decision accuracy (exact pair 8/16). Shadow mode applied nothing; active authority remains blocked.
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

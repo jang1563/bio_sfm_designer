@@ -99,9 +99,10 @@ The frozen offline replay result is:
 - both: API calls `0`, provider calls `0`, compute submissions `0`,
   recommendations applied `0`.
 
-## Next boundary
+## Live follow-up
 
-A live shadow panel would be a separate experiment. It requires explicit
-per-invocation approval, an explicit provider/model, captured raw responses
-bound to these prompt hashes, and independent rubric review. No such call is
-authorized or performed by W6-v2.
+The separately approved Anthropic live shadow panel was completed on
+2026-07-23. It passed transport, schema, authority, qualitative-value, and
+no-effect checks, but failed the frozen stop/explore decision thresholds.
+See [`W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`](W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md).
+The approval is consumed and no additional call is authorized.
