@@ -303,6 +303,14 @@ The known open limits are also part of the anchor:
 | W5: De-novo binders | Move beyond fixed-backbone ProteinMPNN interface redesign. | RFdiffusion or equivalent generator selected with license and HPC constraints checked. | Candidate JSONL uses the same bridge and can be evaluated by the complex posthoc/gate stack. |
 | W6: Live orchestration | Let Claude plan/interprete between verified batch rounds. | P0 key rotation complete; provider seam configured; safety and label-integrity checks on. | Live provider run is reproducible, logged, and never bypasses the external trust/safety gates. |
 
+W6 engineering update (2026-07-23): the provider seam is now executable in
+default-shadow mode with an exact recommendation schema, bounded Anthropic and
+OpenAI adapters, prompt/response audit logs, one-batch post-stop consultation,
+and an offline one-call invariant smoke. This does not complete W6 or M7:
+there has been no live provider call, P0 credential hygiene remains an
+out-of-band entry condition, and productive W4 scientific evidence remains
+separate from this orchestration plumbing.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

@@ -48,7 +48,21 @@ whether each candidate is trusted, verified, replaced by a baseline, or deferred
 | Predict | `predict.Predictor` | `StubPredictor` | Boltz-2 / pLDDT (M1), property heads |
 | Trust | `bio_sfm_trust` (calibration, gate, scoring) | wired, calibrates from verified data | same engine on real records |
 | Safety | `safety.SafetyScreen` | built-in lexicon + policy | constitutional-bioguard DeBERTa + FRT label-integrity (M2) |
-| Orchestrate | `loop.Planner` / `loop.Interpreter` | deterministic rules | Claude via `bio_sfm_trust` anthropic provider (M2) |
+| Orchestrate | `loop.Planner` / `loop.Interpreter` | deterministic rules + fixture shadow provider | optional Anthropic/OpenAI provider adapters behind the same strict contract |
+
+## LLM authority boundary
+
+The provider is called only after routing, safety checks, budget enforcement,
+calibration, and round scoring. It receives aggregate summaries, not candidate
+sequences or hidden truth. Its exact JSON recommendation can contain only
+`stop`, `reason`, `hypothesis`, and `explore`.
+
+`shadow` mode is the default and records the recommendation without applying
+it. `active` mode may affect only early stopping and next-round parent
+diversity, after deterministic hard limits. Unknown fields, malformed output,
+or provider errors fall back to the deterministic decision. Every provider call
+is written to `orchestration.jsonl` with request/response hashes and an explicit
+list of applied fields. See [`LLM_ORCHESTRATION.md`](LLM_ORCHESTRATION.md).
 
 ## Leakage discipline
 

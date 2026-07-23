@@ -21,6 +21,9 @@ dependencies = [
 safety = ["constitutional-bioguard"]   # real DeBERTa biosafety screen (M2; pulls torch/transformers)
 structure = ["gemmi"]                  # CA-lDDT truth for the protein substrate (M1)
 yaml = ["pyyaml"]                       # load ObjectiveSpec from YAML configs
+llm-anthropic = ["anthropic>=0.94.0,<1.0.0"]
+llm-openai = ["openai>=2.0.0,<3.0.0"]
+llm = ["anthropic>=0.94.0,<1.0.0", "openai>=2.0.0,<3.0.0"]
 dev = ["pytest", "numpy"]
 
 [tool.setuptools.packages.find]

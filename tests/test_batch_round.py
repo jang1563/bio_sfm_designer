@@ -53,6 +53,103 @@ class BatchRoundCLITests(unittest.TestCase):
             flagged_row = next(r for r in result.rows if r["candidate_id"] == flagged)
             self.assertEqual(flagged_row["action"], "defer")
 
+    def test_one_batch_fixture_orchestrator_writes_shadow_audit(self):
+        records = load_structure_records(FIXTURE)[:3]
+        ids = [str(row["target_id"]) for row in records]
+        with tempfile.TemporaryDirectory() as d:
+            candidates = _write(
+                d,
+                "candidates.jsonl",
+                [
+                    {
+                        "id": str(row["target_id"]),
+                        "representation": str(row["target_id"]),
+                        "regime": row["regime"],
+                    }
+                    for row in records
+                ],
+            )
+            verdicts = _write(
+                d,
+                "verdicts.jsonl",
+                [{"id": candidate_id, "flag": False, "reason": "clear"} for candidate_id in ids],
+            )
+            out = os.path.join(d, "round")
+            args = Namespace(
+                candidates=candidates,
+                records=FIXTURE,
+                verdicts=verdicts,
+                target="protein-structure trust-routing evaluation",
+                objective="structure_quality",
+                lam=0.5,
+                assay_budget=20,
+                out=out,
+                preflight_out=None,
+                strict_complex_records=False,
+                allow_missing_verdicts=False,
+                provider="fixture",
+                provider_model=None,
+                provider_max_output_tokens=256,
+                orchestration_mode="shadow",
+                credential_hygiene_attested=False,
+            )
+            result = run(args)
+
+            self.assertEqual(len(result.orchestration_events), 1)
+            self.assertEqual(result.orchestration_events[0]["status"], "accepted")
+            self.assertFalse(result.orchestration_events[0]["applied"])
+            self.assertTrue(os.path.exists(os.path.join(out, "orchestration.jsonl")))
+            with open(os.path.join(out, "preflight.json")) as fh:
+                preflight = json.load(fh)
+            self.assertTrue(preflight["orchestration"]["provider_preflight_ok"])
+            self.assertFalse(preflight["orchestration"]["live_provider"])
+
+    def test_live_orchestrator_blocks_before_api_without_p0_attestation(self):
+        records = load_structure_records(FIXTURE)[:1]
+        candidate_id = str(records[0]["target_id"])
+        with tempfile.TemporaryDirectory() as d:
+            candidates = _write(
+                d,
+                "candidates.jsonl",
+                [{"id": candidate_id, "representation": candidate_id, "regime": records[0]["regime"]}],
+            )
+            verdicts = _write(
+                d,
+                "verdicts.jsonl",
+                [{"id": candidate_id, "flag": False, "reason": "clear"}],
+            )
+            out = os.path.join(d, "round")
+            args = Namespace(
+                candidates=candidates,
+                records=FIXTURE,
+                verdicts=verdicts,
+                target="protein-structure trust-routing evaluation",
+                objective="structure_quality",
+                lam=0.5,
+                assay_budget=20,
+                out=out,
+                preflight_out=None,
+                strict_complex_records=False,
+                allow_missing_verdicts=False,
+                provider="openai",
+                provider_model="test-model",
+                provider_max_output_tokens=256,
+                orchestration_mode="shadow",
+                credential_hygiene_attested=False,
+            )
+            with self.assertRaisesRegex(ValueError, "preflight failed"):
+                run(args)
+            with open(os.path.join(out, "preflight.json")) as fh:
+                preflight = json.load(fh)
+
+        self.assertFalse(preflight["ok"])
+        self.assertTrue(preflight["orchestration"]["live_provider"])
+        self.assertFalse(preflight["orchestration"]["provider_preflight_ok"])
+        self.assertIn(
+            "orchestration_provider_preflight_failed",
+            {failure["kind"] for failure in preflight["failures"]},
+        )
+
     def test_omitting_verdicts_uses_builtin_screen(self):
         records = load_structure_records(FIXTURE)[:3]
         with tempfile.TemporaryDirectory() as d:

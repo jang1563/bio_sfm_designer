@@ -30,6 +30,7 @@ from ..config import ObjectiveSpec
 from ..generate import PrecomputedGenerator
 from ..generate.precomputed import load_candidate_records
 from ..loop.controller import DBTLController
+from ..loop.providers import get_orchestration_provider, is_live_provider
 from ..predict.structure import PrecomputedStructurePredictor
 from ..predict.structure import load_structure_records
 from ..safety import PrecomputedScreen, SafetyScreen
@@ -582,6 +583,15 @@ def _batch_round_command_from_args(args, *, include_sync_back_plan: bool = True)
     parts.extend(["--conformal-delta", str(getattr(args, "conformal_delta", 0.1))])
     if getattr(args, "provider", None):
         parts.extend(["--provider", str(args.provider)])
+        provider_model = getattr(args, "provider_model", None)
+        if provider_model:
+            parts.extend(["--provider-model", str(provider_model)])
+        parts.extend([
+            "--provider-max-output-tokens",
+            str(getattr(args, "provider_max_output_tokens", 256)),
+            "--orchestration-mode",
+            str(getattr(args, "orchestration_mode", "shadow")),
+        ])
     if include_sync_back_plan:
         if getattr(args, "emit_sync_back_plan", None):
             parts.extend(["--emit-sync-back-plan", str(args.emit_sync_back_plan)])
@@ -975,6 +985,53 @@ def run(args) -> "object":
         conformal_alpha=getattr(args, "conformal_alpha", None),
         conformal_delta=getattr(args, "conformal_delta", 0.1),
     )
+    provider_name = getattr(args, "provider", None)
+    provider_model = getattr(args, "provider_model", None)
+    provider_max_output_tokens = getattr(args, "provider_max_output_tokens", 256)
+    orchestration_mode = getattr(args, "orchestration_mode", "shadow")
+    credential_hygiene_attested = bool(
+        getattr(args, "credential_hygiene_attested", False)
+    )
+    provider = None
+    provider_error = None
+    mode_error = None
+    if provider_name:
+        try:
+            provider = get_orchestration_provider(
+                provider_name,
+                model=provider_model,
+                max_output_tokens=provider_max_output_tokens,
+                credential_hygiene_attested=credential_hygiene_attested,
+            )
+        except (ImportError, RuntimeError, ValueError) as exc:
+            provider_error = {
+                "kind": "orchestration_provider_preflight_failed",
+                "error_type": type(exc).__name__,
+                "message": str(exc),
+            }
+            preflight["failures"].append(provider_error)
+            preflight["ok"] = False
+    if orchestration_mode not in {"shadow", "active"}:
+        mode_error = {
+            "kind": "orchestration_mode_invalid",
+            "value": orchestration_mode,
+        }
+        preflight["failures"].append(mode_error)
+        preflight["ok"] = False
+    preflight["orchestration"] = {
+        "requested": provider_name is not None,
+        "provider": provider_name,
+        "model": provider_model,
+        "mode": orchestration_mode,
+        "max_output_tokens": provider_max_output_tokens,
+        "live_provider": is_live_provider(provider_name),
+        "credential_hygiene_attested": credential_hygiene_attested,
+        "provider_preflight_ok": provider_name is None or provider_error is None,
+        "mode_preflight_ok": mode_error is None,
+        "replay_requires_credential_hygiene_reattestation": is_live_provider(
+            provider_name
+        ),
+    }
     preflight["self_command"] = _batch_round_command_from_args(args)
     preflight_out = getattr(args, "preflight_out", None) or os.path.join(args.out, "preflight.json")
     _write_json(preflight_out, preflight)
@@ -1025,17 +1082,13 @@ def run(args) -> "object":
             conformal_alpha=getattr(args, "conformal_alpha", None),
             conformal_delta=getattr(args, "conformal_delta", 0.1),
         )
-    provider = None
-    if args.provider:
-        from bio_sfm_trust import get_provider
-        provider = get_provider(args.provider)
-
     result = DBTLController(
         generator=PrecomputedGenerator(args.candidates),
         predictor=PrecomputedStructurePredictor(args.records),
         gate=gate,
         screen=screen,
         provider=provider,
+        orchestration_mode=orchestration_mode,
     ).run(spec, out_dir=args.out)
 
     agg = result.aggregate
@@ -1081,7 +1134,34 @@ def main() -> None:
     ap.add_argument("--conformal-alpha", type=float, default=None,
                     help="optional RCPS false-accept target for prevalidated regimes")
     ap.add_argument("--conformal-delta", type=float, default=0.1)
-    ap.add_argument("--provider", default=None, help="optional LLM orchestrator: 'anthropic' or 'mock_defer'")
+    ap.add_argument(
+        "--provider",
+        default=None,
+        choices=["fixture", "anthropic", "openai"],
+        help="optional advisory LLM orchestrator; live providers require P0 attestation",
+    )
+    ap.add_argument(
+        "--provider-model",
+        default=None,
+        help="explicit model id; required for a live provider",
+    )
+    ap.add_argument(
+        "--provider-max-output-tokens",
+        type=int,
+        default=256,
+        help="bounded provider response budget (1..1024)",
+    )
+    ap.add_argument(
+        "--orchestration-mode",
+        choices=["shadow", "active"],
+        default="shadow",
+        help="shadow records advice; active may steer only stop/explore after hard limits",
+    )
+    ap.add_argument(
+        "--credential-hygiene-attested",
+        action="store_true",
+        help="attest out-of-band P0 key rotation/hygiene for this live call",
+    )
     ap.add_argument("--emit-sync-back-plan", default=None,
                     help="optional shell plan to rsync missing batch JSONLs back from Cayuga")
     ap.add_argument("--sync-remote-root", default=None,

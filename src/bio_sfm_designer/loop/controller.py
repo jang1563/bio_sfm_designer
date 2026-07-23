@@ -48,21 +48,27 @@ class CampaignResult:
     best: Optional[Dict[str, Any]] = None
     campaign_path: Optional[str] = None
     summary_path: Optional[str] = None
+    orchestration_path: Optional[str] = None
+    orchestration_events: List[Dict[str, Any]] = field(default_factory=list)
     rows: List[Dict[str, Any]] = field(default_factory=list)
     note: str = ""
 
 
 class DBTLController:
     def __init__(self, generator=None, predictor=None, gate=None, screen=None, planner=None,
-                 interpreter=None, provider=None):
+                 interpreter=None, provider=None, orchestration_mode: str = "shadow"):
         self.generator = generator or StubGenerator()
         self.predictor = predictor or StubPredictor()
         self.gate = gate or TrustGate()
         self.screen = screen or SafetyScreen()
         # planner may be None -> built from the spec in run() (so acquisition/diversity are configurable)
         self.planner = planner
-        # provider (an LLM callable) makes the interpreter LLM-orchestrated; None -> deterministic.
-        self.interpreter = interpreter or Interpreter(provider=provider)
+        # The default live-provider posture is shadow-only. An explicit Interpreter
+        # or orchestration_mode="active" is required to apply stop/explore advice.
+        self.interpreter = interpreter or Interpreter(
+            provider=provider,
+            mode=orchestration_mode,
+        )
 
     def run(self, spec: ObjectiveSpec, out_dir: Optional[str] = None,
             prevalidate: Optional[Dict[str, Any]] = None) -> CampaignResult:
@@ -89,6 +95,7 @@ class DBTLController:
         rows: List[Dict[str, Any]] = []
         all_decisions: List[Dict[str, Any]] = []
         history: List[Dict[str, Any]] = []
+        orchestration_events: List[Dict[str, Any]] = []
         assays_used = 0
         best: Optional[Dict[str, Any]] = None
         parents = None
@@ -173,6 +180,12 @@ class DBTLController:
             #    steer exploration — THEN parents are selected under that steer. The steer changes
             #    only WHICH designs are bred next; it never touches the trust-routing decision.
             decision = self.interpreter.interpret(rnd, spec, history, assays_used)
+            if decision.get("orchestrator_recommendation") is not None:
+                history[-1]["orchestrator_recommendation"] = decision[
+                    "orchestrator_recommendation"
+                ]
+            if decision.get("orchestration_event") is not None:
+                orchestration_events.append(decision["orchestration_event"])
             if decision.get("hypothesis"):
                 history[-1]["llm_hypothesis"] = decision["hypothesis"]
             if decision.get("explore") is not None:
@@ -190,7 +203,10 @@ class DBTLController:
                       "calibrator_fitted": h.get("calibrator_fitted", False),
                       "stop_reason": h.get("stop_reason"),
                       "llm_hypothesis": h.get("llm_hypothesis"),
-                      "llm_explore": h.get("llm_explore")} for h in history]
+                      "llm_explore": h.get("llm_explore"),
+                      "orchestrator_recommendation": h.get(
+                          "orchestrator_recommendation"
+                      )} for h in history]
 
         result = CampaignResult(
             status="allow",
@@ -203,11 +219,15 @@ class DBTLController:
             aggregate=aggregate,
             per_round=per_round,
             best=best,
+            orchestration_events=orchestration_events,
             rows=rows,
         )
 
         if out_dir:
             result.campaign_path = io_utils.write_campaign(rows, f"{out_dir}/campaign.jsonl")
+            if orchestration_events:
+                result.orchestration_path = f"{out_dir}/orchestration.jsonl"
+                io_utils.write_jsonl(orchestration_events, result.orchestration_path)
             result.summary_path = io_utils.write_summary(
                 {
                     "target": spec.target,
@@ -221,6 +241,15 @@ class DBTLController:
                     "aggregate": aggregate,
                     "per_round": per_round,
                     "best": best,
+                    "orchestration": {
+                        "mode": getattr(self.interpreter, "mode", "custom"),
+                        "event_count": len(orchestration_events),
+                        "accepted_count": sum(
+                            event.get("status") == "accepted"
+                            for event in orchestration_events
+                        ),
+                        "audit_path": result.orchestration_path,
+                    },
                 },
                 f"{out_dir}/summary.json",
             )

@@ -123,14 +123,17 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-15)
+## Status (2026-07-23)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1055` designer tests on 2026-07-23).
+**Current local source verified** (`1077` designer tests plus `70` subtests on 2026-07-23).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
+- Fail-closed LLM orchestration now has strict recommendations, default `shadow` authority,
+  provider/audit adapters, and a one-call synthetic smoke; no live-provider result is claimed
+  until P0 credential hygiene is explicitly attested.
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding
@@ -728,7 +731,10 @@ fallback until the coordinated trust-core release is published:
   `--prevalidate-records` plus `--conformal-alpha` to install the calibrated/RCPS gate before routing;
   prevalidation records that overlap the current batch are blocked as truth leakage, the certified complex
   `tau` is recorded, prevalidation/current-batch predictor-source-label contracts must match by regime,
-  and `summary.json` preserves the gate-prevalidation metadata used for status audits.
+  and `summary.json` preserves the gate-prevalidation metadata used for status audits. An optional
+  app-level `--provider fixture|anthropic|openai` now produces one post-round orchestration recommendation;
+  default `shadow` mode writes `orchestration.jsonl` but cannot change routing, safety, budgets, or submit
+  the next batch. See [`docs/LLM_ORCHESTRATION.md`](docs/LLM_ORCHESTRATION.md).
   The complex ProteinMPNN generator carries `COMPLEX_ID` into candidate metadata and namespaces generated candidate ids.
 - Tiered **biosafety screen** (lexicon → bioguard → DeBERTa), fail-closed, human-triage.
 
@@ -764,6 +770,8 @@ fallback until the coordinated trust-core release is published:
 pip install -e ".[dev]"                  # pulls the pinned public bio-sfm-trust-core release tag
 python -m pytest -q
 python -m bio_sfm_designer.experiments.dry_run_stub_designer --out results/dry_run
+python -m bio_sfm_designer.experiments.llm_orchestration_smoke \
+  --provider fixture --out results/llm_orchestration_smoke.json
 ```
 
 The dry-run runs the whole loop on stub generators/predictors, then shows a hazardous
@@ -773,7 +781,7 @@ objective being refused at the screen.
 
 | Path | Role |
 |---|---|
-| `loop/` | DBTL controller + planner + interpreter (Claude = orchestrator) |
+| `loop/` | DBTL controller + planner + strict shadow/active LLM interpreter and provider adapters |
 | `generate/` | Generator protocol + stub + `Precomputed` adapter; real **ProteinMPNN** via `hpc/` |
 | `predict/` | Predictor protocol + stub + `Precomputed` adapter; real **ESMFold + Boltz-2** via `hpc/` |
 | `trust/` | the external calibrated gate + predictor→evidence adapter |
