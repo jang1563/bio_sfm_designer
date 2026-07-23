@@ -12,3 +12,11 @@ same author (JK). Used by `tests/test_structure_gate.py` and
 `experiments/offline_structure_gate.py` as the M1 real-data substrate — no GPU/Boltz needed
 (records are precomputed). Schema matches `bio_sfm_trust.gate.confidence_to_risk` /
 `phase2_calibration_gate`.
+
+## W6-v2 shadow-panel fixtures
+
+`w6_v2_shadow_panel_{valid,adversarial}_response_specs.json` are synthetic,
+provider-free response definitions for the frozen 16-case orchestration panel.
+`w6_v2_shadow_panel_{valid,adversarial}_responses.jsonl` bind those definitions
+to the exact panel and prompt SHA-256 values. They test the offline scorer and
+are not live-model outputs or scientific evidence.

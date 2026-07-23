@@ -1,0 +1,205 @@
+{
+  "schema_version": "w6_v2_public_evidence_snapshot_v1",
+  "snapshot_id": "w6-v2-public-evidence-2026-07-23",
+  "frozen_at": "2026-07-23",
+  "derivation": "Public-safe decision facts curated from the listed local or tracked project artifacts at their exact SHA-256 values.",
+  "content_boundary": {
+    "aggregate_decision_facts_only": true,
+    "candidate_sequences_included": false,
+    "candidate_representations_included": false,
+    "hidden_truth_rows_included": false,
+    "credentials_included": false,
+    "absolute_local_paths_included": false
+  },
+  "cases": {
+    "w1_full_mix_continue_scale": {
+      "source_path": "results/m6c_project_status.json",
+      "source_sha256": "50dff97cf67aec29c8906a0c7d21b6ce2751e24e913cd1cdd7a99f0729fd0518",
+      "source_tracked_at_freeze": false,
+      "status": "continue_scale",
+      "facts": {
+        "records": 852,
+        "target_alpha": 0.2,
+        "estimated_additional_records": 458
+      }
+    },
+    "w1_t030_stop_certified": {
+      "source_path": "results/m6c_project_status_t030_protocol.json",
+      "source_sha256": "0d50fff15e0e1891e58df0027712827f41e9b7d89827533262890659c87c4809",
+      "source_tracked_at_freeze": false,
+      "status": "stop_certified",
+      "facts": {
+        "records": 220,
+        "target_alpha": 0.2,
+        "complete": true
+      }
+    },
+    "w2_v11_underpowered_terminal": {
+      "source_path": "results/m6d_w2_target_family_redesign_v11_new_representative_panel_power_diagnostic.json",
+      "source_sha256": "1218c3adb956b55fb71512dc62ca6237e93eca0b69f69119e9276f8acc2a5787",
+      "source_tracked_at_freeze": false,
+      "status": "declared_alpha_structurally_unattainable_at_current_split",
+      "facts": {
+        "targets": 11,
+        "records": 1100,
+        "panel_status": "multi_target_evaluable_not_certified",
+        "target_alpha": 0.2
+      }
+    },
+    "w2b_fit_continue_certification": {
+      "source_path": "results/m6d_w2b_target_adaptive_fit_report.json",
+      "source_sha256": "6aac81be46805ad983e770af49f15e38cac140d469e4541e40788a21129ef3c1",
+      "source_tracked_at_freeze": true,
+      "status": "w2b_fit_complete_awaiting_certification",
+      "facts": {
+        "targets": 8,
+        "fit_records": 480,
+        "fit_eligible_targets": 5,
+        "selective_candidates": 1,
+        "strict_qc_failures": 0
+      }
+    },
+    "w2b_certification_terminal": {
+      "source_path": "results/m6d_w2b_target_adaptive_certification_report.json",
+      "source_sha256": "87760fadffb46848bb027bc214710286ec5d057ec8ecb83030b0f361c2639d36",
+      "source_tracked_at_freeze": true,
+      "status": "w2b_certification_terminal_not_supported",
+      "facts": {
+        "certification_records": 300,
+        "certified_targets": 4,
+        "selective_certified_targets": 0,
+        "panel_gate_passed": false
+      }
+    },
+    "w2c_design_discovery": {
+      "source_path": "results/m6d_w2c_design_gate.json",
+      "source_sha256": "2fe726335575239baaf6f41a10680750e0277e82e4a9e04d21e0c23aad099667",
+      "source_tracked_at_freeze": true,
+      "status": "w2c_design_power_qualified_no_submit",
+      "facts": {
+        "target_alpha": 0.2,
+        "design_power_qualified": true,
+        "submission_allowed": false
+      }
+    },
+    "w2c_msa_continue_fit_learn": {
+      "source_path": "results/m6d_w2c_target_msa_completion.json",
+      "source_sha256": "90fee9bba886233e095e9fdcc757fb95cafc7257f2a1f58e0508fee95bc6f344",
+      "source_tracked_at_freeze": false,
+      "status": "target_msa_precompute_complete_8_of_8",
+      "facts": {
+        "targets": 8,
+        "ready_msa_report_pairs": 8,
+        "audit_ok": true
+      }
+    },
+    "w2c_threshold_learning_terminal": {
+      "source_path": "results/m6d_w2c_fit_learn_completion.json",
+      "source_sha256": "11a6bb92c3f1dcd8e109922a740f95814a23845e112c7fd1ba1238dd0afa28a5",
+      "source_tracked_at_freeze": false,
+      "status": "w2c_fit_learn_complete_threshold_learning_terminal_not_supported",
+      "facts": {
+        "targets": 8,
+        "records": 480,
+        "threshold_candidate_targets": 0,
+        "minimum_candidates_required": 3,
+        "independent_screen_generation_approved": false
+      }
+    },
+    "w3_mechanism_context_unresolved": {
+      "source_path": "results/m6d_w3_mechanism_panel_adjudication.json",
+      "source_sha256": "bc0e009cec8bdd4f021331d10f8367127dc6fd6befcbe2b39dfe0b9d47a3fcd0",
+      "source_tracked_at_freeze": false,
+      "status": "context_dependent_or_unresolved",
+      "facts": {
+        "records": 58,
+        "audit_ok": true,
+        "population_robustness_supported": false,
+        "w2c_rescue_supported": false
+      }
+    },
+    "w3b_design_continue_msa": {
+      "source_path": "results/m6d_w3b_disagreement_design_gate.json",
+      "source_sha256": "bf6361b80575ec4f6d108356f70f09a18fc61fd3dd0e462b4d282e6d095f3aea",
+      "source_tracked_at_freeze": true,
+      "status": "w3b_design_power_qualified_inputs_incomplete_no_submit",
+      "facts": {
+        "targets": 8,
+        "design_power_qualified": true,
+        "inputs_ready": false,
+        "submission_allowed": false
+      }
+    },
+    "w3b_msa_continue_post_msa_gate": {
+      "source_path": "results/m6d_w3b_target_msa_lifecycle.json",
+      "source_sha256": "8504c9bc74acdeefbfaf9bc07418e376ea89e82f4789397cbebd5c4250bbe06f",
+      "source_tracked_at_freeze": true,
+      "status": "target_msa_precompute_complete_8_of_8",
+      "facts": {
+        "targets": 8,
+        "post_msa_design_gate_allowed": true,
+        "candidate_generation_allowed": false
+      }
+    },
+    "w3b_fit_terminal": {
+      "source_path": "results/m6d_w3b_fit_completion.json",
+      "source_sha256": "ad7908bcf0b7e0577b746488e9584b91d15dd08fb2d93e8f95b8104e118e1b9f",
+      "source_tracked_at_freeze": true,
+      "status": "w3b_fit_complete_rule_not_found_terminal_stop",
+      "facts": {
+        "targets": 3,
+        "matched_records": 180,
+        "primary_qualifying_rules": 0,
+        "comparator_qualifying_rules": 0,
+        "minimum_possible_global_false_accept_rate": 0.08333333333333333,
+        "frozen_empirical_risk_cap": 0.08
+      }
+    },
+    "w3c_validity_discovery": {
+      "source_path": "results/m6d_w3c_target_validity_audit.json",
+      "source_sha256": "a3e21efb8b786ab3e5c55fbb63f638ddb718f226d4f4a963c513b6ed44d5eef8",
+      "source_tracked_at_freeze": true,
+      "status": "w3c_target_validity_reset_complete_fresh_target_discovery_required",
+      "facts": {
+        "historical_targets": 24,
+        "complete_two_chain_assemblies": 5,
+        "strict_target_binder_systems": 3
+      }
+    },
+    "w3c_lock_continue_msa_packet": {
+      "source_path": "results/m6d_w3c_fresh_target_lock.json",
+      "source_sha256": "1713155ffd24019a003b1366d27816bd5f3b9e1d98b6e2c576b94a00e5936137",
+      "source_tracked_at_freeze": true,
+      "status": "w3c_a_fresh_target_representation_lock_complete_no_submit",
+      "facts": {
+        "locked_targets": 8,
+        "msa_work_complete": false,
+        "predictor_work_complete": false
+      }
+    },
+    "w3c_b1_continue_no_submit_validation": {
+      "source_path": "results/m6d_w3c_b1_target_msa_approval_packet.json",
+      "source_sha256": "384f7b66a05a9c35d918aff1dc744825e9e82aa24bf0f595be7ec94fc7ea6127",
+      "source_tracked_at_freeze": true,
+      "status": "w3c_b1_packet_prepared_cayuga_no_submit_validation_required",
+      "facts": {
+        "targets": 8,
+        "maximum_a40_gpu_hours": 8,
+        "no_submit": true,
+        "ready_to_request_exact_approval": false
+      }
+    },
+    "w4_fail_closed_stop_and_replace_screen": {
+      "source_path": "results/m6c_w4_fail_closed_campaign_status.json",
+      "source_sha256": "4d32086db3855d6990f2599406d56748eec4b499a93071c923d8f6475f252ff8",
+      "source_tracked_at_freeze": false,
+      "status": "closed_loop_round_complete_fail_closed_all_defer",
+      "facts": {
+        "candidates": 50,
+        "assays_used": 0,
+        "defer_rate": 1.0,
+        "all_candidate_flags": true
+      }
+    }
+  }
+}

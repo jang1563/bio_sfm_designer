@@ -74,6 +74,20 @@ python -m bio_sfm_designer.experiments.llm_orchestration_smoke \
   --out results/llm_orchestration_smoke.json
 ```
 
+## W6-v2 frozen offline panel
+
+The one-state smoke is complemented by a 16-case W2-W4 panel that freezes
+aggregate scientific decision states, expected stop/explore behavior, allowed
+evidence scopes, forbidden authority, and a review rubric. Its freeze, fixture
+binding, and scoring code has no provider path and runs with the network
+blocked. Valid and adversarial synthetic replays prove the evaluator accepts
+the exact contract and rejects malformed, unsafe, inconsistent, or
+non-actionable behavior.
+
+See [`W6_V2_FROZEN_SHADOW_PANEL.md`](W6_V2_FROZEN_SHADOW_PANEL.md). This is an
+offline harness result, not a live-model evaluation, permission for provider
+calls, or M7 completion.
+
 ## Live shadow smoke
 
 Live providers are deliberately blocked unless P0 credential hygiene has been

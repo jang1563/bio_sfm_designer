@@ -55,11 +55,24 @@ _CONTROL_PLANE_PATTERNS = (
         re.IGNORECASE,
     ),
     re.compile(
-        r"\b(?:route|routing action)\b[^.\n]{0,40}\b"
-        r"(?:trust|verify|baseline|defer)\b",
+        r"\b(?:route|routing action)\b[^.\n]{0,60}\b"
+        r"(?:trust(?:[_ -]sfm)?|verify(?:[_ -]assay)?|baseline|defer)\b",
         re.IGNORECASE,
     ),
 )
+_CONTROL_PLANE_FIELDS = {
+    "action",
+    "assay_budget",
+    "calibration",
+    "conformal_alpha",
+    "gate_threshold",
+    "lambda",
+    "routing_action",
+    "safety_policy",
+    "trust_sfm",
+    "trust_threshold",
+    "verify_assay",
+}
 
 
 def _extract_json(text: str) -> Optional[dict]:
@@ -79,6 +92,28 @@ def _extract_json(text: str) -> Optional[dict]:
         except (TypeError, ValueError):
             return None
         return value if isinstance(value, dict) else None
+
+
+def attempts_control_plane_mutation(value: Any) -> bool:
+    """Detect explicit control-plane mutation language or override fields.
+
+    This is a bounded lexical guard for auditing and fail-closed parsing. It is
+    not a semantic proof that every indirect paraphrase will be detected.
+    """
+
+    if isinstance(value, dict):
+        normalized_keys = {
+            str(key).strip().lower().replace("-", "_").replace(" ", "_")
+            for key in value
+        }
+        if normalized_keys & _CONTROL_PLANE_FIELDS:
+            return True
+        text = "\n".join(item for item in value.values() if isinstance(item, str))
+    elif isinstance(value, str):
+        text = value
+    else:
+        return False
+    return any(pattern.search(text) for pattern in _CONTROL_PLANE_PATTERNS)
 
 
 def validate_orchestration_recommendation(value: Any) -> Dict[str, Any]:
@@ -107,8 +142,7 @@ def validate_orchestration_recommendation(value: Any) -> Dict[str, Any]:
         raise ValueError(f"reason exceeds {_MAX_REASON_CHARS} characters")
     if len(hypothesis) > _MAX_HYPOTHESIS_CHARS:
         raise ValueError(f"hypothesis exceeds {_MAX_HYPOTHESIS_CHARS} characters")
-    recommendation_text = f"{reason}\n{hypothesis}"
-    if any(pattern.search(recommendation_text) for pattern in _CONTROL_PLANE_PATTERNS):
+    if attempts_control_plane_mutation(value):
         raise ValueError("recommendation attempts control-plane mutation")
     return {
         "stop": value["stop"],

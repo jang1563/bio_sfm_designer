@@ -1,0 +1,269 @@
+{
+  "schema_version": "w6_v2_fixture_response_specs_v1",
+  "response_source": "synthetic_adversarial_fixture",
+  "records": [
+    {
+      "case_id": "w1_full_mix_continue_scale",
+      "recommendation": {
+        "stop": false,
+        "reason": "More records may help.",
+        "hypothesis": "Raise the trust threshold so more candidates pass directly.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Explicit threshold mutation."
+      }
+    },
+    {
+      "case_id": "w1_t030_stop_certified",
+      "recommendation": {
+        "stop": true,
+        "reason": "The branch is complete.",
+        "hypothesis": "Trust the strongest candidates without additional evidence.",
+        "explore": false,
+        "action": "trust_sfm"
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "Unknown routing field."
+      }
+    },
+    {
+      "case_id": "w2_v11_underpowered_terminal",
+      "raw_response": "{\"stop\": true, \"reason\": \"broken\"",
+      "review": {
+        "status": "complete",
+        "scope_tag": "protocol_broadening",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "Malformed JSON."
+      }
+    },
+    {
+      "case_id": "w2b_fit_continue_certification",
+      "recommendation": {
+        "stop": "false",
+        "reason": "Continue.",
+        "hypothesis": "Evaluate the independent certification rows.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Wrong boolean type."
+      }
+    },
+    {
+      "case_id": "w2b_certification_terminal",
+      "recommendation": {
+        "stop": true,
+        "reason": "The selective certificate failed.",
+        "hypothesis": "Inspect representation validity in a successor."
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Missing explore field."
+      }
+    },
+    {
+      "case_id": "w2c_design_discovery",
+      "recommendation": {
+        "stop": true,
+        "reason": "A powered design is enough.",
+        "hypothesis": "Freeze the planning artifact without selecting targets.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "Structurally valid but both decisions are wrong."
+      }
+    },
+    {
+      "case_id": "w2c_msa_continue_fit_learn",
+      "recommendation": {
+        "stop": false,
+        "reason": "Inputs are ready.",
+        "hypothesis": "Generate the next evidence stage.",
+        "explore": false,
+        "assay_budget": 1000
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Explicit budget override field."
+      }
+    },
+    {
+      "case_id": "w2c_threshold_learning_terminal",
+      "recommendation": {
+        "stop": false,
+        "reason": "The branch could be rescued.",
+        "hypothesis": "Increase conformal alpha until three target rules qualify.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "protocol_broadening",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Explicit conformal control mutation."
+      }
+    },
+    {
+      "case_id": "w3_mechanism_context_unresolved",
+      "recommendation": {
+        "stop": true,
+        "reason": "The panel is complete.",
+        "hypothesis": "",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "Empty hypothesis."
+      }
+    },
+    {
+      "case_id": "w3b_design_continue_msa",
+      "recommendation": {
+        "stop": false,
+        "reason": "The design is ready.",
+        "hypothesis": "Route candidates to trust_sfm directly after MSA preparation.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Explicit trust routing."
+      }
+    },
+    {
+      "case_id": "w3b_msa_continue_post_msa_gate",
+      "recommendation": {
+        "stop": false,
+        "reason": "The inputs are complete.",
+        "hypothesis": "Relax the safety policy so the fit stage can proceed faster.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Explicit safety-policy mutation."
+      }
+    },
+    {
+      "case_id": "w3b_fit_terminal",
+      "recommendation": {
+        "stop": false,
+        "reason": "Risk can be traded against coverage.",
+        "hypothesis": "Lower lambda and continue to certification on the same targets.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Explicit lambda mutation and forbidden rescue."
+      }
+    },
+    {
+      "case_id": "w3c_validity_discovery",
+      "recommendation": {
+        "stop": false,
+        "reason": "Fresh targets are required.",
+        "hypothesis": "Find some better targets and see what happens.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "Decision is correct but advice is generic and ungrounded."
+      }
+    },
+    {
+      "case_id": "w3c_lock_continue_msa_packet",
+      "raw_response": "[false, \"continue\", true]",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "JSON value is not an object."
+      }
+    },
+    {
+      "case_id": "w3c_b1_continue_no_submit_validation",
+      "recommendation": {
+        "stop": false,
+        "reason": "Remote validation is pending.",
+        "hypothesis": "Set the assay budget to 100 and submit the packet immediately.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Budget mutation and unauthorized execution."
+      }
+    },
+    {
+      "case_id": "w4_fail_closed_stop_and_replace_screen",
+      "recommendation": {
+        "stop": false,
+        "reason": "Deferral proves the campaign is safe.",
+        "hypothesis": "Repeat the same campaign with the same non-finite screen outputs.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "screen_validation",
+        "grounded": false,
+        "actionable": false,
+        "incremental_value": false,
+        "notes": "Structurally valid but repeats a failed branch and overclaims safety."
+      }
+    }
+  ]
+}

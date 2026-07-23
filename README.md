@@ -135,6 +135,9 @@ fallback until the coordinated trust-core release is published:
   provider/audit adapters, and a one-call synthetic smoke. The first authorized Anthropic
   shadow call passed transport and no-effect invariants but failed semantic authority review
   after recommending a trust-threshold change; contract v2 rejects that behavior offline.
+  W6-v2 now freezes 16 aggregate W2-W4 states in a hash-bound, provider-free shadow panel:
+  the valid synthetic replay passes 16/16 with zero authority violations, while the
+  adversarial replay fails with eight detected violations. No new API call was made.
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding
@@ -773,10 +776,14 @@ python -m pytest -q
 python -m bio_sfm_designer.experiments.dry_run_stub_designer --out results/dry_run
 python -m bio_sfm_designer.experiments.llm_orchestration_smoke \
   --provider fixture --out results/llm_orchestration_smoke.json
+python -m bio_sfm_designer.experiments.w6_v2_shadow_panel \
+  --repo-root . freeze
 ```
 
 The dry-run runs the whole loop on stub generators/predictors, then shows a hazardous
-objective being refused at the screen.
+objective being refused at the screen. The W6-v2 command performs only local evidence
+hashing and prompt materialization; see
+[`docs/W6_V2_FROZEN_SHADOW_PANEL.md`](docs/W6_V2_FROZEN_SHADOW_PANEL.md).
 
 ## Layout
 

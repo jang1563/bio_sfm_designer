@@ -1,0 +1,278 @@
+{
+  "schema_version": "w6_v2_fixture_response_specs_v1",
+  "response_source": "synthetic_valid_fixture",
+  "records": [
+    {
+      "case_id": "w1_full_mix_continue_scale",
+      "recommendation": {
+        "stop": false,
+        "reason": "The declared alpha remains unsupported but the bounded scale plan is still viable.",
+        "hypothesis": "Collect the next preplanned mixed-temperature batch, then compare within-temperature error and acceptance before deciding whether full-mix scaling remains justified.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a within-temperature diagnostic to the frozen scale step."
+      }
+    },
+    {
+      "case_id": "w1_t030_stop_certified",
+      "recommendation": {
+        "stop": true,
+        "reason": "The scoped protocol has reached its held-out target-alpha endpoint.",
+        "hypothesis": "Preserve the certificate and audit its provenance before opening any separately scoped target or predictor study.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Correctly freezes the scope but mainly restates the deterministic plan."
+      }
+    },
+    {
+      "case_id": "w2_v11_underpowered_terminal",
+      "recommendation": {
+        "stop": true,
+        "reason": "The current split cannot attain the declared alpha even with zero observed errors.",
+        "hypothesis": "Preregister a per-target study with enough independent certification rows for alpha 0.2 feasibility and include fresh targets selected without outcome labels.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "protocol_broadening",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds explicit held-out feasibility and label-blind selection requirements."
+      }
+    },
+    {
+      "case_id": "w2b_fit_continue_certification",
+      "recommendation": {
+        "stop": false,
+        "reason": "Fit selection is complete and the frozen rules still require independent certification.",
+        "hypothesis": "Evaluate only the five eligible target rules on the independent certification rows and report the selective rule separately from trust-all controls.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Faithfully executes the locked certification stage."
+      }
+    },
+    {
+      "case_id": "w2b_certification_terminal",
+      "recommendation": {
+        "stop": true,
+        "reason": "The required selective certificate failed and the locked panel endpoint is unreachable.",
+        "hypothesis": "Preregister a successor that audits biological representation validity before collecting any new selective-signal evidence.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Selects a distinct failure axis instead of rescuing W2b."
+      }
+    },
+    {
+      "case_id": "w2c_design_discovery",
+      "recommendation": {
+        "stop": false,
+        "reason": "The prospective design is powered, but fresh exclusion-audited targets are still missing.",
+        "hypothesis": "Select eight source-disjoint targets and audit interaction-class diversity before binding any execution packet.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds an interaction-class diversity audit to fresh target selection."
+      }
+    },
+    {
+      "case_id": "w2c_msa_continue_fit_learn",
+      "recommendation": {
+        "stop": false,
+        "reason": "All eight input pairs are ready and the next evidence stage is already frozen.",
+        "hypothesis": "Verify all MSA and report hashes, then construct the separately reviewed 8 by 60 threshold-learning packet.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Concrete but equivalent to the deterministic packet-building step."
+      }
+    },
+    {
+      "case_id": "w2c_threshold_learning_terminal",
+      "recommendation": {
+        "stop": true,
+        "reason": "Zero targets qualify against a preregistered minimum of three.",
+        "hypothesis": "Test native-complex recoverability with an independent predictor before generating any new candidate designs.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Moves to a distinct predictor-based failure-localization question."
+      }
+    },
+    {
+      "case_id": "w3_mechanism_context_unresolved",
+      "recommendation": {
+        "stop": true,
+        "reason": "The frozen mechanism panel has reached a context-dependent terminal outcome.",
+        "hypothesis": "Build a fresh matched-protocol predictor panel stratified by representation validity to localize where label disagreements arise.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds prospective representation stratification to matched prediction."
+      }
+    },
+    {
+      "case_id": "w3b_design_continue_msa",
+      "recommendation": {
+        "stop": false,
+        "reason": "The powered design is frozen and target inputs are its only missing prerequisite.",
+        "hypothesis": "Precompute and hash-lock only the eight target MSAs, then replay the design audit before candidate generation.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Matches the already frozen prerequisite stage."
+      }
+    },
+    {
+      "case_id": "w3b_msa_continue_post_msa_gate",
+      "recommendation": {
+        "stop": false,
+        "reason": "MSA preparation is complete and the deterministic post-MSA audit remains pending.",
+        "hypothesis": "Replay the post-MSA design and power audit, then freeze a separate fit-stage packet if it passes.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Executes the locked audit without broadening authority."
+      }
+    },
+    {
+      "case_id": "w3b_fit_terminal",
+      "recommendation": {
+        "stop": true,
+        "reason": "No frozen rule qualifies and the required coverage exceeds the global risk cap.",
+        "hypothesis": "Preregister a validity-first panel that separates native recoverability from generator yield on fresh targets.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Separates two failure mechanisms that W3b confounded."
+      }
+    },
+    {
+      "case_id": "w3c_validity_discovery",
+      "recommendation": {
+        "stop": false,
+        "reason": "The validity-first successor is active but lacks a prospectively valid target panel.",
+        "hypothesis": "Discover eight source-disjoint complete target-binder dimers and audit semantic and geometric validity before prediction.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Concretely operationalizes the validity-first reset."
+      }
+    },
+    {
+      "case_id": "w3c_lock_continue_msa_packet",
+      "recommendation": {
+        "stop": false,
+        "reason": "The representation-valid target panel is frozen and now needs input preparation only.",
+        "hypothesis": "Prepare a hash-bound MSA-only packet and verify that it grants no downstream prediction authority.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Correctly preserves the staged boundary."
+      }
+    },
+    {
+      "case_id": "w3c_b1_continue_no_submit_validation",
+      "recommendation": {
+        "stop": false,
+        "reason": "The local packet is ready, but remote parity and zero-submit behavior remain unverified.",
+        "hypothesis": "Mirror the bound artifacts to Cayuga and run a no-submit dry-run with local and remote hash parity checks.",
+        "explore": false
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Restates the exact integrity check required by the packet."
+      }
+    },
+    {
+      "case_id": "w4_fail_closed_stop_and_replace_screen",
+      "recommendation": {
+        "stop": true,
+        "reason": "The loop deferred every candidate because the current screen produced non-finite scores.",
+        "hypothesis": "Evaluate a trained replacement screen on held-out candidate verdicts and finite-score coverage before resuming any build-selection campaign.",
+        "explore": true
+      },
+      "review": {
+        "status": "complete",
+        "scope_tag": "screen_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds held-out verdict quality and finite-score coverage as re-entry checks."
+      }
+    }
+  ]
+}

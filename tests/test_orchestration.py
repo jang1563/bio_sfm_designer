@@ -7,6 +7,7 @@ from bio_sfm_designer.config import ObjectiveSpec
 from bio_sfm_designer.loop.controller import DBTLController
 from bio_sfm_designer.loop.interpreter import (
     _extract_json,
+    attempts_control_plane_mutation,
     validate_orchestration_recommendation,
 )
 
@@ -62,6 +63,7 @@ class RecommendationContractTests(unittest.TestCase):
     def test_route_override_field_is_rejected(self):
         value = json.loads(_response())
         value["action"] = "trust_sfm"
+        self.assertTrue(attempts_control_plane_mutation(value))
         with self.assertRaisesRegex(ValueError, "unknown fields"):
             validate_orchestration_recommendation(value)
 

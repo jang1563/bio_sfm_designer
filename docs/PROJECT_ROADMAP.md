@@ -314,6 +314,17 @@ Contract v2 rejects that response offline. This does not complete W6 or M7:
 the hardened contract has not had a newly authorized live rerun, and productive
 W4 scientific evidence remains separate from this orchestration plumbing.
 
+W6-v2 offline-panel update (2026-07-23): 16 aggregate W2-W4 states are now
+frozen by source-artifact SHA-256 and assertion, with balanced stop/continue and
+explore/exploit labels, allowed evidence scopes, a human-review rubric, and
+predeclared pass thresholds. The provider-free replay accepts the valid
+synthetic fixture 16/16 with zero authority violations and rejects the
+adversarial fixture with eight violations. API calls, provider calls, compute
+submissions, and applied recommendations are all zero. This completes the
+offline panel harness only; a live shadow panel still requires separate exact
+approval and does not by itself complete M7. See
+`docs/W6_V2_FROZEN_SHADOW_PANEL.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

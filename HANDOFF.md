@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | first live shadow smoke complete; semantic boundary negative | one authorized Anthropic call passed transport/routing/no-effect checks but recommended changing the trust threshold; shadow prevented any effect, contract v2 rejects the response offline, and no M7 completion is claimed |
+| M7 | live smoke negative; W6-v2 offline panel ready | one authorized Anthropic call passed transport/routing/no-effect checks but recommended changing the trust threshold; contract v2 rejects it, and the new 16-case offline panel passes valid/adversarial harness replay with zero provider calls; no M7 completion is claimed |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1167,6 +1167,9 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
    `applied=false`. This repo must never contain provider keys or key material. Future calls still require
    an explicit model, per-invocation approval, and `--credential-hygiene-attested`; built-in live providers
    remain shadow-only.
+8. **W6-v2 offline shadow panel:** `docs/W6_V2_FROZEN_SHADOW_PANEL.md` freezes 16 aggregate W2-W4
+   states and their scoring rubric. Valid synthetic replay is 16/16 with zero authority violations;
+   adversarial replay fails with eight. This used zero API/provider calls and authorizes no live run.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 
