@@ -60,9 +60,11 @@ sequences or hidden truth. Its exact JSON recommendation can contain only
 `shadow` mode is the default and records the recommendation without applying
 it. `active` mode may affect only early stopping and next-round parent
 diversity, after deterministic hard limits. Unknown fields, malformed output,
-or provider errors fall back to the deterministic decision. Every provider call
-is written to `orchestration.jsonl` with request/response hashes and an explicit
-list of applied fields. See [`LLM_ORCHESTRATION.md`](LLM_ORCHESTRATION.md).
+provider errors, or recognized explicit control-plane mutation patterns fall
+back to the deterministic decision. Built-in live providers are shadow-only.
+Every provider call is written to `orchestration.jsonl` with request/response
+hashes and an explicit list of applied fields. See
+[`LLM_ORCHESTRATION.md`](LLM_ORCHESTRATION.md).
 
 ## Leakage discipline
 

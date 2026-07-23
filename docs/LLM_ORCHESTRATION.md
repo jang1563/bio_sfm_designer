@@ -27,7 +27,12 @@ The provider must return exactly:
 
 Missing fields, extra fields such as `action` or `trust_sfm`, wrong types,
 provider errors, and parse failures are rejected. The deterministic controller
-continues or stops under its own rules.
+continues or stops under its own rules. Contract v2 adds a fail-closed lexical
+guard for explicit attempts to change gate thresholds, calibration, conformal
+alpha, lambda, routing policy, assay budgets, or safety policy. Evidence
+collection and candidate strategy remain valid recommendation scope. This
+bounded guard rejects the observed live failure; it is not proof that every
+indirect semantic paraphrase can be detected.
 
 ## Modes
 
@@ -36,6 +41,9 @@ continues or stops under its own rules.
 - `active` may apply early-stop and explore/exploit advice in a multi-round
   controller run. It still runs after hard limits and cannot change any
   `trust_sfm`, `verify_assay`, `default_baseline`, or `defer` decision.
+
+Built-in Anthropic and OpenAI providers are restricted to `shadow`; `active`
+remains available only for offline/custom-provider experiments.
 
 `run_batch_round.py` consumes one asynchronous batch, so its controller always
 reaches the one-round limit. The interpreter still makes one shadow call after
@@ -86,7 +94,13 @@ The OpenAI adapter uses the same contract with `.[llm-openai]` and
 at most 1,024 output tokens; the default is 256. Provider SDK retries are
 disabled for this smoke path.
 
-The current repository state does not itself prove that out-of-band key
-rotation has occurred. Until JK confirms P0, only the fixture smoke is
-authorized. A failed live response is a provider failure, not permission to
-change routing or retry automatically.
+JK attested P0 credential hygiene completion and authorized one Anthropic
+shadow call on 2026-07-23. The call passed transport, structural JSON, routing
+equivalence, and no-effect checks, but failed semantic authority review because
+the model recommended changing the trust threshold. Shadow mode prevented any
+effect. The exact bounded result and hashes are recorded in
+[`LLM_ORCHESTRATION_LIVE_SMOKE_2026_07_23.md`](LLM_ORCHESTRATION_LIVE_SMOKE_2026_07_23.md).
+
+That one-call approval is consumed. Contract v2 was hardened offline; another
+live invocation requires a new explicit approval. A failed or semantically
+invalid response is not permission to change routing or retry automatically.

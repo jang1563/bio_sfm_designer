@@ -65,8 +65,51 @@ class RecommendationContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown fields"):
             validate_orchestration_recommendation(value)
 
+    def test_live_v1_threshold_mutation_is_rejected_on_replay(self):
+        value = {
+            "stop": True,
+            "reason": (
+                "Single-round campaign is complete with strong metrics and no "
+                "further rounds authorized."
+            ),
+            "hypothesis": (
+                "Next round could raise the trust threshold slightly to convert "
+                "some verification into direct trusted acceptances."
+            ),
+            "explore": False,
+        }
+        with self.assertRaisesRegex(ValueError, "control-plane mutation"):
+            validate_orchestration_recommendation(value)
+
+    def test_evidence_collection_and_gate_selected_parents_remain_allowed(self):
+        value = {
+            "stop": False,
+            "reason": "the current evidence is underpowered",
+            "hypothesis": (
+                "Increase diversity among gate-selected parents and collect an "
+                "independent calibration dataset."
+            ),
+            "explore": True,
+        }
+        parsed = validate_orchestration_recommendation(value)
+        self.assertTrue(parsed["explore"])
+
 
 class OrchestrationTests(unittest.TestCase):
+    def test_built_in_live_provider_cannot_enter_active_mode(self):
+        class LiveProvider:
+            provider_name = "anthropic"
+            model = "test-model"
+
+            def __call__(self, prompt):
+                return _response()
+
+        with self.assertRaisesRegex(ValueError, "require shadow"):
+            DBTLController(
+                provider=LiveProvider(),
+                orchestration_mode="active",
+            )
+
     def test_shadow_is_default_and_never_applies_recommendation(self):
         result = DBTLController(
             provider=lambda prompt: _response(
@@ -139,6 +182,21 @@ class OrchestrationTests(unittest.TestCase):
             "invalid_response",
         )
         self.assertFalse(result.orchestration_events[0]["applied"])
+
+    def test_control_plane_mutation_attempt_fails_closed(self):
+        result = DBTLController(
+            provider=lambda prompt: _response(
+                stop=True,
+                hypothesis="Raise the trust threshold to reduce verification.",
+            )
+        ).run(_spec(rounds=1))
+        event = result.orchestration_events[0]
+        self.assertEqual(event["status"], "invalid_response")
+        self.assertEqual(
+            event["error_type"],
+            "recommendation attempts control-plane mutation",
+        )
+        self.assertFalse(event["applied"])
 
     def test_garbage_provider_falls_back_to_deterministic(self):
         result = DBTLController(

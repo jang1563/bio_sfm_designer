@@ -306,10 +306,13 @@ The known open limits are also part of the anchor:
 W6 engineering update (2026-07-23): the provider seam is now executable in
 default-shadow mode with an exact recommendation schema, bounded Anthropic and
 OpenAI adapters, prompt/response audit logs, one-batch post-stop consultation,
-and an offline one-call invariant smoke. This does not complete W6 or M7:
-there has been no live provider call, P0 credential hygiene remains an
-out-of-band entry condition, and productive W4 scientific evidence remains
-separate from this orchestration plumbing.
+and an offline one-call invariant smoke. JK then attested P0 credential hygiene
+and authorized one Anthropic `claude-opus-4-8` shadow call. Transport,
+structural JSON, routing equivalence, and no-effect checks passed, but semantic
+authority failed because the model recommended changing the trust threshold.
+Contract v2 rejects that response offline. This does not complete W6 or M7:
+the hardened contract has not had a newly authorized live rerun, and productive
+W4 scientific evidence remains separate from this orchestration plumbing.
 
 ## Milestone Ladder
 

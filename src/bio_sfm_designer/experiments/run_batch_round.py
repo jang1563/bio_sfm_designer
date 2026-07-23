@@ -1018,6 +1018,13 @@ def run(args) -> "object":
         }
         preflight["failures"].append(mode_error)
         preflight["ok"] = False
+    elif is_live_provider(provider_name) and orchestration_mode != "shadow":
+        mode_error = {
+            "kind": "live_orchestration_requires_shadow",
+            "value": orchestration_mode,
+        }
+        preflight["failures"].append(mode_error)
+        preflight["ok"] = False
     preflight["orchestration"] = {
         "requested": provider_name is not None,
         "provider": provider_name,

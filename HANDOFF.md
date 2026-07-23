@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | engineering shadow path complete; live run blocked | strict orchestration contract, provider adapters, audit JSONL, and offline invariant smoke are implemented; no live call or M7 scientific claim until P0 credential hygiene and the W4 boundary are satisfied |
+| M7 | first live shadow smoke complete; semantic boundary negative | one authorized Anthropic call passed transport/routing/no-effect checks but recommended changing the trust threshold; shadow prevented any effect, contract v2 rejects the response offline, and no M7 completion is claimed |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1161,10 +1161,12 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
    candidate scores and therefore failed closed. Keep this as useful safety behavior, not as a route-to-build
    policy, until a trained screen head produces finite, audited verdicts.
 6. Optional: **RFdiffusion** de-novo binder backbones (vs ProteinMPNN interface redesign on a fixed backbone).
-7. **P0 (blocks live LLM orchestration / M7):** complete credential hygiene before any live-provider run.
-   This repo should not contain provider keys or key material. JK owns any out-of-band rotation/revocation.
-   The offline fixture smoke in `docs/LLM_ORCHESTRATION.md` is allowed without a key; live Anthropic/OpenAI
-   adapters require an explicit model and per-invocation `--credential-hygiene-attested`.
+7. **P0 credential hygiene:** JK attested completion on 2026-07-23 and authorized one Anthropic
+   `claude-opus-4-8` shadow call. The bounded result is
+   `docs/LLM_ORCHESTRATION_LIVE_SMOKE_2026_07_23.md`: transport passed, semantic authority failed, and
+   `applied=false`. This repo must never contain provider keys or key material. Future calls still require
+   an explicit model, per-invocation approval, and `--credential-hygiene-attested`; built-in live providers
+   remain shadow-only.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

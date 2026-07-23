@@ -127,13 +127,14 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1077` designer tests plus `70` subtests on 2026-07-23).
+**Current local source verified** (`1081` designer tests plus `70` subtests on 2026-07-23).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
 - Fail-closed LLM orchestration now has strict recommendations, default `shadow` authority,
-  provider/audit adapters, and a one-call synthetic smoke; no live-provider result is claimed
-  until P0 credential hygiene is explicitly attested.
+  provider/audit adapters, and a one-call synthetic smoke. The first authorized Anthropic
+  shadow call passed transport and no-effect invariants but failed semantic authority review
+  after recommending a trust-threshold change; contract v2 rejects that behavior offline.
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

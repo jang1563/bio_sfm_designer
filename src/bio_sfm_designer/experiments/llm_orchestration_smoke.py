@@ -30,7 +30,7 @@ def run_smoke(
     """Exercise exactly one advisory call and compare it with no-LLM routing."""
 
     report: Dict[str, Any] = {
-        "schema_version": "llm_orchestration_smoke_v1",
+        "schema_version": "llm_orchestration_smoke_v2",
         "provider": provider_name,
         "model": model,
         "mode": "shadow",
