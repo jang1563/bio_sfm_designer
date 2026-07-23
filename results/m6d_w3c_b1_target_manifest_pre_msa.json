@@ -1,0 +1,305 @@
+{
+  "failures": [],
+  "failures_by_kind": {},
+  "input_prep_artifacts": [
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_1TE1.pdb",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/prepared_1TE1_BA.pdb",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/prepared_1TE1_BA.report.json",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.fasta",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.fasta.report.json",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m.report.json",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_3QB4.pdb",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/prepared_3QB4_AB.pdb",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/prepared_3QB4_AB.report.json",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.fasta",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.fasta.report.json",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m.report.json",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_5E5M.pdb",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/prepared_5E5M_AB.pdb",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/prepared_5E5M_AB.report.json",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.fasta",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.fasta.report.json",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m.report.json",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_5JSB.pdb",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/prepared_5JSB_AB.pdb",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/prepared_5JSB_AB.report.json",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.fasta",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.fasta.report.json",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m.report.json",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_6KBR.pdb",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/prepared_6KBR_AC.pdb",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/prepared_6KBR_AC.report.json",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.fasta",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.fasta.report.json",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m.report.json",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_6KMQ.pdb",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/prepared_6KMQ_AB.pdb",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/prepared_6KMQ_AB.report.json",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.fasta",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.fasta.report.json",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m.report.json",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_6SGE.pdb",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/prepared_6SGE_AB.pdb",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/prepared_6SGE_AB.report.json",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.fasta",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.fasta.report.json",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m.report.json",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "field": "source_pdb",
+      "path": "hpc_outputs/m6d_w3c_sources/source_7B5G.pdb",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "field": "prepared_pdb",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/prepared_7B5G_AB.pdb",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "field": "prep_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/prepared_7B5G_AB.report.json",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "field": "target_fasta",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.fasta",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "field": "target_fasta_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.fasta.report.json",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "field": "target_msa",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "field": "target_msa_report",
+      "path": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m.report.json",
+      "target_id": "7B5G_AB"
+    }
+  ],
+  "manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+  "min_contacts": 20,
+  "min_targets": 8,
+  "n_ready_targets": 8,
+  "n_targets": 8,
+  "ok": true,
+  "ready_targets": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "require_files": false,
+  "require_records": false,
+  "target_ids": null
+}

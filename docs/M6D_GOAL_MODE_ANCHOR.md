@@ -10,8 +10,10 @@
 > The evaluator returned `w3b_fit_rule_not_found_stop`. `1FSK_LJ` was wrong for all 60 candidates under
 > both endpoints, so the required 15 target accepts imply `15/180 = 0.08333`, above the 0.08 risk cap.
 > Certification and held-out test are unreachable and have zero submissions. The distinct successor is
-> now W3c validity-first failure localization. Resume from `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md` and
-> discover fresh valid target-binder dimers; do not rescue W3b or infer compute approval.
+> now W3c validity-first failure localization. W3c-A has representation-locked eight fresh strict
+> target-binder dimers with zero compute. Its hash-bound W3c-B1 target-MSA-only packet is locally prepared,
+> but Cayuga no-submit mirror validation has not run. Resume from
+> `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`; do not rescue W3b or infer compute approval.
 
 Date: 2026-07-15
 
@@ -50,9 +52,10 @@ representatives found 5 complete author-determined two-chain assemblies and 3 st
 Strict branch counts are W2b `0/8`, W2c `2/8`, and W3b `1/8`. This is a post-outcome diagnostic design
 reset, not a subgroup claim: historical experiments remain valid only for their exact prepared structural-
 proxy inputs. W3c freezes the failure order as representation validity, native dual-predictor recovery,
-generator yield, then trust-signal calibration. Current work is W3c-A discovery of eight fresh,
-source-disjoint complete target-binder dimers. No MSA, H100, ProteinMPNN, gate, or certification packet
-exists or is authorized.
+generator yield, then trust-signal calibration. W3c-A has locked eight fresh, source-disjoint complete
+target-binder dimers. The separate W3c-B1 target-MSA packet is prepared locally and audit-clean, but
+Cayuga no-submit mirror validation, exact approval, submission, receipt, and target-MSA outputs remain
+absent. ProteinMPNN, predictor, gate, and certification work remain unauthorized.
 
 ## Active Objective
 
@@ -62,8 +65,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
 - preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
   certification and held-out-test roles;
-- execute only the preregistered W3c-A fresh-target discovery and representation lock before any MSA or
-  predictor compute;
+- preserve the completed W3c-A representation lock and advance W3c-B1 only through Cayuga no-submit
+  mirror validation before any exact target-MSA approval;
+- require a separate preregistered approval for native dual-predictor recovery before any generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -100,9 +104,11 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   `15/180 = 0.08333`, above the 0.08 cap. Certification and held-out test have zero submissions, and W3b
   supports no gate or biological-success claim.
 - W3c: the historical-pool validity audit passes its deterministic checks but finds only 5/24 complete
-  two-chain assemblies and 3/24 strict target-binder systems. The successor protocol is hash-bound and
-  preregistered for target discovery only. Zero fresh targets are locked, zero W3c jobs are submitted, and
-  strict target-binder generalization remains unsupported.
+  two-chain assemblies and 3/24 strict target-binder systems. W3c-A has representation-locked exactly
+  eight fresh strict target-binder dimers without predictor labels or generated designs. W3c-B1 is locally
+  packet-ready but has zero authorized queries, zero submissions, zero receipts, and zero outputs pending
+  Cayuga no-submit validation. Native recoverability and strict target-binder generalization remain
+  unsupported.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -185,6 +191,15 @@ from Chai records alone.
   `configs/m6d_w3c_target_semantic_annotations.json`, and
   `results/m6d_w3c_target_validity_audit.{json,md}`; public replay uses
   `tests/fixtures/m6d_w3c_historical_structure_fixture.json`
+- W3c-A fresh-target representation lock:
+  `docs/M6D_W3C_A_TARGET_LOCK.md`, `configs/m6d_w3c_fresh_targets.json`,
+  `configs/m6d_w3c_historical_overlap_registry.json`, and
+  `results/m6d_w3c_fresh_target_lock.{json,md}`; public replay uses
+  `tests/fixtures/m6d_w3c_fresh_structure_fixture.json`
+- W3c-B1 target-MSA-only no-submit boundary:
+  `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`, `configs/m6d_w3c_b1_target_msa_manifest.json`,
+  `results/m6d_w3c_b1_target_msa_approval_packet.{json,md}`, and
+  `hpc/run_w3c_b1_target_msa_guarded.sh`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and

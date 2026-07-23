@@ -1,6 +1,6 @@
 # M6d W3c validity-first failure-localization protocol
 
-Status: `preregistered_target_discovery_only_no_submit`.
+Status: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`.
 
 Date: 2026-07-15.
 
@@ -92,7 +92,8 @@ After a target manifest and representation lock pass exactly, a separate approva
 most eight target-MSA queries on A40. It authorizes no ProteinMPNN or structure-predictor work. All eight
 MSAs must pass frozen-sequence, depth, hash, and no-truncation checks before W3c-B2 can be prepared.
 
-No approval packet exists yet.
+The hash-bound approval packet is now prepared locally. It authorizes zero queries until Cayuga mirror
+validation passes and the exact stage-specific approval is recorded.
 
 ## W3c-B2: native recoverability
 
@@ -116,5 +117,22 @@ and cannot transfer.
 
 ## Current action
 
-Discover and lock eight fresh strict target-binder dimers. Do not prepare an MSA or H100 approval packet
-until the target manifest and representation audit pass exactly.
+Mirror the packet-bound W3c-B1 artifacts to Cayuga and run the guarded wrapper in dry-run mode. Confirm
+local/remote hash parity, exit `0`, zero submissions, and absent receipt/output artifacts before requesting
+the exact W3c-B1 approval. Do not prepare W3c-B2, ProteinMPNN, or predictor work.
+
+## Execution update: W3c-A complete
+
+On 2026-07-15, exactly eight fresh targets passed the frozen representation and overlap gates. The locked
+IDs are `1TE1_BA`, `3QB4_AB`, `5E5M_AB`, `5JSB_AB`, `6KBR_AC`, `6KMQ_AB`, `6SGE_AB`, and `7B5G_AB`.
+The completed CPU-only audit is documented in [M6D_W3C_A_TARGET_LOCK.md](M6D_W3C_A_TARGET_LOCK.md).
+
+No target-MSA query, ProteinMPNN design, or predictor evaluation was run.
+
+## Execution update: W3c-B1 packet prepared locally
+
+The separate hash-bound W3c-B1 packet is now locally prepared and documented in
+[M6D_W3C_B1_TARGET_MSA_APPROVAL.md](M6D_W3C_B1_TARGET_MSA_APPROVAL.md). It locks exactly eight one-hour
+A40 target-MSA queries and zero downstream work. Local dry-run and refusal checks pass, but Cayuga
+no-submit mirror validation has not run. Exact approval is therefore not request-ready, and no W3c-B1
+submission, receipt, MSA, ProteinMPNN design, or predictor evaluation exists.

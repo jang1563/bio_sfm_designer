@@ -1,0 +1,196 @@
+{
+  "approval_env_value": "approve-w3c-b1-target-msa-precompute",
+  "approval_env_var": "BIO_SFM_APPROVE_W3C_B1_TARGET_MSA",
+  "approval_packet_ready": true,
+  "approval_recorded": false,
+  "artifact": "m6d_w3c_b1_target_msa_approval_packet",
+  "bound_artifacts": {
+    "execution_manifest": {
+      "bytes": 10951,
+      "path": "configs/m6d_w3c_b1_target_msa_manifest.json",
+      "sha256": "d03711fbf576690a9347c2aa948af683495423c0775c60d39bf33fb52d80deda"
+    },
+    "extract_chain_fasta": {
+      "bytes": 4762,
+      "path": "hpc/extract_chain_fasta.py",
+      "sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b"
+    },
+    "fresh_target_lock": {
+      "bytes": 24092,
+      "path": "results/m6d_w3c_fresh_target_lock.json",
+      "sha256": "1713155ffd24019a003b1366d27816bd5f3b9e1d98b6e2c576b94a00e5936137"
+    },
+    "historical_overlap_registry": {
+      "bytes": 15156,
+      "path": "configs/m6d_w3c_historical_overlap_registry.json",
+      "sha256": "84a837b092ebca73078582f14d8998eb711071a985290e7b57d70b7443bc1df0"
+    },
+    "locked_manifest": {
+      "bytes": 5692,
+      "path": "configs/m6d_w3c_fresh_targets.json",
+      "sha256": "c3689aee385fef7db89bb7e81b638c1274a957f9465f73464bf42987cda8893d"
+    },
+    "plan": {
+      "bytes": 35869,
+      "path": "results/m6d_w3c_b1_target_msas.sh",
+      "sha256": "a0233c371abba51d8ede2ee848b7c12abbc99226492c90199ebc0babb72b2e10"
+    },
+    "precompute_python": {
+      "bytes": 11266,
+      "path": "hpc/precompute_boltz_target_msa.py",
+      "sha256": "c1acecd1a67c9253df17a02e16f402296056892e1fe3b878d172f72dd8e369ff"
+    },
+    "precompute_sbatch": {
+      "bytes": 1776,
+      "path": "hpc/run_precompute_boltz_target_msa.sbatch",
+      "sha256": "14080cbbb791a1db2fe1bcd4ca8bcba36d5f4d47ba9ae22f6f27042c59e2f82f"
+    },
+    "preflight": {
+      "bytes": 11762,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3c_b1_target_msa_preflight.py",
+      "sha256": "d7648ede6d781ad6079ed3b093297d877ae74bc6f4917e3874fbfba048e75f40"
+    },
+    "prep_heterodimer": {
+      "bytes": 8527,
+      "path": "hpc/prep_hetdimer.py",
+      "sha256": "ca9c6ebb7156bcd401a7c4de981f89985123fe8bbcf0c55b344b58d0cf1b7356"
+    },
+    "protocol": {
+      "bytes": 4903,
+      "path": "configs/m6d_w3c_validity_first_protocol.json",
+      "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+    },
+    "structure_fixture": {
+      "bytes": 748340,
+      "path": "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+      "sha256": "b8d523ddc58d6f043001f88a41b7486fd4648f4b299c199bbf62db20c0bff7e0"
+    }
+  },
+  "can_claim_biological_binder_success": false,
+  "can_claim_generator_yield": false,
+  "can_claim_native_recoverability": false,
+  "can_claim_trust_gate": false,
+  "can_prepare_w3c_b2": false,
+  "can_submit_proteinmpnn": false,
+  "can_submit_structure_predictors": false,
+  "can_submit_target_msa_if_explicitly_approved": true,
+  "cayuga_no_submit_validation_required": true,
+  "cayuga_no_submit_validation_status": "not_run",
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "This no-submit packet can authorize exactly eight target-MSA input-prep queries only after the exact approval phrase. It never authorizes ProteinMPNN, either structure predictor, W3c-B2 preparation, or any scientific claim.",
+  "explicit_approval_required": true,
+  "failures": [],
+  "maximum_a40_gpu_hours": 8.0,
+  "maximum_target_msa_queries": 8,
+  "next_action": "Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. Only after hash parity and zero-submit behavior pass should the exact phrase 'approve W3c-B1 target-MSA precompute' be requested.",
+  "no_submit": true,
+  "preexisting_target_msa_paths": [],
+  "ready_to_request_exact_approval": false,
+  "receipt_exists": false,
+  "receipt_path": "results/m6d_w3c_b1_target_msa_receipt.jsonl",
+  "required_user_phrase": "approve W3c-B1 target-MSA precompute",
+  "slurm_time_per_query": "01:00:00",
+  "status": "w3c_b1_packet_prepared_cayuga_no_submit_validation_required",
+  "submission_performed": false,
+  "submit_command_if_approved": "BIO_SFM_APPROVE_W3C_B1_TARGET_MSA=approve-w3c-b1-target-msa-precompute bash hpc/run_w3c_b1_target_msa_guarded.sh",
+  "target_count": 8,
+  "target_ids": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "target_msa_queries_authorized_by_this_packet": 0,
+  "target_msa_queries_if_explicitly_approved": 8,
+  "target_source_bindings": [
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_1TE1.pdb",
+      "source_pdb_sha256": "72daa3f8779e2d4f7a15d4dcdf4cbbffd2b183d519a68354c1ae003be26ce699",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.fasta",
+      "target_id": "1TE1_BA",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m.report.json",
+      "target_sequence_sha256": "0791623fe0756f683d3c5e547f7a4c725bca84a145a0b389136c0c6c297906c0"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_3QB4.pdb",
+      "source_pdb_sha256": "6769de57cf8f396723d868fe76091efc4810581dc0b12dba8ce9f8e7eeaa507a",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.fasta",
+      "target_id": "3QB4_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m.report.json",
+      "target_sequence_sha256": "862c960bfcb0e1d2939202ed29b33e197275c21d8f49cdd9336491b05778cdfd"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_5E5M.pdb",
+      "source_pdb_sha256": "5f231dbbd19cbc5216aaebdaf9461292c9bf0b1c1e3cef453ba19c05de495ee0",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.fasta",
+      "target_id": "5E5M_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m.report.json",
+      "target_sequence_sha256": "7a2450c6429f805e6ca72013e1a0b6a579c65143c898615a7d7cb4ba681654ac"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_5JSB.pdb",
+      "source_pdb_sha256": "82b0419b5d0bd8a0a99d15c5b1c781c3945b77d1f7e77ab645ddcf843b35b64a",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.fasta",
+      "target_id": "5JSB_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m.report.json",
+      "target_sequence_sha256": "9451a288bdeb55eeba38601282b94f4abe2078aecf940364d87eead2338b637b"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_6KBR.pdb",
+      "source_pdb_sha256": "b2eba90003c5556288bb3ec0af6d856e9fd0552b6b09c8098eec32359c88a117",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.fasta",
+      "target_id": "6KBR_AC",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m.report.json",
+      "target_sequence_sha256": "cb4fdec8f8f393c62bc486e863ea61cdadbbbe22a1e46352ddf843d8cd05bb36"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_6KMQ.pdb",
+      "source_pdb_sha256": "7e45049b88c983fccdfc909e50360de175cc440b765059aaf95873b27dc2fa86",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.fasta",
+      "target_id": "6KMQ_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m.report.json",
+      "target_sequence_sha256": "3a660ea3c18597311af4cc4bb6fe3ed6bc9fa5e1bc4678cf37ed8ab6ef900609"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_6SGE.pdb",
+      "source_pdb_sha256": "60a8ccac3d18576735323e9c3b44a74da0633d373b7d2fef1edfe1b21f5f4eba",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.fasta",
+      "target_id": "6SGE_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m.report.json",
+      "target_sequence_sha256": "0e322c532bef4a6f8371a9ecfb0225ff1ffce7b438a96054a39f80ec63a56568"
+    },
+    {
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_7B5G.pdb",
+      "source_pdb_sha256": "5480a02aa18f9b08bdfae99d86438fd497c0fe07deb9febe6ac28e27fb4725dc",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.fasta",
+      "target_id": "7B5G_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m.report.json",
+      "target_sequence_sha256": "8d45888e3817f216e9cd4ac6d7fe88fd78e7693d889af8d33a324e8b3ad448ea"
+    }
+  ],
+  "version": 1,
+  "wrapper": {
+    "path": "hpc/run_w3c_b1_target_msa_guarded.sh",
+    "sha256": "ad0762f9bf5b386159b2974d4af10f62288400f6b4a510178f296a34f822b1ef"
+  }
+}

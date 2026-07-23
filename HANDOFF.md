@@ -108,9 +108,15 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > strict target-binder generalization. Read `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md` and
 > `results/m6d_w3c_target_validity_audit.json`; the tracked
 > `tests/fixtures/m6d_w3c_historical_structure_fixture.json` supports public CPU replay without local raw
-> PDB files. The immediate task is to discover and representation-lock
-> eight fresh, source-disjoint complete target-binder dimers using metadata and geometry only. No MSA or
-> H100 approval packet exists, and zero W3c ProteinMPNN or predictor jobs are authorized.
+> PDB files. W3c-A is now complete: `1TE1_BA`, `3QB4_AB`, `5E5M_AB`, `5JSB_AB`, `6KBR_AC`, `6KMQ_AB`,
+> `6SGE_AB`, and `7B5G_AB` passed every frozen structural, semantic, and exact-overlap check. Read
+> `docs/M6D_W3C_A_TARGET_LOCK.md`, `results/m6d_w3c_fresh_target_lock.json`, and
+> `configs/m6d_w3c_fresh_targets.json`. The hash-bound W3c-B1 packet is now locally prepared at
+> `results/m6d_w3c_b1_target_msa_approval_packet.json`; read
+> `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`. It locks exactly eight one-hour A40 target-MSA queries and
+> zero ProteinMPNN, structure-predictor, or W3c-B2 authority. Local dry-run and refusal checks pass. The
+> immediate task is Cayuga no-submit mirror validation; it has not run, exact approval is not request-ready,
+> and no W3c job or receipt exists. Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and
@@ -850,6 +856,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6d / W2-W2c | complete negative result | multi-target and target-adaptive panels completed; universal and selective-pAE viability claims are not supported |
 | M6e / W3 | complete unresolved result | the frozen 58-case AF2 mechanism panel completed; the joint outcome is `context_dependent_or_unresolved` |
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
+| M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
 | M7/M8 | future | live gated orchestration and a new de-novo generator remain downstream of W3b and productive W4 evidence |
 

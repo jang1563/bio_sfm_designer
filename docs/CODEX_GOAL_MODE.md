@@ -11,8 +11,10 @@
 > `15/180 = 0.08333`, above the 0.08 cap. No certification or held-out-test job was submitted. Resume from
 > `docs/M6D_W3B_FIT_COMPLETION.md`. The chosen successor is W3c validity-first failure localization. Its
 > historical-pool audit found only 5/24 complete two-chain assemblies and 3/24 strict target-binder systems.
-> Resume from `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`; execute fresh-target discovery only, with no W3c
-> MSA or predictor compute authorized.
+> W3c-A has now representation-locked eight fresh strict target-binder dimers with zero compute. The
+> hash-bound W3c-B1 target-MSA-only packet is prepared locally, but Cayuga no-submit mirror validation has
+> not run. Resume from `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`; no W3c query, ProteinMPNN design,
+> predictor evaluation, or downstream stage is currently authorized.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -29,10 +31,11 @@ preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning r
 post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result and its
 input, runtime, approval, and adjudication locks; preserve the terminal W3b fit result without
 threshold rescue, target substitution, certification, or held-out testing; execute the preregistered W3c
-validity-first successor in order, beginning with eight fresh complete target-binder dimers and no compute,
-then require separate exact approvals for MSA and native dual-predictor recovery before any generator work;
-preserve W1 as target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep
-all status artifacts honest and reproducible.
+validity-first successor in order; preserve the completed eight-target representation lock; run the
+W3c-B1 target-MSA stage only after Cayuga no-submit mirror validation and exact approval; require a separate
+preregistered approval for native dual-predictor recovery before any generator work; preserve W1 as
+target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep all status artifacts
+honest and reproducible.
 ```
 
 ## Current Resume Anchor
@@ -111,9 +114,13 @@ Current W3c successor: `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`,
 `tests/fixtures/m6d_w3c_historical_structure_fixture.json`. The deterministic 24-target audit finds 5 complete
 author-determined two-chain assemblies and 3 strict target-binder systems; branch-level strict counts are
 W2b `0/8`, W2c `2/8`, and W3b `1/8`. Historical results therefore retain only their exact prepared
-structural-proxy scope. W3c-A must discover and representation-lock eight fresh, source-disjoint complete
-target-binder dimers without predictor or generated-design labels. No W3c target-MSA packet, native-screen
-packet, ProteinMPNN job, predictor job, or later protocol exists yet.
+structural-proxy scope. W3c-A has now locked exactly eight fresh, source-disjoint complete target-binder
+dimers without predictor or generated-design labels. The representation lock is
+`docs/M6D_W3C_A_TARGET_LOCK.md`, `configs/m6d_w3c_fresh_targets.json`, and
+`results/m6d_w3c_fresh_target_lock.{json,md}`. The separate W3c-B1 packet is locally prepared at
+`docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md` and `results/m6d_w3c_b1_target_msa_approval_packet.{json,md}`.
+Cayuga no-submit mirror validation, exact approval, submission, receipt, all eight target MSAs, and every
+downstream stage remain absent.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -718,12 +725,15 @@ Use this order unless the user gives a newer instruction:
    new alpha target or target-specific stress test is explicitly chosen.
 3. W2/W2b/W2c/W3b - Preserve the completed negative evidence and frozen stop decisions. Do not rescue,
    retune, substitute targets, or spend on stages made unreachable by their protocols.
-4. W3c-A - Discover exactly eight fresh complete biological target-binder dimers outside every historical
-   target, RCSB source, and target-sequence registry. Use metadata and geometry only; lock the manifest and
-   representation audit before preparing any MSA approval packet.
-5. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
+4. W3c-A/W3c-B1 - Preserve the completed eight-target representation lock. Run Cayuga no-submit mirror
+   validation for the locally prepared B1 packet, then request exact approval only after hash parity,
+   dry-run exit `0`, zero submissions, and absent provenance outputs are confirmed.
+5. W3c-B2 - Prepare native dual-predictor recovery only after all eight target MSAs pass frozen-sequence,
+   depth, hash, and no-truncation checks. It requires a separate preregistered H100 approval and authorizes
+   no generator work.
+6. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
-6. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,
+7. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,
    and key-rotation constraints are satisfied.
 
 If the current readiness artifact exposes a runnable blocker outside this priority order, resolve that

@@ -1,24 +1,24 @@
 # M6d Goal Drift Audit
 
-Status: `no_major_direction_drift_w3c_validity_first_reset_preregistered`.
+Status: `no_major_direction_drift_w3c_b1_packet_ready_cayuga_validation_next`.
 Audit ok: `True`.
 Major direction drift: `False`.
 
 ## Assessment
 
 - mission: `no_drift_external_calibrated_trust_gate_north_star_preserved`
-- protocol: `controlled_validity_first_successor_reset_preregistered_before_new_compute`
-- claims: `historical_claim_scope_narrowed_to_exact_structural_proxy_inputs`
-- execution: `cpu_metadata_audit_only_zero_w3c_jobs_no_submit`
-- operational status: `fresh_target_discovery_required_before_msa_or_native_screen`
+- protocol: `no_drift_w3c_b1_packet_matches_frozen_validity_first_protocol`
+- claims: `no_drift_packet_only_no_native_generator_or_gate_claim`
+- execution: `no_submit_zero_msa_zero_predictor_zero_proteinmpnn`
+- operational status: `w3c_b1_packet_ready_cayuga_no_submit_validation_required`
 
 ## Active Risks
 
-- `historical_target_semantic_overclaim` (managed): the 24 historical targets are diagnostic only and support no strict target-binder subgroup claim
-- `representation_failure_conflated_with_generator_failure` (managed): W3c requires complete biological dimers and native dual-predictor recovery before generation
-- `historical_label_leak_into_target_selection` (managed): fresh target discovery excludes historical sources and may not use predictor or generated-design labels
-- `premature_compute_authority` (managed): no MSA or native-screen approval packet exists and all later compute remains separately gated
+- `w3c_b1_hash_drift` (managed): the wrapper refuses any manifest, source-lock, plan, preflight, or runtime hash drift
+- `w3c_b1_authority_leak` (managed): the packet authorizes zero queries now and requires one exact approval phrase
+- `w3c_b1_budget_expansion` (managed): exactly eight one-hour one-A40 sbatch calls are locked
+- `w3c_native_or_generator_prematurity` (managed): ProteinMPNN, both structure predictors, W3c-B2, and all claims remain blocked
 
 ## Next Action
 
-Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.
+Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. Only after hash parity and zero-submit behavior pass should the exact phrase 'approve W3c-B1 target-MSA precompute' be requested.

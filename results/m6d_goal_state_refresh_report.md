@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3c_fresh_target_discovery_required`.
+Status: `goal_state_refreshed_w3c_b1_packet_ready_cayuga_validation_required`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -31,6 +31,11 @@ W3b certification reachable: `False`.
 W3c target validity: `w3c_target_validity_reset_complete_fresh_target_discovery_required`.
 W3c historical complete dimers: `5`.
 W3c historical strict target-binders: `3`.
+W3c-A fresh target lock: `w3c_a_fresh_target_representation_lock_complete_no_submit`.
+W3c-A fresh targets locked: `8`.
+W3c-B1 target-MSA packet: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`.
+W3c-B1 approval recorded: `False`.
+W3c-B1 queries authorized: `0`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -50,7 +55,19 @@ Cayuga submission allowed: `False`.
 - `tests/fixtures/m6d_w3c_historical_structure_fixture.json`
 - `results/m6d_w3c_target_validity_audit.json`
 - `results/m6d_w3c_target_validity_audit.md`
+- `configs/m6d_w3c_fresh_target_candidates.json`
+- `configs/m6d_w3c_historical_overlap_registry.json`
+- `configs/m6d_w3c_fresh_targets.json`
+- `tests/fixtures/m6d_w3c_fresh_structure_fixture.json`
+- `results/m6d_w3c_fresh_target_lock.json`
+- `results/m6d_w3c_fresh_target_lock.md`
+- `configs/m6d_w3c_b1_target_msa_manifest.json`
+- `results/m6d_w3c_b1_target_manifest_pre_msa.json`
+- `results/m6d_w3c_b1_target_msas.sh`
+- `hpc/run_w3c_b1_target_msa_guarded.sh`
+- `results/m6d_w3c_b1_target_msa_approval_packet.json`
+- `results/m6d_w3c_b1_target_msa_approval_packet.md`
 
 ## Next Action
 
-Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.
+Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. Only after hash parity and zero-submit behavior pass should the exact phrase 'approve W3c-B1 target-MSA precompute' be requested.

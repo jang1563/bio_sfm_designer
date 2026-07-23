@@ -41,8 +41,10 @@
 > 24 historical representatives found 5 complete author-determined two-chain assemblies and 3 strict
 > target-binder systems, with strict branch counts W2b `0/8`, W2c `2/8`, and W3b `1/8`. Historical branches
 > remain exact structural-proxy experiments and do not estimate strict target-binder generalization. W3c-A
-> must discover eight fresh, source-disjoint complete target-binder dimers before any MSA or predictor
-> packet is prepared. No W3c compute is currently authorized.
+> then locked eight fresh, source-disjoint complete target-binder dimers. All eight pass the frozen
+> structure, semantic, geometry, and exact-overlap gates, with zero MSA or predictor work. The W3c-B1
+> target-MSA-only packet is locally prepared and locks eight one-hour A40 queries, but Cayuga no-submit mirror
+> validation is still required before exact approval may be requested. No W3c compute is currently authorized.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -151,9 +153,23 @@ both frozen predictors can recover native complexes after the benchmark is restr
 valid biological target-binder dimers. `configs/m6d_w3c_validity_first_protocol.json` freezes eight fresh
 targets, strict representation criteria, a later MSA-only stage, and a later native-only 16-prediction
 screen requiring at least 6/8 targets to pass both predictors at L-RMSD below 4.0 A. Each compute stage
-requires a separate exact approval; no approval packet exists. See
+requires a separate exact approval. The W3c-B1 packet now exists locally, but Cayuga no-submit validation is
+pending and exact approval is not request-ready. See
 `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`, `results/m6d_w3c_target_validity_audit.{json,md}`, and the
 public CPU replay fixture `tests/fixtures/m6d_w3c_historical_structure_fixture.json`.
+
+2026-07-15 W3c-A completion: `m6d_w3c_fresh_target_lock` combines the 129-target/128-source historical
+evidence registry with the 24 representative inputs, then excludes 153 target IDs, 152 RCSB sources, and
+24 exact target-sequence hashes. The locked panel is `1TE1_BA`, `3QB4_AB`, `5E5M_AB`, `5JSB_AB`,
+`6KBR_AC`, `6KMQ_AB`, `6SGE_AB`, and `7B5G_AB`. Each pair is a complete author-determined two-protein
+dimer with distinct molecule entities, a manual target-binder semantic pass, at least 40 CA residues per
+chain, no observed numbering gap, and at least 20 CA contacts. See `docs/M6D_W3C_A_TARGET_LOCK.md`,
+`configs/m6d_w3c_fresh_targets.json`, and `results/m6d_w3c_fresh_target_lock.{json,md}`. This is an exact
+source/hash and representation lock, not sequence-family disjointness or native-recoverability evidence.
+The W3c-B1 packet is locally prepared and audit-clean. It binds the eight source/sequence locks, exact
+execution paths, one-hour A40 Slurm resource, eight-query/8-A40-GPU-hour ceiling, and zero downstream
+authority. Local dry-run and wrong/missing-approval refusal checks pass. Cayuga no-submit mirror validation,
+exact approval, submission, and all target-MSA outputs remain absent.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -542,10 +558,12 @@ Allowed decisions:
    those stages unreachable.
 4. Preserve the 24-target validity audit as a diagnostic claim reset: only 5 pairs are complete dimers and
    only 3 are strict target-binder systems; do not turn those post-outcome annotations into subgroup claims.
-5. Execute W3c-A only: discover exactly eight fresh complete target-binder dimers outside every historical
-   target, RCSB source, and target-sequence registry, without predictor or generated-design labels.
-6. Lock the target manifest and representation audit before preparing a separately approved MSA-only packet.
-   ProteinMPNN, native prediction, generator, gate, and certification work remain at zero.
+5. Preserve the completed W3c-A eight-target representation lock; do not replace a target after predictor
+   output or reinterpret exact hash exclusion as sequence-family disjointness.
+6. Preserve the locally completed hash-bound W3c-B1 packet and run Cayuga no-submit mirror validation next.
+   Request exact approval only after local/remote hash parity, dry-run exit `0`, zero submissions, and absent
+   provenance outputs are confirmed. ProteinMPNN, native prediction, generator, gate, and certification work
+   remain at zero.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

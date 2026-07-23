@@ -85,6 +85,9 @@ _W3B_FIT_TERMINAL_NEXT_ACTION = (
 _W3C_TARGET_VALIDITY_STATUS = (
     "w3c_target_validity_reset_complete_fresh_target_discovery_required"
 )
+_W3C_FRESH_TARGET_LOCK_STATUS = (
+    "w3c_a_fresh_target_representation_lock_complete_no_submit"
+)
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
     "candidates. Require a new explicit approval before compute and do not retune any learned threshold."
@@ -1371,6 +1374,275 @@ def _w3c_target_validity_summary(report: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _w3c_fresh_target_lock_summary(report: Dict[str, Any]) -> Dict[str, Any]:
+    summary = report.get("summary") if isinstance(report.get("summary"), dict) else {}
+    inputs = report.get("inputs") if isinstance(report.get("inputs"), dict) else {}
+    targets = report.get("targets") if isinstance(report.get("targets"), list) else []
+    expected_ids = [
+        "1TE1_BA",
+        "3QB4_AB",
+        "5E5M_AB",
+        "5JSB_AB",
+        "6KBR_AC",
+        "6KMQ_AB",
+        "6SGE_AB",
+        "7B5G_AB",
+    ]
+    expected_inputs = {
+        "candidate_config": "configs/m6d_w3c_fresh_target_candidates.json",
+        "historical_overlap_registry": "configs/m6d_w3c_historical_overlap_registry.json",
+        "validity_first_protocol": "configs/m6d_w3c_validity_first_protocol.json",
+        "structure_fixture": "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+        "locked_manifest": "configs/m6d_w3c_fresh_targets.json",
+    }
+    checks = {
+        "identity_exact": (
+            report.get("artifact") == "m6d_w3c_fresh_target_lock"
+            and report.get("version") == 1
+            and report.get("status") == _W3C_FRESH_TARGET_LOCK_STATUS
+        ),
+        "audit_ok": report.get("audit_ok") is True,
+        "target_panel_exact": (
+            summary.get("required_targets") == 8
+            and summary.get("locked_targets") == 8
+            and summary.get("target_ids") == expected_ids
+            and len(summary.get("source_rcsb_ids", [])) == 8
+            and len(set(summary.get("source_rcsb_ids", []))) == 8
+            and summary.get("minimum_ca_contact_pairs", 0) >= 20
+        ),
+        "input_bindings_exact": all(
+            isinstance(inputs.get(name), dict)
+            and inputs[name].get("path") == path
+            and _is_sha256(inputs[name].get("sha256"))
+            for name, path in expected_inputs.items()
+        ),
+        "local_source_verification_disclosed": isinstance(
+            inputs.get("local_source_pdbs_verified"), bool
+        ),
+        "report_checks_all_pass": (
+            isinstance(report.get("checks"), dict)
+            and bool(report["checks"])
+            and all(value is True for value in report["checks"].values())
+        ),
+        "target_checks_all_pass": (
+            len(targets) == 8
+            and [row.get("target_id") for row in targets] == expected_ids
+            and all(
+                isinstance(row, dict)
+                and isinstance(row.get("checks"), dict)
+                and bool(row["checks"])
+                and all(value is True for value in row["checks"].values())
+                for row in targets
+            )
+        ),
+        "stage_a_complete": report.get("w3c_a_complete") is True,
+        "later_packets_absent": (
+            report.get("w3c_b1_target_msa_packet_prepared") is False
+            and report.get("w3c_b2_native_screen_packet_prepared") is False
+        ),
+        "zero_compute": (
+            report.get("proteinmpnn_designs") == 0
+            and report.get("predictor_evaluations") == 0
+            and report.get("target_msa_queries_authorized") == 0
+        ),
+        "no_submit": (
+            report.get("no_submit") is True
+            and report.get("cayuga_submission_allowed") is False
+        ),
+        "claims_closed": (
+            report.get("can_claim_native_recoverability") is False
+            and report.get("can_claim_generator_yield") is False
+            and report.get("can_claim_trust_gate") is False
+            and report.get("can_claim_biological_binder_success") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3c-A fresh target lock invariants failed: {', '.join(failed)}")
+    return {
+        "status": report["status"],
+        "audit_ok": True,
+        "n_targets": 8,
+        "target_ids": expected_ids,
+        "source_rcsb_ids": summary["source_rcsb_ids"],
+        "minimum_ca_contact_pairs": summary["minimum_ca_contact_pairs"],
+        "interaction_class_counts": summary.get("interaction_class_counts", {}),
+        "protocol_sha256": inputs["validity_first_protocol"]["sha256"],
+        "manifest_sha256": inputs["locked_manifest"]["sha256"],
+        "fixture_sha256": inputs["structure_fixture"]["sha256"],
+        "overlap_registry_sha256": inputs["historical_overlap_registry"]["sha256"],
+        "local_source_pdbs_verified": inputs["local_source_pdbs_verified"],
+        "w3c_b1_target_msa_packet_prepared": False,
+        "w3c_b2_native_screen_packet_prepared": False,
+        "proteinmpnn_designs": 0,
+        "predictor_evaluations": 0,
+        "target_msa_queries_authorized": 0,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim": False,
+        "next_action": report["next_action"],
+        "checks": checks,
+    }
+
+
+def _w3c_b1_target_msa_packet_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
+    expected_ids = [
+        "1TE1_BA",
+        "3QB4_AB",
+        "5E5M_AB",
+        "5JSB_AB",
+        "6KBR_AC",
+        "6KMQ_AB",
+        "6SGE_AB",
+        "7B5G_AB",
+    ]
+    expected_bindings = {
+        "locked_manifest": "configs/m6d_w3c_fresh_targets.json",
+        "fresh_target_lock": "results/m6d_w3c_fresh_target_lock.json",
+        "protocol": "configs/m6d_w3c_validity_first_protocol.json",
+        "execution_manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "structure_fixture": "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+        "historical_overlap_registry": (
+            "configs/m6d_w3c_historical_overlap_registry.json"
+        ),
+        "plan": "results/m6d_w3c_b1_target_msas.sh",
+        "preflight": (
+            "src/bio_sfm_designer/experiments/"
+            "m6d_w3c_b1_target_msa_preflight.py"
+        ),
+        "precompute_sbatch": "hpc/run_precompute_boltz_target_msa.sbatch",
+        "precompute_python": "hpc/precompute_boltz_target_msa.py",
+        "prep_heterodimer": "hpc/prep_hetdimer.py",
+        "extract_chain_fasta": "hpc/extract_chain_fasta.py",
+    }
+    bindings = (
+        packet.get("bound_artifacts")
+        if isinstance(packet.get("bound_artifacts"), dict)
+        else {}
+    )
+    source_bindings = (
+        packet.get("target_source_bindings")
+        if isinstance(packet.get("target_source_bindings"), list)
+        else []
+    )
+    checks = {
+        "identity_exact": (
+            packet.get("artifact") == "m6d_w3c_b1_target_msa_approval_packet"
+            and packet.get("version") == 1
+            and packet.get("status")
+            == "w3c_b1_packet_prepared_cayuga_no_submit_validation_required"
+            and packet.get("approval_packet_ready") is True
+        ),
+        "target_panel_exact": (
+            packet.get("target_count") == 8
+            and packet.get("target_ids") == expected_ids
+            and len(source_bindings) == 8
+            and [row.get("target_id") for row in source_bindings] == expected_ids
+        ),
+        "source_sequence_bindings_valid": all(
+            isinstance(row, dict)
+            and _is_sha256(row.get("source_pdb_sha256"))
+            and _is_sha256(row.get("target_sequence_sha256"))
+            and isinstance(row.get("source_pdb"), str)
+            and isinstance(row.get("target_fasta"), str)
+            and isinstance(row.get("target_msa"), str)
+            and isinstance(row.get("target_msa_report"), str)
+            for row in source_bindings
+        ),
+        "runtime_bindings_exact": (
+            set(bindings) == set(expected_bindings)
+            and all(
+                isinstance(bindings.get(name), dict)
+                and bindings[name].get("path") == path
+                and _is_sha256(bindings[name].get("sha256"))
+                for name, path in expected_bindings.items()
+            )
+        ),
+        "wrapper_bound": (
+            isinstance(packet.get("wrapper"), dict)
+            and packet["wrapper"].get("path")
+            == "hpc/run_w3c_b1_target_msa_guarded.sh"
+            and _is_sha256(packet["wrapper"].get("sha256"))
+        ),
+        "approval_identity_exact": (
+            packet.get("required_user_phrase")
+            == "approve W3c-B1 target-MSA precompute"
+            and packet.get("approval_env_var")
+            == "BIO_SFM_APPROVE_W3C_B1_TARGET_MSA"
+            and packet.get("approval_env_value")
+            == "approve-w3c-b1-target-msa-precompute"
+            and packet.get("explicit_approval_required") is True
+        ),
+        "budget_exact": (
+            packet.get("maximum_target_msa_queries") == 8
+            and float(packet.get("maximum_a40_gpu_hours") or 0.0) == 8.0
+            and packet.get("slurm_time_per_query") == "01:00:00"
+            and packet.get("target_msa_queries_if_explicitly_approved") == 8
+        ),
+        "zero_authority_now": (
+            packet.get("approval_recorded") is False
+            and packet.get("submission_performed") is False
+            and packet.get("target_msa_queries_authorized_by_this_packet") == 0
+            and packet.get("receipt_exists") is False
+            and packet.get("preexisting_target_msa_paths") == []
+        ),
+        "cayuga_validation_pending": (
+            packet.get("cayuga_no_submit_validation_required") is True
+            and packet.get("cayuga_no_submit_validation_status") == "not_run"
+            and packet.get("ready_to_request_exact_approval") is False
+        ),
+        "downstream_closed": (
+            packet.get("can_submit_proteinmpnn") is False
+            and packet.get("can_submit_structure_predictors") is False
+            and packet.get("can_prepare_w3c_b2") is False
+            and packet.get("can_claim_native_recoverability") is False
+            and packet.get("can_claim_generator_yield") is False
+            and packet.get("can_claim_trust_gate") is False
+            and packet.get("can_claim_biological_binder_success") is False
+        ),
+        "no_submit": (
+            packet.get("no_submit") is True
+            and packet.get("cayuga_submission_allowed") is False
+            and packet.get("failures") == []
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(f"W3c-B1 target-MSA packet invariants failed: {', '.join(failed)}")
+    return {
+        "status": packet["status"],
+        "approval_packet_ready": True,
+        "approval_recorded": False,
+        "submission_performed": False,
+        "required_user_phrase": packet["required_user_phrase"],
+        "approval_env_var": packet["approval_env_var"],
+        "approval_env_value": packet["approval_env_value"],
+        "target_count": 8,
+        "target_ids": expected_ids,
+        "maximum_target_msa_queries": 8,
+        "maximum_a40_gpu_hours": 8.0,
+        "target_msa_queries_authorized": 0,
+        "target_msa_queries_if_explicitly_approved": 8,
+        "cayuga_no_submit_validation_status": "not_run",
+        "ready_to_request_exact_approval": False,
+        "locked_manifest_sha256": bindings["locked_manifest"]["sha256"],
+        "protocol_sha256": bindings["protocol"]["sha256"],
+        "fixture_sha256": bindings["structure_fixture"]["sha256"],
+        "overlap_registry_sha256": bindings["historical_overlap_registry"]["sha256"],
+        "execution_manifest_sha256": bindings["execution_manifest"]["sha256"],
+        "plan_sha256": bindings["plan"]["sha256"],
+        "wrapper_sha256": packet["wrapper"]["sha256"],
+        "proteinmpnn_allowed": False,
+        "structure_predictors_allowed": False,
+        "w3c_b2_allowed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim": False,
+        "next_action": packet["next_action"],
+        "checks": checks,
+    }
+
+
 def _apply_w3b_fit_ready_state(
     bundle: Dict[str, Dict[str, Any]],
     w3_completion: Dict[str, Any],
@@ -2383,6 +2655,462 @@ def _apply_w3c_target_validity_state(
             updated.append(path)
 
 
+def _apply_w3c_fresh_target_lock_state(
+    bundle: Dict[str, Dict[str, Any]],
+    w3c: Dict[str, Any],
+    fresh_lock: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3c_B1_hash_bound_target_MSA_no_submit_packet"
+    next_action = fresh_lock["next_action"]
+    ranked_actions = [
+        "Preserve the exact eight-target W3c-A manifest, source hashes, chain roles, and semantic annotations.",
+        "Prepare a hash-bound W3c-B1 no-submit packet for at most eight target-MSA queries on A40.",
+        "Keep ProteinMPNN and both structure predictors at zero during W3c-B1 preparation and execution.",
+        "Require a new exact approval only after the W3c-B1 packet and budget lock pass locally.",
+        "Do not prepare W3c-B2 until all eight target MSAs pass sequence, depth, hash, and no-truncation checks.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor.setdefault("claim_boundaries", {})["w3c"] = (
+        "representation_lock_complete_no_native_recovery_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_fresh_target_candidates": "configs/m6d_w3c_fresh_target_candidates.json",
+        "w3c_historical_overlap_registry": (
+            "configs/m6d_w3c_historical_overlap_registry.json"
+        ),
+        "w3c_fresh_target_manifest": "configs/m6d_w3c_fresh_targets.json",
+        "w3c_fresh_structure_fixture": (
+            "tests/fixtures/m6d_w3c_fresh_structure_fixture.json"
+        ),
+        "w3c_fresh_target_lock": "results/m6d_w3c_fresh_target_lock.json",
+        "w3c_fresh_target_lock_markdown": "results/m6d_w3c_fresh_target_lock.md",
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_a_representation_lock_complete_b1_packet_not_prepared_no_submit",
+        "goal_progress": fresh_lock["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3c": fresh_lock["status"],
+        "w3c_historical_targets_audited": w3c["n_historical_targets"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_ids": fresh_lock["target_ids"],
+        "w3c_target_msa_packet_prepared": False,
+        "w3c_target_msa_queries_authorized": 0,
+        "w3c_native_screen_packet_prepared": False,
+        "w3c_proteinmpnn_designs": 0,
+        "w3c_predictor_evaluations": 0,
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3c_fresh_target_lock"] = fresh_lock
+    anchor["next_resume_steps"] = [
+        "read the W3c-A lock report and preserve all eight source, chain, sequence, and semantic bindings",
+        "prepare the W3c-B1 target-MSA packet without submitting it",
+        "bind the packet to at most eight A40 MSA queries and zero ProteinMPNN or predictor evaluations",
+        "run local and Cayuga no-submit validation before requesting exact approval",
+        "do not prepare native prediction until all eight MSA completion checks pass",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_status": fresh_lock["status"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msa_packet_prepared": False,
+        "w3c_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_a_complete_b1_packet_preparation_required",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_target_validity": w3c,
+        "w3c_fresh_target_lock": fresh_lock,
+    })
+    completion.setdefault("claim_boundary", {})["w3c"] = (
+        "eight representations locked; no MSA, native-recovery, generator, gate, or biological-success evidence"
+    )
+    completion.setdefault("workstream_status", {})["W3c_validity_first"] = {
+        "complete": False,
+        "scientific_success": None,
+        "status": fresh_lock["status"],
+        "w3c_a_complete": True,
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_a_complete_b1_packet_next",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "representation_validity_issue_detected": True,
+        "representation_lock_complete": True,
+        "claim_scope_corrected": True,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3c"] = (
+        "representation_lock_only_no_native_recovery_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3c_lock_substitution",
+            "status": "managed",
+            "control": "all eight sources, chains, target sequences, semantic verdicts, and overlap sets are hash-bound",
+        },
+        {
+            "id": "w3c_target_selection_label_leak",
+            "status": "managed",
+            "control": "the lock consumes no predictor output or generated-design label",
+        },
+        {
+            "id": "w3c_b1_authority_leak",
+            "status": "managed",
+            "control": "W3c-A authorizes zero MSA queries; B1 requires a separate packet and exact approval",
+        },
+        {
+            "id": "w3c_native_or_generator_prematurity",
+            "status": "managed",
+            "control": "native prediction and ProteinMPNN remain blocked until the ordered earlier gates pass",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_w3c_a_completed_under_frozen_validity_first_gate",
+        "claims": "no_drift_representation_only_no_native_generator_or_gate_claim",
+        "execution": "cpu_metadata_only_zero_msa_zero_predictor_zero_proteinmpnn",
+        "operational_status": "w3c_b1_no_submit_packet_preparation_required",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {})["W3c_validity_first"] = {
+        "historical_audit": w3c,
+        "fresh_target_lock": fresh_lock,
+    }
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_a_complete_b1_no_submit_packet_preparation_required",
+        "w3c_target_validity": w3c,
+        "w3c_fresh_target_lock": fresh_lock,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "w3c_a_representation_lock_complete_no_msa_native_generator_gate_or_success_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_a_complete_b1_packet_preparation"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3c-B1 hash-bound target-MSA packet preparation",
+        "w3c_target_validity": w3c,
+        "w3c_fresh_target_lock": fresh_lock,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3c_fresh_target_lock": "8_of_8_representation_and_overlap_checks_passed",
+        "w3c_fresh_manifest_binding": fresh_lock["manifest_sha256"],
+        "w3c_fresh_fixture_binding": fresh_lock["fixture_sha256"],
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "w3c_stage": "W3c-A_complete_W3c-B1_packet_not_prepared",
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msa_packet_prepared": False,
+        "w3c_msa_queries_authorized": 0,
+        "w3c_msa_jobs_submitted": 0,
+        "w3c_predictor_jobs_submitted": 0,
+        "w3c_proteinmpnn_jobs_submitted": 0,
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "representation_lock_complete_no_compute_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_a_complete_b1_packet_preparation_required",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_target_validity": w3c,
+        "w3c_fresh_target_lock": fresh_lock,
+        "submission_performed": False,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "configs/m6d_w3c_fresh_target_candidates.json",
+        "configs/m6d_w3c_historical_overlap_registry.json",
+        "configs/m6d_w3c_fresh_targets.json",
+        "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+        "results/m6d_w3c_fresh_target_lock.json",
+        "results/m6d_w3c_fresh_target_lock.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
+def _apply_w3c_b1_target_msa_packet_state(
+    bundle: Dict[str, Dict[str, Any]],
+    fresh_lock: Dict[str, Any],
+    packet: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3c_B1_Cayuga_no_submit_mirror_validation"
+    next_action = packet["next_action"]
+    ranked_actions = [
+        "Review the W3c-B1 execution-manifest, plan, wrapper, source, sequence, and budget hashes.",
+        "Provide the exact approval phrase only if the eight-query A40 scope is accepted.",
+        "After approval, run only the guarded W3c-B1 target-MSA wrapper and preserve its receipt.",
+        "Keep ProteinMPNN, Boltz/AF2 structure prediction, and W3c-B2 at zero during B1.",
+        "Do not prepare W3c-B2 until all eight MSAs pass sequence, depth, hash, and no-truncation checks.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor.setdefault("claim_boundaries", {})["w3c"] = (
+        "b1_packet_ready_no_msa_native_recovery_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_b1_target_msa_manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "w3c_b1_target_msa_plan": "results/m6d_w3c_b1_target_msas.sh",
+        "w3c_b1_target_msa_wrapper": "hpc/run_w3c_b1_target_msa_guarded.sh",
+        "w3c_b1_target_msa_approval_packet": (
+            "results/m6d_w3c_b1_target_msa_approval_packet.json"
+        ),
+        "w3c_b1_target_msa_approval_packet_markdown": (
+            "results/m6d_w3c_b1_target_msa_approval_packet.md"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_b1_packet_ready_cayuga_validation_required_no_submit",
+        "goal_progress": packet["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3c": packet["status"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_ids": packet["target_ids"],
+        "w3c_target_msa_packet_prepared": True,
+        "w3c_target_msa_packet_status": packet["status"],
+        "w3c_target_msa_approval_recorded": False,
+        "w3c_b1_cayuga_no_submit_validation_status": "not_run",
+        "w3c_b1_ready_to_request_exact_approval": False,
+        "w3c_target_msa_queries_authorized": 0,
+        "w3c_target_msa_queries_if_approved": 8,
+        "w3c_target_msa_jobs_submitted": 0,
+        "w3c_native_screen_packet_prepared": False,
+        "w3c_proteinmpnn_designs": 0,
+        "w3c_predictor_evaluations": 0,
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3c_b1_target_msa_approval"] = packet
+    anchor["next_resume_steps"] = [
+        "read the W3c-B1 approval packet and verify the exact eight-target and 8 A40 GPU-hour scope",
+        "mirror all packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode",
+        "verify hash parity, zero scheduler submission, and absent receipt and summary files",
+        f"only after that validation, request the exact user phrase: {packet['required_user_phrase']}",
+        "preserve the receipt and sync all eight A3M and report files before adjudication",
+        "do not prepare native prediction while any B1 completion check is open",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_status": packet["status"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msa_packet_prepared": True,
+        "w3c_target_msa_approval_recorded": False,
+        "w3c_b1_cayuga_no_submit_validation_status": "not_run",
+        "w3c_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_b1_packet_ready_cayuga_validation_required",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+    })
+    completion.setdefault("claim_boundary", {})["w3c"] = (
+        "eight representations and the B1 packet are locked; no MSA, native-recovery, "
+        "generator, gate, or biological-success evidence exists"
+    )
+    completion.setdefault("workstream_status", {})["W3c_validity_first"] = {
+        "complete": False,
+        "scientific_success": None,
+        "status": packet["status"],
+        "w3c_a_complete": True,
+        "w3c_b1_packet_prepared": True,
+        "w3c_b1_approval_recorded": False,
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_b1_packet_ready_cayuga_validation_next",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "representation_validity_issue_detected": True,
+        "representation_lock_complete": True,
+        "w3c_b1_packet_prepared": True,
+        "claim_scope_corrected": True,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3c"] = (
+        "b1_packet_only_no_msa_native_recovery_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3c_b1_hash_drift",
+            "status": "managed",
+            "control": "the wrapper refuses any manifest, source-lock, plan, preflight, or runtime hash drift",
+        },
+        {
+            "id": "w3c_b1_authority_leak",
+            "status": "managed",
+            "control": "the packet authorizes zero queries now and requires one exact approval phrase",
+        },
+        {
+            "id": "w3c_b1_budget_expansion",
+            "status": "managed",
+            "control": "exactly eight one-hour one-A40 sbatch calls are locked",
+        },
+        {
+            "id": "w3c_native_or_generator_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN, both structure predictors, W3c-B2, and all claims remain blocked",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_w3c_b1_packet_matches_frozen_validity_first_protocol",
+        "claims": "no_drift_packet_only_no_native_generator_or_gate_claim",
+        "execution": "no_submit_zero_msa_zero_predictor_zero_proteinmpnn",
+        "operational_status": "w3c_b1_packet_ready_cayuga_no_submit_validation_required",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).setdefault("W3c_validity_first", {}).update({
+        "fresh_target_lock": fresh_lock,
+        "b1_target_msa_approval": packet,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_b1_packet_ready_cayuga_no_submit_validation_required",
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "w3c_b1_packet_ready_no_msa_native_generator_gate_or_success_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_b1_packet_ready_cayuga_validation_required"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3c-B1 Cayuga no-submit mirror validation",
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3c_b1_packet": "hash_budget_scope_and_dry_run_checks_passed",
+        "w3c_b1_execution_manifest_binding": packet["execution_manifest_sha256"],
+        "w3c_b1_plan_binding": packet["plan_sha256"],
+        "w3c_b1_wrapper_binding": packet["wrapper_sha256"],
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "w3c_stage": "W3c-B1_packet_ready_Cayuga_validation_required",
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msa_packet_prepared": True,
+        "w3c_target_msa_approval_recorded": False,
+        "w3c_b1_cayuga_no_submit_validation_status": "not_run",
+        "w3c_msa_queries_authorized": 0,
+        "w3c_msa_jobs_submitted": 0,
+        "w3c_predictor_jobs_submitted": 0,
+        "w3c_proteinmpnn_jobs_submitted": 0,
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "b1_packet_ready_no_compute_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_b1_packet_ready_cayuga_validation_required",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+        "submission_performed": False,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "results/m6d_w3c_b1_target_manifest_pre_msa.json",
+        "results/m6d_w3c_b1_target_msas.sh",
+        "hpc/run_w3c_b1_target_msa_guarded.sh",
+        "results/m6d_w3c_b1_target_msa_approval_packet.json",
+        "results/m6d_w3c_b1_target_msa_approval_packet.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -2411,6 +3139,8 @@ def refresh_bundle(
     w3b_fit_af2_recovery_packet: Optional[Dict[str, Any]] = None,
     w3b_fit_completion: Optional[Dict[str, Any]] = None,
     w3c_target_validity_audit: Optional[Dict[str, Any]] = None,
+    w3c_fresh_target_lock: Optional[Dict[str, Any]] = None,
+    w3c_b1_target_msa_packet: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -2479,6 +3209,16 @@ def refresh_bundle(
         if isinstance(w3c_target_validity_audit, dict)
         else None
     )
+    w3c_fresh_lock = (
+        _w3c_fresh_target_lock_summary(w3c_fresh_target_lock)
+        if isinstance(w3c_fresh_target_lock, dict)
+        else None
+    )
+    w3c_b1_packet = (
+        _w3c_b1_target_msa_packet_summary(w3c_b1_target_msa_packet)
+        if isinstance(w3c_b1_target_msa_packet, dict)
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -2499,6 +3239,28 @@ def refresh_bundle(
         raise ValueError("W3b terminal fit state requires the validated recovery evidence chain")
     if w3c_target_validity is not None and w3b_terminal is None:
         raise ValueError("W3c target-validity state requires the terminal W3b fit evidence chain")
+    if w3c_fresh_lock is not None and w3c_target_validity is None:
+        raise ValueError("W3c-A fresh target lock requires the W3c target-validity reset")
+    if w3c_b1_packet is not None and w3c_fresh_lock is None:
+        raise ValueError("W3c-B1 target-MSA packet requires the W3c-A fresh target lock")
+    if (
+        w3c_fresh_lock is not None
+        and w3c_target_validity is not None
+        and w3c_fresh_lock["protocol_sha256"] != w3c_target_validity["protocol_sha256"]
+    ):
+        raise ValueError("W3c-A fresh target lock protocol does not match the validity reset")
+    if w3c_b1_packet is not None and w3c_fresh_lock is not None:
+        binding_pairs = (
+            ("locked_manifest_sha256", "manifest_sha256"),
+            ("protocol_sha256", "protocol_sha256"),
+            ("fixture_sha256", "fixture_sha256"),
+            ("overlap_registry_sha256", "overlap_registry_sha256"),
+        )
+        if any(
+            w3c_b1_packet[packet_key] != w3c_fresh_lock[lock_key]
+            for packet_key, lock_key in binding_pairs
+        ):
+            raise ValueError("W3c-B1 packet bindings do not match the W3c-A lock")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -3384,6 +4146,20 @@ def refresh_bundle(
             w3c_target_validity,
             runtime_goal_active=runtime_goal_active,
         )
+    if w3c_fresh_lock is not None and w3c_target_validity is not None:
+        _apply_w3c_fresh_target_lock_state(
+            bundle,
+            w3c_target_validity,
+            w3c_fresh_lock,
+            runtime_goal_active=runtime_goal_active,
+        )
+    if w3c_b1_packet is not None and w3c_fresh_lock is not None:
+        _apply_w3c_b1_target_msa_packet_state(
+            bundle,
+            w3c_fresh_lock,
+            w3c_b1_packet,
+            runtime_goal_active=runtime_goal_active,
+        )
     return bundle
 
 
@@ -3413,6 +4189,8 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
     w3c = report.get("w3c_target_validity") or {}
+    w3c_lock = report.get("w3c_fresh_target_lock") or {}
+    w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -3456,6 +4234,11 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3c target validity: `{w3c.get('status', 'not_audited')}`.",
         f"W3c historical complete dimers: `{w3c.get('n_structurally_complete_two_chain', 'not_audited')}`.",
         f"W3c historical strict target-binders: `{w3c.get('n_strict_target_binder_eligible', 'not_audited')}`.",
+        f"W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`.",
+        f"W3c-A fresh targets locked: `{w3c_lock.get('n_targets', 0)}`.",
+        f"W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`.",
+        f"W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`.",
+        f"W3c-B1 queries authorized: `{w3c_b1.get('target_msa_queries_authorized', 0)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -3481,6 +4264,8 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
     w3c = report.get("w3c_target_validity") or {}
+    w3c_lock = report.get("w3c_fresh_target_lock") or {}
+    w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -3528,6 +4313,11 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3c target validity: `{w3c.get('status', 'not_audited')}`",
         f"- W3c historical complete dimers: `{w3c.get('n_structurally_complete_two_chain', 'not_audited')}`",
         f"- W3c historical strict target-binders: `{w3c.get('n_strict_target_binder_eligible', 'not_audited')}`",
+        f"- W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`",
+        f"- W3c-A fresh targets locked: `{w3c_lock.get('n_targets', 0)}`",
+        f"- W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`",
+        f"- W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`",
+        f"- W3c-B1 queries authorized: `{w3c_b1.get('target_msa_queries_authorized', 0)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -3578,6 +4368,8 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
     w3c = report.get("w3c_target_validity") or {}
+    w3c_lock = report.get("w3c_fresh_target_lock") or {}
+    w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -3602,7 +4394,10 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3b AF2 recovery jobs submitted: `{w3b_recovery.get('recovery_jobs_submitted', 0)}`.",
         f"W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`.",
         f"W3c target validity: `{w3c.get('status', 'not_audited')}`.",
-        f"W3c fresh targets locked: `{0 if w3c else 'not_started'}`.",
+        f"W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`.",
+        f"W3c fresh targets locked: `{w3c_lock.get('n_targets', 0)}`.",
+        f"W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`.",
+        f"W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -3623,6 +4418,8 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3b_recovery = report.get("w3b_fit_recovery") or {}
     w3b_fit_completion = report.get("w3b_fit_completion") or {}
     w3c = report.get("w3c_target_validity") or {}
+    w3c_lock = report.get("w3c_fresh_target_lock") or {}
+    w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -3664,7 +4461,11 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3b fit completion: `{w3b_fit_completion.get('status', 'not_complete')}`",
         f"- W3b certification reachable: `{hpc.get('w3b_certification_reachable', False)}`",
         f"- W3c target validity: `{w3c.get('status', 'not_audited')}`",
+        f"- W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`",
         f"- W3c fresh targets locked: `{hpc.get('w3c_fresh_targets_locked', 'not_started')}`",
+        f"- W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`",
+        f"- W3c-B1 approval recorded: `{hpc.get('w3c_target_msa_approval_recorded', False)}`",
+        f"- W3c-B1 queries authorized: `{hpc.get('w3c_msa_queries_authorized', 0)}`",
         f"- W3c MSA jobs submitted: `{hpc.get('w3c_msa_jobs_submitted', 0)}`",
         f"- W3c predictor jobs submitted: `{hpc.get('w3c_predictor_jobs_submitted', 0)}`",
         "",
@@ -3801,6 +4602,14 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3c-target-validity-audit",
         default="results/m6d_w3c_target_validity_audit.json",
+    )
+    parser.add_argument(
+        "--w3c-fresh-target-lock",
+        default="results/m6d_w3c_fresh_target_lock.json",
+    )
+    parser.add_argument(
+        "--w3c-b1-target-msa-packet",
+        default="results/m6d_w3c_b1_target_msa_approval_packet.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -3952,6 +4761,16 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3c_target_validity_audit)
             if os.path.exists(args.w3c_target_validity_audit)
+            else None
+        ),
+        (
+            _load_json(args.w3c_fresh_target_lock)
+            if os.path.exists(args.w3c_fresh_target_lock)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b1_target_msa_packet)
+            if os.path.exists(args.w3c_b1_target_msa_packet)
             else None
         ),
         updated_at=args.updated_at,

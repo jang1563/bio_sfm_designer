@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3c_fresh_target_discovery_required`.
+Status: `goal_active_w3c_b1_packet_ready_cayuga_validation_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -35,10 +35,15 @@ Can mark goal complete: `False`.
 - W3c target validity: `w3c_target_validity_reset_complete_fresh_target_discovery_required`
 - W3c historical complete dimers: `5`
 - W3c historical strict target-binders: `3`
-- remaining requirement: `W3c_fresh_valid_target_manifest_and_representation_lock`
+- W3c-A fresh target lock: `w3c_a_fresh_target_representation_lock_complete_no_submit`
+- W3c-A fresh targets locked: `8`
+- W3c-B1 target-MSA packet: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`
+- W3c-B1 approval recorded: `False`
+- W3c-B1 queries authorized: `0`
+- remaining requirement: `W3c_B1_Cayuga_no_submit_mirror_validation`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Discover and preregister eight fresh, source-disjoint targets that pass the frozen structural and semantic validity gate. Prepare no ProteinMPNN designs. A separately approved native-sequence screen must show that both frozen predictors can recover each target before any generator or trust-gate experiment.
+Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. Only after hash parity and zero-submit behavior pass should the exact phrase 'approve W3c-B1 target-MSA precompute' be requested.

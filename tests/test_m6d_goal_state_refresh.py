@@ -771,6 +771,170 @@ def _w3c_target_validity_artifact():
     }
 
 
+def _w3c_fresh_target_lock_artifact():
+    target_ids = [
+        "1TE1_BA",
+        "3QB4_AB",
+        "5E5M_AB",
+        "5JSB_AB",
+        "6KBR_AC",
+        "6KMQ_AB",
+        "6SGE_AB",
+        "7B5G_AB",
+    ]
+    source_ids = [target_id.split("_", 1)[0] for target_id in target_ids]
+    return {
+        "artifact": "m6d_w3c_fresh_target_lock",
+        "version": 1,
+        "status": "w3c_a_fresh_target_representation_lock_complete_no_submit",
+        "audit_ok": True,
+        "inputs": {
+            "candidate_config": {
+                "path": "configs/m6d_w3c_fresh_target_candidates.json",
+                "sha256": "1" * 64,
+            },
+            "historical_overlap_registry": {
+                "path": "configs/m6d_w3c_historical_overlap_registry.json",
+                "sha256": "2" * 64,
+            },
+            "validity_first_protocol": {
+                "path": "configs/m6d_w3c_validity_first_protocol.json",
+                "sha256": "8" * 64,
+            },
+            "structure_fixture": {
+                "path": "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+                "sha256": "3" * 64,
+            },
+            "locked_manifest": {
+                "path": "configs/m6d_w3c_fresh_targets.json",
+                "sha256": "4" * 64,
+            },
+            "local_source_pdbs_verified": True,
+        },
+        "summary": {
+            "required_targets": 8,
+            "locked_targets": 8,
+            "target_ids": target_ids,
+            "source_rcsb_ids": source_ids,
+            "minimum_ca_contact_pairs": 25,
+            "interaction_class_counts": {"nanobody_target": 3, "other": 5},
+        },
+        "checks": {"all_inputs_valid": True},
+        "targets": [
+            {"target_id": target_id, "checks": {"strict_gate": True}}
+            for target_id in target_ids
+        ],
+        "w3c_a_complete": True,
+        "w3c_b1_target_msa_packet_prepared": False,
+        "w3c_b2_native_screen_packet_prepared": False,
+        "proteinmpnn_designs": 0,
+        "predictor_evaluations": 0,
+        "target_msa_queries_authorized": 0,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "next_action": "Prepare a separate hash-bound no-submit W3c-B1 target-MSA packet.",
+    }
+
+
+def _w3c_b1_target_msa_packet_artifact():
+    target_ids = [
+        "1TE1_BA",
+        "3QB4_AB",
+        "5E5M_AB",
+        "5JSB_AB",
+        "6KBR_AC",
+        "6KMQ_AB",
+        "6SGE_AB",
+        "7B5G_AB",
+    ]
+    paths = {
+        "locked_manifest": "configs/m6d_w3c_fresh_targets.json",
+        "fresh_target_lock": "results/m6d_w3c_fresh_target_lock.json",
+        "protocol": "configs/m6d_w3c_validity_first_protocol.json",
+        "execution_manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "structure_fixture": "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+        "historical_overlap_registry": (
+            "configs/m6d_w3c_historical_overlap_registry.json"
+        ),
+        "plan": "results/m6d_w3c_b1_target_msas.sh",
+        "preflight": (
+            "src/bio_sfm_designer/experiments/"
+            "m6d_w3c_b1_target_msa_preflight.py"
+        ),
+        "precompute_sbatch": "hpc/run_precompute_boltz_target_msa.sbatch",
+        "precompute_python": "hpc/precompute_boltz_target_msa.py",
+        "prep_heterodimer": "hpc/prep_hetdimer.py",
+        "extract_chain_fasta": "hpc/extract_chain_fasta.py",
+    }
+    hex_digits = "123456789abcdef"
+    hashes = {name: hex_digits[index] * 64 for index, name in enumerate(paths)}
+    hashes["locked_manifest"] = "4" * 64
+    hashes["protocol"] = "8" * 64
+    hashes["structure_fixture"] = "3" * 64
+    hashes["historical_overlap_registry"] = "2" * 64
+    return {
+        "artifact": "m6d_w3c_b1_target_msa_approval_packet",
+        "version": 1,
+        "status": "w3c_b1_packet_prepared_cayuga_no_submit_validation_required",
+        "approval_packet_ready": True,
+        "approval_recorded": False,
+        "submission_performed": False,
+        "explicit_approval_required": True,
+        "required_user_phrase": "approve W3c-B1 target-MSA precompute",
+        "approval_env_var": "BIO_SFM_APPROVE_W3C_B1_TARGET_MSA",
+        "approval_env_value": "approve-w3c-b1-target-msa-precompute",
+        "bound_artifacts": {
+            name: {"path": path, "sha256": hashes[name]}
+            for name, path in paths.items()
+        },
+        "wrapper": {
+            "path": "hpc/run_w3c_b1_target_msa_guarded.sh",
+            "sha256": "a" * 64,
+        },
+        "target_count": 8,
+        "target_ids": target_ids,
+        "target_source_bindings": [
+            {
+                "target_id": target_id,
+                "source_pdb": f"hpc_outputs/m6d_w3c_sources/source_{target_id[:4]}.pdb",
+                "source_pdb_sha256": "b" * 64,
+                "target_sequence_sha256": "c" * 64,
+                "target_fasta": f"hpc_outputs/m6d_w3c_b1_targets/{target_id}/target.fasta",
+                "target_msa": f"hpc_outputs/m6d_w3c_b1_targets/{target_id}/target.a3m",
+                "target_msa_report": (
+                    f"hpc_outputs/m6d_w3c_b1_targets/{target_id}/target.a3m.report.json"
+                ),
+            }
+            for target_id in target_ids
+        ],
+        "maximum_target_msa_queries": 8,
+        "maximum_a40_gpu_hours": 8.0,
+        "slurm_time_per_query": "01:00:00",
+        "target_msa_queries_authorized_by_this_packet": 0,
+        "target_msa_queries_if_explicitly_approved": 8,
+        "cayuga_no_submit_validation_required": True,
+        "cayuga_no_submit_validation_status": "not_run",
+        "ready_to_request_exact_approval": False,
+        "can_submit_proteinmpnn": False,
+        "can_submit_structure_predictors": False,
+        "can_prepare_w3c_b2": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "receipt_exists": False,
+        "preexisting_target_msa_paths": [],
+        "failures": [],
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_action": "Wait for exact W3c-B1 target-MSA execution approval.",
+    }
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -819,6 +983,8 @@ def _refresh_current_w3b(
     recovery=None,
     fit_completion=None,
     target_validity=None,
+    fresh_target_lock=None,
+    b1_packet=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -846,6 +1012,8 @@ def _refresh_current_w3b(
         completion or _w3_completion(),
         *optional,
         w3c_target_validity_audit=target_validity,
+        w3c_fresh_target_lock=fresh_target_lock,
+        w3c_b1_target_msa_packet=b1_packet,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1350,6 +1518,97 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "terminal W3b fit"):
             _refresh_current_w3b(target_validity=_w3c_target_validity_artifact())
 
+    def test_w3c_a_fresh_target_lock_becomes_current_no_submit_state(self):
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_a_complete_b1_packet_preparation_required",
+        )
+        self.assertEqual(bundle["anchor"]["current_status"]["w3c_fresh_targets_locked"], 8)
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["remaining_requirements"],
+            ["W3c_B1_hash_bound_target_MSA_no_submit_packet"],
+        )
+        self.assertTrue(bundle["drift"]["representation_lock_complete"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertFalse(
+            bundle["harness"]["hpc_status"]["w3c_target_msa_packet_prepared"]
+        )
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_msa_jobs_submitted"], 0)
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_predictor_jobs_submitted"], 0)
+
+    def test_w3c_a_fresh_target_lock_requires_validity_reset(self):
+        with self.assertRaisesRegex(ValueError, "requires the W3c target-validity"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            )
+
+    def test_w3c_b1_packet_becomes_current_exact_approval_boundary(self):
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=_w3c_b1_target_msa_packet_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_b1_packet_ready_cayuga_validation_required",
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["remaining_requirements"],
+            ["W3c_B1_Cayuga_no_submit_mirror_validation"],
+        )
+        self.assertTrue(
+            bundle["anchor"]["current_status"]["w3c_target_msa_packet_prepared"]
+        )
+        self.assertFalse(
+            bundle["anchor"]["current_status"]["w3c_target_msa_approval_recorded"]
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["w3c_target_msa_queries_authorized"],
+            0,
+        )
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_msa_jobs_submitted"], 0)
+        self.assertEqual(
+            bundle["harness"]["hpc_status"][
+                "w3c_b1_cayuga_no_submit_validation_status"
+            ],
+            "not_run",
+        )
+        self.assertFalse(bundle["harness"]["hpc_status"]["w3c_submission_allowed"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+
+    def test_w3c_b1_packet_requires_w3c_a_lock(self):
+        with self.assertRaisesRegex(ValueError, "requires the W3c-A fresh target lock"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                b1_packet=_w3c_b1_target_msa_packet_artifact(),
+            )
+
+    def test_w3c_b1_packet_fails_closed_on_manifest_hash_drift(self):
+        packet = _w3c_b1_target_msa_packet_artifact()
+        packet["bound_artifacts"]["locked_manifest"]["sha256"] = "d" * 64
+        with self.assertRaisesRegex(ValueError, "bindings do not match"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b1_packet=packet,
+            )
+
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
         packet["rows"].pop()
@@ -1459,6 +1718,12 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3c_target_validity": os.path.join(
                     root, "missing-w3c-target-validity.json"
                 ),
+                "w3c_fresh_target_lock": os.path.join(
+                    root, "missing-w3c-fresh-target-lock.json"
+                ),
+                "w3c_b1_target_msa_packet": os.path.join(
+                    root, "missing-w3c-b1-target-msa-packet.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -1492,6 +1757,8 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w3b-fit-af2-recovery-packet", paths["w3b_af2_recovery"],
                 "--w3b-fit-completion", paths["w3b_fit_completion"],
                 "--w3c-target-validity-audit", paths["w3c_target_validity"],
+                "--w3c-fresh-target-lock", paths["w3c_fresh_target_lock"],
+                "--w3c-b1-target-msa-packet", paths["w3c_b1_target_msa_packet"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -1521,6 +1788,8 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3b_af2_recovery",
                     "w3b_fit_completion",
                     "w3c_target_validity",
+                    "w3c_fresh_target_lock",
+                    "w3c_b1_target_msa_packet",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)
