@@ -281,8 +281,9 @@ The known open limits are also part of the anchor:
 
 1. Measurement first. Negative results, refusals, and corrected claims are real
    progress.
-2. The gate, not the orchestrator, owns trust. Claude may plan and interpret,
-   but it does not decide whether a model is confident enough.
+2. The gate, not the orchestrator, owns trust. An LLM may propose a bounded
+   hypothesis, but deterministic code owns stop/explore and it does not decide
+   whether a model is confident enough.
 3. Expensive compute must be replayable from explicit inputs. Every model batch
    should reduce to input files, an sbatch command, JSONL outputs, and local
    posthoc checks.
@@ -301,7 +302,7 @@ The known open limits are also part of the anchor:
 | W3: Independent predictor | Close or quantify the Boltz-only caveat. | A filled `configs/template_second_predictor_contract.json` copy plus matched records from a second complex predictor with stable `complex_target_id` + `target_id` keys and explicit signal/label sources. | `complex_predictor_contract.py --require-files --run-record-qc` passes with disjoint primary/secondary record paths, positive `min_overlap`, valid `min_label_agreement`, and strict disjoint record-file checking, then `complex_cross_predictor.py` passes labeled-overlap, same-threshold label agreement, target-identity, distinct-provenance, non-copied numeric-output, and per-JSONL predictor-membership checks; `complex_project_status.py` refuses older/non-strict cross reports without that audit. |
 | W4: Closed-loop DBTL | Feed the complex evidence back into route/verify/learn decisions. | Synchronized candidates, records, verdicts, prior verified prevalidation records, and calibrated/conformal gate settings. | One async batch round runs through `run_batch_round.py --strict-complex-records --prevalidate-records ... --conformal-alpha ...` or a complex-specific successor, records complex-regime `tau`, proves prevalidation/current-batch predictor-source-label contract compatibility, and writes `preflight.json`, campaign artifacts, and route/verify/net summaries that project status accepts as calibrated W4 evidence. |
 | W5: De-novo binders | Move beyond fixed-backbone ProteinMPNN interface redesign. | RFdiffusion or equivalent generator selected with license and HPC constraints checked. | Candidate JSONL uses the same bridge and can be evaluated by the complex posthoc/gate stack. |
-| W6: Live orchestration | Let Claude plan/interprete between verified batch rounds. | P0 key rotation complete; provider seam configured; safety and label-integrity checks on. | Live provider run is reproducible, logged, and never bypasses the external trust/safety gates. |
+| W6: Live orchestration | Test bounded LLM hypothesis generation between verified batch rounds. | P0 key rotation complete; provider seam configured; safety and label-integrity checks on. | A prospectively frozen hypothesis-only live run is reproducible, logged, qualitatively useful, and never owns stop/explore or bypasses the external trust/safety gates. |
 
 W6 engineering update (2026-07-23): the provider seam is now executable in
 default-shadow mode with an exact recommendation schema, bounded Anthropic and
@@ -338,6 +339,18 @@ successor must be validated offline before any separately approved future
 provider call. M7 remains incomplete. See
 `docs/W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`.
 
+W6-v3 hypothesis-only update (2026-07-23): the runtime and offline evaluator
+now remove `stop` and `explore` from the provider contract. Deterministic code
+owns those decisions and the LLM may emit only `reason+hypothesis`. The frozen
+valid synthetic replay passes 16/16 with zero authority violations; the
+adversarial replay accepts 5/16 and records nine violations. A mechanical
+reduction of the consumed W6-v2 live responses also passes the v3 qualitative
+contract (grounded/actionable 16/16, incremental value 9/16), but it is
+explicitly post-hoc, non-independent development evidence. It does not
+authorize deployment, another provider call, or M7 completion. A future
+prospective live test would require a new independent frozen panel and separate
+exact approval. See `docs/W6_V3_HYPOTHESIS_ONLY.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |
@@ -346,7 +359,7 @@ provider call. M7 remains incomplete. See
 | M6d | At least three heterodimer targets are prepared, run, and evaluated target-wise. | target manifest, prepared PDBs, target FASTAs/MSAs/reports, `complex_panel_report.json`. |
 | M6e | Independent predictor comparison is available for matched complex candidates. | second-predictor records JSONL, `complex_cross_predictor` output. |
 | M6f | Complex records are consumed by a DBTL campaign loop rather than only posthoc scripts. | campaign JSONL, summary JSON, route/verify/net comparison, W4 claim-boundary status artifact. |
-| M7 | Live orchestrator participates in a gated batch campaign without owning trust decisions. | provider logs, safety verdicts, campaign artifacts, gate certificate. |
+| M7 | A prospectively validated hypothesis-only orchestrator participates in a gated batch campaign without owning stop/explore or trust decisions. | independent frozen panel, provider logs, safety verdicts, campaign artifacts, gate certificate. |
 | M8 | New generator regime is added without changing the trust-gate contract. | RFdiffusion or equivalent candidate JSONL plus existing posthoc/gate outputs. |
 
 ## Stop/Go After Each Batch

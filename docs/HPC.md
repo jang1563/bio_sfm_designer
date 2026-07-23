@@ -64,8 +64,9 @@ candidate-record target identity agreement, and uses the `COMPLEX_ID` filled by
 the preflight blocks prevalidation records that overlap the current batch and records the certified complex
 `tau` that project status requires for W4 completion. It also blocks calibrated routing if the prior records
 and current batch disagree on `predictor_id`, `signal_source`, `label_source`, or `lrmsd_threshold` within
-the routed regime. Add `--provider anthropic`
-for the live LLM orchestrator. One invocation = one async HPC round.
+the routed regime. Add `--provider anthropic` only for an explicitly approved,
+hypothesis-only live shadow call. The provider cannot change stop/explore or
+submit the next async HPC round.
 
 ## Revised milestones (HPC-aware)
 

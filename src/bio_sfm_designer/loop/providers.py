@@ -25,16 +25,17 @@ class FixtureOrchestrationProvider:
     """Dependency-free, deterministic provider used for contract tests."""
 
     provider_name = "fixture"
-    model = "deterministic-orchestrator-v1"
+    model = "deterministic-hypothesis-orchestrator-v3"
 
     def __call__(self, prompt: str) -> str:
         del prompt
         return json.dumps(
             {
-                "stop": False,
-                "reason": "continue under deterministic campaign limits",
-                "hypothesis": "diversify the next batch while preserving gate-selected parents",
-                "explore": True,
+                "reason": "The immutable controller decision leaves a bounded evidence question.",
+                "hypothesis": (
+                    "Compare one additional evidence slice while preserving "
+                    "gate-selected parents and the frozen campaign limits."
+                ),
             },
             sort_keys=True,
         )

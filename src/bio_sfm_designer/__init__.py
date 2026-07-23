@@ -1,9 +1,10 @@
 """bio_sfm_designer — a calibrated, cost-aware, safety-screened DBTL designer.
 
-Claude orchestrates specialist scientific foundation models (SFMs); an EXTERNAL
-calibrated trust gate decides, per candidate, whether to trust the model's output,
-verify it by assay, fall back to a cheap baseline, or defer — and a biosafety screen
-runs before propose and before synth. The trust engine is reused from
+An optional LLM proposes bounded hypotheses over specialist scientific foundation
+models (SFMs), while deterministic code owns loop decisions. An EXTERNAL calibrated
+trust gate decides, per candidate, whether to trust the model's output, verify it by
+assay, fall back to a cheap baseline, or defer — and a biosafety screen runs before
+propose and before synth. The trust engine is reused from
 `bio_sfm_trust` (the bio-sfm-trust-core package).
 """
 

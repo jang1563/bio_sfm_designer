@@ -20,3 +20,12 @@ provider-free response definitions for the frozen 16-case orchestration panel.
 `w6_v2_shadow_panel_{valid,adversarial}_responses.jsonl` bind those definitions
 to the exact panel and prompt SHA-256 values. They test the offline scorer and
 are not live-model outputs or scientific evidence.
+
+## W6-v3 hypothesis-only fixtures
+
+`w6_v3_hypothesis_only_{valid,adversarial}_responses.jsonl` mechanically reduce
+the frozen W6-v2 synthetic specs by removing `stop` and `explore`. They bind
+`reason+hypothesis` to the v3 request hashes and verify that the reduced
+contract accepts bounded hypotheses while rejecting malformed, decision-
+bearing, control-plane, and low-quality responses. They are synthetic contract
+tests, not provider outputs or prospective evidence.

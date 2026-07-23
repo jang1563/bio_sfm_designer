@@ -93,9 +93,9 @@
 > reproducible without the ignored local PDB cache.
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
-for biology. Claude orchestrates specialist scientific foundation models (SFMs —
-protein/genome/single-cell); an **external calibrated trust gate** decides, per
-candidate, whether to
+for biology. An optional LLM proposes bounded hypotheses over specialist scientific
+foundation models (SFMs — protein/genome/single-cell); deterministic code controls
+the loop and an **external calibrated trust gate** decides, per candidate, whether to
 
 `trust_sfm | verify_assay | default_baseline | defer`,  scored by `net = benefit − λ·assays`,
 
@@ -127,11 +127,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1081` designer tests plus `70` subtests on 2026-07-23).
+**Current local source verified** (`1111` designer tests plus `88` trust-core tests on 2026-07-23).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
-- DBTL loop closed on CPU (heritable feedback, pluggable acquisition, causal orchestration).
-- Fail-closed LLM orchestration now has strict recommendations, default `shadow` authority,
+- DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).
+- Fail-closed LLM orchestration now has a strict hypothesis-only contract, default `shadow` authority,
   provider/audit adapters, and a one-call synthetic smoke. The first authorized Anthropic
   shadow call passed transport and no-effect invariants but failed semantic authority review
   after recommending a trust-threshold change; contract v2 rejects that behavior offline.
@@ -139,7 +139,11 @@ fallback until the coordinated trust-core release is published:
   the valid synthetic replay passes 16/16 with zero authority violations, while the
   adversarial replay fails with eight detected violations. A separately approved 16-call
   Anthropic live panel then passed schema and authority checks but failed stop/explore
-  decision accuracy (exact pair 8/16). Shadow mode applied nothing; active authority remains blocked.
+  decision accuracy (exact pair 8/16). W6-v3 therefore removes both decision fields: valid
+  synthetic replay passes 16/16 with zero violations and adversarial replay fails with nine.
+  Reducing the old live responses also passes the qualitative contract, but only as explicitly
+  non-independent post-hoc development evidence. No prospective v3 live validation or API
+  authorization exists; shadow mode applied nothing.
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding
@@ -738,7 +742,7 @@ fallback until the coordinated trust-core release is published:
   prevalidation records that overlap the current batch are blocked as truth leakage, the certified complex
   `tau` is recorded, prevalidation/current-batch predictor-source-label contracts must match by regime,
   and `summary.json` preserves the gate-prevalidation metadata used for status audits. An optional
-  app-level `--provider fixture|anthropic|openai` now produces one post-round orchestration recommendation;
+  app-level `--provider fixture|anthropic|openai` now produces one post-round hypothesis proposal;
   default `shadow` mode writes `orchestration.jsonl` but cannot change routing, safety, budgets, or submit
   the next batch. See [`docs/LLM_ORCHESTRATION.md`](docs/LLM_ORCHESTRATION.md).
   The complex ProteinMPNN generator carries `COMPLEX_ID` into candidate metadata and namespaces generated candidate ids.
@@ -780,18 +784,21 @@ python -m bio_sfm_designer.experiments.llm_orchestration_smoke \
   --provider fixture --out results/llm_orchestration_smoke.json
 python -m bio_sfm_designer.experiments.w6_v2_shadow_panel \
   --repo-root . freeze
+python -m bio_sfm_designer.experiments.w6_v3_hypothesis_only \
+  --repo-root . freeze
 ```
 
 The dry-run runs the whole loop on stub generators/predictors, then shows a hazardous
-objective being refused at the screen. The W6-v2 command performs only local evidence
-hashing and prompt materialization; see
-[`docs/W6_V2_FROZEN_SHADOW_PANEL.md`](docs/W6_V2_FROZEN_SHADOW_PANEL.md).
+objective being refused at the screen. The W6-v2 and W6-v3 commands perform
+only local evidence hashing and prompt materialization; see
+[`docs/W6_V2_FROZEN_SHADOW_PANEL.md`](docs/W6_V2_FROZEN_SHADOW_PANEL.md) and
+[`docs/W6_V3_HYPOTHESIS_ONLY.md`](docs/W6_V3_HYPOTHESIS_ONLY.md).
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `loop/` | DBTL controller + planner + strict shadow/active LLM interpreter and provider adapters |
+| `loop/` | DBTL controller + planner + hypothesis-only shadow/active interpreter and provider adapters |
 | `generate/` | Generator protocol + stub + `Precomputed` adapter; real **ProteinMPNN** via `hpc/` |
 | `predict/` | Predictor protocol + stub + `Precomputed` adapter; real **ESMFold + Boltz-2** via `hpc/` |
 | `trust/` | the external calibrated gate + predictor→evidence adapter |

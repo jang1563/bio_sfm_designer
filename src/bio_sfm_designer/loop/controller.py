@@ -9,9 +9,9 @@ Per round:
   6. Screen:  re-screen any candidate that would advance to build/synth.
   7. Calibrate: verified candidates (truth revealed) feed the gate's calibrator.
   8. Score:   net = benefit − λ·assays (via bio_sfm_trust).
-  9. Learn:   planner seeds the next round; interpreter decides iterate vs stop.
+  9. Learn:   deterministic code decides stop; the LLM may propose a hypothesis.
 
-Claude orchestrates (planner/interpreter); the gate decides trust.
+The controller decides the loop, and the external gate decides trust.
 """
 
 from __future__ import annotations
@@ -63,8 +63,8 @@ class DBTLController:
         self.screen = screen or SafetyScreen()
         # planner may be None -> built from the spec in run() (so acquisition/diversity are configurable)
         self.planner = planner
-        # The default live-provider posture is shadow-only. An explicit Interpreter
-        # or orchestration_mode="active" is required to apply stop/explore advice.
+        # Providers are hypothesis-only. Shadow logs the proposal; active may
+        # surface the hypothesis in history, but neither mode controls decisions.
         self.interpreter = interpreter or Interpreter(
             provider=provider,
             mode=orchestration_mode,
@@ -176,9 +176,8 @@ class DBTLController:
                     if best is None or pc["realized_quality"] > best["realized_quality"]:
                         best = {"candidate_id": pc["candidate_id"], "realized_quality": pc["realized_quality"], "round": rnd}
 
-            # 9. learn: the orchestrator (interpreter) goes FIRST — it may stop early and may
-            #    steer exploration — THEN parents are selected under that steer. The steer changes
-            #    only WHICH designs are bred next; it never touches the trust-routing decision.
+            # 9. learn: deterministic code decides stop/continue. The optional
+            #    orchestrator can add a hypothesis to history but owns no decision.
             decision = self.interpreter.interpret(rnd, spec, history, assays_used)
             if decision.get("orchestrator_recommendation") is not None:
                 history[-1]["orchestrator_recommendation"] = decision[
@@ -188,8 +187,10 @@ class DBTLController:
                 orchestration_events.append(decision["orchestration_event"])
             if decision.get("hypothesis"):
                 history[-1]["llm_hypothesis"] = decision["hypothesis"]
+            # A custom non-LLM interpreter may still provide a deterministic
+            # exploration setting. The built-in LLM interpreter always returns None.
             if decision.get("explore") is not None:
-                planner.diversity = bool(decision["explore"])     # causal steer on the next batch
+                planner.diversity = bool(decision["explore"])
                 history[-1]["llm_explore"] = bool(decision["explore"])
             if decision["stop"]:
                 history[-1]["stop_reason"] = decision["reason"]

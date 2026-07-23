@@ -472,9 +472,9 @@ For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this hand
 ## 1. What this project is (goal + thesis)
 
 A **calibrated, cost-aware, safety-screened Design–Build–Test–Learn (DBTL) designer** for proteins.
-Claude is the **orchestrator** (not an oracle) over specialist scientific foundation models (SFMs —
-ProteinMPNN, ESMFold, Boltz-2). The intellectual core is an **external, engineered trust gate** that
-decides, per candidate,
+An LLM can serve as a **hypothesis-only advisory orchestrator** (not an oracle) over specialist
+scientific foundation models (SFMs — ProteinMPNN, ESMFold, Boltz-2). Deterministic code owns
+stop/explore. The intellectual core is an **external, engineered trust gate** that decides, per candidate,
 
 ```
 trust_sfm | verify_assay | default_baseline | defer      scored by  net = benefit − λ·assays
@@ -510,7 +510,7 @@ the measurement project the engine was extracted from — referenced, not requir
 # fresh venv (NOTE: /tmp is ephemeral — recreate when gone; needs modern pip for PEP 660 editable installs)
 python3 -m venv /tmp/bio_sfm_venv && /tmp/bio_sfm_venv/bin/pip install -U pip
 /tmp/bio_sfm_venv/bin/pip install -e ".[dev]"                         # includes pytest + numpy for CI parity
-/tmp/bio_sfm_venv/bin/python -m pytest -q                             # public clone smoke: 118 passed, 4 skipped
+/tmp/bio_sfm_venv/bin/python -m pytest -q                             # public CPU regression suite
 ```
 
 For local engine development, override the pinned public dependency with the sibling checkout,
@@ -835,7 +835,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 
 ## 3. Architecture
 
-- `loop/` — DBTL controller + planner + acquisition + interpreter (Claude = orchestrator; live provider seam exists, mockable).
+- `loop/` — DBTL controller + planner + acquisition + hypothesis-only interpreter (live provider seam exists, mockable).
 - `generate/` — Generator protocol + stub + `PrecomputedGenerator` (consumes HPC JSONL).
 - `predict/` — Predictor protocol + stub + `PrecomputedStructurePredictor`.
 - `trust/` — the external calibrated `TrustGate` (per-regime calibration-validated trust; conformal mode).
@@ -848,7 +848,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | milestone | status | what |
 |---|---|---|
 | M0-M2 | complete | scaffold, offline gate on real PDBs, per-regime calibration, provider seam, and fail-closed biosafety screen |
-| M3 | engineering complete | CPU DBTL loop with heritable feedback, pluggable acquisition, and causal orchestration |
+| M3 | engineering complete | CPU DBTL loop with heritable feedback, pluggable acquisition, and deterministic control |
 | M4 | complete | first real ProteinMPNN-to-ESMFold backend and the documented single-model caveat |
 | M5a/M5b | complete | conformal/RCPS risk control and a gate over real design records |
 | M6a/M6b | complete negative result | independent Boltz-2 monomer refold; clean within-regime testing shows monomer confidence is chance-level as a fine trust signal |
@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | 16-case live shadow panel complete; decision boundary negative | Anthropic passed 16/16 schema and zero authority violations, but stop/explore exact-pair accuracy was 8/16; qualitative hypotheses were useful, shadow applied nothing, active authority remains blocked, and no M7 completion is claimed |
+| M7 | decision authority negative; v3 offline-qualified only | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removes both fields and passes offline synthetic plus post-hoc development replay, but has no independent prospective live validation and no M7 completion |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1177,6 +1177,13 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
    fails. Preserve deterministic stop/explore and test only a reduced hypothesis-advice contract offline.
    The approval is consumed; no additional call is authorized. See
    `docs/W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`.
+10. **W6-v3 hypothesis-only boundary:** runtime and offline scoring now accept only
+   `reason+hypothesis`; deterministic code owns stop/explore. The valid synthetic replay passes 16/16
+   with zero authority violations, while the adversarial replay accepts 5/16 and records nine
+   violations. Reducing the consumed W6-v2 live outputs preserves grounded/actionable 16/16 and
+   incremental value 9/16, but this is explicitly post-hoc and non-independent. No live v3 call is
+   authorized. Any future test needs a new independent frozen panel plus exact provider/model/call-count
+   approval. See `docs/W6_V3_HYPOTHESIS_ONLY.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

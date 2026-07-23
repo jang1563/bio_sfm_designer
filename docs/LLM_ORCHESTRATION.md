@@ -1,7 +1,7 @@
 # LLM Orchestration
 
-The LLM is an advisory reasoning layer around the DBTL loop. It does not own
-trust, safety, budgets, or compute submission.
+The LLM is a hypothesis-only advisory layer around the DBTL loop. It does not
+own stop/explore, trust, safety, budgets, routing, or compute submission.
 
 ## Authority contract
 
@@ -14,41 +14,40 @@ After a completed round, the interpreter gives the provider only:
 It does not send candidate sequences, candidate representations, or hidden
 truth. Target text and metrics are marked as untrusted data in the prompt.
 
-The provider must return exactly:
+The deterministic controller's stop decision and the operator-owned
+exploration setting are included as immutable prompt state. The provider must
+return exactly:
 
 ```json
 {
-  "stop": false,
   "reason": "brief rationale",
-  "hypothesis": "one concrete next-round direction",
-  "explore": true
+  "hypothesis": "one concrete next-round direction"
 }
 ```
 
-Missing fields, extra fields such as `action` or `trust_sfm`, wrong types,
-provider errors, and parse failures are rejected. The deterministic controller
-continues or stops under its own rules. Contract v2 adds a fail-closed lexical
-guard for explicit attempts to change gate thresholds, calibration, conformal
-alpha, lambda, routing policy, assay budgets, or safety policy. Evidence
-collection and candidate strategy remain valid recommendation scope. This
-bounded guard rejects the observed live failure; it is not proof that every
-indirect semantic paraphrase can be detected.
+Missing fields, extra fields including `stop`, `explore`, `action`, or
+`trust_sfm`, provider errors, and parse failures are rejected. Contract v3
+retains the fail-closed lexical guard for explicit attempts to change gate
+thresholds, calibration, conformal alpha, lambda, routing policy, assay
+budgets, or safety policy. Evidence collection and candidate strategy remain
+valid proposal scope. This bounded guard is not proof that every indirect
+semantic paraphrase can be detected.
 
 ## Modes
 
-- `shadow` is the default. The recommendation is logged but cannot change the
+- `shadow` is the default. The hypothesis is logged but cannot change the
   campaign. This is the mode for the first live experiment.
-- `active` may apply early-stop and explore/exploit advice in a multi-round
-  controller run. It still runs after hard limits and cannot change any
-  `trust_sfm`, `verify_assay`, `default_baseline`, or `defer` decision.
+- `active` may surface only an accepted hypothesis in campaign history. It
+  cannot change stop, exploration, `trust_sfm`, `verify_assay`,
+  `default_baseline`, `defer`, budgets, or execution.
 
 Built-in Anthropic and OpenAI providers are restricted to `shadow`; `active`
 remains available only for offline/custom-provider experiments.
 
 `run_batch_round.py` consumes one asynchronous batch, so its controller always
-reaches the one-round limit. The interpreter still makes one shadow call after
-that hard stop to recommend what the next separately launched batch should
-test. The LLM cannot cause that next batch to run.
+reaches the one-round limit. The interpreter may still request one hypothesis
+for a separately reviewed successor. The LLM cannot cause that successor to
+run.
 
 ## Audit
 
@@ -133,3 +132,17 @@ incremental value in 9/16. This supports a narrower hypothesis-generation role,
 not live ownership of stop/explore. See
 [`W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md`](W6_V2_LIVE_SHADOW_PANEL_2026_07_23.md).
 The 16-call approval is consumed; no retry or additional call is authorized.
+
+## W6-v3 hypothesis-only successor
+
+W6-v3 removes `stop` and `explore` from both the runtime provider contract and
+the offline evaluator. Its frozen 16-case valid synthetic replay passes 16/16
+with zero authority violations; the adversarial replay accepts only 5/16 and
+records nine authority violations.
+
+Mechanically reducing the already consumed W6-v2 live outputs to
+`reason+hypothesis` also passes the v3 qualitative contract: all 16 are grounded
+and actionable, with incremental value in 9/16. That is explicitly post-hoc,
+non-independent development evidence, not prospective validation. It
+authorizes no API call, deployment, or M7 completion. See
+[`W6_V3_HYPOTHESIS_ONLY.md`](W6_V3_HYPOTHESIS_ONLY.md).

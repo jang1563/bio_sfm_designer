@@ -17,7 +17,9 @@ class _FakeOpenAIResponses:
 
     def create(self, **kwargs):
         self.calls.append(kwargs)
-        return SimpleNamespace(output_text='{"stop": false}')
+        return SimpleNamespace(
+            output_text='{"reason": "bounded", "hypothesis": "collect evidence"}'
+        )
 
 
 class _FakeAnthropicMessages:
@@ -29,7 +31,10 @@ class _FakeAnthropicMessages:
         return SimpleNamespace(
             content=[
                 SimpleNamespace(type="thinking", text="private"),
-                SimpleNamespace(type="text", text='{"stop": false}'),
+                SimpleNamespace(
+                    type="text",
+                    text='{"reason": "bounded", "hypothesis": "collect evidence"}',
+                ),
             ]
         )
 
@@ -37,7 +42,7 @@ class _FakeAnthropicMessages:
 class ProviderTests(unittest.TestCase):
     def test_fixture_matches_orchestration_contract_shape(self):
         payload = json.loads(FixtureOrchestrationProvider()("prompt"))
-        self.assertEqual(set(payload), {"stop", "reason", "hypothesis", "explore"})
+        self.assertEqual(set(payload), {"reason", "hypothesis"})
 
     def test_openai_adapter_is_bounded_and_returns_output_text(self):
         responses = _FakeOpenAIResponses()
@@ -47,7 +52,10 @@ class ProviderTests(unittest.TestCase):
             max_output_tokens=123,
             client=client,
         )
-        self.assertEqual(provider("hello"), '{"stop": false}')
+        self.assertEqual(
+            provider("hello"),
+            '{"reason": "bounded", "hypothesis": "collect evidence"}',
+        )
         self.assertEqual(
             responses.calls,
             [
@@ -68,7 +76,10 @@ class ProviderTests(unittest.TestCase):
             max_output_tokens=234,
             client=client,
         )
-        self.assertEqual(provider("hello"), '{"stop": false}')
+        self.assertEqual(
+            provider("hello"),
+            '{"reason": "bounded", "hypothesis": "collect evidence"}',
+        )
         self.assertEqual(messages.calls[0]["model"], "test-anthropic-model")
         self.assertEqual(messages.calls[0]["max_tokens"], 234)
 

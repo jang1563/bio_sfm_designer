@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bio_sfm_designer"
 version = "0.1.0"
-description = "Calibrated, cost-aware, safety-screened DBTL designer: Claude orchestrates specialist SFMs behind an external trust gate."
+description = "Calibrated, cost-aware, safety-screened DBTL designer with hypothesis-only LLM advice behind an external trust gate."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }

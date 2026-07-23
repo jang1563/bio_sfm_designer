@@ -1162,7 +1162,10 @@ def main() -> None:
         "--orchestration-mode",
         choices=["shadow", "active"],
         default="shadow",
-        help="shadow records advice; active may steer only stop/explore after hard limits",
+        help=(
+            "shadow records a hypothesis; active may surface only that hypothesis "
+            "in history (never stop/explore or routing)"
+        ),
     )
     ap.add_argument(
         "--credential-hygiene-attested",
