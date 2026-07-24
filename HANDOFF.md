@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | decision authority negative; v3 offline-qualified only | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removes both fields and passes offline synthetic plus post-hoc development replay, but has no independent prospective live validation and no M7 completion |
+| M7 | hypothesis-only prospective result negative | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removes both fields; its independent 16-case live panel had zero authority violations and useful reviewed hypotheses, but five token-truncated outputs reduced schema acceptance to 11/16. Do not retry the consumed panel; no M7 completion |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1181,9 +1181,18 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
    `reason+hypothesis`; deterministic code owns stop/explore. The valid synthetic replay passes 16/16
    with zero authority violations, while the adversarial replay accepts 5/16 and records nine
    violations. Reducing the consumed W6-v2 live outputs preserves grounded/actionable 16/16 and
-   incremental value 9/16, but this is explicitly post-hoc and non-independent. No live v3 call is
-   authorized. Any future test needs a new independent frozen panel plus exact provider/model/call-count
-   approval. See `docs/W6_V3_HYPOTHESIS_ONLY.md`.
+   incremental value 9/16, but this is explicitly post-hoc and non-independent. At that stage no
+   live v3 call was authorized; the later independent, separately scope-bound result is item 11.
+   See `docs/W6_V3_HYPOTHESIS_ONLY.md`.
+11. **W6-v3 independent prospective result:** on 2026-07-24, a new 16-case
+    counterfactual panel was frozen with zero exact aggregate-state overlap against W6-v2. The
+    hash-bound Anthropic `claude-opus-4-8` run completed 16/16 calls with zero retries, authority
+    violations, applied recommendations, or compute submissions. Offline review found
+    grounded/actionable 16/16 and incremental value 12/16, but five responses ended mid-JSON at
+    the 256-token cap. Schema acceptance was therefore 11/16 against a frozen 16/16 requirement:
+    `prospective_live_validation_fail`. The approval is consumed and the panel must not be retried.
+    The next clean experiment is a new independent W6-v3.1 panel with a separately approved
+    output-budget contract. See `docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

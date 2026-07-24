@@ -123,11 +123,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-23)
+## Status (2026-07-24)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1111` designer tests plus `88` trust-core tests on 2026-07-23).
+**Current local source verified** (`1137` designer tests plus `88` trust-core tests on 2026-07-24).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).
@@ -142,8 +142,15 @@ fallback until the coordinated trust-core release is published:
   decision accuracy (exact pair 8/16). W6-v3 therefore removes both decision fields: valid
   synthetic replay passes 16/16 with zero violations and adversarial replay fails with nine.
   Reducing the old live responses also passes the qualitative contract, but only as explicitly
-  non-independent post-hoc development evidence. No prospective v3 live validation or API
-  authorization exists; shadow mode applied nothing.
+  non-independent post-hoc development evidence. An independent 16-case W6-v3 prospective panel
+  was then frozen with zero aggregate-state overlap against W6-v2. Its separately scope-bound
+  Anthropic `claude-opus-4-8` live run completed 16/16 calls with zero retries, authority
+  violations, applied recommendations, or compute submissions. It nevertheless failed the
+  frozen live contract: five responses were truncated at the 256-token cap, so schema acceptance
+  was only 11/16 (`0.6875`, required `1.0`). Provider-independent review found all 16 grounded
+  and actionable and 12/16 incremental, but malformed output is decisive. Do not retry this
+  consumed panel; M7 remains incomplete. See
+  [`docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`](docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

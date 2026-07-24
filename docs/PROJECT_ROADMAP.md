@@ -351,6 +351,21 @@ authorize deployment, another provider call, or M7 completion. A future
 prospective live test would require a new independent frozen panel and separate
 exact approval. See `docs/W6_V3_HYPOTHESIS_ONLY.md`.
 
+W6-v3 prospective-panel update (2026-07-24): a new 16-case counterfactual
+panel was frozen with all W6-v2 case/source identifiers excluded and zero exact
+aggregate-state hash overlap. Its provider-free valid fixture passed 16/16 and
+the adversarial fixture failed closed. A separately hash-bound Anthropic
+`claude-opus-4-8` scope then consumed exactly 16 shadow calls with zero retries,
+authority violations, applied recommendations, or compute submissions.
+Provider-independent review found grounded/actionable 16/16 and incremental
+value 12/16. The prospective contract nevertheless failed: five outputs were
+truncated at the 256-token cap, so schema acceptance was 11/16 against the
+frozen 16/16 requirement. This is a completed negative prospective validation.
+Do not retry the consumed panel. W6 and M7 remain incomplete; the clean
+successor is a new independent W6-v3.1 panel with a separately approved
+output-budget contract. See
+`docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

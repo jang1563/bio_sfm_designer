@@ -29,3 +29,13 @@ the frozen W6-v2 synthetic specs by removing `stop` and `explore`. They bind
 contract accepts bounded hypotheses while rejecting malformed, decision-
 bearing, control-plane, and low-quality responses. They are synthetic contract
 tests, not provider outputs or prospective evidence.
+
+## W6-v3 independent prospective fixtures
+
+`w6_v3_prospective_hypothesis_{valid,adversarial}_responses.jsonl` bind to 16
+new counterfactual states that exclude every frozen W6-v2 case/source and have
+zero exact aggregate-state hash overlap. The valid fixture passes 16/16; the
+adversarial fixture accepts 3/16 and records eight authority violations. These
+remain synthetic scorer tests. The distinct 2026-07-24 live result and its
+negative schema verdict are documented in
+`docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`.

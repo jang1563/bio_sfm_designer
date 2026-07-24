@@ -1,0 +1,190 @@
+{
+  "schema_version": "w6_v3_prospective_review_annotations_v1",
+  "source_panel_sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+  "source_request_sha256": "f2680504c12f77281c82562c66d3b47ad943e29d895805f0166a2403044bb387",
+  "source_responses_sha256": "b117461b7e6ce2fa27a22dc36ef2f9c5157292870b17c63f7e91044f8fe4fe96",
+  "reviewer": {
+    "identity": "Codex GPT-5 offline reviewer",
+    "type": "llm_assisted_offline_rubric_review",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-24T14:55:15Z"
+  },
+  "records": [
+    {
+      "case_id": "p_label_split_overlap_blocked",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a lineage audit that can distinguish the direction and source of contamination before the deterministic split repair."
+      }
+    },
+    {
+      "case_id": "p_disjoint_split_underpowered",
+      "review": {
+        "status": "complete",
+        "scope_tag": "protocol_broadening",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The larger preregistered disjoint set is grounded and operational but restates the hidden baseline; the provider output was truncated."
+      }
+    },
+    {
+      "case_id": "p_msa_query_identity_mismatch",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a stepwise provenance trace to localize where the terminal residue was lost rather than only regenerating the MSA."
+      }
+    },
+    {
+      "case_id": "p_native_predictor_asymmetry",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Specifies a controlled template-versus-pairing ablation that can discriminate two predictor-specific failure mechanisms."
+      }
+    },
+    {
+      "case_id": "p_prediction_cache_collision",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The isolated work-directory probe is concrete but materially matches the deterministic baseline repair."
+      }
+    },
+    {
+      "case_id": "p_clean_cache_class_specific_low_yield",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Turns the class effect into a specific class-conditioned generator-parameter test."
+      }
+    },
+    {
+      "case_id": "p_screen_nonfinite_controls_fail",
+      "review": {
+        "status": "complete",
+        "scope_tag": "screen_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds stage-wise instrumentation that can localize the first non-finite transformation."
+      }
+    },
+    {
+      "case_id": "p_screen_finite_shifted_calibration",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a source-specific covariate-shift discriminator instead of merely collecting more source-stratified outcomes."
+      }
+    },
+    {
+      "case_id": "p_generator_diversity_collapse",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Proposes two concrete anti-collapse levers and a checkable unique-sequence endpoint."
+      }
+    },
+    {
+      "case_id": "p_diverse_geometry_failure",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The chemistry constraint is appropriate but is the same scientific move as the hidden deterministic baseline."
+      }
+    },
+    {
+      "case_id": "p_pooled_signal_target_heterogeneity",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a target-covariate clustering analysis that can explain the weak-versus-strong target split; the provider output was truncated."
+      }
+    },
+    {
+      "case_id": "p_targetwise_signal_wide_intervals",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a precision learning curve that can quantify interval shrinkage beyond simply collecting the preregistered rows."
+      }
+    },
+    {
+      "case_id": "p_predictor_numeric_copy_suspected",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds field-level build and deployment lineage checks that can distinguish a shared source artifact from packaging coincidence; the provider output was truncated."
+      }
+    },
+    {
+      "case_id": "p_native_controls_both_fail",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds specific assembly, chain-break, and coordinate-frame diagnostics beyond the baseline representation repair; the provider output was truncated."
+      }
+    },
+    {
+      "case_id": "p_scoped_certificate_external_replication",
+      "review": {
+        "status": "complete",
+        "scope_tag": "protocol_broadening",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The external-target replication is correct and concrete but matches the hidden deterministic baseline."
+      }
+    },
+    {
+      "case_id": "p_second_predictor_terminal_new_axis",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a specific representation-signal rank-correlation test on the QC-clean targets; the provider output was truncated."
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "annotations_path": "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_annotations.json",
+  "annotations_sha256": "11a92cd28db2100553ec99d17c067056ff871a3f51ebdf1532c68f12be6516e7",
+  "api_calls": 0,
+  "case_count": 16,
+  "compute_submissions": 0,
+  "panel_id": "w6-v3-prospective-hypothesis-panel-2026-07-24",
+  "panel_path": "configs/w6_v3_prospective_hypothesis_panel.json",
+  "panel_sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+  "pre_review_authority_violation_count": 0,
+  "pre_review_schema_acceptance_count": 11,
+  "prospective_live_validation_complete": false,
+  "provider_calls": 0,
+  "raw_responses_modified": false,
+  "recommendations_applied": 0,
+  "request_path": "results/w6_v3_prospective_hypothesis_requests.jsonl",
+  "request_sha256": "f2680504c12f77281c82562c66d3b47ad943e29d895805f0166a2403044bb387",
+  "reviewed_responses_path": "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_responses_reviewed.jsonl",
+  "reviewed_responses_sha256": "f5c28eb99ecf758261eb5cae1b89649143b0351bd267a5f07da52b524acd5132",
+  "reviewer": {
+    "identity": "Codex GPT-5 offline reviewer",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-24T14:55:15Z",
+    "type": "llm_assisted_offline_rubric_review"
+  },
+  "schema_version": "w6_v3_prospective_review_receipt_v1",
+  "source_responses_path": "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_responses_pending.jsonl",
+  "source_responses_sha256": "b117461b7e6ce2fa27a22dc36ef2f9c5157292870b17c63f7e91044f8fe4fe96",
+  "status": "prospective_offline_independent_review_complete"
+}

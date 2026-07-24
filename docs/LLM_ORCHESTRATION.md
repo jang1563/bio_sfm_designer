@@ -146,3 +146,25 @@ and actionable, with incremental value in 9/16. That is explicitly post-hoc,
 non-independent development evidence, not prospective validation. It
 authorizes no API call, deployment, or M7 completion. See
 [`W6_V3_HYPOTHESIS_ONLY.md`](W6_V3_HYPOTHESIS_ONLY.md).
+
+## W6-v3 independent prospective result
+
+On 2026-07-24, 16 newly written counterfactual states were frozen as an
+independent prospective panel. Validation excludes every W6-v2 case/source and
+directly proves zero canonical aggregate-state hash overlap. The valid offline
+fixture passed 16/16 with zero authority violations; the adversarial fixture
+accepted 3/16 and detected eight violations.
+
+A hash-bound one-shot Anthropic `claude-opus-4-8` scope then consumed exactly
+16 calls with 256 maximum output tokens per call and zero retries. All calls
+returned and none attempted to mutate deterministic decisions or the control
+plane. Provider-independent review found grounded/actionable 16/16 and
+incremental value 12/16. The live contract still failed because five responses
+ended mid-JSON, leaving schema acceptance at 11/16 instead of the required
+16/16. Shadow mode applied nothing.
+
+This is a completed negative prospective validation, not a missing run and not
+M7 completion. The consumed panel must not be retried. A successor needs a new
+independent panel and a separately frozen transport contract, with 512 output
+tokens as the recommended primary change. See
+[`W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`](W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md).
