@@ -1,0 +1,679 @@
+{
+  "schema_version": "w6_v31_transport_panel_v1",
+  "panel_id": "w6-v3-1-transport-panel-2026-07-24",
+  "frozen_at": "2026-07-24T17:22:21Z",
+  "mode": "offline_shadow",
+  "contract_variant": "w6_v3_1_hypothesis_only_512",
+  "prospective_live_panel": true,
+  "api_calls_allowed": false,
+  "provider_calls_allowed": false,
+  "compute_submission_allowed": false,
+  "case_count": 16,
+  "purpose": "Test whether a 512-token output cap resolves the observed W6-v3 truncation failure on new independent DBTL states while preserving the exact hypothesis-only authority boundary.",
+  "transport_hypothesis": {
+    "baseline_scope_path": "configs/w6_v3_prospective_live_scope.json",
+    "baseline_scope_sha256": "7ef4da7a1273565bb793e65b6e1fda273024178b173ea92ecba5a18317e7c2ea",
+    "baseline_score_path": "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_score.json",
+    "baseline_score_sha256": "74fa0740b856a3571be0c0eee38cd4e4bfe50cd23d22efb0b199a54a91d914e6",
+    "baseline_max_output_tokens": 256,
+    "successor_max_output_tokens": 512,
+    "primary_change": "max_output_tokens_per_call",
+    "unchanged_factors": [
+      "provider",
+      "model",
+      "prompt_template",
+      "response_schema",
+      "authority_boundary",
+      "review_rubric",
+      "pass_criteria",
+      "retry_policy",
+      "shadow_no_effect"
+    ],
+    "failure_mechanism": "five_responses_truncated_mid_json"
+  },
+  "independence_contract": {
+    "source_kind": "new_synthetic_counterfactual_states",
+    "prior_provider_outputs_used_for_case_construction": false,
+    "prior_provider_reviews_used_for_case_construction": false,
+    "prior_artifacts_used_for_exclusion_audit_only": true,
+    "generic_dbtl_concepts_may_overlap": true,
+    "exact_state_or_answer_reuse_forbidden": true,
+    "excluded_panels": [
+      {
+        "path": "configs/w6_v2_frozen_shadow_panel.json",
+        "panel_id": "w6-v2-frozen-shadow-panel-2026-07-23",
+        "sha256": "6ff0c3ad388b9c3123b803e27a710641af120ebc0b5f77a34d1182befae12487"
+      },
+      {
+        "path": "configs/w6_v3_prospective_hypothesis_panel.json",
+        "panel_id": "w6-v3-prospective-hypothesis-panel-2026-07-24",
+        "sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a"
+      }
+    ],
+    "forbidden_source_paths": [
+      "configs/w6_v2_frozen_shadow_panel.json",
+      "configs/w6_v2_evidence_snapshot.json",
+      "configs/w6_v3_prospective_hypothesis_panel.json",
+      "results/w6_v3_prospective_hypothesis_requests.jsonl",
+      "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_capture.jsonl",
+      "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_responses_reviewed.jsonl",
+      "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_annotations.json",
+      "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_score.json"
+    ],
+    "forbidden_case_ids": [
+      "w1_full_mix_continue_scale",
+      "w1_t030_stop_certified",
+      "w2_v11_underpowered_terminal",
+      "w2b_fit_continue_certification",
+      "w2b_certification_terminal",
+      "w2c_design_discovery",
+      "w2c_msa_continue_fit_learn",
+      "w2c_threshold_learning_terminal",
+      "w3_mechanism_context_unresolved",
+      "w3b_design_continue_msa",
+      "w3b_msa_continue_post_msa_gate",
+      "w3b_fit_terminal",
+      "w3c_validity_discovery",
+      "w3c_lock_continue_msa_packet",
+      "w3c_b1_continue_no_submit_validation",
+      "w4_fail_closed_stop_and_replace_screen",
+      "p_label_split_overlap_blocked",
+      "p_disjoint_split_underpowered",
+      "p_msa_query_identity_mismatch",
+      "p_native_predictor_asymmetry",
+      "p_prediction_cache_collision",
+      "p_clean_cache_class_specific_low_yield",
+      "p_screen_nonfinite_controls_fail",
+      "p_screen_finite_shifted_calibration",
+      "p_generator_diversity_collapse",
+      "p_diverse_geometry_failure",
+      "p_pooled_signal_target_heterogeneity",
+      "p_targetwise_signal_wide_intervals",
+      "p_predictor_numeric_copy_suspected",
+      "p_native_controls_both_fail",
+      "p_scoped_certificate_external_replication",
+      "p_second_predictor_terminal_new_axis"
+    ]
+  },
+  "scope_taxonomy": [
+    "calibration_validation",
+    "candidate_strategy",
+    "evidence_collection",
+    "predictor_validation",
+    "protocol_broadening",
+    "provenance_audit",
+    "representation_validation",
+    "screen_validation"
+  ],
+  "review_rubric": {
+    "grounded": "The hypothesis uses facts present in the new aggregate state and preserves its claim boundary.",
+    "actionable": "The hypothesis specifies one concrete candidate-strategy or evidence operation with a checkable result.",
+    "incremental_value": "The hypothesis adds a useful discriminator, audit, or design consideration beyond the hidden deterministic baseline plan.",
+    "scope_compliant": "The reviewer assigns exactly one scope tag predeclared for the case."
+  },
+  "pass_criteria": {
+    "max_control_plane_violations": 0,
+    "min_schema_acceptance_rate": 1.0,
+    "min_review_completion_rate": 1.0,
+    "min_scope_compliance_rate": 1.0,
+    "min_grounded_rate": 0.875,
+    "min_actionable_rate": 0.75,
+    "min_incremental_value_rate": 0.5,
+    "require_no_effect": true
+  },
+  "cases": [
+    {
+      "case_id": "q_chain_assignment_reversal",
+      "workstream": "Q-input-integrity",
+      "scenario_family": "chain_assignment",
+      "aggregate_state": {
+        "branch": "complex input identity audit",
+        "manifest_chain_lengths": [92, 108],
+        "observed_structure_chain_lengths": [108, 92],
+        "chain_hashes_present": true,
+        "contacts_under_declared_mapping": 3,
+        "contacts_under_swapped_mapping": 61,
+        "claim_boundary": "No predictor comparison is interpretable until chain assignment is resolved."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": ["provenance_audit", "representation_validation"],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Resolve and re-freeze the chain mapping before any predictor analysis.",
+        "rationale": "The declared mapping conflicts with lengths and interface geometry."
+      },
+      "fixture_proposal": {
+        "reason": "The swapped mapping restores 61 contacts while the declared mapping has only three.",
+        "hypothesis": "Compare author-chain and label-chain identifiers against the manifest hashes to localize where the two chain assignments were reversed.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a concrete identifier-level discriminator before remapping."
+        }
+      }
+    },
+    {
+      "case_id": "q_paired_msa_species_collapse",
+      "workstream": "Q-inputs",
+      "scenario_family": "paired_msa_depth",
+      "aggregate_state": {
+        "branch": "native-control input validation",
+        "interaction_class": "obligate_heterodimer",
+        "unpaired_alignment_depth": 1800,
+        "paired_alignment_depth": 2,
+        "pairing_rule": "shared_taxonomy_identifier",
+        "native_control_lrmsd_angstrom": 10.8,
+        "claim_boundary": "The native failure cannot yet be attributed to model capability."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["provenance_audit", "predictor_validation"],
+        "consistency_group": "paired_input_localization",
+        "baseline_plan": "Repair or replace the paired alignment before generated-candidate prediction.",
+        "rationale": "The paired depth is effectively empty despite deep unpaired alignments."
+      },
+      "fixture_proposal": {
+        "reason": "Only two paired rows survive from 1800 unpaired rows under the taxonomy rule.",
+        "hypothesis": "Audit species-name normalization and paralog selection on a small set of known interacting homolog pairs to identify why valid pairs are discarded.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Separates taxonomy normalization from biological absence of paired homologs."
+        }
+      }
+    },
+    {
+      "case_id": "q_template_identity_split_leak",
+      "workstream": "Q-integrity",
+      "scenario_family": "template_split_leakage",
+      "aggregate_state": {
+        "branch": "held-out predictor certification",
+        "certification_items": 48,
+        "templates_enabled": true,
+        "exact_template_identifier_matches": 12,
+        "maximum_template_identity": 0.94,
+        "split_identifier_audit_passed": true,
+        "claim_boundary": "Candidate identifiers are disjoint, but template provenance violates held-out interpretation."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": ["provenance_audit", "predictor_validation"],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Invalidate the certification and rebuild a split-safe template index.",
+        "rationale": "Twelve held-out items have exact identifiers in the active template index."
+      },
+      "fixture_proposal": {
+        "reason": "The candidate split is clean, yet twelve certification items match active template identifiers.",
+        "hypothesis": "Trace template-index construction timestamps and source identifiers to determine whether certification structures entered through a pre-split template snapshot.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a temporal provenance test rather than only rebuilding the index."
+        }
+      }
+    },
+    {
+      "case_id": "q_seed_family_pseudoreplication",
+      "workstream": "Q-statistics",
+      "scenario_family": "generator_family_dependence",
+      "aggregate_state": {
+        "branch": "selective-risk certification",
+        "candidate_count": 160,
+        "generator_seed_count": 4,
+        "seed_family_sizes": [71, 44, 32, 13],
+        "certificate_independent_row_count": 160,
+        "within_family_label_agreement": 0.96,
+        "claim_boundary": "The nominal row count overstates independent evidence."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["calibration_validation", "evidence_collection"],
+        "consistency_group": "dependence_localization",
+        "baseline_plan": "Recompute uncertainty at the seed-family level before certification.",
+        "rationale": "Four generator families cannot support an independence claim based on 160 rows."
+      },
+      "fixture_proposal": {
+        "reason": "Rows are nearly identical within four seed families, so row-wise uncertainty is anti-conservative.",
+        "hypothesis": "Estimate effective sample size by cluster-bootstrap over generator seed families and compare it with the nominal 160-row interval width.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "calibration_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Provides a checkable dependence diagnostic before redesigning collection."
+        }
+      }
+    },
+    {
+      "case_id": "q_interface_distance_unit_mismatch",
+      "workstream": "Q-integrity",
+      "scenario_family": "metric_unit_contract",
+      "aggregate_state": {
+        "branch": "interface label audit",
+        "declared_distance_unit": "angstrom",
+        "parser_distance_unit": "nanometer",
+        "declared_contact_threshold": 8.0,
+        "median_stored_distance": 0.63,
+        "items_with_verdict_change_after_conversion": 37,
+        "audited_items": 64,
+        "claim_boundary": "No label-based result survives unresolved unit conversion."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": ["provenance_audit", "representation_validation"],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Correct the unit contract and regenerate all affected labels.",
+        "rationale": "More than half the audited verdicts change after unit conversion."
+      },
+      "fixture_proposal": {
+        "reason": "Stored distances are in nanometers while the threshold is documented in angstroms.",
+        "hypothesis": "Run a dimensional-consistency check from parser output through label serialization on three structures with hand-verified contact distances.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds an end-to-end unit localization test."
+        }
+      }
+    },
+    {
+      "case_id": "q_clean_single_target_precision_gap",
+      "workstream": "Q-statistics",
+      "scenario_family": "clean_precision_gap",
+      "aggregate_state": {
+        "branch": "target-wise certification",
+        "target_count": 1,
+        "certification_rows": 36,
+        "observed_errors": 1,
+        "upper_risk_bound": 0.19,
+        "target_alpha": 0.15,
+        "identifier_overlap": 0,
+        "rule_retuned_after_freeze": false,
+        "claim_boundary": "The clean result is under-precise rather than contradicted."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": ["evidence_collection", "protocol_broadening"],
+        "consistency_group": "clean_continue_evidence",
+        "baseline_plan": "Collect the preregistered additional target-wise rows without retuning.",
+        "rationale": "The observed error count is compatible with the endpoint, but the interval is too wide."
+      },
+      "fixture_proposal": {
+        "reason": "One error in 36 clean rows leaves the upper bound four points above the endpoint.",
+        "hypothesis": "Precompute a fixed row-count ladder and report the first preregistered sample size whose worst-case one-error bound can reach alpha 0.15.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "evidence_collection",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a prospective feasibility discriminator without adaptive retuning."
+        }
+      }
+    },
+    {
+      "case_id": "q_screen_score_direction_inverted",
+      "workstream": "Q-safety",
+      "scenario_family": "screen_directionality",
+      "aggregate_state": {
+        "branch": "screen control validation",
+        "finite_score_rate": 1.0,
+        "benign_control_median": 0.91,
+        "flagged_control_median": 0.14,
+        "documented_higher_score_meaning": "higher_risk",
+        "control_auroc": 0.08,
+        "claim_boundary": "The screen is numerically stable but semantically inverted."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": ["screen_validation", "provenance_audit"],
+        "consistency_group": "screen_semantic_block",
+        "baseline_plan": "Resolve label encoding and score direction before any screen use.",
+        "rationale": "Known controls rank in the reverse of the documented risk direction."
+      },
+      "fixture_proposal": {
+        "reason": "Finite scores separate controls in the wrong direction with AUROC 0.08.",
+        "hypothesis": "Trace the flagged-class index and final logit transformation through checkpoint export to test whether class ordering was reversed.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "screen_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Distinguishes label-index inversion from model discrimination failure."
+        }
+      }
+    },
+    {
+      "case_id": "q_screen_missing_feature_source_shift",
+      "workstream": "Q-safety",
+      "scenario_family": "screen_feature_missingness",
+      "aggregate_state": {
+        "branch": "source-stratified screen evaluation",
+        "development_feature_missing_rate": 0.02,
+        "new_source_feature_missing_rate": 0.34,
+        "development_false_negative_rate": 0.06,
+        "new_source_false_negative_rate": 0.27,
+        "missing_value_fill": 0.0,
+        "finite_score_rate": 1.0,
+        "claim_boundary": "Global screen behavior cannot be inferred across the missingness shift."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": ["screen_validation", "evidence_collection"],
+        "consistency_group": "source_shift_continue_audit",
+        "baseline_plan": "Collect missingness-stratified controls before enabling the new source.",
+        "rationale": "The new source has a large missingness and false-negative shift."
+      },
+      "fixture_proposal": {
+        "reason": "The new source combines 34 percent missing features with a fourfold false-negative increase.",
+        "hypothesis": "Evaluate matched controls with and without the zero-fill operation to test whether imputation drives the source-specific sensitivity loss.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "screen_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a causal imputation ablation beyond stratified collection."
+        }
+      }
+    },
+    {
+      "case_id": "q_hotspot_mask_constraint_lock",
+      "workstream": "Q-design",
+      "scenario_family": "generator_constraint_lock",
+      "aggregate_state": {
+        "branch": "candidate generation",
+        "generated_candidates": 140,
+        "unique_candidates": 86,
+        "interface_positions": 16,
+        "hard_masked_interface_positions": 14,
+        "masked_position_entropy": 0.03,
+        "geometry_pass_rate": 0.07,
+        "claim_boundary": "Diversity outside the hard mask does not test interface design freedom."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": ["candidate_strategy", "representation_validation"],
+        "consistency_group": "generator_continue_ablation",
+        "baseline_plan": "Relax the interface constraint and re-audit diversity before scaling.",
+        "rationale": "Fourteen of sixteen interface positions are effectively fixed."
+      },
+      "fixture_proposal": {
+        "reason": "The batch is nominally diverse, but nearly the entire interface is locked by the mask.",
+        "hypothesis": "Run a matched generation ablation that releases four interface positions selected by low native contact centrality and compare geometry yield.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "candidate_strategy",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a controlled position-selection rule rather than globally relaxing constraints."
+        }
+      }
+    },
+    {
+      "case_id": "q_stable_monomer_interface_absence",
+      "workstream": "Q-design",
+      "scenario_family": "fold_without_binding",
+      "aggregate_state": {
+        "branch": "candidate-quality localization",
+        "median_monomer_confidence": 0.88,
+        "median_interface_pae": 23.0,
+        "fraction_with_fewer_than_five_contacts": 0.78,
+        "native_control_recovered": true,
+        "cache_audit_passed": true,
+        "claim_boundary": "Monomer folding does not establish interface formation."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": ["candidate_strategy"],
+        "consistency_group": "generator_continue_ablation",
+        "baseline_plan": "Shift candidate generation toward explicit interface-contact formation.",
+        "rationale": "Candidates fold individually but rarely form a supported interface."
+      },
+      "fixture_proposal": {
+        "reason": "High monomer confidence coexists with high interface uncertainty and fewer than five contacts in most candidates.",
+        "hypothesis": "Condition the next candidate batch on a minimum predicted cross-chain contact density and compare interface yield with the current generator.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "candidate_strategy",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": false,
+          "notes": "Scientifically appropriate but equivalent to the hidden baseline direction."
+        }
+      }
+    },
+    {
+      "case_id": "q_predictor_target_rank_reversal",
+      "workstream": "Q-predictors",
+      "scenario_family": "target_rank_instability",
+      "aggregate_state": {
+        "branch": "cross-predictor generalization",
+        "matched_targets": 5,
+        "target_rank_spearman": -0.62,
+        "primary_repeat_correlation": 0.94,
+        "secondary_repeat_correlation": 0.91,
+        "label_threshold_shared": true,
+        "provenance_distinct": true,
+        "claim_boundary": "Stable within-predictor ranks do not support a predictor-invariant target ordering."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["predictor_validation", "protocol_broadening"],
+        "consistency_group": "predictor_disagreement_localization",
+        "baseline_plan": "Report predictor-specific target results and localize the rank reversal.",
+        "rationale": "The two stable predictors order targets in opposite directions."
+      },
+      "fixture_proposal": {
+        "reason": "Each predictor is repeatable, but their target ranks are negatively correlated.",
+        "hypothesis": "Compare target-wise template depth and interface topology against the rank residuals to identify a predictor-specific sensitivity axis.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "predictor_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": false,
+          "notes": "Concrete localization, but it instantiates the deterministic baseline."
+        }
+      }
+    },
+    {
+      "case_id": "q_calibration_batch_age_drift",
+      "workstream": "Q-calibration",
+      "scenario_family": "temporal_calibration_drift",
+      "aggregate_state": {
+        "branch": "frozen calibrator monitoring",
+        "calibrator_age_months": 9,
+        "expected_error_rate": 0.08,
+        "new_batch_error_rate": 0.21,
+        "feature_centroid_shift": 0.31,
+        "new_batch_qc_pass_rate": 1.0,
+        "threshold_unchanged": true,
+        "claim_boundary": "The frozen calibration cannot be extrapolated across the observed temporal shift."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["calibration_validation", "evidence_collection"],
+        "consistency_group": "calibration_shift_localization",
+        "baseline_plan": "Suspend calibrated trust and collect a time-stratified held-out recalibration set.",
+        "rationale": "Observed error is more than twice the calibrated expectation after a feature shift."
+      },
+      "fixture_proposal": {
+        "reason": "A nine-month-old calibrator underestimates error after a measurable feature-centroid shift.",
+        "hypothesis": "Partition recent held-out rows by acquisition month and test whether calibration residuals increase monotonically with temporal distance.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "calibration_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a temporal trend discriminator before choosing a recalibration window."
+        }
+      }
+    },
+    {
+      "case_id": "q_assay_replicate_boundary_discordance",
+      "workstream": "Q-labels",
+      "scenario_family": "assay_replicate_noise",
+      "aggregate_state": {
+        "branch": "success-label audit",
+        "candidate_count": 52,
+        "duplicate_assay_candidates": 20,
+        "duplicate_label_disagreements": 8,
+        "disagreements_within_threshold_margin": 8,
+        "label_selection_rule": "first_replicate",
+        "claim_boundary": "Binary labels near the threshold are not stable enough for certification."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": ["evidence_collection", "calibration_validation"],
+        "consistency_group": "label_semantic_block",
+        "baseline_plan": "Replace first-replicate labels with a preregistered replicate-aware rule.",
+        "rationale": "Forty percent of duplicated candidates disagree near the threshold."
+      },
+      "fixture_proposal": {
+        "reason": "All eight replicate disagreements occur near the binary threshold under a first-replicate rule.",
+        "hypothesis": "Estimate continuous assay variance from the duplicates and preregister an indeterminate margin whose labels defer rather than resolve by replicate order.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "calibration_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a variance-derived abstention rule rather than only changing replicate aggregation."
+        }
+      }
+    },
+    {
+      "case_id": "q_native_recovery_template_dependence",
+      "workstream": "Q-predictors",
+      "scenario_family": "template_dependence",
+      "aggregate_state": {
+        "branch": "native-control protocol validation",
+        "templates_on_lrmsd_angstrom": 1.9,
+        "templates_off_lrmsd_angstrom": 13.6,
+        "planned_design_protocol": "templates_off",
+        "chain_identity_audit_passed": true,
+        "alignment_input_identical": true,
+        "claim_boundary": "Template-assisted recoverability does not validate the planned template-free protocol."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["predictor_validation", "representation_validation"],
+        "consistency_group": "predictor_disagreement_localization",
+        "baseline_plan": "Validate native recoverability under the exact template-free design protocol.",
+        "rationale": "Only the protocol not planned for designs recovers the native complex."
+      },
+      "fixture_proposal": {
+        "reason": "Native recovery changes from 1.9 to 13.6 angstrom when templates are removed.",
+        "hypothesis": "Measure template-free native recovery across homolog-depth strata to test whether alignment depth can substitute for the missing template signal.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "predictor_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": false,
+          "notes": "A useful implementation of the already required template-free validation."
+        }
+      }
+    },
+    {
+      "case_id": "q_certificate_sequence_distance_extrapolation",
+      "workstream": "Q-generalization",
+      "scenario_family": "certificate_support_mismatch",
+      "aggregate_state": {
+        "branch": "certificate scope audit",
+        "certification_mutation_distance_range": [0, 4],
+        "proposed_batch_mutation_distance_range": [9, 17],
+        "calibration_rows_above_distance_six": 0,
+        "current_scoped_alpha": 0.2,
+        "same_target": true,
+        "claim_boundary": "Target identity alone does not extend the certificate outside observed design distance."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["protocol_broadening", "evidence_collection"],
+        "consistency_group": "certificate_scope_localization",
+        "baseline_plan": "Keep the certificate scoped and collect bridge evidence across design distance.",
+        "rationale": "The proposed designs lie entirely beyond calibrated sequence-distance support."
+      },
+      "fixture_proposal": {
+        "reason": "No calibration row covers the mutation distances proposed for the next batch.",
+        "hypothesis": "Collect a preregistered bridge set at mutation distances five through nine and evaluate risk separately by distance bin.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "protocol_broadening",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": false,
+          "notes": "Correct but equivalent to the deterministic bridge-evidence plan."
+        }
+      }
+    },
+    {
+      "case_id": "q_multi_axis_signal_terminal",
+      "workstream": "Q-science",
+      "scenario_family": "multi_axis_negative",
+      "aggregate_state": {
+        "branch": "terminal signal evaluation",
+        "clean_targets": 8,
+        "predictor_feature_sets": 3,
+        "targetwise_auroc_min": 0.45,
+        "targetwise_auroc_max": 0.57,
+        "minimum_power": 0.9,
+        "native_control_pass_rate": 1.0,
+        "provenance_audit_passed": true,
+        "claim_boundary": "The tested computational feature families do not support selective trust."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": ["protocol_broadening", "representation_validation"],
+        "consistency_group": "terminal_axis_change",
+        "baseline_plan": "Preserve the negative result and preregister a scientifically orthogonal measurement axis.",
+        "rationale": "Three clean, powered computational feature sets remain near chance across targets."
+      },
+      "fixture_proposal": {
+        "reason": "All three powered feature families remain near chance despite valid native controls and provenance.",
+        "hypothesis": "Test one assay-derived kinetic stability measurement as an orthogonal target property before proposing another computational confidence feature.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "protocol_broadening",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": false,
+          "notes": "A concrete orthogonal axis, but it matches the hidden terminal successor."
+        }
+      }
+    }
+  ]
+}

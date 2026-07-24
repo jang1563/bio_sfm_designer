@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | hypothesis-only prospective result negative | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removes both fields; its independent 16-case live panel had zero authority violations and useful reviewed hypotheses, but five token-truncated outputs reduced schema acceptance to 11/16. Do not retry the consumed panel; no M7 completion |
+| M7 | hypothesis-only prospective result negative; v3.1 no-call ready | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removes both fields; its independent live panel had zero authority violations but five token-truncated outputs. W6-v3.1 is frozen offline on 16 new states with a 512-token plan and hardened provenance, but remains unauthorized and has no live result or M7 completion |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1193,6 +1193,14 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
     `prospective_live_validation_fail`. The approval is consumed and the panel must not be retried.
     The next clean experiment is a new independent W6-v3.1 panel with a separately approved
     output-budget contract. See `docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`.
+12. **W6-v3.1 no-call successor:** the new 16-case panel excludes all 32 prior W6-v2/W6-v3
+    case and aggregate-state hashes plus 27 exact prior answer hashes. It freezes 512 output
+    tokens as the only planned runtime change; provider/model, prompt/schema, authority, retries,
+    rubric, and pass criteria remain fixed. Valid offline replay passes 16/16 with zero violations;
+    adversarial replay accepts 3/16 and records eight. The runner requires token usage, stop reason,
+    exact component hashes, and a clean worktree. `configs/w6_v31_live_scope.json` remains
+    `live_execution_authorized=false`, so no new API call or M7 completion exists. See
+    `docs/W6_V31_TRANSPORT_SUCCESSOR.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

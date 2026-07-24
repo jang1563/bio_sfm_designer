@@ -8,11 +8,22 @@ never call the trust gate or submit compute.
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from typing import Any, Optional
 
 
 _LIVE_PROVIDERS = {"anthropic", "anthropic_messages", "openai", "openai_responses"}
 _FIXTURE_PROVIDERS = {"fixture", "mock", "mock_defer", "mock_orchestrator"}
+
+
+@dataclass(frozen=True)
+class OrchestrationProviderResult:
+    """Provider text plus optional transport metadata from the same call."""
+
+    text: str
+    input_tokens: Optional[int] = None
+    output_tokens: Optional[int] = None
+    stop_reason: Optional[str] = None
 
 
 def _validate_max_output_tokens(value: int) -> int:
@@ -27,18 +38,27 @@ class FixtureOrchestrationProvider:
     provider_name = "fixture"
     model = "deterministic-hypothesis-orchestrator-v3"
 
-    def __call__(self, prompt: str) -> str:
+    def call_with_metadata(self, prompt: str) -> OrchestrationProviderResult:
         del prompt
-        return json.dumps(
-            {
-                "reason": "The immutable controller decision leaves a bounded evidence question.",
-                "hypothesis": (
-                    "Compare one additional evidence slice while preserving "
-                    "gate-selected parents and the frozen campaign limits."
-                ),
-            },
-            sort_keys=True,
+        return OrchestrationProviderResult(
+            text=json.dumps(
+                {
+                    "reason": (
+                        "The immutable controller decision leaves a bounded "
+                        "evidence question."
+                    ),
+                    "hypothesis": (
+                        "Compare one additional evidence slice while preserving "
+                        "gate-selected parents and the frozen campaign limits."
+                    ),
+                },
+                sort_keys=True,
+            ),
+            stop_reason="fixture_complete",
         )
+
+    def __call__(self, prompt: str) -> str:
+        return self.call_with_metadata(prompt).text
 
 
 class OpenAIResponsesProvider:
@@ -70,7 +90,7 @@ class OpenAIResponsesProvider:
             self._client = OpenAI(max_retries=0, timeout=60.0)
         return self._client
 
-    def __call__(self, prompt: str) -> str:
+    def call_with_metadata(self, prompt: str) -> OrchestrationProviderResult:
         response = self._get_client().responses.create(
             model=self.model,
             input=prompt,
@@ -80,7 +100,25 @@ class OpenAIResponsesProvider:
         text = getattr(response, "output_text", None)
         if not isinstance(text, str) or not text.strip():
             raise RuntimeError("OpenAI response did not contain output_text")
-        return text
+        usage = getattr(response, "usage", None)
+        incomplete = getattr(response, "incomplete_details", None)
+        stop_reason = getattr(incomplete, "reason", None)
+        if not isinstance(stop_reason, str) or not stop_reason.strip():
+            status = getattr(response, "status", None)
+            stop_reason = status if isinstance(status, str) and status.strip() else None
+        return OrchestrationProviderResult(
+            text=text,
+            input_tokens=_optional_token_count(
+                getattr(usage, "input_tokens", None)
+            ),
+            output_tokens=_optional_token_count(
+                getattr(usage, "output_tokens", None)
+            ),
+            stop_reason=stop_reason,
+        )
+
+    def __call__(self, prompt: str) -> str:
+        return self.call_with_metadata(prompt).text
 
 
 class AnthropicMessagesProvider:
@@ -112,7 +150,7 @@ class AnthropicMessagesProvider:
             self._client = Anthropic(max_retries=0, timeout=60.0)
         return self._client
 
-    def __call__(self, prompt: str) -> str:
+    def call_with_metadata(self, prompt: str) -> OrchestrationProviderResult:
         response = self._get_client().messages.create(
             model=self.model,
             max_tokens=self.max_output_tokens,
@@ -126,7 +164,48 @@ class AnthropicMessagesProvider:
         text = "".join(parts)
         if not text.strip():
             raise RuntimeError("Anthropic response did not contain a text block")
-        return text
+        usage = getattr(response, "usage", None)
+        stop_reason = getattr(response, "stop_reason", None)
+        return OrchestrationProviderResult(
+            text=text,
+            input_tokens=_optional_token_count(
+                getattr(usage, "input_tokens", None)
+            ),
+            output_tokens=_optional_token_count(
+                getattr(usage, "output_tokens", None)
+            ),
+            stop_reason=(
+                stop_reason
+                if isinstance(stop_reason, str) and stop_reason.strip()
+                else None
+            ),
+        )
+
+    def __call__(self, prompt: str) -> str:
+        return self.call_with_metadata(prompt).text
+
+
+def _optional_token_count(value: Any) -> Optional[int]:
+    if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+        return value
+    return None
+
+
+def call_provider_with_metadata(
+    provider: Any,
+    prompt: str,
+) -> OrchestrationProviderResult:
+    """Call a provider once and normalize optional transport metadata."""
+
+    method = getattr(provider, "call_with_metadata", None)
+    result = method(prompt) if callable(method) else provider(prompt)
+    if isinstance(result, OrchestrationProviderResult):
+        if not isinstance(result.text, str):
+            raise TypeError("provider returned non-string response text")
+        return result
+    if not isinstance(result, str):
+        raise TypeError("provider returned a non-string response")
+    return OrchestrationProviderResult(text=result)
 
 
 def get_orchestration_provider(

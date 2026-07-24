@@ -39,3 +39,12 @@ adversarial fixture accepts 3/16 and records eight authority violations. These
 remain synthetic scorer tests. The distinct 2026-07-24 live result and its
 negative schema verdict are documented in
 `docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`.
+
+## W6-v3.1 transport-successor fixtures
+
+`w6_v31_transport_{valid,adversarial}_responses.jsonl` bind to 16 additional
+counterfactual states that exclude both prior W6 panels, all 32 prior case/state
+hashes, and exact prior answers. The valid fixture passes 16/16 with zero
+authority violations; the adversarial fixture accepts 3/16 and records eight.
+They qualify the offline contract only. The 512-token live scope remains
+unauthorized; see `docs/W6_V31_TRANSPORT_SUCCESSOR.md`.

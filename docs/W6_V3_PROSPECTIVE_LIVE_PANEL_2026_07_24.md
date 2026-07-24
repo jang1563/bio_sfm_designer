@@ -125,4 +125,8 @@ transport contract. The recommended single primary change is a 512-token output
 cap while retaining the exact two-field schema, zero retries, deterministic
 authority boundary, and no-effect shadow mode. The adapter should also capture
 provider token usage when available and attest a clean source tree before any
-call. That successor requires its own panel hash and exact live-call approval.
+call.
+
+That no-call successor is now frozen and qualified offline in
+[`W6_V31_TRANSPORT_SUCCESSOR.md`](W6_V31_TRANSPORT_SUCCESSOR.md). Its live scope
+remains explicitly unauthorized and still requires exact live-call approval.

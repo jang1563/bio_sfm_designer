@@ -366,6 +366,17 @@ successor is a new independent W6-v3.1 panel with a separately approved
 output-budget contract. See
 `docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`.
 
+W6-v3.1 no-call update (2026-07-24): the failure-driven transport successor is
+now frozen on 16 new counterfactual states. It excludes all 32 prior W6-v2 and
+W6-v3 case/state hashes and 27 exact prior answer hashes. The only planned
+runtime change is 256 to 512 maximum output tokens; provider/model,
+hypothesis-only prompt/schema, authority, retry policy, rubric, and pass
+criteria remain fixed. The valid fixture passes 16/16 with zero violations and
+the adversarial fixture accepts 3/16 with eight violations. The future capture
+path requires complete token usage and stop reason, exact component hashes, and
+a clean worktree. Its scope is explicitly unauthorized, so API/provider calls
+remain zero. See `docs/W6_V31_TRANSPORT_SUCCESSOR.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

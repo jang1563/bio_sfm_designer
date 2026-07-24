@@ -168,3 +168,21 @@ M7 completion. The consumed panel must not be retried. A successor needs a new
 independent panel and a separately frozen transport contract, with 512 output
 tokens as the recommended primary change. See
 [`W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`](W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md).
+
+## W6-v3.1 no-call transport successor
+
+The failure-driven W6-v3.1 successor is now frozen offline. It preserves the
+Anthropic model, hypothesis-only prompt/schema, authority boundary, zero-retry
+policy, rubric, and pass criteria while changing the maximum output budget from
+256 to 512 tokens. Its 16 new cases exclude all 32 earlier W6-v2/W6-v3 cases
+and states plus exact prior answers.
+
+The valid fixture passes 16/16 with zero authority violations; the adversarial
+fixture accepts 3/16 and records eight violations. The live adapter now records
+input/output token counts and stop reason from the same provider call, detects
+output-limit stops, verifies exact component hashes, and refuses to run from a
+dirty worktree.
+
+`configs/w6_v31_live_scope.json` remains `live_execution_authorized=false`.
+This is no-call readiness, not prospective evidence or M7 completion. See
+[`W6_V31_TRANSPORT_SUCCESSOR.md`](W6_V31_TRANSPORT_SUCCESSOR.md).
