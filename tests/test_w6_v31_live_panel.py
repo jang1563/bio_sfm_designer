@@ -15,8 +15,12 @@ from bio_sfm_designer.loop.providers import OrchestrationProviderResult
 
 ROOT = Path(__file__).resolve().parents[1]
 SCOPE = ROOT / "configs/w6_v31_live_scope.json"
+APPROVED_SCOPE = ROOT / "configs/w6_v31_live_scope_approved_20260725.json"
 EXPECTED_SCOPE_SHA256 = (
     "3ce9af157ba0e3a9a5047c1f01b52c1d94713e356bfaa29fb5f01187be4cfe8e"
+)
+EXPECTED_APPROVED_SCOPE_SHA256 = (
+    "b8b667a136a6dbdb2d723bce2586211a6f70c403d6186699e5a80349ba2753ab"
 )
 
 
@@ -136,6 +140,24 @@ class W6V31LivePanelTests(unittest.TestCase):
                     approved_scope_sha256=EXPECTED_SCOPE_SHA256,
                 )
         self.assertEqual(provider.calls, [])
+
+    def test_approved_scope_locks_the_exact_user_authorization(self):
+        scope, panel, requests, _, _, _ = load_and_validate_scope(
+            APPROVED_SCOPE,
+            repo_root=ROOT,
+            expected_scope_sha256=EXPECTED_APPROVED_SCOPE_SHA256,
+        )
+        self.assertTrue(scope["live_execution_authorized"])
+        self.assertEqual(scope["provider"], "anthropic")
+        self.assertEqual(scope["model"], "claude-opus-4-8")
+        self.assertEqual(scope["approved_call_count"], 16)
+        self.assertEqual(scope["max_output_tokens_per_call"], 512)
+        self.assertEqual(scope["sdk_retries_per_call"], 0)
+        self.assertFalse(scope["compute_submission_allowed"])
+        self.assertFalse(scope["recommendations_may_be_applied"])
+        self.assertIn("User approved exactly", scope["approval_basis"])
+        self.assertEqual(panel["case_count"], 16)
+        self.assertEqual(len(requests), 16)
 
     def test_complete_metadata_capture_records_usage_and_stop_reason(self):
         provider = FakeMetadataProvider(limit_at=4)
