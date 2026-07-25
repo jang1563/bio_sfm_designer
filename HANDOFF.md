@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | hypothesis-only prospective result negative; v3.1 no-call ready | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removes both fields; its independent live panel had zero authority violations but five token-truncated outputs. W6-v3.1 is frozen offline on 16 new states with a 512-token plan and hardened provenance, but remains unauthorized and has no live result or M7 completion |
+| M7 | v3.1 live result incomplete; not passing | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removed both fields but failed schema at a 256-token cap. W6-v3.1 attempted its separately approved 16-call, 512-token panel: 15 responses were exact JSON with zero authority violations or output-limit stops, while one call returned `RuntimeError` without response metadata. No retry/imputation occurred; the approval is consumed and M7 remains incomplete |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1199,8 +1199,20 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
     rubric, and pass criteria remain fixed. Valid offline replay passes 16/16 with zero violations;
     adversarial replay accepts 3/16 and records eight. The runner requires token usage, stop reason,
     exact component hashes, and a clean worktree. `configs/w6_v31_live_scope.json` remains
-    `live_execution_authorized=false`, so no new API call or M7 completion exists. See
+    the immutable unauthorized baseline packet. At this freeze stage no new API call or M7
+    completion existed; the later separately approved execution is recorded in item 13. See
     `docs/W6_V31_TRANSPORT_SUCCESSOR.md`.
+13. **W6-v3.1 one-shot live result:** JK separately approved exactly 16 Anthropic
+    `claude-opus-4-8` calls at 512 output tokens, zero retries, no effect, and no compute.
+    The authorized scope was committed first, and the run started from clean commit
+    `0a9ef16467bf6bed696455d4a0361ae4fb14ce06`. It attempted all 16 calls: 15 succeeded
+    with complete metadata and one (`q_certificate_sequence_distance_extrapolation`) ended
+    in `RuntimeError` without response or token metadata. The 15 observed responses were
+    exact JSON 15/15, had zero authority violations and zero output-limit stops, and were
+    grounded/actionable 15/15 with incremental value 14/15. The result is deliberately
+    `w6_v31_prospective_live_validation_incomplete`, not a pass. The failed case was not
+    retried, imputed, synthesized, or reviewed; the approval is consumed and M7 remains
+    incomplete. See `docs/W6_V31_LIVE_RESULT_2026_07_25.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

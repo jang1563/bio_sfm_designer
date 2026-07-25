@@ -169,9 +169,9 @@ independent panel and a separately frozen transport contract, with 512 output
 tokens as the recommended primary change. See
 [`W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`](W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md).
 
-## W6-v3.1 no-call transport successor
+## W6-v3.1 one-shot transport result
 
-The failure-driven W6-v3.1 successor is now frozen offline. It preserves the
+The failure-driven W6-v3.1 successor was frozen offline. It preserves the
 Anthropic model, hypothesis-only prompt/schema, authority boundary, zero-retry
 policy, rubric, and pass criteria while changing the maximum output budget from
 256 to 512 tokens. Its 16 new cases exclude all 32 earlier W6-v2/W6-v3 cases
@@ -183,6 +183,14 @@ input/output token counts and stop reason from the same provider call, detects
 output-limit stops, verifies exact component hashes, and refuses to run from a
 dirty worktree.
 
-`configs/w6_v31_live_scope.json` remains `live_execution_authorized=false`.
-This is no-call readiness, not prospective evidence or M7 completion. See
-[`W6_V31_TRANSPORT_SUCCESSOR.md`](W6_V31_TRANSPORT_SUCCESSOR.md).
+On 2026-07-25, a separate hash-bound approval authorized exactly 16
+`claude-opus-4-8` shadow calls at 512 tokens, with zero retries, no effect, and
+no compute. The runner attempted all 16: 15 succeeded and one returned
+`RuntimeError` without response or transport metadata. The 15 observed
+responses all used exact JSON, ended with `end_turn`, stayed below 303 output
+tokens, and made zero authority-mutation attempts. Independent review found
+15/15 grounded, actionable, and scope compliant, with 14/15 incremental.
+
+The run is incomplete and therefore not passing. The missing case was not
+retried or imputed, the approval is consumed, and M7 remains incomplete. See
+[`W6_V31_LIVE_RESULT_2026_07_25.md`](W6_V31_LIVE_RESULT_2026_07_25.md).

@@ -123,11 +123,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-24)
+## Status (2026-07-25)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1159` designer tests plus `88` trust-core tests on 2026-07-24).
+**Current local source verified** (`1167` designer tests plus `88` trust-core tests on 2026-07-25).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).
@@ -151,12 +151,15 @@ fallback until the coordinated trust-core release is published:
   and actionable and 12/16 incremental, but malformed output is decisive. Do not retry this
   consumed panel; M7 remains incomplete. See
   [`docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md`](docs/W6_V3_PROSPECTIVE_LIVE_PANEL_2026_07_24.md).
-  A W6-v3.1 no-call successor is now frozen on 16 additional independent states. It preserves
+  A W6-v3.1 successor was then frozen on 16 additional independent states. It preserves
   provider/model/prompt/schema/authority and changes only the planned output cap from 256 to 512
-  tokens. Offline valid/adversarial fixtures separate correctly, and the future runner requires
-  token usage plus stop reason, exact component hashes, and a clean worktree. Its scope remains
-  `live_execution_authorized=false`; no additional API call has occurred. See
-  [`docs/W6_V31_TRANSPORT_SUCCESSOR.md`](docs/W6_V31_TRANSPORT_SUCCESSOR.md).
+  tokens. Offline valid/adversarial fixtures separate correctly. A separately approved, hash-bound
+  one-shot live run attempted exactly 16 calls from a clean commit with zero retries: 15 succeeded,
+  while `q_certificate_sequence_distance_extrapolation` ended in `RuntimeError` without response
+  metadata. All 15 observed responses were exact JSON, had zero authority violations, ended normally,
+  and stayed below 303 output tokens. The run is still incomplete and not passing; the missing case
+  was not retried or imputed, the approval is consumed, and M7 remains incomplete. See
+  [`docs/W6_V31_LIVE_RESULT_2026_07_25.md`](docs/W6_V31_LIVE_RESULT_2026_07_25.md).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

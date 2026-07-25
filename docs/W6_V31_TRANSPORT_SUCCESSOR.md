@@ -2,8 +2,13 @@
 
 ## Status
 
-W6-v3.1 is frozen and qualified **offline only**. No provider or API call has
-been made under this successor.
+W6-v3.1 was frozen and qualified offline, then executed once under a separate
+exact approval on 2026-07-25. The one-shot live run attempted all 16 calls,
+returned 15 responses, and failed closed after one provider-path
+`RuntimeError`. The approval is consumed and no retry is authorized.
+
+The full live result is recorded in
+[`W6_V31_LIVE_RESULT_2026_07_25.md`](W6_V31_LIVE_RESULT_2026_07_25.md).
 
 The predecessor W6-v3 live panel failed because five of 16 responses ended
 mid-JSON under a 256-token output cap. W6-v3.1 tests one primary runtime change:
@@ -61,7 +66,9 @@ These are contract tests, not provider-performance evidence.
 
 ## Provenance-Hardened Runtime
 
-`configs/w6_v31_live_scope.json` is a no-call scope packet. It freezes:
+`configs/w6_v31_live_scope.json` remains the original no-call scope packet.
+The later authorized packet,
+`configs/w6_v31_live_scope_approved_20260725.json`, freezes:
 
 - Anthropic `claude-opus-4-8`;
 - exactly 16 calls, one per request;
@@ -74,9 +81,9 @@ These are contract tests, not provider-performance evidence.
 - a clean Git worktree before the first provider call;
 - no overwrite, resume, compute submission, or additional call.
 
-The current scope digest is
-`3ce9af157ba0e3a9a5047c1f01b52c1d94713e356bfaa29fb5f01187be4cfe8e`,
-but it deliberately sets:
+The historical no-call scope digest is
+`3ce9af157ba0e3a9a5047c1f01b52c1d94713e356bfaa29fb5f01187be4cfe8e`
+and deliberately sets:
 
 ```json
 {
@@ -90,6 +97,12 @@ provider. Unit tests prove that authorization, component-hash mismatch,
 scope-hash mismatch, a dirty worktree, missing transport metadata, existing
 outputs, and unsafe flag changes all fail closed.
 
+The separately committed authorization scope has digest
+`b8b667a136a6dbdb2d723bce2586211a6f70c403d6186699e5a80349ba2753ab`.
+It was consumed from clean source commit
+`0a9ef16467bf6bed696455d4a0361ae4fb14ce06`; its receipt explicitly forbids
+additional calls.
+
 ## Review Path
 
 `w6_v31_review.py` applies a provider-independent review only after exact
@@ -101,17 +114,20 @@ panel, request, and pending-response hash checks. It:
 - writes a separate reviewed-response file and receipt;
 - makes zero provider calls.
 
+Because the live capture was incomplete, that complete-panel path correctly
+produced no pending-response packet. The separate
+`w6_v31_incomplete_result.py` auditor validates the 16-row capture and receipt,
+allows review only for the 15 successful responses, refuses any annotation for
+the missing response, and reports an incomplete non-pass.
+
 ## Next Gate
 
-The no-call packet should be committed and pushed first. A future live run then
-requires a new explicit approval covering:
+Do not retry or selectively recover the consumed panel. The observed 15
+responses support the 512-token transport hypothesis only conditionally:
+15/15 used exact JSON, had zero authority violations, and ended normally
+without an output-limit stop. The missing sixteenth response prevents a
+prospective pass and M7 remains incomplete.
 
-- Anthropic `claude-opus-4-8`;
-- 16 calls;
-- 512 maximum output tokens per call;
-- zero retries;
-- shadow-only/no effect.
-
-After approval, the scope must be changed to authorized, hash-frozen, committed,
-and validated from a clean worktree before any call. W6-v3.1 currently provides
-no prospective live result and does not complete M7.
+Any successor requires a newly frozen independent panel and a new explicit
+approval. It should preserve the 512-token, hypothesis-only, zero-retry,
+shadow/no-effect contract and add structured non-sensitive failure telemetry.

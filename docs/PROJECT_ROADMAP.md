@@ -377,6 +377,19 @@ path requires complete token usage and stop reason, exact component hashes, and
 a clean worktree. Its scope is explicitly unauthorized, so API/provider calls
 remain zero. See `docs/W6_V31_TRANSPORT_SUCCESSOR.md`.
 
+W6-v3.1 live update (2026-07-25): a separately committed, hash-bound scope
+authorized exactly 16 Anthropic `claude-opus-4-8` shadow calls at 512 maximum
+output tokens, with zero retries, no effect, and no compute. The run attempted
+all 16 calls from a clean commit: 15 succeeded with complete metadata and one
+ended in `RuntimeError` without response, HTTP status, or token metadata. All
+15 observed responses used exact JSON, ended with `end_turn`, stayed below 303
+output tokens, and made zero authority-mutation attempts. Provider-independent
+review found grounded/actionable/scope-compliant 15/15 and incremental value
+14/15. This supports the 512-token transport hypothesis on successful calls
+but does not satisfy the frozen 16/16 prospective requirement. No retry or
+imputation occurred, the approval is consumed, and W6/M7 remain incomplete.
+See `docs/W6_V31_LIVE_RESULT_2026_07_25.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

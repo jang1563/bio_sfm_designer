@@ -129,4 +129,6 @@ call.
 
 That no-call successor is now frozen and qualified offline in
 [`W6_V31_TRANSPORT_SUCCESSOR.md`](W6_V31_TRANSPORT_SUCCESSOR.md). Its live scope
-remains explicitly unauthorized and still requires exact live-call approval.
+remains the immutable unauthorized baseline packet. A later separate exact
+approval produced the incomplete 15/16 result recorded in
+[`W6_V31_LIVE_RESULT_2026_07_25.md`](W6_V31_LIVE_RESULT_2026_07_25.md).

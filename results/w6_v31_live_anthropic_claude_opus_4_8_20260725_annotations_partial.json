@@ -1,0 +1,181 @@
+{
+  "schema_version": "w6_v31_incomplete_review_annotations_v1",
+  "source_scope_sha256": "b8b667a136a6dbdb2d723bce2586211a6f70c403d6186699e5a80349ba2753ab",
+  "source_panel_sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+  "source_request_sha256": "ac4ea1a8be736eba127a46cf517d18ba427d265a43f74f7728bb79a2a5e4e1b1",
+  "source_capture_sha256": "0a350d77af7c854b1593a977574b6ceef53b0a81ac67f1b4a95981e754f1790e",
+  "source_receipt_sha256": "5ee84cbaf69575cecca04ec35c7d83e2e6aae979e0a346cace253200f4a317c4",
+  "reviewer": {
+    "identity": "Codex offline reviewer",
+    "type": "model_assisted_offline_rubric_review",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-25T17:10:36Z"
+  },
+  "records": [
+    {
+      "case_id": "q_chain_assignment_reversal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the observed length/contact reversal and adds a chain-hash cross-check that can localize the transposition before predictor analysis."
+      }
+    },
+    {
+      "case_id": "q_paired_msa_species_collapse",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Connects the 2-versus-1800 depth discrepancy to the declared taxonomy pairing rule and proposes a checkable dropped-pair audit."
+      }
+    },
+    {
+      "case_id": "q_template_identity_split_leak",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Preserves the held-out claim boundary and extends the audit from candidate identifiers to complete template lineage."
+      }
+    },
+    {
+      "case_id": "q_seed_family_pseudoreplication",
+      "review": {
+        "status": "complete",
+        "scope_tag": "calibration_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses all four family-size and agreement facts and specifies variance decomposition and effective independent-unit estimation."
+      }
+    },
+    {
+      "case_id": "q_interface_distance_unit_mismatch",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Grounds the unit conflict in the 0.63 magnitude and 37 flipped verdicts, then adds a per-item source-unit trace."
+      }
+    },
+    {
+      "case_id": "q_clean_single_target_precision_gap",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "Correctly identifies under-precision and proposes more independent rows, but this substantially restates the hidden deterministic baseline."
+      }
+    },
+    {
+      "case_id": "q_screen_score_direction_inverted",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the reversed control medians and AUROC and adds a transformation-level sign and label provenance trace."
+      }
+    },
+    {
+      "case_id": "q_screen_missing_feature_source_shift",
+      "review": {
+        "status": "complete",
+        "scope_tag": "screen_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Links zero filling and the missingness shift to false negatives and defines a checkable within-source stratified comparison."
+      }
+    },
+    {
+      "case_id": "q_hotspot_mask_constraint_lock",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Respects the interface-freedom boundary and adds a diagnostic stratification of the two free positions before scaling."
+      }
+    },
+    {
+      "case_id": "q_stable_monomer_interface_absence",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Localizes failure to interfaces and adds concrete contact-count, patch-complementarity, and hotspot constraints to the baseline strategy."
+      }
+    },
+    {
+      "case_id": "q_predictor_target_rank_reversal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the stable but anticorrelated rankings and proposes an orthogonal matched-target measurement to discriminate construct validity."
+      }
+    },
+    {
+      "case_id": "q_calibration_batch_age_drift",
+      "review": {
+        "status": "complete",
+        "scope_tag": "calibration_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Preserves the non-extrapolation boundary and adds error-versus-centroid-distance analysis to a current-distribution validation panel."
+      }
+    },
+    {
+      "case_id": "q_assay_replicate_boundary_discordance",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the 8-of-20 discordance and adds continuous paired-readout analysis to distinguish variance from first-replicate artifacts."
+      }
+    },
+    {
+      "case_id": "q_native_recovery_template_dependence",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Preserves the template-free claim boundary and adds a controlled template-feature ablation to localize the recovery dependence."
+      }
+    },
+    {
+      "case_id": "q_multi_axis_signal_terminal",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Preserves the negative result for tested feature families while specifying one preregisterable structure-derived representation test."
+      }
+    }
+  ]
+}

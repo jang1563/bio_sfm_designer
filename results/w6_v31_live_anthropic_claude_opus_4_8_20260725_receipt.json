@@ -1,0 +1,71 @@
+{
+  "api_calls": 16,
+  "approval_basis": "User approved exactly: W6-v3.1 one-shot live shadow; Anthropic claude-opus-4-8; 16 calls; 512 max output tokens per call; zero retries; no effect; no compute. Approval received 2026-07-25.",
+  "approval_consumed": true,
+  "approved_call_count": 16,
+  "attempted_calls": 16,
+  "capture_path": "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_capture.jsonl",
+  "capture_sha256": "0a350d77af7c854b1593a977574b6ceef53b0a81ac67f1b4a95981e754f1790e",
+  "compute_submissions": 0,
+  "credential_hygiene_attested": true,
+  "execution_components": [
+    {
+      "expected_sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb",
+      "observed_sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb",
+      "path": "src/bio_sfm_designer/loop/providers.py"
+    },
+    {
+      "expected_sha256": "a9ec56cbc7ac4757e55803b4da060fea8685aceacf6cff1f2fa7c47a42e42f38",
+      "observed_sha256": "a9ec56cbc7ac4757e55803b4da060fea8685aceacf6cff1f2fa7c47a42e42f38",
+      "path": "src/bio_sfm_designer/experiments/w6_v2_shadow_panel.py"
+    },
+    {
+      "expected_sha256": "5907fbf3a23170f5b15d4ca1a3db8a7aecc5cd94156c4bdee534ff8e57baa344",
+      "observed_sha256": "5907fbf3a23170f5b15d4ca1a3db8a7aecc5cd94156c4bdee534ff8e57baa344",
+      "path": "src/bio_sfm_designer/experiments/w6_v3_hypothesis_only.py"
+    },
+    {
+      "expected_sha256": "c7283335525c69907fcb58877dcfd006c6620facb188b575e3bead1be89482a8",
+      "observed_sha256": "c7283335525c69907fcb58877dcfd006c6620facb188b575e3bead1be89482a8",
+      "path": "src/bio_sfm_designer/experiments/w6_v31_transport_panel.py"
+    },
+    {
+      "expected_sha256": "e1e0e6475c63c57ee8158ec3277a50b3a3a300c11ac9bc037cb9f1b1a364c982",
+      "observed_sha256": "e1e0e6475c63c57ee8158ec3277a50b3a3a300c11ac9bc037cb9f1b1a364c982",
+      "path": "src/bio_sfm_designer/experiments/w6_v31_live_panel.py"
+    }
+  ],
+  "failed_calls": 1,
+  "independent_from_w6_v2_and_w6_v3": true,
+  "independent_review_pending": false,
+  "live_execution_authorized_for_additional_calls": false,
+  "m7_complete": false,
+  "max_output_tokens_per_call": 512,
+  "mode": "shadow",
+  "model": "claude-opus-4-8",
+  "output_limit_stop_calls": 0,
+  "panel_id": "w6-v3-1-transport-panel-2026-07-24",
+  "panel_path": "configs/w6_v31_transport_panel.json",
+  "panel_sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+  "prospective_live_validation_complete": false,
+  "provider": "anthropic",
+  "provider_calls": 16,
+  "recommendations_applied": 0,
+  "request_path": "results/w6_v31_transport_requests.jsonl",
+  "request_sha256": "ac4ea1a8be736eba127a46cf517d18ba427d265a43f74f7728bb79a2a5e4e1b1",
+  "responses_path": null,
+  "responses_sha256": null,
+  "schema_version": "w6_v31_live_receipt_v1",
+  "scope_id": "w6-v3-1-live-scope-approved-2026-07-25",
+  "scope_path": "configs/w6_v31_live_scope_approved_20260725.json",
+  "scope_sha256": "b8b667a136a6dbdb2d723bce2586211a6f70c403d6186699e5a80349ba2753ab",
+  "sdk_retries_per_call": 0,
+  "source_commit": "0a9ef16467bf6bed696455d4a0361ae4fb14ce06",
+  "source_worktree_clean": true,
+  "source_worktree_porcelain_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status": "w6_v31_live_capture_incomplete_no_retry",
+  "succeeded_calls": 15,
+  "total_input_tokens": null,
+  "total_output_tokens": null,
+  "transport_metadata_complete_calls": 15
+}
