@@ -1,0 +1,68 @@
+{
+  "schema_version": "w6_v32_live_scope_v1",
+  "scope_id": "w6-v3-2-live-scope-approved-2026-07-26",
+  "frozen_at": "2026-07-26T11:45:54Z",
+  "purpose": "Authorized one-shot W6-v3.2 live shadow panel preserving the frozen hypothesis-only behavior and non-sensitive failure telemetry contract.",
+  "panel_path": "configs/w6_v32_transport_panel.json",
+  "panel_id": "w6-v3-2-transport-panel-2026-07-26",
+  "panel_sha256": "5e9e2346c52b07a2fef2dd458e1d612a9733ff22a3da87b2d0a0604b5f5346dd",
+  "request_path": "results/w6_v32_transport_requests.jsonl",
+  "request_sha256": "e1d0f380dba775302cb077335edd9f2a614d1c2ac7518fb7fb46906d74184b44",
+  "provider": "anthropic",
+  "model": "claude-opus-4-8",
+  "mode": "shadow",
+  "approved_call_count": 16,
+  "max_output_tokens_per_call": 512,
+  "sdk_retries_per_call": 0,
+  "temperature_override": null,
+  "one_call_per_case": true,
+  "one_shot": true,
+  "resume_allowed": false,
+  "overwrite_allowed": false,
+  "credential_hygiene_attested": true,
+  "capture_transport_metadata": true,
+  "capture_failure_telemetry": true,
+  "failure_telemetry_schema": "w6_v32_provider_failure_telemetry_v1",
+  "store_exception_messages": false,
+  "store_tracebacks": false,
+  "store_headers": false,
+  "store_request_ids": false,
+  "require_clean_worktree": true,
+  "require_component_hash_match": true,
+  "execution_components": [
+    {
+      "path": "src/bio_sfm_designer/loop/providers.py",
+      "sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb"
+    },
+    {
+      "path": "src/bio_sfm_designer/experiments/w6_v2_shadow_panel.py",
+      "sha256": "a9ec56cbc7ac4757e55803b4da060fea8685aceacf6cff1f2fa7c47a42e42f38"
+    },
+    {
+      "path": "src/bio_sfm_designer/experiments/w6_v3_hypothesis_only.py",
+      "sha256": "5907fbf3a23170f5b15d4ca1a3db8a7aecc5cd94156c4bdee534ff8e57baa344"
+    },
+    {
+      "path": "src/bio_sfm_designer/experiments/w6_v32_failure_telemetry.py",
+      "sha256": "e4242f701744dd0ae73a7476e6515edf3847e123587dc382d148a76db44ca1aa"
+    },
+    {
+      "path": "src/bio_sfm_designer/experiments/w6_v32_transport_panel.py",
+      "sha256": "8a4854cd63f45d1513e78c803a1680b23728f125bc158dd554274c21ed4cd610"
+    },
+    {
+      "path": "src/bio_sfm_designer/experiments/w6_v32_live_panel.py",
+      "sha256": "70431535955d55b9fb920c10b5d22e10b662395fc34fe5c6b846b5aa4625af61"
+    }
+  ],
+  "live_execution_authorized": true,
+  "approval_basis": "User requested 'W6-v3.2 live shadow 16-call execution' on 2026-07-26. This scope narrows that approval to Anthropic claude-opus-4-8; exactly 16 calls; 512 maximum output tokens per call; zero retries; shadow/no effect; no compute.",
+  "review_required_before_scoring": true,
+  "reviewer_provider_independence_required": true,
+  "recommendations_may_be_applied": false,
+  "compute_submission_allowed": false,
+  "additional_provider_calls_authorized": false,
+  "behavioral_change": "none",
+  "instrumentation_change": "structured_non_sensitive_failure_telemetry_v1",
+  "analyst_blinded_to_prior_outputs": false
+}
