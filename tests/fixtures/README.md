@@ -47,4 +47,14 @@ counterfactual states that exclude both prior W6 panels, all 32 prior case/state
 hashes, and exact prior answers. The valid fixture passes 16/16 with zero
 authority violations; the adversarial fixture accepts 3/16 and records eight.
 They qualify the offline contract only. The 512-token live scope remains
-unauthorized; see `docs/W6_V31_TRANSPORT_SUCCESSOR.md`.
+the historical no-call baseline; the later incomplete live result is in
+`docs/W6_V31_LIVE_RESULT_2026_07_25.md`.
+
+## W6-v3.2 telemetry-successor fixtures
+
+`w6_v32_transport_{valid,adversarial}_responses.jsonl` bind to 16 new states
+that exclude all 48 earlier W6-v2/v3/v3.1 cases and aggregate-state hashes plus
+58 canonical prior answer hashes. The valid fixture passes 16/16 with zero
+authority violations and incremental value 15/16. The adversarial fixture
+accepts 3/16 and records eight violations. These remain provider-free contract
+tests; `configs/w6_v32_live_scope.json` is unauthorized.

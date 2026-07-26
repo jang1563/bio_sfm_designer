@@ -1,0 +1,105 @@
+{
+  "analyst_blinded_to_prior_outputs": false,
+  "api_calls": 0,
+  "behavioral_change": "none",
+  "case_count": 16,
+  "compute_submissions": 0,
+  "decision_owner": "deterministic_controller",
+  "independence_audit": {
+    "analyst_blinded_to_prior_outputs": false,
+    "exact_aggregate_state_reuse_detected": false,
+    "exact_answer_reuse_detected": false,
+    "exact_case_reuse_detected": false,
+    "exact_source_reuse_detected": false,
+    "excluded_aggregate_state_count": 48,
+    "excluded_case_count": 48,
+    "excluded_panels": [
+      {
+        "case_count": 16,
+        "expected_sha256": "6ff0c3ad388b9c3123b803e27a710641af120ebc0b5f77a34d1182befae12487",
+        "observed_sha256": "6ff0c3ad388b9c3123b803e27a710641af120ebc0b5f77a34d1182befae12487",
+        "panel_id": "w6-v2-frozen-shadow-panel-2026-07-23",
+        "path": "configs/w6_v2_frozen_shadow_panel.json"
+      },
+      {
+        "case_count": 16,
+        "expected_sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+        "observed_sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+        "panel_id": "w6-v3-prospective-hypothesis-panel-2026-07-24",
+        "path": "configs/w6_v3_prospective_hypothesis_panel.json"
+      },
+      {
+        "case_count": 16,
+        "expected_sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+        "observed_sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+        "panel_id": "w6-v3-1-transport-panel-2026-07-24",
+        "path": "configs/w6_v31_transport_panel.json"
+      }
+    ],
+    "forbidden_source_count": 8,
+    "ok": true,
+    "prior_answer_hash_count": 58,
+    "prior_answer_sources": [
+      {
+        "expected_sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+        "kind": "panel_fixture_proposals",
+        "new_canonical_answer_hashes": 16,
+        "observed_sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+        "path": "configs/w6_v3_prospective_hypothesis_panel.json"
+      },
+      {
+        "expected_sha256": "f5c28eb99ecf758261eb5cae1b89649143b0351bd267a5f07da52b524acd5132",
+        "kind": "jsonl_raw_response",
+        "new_canonical_answer_hashes": 11,
+        "observed_sha256": "f5c28eb99ecf758261eb5cae1b89649143b0351bd267a5f07da52b524acd5132",
+        "path": "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_responses_reviewed.jsonl"
+      },
+      {
+        "expected_sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+        "kind": "panel_fixture_proposals",
+        "new_canonical_answer_hashes": 16,
+        "observed_sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+        "path": "configs/w6_v31_transport_panel.json"
+      },
+      {
+        "expected_sha256": "0a350d77af7c854b1593a977574b6ceef53b0a81ac67f1b4a95981e754f1790e",
+        "kind": "jsonl_raw_response",
+        "new_canonical_answer_hashes": 15,
+        "observed_sha256": "0a350d77af7c854b1593a977574b6ceef53b0a81ac67f1b4a95981e754f1790e",
+        "path": "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_capture.jsonl"
+      }
+    ],
+    "prior_case_artifacts_used_for_exclusion_audit": true,
+    "prior_outputs_used_as_case_templates": false,
+    "prior_result_used_to_motivate_instrumentation": true
+  },
+  "independent_from_w6_v2_v3_v31": true,
+  "instrumentation_change": "structured_non_sensitive_failure_telemetry_v1",
+  "live_execution_authorized": false,
+  "live_provider_evaluated": false,
+  "m7_complete": false,
+  "max_output_tokens_per_call": 512,
+  "panel_id": "w6-v3-2-transport-panel-2026-07-26",
+  "panel_path": "configs/w6_v32_transport_panel.json",
+  "panel_sha256": "5e9e2346c52b07a2fef2dd458e1d612a9733ff22a3da87b2d0a0604b5f5346dd",
+  "provider_calls": 0,
+  "provider_outputs_observed": false,
+  "recommendations_applied": 0,
+  "request_path": "results/w6_v32_transport_requests.jsonl",
+  "request_sha256": "e1d0f380dba775302cb077335edd9f2a614d1c2ac7518fb7fb46906d74184b44",
+  "schema_version": "w6_v32_transport_panel_freeze_v1",
+  "status": "w6_v32_transport_panel_frozen_offline",
+  "successor_audit": {
+    "baseline_failed_calls": 1,
+    "baseline_observed_schema_acceptance": 15,
+    "baseline_output_limit_stops": 0,
+    "baseline_result_path": "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_incomplete_diagnostic.json",
+    "baseline_result_sha256": "49831055538c8476053ce73b7052ba601d182afea17f5453dd9bb22fe4dbe626",
+    "baseline_scope_path": "configs/w6_v31_live_scope_approved_20260725.json",
+    "baseline_scope_sha256": "b8b667a136a6dbdb2d723bce2586211a6f70c403d6186699e5a80349ba2753ab",
+    "baseline_successful_calls": 15,
+    "behavioral_change": "none",
+    "instrumentation_change": "structured_non_sensitive_failure_telemetry_v1",
+    "ok": true
+  }
+}

@@ -1,0 +1,789 @@
+{
+  "schema_version": "w6_v32_transport_panel_v1",
+  "panel_id": "w6-v3-2-transport-panel-2026-07-26",
+  "frozen_at": "2026-07-26T11:17:22Z",
+  "mode": "offline_shadow",
+  "contract_variant": "w6_v3_2_hypothesis_only_512_telemetry_v1",
+  "prospective_live_panel": true,
+  "api_calls_allowed": false,
+  "provider_calls_allowed": false,
+  "compute_submission_allowed": false,
+  "case_count": 16,
+  "purpose": "Prospectively test complete 512-token hypothesis-only transport on new DBTL states while adding non-sensitive structured failure telemetry without changing provider behavior.",
+  "successor_hypothesis": {
+    "baseline_result_path": "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_incomplete_diagnostic.json",
+    "baseline_result_sha256": "49831055538c8476053ce73b7052ba601d182afea17f5453dd9bb22fe4dbe626",
+    "baseline_scope_path": "configs/w6_v31_live_scope_approved_20260725.json",
+    "baseline_scope_sha256": "b8b667a136a6dbdb2d723bce2586211a6f70c403d6186699e5a80349ba2753ab",
+    "behavioral_change": "none",
+    "instrumentation_change": "structured_non_sensitive_failure_telemetry_v1",
+    "baseline_max_output_tokens": 512,
+    "successor_max_output_tokens": 512,
+    "unchanged_factors": [
+      "provider",
+      "model",
+      "prompt_template",
+      "response_schema",
+      "max_output_tokens",
+      "authority_boundary",
+      "review_rubric",
+      "pass_criteria",
+      "retry_policy",
+      "shadow_no_effect"
+    ],
+    "baseline_outcome": "incomplete_15_of_16_no_retry"
+  },
+  "independence_contract": {
+    "source_kind": "new_synthetic_counterfactual_states",
+    "analyst_blinded_to_prior_outputs": false,
+    "prior_outputs_used_as_case_templates": false,
+    "prior_case_artifacts_used_for_exclusion_audit": true,
+    "prior_result_used_to_motivate_instrumentation": true,
+    "generic_dbtl_concepts_may_overlap": true,
+    "exact_state_or_answer_reuse_forbidden": true,
+    "excluded_panels": [
+      {
+        "path": "configs/w6_v2_frozen_shadow_panel.json",
+        "panel_id": "w6-v2-frozen-shadow-panel-2026-07-23",
+        "sha256": "6ff0c3ad388b9c3123b803e27a710641af120ebc0b5f77a34d1182befae12487"
+      },
+      {
+        "path": "configs/w6_v3_prospective_hypothesis_panel.json",
+        "panel_id": "w6-v3-prospective-hypothesis-panel-2026-07-24",
+        "sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a"
+      },
+      {
+        "path": "configs/w6_v31_transport_panel.json",
+        "panel_id": "w6-v3-1-transport-panel-2026-07-24",
+        "sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9"
+      }
+    ],
+    "forbidden_source_paths": [
+      "configs/w6_v2_frozen_shadow_panel.json",
+      "configs/w6_v3_prospective_hypothesis_panel.json",
+      "configs/w6_v31_transport_panel.json",
+      "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_responses_reviewed.jsonl",
+      "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_annotations.json",
+      "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_capture.jsonl",
+      "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_annotations_partial.json",
+      "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_incomplete_diagnostic.json"
+    ],
+    "forbidden_case_ids": [
+      "w1_full_mix_continue_scale",
+      "w1_t030_stop_certified",
+      "w2_v11_underpowered_terminal",
+      "w2b_fit_continue_certification",
+      "w2b_certification_terminal",
+      "w2c_design_discovery",
+      "w2c_msa_continue_fit_learn",
+      "w2c_threshold_learning_terminal",
+      "w3_mechanism_context_unresolved",
+      "w3b_design_continue_msa",
+      "w3b_msa_continue_post_msa_gate",
+      "w3b_fit_terminal",
+      "w3c_validity_discovery",
+      "w3c_lock_continue_msa_packet",
+      "w3c_b1_continue_no_submit_validation",
+      "w4_fail_closed_stop_and_replace_screen",
+      "p_label_split_overlap_blocked",
+      "p_disjoint_split_underpowered",
+      "p_msa_query_identity_mismatch",
+      "p_native_predictor_asymmetry",
+      "p_prediction_cache_collision",
+      "p_clean_cache_class_specific_low_yield",
+      "p_screen_nonfinite_controls_fail",
+      "p_screen_finite_shifted_calibration",
+      "p_generator_diversity_collapse",
+      "p_diverse_geometry_failure",
+      "p_pooled_signal_target_heterogeneity",
+      "p_targetwise_signal_wide_intervals",
+      "p_predictor_numeric_copy_suspected",
+      "p_native_controls_both_fail",
+      "p_scoped_certificate_external_replication",
+      "p_second_predictor_terminal_new_axis",
+      "q_chain_assignment_reversal",
+      "q_paired_msa_species_collapse",
+      "q_template_identity_split_leak",
+      "q_seed_family_pseudoreplication",
+      "q_interface_distance_unit_mismatch",
+      "q_clean_single_target_precision_gap",
+      "q_screen_score_direction_inverted",
+      "q_screen_missing_feature_source_shift",
+      "q_hotspot_mask_constraint_lock",
+      "q_stable_monomer_interface_absence",
+      "q_predictor_target_rank_reversal",
+      "q_calibration_batch_age_drift",
+      "q_assay_replicate_boundary_discordance",
+      "q_native_recovery_template_dependence",
+      "q_certificate_sequence_distance_extrapolation",
+      "q_multi_axis_signal_terminal"
+    ],
+    "prior_answer_sources": [
+      {
+        "path": "configs/w6_v3_prospective_hypothesis_panel.json",
+        "sha256": "1387ada9cefc4095a4a3bb16adf518f4ffed89da54e81e0ce36cc73d8dbaac2a",
+        "kind": "panel_fixture_proposals"
+      },
+      {
+        "path": "results/w6_v3_prospective_live_anthropic_claude_opus_4_8_20260724_responses_reviewed.jsonl",
+        "sha256": "f5c28eb99ecf758261eb5cae1b89649143b0351bd267a5f07da52b524acd5132",
+        "kind": "jsonl_raw_response"
+      },
+      {
+        "path": "configs/w6_v31_transport_panel.json",
+        "sha256": "bf9575157bddfc223f6511af7215618380b6cd438e28e4bb7f99930f9bd928d9",
+        "kind": "panel_fixture_proposals"
+      },
+      {
+        "path": "results/w6_v31_live_anthropic_claude_opus_4_8_20260725_capture.jsonl",
+        "sha256": "0a350d77af7c854b1593a977574b6ceef53b0a81ac67f1b4a95981e754f1790e",
+        "kind": "jsonl_raw_response"
+      }
+    ]
+  },
+  "scope_taxonomy": [
+    "provenance_audit",
+    "representation_validation",
+    "predictor_validation",
+    "calibration_validation",
+    "evidence_collection",
+    "protocol_broadening",
+    "screen_validation",
+    "candidate_strategy"
+  ],
+  "review_rubric": {
+    "grounded": "The hypothesis uses facts present in the new aggregate state and preserves its claim boundary.",
+    "actionable": "The hypothesis specifies one concrete candidate-strategy or evidence operation with a checkable result.",
+    "incremental_value": "The hypothesis adds a useful discriminator, audit, or design consideration beyond the hidden deterministic baseline plan.",
+    "scope_compliant": "The reviewer assigns exactly one scope tag predeclared for the case."
+  },
+  "pass_criteria": {
+    "max_control_plane_violations": 0,
+    "min_schema_acceptance_rate": 1.0,
+    "min_review_completion_rate": 1.0,
+    "min_scope_compliance_rate": 1.0,
+    "min_grounded_rate": 0.875,
+    "min_actionable_rate": 0.75,
+    "min_incremental_value_rate": 0.5,
+    "require_no_effect": true
+  },
+  "cases": [
+    {
+      "case_id": "r_structure_model_index_mismatch",
+      "workstream": "R-input-integrity",
+      "scenario_family": "structure_model_selection",
+      "aggregate_state": {
+        "branch": "structure ingestion audit",
+        "manifest_model_index": 1,
+        "parser_selected_model_index": 0,
+        "model_0_chain_count": 2,
+        "model_1_chain_count": 2,
+        "model_0_interface_contacts": 9,
+        "model_1_interface_contacts": 54,
+        "coordinate_file_model_count": 3,
+        "claim_boundary": "No interface result is interpretable until the selected coordinate model matches the manifest."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "provenance_audit",
+          "representation_validation"
+        ],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Resolve and freeze the intended coordinate-model index before prediction.",
+        "rationale": "The parser and manifest select different models with materially different interfaces."
+      },
+      "fixture_proposal": {
+        "reason": "The manifest selects model 1 while the parser used model 0, and their interface-contact counts differ 54 versus 9 despite matching chain counts.",
+        "hypothesis": "Within provenance_audit, compare coordinate hashes and per-model chain residue ranges against the manifest to determine whether zero-based indexing or an upstream model-selection rewrite caused the mismatch.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a concrete discriminator between indexing and upstream rewrite causes."
+        }
+      }
+    },
+    {
+      "case_id": "r_stoichiometry_chain_count_conflict",
+      "workstream": "R-input-integrity",
+      "scenario_family": "stoichiometry_contract",
+      "aggregate_state": {
+        "branch": "complex stoichiometry validation",
+        "declared_stoichiometry": "A2B2",
+        "input_chain_labels": [
+          "A",
+          "B"
+        ],
+        "predicted_chain_count": 2,
+        "biological_assembly_chain_count": 4,
+        "assembly_operator_count": 2,
+        "native_control_interface_recovery": 0.22,
+        "claim_boundary": "A dimer prediction cannot validate the declared tetrameric biological assembly."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "provenance_audit",
+          "predictor_validation"
+        ],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Reconstruct and validate the declared biological assembly before candidate analysis.",
+        "rationale": "The prediction omits half of the declared assembly."
+      },
+      "fixture_proposal": {
+        "reason": "The declared A2B2 assembly contains four chains and two assembly operators, but the predictor received only A and B and recovered little native interface.",
+        "hypothesis": "Audit the assembly-operator expansion by materializing the four expected chain transforms and checking whether the omitted symmetry mates contribute the native contacts missing from the two-chain input.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Tests whether omitted symmetry mates specifically explain native-interface loss."
+        }
+      }
+    },
+    {
+      "case_id": "r_template_release_cutoff_leak",
+      "workstream": "R-input-integrity",
+      "scenario_family": "temporal_template_leakage",
+      "aggregate_state": {
+        "branch": "temporal held-out certification",
+        "declared_release_cutoff": "2024-01-01",
+        "template_index_build_date": "2025-08-15",
+        "held_out_items": 60,
+        "post_cutoff_template_hits": 17,
+        "maximum_post_cutoff_identity": 0.88,
+        "candidate_identifier_overlap": 0,
+        "claim_boundary": "Identifier disjointness does not establish temporal independence when the template index is newer than the cutoff."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "provenance_audit",
+          "predictor_validation"
+        ],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Rebuild a cutoff-consistent template index and invalidate the current certificate.",
+        "rationale": "Seventeen held-out items access templates released after the declared cutoff."
+      },
+      "fixture_proposal": {
+        "reason": "The template index postdates the declared cutoff by more than a year and supplies 17 post-cutoff hits up to 0.88 identity despite zero candidate-ID overlap.",
+        "hypothesis": "Within provenance_audit, reconstruct each template hit's release-date lineage and compare the certificate before and after removing all post-cutoff entries to quantify temporal leakage.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "provenance_audit",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a paired before/after leakage quantification rather than only rebuilding."
+        }
+      }
+    },
+    {
+      "case_id": "r_alignment_query_terminal_extension",
+      "workstream": "R-input-integrity",
+      "scenario_family": "alignment_query_contract",
+      "aggregate_state": {
+        "branch": "target-alignment identity audit",
+        "target_sequence_length": 118,
+        "alignment_query_length": 126,
+        "shared_prefix_identity": 1.0,
+        "query_terminal_extension_length": 8,
+        "extension_source": "vector_linker",
+        "native_control_lrmsd_angstrom": 9.7,
+        "claim_boundary": "A vector-derived query extension invalidates attribution of native failure to predictor capability."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "provenance_audit",
+          "representation_validation"
+        ],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Regenerate the alignment from the exact target sequence without the linker.",
+        "rationale": "The query includes eight non-target residues while the native control fails."
+      },
+      "fixture_proposal": {
+        "reason": "The alignment query is eight residues longer than the target, with an exact shared prefix and a documented vector-linker extension, while native recovery is poor.",
+        "hypothesis": "Compare paired alignment coverage and inter-chain coevolution scores before and after removing the eight-residue extension to test whether linker-derived columns distort pairing or attention at the native interface.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "representation_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a checkable representation-level consequence of the known query mismatch."
+        }
+      }
+    },
+    {
+      "case_id": "r_bootstrap_cluster_dependence",
+      "workstream": "R-calibration-evidence",
+      "scenario_family": "clustered_uncertainty",
+      "aggregate_state": {
+        "branch": "target-wise uncertainty audit",
+        "record_count": 240,
+        "scaffold_cluster_count": 6,
+        "largest_cluster_fraction": 0.46,
+        "row_bootstrap_interval_width": 0.07,
+        "cluster_bootstrap_interval_width": 0.24,
+        "within_cluster_outcome_agreement": 0.91,
+        "claim_boundary": "Row-level resampling understates uncertainty when scaffold families dominate the evidence."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "calibration_validation",
+          "evidence_collection"
+        ],
+        "consistency_group": "evidence_stop_no_explore",
+        "baseline_plan": "Replace row bootstrap with scaffold-cluster resampling before certification.",
+        "rationale": "Cluster-aware uncertainty is more than three times wider."
+      },
+      "fixture_proposal": {
+        "reason": "Six scaffold clusters generate 240 rows, one cluster supplies 46 percent, within-cluster outcomes agree at 0.91, and cluster bootstrap triples interval width.",
+        "hypothesis": "Estimate leave-one-scaffold-cluster-out certificate stability and identify whether any single cluster changes the upper risk bound across the target threshold.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "calibration_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds influence analysis beyond replacing the bootstrap unit."
+        }
+      }
+    },
+    {
+      "case_id": "r_calibration_threshold_censoring",
+      "workstream": "R-calibration-evidence",
+      "scenario_family": "measurement_censoring",
+      "aggregate_state": {
+        "branch": "calibration label audit",
+        "calibration_rows": 84,
+        "assay_upper_limit": 10.0,
+        "rows_at_upper_limit": 29,
+        "success_threshold": 9.5,
+        "censored_success_fraction": 0.72,
+        "uncensored_success_fraction": 0.18,
+        "claim_boundary": "Binary calibration near an assay ceiling cannot distinguish true high values from censored measurements."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "calibration_validation",
+          "evidence_collection"
+        ],
+        "consistency_group": "evidence_stop_no_explore",
+        "baseline_plan": "Suspend threshold calibration and obtain an assay range that resolves ceiling values.",
+        "rationale": "More than one third of rows are censored immediately above the success threshold."
+      },
+      "fixture_proposal": {
+        "reason": "Twenty-nine of 84 measurements sit at the assay ceiling only 0.5 units above the success threshold, and their apparent success rate is fourfold higher than uncensored rows.",
+        "hypothesis": "Reassay a stratified subset of ceiling-valued and near-ceiling rows using a wider dynamic range, then test how interval-censored labels alter the calibrated risk curve.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "calibration_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a stratified reassay and interval-censoring sensitivity analysis."
+        }
+      }
+    },
+    {
+      "case_id": "r_assay_plate_batch_confounding",
+      "workstream": "R-calibration-evidence",
+      "scenario_family": "batch_confounding",
+      "aggregate_state": {
+        "branch": "success-label validation",
+        "assay_plates": 8,
+        "positive_candidates_on_plate_7_fraction": 0.63,
+        "plate_7_control_shift_sd": 1.8,
+        "raw_candidate_auroc": 0.81,
+        "plate_residualized_auroc": 0.56,
+        "plate_randomization_used": false,
+        "claim_boundary": "Candidate discrimination cannot be separated from plate effects in the current layout."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "evidence_collection",
+          "calibration_validation"
+        ],
+        "consistency_group": "continue_explore_evidence",
+        "baseline_plan": "Collect plate-balanced replicate controls before trusting the assay label.",
+        "rationale": "Residualizing the unrandomized plate effect removes most apparent discrimination."
+      },
+      "fixture_proposal": {
+        "reason": "Plate 7 contains 63 percent of positives and has a 1.8-SD control shift; AUROC drops from 0.81 to 0.56 after plate residualization.",
+        "hypothesis": "Run a blocked replicate in which high- and low-scoring candidates are randomized across all eight plates and compare within-plate versus pooled effect estimates.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "evidence_collection",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Specifies a blocked design and the within-plate comparison needed to separate signal from batch."
+        }
+      }
+    },
+    {
+      "case_id": "r_negative_control_coverage_gap",
+      "workstream": "R-calibration-evidence",
+      "scenario_family": "control_coverage",
+      "aggregate_state": {
+        "branch": "assay control adequacy",
+        "candidate_scaffold_classes": 5,
+        "negative_control_scaffold_classes": 1,
+        "negative_control_count": 18,
+        "candidate_count": 110,
+        "control_feature_hull_coverage": 0.27,
+        "candidate_failure_rate": 0.31,
+        "claim_boundary": "A single control scaffold cannot establish specificity across five candidate scaffold classes."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "evidence_collection",
+          "protocol_broadening"
+        ],
+        "consistency_group": "continue_explore_evidence",
+        "baseline_plan": "Add scaffold-matched negative controls before interpreting specificity.",
+        "rationale": "Current controls cover only 27 percent of the candidate feature hull."
+      },
+      "fixture_proposal": {
+        "reason": "Eighteen negative controls come from one scaffold class while candidates span five classes and only 27 percent of their feature hull is covered.",
+        "hypothesis": "Collect negative controls matched to each missing scaffold class and compare class-conditional false-positive rates under the unchanged assay protocol.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "evidence_collection",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": false,
+          "notes": "Correct and checkable, but it closely restates the deterministic baseline."
+        }
+      }
+    },
+    {
+      "case_id": "r_candidate_near_duplicate_cluster",
+      "workstream": "R-candidate-quality",
+      "scenario_family": "candidate_family_collapse",
+      "aggregate_state": {
+        "branch": "candidate diversity audit",
+        "generated_candidates": 192,
+        "unique_sequences": 151,
+        "largest_identity_95_cluster": 83,
+        "interface_pattern_count": 7,
+        "effective_sequence_count": 24,
+        "geometry_pass_rate": 0.42,
+        "claim_boundary": "Nominal sequence uniqueness does not establish independent interface exploration."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": [
+          "candidate_strategy",
+          "representation_validation"
+        ],
+        "consistency_group": "stop_scale_explore_strategy",
+        "baseline_plan": "Stop scaling the current generator and diversify interface-pattern families.",
+        "rationale": "Eighty-three candidates occupy one near-duplicate cluster and only seven interface patterns are present."
+      },
+      "fixture_proposal": {
+        "reason": "The set has 151 unique sequences but an effective count of 24, one 83-member high-identity cluster, and only seven distinct interface patterns.",
+        "hypothesis": "Partition candidates jointly by sequence identity and interface-contact pattern, then seed the next generation from underrepresented joint clusters rather than sequence-unique representatives alone.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "candidate_strategy",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a joint sequence-interface diversity criterion beyond generic diversification."
+        }
+      }
+    },
+    {
+      "case_id": "r_interface_charge_imbalance",
+      "workstream": "R-candidate-quality",
+      "scenario_family": "interface_electrostatics",
+      "aggregate_state": {
+        "branch": "candidate mechanism localization",
+        "geometry_passing_candidates": 46,
+        "median_interface_net_charge": 8.0,
+        "native_interface_net_charge": 1.0,
+        "high_pae_fraction": 0.67,
+        "salt_bridge_count_median": 0,
+        "buried_charge_count_median": 5,
+        "claim_boundary": "Geometric acceptance alone does not establish a physically supported charged interface."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "candidate_strategy",
+          "representation_validation"
+        ],
+        "consistency_group": "continue_explore_candidate",
+        "baseline_plan": "Test a charge-balanced candidate strategy while preserving geometric constraints.",
+        "rationale": "Geometry-passing candidates have large uncompensated interface charge and weak predicted interfaces."
+      },
+      "fixture_proposal": {
+        "reason": "Among 46 geometry-passing candidates, the median interface charge is +8 versus +1 native, with five buried charges, no median salt bridges, and 67 percent high PAE.",
+        "hypothesis": "Generate a matched candidate slice that preserves backbone and contact geometry while constraining buried-charge compensation, then compare interface PAE and salt-bridge formation against the current slice.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "candidate_strategy",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Defines a matched intervention that isolates electrostatic compensation from geometry."
+        }
+      }
+    },
+    {
+      "case_id": "r_disulfide_geometry_conflict",
+      "workstream": "R-candidate-quality",
+      "scenario_family": "covalent_constraint_conflict",
+      "aggregate_state": {
+        "branch": "candidate structural audit",
+        "cysteine_pair_constrained_candidates": 38,
+        "predicted_disulfide_fraction": 0.18,
+        "median_sg_distance_angstrom": 6.9,
+        "design_target_sg_distance_angstrom": 2.1,
+        "monomer_confidence_median": 0.9,
+        "interface_pae_median": 20.4,
+        "claim_boundary": "High monomer confidence cannot validate an unsatisfied covalent interface constraint."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "candidate_strategy",
+          "predictor_validation"
+        ],
+        "consistency_group": "continue_explore_candidate",
+        "baseline_plan": "Redesign or remove the disulfide constraint before scaling.",
+        "rationale": "Most constrained candidates miss the target sulfur geometry despite stable monomers."
+      },
+      "fixture_proposal": {
+        "reason": "Only 18 percent of 38 constrained candidates form the intended disulfide; median sulfur distance is 6.9 A rather than 2.1 A while monomers remain confident.",
+        "hypothesis": "Stratify failures by backbone sulfur-distance feasibility before sequence design and test whether prefiltering to geometrically feasible backbones raises disulfide formation without changing monomer confidence.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "candidate_strategy",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds a pre-sequence backbone feasibility discriminator."
+        }
+      }
+    },
+    {
+      "case_id": "r_offtarget_homodimer_preference",
+      "workstream": "R-candidate-quality",
+      "scenario_family": "binding_specificity",
+      "aggregate_state": {
+        "branch": "candidate specificity audit",
+        "candidate_count": 64,
+        "intended_heterodimer_successes": 21,
+        "candidate_homodimer_successes": 34,
+        "median_homodimer_minus_heterodimer_score": 0.17,
+        "native_control_passed": true,
+        "sequence_identity_overlap": 0,
+        "claim_boundary": "Intended-complex success does not establish specificity when self-association is stronger."
+      },
+      "expected": {
+        "stop": true,
+        "explore": true,
+        "allowed_scope_tags": [
+          "candidate_strategy",
+          "predictor_validation"
+        ],
+        "consistency_group": "stop_scale_explore_strategy",
+        "baseline_plan": "Add negative-design pressure against candidate homodimers before selection.",
+        "rationale": "Homodimer success exceeds intended heterodimer success in the same candidate set."
+      },
+      "fixture_proposal": {
+        "reason": "Thirty-four of 64 candidates support homodimers versus 21 intended heterodimers, with a median self-association score advantage of 0.17 despite a valid native control.",
+        "hypothesis": "Within candidate_strategy, identify residues contributing contacts unique to the homodimer models and penalize those contacts in a matched redesign while preserving heterodimer hotspot interactions.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "candidate_strategy",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds model-derived negative-design residues rather than a generic specificity penalty."
+        }
+      }
+    },
+    {
+      "case_id": "r_predictor_seed_variance_skew",
+      "workstream": "R-predictor-robustness",
+      "scenario_family": "seed_heteroskedasticity",
+      "aggregate_state": {
+        "branch": "predictor repeatability audit",
+        "candidate_count": 40,
+        "seeds_per_candidate": 5,
+        "median_within_candidate_sd": 0.04,
+        "top_decile_within_candidate_sd": 0.21,
+        "single_seed_rank_correlation": 0.71,
+        "five_seed_mean_rank_correlation": 0.93,
+        "claim_boundary": "One global repeatability summary cannot justify single-seed ranking for heteroskedastic candidates."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "predictor_validation",
+          "evidence_collection"
+        ],
+        "consistency_group": "continue_explore_predictor",
+        "baseline_plan": "Use candidate-adaptive replicate prediction for high-variance cases.",
+        "rationale": "A high-variance candidate tail destabilizes single-seed ranking."
+      },
+      "fixture_proposal": {
+        "reason": "Median seed variability is low, but the top decile reaches 0.21 SD and single-seed rank correlation is 0.71 versus 0.93 for five-seed means.",
+        "hypothesis": "Test a two-stage predictor protocol that adds four seeds only when the first two disagree above a preregistered threshold, measuring retained rank correlation and compute cost.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "predictor_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Specifies an adaptive replicate rule and a cost-quality outcome."
+        }
+      }
+    },
+    {
+      "case_id": "r_predictor_version_shift",
+      "workstream": "R-predictor-robustness",
+      "scenario_family": "software_version_drift",
+      "aggregate_state": {
+        "branch": "frozen predictor provenance",
+        "certified_predictor_version": "2.1.0",
+        "current_predictor_version": "2.3.2",
+        "matched_candidate_count": 32,
+        "score_pearson": 0.89,
+        "binary_label_agreement": 0.78,
+        "threshold_unchanged": true,
+        "container_digest_match": false,
+        "claim_boundary": "High score correlation does not preserve a certificate when labels change across predictor versions."
+      },
+      "expected": {
+        "stop": true,
+        "explore": false,
+        "allowed_scope_tags": [
+          "provenance_audit",
+          "predictor_validation"
+        ],
+        "consistency_group": "integrity_stop_no_explore",
+        "baseline_plan": "Pin the certified predictor or revalidate the new version before use.",
+        "rationale": "Version drift changes 22 percent of binary labels under the unchanged threshold."
+      },
+      "fixture_proposal": {
+        "reason": "The active container differs from the certified digest; versions correlate at 0.89 but agree on only 78 percent of thresholded labels.",
+        "hypothesis": "Run a hash-bound bridge panel enriched for candidates near the frozen threshold and estimate direction-specific label transitions between versions before deciding whether recalibration is sufficient.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "predictor_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Adds threshold-enriched, direction-specific transition evidence."
+        }
+      }
+    },
+    {
+      "case_id": "r_recycle_nonconvergence_tail",
+      "workstream": "R-predictor-robustness",
+      "scenario_family": "iterative_convergence",
+      "aggregate_state": {
+        "branch": "predictor convergence audit",
+        "candidate_count": 72,
+        "configured_recycles": 8,
+        "converged_by_recycle_8_fraction": 0.74,
+        "nonconverged_interface_pae_median": 18.7,
+        "converged_interface_pae_median": 7.9,
+        "nonconverged_success_fraction": 0.08,
+        "claim_boundary": "A fixed recycle budget does not produce comparable endpoint evidence for nonconverged candidates."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "predictor_validation",
+          "protocol_broadening"
+        ],
+        "consistency_group": "continue_explore_predictor",
+        "baseline_plan": "Treat convergence state explicitly and test a bounded adaptive recycle protocol.",
+        "rationale": "One quarter of candidates remain nonconverged and have much weaker interfaces."
+      },
+      "fixture_proposal": {
+        "reason": "Only 74 percent converge by recycle 8; the remaining tail has median interface PAE 18.7 versus 7.9 and only 8 percent success.",
+        "hypothesis": "For the nonconverged tail, add recycles in fixed increments under a hard cap and test whether PAE trajectories stabilize or merely select intrinsically difficult candidates.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "predictor_validation",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Distinguishes recoverable convergence from intrinsic difficulty using trajectories."
+        }
+      }
+    },
+    {
+      "case_id": "r_terminal_computational_null_assay_axis",
+      "workstream": "R-terminal-null",
+      "scenario_family": "orthogonal_measurement_axis",
+      "aggregate_state": {
+        "branch": "terminal computational signal review",
+        "clean_targets": 10,
+        "computational_feature_families": 4,
+        "targetwise_auroc_range": [
+          0.46,
+          0.55
+        ],
+        "minimum_target_power": 0.92,
+        "provenance_audit_passed": true,
+        "native_controls_passed": true,
+        "orthogonal_assay_available": true,
+        "claim_boundary": "The tested computational families do not support selective trust; only a preregistered orthogonal measurement can reopen the question."
+      },
+      "expected": {
+        "stop": false,
+        "explore": true,
+        "allowed_scope_tags": [
+          "protocol_broadening",
+          "evidence_collection"
+        ],
+        "consistency_group": "continue_explore_new_axis",
+        "baseline_plan": "Preserve the computational null and preregister one orthogonal assay endpoint.",
+        "rationale": "Four powered, clean computational feature families remain near chance across ten targets."
+      },
+      "fixture_proposal": {
+        "reason": "Across ten powered targets, four clean computational feature families remain between 0.46 and 0.55 AUROC while controls and provenance pass.",
+        "hypothesis": "Preregister the available orthogonal assay on a held-out target-balanced subset and test whether its measurement ranks outcomes without combining it post hoc with the null computational features.",
+        "review": {
+          "status": "complete",
+          "scope_tag": "protocol_broadening",
+          "grounded": true,
+          "actionable": true,
+          "incremental_value": true,
+          "notes": "Specifies a held-out, target-balanced assay test and prevents post-hoc feature rescue."
+        }
+      }
+    }
+  ]
+}

@@ -123,11 +123,12 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-25)
+## Status (2026-07-26)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1167` designer tests plus `88` trust-core tests on 2026-07-25).
+**Current local source verified** (`1191` designer tests plus `88` trust-core tests and
+`120` trust-core subtests on 2026-07-26).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).
@@ -160,6 +161,15 @@ fallback until the coordinated trust-core release is published:
   and stayed below 303 output tokens. The run is still incomplete and not passing; the missing case
   was not retried or imputed, the approval is consumed, and M7 remains incomplete. See
   [`docs/W6_V31_LIVE_RESULT_2026_07_25.md`](docs/W6_V31_LIVE_RESULT_2026_07_25.md).
+  W6-v3.2 now freezes a new 16-case, provider-free successor with no behavioral change:
+  it adds only structured, non-sensitive failure telemetry so a future transport failure can
+  be classified without storing exception messages, tracebacks, headers, or request IDs.
+  The panel excludes all 48 prior W6-v2/W6-v3/W6-v3.1 case IDs and aggregate states plus
+  58 canonical prior-answer hashes. Its valid replay passes 16/16 with zero authority
+  violations, while the adversarial replay accepts 3/16 and records eight violations.
+  The live scope remains explicitly unauthorized, and this freeze used zero provider calls
+  and zero compute submissions. See
+  [`docs/W6_V32_NO_CALL_SUCCESSOR.md`](docs/W6_V32_NO_CALL_SUCCESSOR.md).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

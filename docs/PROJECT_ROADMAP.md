@@ -390,6 +390,23 @@ but does not satisfy the frozen 16/16 prospective requirement. No retry or
 imputation occurred, the approval is consumed, and W6/M7 remain incomplete.
 See `docs/W6_V31_LIVE_RESULT_2026_07_25.md`.
 
+W6-v3.2 no-call update (2026-07-26): a new 16-case telemetry-successor panel
+is frozen offline. It excludes all 48 prior W6-v2/v3/v3.1 case and canonical
+aggregate-state hashes plus 58 canonical prior fixture/live answer hashes.
+Exact reuse is zero. The analyst was not blind to earlier results, and the
+panel says so explicitly; prior outputs were not used as case templates, while
+the incomplete W6-v3.1 result motivated the instrumentation change.
+
+Provider/model, 512-token cap, hypothesis-only prompt/schema, authority,
+zero-retry policy, rubric, and pass criteria are unchanged. Structured
+non-sensitive failure telemetry now records a safe reason code, exception type,
+optional HTTP status, and coarse transience class while forbidding error
+messages, tracebacks, headers, request IDs, and retry authority. Valid offline
+replay passes 16/16 with zero authority violations; adversarial replay accepts
+3/16 and records eight. The no-call scope is explicitly unauthorized, API and
+provider calls remain zero, and W6/M7 remain incomplete. See
+`docs/W6_V32_NO_CALL_SUCCESSOR.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

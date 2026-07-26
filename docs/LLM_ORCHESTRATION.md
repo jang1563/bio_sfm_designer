@@ -194,3 +194,27 @@ tokens, and made zero authority-mutation attempts. Independent review found
 The run is incomplete and therefore not passing. The missing case was not
 retried or imputed, the approval is consumed, and M7 remains incomplete. See
 [`W6_V31_LIVE_RESULT_2026_07_25.md`](W6_V31_LIVE_RESULT_2026_07_25.md).
+
+## W6-v3.2 no-call telemetry successor
+
+W6-v3.2 is now frozen offline on 16 new states. It excludes all 48 earlier
+W6-v2/v3/v3.1 cases and aggregate-state hashes plus 58 canonical prior answer
+hashes. Exact reuse is zero. Because the analyst has seen prior results, the
+panel explicitly records `analyst_blinded_to_prior_outputs=false`; it does not
+claim blinded construction.
+
+Provider/model, 512-token cap, prompt/schema, authority, retry policy, rubric,
+and pass criteria are unchanged. The sole implementation change is
+`structured_non_sensitive_failure_telemetry_v1`, which stores a safe reason
+code, exception type, optional HTTP status, and coarse transience class while
+forbidding messages, tracebacks, headers, request IDs, and retry authority.
+
+The valid offline fixture passes 16/16 with zero authority violations and
+incremental value 15/16. The adversarial fixture accepts 3/16 and records eight
+authority violations. Fake-provider capture tests preserve exactly one attempt
+per case and remove raw error text.
+
+`configs/w6_v32_live_scope.json` is explicitly unauthorized and validates with
+zero API calls. No W6-v3.2 provider call has occurred, and M7 remains
+incomplete. See
+[`W6_V32_NO_CALL_SUCCESSOR.md`](W6_V32_NO_CALL_SUCCESSOR.md).

@@ -109,8 +109,9 @@ mechanistic claim is justified.
 
 Do not recover the missing case under the consumed authorization.
 
-A clean successor would require a newly frozen independent panel and a new
-exact approval. It should preserve the 512-token hypothesis-only contract,
-retain zero retries and no-effect authority, and add non-sensitive structured
-failure telemetry as instrumentation. Only a complete prospective pass should
-advance orchestration into a gated batch campaign.
+That clean no-call successor is now frozen as W6-v3.2 in
+[`W6_V32_NO_CALL_SUCCESSOR.md`](W6_V32_NO_CALL_SUCCESSOR.md). It preserves the
+512-token hypothesis-only, zero-retry, no-effect contract and adds non-sensitive
+structured failure telemetry. Its live scope remains unauthorized. Only a
+complete prospective pass should advance orchestration into a gated batch
+campaign.

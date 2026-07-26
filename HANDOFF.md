@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | v3.1 live result incomplete; not passing | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removed both fields but failed schema at a 256-token cap. W6-v3.1 attempted its separately approved 16-call, 512-token panel: 15 responses were exact JSON with zero authority violations or output-limit stops, while one call returned `RuntimeError` without response metadata. No retry/imputation occurred; the approval is consumed and M7 remains incomplete |
+| M7 | v3.2 no-call successor frozen; live unauthorized | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removed both fields but failed schema at a 256-token cap. W6-v3.1 attempted its separately approved 16-call, 512-token panel: 15 responses were exact JSON with zero authority violations or output-limit stops, while one call returned `RuntimeError` without response metadata. W6-v3.2 keeps the behavior fixed and adds only non-sensitive failure telemetry; its independent 16-case offline panel is frozen and qualified, but no live call is authorized. M7 remains incomplete |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1213,6 +1213,21 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
     `w6_v31_prospective_live_validation_incomplete`, not a pass. The failed case was not
     retried, imputed, synthesized, or reviewed; the approval is consumed and M7 remains
     incomplete. See `docs/W6_V31_LIVE_RESULT_2026_07_25.md`.
+14. **W6-v3.2 no-call telemetry successor:** the new 16-case panel excludes all 48
+    W6-v2/W6-v3/W6-v3.1 case IDs and aggregate states plus 58 canonical prior-answer
+    hashes. It deliberately makes no behavioral change: provider, model, prompt, schema,
+    authority, retry policy, output cap, rubric, and pass criteria remain fixed. The sole
+    instrumentation change records a safe reason code, exception class, optional HTTP
+    status, and coarse transience class without persisting exception messages, tracebacks,
+    headers, or request IDs. Valid offline replay passes 16/16 with zero authority
+    violations; adversarial replay accepts 3/16 and records eight. A fake-provider failure
+    test proves all 16 attempts still occur with zero retry, no raw error leakage, and no
+    partial response packet. `configs/w6_v32_live_scope.json` is hash-bound and explicitly
+    sets `live_execution_authorized=false`; this stage used zero API/provider calls and zero
+    compute submissions. The analyst was not blinded: prior result artifacts motivated the
+    telemetry change and prior case artifacts were used for exclusion auditing, but prior
+    outputs were not used as new case templates. M7 remains incomplete. See
+    `docs/W6_V32_NO_CALL_SUCCESSOR.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

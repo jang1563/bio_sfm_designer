@@ -131,3 +131,6 @@ prospective pass and M7 remains incomplete.
 Any successor requires a newly frozen independent panel and a new explicit
 approval. It should preserve the 512-token, hypothesis-only, zero-retry,
 shadow/no-effect contract and add structured non-sensitive failure telemetry.
+That no-call successor is now frozen as W6-v3.2 in
+[`W6_V32_NO_CALL_SUCCESSOR.md`](W6_V32_NO_CALL_SUCCESSOR.md); it remains
+unauthorized.
