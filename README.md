@@ -127,7 +127,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1191` designer tests plus `88` trust-core tests and
+**Current local source verified** (`1195` designer tests plus `88` trust-core tests and
 `120` trust-core subtests on 2026-07-26).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
@@ -167,9 +167,15 @@ fallback until the coordinated trust-core release is published:
   The panel excludes all 48 prior W6-v2/W6-v3/W6-v3.1 case IDs and aggregate states plus
   58 canonical prior-answer hashes. Its valid replay passes 16/16 with zero authority
   violations, while the adversarial replay accepts 3/16 and records eight violations.
-  The live scope remains explicitly unauthorized, and this freeze used zero provider calls
-  and zero compute submissions. See
-  [`docs/W6_V32_NO_CALL_SUCCESSOR.md`](docs/W6_V32_NO_CALL_SUCCESSOR.md).
+  The baseline no-call scope remains explicitly unauthorized, and that freeze used zero
+  provider calls and zero compute submissions. A later separately approved scope then
+  executed exactly 16 Anthropic calls with 16 successes, zero retries, complete transport
+  and safe telemetry, zero output-limit stops, zero authority violations, and zero effect.
+  Provider-independent review found 15/16 grounded, 16/16 actionable, and 14/16 incremental;
+  the frozen prospective hypothesis-only contract passes. This is a bounded layer result,
+  not LLM control authority or M7 completion, and no additional call is authorized. See
+  [`docs/W6_V32_NO_CALL_SUCCESSOR.md`](docs/W6_V32_NO_CALL_SUCCESSOR.md) and
+  [`docs/W6_V32_LIVE_RESULT_2026_07_26.md`](docs/W6_V32_LIVE_RESULT_2026_07_26.md).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

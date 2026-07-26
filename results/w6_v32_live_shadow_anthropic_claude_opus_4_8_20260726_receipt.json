@@ -1,0 +1,85 @@
+{
+  "analyst_blinded_to_prior_outputs": false,
+  "api_calls": 16,
+  "approval_basis": "User requested 'W6-v3.2 live shadow 16-call execution' on 2026-07-26. This scope narrows that approval to Anthropic claude-opus-4-8; exactly 16 calls; 512 maximum output tokens per call; zero retries; shadow/no effect; no compute.",
+  "approval_consumed": true,
+  "approved_call_count": 16,
+  "attempted_calls": 16,
+  "behavioral_change": "none",
+  "capture_path": "results/w6_v32_live_shadow_anthropic_claude_opus_4_8_20260726_capture.jsonl",
+  "capture_sha256": "b68529ccfc85f0c57da8a282334f3b5ac82fe144c35204e841f06917ac78ac7b",
+  "compute_submissions": 0,
+  "credential_hygiene_attested": true,
+  "exception_messages_stored": false,
+  "execution_components": [
+    {
+      "expected_sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb",
+      "observed_sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb",
+      "path": "src/bio_sfm_designer/loop/providers.py"
+    },
+    {
+      "expected_sha256": "a9ec56cbc7ac4757e55803b4da060fea8685aceacf6cff1f2fa7c47a42e42f38",
+      "observed_sha256": "a9ec56cbc7ac4757e55803b4da060fea8685aceacf6cff1f2fa7c47a42e42f38",
+      "path": "src/bio_sfm_designer/experiments/w6_v2_shadow_panel.py"
+    },
+    {
+      "expected_sha256": "5907fbf3a23170f5b15d4ca1a3db8a7aecc5cd94156c4bdee534ff8e57baa344",
+      "observed_sha256": "5907fbf3a23170f5b15d4ca1a3db8a7aecc5cd94156c4bdee534ff8e57baa344",
+      "path": "src/bio_sfm_designer/experiments/w6_v3_hypothesis_only.py"
+    },
+    {
+      "expected_sha256": "e4242f701744dd0ae73a7476e6515edf3847e123587dc382d148a76db44ca1aa",
+      "observed_sha256": "e4242f701744dd0ae73a7476e6515edf3847e123587dc382d148a76db44ca1aa",
+      "path": "src/bio_sfm_designer/experiments/w6_v32_failure_telemetry.py"
+    },
+    {
+      "expected_sha256": "8a4854cd63f45d1513e78c803a1680b23728f125bc158dd554274c21ed4cd610",
+      "observed_sha256": "8a4854cd63f45d1513e78c803a1680b23728f125bc158dd554274c21ed4cd610",
+      "path": "src/bio_sfm_designer/experiments/w6_v32_transport_panel.py"
+    },
+    {
+      "expected_sha256": "70431535955d55b9fb920c10b5d22e10b662395fc34fe5c6b846b5aa4625af61",
+      "observed_sha256": "70431535955d55b9fb920c10b5d22e10b662395fc34fe5c6b846b5aa4625af61",
+      "path": "src/bio_sfm_designer/experiments/w6_v32_live_panel.py"
+    }
+  ],
+  "failed_calls": 0,
+  "failure_reason_counts": {},
+  "failure_telemetry_complete_calls": 16,
+  "headers_stored": false,
+  "independent_from_w6_v2_v3_v31": true,
+  "independent_review_pending": true,
+  "instrumentation_change": "structured_non_sensitive_failure_telemetry_v1",
+  "live_execution_authorized_for_additional_calls": false,
+  "m7_complete": false,
+  "max_output_tokens_per_call": 512,
+  "mode": "shadow",
+  "model": "claude-opus-4-8",
+  "output_limit_stop_calls": 0,
+  "panel_id": "w6-v3-2-transport-panel-2026-07-26",
+  "panel_path": "configs/w6_v32_transport_panel.json",
+  "panel_sha256": "5e9e2346c52b07a2fef2dd458e1d612a9733ff22a3da87b2d0a0604b5f5346dd",
+  "prospective_live_validation_complete": false,
+  "provider": "anthropic",
+  "provider_calls": 16,
+  "recommendations_applied": 0,
+  "request_ids_stored": false,
+  "request_path": "results/w6_v32_transport_requests.jsonl",
+  "request_sha256": "e1d0f380dba775302cb077335edd9f2a614d1c2ac7518fb7fb46906d74184b44",
+  "responses_path": "results/w6_v32_live_shadow_anthropic_claude_opus_4_8_20260726_responses_pending_review.jsonl",
+  "responses_sha256": "a1dcce969f42665493e334cdd6f90e46d4847ea8f1569688ffda82ce78565c3e",
+  "schema_version": "w6_v32_live_receipt_v1",
+  "scope_id": "w6-v3-2-live-scope-approved-2026-07-26",
+  "scope_path": "configs/w6_v32_live_scope_approved_20260726.json",
+  "scope_sha256": "dfe89f0809fe430b1d90067e8dce8f18bb3037e54efed7164432098b937deb0f",
+  "sdk_retries_per_call": 0,
+  "source_commit": "b17b9769678a9d78badfb6f02b17d95b7a6367eb",
+  "source_worktree_clean": true,
+  "source_worktree_porcelain_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status": "w6_v32_live_capture_complete_pending_review",
+  "succeeded_calls": 16,
+  "total_input_tokens": 12643,
+  "total_output_tokens": 3778,
+  "tracebacks_stored": false,
+  "transport_metadata_complete_calls": 16
+}

@@ -1,0 +1,30 @@
+{
+  "annotations_path": "results/w6_v32_live_shadow_anthropic_claude_opus_4_8_20260726_review_annotations.json",
+  "annotations_sha256": "9346b9af4d2e99265e69a241ef8598f375f33b046b8c22c21ad261fbec775e9c",
+  "api_calls": 0,
+  "case_count": 16,
+  "compute_submissions": 0,
+  "panel_id": "w6-v3-2-transport-panel-2026-07-26",
+  "panel_path": "configs/w6_v32_transport_panel.json",
+  "panel_sha256": "5e9e2346c52b07a2fef2dd458e1d612a9733ff22a3da87b2d0a0604b5f5346dd",
+  "pre_review_authority_violation_count": 0,
+  "pre_review_schema_acceptance_count": 16,
+  "prospective_live_validation_complete": false,
+  "provider_calls": 0,
+  "raw_responses_modified": false,
+  "recommendations_applied": 0,
+  "request_path": "results/w6_v32_transport_requests.jsonl",
+  "request_sha256": "e1d0f380dba775302cb077335edd9f2a614d1c2ac7518fb7fb46906d74184b44",
+  "reviewed_responses_path": "results/w6_v32_live_shadow_anthropic_claude_opus_4_8_20260726_responses_reviewed.jsonl",
+  "reviewed_responses_sha256": "0094b62c01c9f0113cae39f0da66f43c87adc2ee9d0d34384e7c2756b22c632a",
+  "reviewer": {
+    "identity": "OpenAI Codex",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-26T11:49:40Z",
+    "type": "offline_provider_independent_rubric_review"
+  },
+  "schema_version": "w6_v32_review_receipt_v1",
+  "source_responses_path": "results/w6_v32_live_shadow_anthropic_claude_opus_4_8_20260726_responses_pending_review.jsonl",
+  "source_responses_sha256": "a1dcce969f42665493e334cdd6f90e46d4847ea8f1569688ffda82ce78565c3e",
+  "status": "w6_v32_offline_independent_review_complete"
+}

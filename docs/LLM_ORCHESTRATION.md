@@ -214,7 +214,26 @@ incremental value 15/16. The adversarial fixture accepts 3/16 and records eight
 authority violations. Fake-provider capture tests preserve exactly one attempt
 per case and remove raw error text.
 
-`configs/w6_v32_live_scope.json` is explicitly unauthorized and validates with
-zero API calls. No W6-v3.2 provider call has occurred, and M7 remains
-incomplete. See
+`configs/w6_v32_live_scope.json` is the immutable unauthorized baseline and
+validates with zero API calls. Its later separately approved execution is
+recorded below. See
 [`W6_V32_NO_CALL_SUCCESSOR.md`](W6_V32_NO_CALL_SUCCESSOR.md).
+
+## W6-v3.2 live result
+
+The separately committed scope authorized exactly 16 Anthropic
+`claude-opus-4-8` shadow calls at 512 maximum output tokens, with zero retries,
+no effect, and no compute. From clean commit `b17b976`, the run completed 16/16
+calls with complete transport and safe telemetry, `end_turn` 16/16, zero
+output-limit stops, and zero failures.
+
+Provider-independent review found schema/scope/actionable/no-effect 16/16,
+grounded 15/16, incremental value 14/16, and zero authority violations or
+decision-field attempts. The frozen result is
+`w6_v32_prospective_live_validation_pass`.
+
+This is a bounded hypothesis-layer pass, not active orchestration authority.
+The approval is consumed, no additional call is authorized, deterministic code
+retains all control-plane decisions, and M7 remains incomplete pending a gated
+DBTL batch campaign. See
+[`W6_V32_LIVE_RESULT_2026_07_26.md`](W6_V32_LIVE_RESULT_2026_07_26.md).

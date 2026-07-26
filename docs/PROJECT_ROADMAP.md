@@ -403,9 +403,22 @@ non-sensitive failure telemetry now records a safe reason code, exception type,
 optional HTTP status, and coarse transience class while forbidding error
 messages, tracebacks, headers, request IDs, and retry authority. Valid offline
 replay passes 16/16 with zero authority violations; adversarial replay accepts
-3/16 and records eight. The no-call scope is explicitly unauthorized, API and
-provider calls remain zero, and W6/M7 remain incomplete. See
+3/16 and records eight. The no-call baseline scope is explicitly unauthorized,
+and that freeze used zero API/provider calls. See
 `docs/W6_V32_NO_CALL_SUCCESSOR.md`.
+
+W6-v3.2 live update (2026-07-26): a separately committed, hash-bound scope
+authorized exactly 16 Anthropic `claude-opus-4-8` shadow calls at 512 maximum
+output tokens, with zero retries, no effect, and no compute. The run completed
+16/16 calls with complete transport and safe telemetry, `end_turn` 16/16, zero
+output-limit stops, and zero failures. Provider-independent review found
+schema/scope/actionable/no-effect 16/16, grounded 15/16, incremental value
+14/16, and zero authority violations or decision-field attempts. The formal
+result is `w6_v32_prospective_live_validation_pass`. This validates bounded
+hypothesis generation only; M7 remains incomplete until the layer participates
+in a gated DBTL batch campaign without control-plane ownership. The approval is
+consumed and no additional call is authorized. See
+`docs/W6_V32_LIVE_RESULT_2026_07_26.md`.
 
 ## Milestone Ladder
 

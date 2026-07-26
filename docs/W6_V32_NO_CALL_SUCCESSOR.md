@@ -2,14 +2,14 @@
 
 ## Status
 
-W6-v3.2 is frozen and qualified **offline only**. No provider or API call has
-been made under this successor.
+W6-v3.2 was first frozen and qualified **offline only**. No provider or API
+call was made during this successor-freeze stage.
 
 It does not selectively recover the missing W6-v3.1 case. Instead, it prepares
 a new 16-case prospective panel under the same behavioral contract and adds
 non-sensitive structured failure telemetry.
 
-The live scope is explicitly unauthorized:
+The baseline no-call scope remains explicitly unauthorized:
 
 ```json
 {
@@ -19,6 +19,8 @@ The live scope is explicitly unauthorized:
 }
 ```
 
+A later separately approved execution is recorded in
+[`W6_V32_LIVE_RESULT_2026_07_26.md`](W6_V32_LIVE_RESULT_2026_07_26.md).
 M7 remains incomplete.
 
 ## Successor Question
@@ -130,20 +132,14 @@ component hashes. Validation constructs no provider and reports `api_calls=0`.
 the panel, request, and pending-response hashes. It preserves raw responses
 byte-for-byte, rejects undeclared scope tags, and makes zero provider calls.
 
-## Next Gate
+## Later Result And Next Gate
 
-No live call is authorized.
+A separately approved, hash-bound live scope subsequently completed all 16
+calls and passed the frozen prospective hypothesis-only contract. The no-call
+scope above remains the immutable baseline; it was not rewritten.
 
-A future live run would require a new exact user approval covering:
-
-- Anthropic `claude-opus-4-8`;
-- exactly 16 calls;
-- 512 maximum output tokens per call;
-- zero retries;
-- shadow/no effect;
-- no compute;
-- scope SHA-256 fixed after an authorized copy is committed.
-
-Even a complete W6-v3.2 panel would validate only the bounded hypothesis layer.
+That one-shot authorization is consumed, and no additional live call is
+authorized. The complete result validates only the bounded hypothesis layer.
 M7 additionally requires participation in a gated batch campaign without
-ownership of stop/explore, trust, safety, routing, or budget decisions.
+ownership of stop/explore, trust, safety, routing, or budget decisions. See
+[`W6_V32_LIVE_RESULT_2026_07_26.md`](W6_V32_LIVE_RESULT_2026_07_26.md).

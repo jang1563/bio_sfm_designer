@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | v3.2 no-call successor frozen; live unauthorized | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removed both fields but failed schema at a 256-token cap. W6-v3.1 attempted its separately approved 16-call, 512-token panel: 15 responses were exact JSON with zero authority violations or output-limit stops, while one call returned `RuntimeError` without response metadata. W6-v3.2 keeps the behavior fixed and adds only non-sensitive failure telemetry; its independent 16-case offline panel is frozen and qualified, but no live call is authorized. M7 remains incomplete |
+| M7 | v3.2 bounded hypothesis layer passed; batch campaign pending | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removed both fields but failed schema at a 256-token cap, and W6-v3.1 ended incomplete at 15/16. W6-v3.2 kept behavior fixed, added only non-sensitive failure telemetry, and completed its separately approved panel 16/16 with zero retries, output-limit stops, authority violations, applied recommendations, or compute. Independent review passed every frozen hypothesis-only criterion. This grants no control authority; M7 still requires a gated DBTL batch campaign |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1228,6 +1228,20 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
     telemetry change and prior case artifacts were used for exclusion auditing, but prior
     outputs were not used as new case templates. M7 remains incomplete. See
     `docs/W6_V32_NO_CALL_SUCCESSOR.md`.
+15. **W6-v3.2 one-shot live result:** JK approved the named W6-v3.2 16-call
+    live-shadow experiment, narrowed by the committed scope to Anthropic
+    `claude-opus-4-8`, 512 maximum output tokens, zero retries, no effect, and
+    no compute. Clean source commit `b17b9769678a9d78badfb6f02b17d95b7a6367eb`
+    attempted exactly 16 calls and succeeded 16/16 with complete transport and
+    safe telemetry, `end_turn` 16/16, zero output-limit stops, and zero raw-error
+    telemetry. Provider-independent review preserved the raw responses and found
+    schema/scope/actionable/no-effect 16/16, grounded 15/16, incremental 14/16,
+    and zero authority violations or decision-field attempts. The formal result
+    is `w6_v32_prospective_live_validation_pass`. It validates only bounded
+    hypothesis generation: deterministic code still owns all control decisions,
+    the approval is consumed, no additional call is authorized, and M7 remains
+    incomplete pending a gated DBTL batch campaign. See
+    `docs/W6_V32_LIVE_RESULT_2026_07_26.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

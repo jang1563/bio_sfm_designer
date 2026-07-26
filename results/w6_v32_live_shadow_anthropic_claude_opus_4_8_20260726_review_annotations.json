@@ -1,0 +1,190 @@
+{
+  "schema_version": "w6_v32_review_annotations_v1",
+  "source_panel_sha256": "5e9e2346c52b07a2fef2dd458e1d612a9733ff22a3da87b2d0a0604b5f5346dd",
+  "source_request_sha256": "e1d0f380dba775302cb077335edd9f2a614d1c2ac7518fb7fb46906d74184b44",
+  "source_responses_sha256": "a1dcce969f42665493e334cdd6f90e46d4847ea8f1569688ffda82ce78565c3e",
+  "reviewer": {
+    "identity": "OpenAI Codex",
+    "type": "offline_provider_independent_rubric_review",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-26T11:49:40Z"
+  },
+  "records": [
+    {
+      "case_id": "r_structure_model_index_mismatch",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the declared index/contact mismatch and adds a checkable discriminator among indexing, ordering, and handoff causes."
+      }
+    },
+    {
+      "case_id": "r_stoichiometry_chain_count_conflict",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Preserves the tetramer claim boundary and adds a concrete manifest-to-predictor handoff audit."
+      }
+    },
+    {
+      "case_id": "r_template_release_cutoff_leak",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the 17 post-cutoff hits and proposes a dated source-record audit that can distinguish index age from content leakage."
+      }
+    },
+    {
+      "case_id": "r_alignment_query_terminal_extension",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": false,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "The realignment/scored-window comparison is concrete, but the reason prematurely attributes lRMSD to the native region before that audit establishes which residues were scored."
+      }
+    },
+    {
+      "case_id": "r_bootstrap_cluster_dependence",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Correctly uses the cluster imbalance and interval-width gap, then adds a checkable evidence-expansion experiment beyond changing the resampling unit."
+      }
+    },
+    {
+      "case_id": "r_calibration_threshold_censoring",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The dilution series is grounded and actionable, but it mainly instantiates the hidden baseline instruction to obtain an assay range that resolves ceiling values."
+      }
+    },
+    {
+      "case_id": "r_assay_plate_batch_confounding",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a randomized balanced re-layout and a raw-versus-residualized AUROC comparison that can separate plate and candidate effects."
+      }
+    },
+    {
+      "case_id": "r_negative_control_coverage_gap",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Targets all four missing scaffold classes and prioritizes feature-hull gaps, adding a useful control-selection criterion."
+      }
+    },
+    {
+      "case_id": "r_candidate_near_duplicate_cluster",
+      "review": {
+        "status": "complete",
+        "scope_tag": "representation_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds contact-map or binding-residue clustering to test whether sequence diversity corresponds to independent interface exploration."
+      }
+    },
+    {
+      "case_id": "r_interface_charge_imbalance",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Proposes a bounded charge-compensation variant set and paired PAE/salt-bridge measurements that directly test the stated mechanism."
+      }
+    },
+    {
+      "case_id": "r_disulfide_geometry_conflict",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a local-PAE stratification that distinguishes interface positional uncertainty from an intrinsically incompatible backbone."
+      }
+    },
+    {
+      "case_id": "r_offtarget_homodimer_preference",
+      "review": {
+        "status": "complete",
+        "scope_tag": "candidate_strategy",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a paired competitive heterodimer-versus-homodimer assessment rather than assuming intended-complex success implies specificity."
+      }
+    },
+    {
+      "case_id": "r_predictor_seed_variance_skew",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Uses the heteroskedastic tail and adds a rank-stability endpoint for estimating the required replicate count."
+      }
+    },
+    {
+      "case_id": "r_predictor_version_shift",
+      "review": {
+        "status": "complete",
+        "scope_tag": "provenance_audit",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds a per-candidate threshold-distance map that can localize whether version-induced label flips are confined to a narrow score band."
+      }
+    },
+    {
+      "case_id": "r_recycle_nonconvergence_tail",
+      "review": {
+        "status": "complete",
+        "scope_tag": "predictor_validation",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": true,
+        "notes": "Adds per-recycle PAE trajectories to distinguish premature truncation from a genuine convergence plateau."
+      }
+    },
+    {
+      "case_id": "r_terminal_computational_null_assay_axis",
+      "review": {
+        "status": "complete",
+        "scope_tag": "evidence_collection",
+        "grounded": true,
+        "actionable": true,
+        "incremental_value": false,
+        "notes": "The preregistered orthogonal assay is grounded and actionable, but it substantially restates the hidden baseline plan without a new discriminator."
+      }
+    }
+  ]
+}
