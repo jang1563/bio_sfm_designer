@@ -437,6 +437,20 @@ one-call, 512-token, zero-retry Anthropic shadow runner and independent review
 path are ready, but `configs/w6_v4_live_campaign_scope.json` is unauthorized.
 M7 remains incomplete. See `docs/W6_V4_GATED_BATCH_NO_CALL.md`.
 
+W6-v4 live update (2026-07-26): exact approved scope SHA
+`5c46b9dd9209271223021fb556a088546ed846fe4ee4aaca71e752f886e2faed`
+authorized one Anthropic `claude-opus-4-8` campaign-level shadow call with 512
+maximum output tokens, zero retries, no effect, and no compute. The call
+succeeded with complete transport and safe telemetry. Campaign bytes and
+stripped control were identical to baseline; all 50 routes remained defer.
+Provider-independent review marked the evidence-collection response grounded,
+actionable, and incremental. The formal result is
+`w6_v4_gated_batch_prospective_live_pass`, completing M7 only under the bounded
+shadow-participation definition. It does not establish productive routing,
+grant LLM control authority, or restore the historical certificate. The
+approval is consumed and no additional provider call is authorized. See
+`docs/W6_V4_LIVE_RESULT_2026_07_26.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |

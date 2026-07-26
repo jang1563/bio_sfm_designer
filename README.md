@@ -183,8 +183,18 @@ fallback until the coordinated trust-core release is published:
   producing 50/50 defers. One valid and five adversarial offline provider arms
   preserve authoritative campaign bytes and deterministic control exactly;
   prompt privacy excludes candidate IDs, sequences, and hidden truth. The
-  future one-call live scope remains unauthorized, and M7 is not complete. See
-  [`docs/W6_V4_GATED_BATCH_NO_CALL.md`](docs/W6_V4_GATED_BATCH_NO_CALL.md).
+  separately committed scope then authorized exactly one Anthropic
+  `claude-opus-4-8` shadow call at 512 maximum output tokens with zero retries
+  and no compute. The call succeeded with complete metadata and `end_turn`,
+  while campaign bytes, routing, assays, and deterministic control remained
+  unchanged. Provider-independent review marked the evidence-collection
+  hypothesis grounded, actionable, and incremental. The formal result is
+  `w6_v4_gated_batch_prospective_live_pass`, completing M7 only under its
+  bounded shadow-participation definition. It does not establish productive
+  routing or restore the historical gate certificate. The approval is consumed
+  and no additional call is authorized. See
+  [`docs/W6_V4_GATED_BATCH_NO_CALL.md`](docs/W6_V4_GATED_BATCH_NO_CALL.md) and
+  [`docs/W6_V4_LIVE_RESULT_2026_07_26.md`](docs/W6_V4_LIVE_RESULT_2026_07_26.md).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

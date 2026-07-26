@@ -1,0 +1,128 @@
+{
+  "artifact": "w6_v4_live_gated_batch_public_summary",
+  "version": 1,
+  "date": "2026-07-26",
+  "status": "w6_v4_gated_batch_prospective_live_pass",
+  "source_commit": "019fe229b66e588e29d3870e6cd991156ca9c656",
+  "provider": "anthropic",
+  "model": "claude-opus-4-8",
+  "mode": "shadow",
+  "frozen_inputs": {
+    "campaign_config": "configs/w6_v4_gated_batch_campaign.json",
+    "campaign_config_sha256": "31ace61e9919e160c4ac316b7509c0ba81a8d853af49aea7e2c3ef252d640e8f",
+    "authorized_scope": "configs/w6_v4_live_campaign_scope_approved_20260726.json",
+    "authorized_scope_sha256": "5c46b9dd9209271223021fb556a088546ed846fe4ee4aaca71e752f886e2faed",
+    "candidate_count": 50,
+    "record_count": 50,
+    "safety_verdict_count": 50
+  },
+  "scientific_boundary": {
+    "strict_complex_qc": true,
+    "gate_calibrated": false,
+    "historical_alpha_0_3_certificate_reused": false,
+    "historical_prevalidation_refused_by_current_split_ltt": true,
+    "action_counts": {
+      "trust_sfm": 0,
+      "verify_assay": 0,
+      "default_baseline": 0,
+      "defer": 50
+    },
+    "assays_used": 0,
+    "hard_stop_reason": "round budget reached"
+  },
+  "execution": {
+    "approved_calls": 1,
+    "attempted_calls": 1,
+    "succeeded_calls": 1,
+    "failed_calls": 0,
+    "sdk_retries_per_call": 0,
+    "max_output_tokens_per_call": 512,
+    "input_tokens": 728,
+    "output_tokens": 213,
+    "stop_reason": "end_turn",
+    "output_limit_stop_calls": 0,
+    "transport_metadata_complete_calls": 1,
+    "failure_telemetry_complete_calls": 1,
+    "observed_latency_seconds": 14.241526,
+    "compute_submissions": 0,
+    "recommendations_applied": 0,
+    "approval_consumed": true,
+    "additional_calls_authorized": false
+  },
+  "deterministic_invariants": {
+    "campaign_bytes_identical": true,
+    "baseline_campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+    "shadow_campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+    "control_view_identical": true,
+    "baseline_control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+    "shadow_control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+    "authority_violation_count": 0,
+    "decision_field_attempt_count": 0,
+    "no_effect": true
+  },
+  "provider_independent_offline_review": {
+    "reviewer": "OpenAI Codex",
+    "scope_tag": "evidence_collection",
+    "schema_accepted": true,
+    "scope_compliant": true,
+    "grounded": true,
+    "actionable": true,
+    "incremental_value": true,
+    "review_provider_calls": 0,
+    "scoring_provider_calls": 0
+  },
+  "scoring": {
+    "status": "w6_v4_gated_batch_prospective_live_pass",
+    "passed": true,
+    "prospective_live_validation_complete": true,
+    "m7_complete": true
+  },
+  "tracked_audit_artifacts": {
+    "transport_capture": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/transport_capture.json",
+      "sha256": "8c869c6909c79e1a700a0c310201a12f52d2d52e46803379fa78f5f2f92696da"
+    },
+    "receipt": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/receipt.json",
+      "sha256": "0b51a591c2585c8efe5f424b775ec24ea495671c5e942ec6633cc6acfe65d2d0"
+    },
+    "pending_response": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/response_pending_review.json",
+      "sha256": "d1624f99fed6f6345d80c000aa0fdf4eed4632adc7fe9b50ed455dc351628942"
+    },
+    "review_annotations": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/review_annotations.json",
+      "sha256": "bce16cd576d35d66b47906c734632bdba996ce2fe1dfd373e5d6efb69345e16e"
+    },
+    "reviewed_response": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/response_reviewed.json",
+      "sha256": "1b0faf0ff05677340cbd30dce1e82ece5138781e4c314b990332412ab08e3f33"
+    },
+    "review_result": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/review_result.json",
+      "sha256": "315c0f1346ebf1f73d4775b22d0e3d0306eb29482b6cde7844c73cc4399db17e"
+    },
+    "baseline_campaign": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/baseline/campaign.jsonl",
+      "sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e"
+    },
+    "baseline_summary": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/baseline/summary.json",
+      "sha256": "a461fe6a978ad0d9f3b76db7f738db354a1b6e76d8a2373c7c96329dd9b8509e"
+    },
+    "shadow_campaign": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/shadow/campaign.jsonl",
+      "sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e"
+    },
+    "shadow_orchestration": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/shadow/orchestration.jsonl",
+      "sha256": "cda95a96df6607e262cae994ad6c520e6eed83f3a69f83a0183fec0877b41326"
+    },
+    "shadow_summary": {
+      "path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/shadow/summary.json",
+      "sha256": "c6c8c42608c884cc278a461b00a8517736ae05b8a73998f4dda8eec3f12233b0"
+    }
+  },
+  "claim_boundary": "M7 completion validates bounded shadow participation in this fail-closed all-defer campaign only. It grants no control-plane authority, does not establish productive design routing, and does not restore the historical gate certificate.",
+  "next_gate": "Do not make another provider call. The next scientific step is to define a separately frozen productive-routing experiment in a calibration-valid regime or preserve M7 as the terminal orchestration milestone while advancing the generator workstream."
+}

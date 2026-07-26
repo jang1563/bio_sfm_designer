@@ -1,0 +1,20 @@
+{
+  "schema_version": "w6_v4_campaign_review_annotations_v1",
+  "source_campaign_config_sha256": "31ace61e9919e160c4ac316b7509c0ba81a8d853af49aea7e2c3ef252d640e8f",
+  "source_live_receipt_sha256": "0b51a591c2585c8efe5f424b775ec24ea495671c5e942ec6633cc6acfe65d2d0",
+  "source_response_sha256": "d1624f99fed6f6345d80c000aa0fdf4eed4632adc7fe9b50ed455dc351628942",
+  "reviewer": {
+    "identity": "codex-independent-reviewer",
+    "type": "offline_provider_independent_rubric_review",
+    "provider_independent": true,
+    "reviewed_at": "2026-07-26T20:56:27Z"
+  },
+  "review": {
+    "status": "complete",
+    "scope_tag": "evidence_collection",
+    "grounded": true,
+    "actionable": true,
+    "incremental_value": true,
+    "notes": "The response cites only frozen aggregate fields (defer, trust, and verify rates plus best_realized_quality), proposes orthogonal structural or energetic metrics and replicate estimates as a checkable evidence-collection operation, and adds a discriminator beyond the immutable stop without changing routing, gates, safety, budget, or compute. It does not establish the cause of deferral or productive routing."
+  }
+}

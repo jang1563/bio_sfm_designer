@@ -1,5 +1,10 @@
 # W6-v4 Gated Batch Campaign: No-Call Freeze
 
+> Post-freeze update: this document preserves the immutable no-call baseline.
+> A separately committed and exactly approved one-call live scope later passed
+> the bounded gated-batch contract. See
+> [`W6_V4_LIVE_RESULT_2026_07_26.md`](W6_V4_LIVE_RESULT_2026_07_26.md).
+
 ## Status
 
 W6-v4 is frozen and qualified **offline only**. It uses zero API calls, zero
@@ -157,16 +162,9 @@ control-plane authority.
 
 ## Approval Boundary
 
-No live call is authorized.
+This no-call baseline authorizes no live call and remains unchanged.
 
-A future execution requires a new exact approval covering:
-
-- Anthropic `claude-opus-4-8`;
-- exactly one campaign-level call;
-- 512 maximum output tokens;
-- zero retries;
-- shadow/no effect;
-- no compute;
-- a separately committed authorized scope with its exact SHA-256.
-
-The current no-call scope must remain unchanged as the baseline.
+A separate scope was later committed and its exact SHA-256 was approved for
+one Anthropic `claude-opus-4-8` campaign-level call with 512 maximum output
+tokens, zero retries, shadow/no effect, and no compute. That call is complete
+and the approval is consumed. No additional provider call is authorized.

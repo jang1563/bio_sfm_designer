@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | v4 real-batch no-call packet ready; live unauthorized | W6-v3.2 passed its bounded 16-case hypothesis layer. W6-v4 now replays the actual 50-design W4 complex batch under strict QC, an uncalibrated external gate, and fail-closed safety because current split-LTT rejects the historical alpha=0.3 certificate. Valid and adversarial offline arms preserve campaign bytes and deterministic control exactly. The one-call live scope is unauthorized; M7 remains incomplete |
+| M7 | bounded complete | W6-v4 executed one exactly approved Anthropic shadow call inside the actual 50-design W4 complex batch. Transport, schema, independent qualitative review, and no-effect invariants passed; campaign bytes and deterministic control were identical, and no recommendation was applied. This completes only bounded shadow participation in a fail-closed/all-defer campaign. It grants no control authority, does not establish productive routing, and does not restore the rejected historical alpha=0.3 certificate |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1257,6 +1257,21 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
     `live_execution_authorized=false`. Offline API/live-provider calls and
     compute submissions are zero, and M7 remains incomplete. See
     `docs/W6_V4_GATED_BATCH_NO_CALL.md`.
+17. **W6-v4 one-call live result:** JK approved exact scope SHA-256
+    `5c46b9dd9209271223021fb556a088546ed846fe4ee4aaca71e752f886e2faed`
+    after it was committed at source commit
+    `019fe229b66e588e29d3870e6cd991156ca9c656`. The one allowed Anthropic
+    `claude-opus-4-8` call succeeded with 728 input tokens, 213 output tokens,
+    `end_turn`, complete safe telemetry, zero retries, zero effect, and zero
+    compute. The response proposed orthogonal structural/energetic evidence and
+    replicate estimates for high-interface-quality candidates. Independent
+    review marked it scope-compliant, grounded, actionable, and incremental.
+    Campaign bytes and stripped control were identical to baseline, all 50
+    routes remained defer, the historical certificate was not reused, and the
+    approval is consumed. The formal result is
+    `w6_v4_gated_batch_prospective_live_pass`; M7 is complete only under the
+    bounded shadow-participation definition, not as productive routing or LLM
+    control authority. See `docs/W6_V4_LIVE_RESULT_2026_07_26.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

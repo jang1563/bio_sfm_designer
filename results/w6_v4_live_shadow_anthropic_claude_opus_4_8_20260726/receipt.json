@@ -1,0 +1,90 @@
+{
+  "additional_provider_calls_authorized": false,
+  "api_calls": 1,
+  "approval_basis": "User approved execution on 2026-07-26 in direct response to the W6-v4 boundary: Anthropic claude-opus-4-8; exactly one campaign-level call; 512 maximum output tokens; zero retries; shadow/no effect; no compute. Execution remains contingent on confirmation of this committed scope SHA-256.",
+  "approval_consumed": true,
+  "approved_call_count": 1,
+  "attempted_calls": 1,
+  "baseline_campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+  "baseline_control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+  "campaign_bytes_identical": true,
+  "campaign_config_path": "configs/w6_v4_gated_batch_campaign.json",
+  "campaign_config_sha256": "31ace61e9919e160c4ac316b7509c0ba81a8d853af49aea7e2c3ef252d640e8f",
+  "campaign_id": "w6-v4-gated-batch-campaign-2026-07-26",
+  "capture_path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/transport_capture.json",
+  "capture_sha256": "8c869c6909c79e1a700a0c310201a12f52d2d52e46803379fa78f5f2f92696da",
+  "compute_submissions": 0,
+  "control_view_identical": true,
+  "event_count": 1,
+  "event_status": "accepted",
+  "execution_components": [
+    {
+      "expected_sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb",
+      "observed_sha256": "0881b1e9e0390a073d67cbcdf31e431064d6c6b2ee8e32e392e0589eb88858bb",
+      "path": "src/bio_sfm_designer/loop/providers.py"
+    },
+    {
+      "expected_sha256": "50c89d75a2dfe20e237a6b1d1a3bb4f682f9043637ca7295de15583d8b89fa15",
+      "observed_sha256": "50c89d75a2dfe20e237a6b1d1a3bb4f682f9043637ca7295de15583d8b89fa15",
+      "path": "src/bio_sfm_designer/loop/interpreter.py"
+    },
+    {
+      "expected_sha256": "139732491dda6d3c5ae16dbeef7ed611a802cf8366d0c8f14ce789ad768542c1",
+      "observed_sha256": "139732491dda6d3c5ae16dbeef7ed611a802cf8366d0c8f14ce789ad768542c1",
+      "path": "src/bio_sfm_designer/loop/controller.py"
+    },
+    {
+      "expected_sha256": "d8d873f7d142cec1630716db0495f02572802464498595513085bb2cfd29ffdd",
+      "observed_sha256": "d8d873f7d142cec1630716db0495f02572802464498595513085bb2cfd29ffdd",
+      "path": "src/bio_sfm_designer/experiments/run_batch_round.py"
+    },
+    {
+      "expected_sha256": "e4242f701744dd0ae73a7476e6515edf3847e123587dc382d148a76db44ca1aa",
+      "observed_sha256": "e4242f701744dd0ae73a7476e6515edf3847e123587dc382d148a76db44ca1aa",
+      "path": "src/bio_sfm_designer/experiments/w6_v32_failure_telemetry.py"
+    },
+    {
+      "expected_sha256": "329c5d11c2cc165d099b2f5e9006b9b274398f7c52027479ae5edae427d5a95f",
+      "observed_sha256": "329c5d11c2cc165d099b2f5e9006b9b274398f7c52027479ae5edae427d5a95f",
+      "path": "src/bio_sfm_designer/experiments/w6_v4_gated_batch_campaign.py"
+    },
+    {
+      "expected_sha256": "b75379195f8c1867bc5c7534cf27feee1aa33ba15140ee00747473fe72e8382e",
+      "observed_sha256": "b75379195f8c1867bc5c7534cf27feee1aa33ba15140ee00747473fe72e8382e",
+      "path": "src/bio_sfm_designer/experiments/w6_v4_live_campaign.py"
+    }
+  ],
+  "failed_calls": 0,
+  "failure_reason": null,
+  "failure_telemetry_complete_calls": 1,
+  "historical_certificate_reused": false,
+  "independent_review_pending": true,
+  "input_tokens": 728,
+  "live_provider_calls": 1,
+  "m7_complete": false,
+  "max_output_tokens_per_call": 512,
+  "mode": "shadow",
+  "model": "claude-opus-4-8",
+  "no_effect": true,
+  "output_limit_stop_calls": 0,
+  "output_tokens": 213,
+  "prospective_live_validation_complete": false,
+  "provider": "anthropic",
+  "recommendations_applied": 0,
+  "response_path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/response_pending_review.json",
+  "response_sha256": "d1624f99fed6f6345d80c000aa0fdf4eed4632adc7fe9b50ed455dc351628942",
+  "schema_version": "w6_v4_live_campaign_receipt_v1",
+  "scope_id": "w6-v4-gated-batch-live-scope-approved-2026-07-26",
+  "scope_path": "configs/w6_v4_live_campaign_scope_approved_20260726.json",
+  "scope_sha256": "5c46b9dd9209271223021fb556a088546ed846fe4ee4aaca71e752f886e2faed",
+  "sdk_retries_per_call": 0,
+  "shadow_campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+  "shadow_control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+  "source_commit": "019fe229b66e588e29d3870e6cd991156ca9c656",
+  "source_worktree_clean": true,
+  "source_worktree_porcelain_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status": "w6_v4_live_campaign_complete_pending_review",
+  "stop_reason": "end_turn",
+  "succeeded_calls": 1,
+  "transport_metadata_complete_calls": 1
+}

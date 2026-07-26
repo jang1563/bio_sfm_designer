@@ -260,3 +260,24 @@ Anthropic shadow call but remains explicitly unauthorized. M7 is incomplete
 until a separately approved live response passes provider-independent review.
 See
 [`W6_V4_GATED_BATCH_NO_CALL.md`](W6_V4_GATED_BATCH_NO_CALL.md).
+
+## W6-v4 gated batch live result
+
+A separate committed scope authorized exactly one Anthropic
+`claude-opus-4-8` campaign-level shadow call. The exact scope SHA was approved
+before execution. The call completed with 728 input tokens, 213 output tokens,
+`end_turn`, complete transport and safe telemetry, zero retries, and zero
+compute.
+
+The accepted evidence-collection hypothesis was never applied. Baseline and
+shadow campaign bytes and stripped control views were identical, all 50
+candidates remained deferred, and no historical certificate was reused.
+Provider-independent review marked the response grounded, actionable, and
+incremental with zero authority violations.
+
+The formal result is `w6_v4_gated_batch_prospective_live_pass`. M7 is complete
+only under the bounded definition of safe shadow participation in this real
+fail-closed batch. The result grants no control-plane authority and does not
+establish productive design routing. The approval is consumed and no
+additional provider call is authorized. See
+[`W6_V4_LIVE_RESULT_2026_07_26.md`](W6_V4_LIVE_RESULT_2026_07_26.md).

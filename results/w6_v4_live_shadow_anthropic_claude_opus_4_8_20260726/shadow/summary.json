@@ -1,0 +1,54 @@
+{
+  "aggregate": {
+    "accuracy": 0.0,
+    "assays_per_item": 0.0,
+    "default_rate": 0.0,
+    "defer_rate": 1.0,
+    "n": 50,
+    "net_reward_per_item": 0.0,
+    "trust_error_rate": 0.0,
+    "trust_error_rate_given_trust": null,
+    "trust_rate": 0.0,
+    "verify_rate": 0.0
+  },
+  "assay_budget": 1000,
+  "assays_used": 0,
+  "best": null,
+  "gate_calibrated": false,
+  "lambda": 0.5,
+  "objective": "interface_quality",
+  "orchestration": {
+    "accepted_count": 1,
+    "audit_path": "results/w6_v4_live_shadow_anthropic_claude_opus_4_8_20260726/shadow/orchestration.jsonl",
+    "event_count": 1,
+    "mode": "shadow"
+  },
+  "per_round": [
+    {
+      "accepted_trusted_count": 0,
+      "accuracy": 0.0,
+      "assays_per_item": 0.0,
+      "best_realized_quality": 0.9199,
+      "calibrator_fitted": false,
+      "default_rate": 0.0,
+      "defer_rate": 1.0,
+      "llm_explore": null,
+      "llm_hypothesis": null,
+      "n": 50,
+      "net_reward_per_item": 0.0,
+      "orchestrator_recommendation": {
+        "hypothesis": "Collect orthogonal per-candidate interface-quality evidence (e.g., independent structural/energetic metrics and replicate estimates around the 0.92-quality candidates) to build a more separable evidence distribution for the top interface-quality candidates.",
+        "reason": "Round 0 aggregate shows full deferral (defer_rate=1.0, trust_rate=0.0, verify_rate=0.0) despite a strong best_realized_quality of 0.9199, suggesting candidates carried little corroborating evidence for the gate to act on; next-round work should target evidence that distinguishes high-quality interfaces."
+      },
+      "round": 0,
+      "stop_reason": "round budget reached",
+      "trust_error_rate": 0.0,
+      "trust_error_rate_given_trust": null,
+      "trust_rate": 0.0,
+      "verify_rate": 0.0
+    }
+  ],
+  "rounds_run": 1,
+  "screen_backend": "precomputed_deberta",
+  "target": "benign complex/binder DBTL routing"
+}

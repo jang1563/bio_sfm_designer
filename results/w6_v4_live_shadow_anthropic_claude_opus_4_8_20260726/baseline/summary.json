@@ -1,0 +1,51 @@
+{
+  "aggregate": {
+    "accuracy": 0.0,
+    "assays_per_item": 0.0,
+    "default_rate": 0.0,
+    "defer_rate": 1.0,
+    "n": 50,
+    "net_reward_per_item": 0.0,
+    "trust_error_rate": 0.0,
+    "trust_error_rate_given_trust": null,
+    "trust_rate": 0.0,
+    "verify_rate": 0.0
+  },
+  "assay_budget": 1000,
+  "assays_used": 0,
+  "best": null,
+  "gate_calibrated": false,
+  "lambda": 0.5,
+  "objective": "interface_quality",
+  "orchestration": {
+    "accepted_count": 0,
+    "audit_path": null,
+    "event_count": 0,
+    "mode": "shadow"
+  },
+  "per_round": [
+    {
+      "accepted_trusted_count": 0,
+      "accuracy": 0.0,
+      "assays_per_item": 0.0,
+      "best_realized_quality": 0.9199,
+      "calibrator_fitted": false,
+      "default_rate": 0.0,
+      "defer_rate": 1.0,
+      "llm_explore": null,
+      "llm_hypothesis": null,
+      "n": 50,
+      "net_reward_per_item": 0.0,
+      "orchestrator_recommendation": null,
+      "round": 0,
+      "stop_reason": "round budget reached",
+      "trust_error_rate": 0.0,
+      "trust_error_rate_given_trust": null,
+      "trust_rate": 0.0,
+      "verify_rate": 0.0
+    }
+  ],
+  "rounds_run": 1,
+  "screen_backend": "precomputed_deberta",
+  "target": "benign complex/binder DBTL routing"
+}

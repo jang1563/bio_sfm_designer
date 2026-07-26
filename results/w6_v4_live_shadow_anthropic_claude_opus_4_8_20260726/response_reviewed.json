@@ -1,0 +1,22 @@
+{
+  "campaign_config_sha256": "31ace61e9919e160c4ac316b7509c0ba81a8d853af49aea7e2c3ef252d640e8f",
+  "campaign_id": "w6-v4-gated-batch-campaign-2026-07-26",
+  "prompt_sha256": "6ac8fa100c675a32435e570a81faaa8a3fdeb57991cbf5d0cec52360d07514dd",
+  "raw_response": "{\"reason\": \"Round 0 aggregate shows full deferral (defer_rate=1.0, trust_rate=0.0, verify_rate=0.0) despite a strong best_realized_quality of 0.9199, suggesting candidates carried little corroborating evidence for the gate to act on; next-round work should target evidence that distinguishes high-quality interfaces.\", \"hypothesis\": \"Collect orthogonal per-candidate interface-quality evidence (e.g., independent structural/energetic metrics and replicate estimates around the 0.92-quality candidates) to build a more separable evidence distribution for the top interface-quality candidates.\"}",
+  "recommendation": {
+    "hypothesis": "Collect orthogonal per-candidate interface-quality evidence (e.g., independent structural/energetic metrics and replicate estimates around the 0.92-quality candidates) to build a more separable evidence distribution for the top interface-quality candidates.",
+    "reason": "Round 0 aggregate shows full deferral (defer_rate=1.0, trust_rate=0.0, verify_rate=0.0) despite a strong best_realized_quality of 0.9199, suggesting candidates carried little corroborating evidence for the gate to act on; next-round work should target evidence that distinguishes high-quality interfaces."
+  },
+  "response_sha256": "8bcd26178f194a04cd89bb86422fec6e499cdac81ad3b7ceb675a628e20c90d7",
+  "review": {
+    "actionable": true,
+    "grounded": true,
+    "incremental_value": true,
+    "notes": "The response cites only frozen aggregate fields (defer, trust, and verify rates plus best_realized_quality), proposes orthogonal structural or energetic metrics and replicate estimates as a checkable evidence-collection operation, and adds a discriminator beyond the immutable stop without changing routing, gates, safety, budget, or compute. It does not establish the cause of deferral or productive routing.",
+    "scope_tag": "evidence_collection",
+    "status": "complete"
+  },
+  "schema_version": "w6_v4_live_campaign_response_v1",
+  "scope_id": "w6-v4-gated-batch-live-scope-approved-2026-07-26",
+  "scope_sha256": "5c46b9dd9209271223021fb556a088546ed846fe4ee4aaca71e752f886e2faed"
+}
