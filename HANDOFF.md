@@ -858,7 +858,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
-| M7 | v3.2 bounded hypothesis layer passed; batch campaign pending | W6-v2 exact stop/explore accuracy was 8/16. W6-v3 removed both fields but failed schema at a 256-token cap, and W6-v3.1 ended incomplete at 15/16. W6-v3.2 kept behavior fixed, added only non-sensitive failure telemetry, and completed its separately approved panel 16/16 with zero retries, output-limit stops, authority violations, applied recommendations, or compute. Independent review passed every frozen hypothesis-only criterion. This grants no control authority; M7 still requires a gated DBTL batch campaign |
+| M7 | v4 real-batch no-call packet ready; live unauthorized | W6-v3.2 passed its bounded 16-case hypothesis layer. W6-v4 now replays the actual 50-design W4 complex batch under strict QC, an uncalibrated external gate, and fail-closed safety because current split-LTT rejects the historical alpha=0.3 certificate. Valid and adversarial offline arms preserve campaign bytes and deterministic control exactly. The one-call live scope is unauthorized; M7 remains incomplete |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
 
 Current milestone detail and definitions of done are in `docs/PROJECT_ROADMAP.md`; the older local
@@ -1242,6 +1242,21 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
     the approval is consumed, no additional call is authorized, and M7 remains
     incomplete pending a gated DBTL batch campaign. See
     `docs/W6_V32_LIVE_RESULT_2026_07_26.md`.
+16. **W6-v4 real-batch no-call packet:** the next M7 gate is frozen on the
+    actual 50-design W4 ProteinMPNN/Boltz complex batch. A replay audit found an
+    important correction: current split-LTT rejects the historical
+    `alpha=0.3`, `tau=0.3333333333333333` prevalidation claim, so W6-v4 does not
+    reuse it. The current campaign passes strict complex QC with an uncalibrated
+    external gate and fail-closed safety, routing all 50 candidates to defer.
+    One valid hypothesis fixture and five adversarial/provider-error fixtures
+    leave authoritative `campaign.jsonl`, routing, assays, and hard stop
+    identical to the no-provider baseline. The aggregate-only prompt contains
+    no candidate IDs, sequences, representations, or hidden truth. The live
+    runner permits one 512-token, zero-retry Anthropic shadow attempt only after
+    a separately committed exact approval; the current scope sets
+    `live_execution_authorized=false`. Offline API/live-provider calls and
+    compute submissions are zero, and M7 remains incomplete. See
+    `docs/W6_V4_GATED_BATCH_NO_CALL.md`.
 
 ## 9. HPC (Cayuga) specifics + gotchas / landmines
 

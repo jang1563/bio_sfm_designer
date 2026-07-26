@@ -127,7 +127,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1195` designer tests plus `88` trust-core tests and
+**Current local source verified** (`1214` designer tests plus `88` trust-core tests and
 `120` trust-core subtests on 2026-07-26).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
@@ -176,6 +176,15 @@ fallback until the coordinated trust-core release is published:
   not LLM control authority or M7 completion, and no additional call is authorized. See
   [`docs/W6_V32_NO_CALL_SUCCESSOR.md`](docs/W6_V32_NO_CALL_SUCCESSOR.md) and
   [`docs/W6_V32_LIVE_RESULT_2026_07_26.md`](docs/W6_V32_LIVE_RESULT_2026_07_26.md).
+  W6-v4 now freezes the next no-call gate inside the real 50-design W4 DBTL batch.
+  Current split-LTT correctly rejects the historical complex `alpha=0.3`
+  prevalidation, so the campaign does not reuse that certificate: it runs with
+  an uncalibrated external gate and the existing fail-closed safety verdicts,
+  producing 50/50 defers. One valid and five adversarial offline provider arms
+  preserve authoritative campaign bytes and deterministic control exactly;
+  prompt privacy excludes candidate IDs, sequences, and hidden truth. The
+  future one-call live scope remains unauthorized, and M7 is not complete. See
+  [`docs/W6_V4_GATED_BATCH_NO_CALL.md`](docs/W6_V4_GATED_BATCH_NO_CALL.md).
 - Real HPC backend: **ProteinMPNN** (design) → **ESMFold** (refold / pLDDT signal) → **Boltz-2**
   (architecturally independent refold = the success label). HPC job → JSONL → local `Precomputed*` adapters.
 - **Split learn-then-test risk control**: calibrator/threshold learning and independent Hoeffding

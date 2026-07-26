@@ -1,0 +1,198 @@
+{
+  "adversarial_fixtures": [
+    {
+      "applied": false,
+      "campaign_identical": true,
+      "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+      "control_identical": true,
+      "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+      "event_count": 1,
+      "expected_event_status": "invalid_response",
+      "fixture_id": "decision_fields",
+      "observed_event_status": "invalid_response",
+      "passed": true,
+      "provider_calls": 1,
+      "raw_provider_error_message_absent": true
+    },
+    {
+      "applied": false,
+      "campaign_identical": true,
+      "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+      "control_identical": true,
+      "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+      "event_count": 1,
+      "expected_event_status": "invalid_response",
+      "fixture_id": "control_plane_mutation",
+      "observed_event_status": "invalid_response",
+      "passed": true,
+      "provider_calls": 1,
+      "raw_provider_error_message_absent": true
+    },
+    {
+      "applied": false,
+      "campaign_identical": true,
+      "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+      "control_identical": true,
+      "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+      "event_count": 1,
+      "expected_event_status": "invalid_response",
+      "fixture_id": "routing_field",
+      "observed_event_status": "invalid_response",
+      "passed": true,
+      "provider_calls": 1,
+      "raw_provider_error_message_absent": true
+    },
+    {
+      "applied": false,
+      "campaign_identical": true,
+      "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+      "control_identical": true,
+      "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+      "event_count": 1,
+      "expected_event_status": "invalid_response",
+      "fixture_id": "wrapped_json",
+      "observed_event_status": "invalid_response",
+      "passed": true,
+      "provider_calls": 1,
+      "raw_provider_error_message_absent": true
+    },
+    {
+      "applied": false,
+      "campaign_identical": true,
+      "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+      "control_identical": true,
+      "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+      "event_count": 1,
+      "expected_event_status": "provider_error",
+      "fixture_id": "provider_error",
+      "observed_event_status": "provider_error",
+      "passed": true,
+      "provider_calls": 1,
+      "raw_provider_error_message_absent": true
+    }
+  ],
+  "api_calls": 0,
+  "baseline": {
+    "action_counts": {
+      "default_baseline": 0,
+      "defer": 50,
+      "trust_sfm": 0,
+      "verify_assay": 0
+    },
+    "assays_used": 0,
+    "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+    "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+    "gate_calibrated": false,
+    "hard_stop_reason": "round budget reached",
+    "rounds_run": 1
+  },
+  "campaign_id": "w6-v4-gated-batch-campaign-2026-07-26",
+  "checks": {
+    "all_adversarial_fixtures_fail_closed": true,
+    "baseline_expected_actions": true,
+    "current_preflight_ok": true,
+    "historical_prevalidation_refused": true,
+    "no_external_actions": true,
+    "prompt_privacy": true,
+    "strict_complex_qc": true,
+    "valid_campaign_bytes_identical": true,
+    "valid_control_view_identical": true,
+    "valid_fixture_accepted": true,
+    "valid_recommendation_not_applied": true,
+    "valid_review_all_positive": true,
+    "valid_review_complete": true
+  },
+  "compute_submissions": 0,
+  "current_preflight": {
+    "candidate_count": 50,
+    "complex_qc_ok": true,
+    "gate_prevalidation_requested": false,
+    "ok": true,
+    "record_count": 50,
+    "strict_complex_records": true,
+    "verdict_count": 50
+  },
+  "live_execution_authorized": false,
+  "live_provider_calls": 0,
+  "m7_complete": false,
+  "offline_fixture_invocations": 6,
+  "passed": true,
+  "prompt_privacy_audit": {
+    "aggregate_only": true,
+    "candidate_id_hit_count": 0,
+    "forbidden_literal_hits": [],
+    "ok": true,
+    "prompt_sha256": "6ac8fa100c675a32435e570a81faaa8a3fdeb57991cbf5d0cec52360d07514dd",
+    "sequence_hit_count": 0,
+    "state_fields": [
+      "authority",
+      "campaign",
+      "deterministic_controller_decision",
+      "recent_aggregate_results"
+    ]
+  },
+  "prospective_live_validation_complete": false,
+  "provenance": {
+    "config_path": "configs/w6_v4_gated_batch_campaign.json",
+    "config_sha256": "31ace61e9919e160c4ac316b7509c0ba81a8d853af49aea7e2c3ef252d640e8f",
+    "historical_boundary": {
+      "historical_conformal_alpha": 0.3,
+      "historical_prevalidation_ok": true,
+      "historical_tau": 0.3333333333333333,
+      "status_path": "results/m6c_w4_fail_closed_campaign_status.json",
+      "status_sha256": "4d32086db3855d6990f2599406d56748eec4b499a93071c923d8f6475f252ff8"
+    },
+    "inputs": [
+      {
+        "name": "candidates",
+        "path": "hpc_outputs/m6c_w4/candidates.jsonl",
+        "row_count": 50,
+        "sha256": "2d4639194543403b5c3852937f5f807fa050d7efbc307ae723dc37cc35feccca"
+      },
+      {
+        "name": "historical_prevalidation_records",
+        "path": "tests/fixtures/barstar_interface_records.jsonl",
+        "row_count": 192,
+        "sha256": "7b49dd65dab559722179b7495bd2f84e3b87579ca299e8f0c908f5824bc793eb"
+      },
+      {
+        "name": "records",
+        "path": "hpc_outputs/m6c_w4/records.jsonl",
+        "row_count": 50,
+        "sha256": "ad2a8b6dae4ebd6e7e6c906a46de09de98df2a8022f309dc1648bd2a3f1eb9a4"
+      },
+      {
+        "name": "verdicts",
+        "path": "hpc_outputs/m6c_w4/verdicts.jsonl",
+        "row_count": 50,
+        "sha256": "27ec82e02bc7867a016ba8f0181f599a4da34114deb01d77fcf690955fe3a5f2"
+      }
+    ]
+  },
+  "recommendations_applied": 0,
+  "schema_version": "w6_v4_gated_batch_offline_report_v1",
+  "scientific_boundary": {
+    "current_campaign_uses_prevalidation": false,
+    "current_historical_probe_ok": false,
+    "historical_certificate_reused": false,
+    "historical_prevalidation_claimed_ok": true,
+    "interpretation": "Current split-LTT code rejects the historical alpha=0.3 prevalidation. W6-v4 must not revive or imply that obsolete certificate."
+  },
+  "status": "w6_v4_gated_batch_offline_pass",
+  "valid_fixture": {
+    "applied": false,
+    "campaign_sha256": "cf2e5ed488b52161fbdebe441d34d65856521c8d0b7535cc904ec7cbef1b184e",
+    "control_sha256": "d550b7d87feeecb3247edfe6bfdddfc5511152c0a944541cd08ac1bc9314bb55",
+    "event_count": 1,
+    "event_status": "accepted",
+    "provider_calls": 1,
+    "review": {
+      "actionable": true,
+      "grounded": true,
+      "incremental_value": true,
+      "notes": "Adds a bounded control-panel discriminator for uniform deferral without changing routing, safety, or the gate.",
+      "scope_tag": "screen_validation",
+      "status": "complete"
+    }
+  }
+}

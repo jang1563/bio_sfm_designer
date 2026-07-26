@@ -237,3 +237,26 @@ The approval is consumed, no additional call is authorized, deterministic code
 retains all control-plane decisions, and M7 remains incomplete pending a gated
 DBTL batch campaign. See
 [`W6_V32_LIVE_RESULT_2026_07_26.md`](W6_V32_LIVE_RESULT_2026_07_26.md).
+
+## W6-v4 gated batch no-call packet
+
+W6-v4 moves from isolated aggregate-state panels into the real DBTL controller
+over the existing 50-design W4 complex batch. It freezes an important
+scientific correction: current split-LTT rejects the historical `alpha=0.3`
+complex prevalidation, so the campaign does not reuse that certificate. It
+runs under strict complex QC, an uncalibrated external gate, and the existing
+fail-closed safety verdicts; all 50 candidates defer.
+
+The no-provider baseline, one valid bounded fixture, and five adversarial or
+provider-error fixtures produce identical authoritative campaign bytes and
+identical stripped control views. The valid recommendation is logged but never
+applied. Every adversarial arm fails closed, including one secret-bearing
+provider-error fixture. Prompt audit finds zero candidate IDs, sequences,
+representations, or hidden truth.
+
+The offline report passes with zero API/live-provider calls and zero compute
+submissions. The future scope permits exactly one 512-token, zero-retry
+Anthropic shadow call but remains explicitly unauthorized. M7 is incomplete
+until a separately approved live response passes provider-independent review.
+See
+[`W6_V4_GATED_BATCH_NO_CALL.md`](W6_V4_GATED_BATCH_NO_CALL.md).

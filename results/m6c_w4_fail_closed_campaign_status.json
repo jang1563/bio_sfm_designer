@@ -1,0 +1,85 @@
+{
+  "artifact": "m6c_w4_fail_closed_campaign_status",
+  "date": "2026-06-29",
+  "workstream": "W4_closed_loop_DBTL",
+  "status": "closed_loop_round_complete",
+  "claim": "strict W4 closed-loop plumbing completed with a fail-closed all-defer campaign",
+  "not_claimed": [
+    "production biosafety clearance",
+    "productive synth/build routing",
+    "independent predictor robustness",
+    "W2 multi-target generalization"
+  ],
+  "inputs": {
+    "candidates": "hpc_outputs/m6c_w4/candidates.jsonl",
+    "records": "hpc_outputs/m6c_w4/records.jsonl",
+    "screen_candidates": "hpc_outputs/m6c_w4/screen_candidates.jsonl",
+    "raw_verdicts": "hpc_outputs/m6c_w4/verdicts_raw_with_objective.jsonl",
+    "candidate_verdicts": "hpc_outputs/m6c_w4/verdicts.jsonl",
+    "candidate_verdict_receipt": "hpc_outputs/m6c_w4/verdicts_candidate_only_receipt.json"
+  },
+  "screen_readout": {
+    "backend": "precomputed_deberta",
+    "raw_verdict_rows": 51,
+    "candidate_verdict_rows": 50,
+    "dropped_optional_ids": [
+      "objective"
+    ],
+    "all_candidate_flags": true,
+    "candidate_flag_reason": "deberta returned non-finite score -> human review",
+    "interpretation": "the smoke DeBERTa head failed closed; every candidate-level screen verdict escalated to human review"
+  },
+  "batch_preflight": {
+    "path": "results/m6c_w4_round/preflight.json",
+    "ok": true,
+    "candidates": 50,
+    "records": 50,
+    "verdicts": 50,
+    "strict_complex_records": true,
+    "gate_prevalidation_ok": true,
+    "batch_contract_ok": true
+  },
+  "campaign": {
+    "summary": "results/m6c_w4_round/summary.json",
+    "campaign_jsonl": "results/m6c_w4_round/campaign.jsonl",
+    "rounds_run": 1,
+    "campaign_records": 50,
+    "n_routed": 50,
+    "assays_used": 0,
+    "trust_rate": 0.0,
+    "verify_rate": 0.0,
+    "default_rate": 0.0,
+    "defer_rate": 1.0,
+    "net_reward_per_item": 0.0,
+    "best": null
+  },
+  "gate_context": {
+    "prevalidation_records": "tests/fixtures/barstar_interface_records.jsonl",
+    "prevalidation_n_records": 192,
+    "conformal_alpha": 0.3,
+    "conformal_delta": 0.1,
+    "complex_tau": 0.3333333333333333,
+    "batch_contract_fields": [
+      "predictor_id",
+      "signal_source",
+      "label_source",
+      "lrmsd_threshold"
+    ]
+  },
+  "project_status": {
+    "path": "results/m6c_project_status_w2_followup.json",
+    "status": "m6_complex_in_progress",
+    "W1_M6c_scale_up": "certified",
+    "W2_multi_target_panel": "evaluable_not_certified",
+    "W3_independent_predictor": "second_predictor_contract_blocked",
+    "W4_closed_loop_DBTL": "closed_loop_round_complete",
+    "can_mark_goal_complete": false,
+    "remaining_external_blocker": "hpc_outputs/m6c_second_predictor/chai1_complex_records.jsonl"
+  },
+  "next_actions": [
+    "Keep W4 recorded as closed-loop plumbing complete but fail-closed/all-defer, not as productive design routing.",
+    "Train or replace the smoke DeBERTa screen head before using W4 for nontrivial build/no-build routing.",
+    "Finish W3 by producing independent second-predictor complex records, then rerun the W3 contract and remote-check bridge.",
+    "Keep W2 broad-panel generalization negative until a per-target panel certifies under the target alpha."
+  ]
+}

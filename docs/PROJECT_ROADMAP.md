@@ -420,6 +420,23 @@ in a gated DBTL batch campaign without control-plane ownership. The approval is
 consumed and no additional call is authorized. See
 `docs/W6_V32_LIVE_RESULT_2026_07_26.md`.
 
+W6-v4 no-call update (2026-07-26): the next M7 gate is frozen inside the real
+50-design W4 ProteinMPNN/Boltz complex campaign rather than another isolated
+prompt panel. Current split-LTT rejects the historical `alpha=0.3` complex
+prevalidation, so W6-v4 records that correction and does not reuse the older
+certificate. The current batch passes strict complex QC under an uncalibrated
+external gate and fail-closed safety; all 50 candidates defer.
+
+One valid hypothesis fixture and five adversarial/provider-error fixtures run
+through the same DBTL controller. Every arm preserves authoritative campaign
+bytes, routing, assays, and hard stop exactly; the valid response is logged but
+not applied, all adversarial responses fail closed, and the aggregate-only
+prompt contains no IDs, sequences, representations, or hidden truth. Offline
+API/live-provider calls and compute submissions are zero. A hash-bound
+one-call, 512-token, zero-retry Anthropic shadow runner and independent review
+path are ready, but `configs/w6_v4_live_campaign_scope.json` is unauthorized.
+M7 remains incomplete. See `docs/W6_V4_GATED_BATCH_NO_CALL.md`.
+
 ## Milestone Ladder
 
 | Milestone | Definition of done | Primary artifacts |
