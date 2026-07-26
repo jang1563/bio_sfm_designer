@@ -77,5 +77,6 @@ success claim.
 
 The separate hash-bound, no-submit W3c-B1 packet is now locally prepared. It preserves all eight W3c-A
 source, chain, and sequence bindings and authorizes zero ProteinMPNN and zero structure-predictor work.
-Cayuga mirror dry-run validation remains the next action; exact user approval must not be requested before
-that validation passes.
+Cayuga mirror dry-run validation now passes with exact hash parity, all eight target IDs, exit `0`, zero
+submissions, and absent provenance/A3M outputs. Exact target-MSA-only approval is now request-ready but
+not recorded.

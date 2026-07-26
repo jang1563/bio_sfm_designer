@@ -1,6 +1,6 @@
 # M6d W3c-B1 target-MSA approval packet
 
-Status: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`.
+Status: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`.
 Approval packet ready: `True`.
 No submit: `True`.
 
@@ -12,8 +12,8 @@ No submit: `True`.
 - maximum A40 GPU-hours: `8.0`
 - ProteinMPNN allowed: `False`
 - structure predictors allowed: `False`
-- Cayuga no-submit validation: `not_run`
-- ready to request exact approval: `False`
+- Cayuga no-submit validation: `pass`
+- ready to request exact approval: `True`
 
 ## Exact approval
 

@@ -1,6 +1,6 @@
 # M6d W3c validity-first failure-localization protocol
 
-Status: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`.
+Status: `w3c_b1_cayuga_validated_exact_approval_required`.
 
 Date: 2026-07-15.
 
@@ -129,10 +129,12 @@ The completed CPU-only audit is documented in [M6D_W3C_A_TARGET_LOCK.md](M6D_W3C
 
 No target-MSA query, ProteinMPNN design, or predictor evaluation was run.
 
-## Execution update: W3c-B1 packet prepared locally
+## Execution update: W3c-B1 packet validated on Cayuga without submission
 
 The separate hash-bound W3c-B1 packet is now locally prepared and documented in
 [M6D_W3C_B1_TARGET_MSA_APPROVAL.md](M6D_W3C_B1_TARGET_MSA_APPROVAL.md). It locks exactly eight one-hour
-A40 target-MSA queries and zero downstream work. Local dry-run and refusal checks pass, but Cayuga
-no-submit mirror validation has not run. Exact approval is therefore not request-ready, and no W3c-B1
-submission, receipt, MSA, ProteinMPNN design, or predictor evaluation exists.
+A40 target-MSA queries and zero downstream work. Local dry-run and refusal checks pass. Cayuga no-submit
+mirror validation also passes with exact 13-artifact hash parity, all eight target IDs, exit `0`, zero
+scheduler submissions, and absent receipt/summary/preflight/A3M outputs. Exact target-MSA-only approval is
+request-ready but not recorded. No W3c-B1 submission, receipt, MSA, ProteinMPNN design, or predictor
+evaluation exists.

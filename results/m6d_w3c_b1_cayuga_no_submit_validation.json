@@ -1,0 +1,116 @@
+{
+  "artifact": "m6d_w3c_b1_cayuga_no_submit_validation",
+  "version": 1,
+  "status": "w3c_b1_cayuga_no_submit_validation_pass",
+  "validation_passed": true,
+  "validated_at": "2026-07-26T21:31:56Z",
+  "source_commit": "681b2565f61bc8049c13efa95a6842fd6cb7dc86",
+  "remote": {
+    "platform": "Cayuga HPC",
+    "host": "redacted",
+    "root": "$HOME/bio_sfm_smoke",
+    "python": "$HOME/.conda/envs/boltz/bin/python3.11",
+    "public_redaction_applied": true,
+    "python_version": "Python 3.11.15"
+  },
+  "mirror": {
+    "method": "explicit_rsync_then_remote_sha256sum",
+    "local_remote_hash_parity": true,
+    "rsync_checksum_dry_run_differences": 0,
+    "artifacts": [
+      {
+        "path": "configs/m6d_w3c_fresh_targets.json",
+        "sha256": "c3689aee385fef7db89bb7e81b638c1274a957f9465f73464bf42987cda8893d"
+      },
+      {
+        "path": "configs/m6d_w3c_validity_first_protocol.json",
+        "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+      },
+      {
+        "path": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "sha256": "d03711fbf576690a9347c2aa948af683495423c0775c60d39bf33fb52d80deda"
+      },
+      {
+        "path": "configs/m6d_w3c_historical_overlap_registry.json",
+        "sha256": "84a837b092ebca73078582f14d8998eb711071a985290e7b57d70b7443bc1df0"
+      },
+      {
+        "path": "results/m6d_w3c_fresh_target_lock.json",
+        "sha256": "1713155ffd24019a003b1366d27816bd5f3b9e1d98b6e2c576b94a00e5936137"
+      },
+      {
+        "path": "results/m6d_w3c_b1_target_msas.sh",
+        "sha256": "a0233c371abba51d8ede2ee848b7c12abbc99226492c90199ebc0babb72b2e10"
+      },
+      {
+        "path": "tests/fixtures/m6d_w3c_fresh_structure_fixture.json",
+        "sha256": "b8d523ddc58d6f043001f88a41b7486fd4648f4b299c199bbf62db20c0bff7e0"
+      },
+      {
+        "path": "src/bio_sfm_designer/experiments/m6d_w3c_b1_target_msa_preflight.py",
+        "sha256": "d7648ede6d781ad6079ed3b093297d877ae74bc6f4917e3874fbfba048e75f40"
+      },
+      {
+        "path": "hpc/run_w3c_b1_target_msa_guarded.sh",
+        "sha256": "ad0762f9bf5b386159b2974d4af10f62288400f6b4a510178f296a34f822b1ef"
+      },
+      {
+        "path": "hpc/run_precompute_boltz_target_msa.sbatch",
+        "sha256": "14080cbbb791a1db2fe1bcd4ca8bcba36d5f4d47ba9ae22f6f27042c59e2f82f"
+      },
+      {
+        "path": "hpc/precompute_boltz_target_msa.py",
+        "sha256": "c1acecd1a67c9253df17a02e16f402296056892e1fe3b878d172f72dd8e369ff"
+      },
+      {
+        "path": "hpc/prep_hetdimer.py",
+        "sha256": "ca9c6ebb7156bcd401a7c4de981f89985123fe8bbcf0c55b344b58d0cf1b7356"
+      },
+      {
+        "path": "hpc/extract_chain_fasta.py",
+        "sha256": "d5441f6c1fb35fa60be89e67562b2449ce599bcf700ac96c0f8a314f19bd1c2b"
+      }
+    ]
+  },
+  "execution": {
+    "mode": "dry_run",
+    "command": "TARGET_MSA_PRECOMPUTE_DRY_RUN=1 BIO_SFM_PYTHON=$HOME/.conda/envs/boltz/bin/python PYTHONNOUSERSITE=1 bash hpc/run_w3c_b1_target_msa_guarded.sh",
+    "exit_code": 0,
+    "target_count": 8,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ],
+    "scheduler_jobs_submitted": 0,
+    "target_msa_queries_submitted": 0,
+    "proteinmpnn_designs": 0,
+    "predictor_evaluations": 0,
+    "approval_env_present": false,
+    "submission_command_executed": false,
+    "receipt_created": false,
+    "summary_created": false,
+    "preflight_report_created": false,
+    "target_msa_count_before": 0,
+    "target_msa_count_after": 0,
+    "stdout_lines": [
+      "status=w3c_b1_input_configuration_valid_no_submit targets=8 jobs_submitted=0 no_submit=True",
+      "target-MSA precompute dry-run: manifest fresh; no scheduler jobs submitted; receipt untouched.",
+      "target-MSA precompute dry-run targets: 1TE1_BA,3QB4_AB,5E5M_AB,5JSB_AB,6KBR_AC,6KMQ_AB,6SGE_AB,7B5G_AB"
+    ]
+  },
+  "approval_boundary": {
+    "approval_recorded": false,
+    "target_msa_queries_authorized": 0,
+    "proteinmpnn_authorized": false,
+    "structure_predictors_authorized": false,
+    "w3c_b2_authorized": false,
+    "scientific_claim_authorized": false
+  },
+  "claim_boundary": "This evidence records one Cayuga no-submit mirror validation only. It authorizes no target-MSA query, ProteinMPNN design, structure prediction, W3c-B2 work, or scientific claim."
+}

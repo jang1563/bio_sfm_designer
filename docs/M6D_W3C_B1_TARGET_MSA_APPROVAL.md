@@ -1,6 +1,6 @@
 # M6d W3c-B1 target-MSA approval packet
 
-Status: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`.
+Status: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`.
 
 ## Purpose
 
@@ -34,6 +34,7 @@ FASTA preflight, Slurm script, and all input-preparation tools.
 - target-MSA plan: `results/m6d_w3c_b1_target_msas.sh`
 - input preflight: `src/bio_sfm_designer/experiments/m6d_w3c_b1_target_msa_preflight.py`
 - guarded wrapper: `hpc/run_w3c_b1_target_msa_guarded.sh`
+- Cayuga no-submit evidence: `results/m6d_w3c_b1_cayuga_no_submit_validation.json`
 - approval packet: `results/m6d_w3c_b1_target_msa_approval_packet.{json,md}`
 
 ## Current validation state
@@ -43,24 +44,18 @@ missing/wrong-approval refusal tests pass. The local dry-run prints exactly the 
 submits no scheduler job, and creates no receipt, summary, preflight report, MSA, ProteinMPNN output, or
 predictor output.
 
-Cayuga mirror validation has not been run. Therefore the exact approval must not be requested or treated as
-active yet.
+Cayuga mirror validation ran in a private project mirror using Python 3.11.15. Public evidence redacts
+the login node and account-specific absolute paths. All 13 packet-bound artifacts matched local SHA-256
+values. The guarded wrapper exited `0`, printed the same eight target IDs, reported zero scheduler
+submissions, and left receipt, summary, input-preflight, and A3M outputs absent. The checksum-mode rsync
+replay reported zero differences.
 
-## Next no-submit action
+The machine-readable evidence passes the packet validator. Exact target-MSA-only approval is now
+request-ready, but approval is not recorded and no query is authorized yet.
 
-Mirror all packet-bound artifacts to the Cayuga checkout and run:
+## Next exact-approval action
 
-```bash
-TARGET_MSA_PRECOMPUTE_DRY_RUN=1 \
-BIO_SFM_PYTHON="$HOME/.conda/envs/boltz/bin/python" \
-PYTHONNOUSERSITE=1 \
-bash hpc/run_w3c_b1_target_msa_guarded.sh
-```
-
-The Cayuga validation must confirm exact local/remote hashes, the same eight dry-run IDs, exit `0`, zero
-scheduler submissions, and absent receipt, summary, and materialization-report files.
-
-Only after that validation passes may the following exact user phrase be requested:
+The following exact user phrase may now be requested:
 
 `approve W3c-B1 target-MSA precompute`
 

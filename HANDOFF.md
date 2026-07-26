@@ -111,12 +111,14 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > PDB files. W3c-A is now complete: `1TE1_BA`, `3QB4_AB`, `5E5M_AB`, `5JSB_AB`, `6KBR_AC`, `6KMQ_AB`,
 > `6SGE_AB`, and `7B5G_AB` passed every frozen structural, semantic, and exact-overlap check. Read
 > `docs/M6D_W3C_A_TARGET_LOCK.md`, `results/m6d_w3c_fresh_target_lock.json`, and
-> `configs/m6d_w3c_fresh_targets.json`. The hash-bound W3c-B1 packet is now locally prepared at
+> `configs/m6d_w3c_fresh_targets.json`. The hash-bound W3c-B1 packet is prepared at
 > `results/m6d_w3c_b1_target_msa_approval_packet.json`; read
 > `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`. It locks exactly eight one-hour A40 target-MSA queries and
-> zero ProteinMPNN, structure-predictor, or W3c-B2 authority. Local dry-run and refusal checks pass. The
-> immediate task is Cayuga no-submit mirror validation; it has not run, exact approval is not request-ready,
-> and no W3c job or receipt exists. Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
+> zero ProteinMPNN, structure-predictor, or W3c-B2 authority. Local dry-run and refusal checks pass. Cayuga
+> no-submit mirror validation also passes with 13/13 artifact hash parity, exact eight-target dry-run output,
+> exit `0`, zero scheduler submissions, and no receipt, summary, preflight, or A3M output. The packet is now
+> ready to request exact target-MSA-only approval; approval is not recorded and no W3c job or receipt exists.
+> Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
 For long-running Codex goal mode, read `docs/CODEX_GOAL_MODE.md` after this handoff and

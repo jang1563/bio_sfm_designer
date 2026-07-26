@@ -43,8 +43,10 @@
 > remain exact structural-proxy experiments and do not estimate strict target-binder generalization. W3c-A
 > then locked eight fresh, source-disjoint complete target-binder dimers. All eight pass the frozen
 > structure, semantic, geometry, and exact-overlap gates, with zero MSA or predictor work. The W3c-B1
-> target-MSA-only packet is locally prepared and locks eight one-hour A40 queries, but Cayuga no-submit mirror
-> validation is still required before exact approval may be requested. No W3c compute is currently authorized.
+> target-MSA-only packet locks eight one-hour A40 queries. Cayuga no-submit mirror validation now passes
+> with exact hash parity, the same eight target IDs, exit `0`, zero scheduler submissions, and no provenance
+> or A3M outputs. Exact target-MSA-only approval is request-ready but not recorded. No W3c compute is
+> currently authorized.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -153,8 +155,8 @@ both frozen predictors can recover native complexes after the benchmark is restr
 valid biological target-binder dimers. `configs/m6d_w3c_validity_first_protocol.json` freezes eight fresh
 targets, strict representation criteria, a later MSA-only stage, and a later native-only 16-prediction
 screen requiring at least 6/8 targets to pass both predictors at L-RMSD below 4.0 A. Each compute stage
-requires a separate exact approval. The W3c-B1 packet now exists locally, but Cayuga no-submit validation is
-pending and exact approval is not request-ready. See
+requires a separate exact approval. The W3c-B1 packet and its Cayuga no-submit evidence now pass, so the
+exact target-MSA-only approval is request-ready but not recorded. See
 `docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md`, `results/m6d_w3c_target_validity_audit.{json,md}`, and the
 public CPU replay fixture `tests/fixtures/m6d_w3c_historical_structure_fixture.json`.
 
@@ -168,8 +170,10 @@ chain, no observed numbering gap, and at least 20 CA contacts. See `docs/M6D_W3C
 source/hash and representation lock, not sequence-family disjointness or native-recoverability evidence.
 The W3c-B1 packet is locally prepared and audit-clean. It binds the eight source/sequence locks, exact
 execution paths, one-hour A40 Slurm resource, eight-query/8-A40-GPU-hour ceiling, and zero downstream
-authority. Local dry-run and wrong/missing-approval refusal checks pass. Cayuga no-submit mirror validation,
-exact approval, submission, and all target-MSA outputs remain absent.
+authority. Local dry-run and wrong/missing-approval refusal checks pass. Cayuga no-submit mirror validation
+passes with exact 13-artifact hash parity, the same eight dry-run IDs, exit `0`, zero scheduler
+submissions, and absent receipt/summary/preflight/A3M outputs. Exact approval, submission, and all
+target-MSA outputs remain absent.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -708,10 +712,9 @@ Allowed decisions:
    only 3 are strict target-binder systems; do not turn those post-outcome annotations into subgroup claims.
 5. Preserve the completed W3c-A eight-target representation lock; do not replace a target after predictor
    output or reinterpret exact hash exclusion as sequence-family disjointness.
-6. Preserve the locally completed hash-bound W3c-B1 packet and run Cayuga no-submit mirror validation next.
-   Request exact approval only after local/remote hash parity, dry-run exit `0`, zero submissions, and absent
-   provenance outputs are confirmed. ProteinMPNN, native prediction, generator, gate, and certification work
-   remain at zero.
+6. Preserve the hash-bound W3c-B1 packet and its passing Cayuga no-submit mirror evidence. Request the exact
+   target-MSA-only approval next; until that phrase is recorded, scheduler submissions remain zero.
+   ProteinMPNN, native prediction, generator, gate, and certification work remain at zero.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

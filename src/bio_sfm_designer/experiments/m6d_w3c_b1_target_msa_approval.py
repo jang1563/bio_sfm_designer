@@ -27,6 +27,9 @@ MAXIMUM_TARGET_MSA_QUERIES = 8
 MAXIMUM_A40_GPU_HOURS = 8.0
 SLURM_TIME = "01:00:00"
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_GIT_COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+CAYUGA_VALIDATION_ARTIFACT = "m6d_w3c_b1_cayuga_no_submit_validation"
+CAYUGA_VALIDATION_STATUS = "w3c_b1_cayuga_no_submit_validation_pass"
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -79,6 +82,146 @@ def _is_sha256(value: Any) -> bool:
 
 def _failure(failures: List[Dict[str, str]], kind: str, message: str) -> None:
     failures.append({"kind": kind, "message": message})
+
+
+def validate_cayuga_no_submit_validation(
+    evidence: Mapping[str, Any],
+    *,
+    bound_artifacts: Mapping[str, Mapping[str, Any]],
+    wrapper_path: str,
+) -> List[Dict[str, str]]:
+    """Validate one observed Cayuga dry run without granting submit authority."""
+
+    failures: List[Dict[str, str]] = []
+    if (
+        evidence.get("artifact") != CAYUGA_VALIDATION_ARTIFACT
+        or evidence.get("version") != 1
+        or evidence.get("status") != CAYUGA_VALIDATION_STATUS
+        or evidence.get("validation_passed") is not True
+        or not isinstance(evidence.get("source_commit"), str)
+        or _GIT_COMMIT_RE.fullmatch(str(evidence.get("source_commit"))) is None
+    ):
+        _failure(
+            failures,
+            "cayuga_validation_identity_invalid",
+            "Cayuga validation identity, status, or source commit is invalid",
+        )
+
+    remote = evidence.get("remote")
+    if (
+        not isinstance(remote, dict)
+        or remote.get("platform") != "Cayuga HPC"
+        or remote.get("host") != "redacted"
+        or remote.get("root") != "$HOME/bio_sfm_smoke"
+        or remote.get("python") != "$HOME/.conda/envs/boltz/bin/python3.11"
+        or remote.get("public_redaction_applied") is not True
+        or remote.get("python_version") != "Python 3.11.15"
+    ):
+        _failure(
+            failures,
+            "cayuga_validation_remote_invalid",
+            "Cayuga validation remote identity or runtime is invalid",
+        )
+
+    expected_artifacts = {
+        str(binding["path"]): str(binding["sha256"])
+        for binding in bound_artifacts.values()
+    }
+    expected_artifacts[wrapper_path] = _sha256(wrapper_path)
+    mirror = evidence.get("mirror")
+    mirror_rows = mirror.get("artifacts") if isinstance(mirror, dict) else None
+    observed_artifacts: Dict[str, str] = {}
+    if isinstance(mirror_rows, list):
+        for row in mirror_rows:
+            if not isinstance(row, dict) or set(row) != {"path", "sha256"}:
+                _failure(
+                    failures,
+                    "cayuga_validation_mirror_row_invalid",
+                    "Cayuga mirror row does not match the path/SHA contract",
+                )
+                continue
+            path = row["path"]
+            sha256 = row["sha256"]
+            if (
+                not isinstance(path, str)
+                or not path
+                or not _is_sha256(sha256)
+                or path in observed_artifacts
+            ):
+                _failure(
+                    failures,
+                    "cayuga_validation_mirror_row_invalid",
+                    "Cayuga mirror row has an invalid or duplicate path/SHA",
+                )
+                continue
+            observed_artifacts[path] = sha256
+    else:
+        _failure(
+            failures,
+            "cayuga_validation_mirror_rows_missing",
+            "Cayuga validation lacks mirrored artifact rows",
+        )
+    if (
+        not isinstance(mirror, dict)
+        or mirror.get("local_remote_hash_parity") is not True
+        or mirror.get("rsync_checksum_dry_run_differences") != 0
+        or observed_artifacts != expected_artifacts
+    ):
+        _failure(
+            failures,
+            "cayuga_validation_hash_parity_failed",
+            "Cayuga mirrored artifacts do not exactly match the bound local packet",
+        )
+
+    execution = evidence.get("execution")
+    expected_stdout = [
+        "status=w3c_b1_input_configuration_valid_no_submit "
+        "targets=8 jobs_submitted=0 no_submit=True",
+        "target-MSA precompute dry-run: manifest fresh; "
+        "no scheduler jobs submitted; receipt untouched.",
+        "target-MSA precompute dry-run targets: " + ",".join(TARGET_IDS),
+    ]
+    if (
+        not isinstance(execution, dict)
+        or execution.get("mode") != "dry_run"
+        or execution.get("exit_code") != 0
+        or execution.get("target_ids") != TARGET_IDS
+        or execution.get("target_count") != 8
+        or execution.get("scheduler_jobs_submitted") != 0
+        or execution.get("target_msa_queries_submitted") != 0
+        or execution.get("proteinmpnn_designs") != 0
+        or execution.get("predictor_evaluations") != 0
+        or execution.get("approval_env_present") is not False
+        or execution.get("submission_command_executed") is not False
+        or execution.get("receipt_created") is not False
+        or execution.get("summary_created") is not False
+        or execution.get("preflight_report_created") is not False
+        or execution.get("target_msa_count_before") != 0
+        or execution.get("target_msa_count_after") != 0
+        or execution.get("stdout_lines") != expected_stdout
+    ):
+        _failure(
+            failures,
+            "cayuga_validation_zero_submit_failed",
+            "Cayuga dry-run evidence violates the exact zero-submit/output contract",
+        )
+
+    boundary = evidence.get("approval_boundary")
+    if (
+        not isinstance(boundary, dict)
+        or boundary.get("approval_recorded") is not False
+        or boundary.get("target_msa_queries_authorized") != 0
+        or boundary.get("proteinmpnn_authorized") is not False
+        or boundary.get("structure_predictors_authorized") is not False
+        or boundary.get("w3c_b2_authorized") is not False
+        or boundary.get("scientific_claim_authorized") is not False
+    ):
+        _failure(
+            failures,
+            "cayuga_validation_authority_leak",
+            "Cayuga validation evidence grants authority beyond a no-submit dry run",
+        )
+    return failures
 
 
 def _stage(protocol: Mapping[str, Any], stage_id: str) -> Mapping[str, Any]:
@@ -285,6 +428,8 @@ def build_packet(
     runtime_bindings: Mapping[str, str],
     wrapper_path: str,
     receipt_path: str,
+    cayuga_validation: Optional[Mapping[str, Any]] = None,
+    cayuga_validation_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     failures: List[Dict[str, str]] = []
     try:
@@ -394,6 +539,30 @@ def build_packet(
     ):
         _failure(failures, "slurm_budget_drift", "precompute sbatch is not locked to one A40 for one hour")
 
+    cayuga_validation_binding = None
+    cayuga_validation_passed = False
+    if cayuga_validation is not None:
+        validation_failures = validate_cayuga_no_submit_validation(
+            cayuga_validation,
+            bound_artifacts=bound_artifacts,
+            wrapper_path=wrapper_path,
+        )
+        failures.extend(validation_failures)
+        cayuga_validation_passed = not validation_failures
+        if cayuga_validation_path is None:
+            _failure(
+                failures,
+                "cayuga_validation_path_missing",
+                "Cayuga validation evidence path is required",
+            )
+            cayuga_validation_passed = False
+        else:
+            try:
+                cayuga_validation_binding = _binding(cayuga_validation_path)
+            except ValueError as exc:
+                _failure(failures, "cayuga_validation_file_missing", str(exc))
+                cayuga_validation_passed = False
+
     ready = not failures
     source_bindings = [
         {
@@ -412,9 +581,13 @@ def build_packet(
         "artifact": "m6d_w3c_b1_target_msa_approval_packet",
         "version": 1,
         "status": (
-            "w3c_b1_packet_prepared_cayuga_no_submit_validation_required"
-            if ready
-            else "w3c_b1_target_msa_approval_packet_blocked"
+            "w3c_b1_packet_cayuga_validated_ready_for_exact_approval"
+            if ready and cayuga_validation_passed
+            else (
+                "w3c_b1_packet_prepared_cayuga_no_submit_validation_required"
+                if ready
+                else "w3c_b1_target_msa_approval_packet_blocked"
+            )
         ),
         "approval_packet_ready": ready,
         "approval_recorded": False,
@@ -437,10 +610,17 @@ def build_packet(
         "slurm_time_per_query": SLURM_TIME,
         "target_msa_queries_authorized_by_this_packet": 0,
         "target_msa_queries_if_explicitly_approved": 8,
-        "can_submit_target_msa_if_explicitly_approved": ready,
+        "can_submit_target_msa_if_explicitly_approved": (
+            ready and cayuga_validation_passed
+        ),
         "cayuga_no_submit_validation_required": True,
-        "cayuga_no_submit_validation_status": "not_run",
-        "ready_to_request_exact_approval": False,
+        "cayuga_no_submit_validation_status": (
+            "pass"
+            if cayuga_validation_passed
+            else ("not_run" if cayuga_validation is None else "failed")
+        ),
+        "cayuga_no_submit_validation_evidence": cayuga_validation_binding,
+        "ready_to_request_exact_approval": ready and cayuga_validation_passed,
         "can_submit_proteinmpnn": False,
         "can_submit_structure_predictors": False,
         "can_prepare_w3c_b2": False,
@@ -460,9 +640,14 @@ def build_packet(
             "W3c-B2 preparation, or any scientific claim."
         ),
         "next_action": (
-            "Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. "
-            f"Only after hash parity and zero-submit behavior pass should the exact phrase "
-            f"'{APPROVAL_PHRASE}' be requested."
+            f"Request the exact phrase '{APPROVAL_PHRASE}'. After that phrase is recorded, "
+            "submit only the eight locked target-MSA input-prep jobs through the guarded wrapper."
+            if ready and cayuga_validation_passed
+            else (
+                "Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. "
+                f"Only after hash parity and zero-submit behavior pass should the exact phrase "
+                f"'{APPROVAL_PHRASE}' be requested."
+            )
         ),
     }
 
@@ -541,6 +726,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument("--wrapper", default="hpc/run_w3c_b1_target_msa_guarded.sh")
     parser.add_argument("--receipt", default="results/m6d_w3c_b1_target_msa_receipt.jsonl")
     parser.add_argument(
+        "--cayuga-validation",
+        default="results/m6d_w3c_b1_cayuga_no_submit_validation.json",
+    )
+    parser.add_argument(
         "--out-json",
         default="results/m6d_w3c_b1_target_msa_approval_packet.json",
     )
@@ -593,6 +782,14 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         runtime_bindings=runtime_bindings,
         wrapper_path=args.wrapper,
         receipt_path=args.receipt,
+        cayuga_validation=(
+            _load_json(args.cayuga_validation)
+            if os.path.isfile(args.cayuga_validation)
+            else None
+        ),
+        cayuga_validation_path=(
+            args.cayuga_validation if os.path.isfile(args.cayuga_validation) else None
+        ),
     )
     _write(args.out_json, json.dumps(packet, indent=2, sort_keys=True) + "\n")
     _write(args.out_md, render_markdown(packet))

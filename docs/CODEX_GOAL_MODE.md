@@ -12,9 +12,11 @@
 > `docs/M6D_W3B_FIT_COMPLETION.md`. The chosen successor is W3c validity-first failure localization. Its
 > historical-pool audit found only 5/24 complete two-chain assemblies and 3/24 strict target-binder systems.
 > W3c-A has now representation-locked eight fresh strict target-binder dimers with zero compute. The
-> hash-bound W3c-B1 target-MSA-only packet is prepared locally, but Cayuga no-submit mirror validation has
-> not run. Resume from `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`; no W3c query, ProteinMPNN design,
-> predictor evaluation, or downstream stage is currently authorized.
+> hash-bound W3c-B1 target-MSA-only packet is prepared, and Cayuga no-submit mirror validation passes with
+> exact hash parity, eight dry-run targets, exit `0`, zero submissions, and absent output artifacts.
+> Resume from `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`; exact target-MSA-only approval is request-ready
+> but not recorded, and no W3c query, ProteinMPNN design, predictor evaluation, or downstream stage is
+> currently authorized.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -725,9 +727,9 @@ Use this order unless the user gives a newer instruction:
    new alpha target or target-specific stress test is explicitly chosen.
 3. W2/W2b/W2c/W3b - Preserve the completed negative evidence and frozen stop decisions. Do not rescue,
    retune, substitute targets, or spend on stages made unreachable by their protocols.
-4. W3c-A/W3c-B1 - Preserve the completed eight-target representation lock. Run Cayuga no-submit mirror
-   validation for the locally prepared B1 packet, then request exact approval only after hash parity,
-   dry-run exit `0`, zero submissions, and absent provenance outputs are confirmed.
+4. W3c-A/W3c-B1 - Preserve the completed eight-target representation lock and the passing Cayuga
+   no-submit mirror evidence. Request exact target-MSA-only approval next; do not submit before the exact
+   phrase is recorded.
 5. W3c-B2 - Prepare native dual-predictor recovery only after all eight target MSAs pass frozen-sequence,
    depth, hash, and no-truncation checks. It requires a separate preregistered H100 approval and authorizes
    no generator work.

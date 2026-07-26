@@ -1,6 +1,6 @@
 # M6d Goal Drift Audit
 
-Status: `no_major_direction_drift_w3c_b1_packet_ready_cayuga_validation_next`.
+Status: `no_major_direction_drift_w3c_b1_cayuga_validated_exact_approval_next`.
 Audit ok: `True`.
 Major direction drift: `False`.
 
@@ -10,7 +10,7 @@ Major direction drift: `False`.
 - protocol: `no_drift_w3c_b1_packet_matches_frozen_validity_first_protocol`
 - claims: `no_drift_packet_only_no_native_generator_or_gate_claim`
 - execution: `no_submit_zero_msa_zero_predictor_zero_proteinmpnn`
-- operational status: `w3c_b1_packet_ready_cayuga_no_submit_validation_required`
+- operational status: `w3c_b1_cayuga_validated_exact_approval_required`
 
 ## Active Risks
 
@@ -21,4 +21,4 @@ Major direction drift: `False`.
 
 ## Next Action
 
-Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. Only after hash parity and zero-submit behavior pass should the exact phrase 'approve W3c-B1 target-MSA precompute' be requested.
+Request the exact phrase 'approve W3c-B1 target-MSA precompute'. After that phrase is recorded, submit only the eight locked target-MSA input-prep jobs through the guarded wrapper.

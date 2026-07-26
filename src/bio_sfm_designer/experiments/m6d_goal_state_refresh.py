@@ -1525,12 +1525,19 @@ def _w3c_b1_target_msa_packet_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         if isinstance(packet.get("target_source_bindings"), list)
         else []
     )
+    validation_status = packet.get("cayuga_no_submit_validation_status")
+    validation_passed = validation_status == "pass"
+    validation_binding = packet.get("cayuga_no_submit_validation_evidence")
+    expected_status = (
+        "w3c_b1_packet_cayuga_validated_ready_for_exact_approval"
+        if validation_passed
+        else "w3c_b1_packet_prepared_cayuga_no_submit_validation_required"
+    )
     checks = {
         "identity_exact": (
             packet.get("artifact") == "m6d_w3c_b1_target_msa_approval_packet"
             and packet.get("version") == 1
-            and packet.get("status")
-            == "w3c_b1_packet_prepared_cayuga_no_submit_validation_required"
+            and packet.get("status") == expected_status
             and packet.get("approval_packet_ready") is True
         ),
         "target_panel_exact": (
@@ -1586,10 +1593,20 @@ def _w3c_b1_target_msa_packet_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
             and packet.get("receipt_exists") is False
             and packet.get("preexisting_target_msa_paths") == []
         ),
-        "cayuga_validation_pending": (
+        "cayuga_validation_state": (
             packet.get("cayuga_no_submit_validation_required") is True
-            and packet.get("cayuga_no_submit_validation_status") == "not_run"
-            and packet.get("ready_to_request_exact_approval") is False
+            and validation_status in {"not_run", "pass"}
+            and packet.get("ready_to_request_exact_approval") is validation_passed
+            and (
+                (
+                    isinstance(validation_binding, dict)
+                    and validation_binding.get("path")
+                    == "results/m6d_w3c_b1_cayuga_no_submit_validation.json"
+                    and _is_sha256(validation_binding.get("sha256"))
+                )
+                if validation_passed
+                else validation_binding is None
+            )
         ),
         "downstream_closed": (
             packet.get("can_submit_proteinmpnn") is False
@@ -1623,8 +1640,9 @@ def _w3c_b1_target_msa_packet_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         "maximum_a40_gpu_hours": 8.0,
         "target_msa_queries_authorized": 0,
         "target_msa_queries_if_explicitly_approved": 8,
-        "cayuga_no_submit_validation_status": "not_run",
-        "ready_to_request_exact_approval": False,
+        "cayuga_no_submit_validation_status": validation_status,
+        "cayuga_no_submit_validation_evidence": validation_binding,
+        "ready_to_request_exact_approval": validation_passed,
         "locked_manifest_sha256": bindings["locked_manifest"]["sha256"],
         "protocol_sha256": bindings["protocol"]["sha256"],
         "fixture_sha256": bindings["structure_fixture"]["sha256"],
@@ -2883,15 +2901,36 @@ def _apply_w3c_b1_target_msa_packet_state(
     *,
     runtime_goal_active: bool,
 ) -> None:
-    requirement = "W3c_B1_Cayuga_no_submit_mirror_validation"
+    validation_status = str(
+        packet.get("cayuga_no_submit_validation_status") or "not_run"
+    )
+    validation_passed = (
+        validation_status == "pass"
+        and packet.get("ready_to_request_exact_approval") is True
+    )
+    requirement = (
+        "W3c_B1_exact_target_MSA_only_approval"
+        if validation_passed
+        else "W3c_B1_Cayuga_no_submit_mirror_validation"
+    )
     next_action = packet["next_action"]
-    ranked_actions = [
-        "Review the W3c-B1 execution-manifest, plan, wrapper, source, sequence, and budget hashes.",
-        "Provide the exact approval phrase only if the eight-query A40 scope is accepted.",
-        "After approval, run only the guarded W3c-B1 target-MSA wrapper and preserve its receipt.",
-        "Keep ProteinMPNN, Boltz/AF2 structure prediction, and W3c-B2 at zero during B1.",
-        "Do not prepare W3c-B2 until all eight MSAs pass sequence, depth, hash, and no-truncation checks.",
-    ]
+    ranked_actions = (
+        [
+            "Preserve the passing Cayuga no-submit evidence and its exact packet hashes.",
+            "Request the exact W3c-B1 target-MSA-only approval phrase.",
+            "After approval, run only the guarded eight-query target-MSA wrapper and preserve its receipt.",
+            "Keep ProteinMPNN, Boltz/AF2 structure prediction, and W3c-B2 at zero during B1.",
+            "Do not prepare W3c-B2 until all eight MSAs pass sequence, depth, hash, and no-truncation checks.",
+        ]
+        if validation_passed
+        else [
+            "Review the W3c-B1 execution-manifest, plan, wrapper, source, sequence, and budget hashes.",
+            "Provide the exact approval phrase only if the eight-query A40 scope is accepted.",
+            "After approval, run only the guarded W3c-B1 target-MSA wrapper and preserve its receipt.",
+            "Keep ProteinMPNN, Boltz/AF2 structure prediction, and W3c-B2 at zero during B1.",
+            "Do not prepare W3c-B2 until all eight MSAs pass sequence, depth, hash, and no-truncation checks.",
+        ]
+    )
 
     anchor = bundle["anchor"]
     anchor["goal_mode"] = (
@@ -2911,9 +2950,18 @@ def _apply_w3c_b1_target_msa_packet_state(
             "results/m6d_w3c_b1_target_msa_approval_packet.md"
         ),
     })
+    validation_binding = packet.get("cayuga_no_submit_validation_evidence")
+    if isinstance(validation_binding, dict):
+        anchor["current_artifacts"]["w3c_b1_cayuga_no_submit_validation"] = str(
+            validation_binding.get("path")
+        )
     current = anchor.setdefault("current_status", {})
     current.update({
-        "status": "m6_complex_w3c_b1_packet_ready_cayuga_validation_required_no_submit",
+        "status": (
+            "m6_complex_w3c_b1_cayuga_validated_ready_for_exact_approval_no_submit"
+            if validation_passed
+            else "m6_complex_w3c_b1_packet_ready_cayuga_validation_required_no_submit"
+        ),
         "goal_progress": packet["status"],
         "runtime_goal_active": runtime_goal_active,
         "remaining_requirements": [requirement],
@@ -2923,8 +2971,8 @@ def _apply_w3c_b1_target_msa_packet_state(
         "w3c_target_msa_packet_prepared": True,
         "w3c_target_msa_packet_status": packet["status"],
         "w3c_target_msa_approval_recorded": False,
-        "w3c_b1_cayuga_no_submit_validation_status": "not_run",
-        "w3c_b1_ready_to_request_exact_approval": False,
+        "w3c_b1_cayuga_no_submit_validation_status": validation_status,
+        "w3c_b1_ready_to_request_exact_approval": validation_passed,
         "w3c_target_msa_queries_authorized": 0,
         "w3c_target_msa_queries_if_approved": 8,
         "w3c_target_msa_jobs_submitted": 0,
@@ -2936,28 +2984,42 @@ def _apply_w3c_b1_target_msa_packet_state(
         "next_action": next_action,
     })
     anchor["w3c_b1_target_msa_approval"] = packet
-    anchor["next_resume_steps"] = [
-        "read the W3c-B1 approval packet and verify the exact eight-target and 8 A40 GPU-hour scope",
-        "mirror all packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode",
-        "verify hash parity, zero scheduler submission, and absent receipt and summary files",
-        f"only after that validation, request the exact user phrase: {packet['required_user_phrase']}",
-        "preserve the receipt and sync all eight A3M and report files before adjudication",
-        "do not prepare native prediction while any B1 completion check is open",
-    ]
+    anchor["next_resume_steps"] = (
+        [
+            "read the W3c-B1 approval packet and preserve the passing Cayuga no-submit evidence",
+            f"request the exact user phrase: {packet['required_user_phrase']}",
+            "after exact approval, run only the guarded eight-query target-MSA wrapper",
+            "preserve the receipt and sync all eight A3M and report files before adjudication",
+            "do not prepare native prediction while any B1 completion check is open",
+        ]
+        if validation_passed
+        else [
+            "read the W3c-B1 approval packet and verify the exact eight-target and 8 A40 GPU-hour scope",
+            "mirror all packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode",
+            "verify hash parity, zero scheduler submission, and absent receipt and summary files",
+            f"only after that validation, request the exact user phrase: {packet['required_user_phrase']}",
+            "preserve the receipt and sync all eight A3M and report files before adjudication",
+            "do not prepare native prediction while any B1 completion check is open",
+        ]
+    )
     anchor.setdefault("latest_goal_mode_refresh", {}).update({
         "runtime_goal_active": runtime_goal_active,
         "w3c_status": packet["status"],
         "w3c_fresh_targets_locked": 8,
         "w3c_target_msa_packet_prepared": True,
         "w3c_target_msa_approval_recorded": False,
-        "w3c_b1_cayuga_no_submit_validation_status": "not_run",
+        "w3c_b1_cayuga_no_submit_validation_status": validation_status,
         "w3c_jobs_submitted": 0,
         "remaining_requirement": requirement,
     })
 
     completion = bundle["completion"]
     completion.update({
-        "status": "goal_active_w3c_b1_packet_ready_cayuga_validation_required",
+        "status": (
+            "goal_active_w3c_b1_cayuga_validated_exact_approval_required"
+            if validation_passed
+            else "goal_active_w3c_b1_packet_ready_cayuga_validation_required"
+        ),
         "audit_ok": True,
         "complete": False,
         "can_mark_goal_complete": False,
@@ -2983,7 +3045,11 @@ def _apply_w3c_b1_target_msa_packet_state(
 
     drift = bundle["drift"]
     drift.update({
-        "status": "no_major_direction_drift_w3c_b1_packet_ready_cayuga_validation_next",
+        "status": (
+            "no_major_direction_drift_w3c_b1_cayuga_validated_exact_approval_next"
+            if validation_passed
+            else "no_major_direction_drift_w3c_b1_packet_ready_cayuga_validation_next"
+        ),
         "audit_ok": True,
         "major_direction_drift": False,
         "representation_validity_issue_detected": True,
@@ -3023,7 +3089,11 @@ def _apply_w3c_b1_target_msa_packet_state(
         "protocol": "no_drift_w3c_b1_packet_matches_frozen_validity_first_protocol",
         "claims": "no_drift_packet_only_no_native_generator_or_gate_claim",
         "execution": "no_submit_zero_msa_zero_predictor_zero_proteinmpnn",
-        "operational_status": "w3c_b1_packet_ready_cayuga_no_submit_validation_required",
+        "operational_status": (
+            "w3c_b1_cayuga_validated_exact_approval_required"
+            if validation_passed
+            else "w3c_b1_packet_ready_cayuga_no_submit_validation_required"
+        ),
         "major_direction_drift": False,
     })
     drift.setdefault("current_state", {}).setdefault("W3c_validity_first", {}).update({
@@ -3033,7 +3103,11 @@ def _apply_w3c_b1_target_msa_packet_state(
 
     actions = bundle["actions"]
     actions.update({
-        "status": "w3c_b1_packet_ready_cayuga_no_submit_validation_required",
+        "status": (
+            "w3c_b1_cayuga_validated_ready_for_exact_approval"
+            if validation_passed
+            else "w3c_b1_packet_ready_cayuga_no_submit_validation_required"
+        ),
         "w3c_fresh_target_lock": fresh_lock,
         "w3c_b1_target_msa_approval": packet,
         "next_actions_ranked": ranked_actions,
@@ -3050,11 +3124,19 @@ def _apply_w3c_b1_target_msa_packet_state(
     harness = bundle["harness"]
     harness.update({
         "goal_mode_status": (
-            "active_w3c_b1_packet_ready_cayuga_validation_required"
+            (
+                "active_w3c_b1_cayuga_validated_exact_approval_required"
+                if validation_passed
+                else "active_w3c_b1_packet_ready_cayuga_validation_required"
+            )
             if runtime_goal_active
             else "contract_ready_runtime_goal_inactive"
         ),
-        "science_focus": "W3c-B1 Cayuga no-submit mirror validation",
+        "science_focus": (
+            "W3c-B1 exact target-MSA-only approval"
+            if validation_passed
+            else "W3c-B1 Cayuga no-submit mirror validation"
+        ),
         "w3c_fresh_target_lock": fresh_lock,
         "w3c_b1_target_msa_approval": packet,
     })
@@ -3064,15 +3146,23 @@ def _apply_w3c_b1_target_msa_packet_state(
         "w3c_b1_plan_binding": packet["plan_sha256"],
         "w3c_b1_wrapper_binding": packet["wrapper_sha256"],
     })
+    if isinstance(validation_binding, dict):
+        harness["local_verification"]["w3c_b1_cayuga_validation_binding"] = (
+            validation_binding.get("sha256")
+        )
     hpc = harness.setdefault("hpc_status", {})
     hpc.update({
         "active_branch": "none",
         "jobs_running": 0,
-        "w3c_stage": "W3c-B1_packet_ready_Cayuga_validation_required",
+        "w3c_stage": (
+            "W3c-B1_Cayuga_validated_exact_approval_required"
+            if validation_passed
+            else "W3c-B1_packet_ready_Cayuga_validation_required"
+        ),
         "w3c_fresh_targets_locked": 8,
         "w3c_target_msa_packet_prepared": True,
         "w3c_target_msa_approval_recorded": False,
-        "w3c_b1_cayuga_no_submit_validation_status": "not_run",
+        "w3c_b1_cayuga_no_submit_validation_status": validation_status,
         "w3c_msa_queries_authorized": 0,
         "w3c_msa_jobs_submitted": 0,
         "w3c_predictor_jobs_submitted": 0,
@@ -3086,7 +3176,11 @@ def _apply_w3c_b1_target_msa_packet_state(
 
     report = bundle["report"]
     report.update({
-        "status": "goal_state_refreshed_w3c_b1_packet_ready_cayuga_validation_required",
+        "status": (
+            "goal_state_refreshed_w3c_b1_cayuga_validated_exact_approval_required"
+            if validation_passed
+            else "goal_state_refreshed_w3c_b1_packet_ready_cayuga_validation_required"
+        ),
         "audit_ok": True,
         "runtime_goal_active": runtime_goal_active,
         "w3c_fresh_target_lock": fresh_lock,
@@ -3109,6 +3203,10 @@ def _apply_w3c_b1_target_msa_packet_state(
     ):
         if path not in updated:
             updated.append(path)
+    if isinstance(validation_binding, dict):
+        validation_path = validation_binding.get("path")
+        if isinstance(validation_path, str) and validation_path not in updated:
+            updated.append(validation_path)
 
 
 def refresh_bundle(

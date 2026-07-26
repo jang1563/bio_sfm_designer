@@ -16,6 +16,7 @@ from bio_sfm_designer.experiments.m6d_w3c_b1_target_msa_approval import (
     APPROVAL_TOKEN,
     TARGET_IDS,
     build_execution_manifest,
+    validate_cayuga_no_submit_validation,
 )
 from bio_sfm_designer.experiments.m6d_w3c_b1_target_msa_preflight import run_preflight
 
@@ -29,6 +30,7 @@ PACKET_PATH = ROOT / "results/m6d_w3c_b1_target_msa_approval_packet.json"
 MANIFEST_AUDIT_PATH = ROOT / "results/m6d_w3c_b1_target_manifest_pre_msa.json"
 WRAPPER_PATH = ROOT / "hpc/run_w3c_b1_target_msa_guarded.sh"
 FIXTURE_PATH = ROOT / "tests/fixtures/m6d_w3c_fresh_structure_fixture.json"
+CAYUGA_VALIDATION_PATH = ROOT / "results/m6d_w3c_b1_cayuga_no_submit_validation.json"
 
 
 def _load(path):
@@ -85,7 +87,7 @@ def test_execution_manifest_is_exact_deterministic_derivation():
 def test_packet_is_ready_but_authorizes_zero_queries_now():
     packet = _load(PACKET_PATH)
 
-    assert packet["status"] == "w3c_b1_packet_prepared_cayuga_no_submit_validation_required"
+    assert packet["status"] == "w3c_b1_packet_cayuga_validated_ready_for_exact_approval"
     assert packet["approval_packet_ready"] is True
     assert packet["approval_recorded"] is False
     assert packet["submission_performed"] is False
@@ -103,8 +105,11 @@ def test_packet_is_ready_but_authorizes_zero_queries_now():
     assert packet["can_submit_structure_predictors"] is False
     assert packet["can_prepare_w3c_b2"] is False
     assert packet["cayuga_no_submit_validation_required"] is True
-    assert packet["cayuga_no_submit_validation_status"] == "not_run"
-    assert packet["ready_to_request_exact_approval"] is False
+    assert packet["cayuga_no_submit_validation_status"] == "pass"
+    assert packet["ready_to_request_exact_approval"] is True
+    assert packet["cayuga_no_submit_validation_evidence"]["sha256"] == _sha256(
+        CAYUGA_VALIDATION_PATH
+    )
     assert packet["receipt_exists"] is False
     assert packet["failures"] == []
     assert packet["no_submit"] is True
@@ -113,6 +118,39 @@ def test_packet_is_ready_but_authorizes_zero_queries_now():
     assert audit["manifest"] == "configs/m6d_w3c_b1_target_msa_manifest.json"
     assert audit["ok"] is True
     assert audit["n_ready_targets"] == 8
+
+
+def test_cayuga_no_submit_evidence_is_exact_and_fail_closed():
+    packet = _load(PACKET_PATH)
+    evidence = _load(CAYUGA_VALIDATION_PATH)
+
+    assert validate_cayuga_no_submit_validation(
+        evidence,
+        bound_artifacts=packet["bound_artifacts"],
+        wrapper_path=str(WRAPPER_PATH.relative_to(ROOT)),
+    ) == []
+
+    scheduler_drift = copy.deepcopy(evidence)
+    scheduler_drift["execution"]["scheduler_jobs_submitted"] = 1
+    failures = validate_cayuga_no_submit_validation(
+        scheduler_drift,
+        bound_artifacts=packet["bound_artifacts"],
+        wrapper_path=str(WRAPPER_PATH.relative_to(ROOT)),
+    )
+    assert {failure["kind"] for failure in failures} == {
+        "cayuga_validation_zero_submit_failed"
+    }
+
+    hash_drift = copy.deepcopy(evidence)
+    hash_drift["mirror"]["artifacts"][0]["sha256"] = "0" * 64
+    failures = validate_cayuga_no_submit_validation(
+        hash_drift,
+        bound_artifacts=packet["bound_artifacts"],
+        wrapper_path=str(WRAPPER_PATH.relative_to(ROOT)),
+    )
+    assert {failure["kind"] for failure in failures} == {
+        "cayuga_validation_hash_parity_failed"
+    }
 
 
 def test_packet_and_wrapper_bind_every_runtime_artifact():

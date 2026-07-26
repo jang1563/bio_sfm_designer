@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3c_b1_packet_ready_cayuga_validation_required`.
+Status: `goal_active_w3c_b1_cayuga_validated_exact_approval_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -37,13 +37,13 @@ Can mark goal complete: `False`.
 - W3c historical strict target-binders: `3`
 - W3c-A fresh target lock: `w3c_a_fresh_target_representation_lock_complete_no_submit`
 - W3c-A fresh targets locked: `8`
-- W3c-B1 target-MSA packet: `w3c_b1_packet_prepared_cayuga_no_submit_validation_required`
+- W3c-B1 target-MSA packet: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`
 - W3c-B1 approval recorded: `False`
 - W3c-B1 queries authorized: `0`
-- remaining requirement: `W3c_B1_Cayuga_no_submit_mirror_validation`
+- remaining requirement: `W3c_B1_exact_target_MSA_only_approval`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Mirror the packet-bound artifacts to Cayuga and run the guarded wrapper in dry-run mode. Only after hash parity and zero-submit behavior pass should the exact phrase 'approve W3c-B1 target-MSA precompute' be requested.
+Request the exact phrase 'approve W3c-B1 target-MSA precompute'. After that phrase is recorded, submit only the eight locked target-MSA input-prep jobs through the guarded wrapper.

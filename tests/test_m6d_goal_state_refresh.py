@@ -1588,6 +1588,52 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertFalse(bundle["harness"]["hpc_status"]["w3c_submission_allowed"])
         self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
 
+    def test_w3c_b1_cayuga_validation_promotes_exact_approval_request(self):
+        packet = _w3c_b1_target_msa_packet_artifact()
+        packet.update({
+            "status": "w3c_b1_packet_cayuga_validated_ready_for_exact_approval",
+            "cayuga_no_submit_validation_status": "pass",
+            "cayuga_no_submit_validation_evidence": {
+                "path": "results/m6d_w3c_b1_cayuga_no_submit_validation.json",
+                "sha256": "e" * 64,
+            },
+            "ready_to_request_exact_approval": True,
+            "next_action": (
+                "Request the exact phrase 'approve W3c-B1 target-MSA precompute'."
+            ),
+        })
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=packet,
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_b1_cayuga_validated_exact_approval_required",
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["remaining_requirements"],
+            ["W3c_B1_exact_target_MSA_only_approval"],
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"][
+                "w3c_b1_cayuga_no_submit_validation_status"
+            ],
+            "pass",
+        )
+        self.assertTrue(
+            bundle["anchor"]["current_status"]["w3c_b1_ready_to_request_exact_approval"]
+        )
+        self.assertEqual(
+            bundle["harness"]["science_focus"],
+            "W3c-B1 exact target-MSA-only approval",
+        )
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_msa_jobs_submitted"], 0)
+        self.assertFalse(bundle["harness"]["hpc_status"]["w3c_submission_allowed"])
+
     def test_w3c_b1_packet_requires_w3c_a_lock(self):
         with self.assertRaisesRegex(ValueError, "requires the W3c-A fresh target lock"):
             _refresh_current_w3b(

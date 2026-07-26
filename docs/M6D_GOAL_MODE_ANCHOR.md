@@ -11,9 +11,11 @@
 > both endpoints, so the required 15 target accepts imply `15/180 = 0.08333`, above the 0.08 risk cap.
 > Certification and held-out test are unreachable and have zero submissions. The distinct successor is
 > now W3c validity-first failure localization. W3c-A has representation-locked eight fresh strict
-> target-binder dimers with zero compute. Its hash-bound W3c-B1 target-MSA-only packet is locally prepared,
-> but Cayuga no-submit mirror validation has not run. Resume from
-> `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`; do not rescue W3b or infer compute approval.
+> target-binder dimers with zero compute. Its hash-bound W3c-B1 target-MSA-only packet is prepared, and
+> Cayuga no-submit mirror validation passes with exact hash parity, eight dry-run targets, exit `0`, zero
+> submissions, and absent output artifacts. Resume from `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`;
+> exact target-MSA-only approval is request-ready but not recorded. Do not rescue W3b or infer broader
+> compute approval.
 
 Date: 2026-07-15
 
@@ -53,9 +55,11 @@ Strict branch counts are W2b `0/8`, W2c `2/8`, and W3b `1/8`. This is a post-out
 reset, not a subgroup claim: historical experiments remain valid only for their exact prepared structural-
 proxy inputs. W3c freezes the failure order as representation validity, native dual-predictor recovery,
 generator yield, then trust-signal calibration. W3c-A has locked eight fresh, source-disjoint complete
-target-binder dimers. The separate W3c-B1 target-MSA packet is prepared locally and audit-clean, but
-Cayuga no-submit mirror validation, exact approval, submission, receipt, and target-MSA outputs remain
-absent. ProteinMPNN, predictor, gate, and certification work remain unauthorized.
+target-binder dimers. The separate W3c-B1 target-MSA packet and Cayuga no-submit mirror evidence are
+audit-clean. The remote dry run preserved exact hash parity, printed all eight targets, exited `0`,
+submitted zero jobs, and created no receipt, summary, preflight, or target-MSA output. Exact approval,
+submission, receipt, and target-MSA outputs remain absent. ProteinMPNN, predictor, gate, and certification
+work remain unauthorized.
 
 ## Active Objective
 
@@ -65,8 +69,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
 - preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
   certification and held-out-test roles;
-- preserve the completed W3c-A representation lock and advance W3c-B1 only through Cayuga no-submit
-  mirror validation before any exact target-MSA approval;
+- preserve the completed W3c-A representation lock and passing W3c-B1 Cayuga no-submit mirror evidence;
+  request exact target-MSA approval next but submit nothing before that phrase is recorded;
 - require a separate preregistered approval for native dual-predictor recovery before any generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
@@ -199,6 +203,7 @@ from Chai records alone.
 - W3c-B1 target-MSA-only no-submit boundary:
   `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`, `configs/m6d_w3c_b1_target_msa_manifest.json`,
   `results/m6d_w3c_b1_target_msa_approval_packet.{json,md}`, and
+  `results/m6d_w3c_b1_cayuga_no_submit_validation.json`, plus
   `hpc/run_w3c_b1_target_msa_guarded.sh`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
