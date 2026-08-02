@@ -1,0 +1,206 @@
+{
+  "artifact": "m6d_w3d_native_diagnostic_protocol",
+  "version": 1,
+  "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
+  "date": "2026-08-02",
+  "predecessor": {
+    "stage": "W3c-B2",
+    "status": "w3c_b2_terminal_partial_result_impossibility_stop",
+    "closed_without_retry": true,
+    "frozen_stage_pass_impossible": true,
+    "maximum_possible_dual_predictor_passes": 2,
+    "minimum_required_dual_predictor_passes": 6
+  },
+  "scientific_question": "On the same eight native target-binder complexes, does strict native recovery depend primarily on evolutionary-input representation, predictor identity, or a predictor-by-representation interaction?",
+  "design_disclosure": {
+    "successor_question_formulated_after_w3c_b2_baseline_outcomes": true,
+    "baseline_cell_is_retrospective": true,
+    "remaining_cells_are_prospective_after_this_lock": true,
+    "fully_prospective_four_cell_claim_allowed": false,
+    "all_eight_predecessor_targets_retained": true,
+    "target_or_record_filtering_after_baseline_outcomes_allowed": false,
+    "baseline_outcomes_may_tune_future_rules": false,
+    "future_outcomes_may_change_scope_or_rules": false
+  },
+  "target_scope": {
+    "target_count": 8,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ],
+    "target_order_frozen": true,
+    "target_dropping_allowed": false,
+    "replacement_targets_allowed": false
+  },
+  "factorial_design": {
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "representation_ids": [
+      "target_msa_binder_query",
+      "query_only_both_chains"
+    ],
+    "total_factorial_cells": 32,
+    "completed_locked_baseline_cells": 8,
+    "prospective_cells": 24,
+    "complete_case_adjudication_required": true,
+    "partial_panel_decisions_allowed": false
+  },
+  "representation_contract": {
+    "factor_defined_by_evolutionary_information_not_file_format": true,
+    "target_msa_binder_query": {
+      "target_homolog_rows": "frozen W3c-B1 target A3M",
+      "binder_homolog_rows": 0,
+      "nonquery_paired_rows": 0,
+      "boltz_encoding": "Target sequence uses the frozen target A3M; binder sequence uses msa: empty.",
+      "af2_encoding": "Annotated multimer A3M contains the paired native query, unpaired frozen target rows, and one unpaired binder query row; it makes no coevolutionary pairing claim."
+    },
+    "query_only_both_chains": {
+      "target_homolog_rows": 0,
+      "binder_homolog_rows": 0,
+      "nonquery_paired_rows": 0,
+      "boltz_encoding": "Both native sequences use msa: empty.",
+      "af2_encoding": "Annotated multimer A3M contains only the paired native target-binder query and no homolog rows."
+    },
+    "chain_order": "Predictor chain A is the frozen target and predictor chain B is the native binder.",
+    "templates_allowed": false,
+    "prediction_time_network_allowed": false
+  },
+  "baseline_reuse": {
+    "representation_id": "target_msa_binder_query",
+    "predictor_id": "boltz2_complex",
+    "records": 8,
+    "reuse_requires_exact_source_hashes": true,
+    "rerun_allowed": false,
+    "rationale": "The complete W3c-B2 Boltz cell already used the frozen target set, runtime identity, seed, template boundary, network boundary, and target-MSA-plus-binder-query information contract. Reusing all eight outcomes avoids redundant compute and prevents selective rescue."
+  },
+  "primary_endpoint": {
+    "metric": "ligand_rmsd_angstrom",
+    "success_rule": "strict_qc_passed and finite interface_pae and finite ligand_rmsd_angstrom < 4.0",
+    "threshold_angstrom": 4.0,
+    "strict_less_than": true,
+    "interface_pae_is_a_qc_value_not_a_selection_threshold": true,
+    "minimum_cell_successes_for_qualification": 6,
+    "secondary_diagnostics": [
+      "continuous ligand_rmsd_angstrom",
+      "continuous interface_pae",
+      "target-level paired success discordance"
+    ]
+  },
+  "decision_contract": {
+    "strong_directional_contrast": {
+      "favored_cell_minimum_successes": 6,
+      "unfavored_cell_maximum_successes": 2,
+      "favored_only_minimum_targets": 4,
+      "unfavored_only_maximum_targets": 1
+    },
+    "native_validity_recovered_rule": "At least one representation must qualify at 6/8 or better for both predictors under that same representation.",
+    "representation_specific_rule": "The same representation must strongly dominate the other representation within both predictors.",
+    "predictor_specific_rule": "The same predictor must strongly dominate the other predictor within both representations.",
+    "interaction_rule": "Strong directional winners reverse across the matched representation or predictor comparisons.",
+    "partial_localization_rule": "At least one strong directional contrast exists but it is not replicated across the orthogonal factor.",
+    "unresolved_rule": "No frozen localization rule is met.",
+    "threshold_tuning_after_outcomes_allowed": false,
+    "target_exclusion_after_outcomes_allowed": false,
+    "adaptive_top_up_allowed": false
+  },
+  "runtime_contract": {
+    "predictor_runtime_identity_sha256": {
+      "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+      "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab"
+    },
+    "seed": 0,
+    "templates_allowed": false,
+    "prediction_time_network_allowed": false,
+    "same_model_and_sampling_settings_across_representations_required": true,
+    "new_no_prediction_runtime_validation_required": true,
+    "af2_absolute_container_visible_input_and_output_paths_required": true,
+    "af2_container_working_directory_must_be_explicit": true,
+    "old_w3c_b2_af2_wrapper_reusable_for_execution": false,
+    "old_failed_af2_job_ids_may_be_recovered": false
+  },
+  "proposed_future_compute": {
+    "new_predictor_evaluations": 24,
+    "new_boltz_evaluations": 8,
+    "new_af2_evaluations": 16,
+    "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+    "maximum_walltime_per_evaluation": "01:00:00",
+    "resource_per_evaluation": "h100:1",
+    "maximum_target_msa_queries": 0,
+    "proteinmpnn_designs": 0,
+    "api_calls": 0,
+    "retries": 0,
+    "adaptive_top_ups": 0,
+    "post_execution_slurm_accounting_required": true
+  },
+  "authority": {
+    "protocol_preparation_only": true,
+    "predictor_evaluations_authorized": 0,
+    "h100_gpu_hours_authorized": 0.0,
+    "target_msa_queries_authorized": 0,
+    "proteinmpnn_designs_authorized": 0,
+    "api_calls_authorized": 0,
+    "submission_allowed": false,
+    "approval_packet_prepared": false,
+    "explicit_compute_approval_required_later": true
+  },
+  "stop_rules": [
+    "Do not rerun or recover any W3c-B2 job.",
+    "Stop if any source hash, target, runtime identity, representation encoding, seed, template boundary, or network boundary differs from this protocol.",
+    "Stop unless all 24 prospective records pass strict provenance and QC; do not adjudicate a partial panel.",
+    "Keep candidate generation blocked unless both predictors qualify under the same representation.",
+    "Even after native validity is recovered, require a separate generator protocol and explicit compute approval."
+  ],
+  "source_bindings": {
+    "w3c_b2_native_manifest": {
+      "path": "configs/m6d_w3c_b2_native_screen_manifest.json",
+      "sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3"
+    },
+    "w3c_b2_runtime_lock": {
+      "path": "configs/m6d_w3c_b2_runtime_lock.json",
+      "sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d"
+    },
+    "w3c_b2_terminal_stop": {
+      "path": "results/m6d_w3c_b2_terminal_stop.json",
+      "sha256": "fa79f5b255b066397efdc3ea3eb5030305701cd9b35a1c62eba48bcfbb52095b"
+    },
+    "w3c_b2_boltz_records": {
+      "path": "results/m6d_w3c_b2_boltz_native_records.jsonl",
+      "sha256": "c94b914a41be1179d69558cab82711f696057149a838ff4344f62332485194c9"
+    },
+    "w3c_b2_af2_failure_evidence": {
+      "path": "results/m6d_w3c_b2_af2_failure_evidence.jsonl",
+      "sha256": "af498504c156525848bb427c8dd173bd11d0a58e99085c8b6576c8e797fcb4fa"
+    },
+    "w3c_b2_boltz_wrapper": {
+      "path": "hpc/run_predict_boltz_w3c_b2_native.sbatch",
+      "sha256": "1c5ee5e72dc712cfa4a6df6c1cd082475d2fa2bcd38b0bf860c3f42de3307d8c"
+    },
+    "w3c_b2_af2_wrapper": {
+      "path": "hpc/run_predict_af2_w3c_b2_native.sbatch",
+      "sha256": "f3afafaad23565447a2226d41cc3983c404ba69e2f096df60ca5488125be0a1b"
+    },
+    "w3c_b2_producer": {
+      "path": "src/bio_sfm_designer/experiments/m6d_w3c_b2_producer.py",
+      "sha256": "5a67aa1dc0fa1a8fb5d26133358bfb6ac390483ecacbd4900ea9f12d83c8c5bb"
+    }
+  },
+  "claim_boundary": {
+    "can_claim_fully_prospective_factorial_result": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_generator_yield": false,
+    "can_claim_trust_gate": false,
+    "can_claim_biological_binder_success": false,
+    "maximum_current_claim": "A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run."
+  },
+  "no_submit": true,
+  "cayuga_submission_allowed": false,
+  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet."
+}

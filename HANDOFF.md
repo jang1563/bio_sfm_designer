@@ -12,8 +12,12 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > W3c-B2 is therefore `w3c_b2_terminal_partial_result_impossibility_stop`. This is not a complete native-
 > recoverability estimate. No retry, AF2 recovery, additional predictor job, ProteinMPNN, generator, or
 > gate work is authorized. Start with `docs/M6D_W3C_B2_NATIVE_SCREEN.md`,
-> `results/m6d_w3c_b2_terminal_stop.json`, and `results/m6d_goal_state_refresh_report.json`. The next work
-> is a no-submit, separately preregistered representation/predictor successor decision.
+> `results/m6d_w3c_b2_terminal_stop.json`, and `results/m6d_goal_state_refresh_report.json`. The distinct
+> W3d successor is now locked as a no-submit 2 x 2 representation-by-predictor diagnostic. It retains all
+> eight Boltz outcomes as an immutable retrospective baseline and freezes 24 prospective cells across
+> Boltz/AF2 and target-MSA/query-only representations. No prediction is authorized. Resume from
+> `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and `results/m6d_w3d_native_diagnostic_readiness.json`; next build the
+> CPU input producer and corrected no-prediction runtime wrappers, then stop before an approval packet.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
@@ -141,7 +145,11 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > every available output hash and metric and validated all eight AF2 input/runtime/log chains. Boltz passes
 > only `2/8`, which upper-bounds the conjunctive dual-predictor result at `2/8 < 6/8`. Preserve
 > `results/m6d_w3c_b2_terminal_stop.json` as the narrow terminal result. Do not repair or rerun this one-shot
-> panel; any representation/predictor successor needs a separate preregistration and approval.
+> panel. The separate W3d successor is preregistered in
+> `configs/m6d_w3d_native_diagnostic_protocol.json`: a 32-cell factorial with 8 immutable baseline cells
+> and 24 prospective cells. Current predictor, H100, ProteinMPNN, MSA-query, and API authority is zero.
+> Read `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; implement only its CPU inputs and no-prediction runtime
+> validation next.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 

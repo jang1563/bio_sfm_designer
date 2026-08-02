@@ -13,17 +13,18 @@
     "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
     "w3b": "terminal negative fit; no qualifying rule, certification, held-out test, or claim",
     "w3c": "the frozen W3c-B2 pass is impossible from Boltz 2/8; full dual-predictor native recoverability, generator yield, trust-gate performance, and biological binder success remain unclaimed",
+    "w3d": "locked_diagnostic_design_and_reused_baseline_only_no_new_scientific_outcome",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.",
+  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3c_successor_representation_predictor_protocol_selection"
+    "W3d_CPU_input_and_runtime_no_prediction_validation"
   ],
-  "status": "goal_active_w3c_b2_terminal_validity_stop_successor_selection",
+  "status": "goal_active_w3d_protocol_locked_input_runtime_validation_required",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -2150,6 +2151,72 @@
     ],
     "structure_fixture_sha256": "ba67e4c6922d580e200266b3a0531564f8fe9e76387ee46de70ec2e664f917e5"
   },
+  "w3d_native_diagnostic": {
+    "all_predecessor_targets_retained": true,
+    "api_calls": 0,
+    "approval_packet_prepared": false,
+    "audit_ok": true,
+    "can_claim_biological_binder_success": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "cayuga_submission_allowed": false,
+    "checks": {
+      "authority_closed": true,
+      "baseline_exact": true,
+      "claims_bounded": true,
+      "factorial_scope_exact": true,
+      "hash_bindings_present": true,
+      "manifest_identity_exact": true,
+      "prospective_scope_exact": true,
+      "readiness_exact": true
+    },
+    "claim_boundary": "A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run.",
+    "complete_case_adjudication_required": true,
+    "completed_locked_baseline_cells": 8,
+    "completed_locked_baseline_successes": 2,
+    "cpu_only_preparation_complete": true,
+    "decision_rules_locked": true,
+    "design_type": "retrospective_baseline_prospective_factorial_completion",
+    "execution_ready": false,
+    "factorial_cells": 32,
+    "fully_prospective_four_cell_claim_allowed": false,
+    "h100_gpu_hours_authorized": 0.0,
+    "input_producer_implemented": false,
+    "manifest_sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
+    "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+    "new_runtime_wrappers_implemented": false,
+    "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
+    "no_prediction_runtime_validation_complete": false,
+    "no_submit": true,
+    "outcome_adjudicator_implemented": true,
+    "posthoc_disclosure_complete": true,
+    "predictor_evaluations_authorized": 0,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "prospective_af2_cells": 16,
+    "prospective_boltz_cells": 8,
+    "prospective_cells": 24,
+    "proteinmpnn_designs": 0,
+    "protocol_sha256": "7034378adbd71388accab3c5c6771a5cd7ae939eb2dc66245c86a287cf7f66d9",
+    "representation_ids": [
+      "target_msa_binder_query",
+      "query_only_both_chains"
+    ],
+    "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
   "workstream_status": {
     "W1_M6c_scale_up": {
       "complete": true,
@@ -2195,6 +2262,15 @@
       "w3c_b2_scheduler_jobs_terminal": 16,
       "w3c_b2_stage_decision_complete": true,
       "w3c_b2_stage_pass": false
+    },
+    "W3d_native_diagnostic": {
+      "complete": false,
+      "cpu_only_preparation_complete": true,
+      "execution_ready": false,
+      "protocol_locked": true,
+      "remaining_requirement": "W3d_CPU_input_and_runtime_no_prediction_validation",
+      "scientific_success": false,
+      "status": "w3d_native_representation_predictor_protocol_locked_no_submit"
     },
     "W4_closed_loop_DBTL": {
       "complete": true,

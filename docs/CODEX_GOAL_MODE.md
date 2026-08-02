@@ -14,10 +14,12 @@
 > W3c-A has representation-locked eight fresh strict target-binder dimers. The exact hash-bound W3c-B1
 > approval was consumed once; eight target-MSA jobs completed 8/8 at `1.151111` A40 GPU-hours and all
 > A3M/report integrity checks pass. Boltz's downstream target-only inference failed after each MSA was
-> retrieved, so zero structure outputs were consumed. The exact W3c-B2 approval was consumed once and jobs
-> `3171272`-`3171287` are submitted with a complete 16/16 receipt, zero retries, and zero adaptive top-ups.
-> They are awaiting Cayuga H100 execution. No additional predictor job, ProteinMPNN design, or downstream
-> claim is authorized.
+> retrieved, so zero structure outputs were consumed. W3c-B2 is now terminal: all eight Boltz jobs completed
+> but only 2/8 targets pass native L-RMSD, while all eight AF2 jobs failed before inference. The frozen
+> both-predictors 6/8 pass is therefore impossible and no retry is authorized. W3d is now locked as the
+> distinct 2 x 2 representation-by-predictor diagnostic, with eight immutable baseline cells and 24
+> prospective cells. No new prediction is authorized. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
+> implement only CPU inputs plus corrected no-prediction runtime validation.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -33,10 +35,10 @@ Continue the bio_sfm_designer M6d science-result program in Cayuga-first goal mo
 preserve terminal W2b v1 and the terminal W2c selective-pAE threshold-learning result without
 post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result and its
 input, runtime, approval, and adjudication locks; preserve the terminal W3b fit result without
-threshold rescue, target substitution, certification, or held-out testing; execute the preregistered W3c
-validity-first successor in order; preserve the completed eight-target representation lock and completed
-W3c-B1 target-MSA evidence; complete only the receipt-bound W3c-B2 native dual-predictor jobs and apply the
-frozen 6/8 adjudication before any separately approved generator work; preserve W1 as
+threshold rescue, target substitution, certification, or held-out testing; preserve W3c-B2 at its terminal
+frozen-stage impossibility stop; execute the preregistered W3d representation-by-predictor successor in
+order, beginning with CPU input production and no-prediction runtime validation and requiring a separate
+approval before any H100 or generator work; preserve W1 as
 target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep all status artifacts
 honest and reproducible.
 ```
@@ -734,12 +736,14 @@ Use this order unless the user gives a newer instruction:
    retune, substitute targets, or spend on stages made unreachable by their protocols.
 4. W3c-A/W3c-B1 - Preserve the completed eight-target representation lock, consumed B1 approval, and
    8/8 target-MSA completion evidence. Do not reuse the B1 approval.
-5. W3c-B2 - Preserve the consumed one-shot approval and monitor only receipt-bound jobs
-   `3171272`-`3171287`. After terminal accounting, sync the frozen outputs and apply the exact both-predictors,
-   at-least-6-of-8 rule. No retry, top-up, target replacement, or generator work is authorized.
-6. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
+5. W3c-B2 - Preserve `w3c_b2_terminal_partial_result_impossibility_stop`. Do not retry AF2, rerun Boltz,
+   replace targets, or reuse the consumed approval.
+6. W3d - Preserve all eight baseline outcomes and all eight targets. Implement the two frozen input
+   representations and absolute-path predictor wrappers, then validate all 24 prospective cells without
+   prediction or submission. Stop before preparing compute authority.
+7. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
-7. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,
+8. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,
    and key-rotation constraints are satisfied.
 
 If the current readiness artifact exposes a runnable blocker outside this priority order, resolve that

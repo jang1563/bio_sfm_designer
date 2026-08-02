@@ -4,13 +4,13 @@
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
   "historical_w2c_submission_performed": true,
-  "next_action": "Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.",
+  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
   "next_actions_ranked": [
-    "Preserve the eight replayed Boltz records, eight AF2 pre-inference failure records, and exact Slurm accounting.",
-    "Close the one-shot W3c-B2 execution with zero retry, adaptive top-up, or AF2 recovery authority.",
-    "Interpret the result only as a frozen-stage impossibility and native-validity warning, not a complete recoverability estimate.",
-    "Preregister a distinct representation/predictor validity successor with its own scope, controls, and stop rule.",
-    "Keep ProteinMPNN, generator-yield, trust-gate, and biological claims blocked until a successor establishes native recovery."
+    "Preserve W3c-B2 as terminal and reuse all eight locked Boltz target-MSA outcomes without rerun.",
+    "Implement the CPU-only W3d input producer for both frozen evolutionary-information representations.",
+    "Implement corrected predictor wrappers with absolute container-visible AF2 paths and an explicit container working directory.",
+    "Validate both exact runtimes and all 24 prospective input cells without model inference or scheduler submission.",
+    "Only after that validation, prepare a separate hash-bound approval packet for exactly 24 H100 evaluations."
   ],
   "no_submit": true,
   "obsolete_current_routes_removed": [
@@ -19,18 +19,18 @@
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "af30f2ff94cd06cdf11a4988620311e8005ffc2964abaab2d86910d388f2a7df",
-    "results/m6d_followup_next_science_actions.md": "b67be945d4819b1b4b768645f2d08b3fcc440e7f8d4b648c87f9af1b4b80af91",
-    "results/m6d_goal_completion_audit.json": "1c7764b905d6bf2d1f9b9ab80481de813304413dba68cd72263b79e5a2a1cc65",
-    "results/m6d_goal_completion_audit.md": "0817f1c766be8aa16e935d9746377a81b3ab536a333f0bdafc1a98ac78e7e2a6",
-    "results/m6d_goal_drift_audit.json": "0f14b434cd5fe84238f89aab8fe0b2c747250b0a900ee462890221f6769e664f",
-    "results/m6d_goal_drift_audit.md": "5b08da1cbf64539f6395607fa6668b22d1afa3c05a7dca9ed5f2891ddd3e50c6",
-    "results/m6d_goal_mode_current_anchor.json": "27a25051640e82e2e50cbc21ffd9496c847e737aef6e9047352ac94bd928ce7d",
-    "results/m6d_goal_mode_local_harness_status.json": "62b355d860df89c659d8dbded8cabc33cb9dcfb1f1c1e015af5052bddf7022ad",
-    "results/m6d_goal_mode_local_harness_status.md": "7bb5eeb300cc0cf46566319e4e90e322cd38926284c62874d92dd60ee4e022e7"
+    "results/m6d_followup_next_science_actions.json": "4c7d4e675da28c0b9906841185b739c57c449eee1888d9bc1531a73e89a42394",
+    "results/m6d_followup_next_science_actions.md": "52dd0c591086c45735590967dc47d56aed2762bc40c4b2d1d1d3701d2aeb0e47",
+    "results/m6d_goal_completion_audit.json": "c4828d206d9cd575ce6f050a9f6a6856ca61660195304b53548ca89d60d8eaf1",
+    "results/m6d_goal_completion_audit.md": "d0bd9c7fb8219e08a60308c8c17171d6489fe44f1fbcbbdc6895fc25758ac551",
+    "results/m6d_goal_drift_audit.json": "534e12d5bf9cb96b504068b17cd9cddc22c69755ef0acab6cd275ced077acd96",
+    "results/m6d_goal_drift_audit.md": "d7a7a89bf35a764714654bcc27806245b43be366fd5ee30ea5a2940afc91ded5",
+    "results/m6d_goal_mode_current_anchor.json": "bf77e7364a6e973c2f6cf86eed5263acbb97ddea69d86a0dddfdc8577aacd1e0",
+    "results/m6d_goal_mode_local_harness_status.json": "944bbc4c3a75a06ceda210addf209c35c7a1c9a66a15da2ba191280f293ac7be",
+    "results/m6d_goal_mode_local_harness_status.md": "0ece7e721645005bd0ffd72db41f9c671559aec078a6597ccf6b67ff7cdcd026"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w3c_b2_terminal_frozen_pass_impossible",
+  "status": "goal_state_refreshed_w3d_protocol_locked_no_submit",
   "submission_performed": true,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
@@ -76,9 +76,14 @@
     "results/m6d_w3c_b2_completion_accounting.json",
     "results/m6d_w3c_b2_boltz_native_records.jsonl",
     "results/m6d_w3c_b2_af2_failure_evidence.jsonl",
-    "results/m6d_w3c_b2_terminal_stop.json"
+    "results/m6d_w3c_b2_terminal_stop.json",
+    "configs/m6d_w3d_native_diagnostic_protocol.json",
+    "configs/m6d_w3d_native_diagnostic_manifest.json",
+    "results/m6d_w3d_native_diagnostic_readiness.json",
+    "results/m6d_w3d_native_diagnostic_readiness.md",
+    "docs/M6D_W3D_NATIVE_DIAGNOSTIC.md"
   ],
-  "updated_at": "2026-08-02T23:18:14+02:00",
+  "updated_at": "2026-08-03T00:06:03+02:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -1761,5 +1766,72 @@
       "1F3V_BA"
     ],
     "structure_fixture_sha256": "ba67e4c6922d580e200266b3a0531564f8fe9e76387ee46de70ec2e664f917e5"
-  }
+  },
+  "w3d_native_diagnostic": {
+    "all_predecessor_targets_retained": true,
+    "api_calls": 0,
+    "approval_packet_prepared": false,
+    "audit_ok": true,
+    "can_claim_biological_binder_success": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "cayuga_submission_allowed": false,
+    "checks": {
+      "authority_closed": true,
+      "baseline_exact": true,
+      "claims_bounded": true,
+      "factorial_scope_exact": true,
+      "hash_bindings_present": true,
+      "manifest_identity_exact": true,
+      "prospective_scope_exact": true,
+      "readiness_exact": true
+    },
+    "claim_boundary": "A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run.",
+    "complete_case_adjudication_required": true,
+    "completed_locked_baseline_cells": 8,
+    "completed_locked_baseline_successes": 2,
+    "cpu_only_preparation_complete": true,
+    "decision_rules_locked": true,
+    "design_type": "retrospective_baseline_prospective_factorial_completion",
+    "execution_ready": false,
+    "factorial_cells": 32,
+    "fully_prospective_four_cell_claim_allowed": false,
+    "h100_gpu_hours_authorized": 0.0,
+    "input_producer_implemented": false,
+    "manifest_sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
+    "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+    "new_runtime_wrappers_implemented": false,
+    "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
+    "no_prediction_runtime_validation_complete": false,
+    "no_submit": true,
+    "outcome_adjudicator_implemented": true,
+    "posthoc_disclosure_complete": true,
+    "predictor_evaluations_authorized": 0,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "prospective_af2_cells": 16,
+    "prospective_boltz_cells": 8,
+    "prospective_cells": 24,
+    "proteinmpnn_designs": 0,
+    "protocol_sha256": "7034378adbd71388accab3c5c6771a5cd7ae939eb2dc66245c86a287cf7f66d9",
+    "representation_ids": [
+      "target_msa_binder_query",
+      "query_only_both_chains"
+    ],
+    "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
+  "w3d_submission_performed": false
 }

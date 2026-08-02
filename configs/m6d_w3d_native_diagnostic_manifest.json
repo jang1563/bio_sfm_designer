@@ -1,0 +1,761 @@
+{
+  "api_calls": 0,
+  "approval_packet_prepared": false,
+  "artifact": "m6d_w3d_native_diagnostic_manifest",
+  "audit_ok": true,
+  "authority": {
+    "api_calls_authorized": 0,
+    "approval_packet_prepared": false,
+    "explicit_compute_approval_required_later": true,
+    "h100_gpu_hours_authorized": 0.0,
+    "predictor_evaluations_authorized": 0,
+    "proteinmpnn_designs_authorized": 0,
+    "protocol_preparation_only": true,
+    "submission_allowed": false,
+    "target_msa_queries_authorized": 0
+  },
+  "baseline_success_target_ids": [
+    "5E5M_AB",
+    "5JSB_AB"
+  ],
+  "baseline_successes": 2,
+  "can_claim_biological_binder_success": false,
+  "can_claim_generator_yield": false,
+  "can_claim_native_recoverability": false,
+  "can_claim_trust_gate": false,
+  "cayuga_submission_allowed": false,
+  "cells": [
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "8afc3157bb95ba3f1558e44ddc951c07048ef048ae4259b53499516d172a2757",
+        "interface_pae": 11.4271,
+        "lrmsd_angstrom": 30.981252497020304,
+        "record_id": "w3c-b2-native-1TE1_BA-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": false
+      },
+      "cell_id": "w3d-1TE1_BA-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "cell_id": "w3d-1TE1_BA-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/1TE1_BA/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/1TE1_BA/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "cell_id": "w3d-1TE1_BA-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/1TE1_BA/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/1TE1_BA/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "cell_id": "w3d-1TE1_BA-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/1TE1_BA/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/1TE1_BA/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "1TE1_BA"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "346a4f7ac8e6f8533e0edf32677057f509dce620c9b9197b0213b54b99ecc831",
+        "interface_pae": 18.0891,
+        "lrmsd_angstrom": 58.44914624783606,
+        "record_id": "w3c-b2-native-3QB4_AB-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": false
+      },
+      "cell_id": "w3d-3QB4_AB-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "cell_id": "w3d-3QB4_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/3QB4_AB/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/3QB4_AB/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "cell_id": "w3d-3QB4_AB-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/3QB4_AB/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/3QB4_AB/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "cell_id": "w3d-3QB4_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/3QB4_AB/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/3QB4_AB/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "3QB4_AB"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "a1f6c4304cf6ff6d53f01e6e44a94b042389d2df356ba3f2993faeb63459ffd6",
+        "interface_pae": 4.4283,
+        "lrmsd_angstrom": 2.4268548953275997,
+        "record_id": "w3c-b2-native-5E5M_AB-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": true
+      },
+      "cell_id": "w3d-5E5M_AB-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "cell_id": "w3d-5E5M_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/5E5M_AB/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/5E5M_AB/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "cell_id": "w3d-5E5M_AB-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/5E5M_AB/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/5E5M_AB/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "cell_id": "w3d-5E5M_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/5E5M_AB/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/5E5M_AB/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "5E5M_AB"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "07a5b3bce4e43929d3b960825f68ea67370be30db1cfbdc98bddd8456f4ec9c7",
+        "interface_pae": 3.2575,
+        "lrmsd_angstrom": 0.644484718148796,
+        "record_id": "w3c-b2-native-5JSB_AB-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": true
+      },
+      "cell_id": "w3d-5JSB_AB-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "cell_id": "w3d-5JSB_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/5JSB_AB/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/5JSB_AB/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "cell_id": "w3d-5JSB_AB-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/5JSB_AB/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/5JSB_AB/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "cell_id": "w3d-5JSB_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/5JSB_AB/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/5JSB_AB/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "5JSB_AB"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "e42b9a2fa989612a089e971293652b1415c845173e11e4936775c51fdfbe482d",
+        "interface_pae": 9.2236,
+        "lrmsd_angstrom": 17.343068271840973,
+        "record_id": "w3c-b2-native-6KBR_AC-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": false
+      },
+      "cell_id": "w3d-6KBR_AC-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "cell_id": "w3d-6KBR_AC-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6KBR_AC/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6KBR_AC/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "cell_id": "w3d-6KBR_AC-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6KBR_AC/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6KBR_AC/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "cell_id": "w3d-6KBR_AC-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6KBR_AC/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6KBR_AC/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "6KBR_AC"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "496b764b33c0b3fa286abd62b969c9a2da437854153d2e10c75a09dfeb951fb2",
+        "interface_pae": 4.1455,
+        "lrmsd_angstrom": 7.910632618054757,
+        "record_id": "w3c-b2-native-6KMQ_AB-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": false
+      },
+      "cell_id": "w3d-6KMQ_AB-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "cell_id": "w3d-6KMQ_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6KMQ_AB/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6KMQ_AB/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "cell_id": "w3d-6KMQ_AB-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6KMQ_AB/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6KMQ_AB/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "cell_id": "w3d-6KMQ_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6KMQ_AB/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6KMQ_AB/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "6KMQ_AB"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "1a4084bfe58b6ce9d5120c30e4fef8f1961432178f1459b20cd39b6166d1d430",
+        "interface_pae": 11.018,
+        "lrmsd_angstrom": 7.319867324885256,
+        "record_id": "w3c-b2-native-6SGE_AB-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": false
+      },
+      "cell_id": "w3d-6SGE_AB-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "cell_id": "w3d-6SGE_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6SGE_AB/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6SGE_AB/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "cell_id": "w3d-6SGE_AB-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6SGE_AB/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6SGE_AB/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "cell_id": "w3d-6SGE_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/6SGE_AB/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/6SGE_AB/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "6SGE_AB"
+    },
+    {
+      "baseline_outcome": {
+        "canonical_record_sha256": "59fcfdf4f8fd96544422782d444ea086a5c27c497cca7f5e2a5b16064995f9f5",
+        "interface_pae": 8.4088,
+        "lrmsd_angstrom": 39.58220184235408,
+        "record_id": "w3c-b2-native-7B5G_AB-boltz2_complex",
+        "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+        "strict_qc_passed": true,
+        "success": false
+      },
+      "cell_id": "w3d-7B5G_AB-target_msa_binder_query-boltz2_complex",
+      "cell_status": "completed_locked_w3c_b2_baseline",
+      "new_prediction_required": false,
+      "planned_output_root": null,
+      "planned_record": null,
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": false,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "cell_id": "w3d-7B5G_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/7B5G_AB/target_msa_binder_query/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/7B5G_AB/target_msa_binder_query/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "target_msa_binder_query",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "cell_id": "w3d-7B5G_AB-query_only_both_chains-boltz2_complex",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/7B5G_AB/query_only_both_chains/boltz2_complex",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/7B5G_AB/query_only_both_chains/boltz2_complex/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "boltz2_complex",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "7B5G_AB"
+    },
+    {
+      "cell_id": "w3d-7B5G_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+      "cell_status": "prospective_not_authorized",
+      "new_prediction_required": true,
+      "planned_output_root": "hpc_outputs/m6d_w3d_native_diagnostic/7B5G_AB/query_only_both_chains/af2_multimer_colabfold_v1",
+      "planned_record": "hpc_outputs/m6d_w3d_native_diagnostic/7B5G_AB/query_only_both_chains/af2_multimer_colabfold_v1/strict_qc_record.json",
+      "prediction_authorized": false,
+      "predictor_id": "af2_multimer_colabfold_v1",
+      "prospective_after_protocol_lock": true,
+      "representation_id": "query_only_both_chains",
+      "target_id": "7B5G_AB"
+    }
+  ],
+  "claim_boundary": "A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run.",
+  "completed_locked_baseline_cells": 8,
+  "decision_contract": {
+    "adaptive_top_up_allowed": false,
+    "interaction_rule": "Strong directional winners reverse across the matched representation or predictor comparisons.",
+    "native_validity_recovered_rule": "At least one representation must qualify at 6/8 or better for both predictors under that same representation.",
+    "partial_localization_rule": "At least one strong directional contrast exists but it is not replicated across the orthogonal factor.",
+    "predictor_specific_rule": "The same predictor must strongly dominate the other predictor within both representations.",
+    "representation_specific_rule": "The same representation must strongly dominate the other representation within both predictors.",
+    "strong_directional_contrast": {
+      "favored_cell_minimum_successes": 6,
+      "favored_only_minimum_targets": 4,
+      "unfavored_cell_maximum_successes": 2,
+      "unfavored_only_maximum_targets": 1
+    },
+    "target_exclusion_after_outcomes_allowed": false,
+    "threshold_tuning_after_outcomes_allowed": false,
+    "unresolved_rule": "No frozen localization rule is met."
+  },
+  "design_type": "retrospective_baseline_prospective_factorial_completion",
+  "fully_prospective_four_cell_claim_allowed": false,
+  "h100_gpu_hours_authorized": 0.0,
+  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
+  "no_submit": true,
+  "prediction_executed": false,
+  "predictor_evaluations_authorized": 0,
+  "predictor_ids": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "primary_endpoint": {
+    "interface_pae_is_a_qc_value_not_a_selection_threshold": true,
+    "metric": "ligand_rmsd_angstrom",
+    "minimum_cell_successes_for_qualification": 6,
+    "secondary_diagnostics": [
+      "continuous ligand_rmsd_angstrom",
+      "continuous interface_pae",
+      "target-level paired success discordance"
+    ],
+    "strict_less_than": true,
+    "success_rule": "strict_qc_passed and finite interface_pae and finite ligand_rmsd_angstrom < 4.0",
+    "threshold_angstrom": 4.0
+  },
+  "proposed_future_compute": {
+    "adaptive_top_ups": 0,
+    "api_calls": 0,
+    "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+    "maximum_target_msa_queries": 0,
+    "maximum_walltime_per_evaluation": "01:00:00",
+    "new_af2_evaluations": 16,
+    "new_boltz_evaluations": 8,
+    "new_predictor_evaluations": 24,
+    "post_execution_slurm_accounting_required": true,
+    "proteinmpnn_designs": 0,
+    "resource_per_evaluation": "h100:1",
+    "retries": 0
+  },
+  "prospective_cells": 24,
+  "proteinmpnn_designs": 0,
+  "protocol_binding": {
+    "bytes": 9474,
+    "path": "configs/m6d_w3d_native_diagnostic_protocol.json",
+    "sha256": "7034378adbd71388accab3c5c6771a5cd7ae939eb2dc66245c86a287cf7f66d9"
+  },
+  "repo_only_replay": "The manifest and readiness audit replay tracked hashes, metadata, records, and terminal evidence without requiring the original HPC prediction files.",
+  "representation_contract": {
+    "chain_order": "Predictor chain A is the frozen target and predictor chain B is the native binder.",
+    "factor_defined_by_evolutionary_information_not_file_format": true,
+    "prediction_time_network_allowed": false,
+    "query_only_both_chains": {
+      "af2_encoding": "Annotated multimer A3M contains only the paired native target-binder query and no homolog rows.",
+      "binder_homolog_rows": 0,
+      "boltz_encoding": "Both native sequences use msa: empty.",
+      "nonquery_paired_rows": 0,
+      "target_homolog_rows": 0
+    },
+    "target_msa_binder_query": {
+      "af2_encoding": "Annotated multimer A3M contains the paired native query, unpaired frozen target rows, and one unpaired binder query row; it makes no coevolutionary pairing claim.",
+      "binder_homolog_rows": 0,
+      "boltz_encoding": "Target sequence uses the frozen target A3M; binder sequence uses msa: empty.",
+      "nonquery_paired_rows": 0,
+      "target_homolog_rows": "frozen W3c-B1 target A3M"
+    },
+    "templates_allowed": false
+  },
+  "representation_ids": [
+    "target_msa_binder_query",
+    "query_only_both_chains"
+  ],
+  "runtime_contract": {
+    "af2_absolute_container_visible_input_and_output_paths_required": true,
+    "af2_container_working_directory_must_be_explicit": true,
+    "new_no_prediction_runtime_validation_required": true,
+    "old_failed_af2_job_ids_may_be_recovered": false,
+    "old_w3c_b2_af2_wrapper_reusable_for_execution": false,
+    "prediction_time_network_allowed": false,
+    "predictor_runtime_identity_sha256": {
+      "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+      "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+    },
+    "same_model_and_sampling_settings_across_representations_required": true,
+    "seed": 0,
+    "templates_allowed": false
+  },
+  "scientific_question": "On the same eight native target-binder complexes, does strict native recovery depend primarily on evolutionary-input representation, predictor identity, or a predictor-by-representation interaction?",
+  "source_bindings": {
+    "w3c_b2_af2_failure_evidence": {
+      "bytes": 13298,
+      "path": "results/m6d_w3c_b2_af2_failure_evidence.jsonl",
+      "sha256": "af498504c156525848bb427c8dd173bd11d0a58e99085c8b6576c8e797fcb4fa"
+    },
+    "w3c_b2_af2_wrapper": {
+      "bytes": 5004,
+      "path": "hpc/run_predict_af2_w3c_b2_native.sbatch",
+      "sha256": "f3afafaad23565447a2226d41cc3983c404ba69e2f096df60ca5488125be0a1b"
+    },
+    "w3c_b2_boltz_records": {
+      "bytes": 15159,
+      "path": "results/m6d_w3c_b2_boltz_native_records.jsonl",
+      "sha256": "c94b914a41be1179d69558cab82711f696057149a838ff4344f62332485194c9"
+    },
+    "w3c_b2_boltz_wrapper": {
+      "bytes": 3083,
+      "path": "hpc/run_predict_boltz_w3c_b2_native.sbatch",
+      "sha256": "1c5ee5e72dc712cfa4a6df6c1cd082475d2fa2bcd38b0bf860c3f42de3307d8c"
+    },
+    "w3c_b2_native_manifest": {
+      "bytes": 23108,
+      "path": "configs/m6d_w3c_b2_native_screen_manifest.json",
+      "sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3"
+    },
+    "w3c_b2_producer": {
+      "bytes": 24834,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3c_b2_producer.py",
+      "sha256": "5a67aa1dc0fa1a8fb5d26133358bfb6ac390483ecacbd4900ea9f12d83c8c5bb"
+    },
+    "w3c_b2_runtime_lock": {
+      "bytes": 5309,
+      "path": "configs/m6d_w3c_b2_runtime_lock.json",
+      "sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d"
+    },
+    "w3c_b2_terminal_stop": {
+      "bytes": 16778,
+      "path": "results/m6d_w3c_b2_terminal_stop.json",
+      "sha256": "fa79f5b255b066397efdc3ea3eb5030305701cd9b35a1c62eba48bcfbb52095b"
+    }
+  },
+  "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
+  "submission_performed": false,
+  "target_count": 8,
+  "target_ids": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "targets": [
+    {
+      "binder_chain": "A",
+      "binder_sequence_length": 274,
+      "binder_sequence_sha256": "66b9034c5bbef879f433a80692f409ed7877d40ad4287985269ce8f1ea3b5d31",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/prepared_1TE1_BA.pdb",
+      "reference_backbone_sha256": "8ebe6747b6f1d1c3999cea5a84791a2a5b562a785b8d9b7a664df00432c755be",
+      "target_chain": "B",
+      "target_id": "1TE1_BA",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m",
+      "target_msa_records": 2442,
+      "target_msa_sha256": "5c6a775dbf5fb22d585cc3eb43916e865150412a63b9a3674adbf1042012a57b",
+      "target_sequence_length": 190,
+      "target_sequence_sha256": "0791623fe0756f683d3c5e547f7a4c725bca84a145a0b389136c0c6c297906c0"
+    },
+    {
+      "binder_chain": "B",
+      "binder_sequence_length": 88,
+      "binder_sequence_sha256": "4820e8aac16e1c0ba8e948648408486970653843eaed71769cc72ad868d292e4",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/prepared_3QB4_AB.pdb",
+      "reference_backbone_sha256": "8a15c3aff74646854d9b1eab647dc73822542b19bd2dc49e2fe91a5afcd84b57",
+      "target_chain": "A",
+      "target_id": "3QB4_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m",
+      "target_msa_records": 1909,
+      "target_msa_sha256": "2865592c3f8f5c3e7b7269a0ac560ff29808e9ac6c6763c64e6c105c946dd7fa",
+      "target_sequence_length": 105,
+      "target_sequence_sha256": "862c960bfcb0e1d2939202ed29b33e197275c21d8f49cdd9336491b05778cdfd"
+    },
+    {
+      "binder_chain": "B",
+      "binder_sequence_length": 112,
+      "binder_sequence_sha256": "6d0fc9cf7e99b3e8d0b2dac00310c679bd605d642e7666c51239c93dfbefc755",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/prepared_5E5M_AB.pdb",
+      "reference_backbone_sha256": "488d3ebd1487b347999c55a7f8ea4a8b6f67d1250fe70272c15468832dfcf71f",
+      "target_chain": "A",
+      "target_id": "5E5M_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m",
+      "target_msa_records": 96,
+      "target_msa_sha256": "3648230ee78da3fa857f036d14302fe8de022bf4d6bd1f66d2b49c8aa2dfc8a8",
+      "target_sequence_length": 115,
+      "target_sequence_sha256": "7a2450c6429f805e6ca72013e1a0b6a579c65143c898615a7d7cb4ba681654ac"
+    },
+    {
+      "binder_chain": "B",
+      "binder_sequence_length": 116,
+      "binder_sequence_sha256": "f86f8464b78f50ef01c7db2db993920e48262f06735e43219d80dea1bb57a7d7",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/prepared_5JSB_AB.pdb",
+      "reference_backbone_sha256": "92058e28e4d1ceb899103e4ed494d5b35237aab2dd768ab07f23408bc87e933b",
+      "target_chain": "A",
+      "target_id": "5JSB_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m",
+      "target_msa_records": 287,
+      "target_msa_sha256": "60b17028ec6900c62d07bba72856c653432b625c229ceffb9ca715456efd05f0",
+      "target_sequence_length": 151,
+      "target_sequence_sha256": "9451a288bdeb55eeba38601282b94f4abe2078aecf940364d87eead2338b637b"
+    },
+    {
+      "binder_chain": "C",
+      "binder_sequence_length": 55,
+      "binder_sequence_sha256": "83bcec87ae0cbe3c1d95a86ce3233eaf0884765c065e9a9977d06b07018ec1af",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/prepared_6KBR_AC.pdb",
+      "reference_backbone_sha256": "702f3fc80562ab22a7a995d4189e0fadb8f947cacd70a0e21d7be2083b9bb0ac",
+      "target_chain": "A",
+      "target_id": "6KBR_AC",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m",
+      "target_msa_records": 7447,
+      "target_msa_sha256": "27dafcd3ee0844e21410a327d44b200090165e33aeae8b3dd4f74d39f73f9418",
+      "target_sequence_length": 223,
+      "target_sequence_sha256": "cb4fdec8f8f393c62bc486e863ea61cdadbbbe22a1e46352ddf843d8cd05bb36"
+    },
+    {
+      "binder_chain": "B",
+      "binder_sequence_length": 116,
+      "binder_sequence_sha256": "6972391c12f17e78bbca7c8bd5e27f9ae9c1c5a4b8adf13f3a9cd2435a1ee79d",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/prepared_6KMQ_AB.pdb",
+      "reference_backbone_sha256": "1029afab9240b81690a34db52403891bf5d4023c6a2a97db7939dbe8ac5466d8",
+      "target_chain": "A",
+      "target_id": "6KMQ_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m",
+      "target_msa_records": 3195,
+      "target_msa_sha256": "31cd86524d3bafbf8d884d9560f2dbc4956780179341a58bc9b6ae9be376989c",
+      "target_sequence_length": 91,
+      "target_sequence_sha256": "3a660ea3c18597311af4cc4bb6fe3ed6bc9fa5e1bc4678cf37ed8ab6ef900609"
+    },
+    {
+      "binder_chain": "B",
+      "binder_sequence_length": 126,
+      "binder_sequence_sha256": "3ff8f177477089e4a5a015781cd59dcab9979c8477a76e9ec884205ffab85c87",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/prepared_6SGE_AB.pdb",
+      "reference_backbone_sha256": "0f3146b07aa523817b5dae0a86cc45b00ab690bcc527b1f18420c076e210f358",
+      "target_chain": "A",
+      "target_id": "6SGE_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m",
+      "target_msa_records": 8845,
+      "target_msa_sha256": "29fdacd0a323f125eff135bccf1730205a982332ce76bece49bbbd78b9538fb0",
+      "target_sequence_length": 178,
+      "target_sequence_sha256": "0e322c532bef4a6f8371a9ecfb0225ff1ffce7b438a96054a39f80ec63a56568"
+    },
+    {
+      "binder_chain": "B",
+      "binder_sequence_length": 123,
+      "binder_sequence_sha256": "ad0d87b87b69525fb503d00c2ab8a7615df8b9abdd9c40cc1e231b257a4e033e",
+      "reference_backbone": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/prepared_7B5G_AB.pdb",
+      "reference_backbone_sha256": "6263ab34ca9e8600d7fb00fd810d93a760ff183851f128fede071feaa7c80903",
+      "target_chain": "A",
+      "target_id": "7B5G_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m",
+      "target_msa_records": 7594,
+      "target_msa_sha256": "63a03a07a936f84cfc3df263d1c5a5a51f0903308b6158673bc7ae09dce74c09",
+      "target_sequence_length": 132,
+      "target_sequence_sha256": "8d45888e3817f216e9cd4ac6d7fe88fd78e7693d889af8d33a324e8b3ad448ea"
+    }
+  ],
+  "total_factorial_cells": 32,
+  "version": 1
+}

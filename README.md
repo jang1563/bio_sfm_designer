@@ -116,6 +116,19 @@
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit
 > reproducible without the ignored local PDB cache.
 
+> **Current W3d status (2026-08-02):** the distinct no-submit successor is now preregistered as an
+> eight-target `2 x 2` native representation-by-predictor diagnostic. It crosses Boltz 2.2.1 and
+> AF2-Multimer v3 with `target_msa_binder_query` and `query_only_both_chains`. All eight W3c-B2 Boltz
+> outcomes are retained as an immutable retrospective baseline; the other 24 cells are frozen
+> prospectively, with no target filtering or baseline rerun. Strong target-paired contrast rules separate
+> representation-specific, predictor-specific, interaction, partial, and unresolved outcomes. Candidate
+> generation remains blocked unless both predictors qualify at `>=6/8` under the same representation.
+> Current authority is zero predictor evaluations, zero H100 GPU-hours, zero ProteinMPNN designs, and zero
+> API calls. The next no-spend step is CPU input production plus corrected absolute-path no-prediction
+> runtime validation. See [docs/M6D_W3D_NATIVE_DIAGNOSTIC.md](docs/M6D_W3D_NATIVE_DIAGNOSTIC.md),
+> [configs/m6d_w3d_native_diagnostic_protocol.json](configs/m6d_w3d_native_diagnostic_protocol.json), and
+> [results/m6d_w3d_native_diagnostic_readiness.json](results/m6d_w3d_native_diagnostic_readiness.json).
+
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. An optional LLM proposes bounded hypotheses over specialist scientific
 foundation models (SFMs — protein/genome/single-cell); deterministic code controls
@@ -151,7 +164,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (designer: `1254` pytest tests and `1139` unittest tests;
+**Current local source verified** (designer: `1290` pytest tests and `1146` unittest tests;
 trust-core: `88` pytest tests and `88` unittest tests on 2026-08-02).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:

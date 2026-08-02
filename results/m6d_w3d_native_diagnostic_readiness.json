@@ -1,0 +1,116 @@
+{
+  "adaptive_top_ups_authorized": 0,
+  "all_predecessor_targets_retained": true,
+  "api_calls": 0,
+  "approval_packet_prepared": false,
+  "artifact": "m6d_w3d_native_diagnostic_readiness",
+  "audit_ok": true,
+  "can_claim_biological_binder_success": false,
+  "can_claim_fully_prospective_factorial_result": false,
+  "can_claim_generator_yield": false,
+  "can_claim_native_recoverability": false,
+  "can_claim_trust_gate": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run.",
+  "complete_case_adjudication_required": true,
+  "completed_locked_baseline_cells": 8,
+  "completed_locked_baseline_successes": 2,
+  "cpu_only_preparation_complete": true,
+  "decision_rules_locked": true,
+  "execution_ready": false,
+  "factorial_cells": 32,
+  "h100_gpu_hours_authorized": 0.0,
+  "input_producer_implemented": false,
+  "manifest_binding": {
+    "bytes": 37401,
+    "path": "configs/m6d_w3d_native_diagnostic_manifest.json",
+    "sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719"
+  },
+  "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+  "new_runtime_wrappers_implemented": false,
+  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
+  "no_prediction_runtime_validation_complete": false,
+  "no_submit": true,
+  "old_w3c_b2_job_recovery_authorized": false,
+  "outcome_adjudicator_implemented": true,
+  "posthoc_disclosure_complete": true,
+  "prediction_executed": false,
+  "predictor_evaluations_authorized": 0,
+  "predictor_ids": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "prospective_af2_cells": 16,
+  "prospective_boltz_cells": 8,
+  "prospective_cells": 24,
+  "proteinmpnn_designs": 0,
+  "protocol_binding": {
+    "bytes": 9474,
+    "path": "configs/m6d_w3d_native_diagnostic_protocol.json",
+    "sha256": "7034378adbd71388accab3c5c6771a5cd7ae939eb2dc66245c86a287cf7f66d9"
+  },
+  "protocol_locked": true,
+  "representation_ids": [
+    "target_msa_binder_query",
+    "query_only_both_chains"
+  ],
+  "retries_authorized": 0,
+  "source_bindings": {
+    "w3c_b2_af2_failure_evidence": {
+      "bytes": 13298,
+      "path": "results/m6d_w3c_b2_af2_failure_evidence.jsonl",
+      "sha256": "af498504c156525848bb427c8dd173bd11d0a58e99085c8b6576c8e797fcb4fa"
+    },
+    "w3c_b2_af2_wrapper": {
+      "bytes": 5004,
+      "path": "hpc/run_predict_af2_w3c_b2_native.sbatch",
+      "sha256": "f3afafaad23565447a2226d41cc3983c404ba69e2f096df60ca5488125be0a1b"
+    },
+    "w3c_b2_boltz_records": {
+      "bytes": 15159,
+      "path": "results/m6d_w3c_b2_boltz_native_records.jsonl",
+      "sha256": "c94b914a41be1179d69558cab82711f696057149a838ff4344f62332485194c9"
+    },
+    "w3c_b2_boltz_wrapper": {
+      "bytes": 3083,
+      "path": "hpc/run_predict_boltz_w3c_b2_native.sbatch",
+      "sha256": "1c5ee5e72dc712cfa4a6df6c1cd082475d2fa2bcd38b0bf860c3f42de3307d8c"
+    },
+    "w3c_b2_native_manifest": {
+      "bytes": 23108,
+      "path": "configs/m6d_w3c_b2_native_screen_manifest.json",
+      "sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3"
+    },
+    "w3c_b2_producer": {
+      "bytes": 24834,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3c_b2_producer.py",
+      "sha256": "5a67aa1dc0fa1a8fb5d26133358bfb6ac390483ecacbd4900ea9f12d83c8c5bb"
+    },
+    "w3c_b2_runtime_lock": {
+      "bytes": 5309,
+      "path": "configs/m6d_w3c_b2_runtime_lock.json",
+      "sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d"
+    },
+    "w3c_b2_terminal_stop": {
+      "bytes": 16778,
+      "path": "results/m6d_w3c_b2_terminal_stop.json",
+      "sha256": "fa79f5b255b066397efdc3ea3eb5030305701cd9b35a1c62eba48bcfbb52095b"
+    }
+  },
+  "source_hashes_verified": 8,
+  "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
+  "submission_performed": false,
+  "target_count": 8,
+  "target_ids": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "target_msa_queries_authorized": 0,
+  "version": 1
+}

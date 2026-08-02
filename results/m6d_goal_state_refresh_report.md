@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3c_b2_terminal_frozen_pass_impossible`.
+Status: `goal_state_refreshed_w3d_protocol_locked_no_submit`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -48,6 +48,11 @@ W3c-B2 scheduler jobs terminal: `16`.
 W3c-B2 Boltz successes: `2` / `8`.
 W3c-B2 maximum dual-predictor passes: `2` / `8`.
 W3c-B2 frozen stage pass: `False`.
+W3d diagnostic: `w3d_native_representation_predictor_protocol_locked_no_submit`.
+W3d factorial cells: `32`.
+W3d locked baseline / prospective cells: `8` / `24`.
+W3d predictor evaluations authorized: `0`.
+W3d execution ready: `False`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -96,7 +101,12 @@ Cayuga submission allowed: `False`.
 - `results/m6d_w3c_b2_boltz_native_records.jsonl`
 - `results/m6d_w3c_b2_af2_failure_evidence.jsonl`
 - `results/m6d_w3c_b2_terminal_stop.json`
+- `configs/m6d_w3d_native_diagnostic_protocol.json`
+- `configs/m6d_w3d_native_diagnostic_manifest.json`
+- `results/m6d_w3d_native_diagnostic_readiness.json`
+- `results/m6d_w3d_native_diagnostic_readiness.md`
+- `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`
 
 ## Next Action
 
-Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.
+Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.

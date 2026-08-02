@@ -140,3 +140,10 @@ biological binder-success evidence.
 - Adjudicator: `bio_sfm_designer.experiments.m6d_w3c_b2_native_screen`
 - Accounting and completion: `bio_sfm_designer.experiments.m6d_w3c_b2_completion`
 - Terminal-stop adjudicator: `bio_sfm_designer.experiments.m6d_w3c_b2_terminal_stop`
+
+## Distinct successor
+
+Preserve W3c-B2 at its terminal partial-result stop. Do not retry AF2, top up, replace targets, reuse the
+consumed approval, or submit ProteinMPNN work. The distinct successor is now preregistered as W3d in
+`docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`. Its 24 prospective cells remain no-submit and require new CPU input
+and no-prediction runtime validation before any approval packet.

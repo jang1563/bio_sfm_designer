@@ -54,7 +54,11 @@
 > the maximum possible dual-predictor result is `2/8`, below the frozen `6/8` requirement regardless of AF2.
 > W3c-B2 is a terminal partial negative decision: full native recoverability remains unevaluable, the stage
 > pass is mathematically impossible, and no retry, recovery, additional prediction, or generator work is
-> authorized. The next milestone is a separately preregistered representation/predictor validity successor.
+> authorized. W3d now locks that distinct successor as an eight-target 2 x 2 representation-by-predictor
+> diagnostic. The complete W3c-B2 Boltz cell is retained as an immutable retrospective baseline, while 24
+> remaining cells are frozen prospectively. The design discloses that mixed timing, forbids target filtering
+> and baseline reruns, and keeps all compute authority at zero. The next milestone is CPU input production
+> and corrected no-prediction runtime validation, not H100 execution.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -190,6 +194,17 @@ retries or adaptive top-ups. All jobs are terminal: Boltz completed 8/8 and AF2 
 The terminal CPU adjudicator replayed every available hash and metric, found Boltz native success at 2/8,
 and proved the frozen dual-predictor 6/8 pass unreachable. See
 `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and `docs/M6D_W3C_B2_NATIVE_SCREEN.md`.
+
+2026-08-02 W3d preregistration: `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
+`configs/m6d_w3d_native_diagnostic_protocol.json` define a distinct 2 x 2 factorial over the same eight
+targets. Predictor identity (Boltz 2.2.1 versus AF2-Multimer v3) is crossed with evolutionary-information
+representation (`target_msa_binder_query` versus `query_only_both_chains`). All eight completed Boltz
+target-MSA outcomes remain fixed; the remaining 24 cells and paired localization rules are prospective
+after this lock. A representation can clear native validity only when both predictors reach at least 6/8
+under that same representation. `results/m6d_w3d_native_diagnostic_readiness.{json,md}` is audit-clean but
+`execution_ready=false`: zero predictor evaluations and zero H100 GPU-hours are authorized. The next step
+is to implement CPU input production and absolute-path, no-prediction runtime validation before any
+approval packet.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -731,9 +746,12 @@ Allowed decisions:
 6. Preserve W3c-B2 at `w3c_b2_terminal_partial_result_impossibility_stop`: 16/16 scheduler jobs are
    terminal, all eight Boltz records replay, Boltz succeeds 2/8, and all eight AF2 jobs failed before model
    inference. Do not retry or recover the consumed one-shot panel; AF2 cannot change the `2/8 < 6/8`
-   conjunction bound. Prepare only a no-submit, separately preregistered representation/predictor validity
-   successor. ProteinMPNN, generator, gate, and certification work remain unauthorized.
-7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
+   conjunction bound.
+7. Continue only the locked W3d no-submit successor. Preserve all eight baseline outcomes and all eight
+   targets; implement the two representation encodings and corrected absolute-path wrappers, then validate
+   all 24 prospective cells without prediction or submission. ProteinMPNN, generator, gate, and
+   certification work remain unauthorized.
+8. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 
 ## File Map

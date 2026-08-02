@@ -21,7 +21,10 @@
 > the frozen `6/8` threshold even under best-case missing AF2 outcomes. Resume from
 > `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and `results/m6d_w3c_b2_terminal_stop.json`. W3c-B2 is closed with
 > no retry or recovery authority; full native recoverability remains unevaluable, and generator work is
-> still blocked pending a separately preregistered representation/predictor successor.
+> still blocked. The separate W3d successor is now preregistered as a 32-cell
+> representation-by-predictor diagnostic: eight immutable W3c-B2 Boltz baseline cells plus 24 prospective
+> cells. Current predictor and H100 authority is zero. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`;
+> next implement CPU inputs and corrected no-prediction runtime validation only.
 
 Date: 2026-08-02
 
@@ -70,7 +73,10 @@ gate, and certification work remain unauthorized. The later one-shot W3c-B2 pane
 Boltz jobs completed and replayed, only two passed native L-RMSD, and all eight AF2 jobs failed before model
 inference on the same container-relative input path. The frozen dual-predictor stage can therefore pass at
 most 2/8 against a required 6/8. This supports a stage-impossibility stop, not a complete native-
-recoverability estimate. No retry or AF2 recovery is authorized under the consumed approval.
+recoverability estimate. No retry or AF2 recovery is authorized under the consumed approval. W3d now
+freezes the distinct diagnostic successor across Boltz/AF2 and target-MSA/query-only representations. It
+retains all targets and all baseline outcomes, discloses that the baseline is retrospective, and freezes
+the remaining 24 cells before their outcomes. No W3d prediction or submission has occurred.
 
 ## Active Objective
 
@@ -82,7 +88,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   certification and held-out-test roles;
 - preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
   preserve the terminal W3c-B2 partial-result stop without retry or post-hoc rescue;
-- preregister a distinct representation/predictor validity successor before any generator work;
+- implement the locked W3d CPU input producer and no-prediction runtime validation before any compute
+  approval or generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -129,6 +136,12 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   complete dual-predictor native recoverability is unavailable, but the frozen stage pass is impossible:
   conjunction caps the result at `2/8 < 6/8`. The consumed approval authorizes zero retries, recovery jobs,
   ProteinMPNN designs, or downstream claims.
+- W3d: the distinct 2 x 2 representation-by-predictor protocol is locked over the same eight targets.
+  Eight W3c-B2 Boltz target-MSA outcomes are immutable retrospective baseline cells; 24 remaining cells
+  are prospective after the lock. Frozen paired rules distinguish representation-specific,
+  predictor-specific, interaction, partial, and unresolved outcomes. Native validity can be recovered only
+  if both predictors qualify at 6/8 under the same representation. Execution is not ready; predictor,
+  H100, ProteinMPNN, MSA-query, API, retry, and adaptive-top-up authority is zero.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -238,6 +251,11 @@ from Chai records alone.
   `results/m6d_w3c_b2_terminal_stop.{json,md}`. Full completion remains fail-closed in
   `src/bio_sfm_designer/experiments/m6d_w3c_b2_completion.py`; the no-compute impossibility adjudicator is
   `src/bio_sfm_designer/experiments/m6d_w3c_b2_terminal_stop.py`
+- W3d native representation-by-predictor diagnostic:
+  `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`, `configs/m6d_w3d_native_diagnostic_protocol.json`,
+  `configs/m6d_w3d_native_diagnostic_manifest.json`,
+  `results/m6d_w3d_native_diagnostic_readiness.{json,md}`, and
+  `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -1358,10 +1376,13 @@ jq '{status, audit_ok, w3c_b2: .w3c_b2_terminal_stop.status, jobs_terminal: .w3c
 jq '{status, audit_ok, execution_complete, stage_decision_complete, scientific_stop_complete, boltz_successes, boltz_success_target_ids, af2_failures_before_model_inference, maximum_possible_dual_predictor_target_passes, minimum_targets_passing, frozen_pass_mathematically_impossible, observed_h100_gpu_hours, additional_jobs_authorized, claim_boundary, next_action}' \
   results/m6d_w3c_b2_terminal_stop.json
 
+jq '{status, audit_ok, execution_ready, factorial_cells, completed_locked_baseline_cells, prospective_cells, posthoc_disclosure_complete, decision_rules_locked, predictor_evaluations_authorized, h100_gpu_hours_authorized, no_submit, next_action}' \
+  results/m6d_w3d_native_diagnostic_readiness.json
+
 git status --short --branch
 ```
 
-The current science branch is fixed: preserve W3c-B2 at its terminal validity stop. Do not retry AF2,
-substitute targets, change the 6/8 rule, or reuse the consumed approval. The next research action is a
-no-submit design decision and preregistration for a scientifically distinct representation/predictor
-successor; any later compute requires a new experiment-specific approval.
+The current science branch is fixed: preserve W3c-B2 at its terminal validity stop and continue only the
+locked W3d no-submit successor. Do not retry AF2, substitute targets, change the 6/8 rule, rerun the
+baseline, or reuse the consumed approval. Implement CPU inputs and corrected no-prediction runtime
+validation next; any later compute requires a new experiment-specific approval.

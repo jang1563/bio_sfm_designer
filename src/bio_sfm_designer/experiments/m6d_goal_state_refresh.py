@@ -2583,6 +2583,218 @@ def _w3c_b2_terminal_stop_summary(
     }
 
 
+def _w3d_native_diagnostic_summary(
+    manifest: Dict[str, Any],
+    readiness: Dict[str, Any],
+    terminal: Dict[str, Any],
+) -> Dict[str, Any]:
+    cells = manifest.get("cells") if isinstance(manifest.get("cells"), list) else []
+    baseline_cells = [
+        row
+        for row in cells
+        if isinstance(row, dict)
+        and row.get("cell_status") == "completed_locked_w3c_b2_baseline"
+    ]
+    prospective_cells = [
+        row
+        for row in cells
+        if isinstance(row, dict)
+        and row.get("cell_status") == "prospective_not_authorized"
+    ]
+    baseline_success_ids = [
+        row.get("target_id")
+        for row in baseline_cells
+        if isinstance(row.get("baseline_outcome"), dict)
+        and row["baseline_outcome"].get("success") is True
+    ]
+    expected_cells = [
+        (target_id, representation_id, predictor_id)
+        for target_id in _W3C_TARGET_IDS
+        for representation_id in (
+            "target_msa_binder_query",
+            "query_only_both_chains",
+        )
+        for predictor_id in _W3C_B2_PREDICTORS
+    ]
+    observed_cells = [
+        (row.get("target_id"), row.get("representation_id"), row.get("predictor_id"))
+        for row in cells
+        if isinstance(row, dict)
+    ]
+    protocol_binding = manifest.get("protocol_binding")
+    manifest_binding = readiness.get("manifest_binding")
+    source_bindings = manifest.get("source_bindings")
+    checks = {
+        "manifest_identity_exact": (
+            manifest.get("artifact") == "m6d_w3d_native_diagnostic_manifest"
+            and manifest.get("version") == 1
+            and manifest.get("status")
+            == "w3d_native_representation_predictor_protocol_locked_no_submit"
+            and manifest.get("audit_ok") is True
+            and manifest.get("design_type")
+            == "retrospective_baseline_prospective_factorial_completion"
+            and manifest.get("fully_prospective_four_cell_claim_allowed") is False
+        ),
+        "factorial_scope_exact": (
+            manifest.get("target_ids") == _W3C_TARGET_IDS
+            and manifest.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and manifest.get("representation_ids")
+            == ["target_msa_binder_query", "query_only_both_chains"]
+            and manifest.get("total_factorial_cells") == 32
+            and manifest.get("completed_locked_baseline_cells") == 8
+            and manifest.get("prospective_cells") == 24
+            and observed_cells == expected_cells
+        ),
+        "baseline_exact": (
+            len(baseline_cells) == 8
+            and [row.get("target_id") for row in baseline_cells]
+            == _W3C_TARGET_IDS
+            and all(
+                row.get("representation_id") == "target_msa_binder_query"
+                and row.get("predictor_id") == "boltz2_complex"
+                and row.get("new_prediction_required") is False
+                and row.get("prediction_authorized") is False
+                and isinstance(row.get("baseline_outcome"), dict)
+                and row["baseline_outcome"].get("strict_qc_passed") is True
+                and _is_sha256(
+                    row["baseline_outcome"].get("canonical_record_sha256")
+                )
+                for row in baseline_cells
+            )
+            and manifest.get("baseline_successes") == 2
+            and manifest.get("baseline_success_target_ids")
+            == ["5E5M_AB", "5JSB_AB"]
+            and baseline_success_ids == ["5E5M_AB", "5JSB_AB"]
+            and terminal.get("boltz_successes") == 2
+        ),
+        "prospective_scope_exact": (
+            len(prospective_cells) == 24
+            and all(
+                row.get("prospective_after_protocol_lock") is True
+                and row.get("new_prediction_required") is True
+                and row.get("prediction_authorized") is False
+                for row in prospective_cells
+            )
+        ),
+        "readiness_exact": (
+            readiness.get("artifact") == "m6d_w3d_native_diagnostic_readiness"
+            and readiness.get("version") == 1
+            and readiness.get("status") == manifest.get("status")
+            and readiness.get("audit_ok") is True
+            and readiness.get("protocol_locked") is True
+            and readiness.get("source_hashes_verified") == 8
+            and readiness.get("factorial_cells") == 32
+            and readiness.get("completed_locked_baseline_cells") == 8
+            and readiness.get("prospective_cells") == 24
+            and readiness.get("posthoc_disclosure_complete") is True
+            and readiness.get("decision_rules_locked") is True
+            and readiness.get("complete_case_adjudication_required") is True
+            and readiness.get("outcome_adjudicator_implemented") is True
+            and readiness.get("cpu_only_preparation_complete") is True
+            and readiness.get("execution_ready") is False
+        ),
+        "hash_bindings_present": (
+            isinstance(protocol_binding, dict)
+            and protocol_binding.get("path")
+            == "configs/m6d_w3d_native_diagnostic_protocol.json"
+            and _is_sha256(protocol_binding.get("sha256"))
+            and readiness.get("protocol_binding") == protocol_binding
+            and isinstance(manifest_binding, dict)
+            and manifest_binding.get("path")
+            == "configs/m6d_w3d_native_diagnostic_manifest.json"
+            and _is_sha256(manifest_binding.get("sha256"))
+            and isinstance(source_bindings, dict)
+            and len(source_bindings) == 8
+            and readiness.get("source_bindings") == source_bindings
+            and all(
+                isinstance(binding, dict) and _is_sha256(binding.get("sha256"))
+                for binding in source_bindings.values()
+            )
+        ),
+        "authority_closed": (
+            manifest.get("prediction_executed") is False
+            and manifest.get("predictor_evaluations_authorized") == 0
+            and manifest.get("h100_gpu_hours_authorized") == 0.0
+            and manifest.get("proteinmpnn_designs") == 0
+            and manifest.get("api_calls") == 0
+            and manifest.get("approval_packet_prepared") is False
+            and manifest.get("submission_performed") is False
+            and manifest.get("no_submit") is True
+            and manifest.get("cayuga_submission_allowed") is False
+            and readiness.get("predictor_evaluations_authorized") == 0
+            and readiness.get("h100_gpu_hours_authorized") == 0.0
+            and readiness.get("target_msa_queries_authorized") == 0
+            and readiness.get("proteinmpnn_designs") == 0
+            and readiness.get("api_calls") == 0
+            and readiness.get("retries_authorized") == 0
+            and readiness.get("adaptive_top_ups_authorized") == 0
+            and readiness.get("old_w3c_b2_job_recovery_authorized") is False
+            and readiness.get("submission_performed") is False
+            and readiness.get("no_submit") is True
+            and readiness.get("cayuga_submission_allowed") is False
+        ),
+        "claims_bounded": (
+            manifest.get("can_claim_native_recoverability") is False
+            and manifest.get("can_claim_generator_yield") is False
+            and manifest.get("can_claim_trust_gate") is False
+            and manifest.get("can_claim_biological_binder_success") is False
+            and readiness.get("can_claim_fully_prospective_factorial_result")
+            is False
+            and readiness.get("can_claim_native_recoverability") is False
+            and readiness.get("can_claim_generator_yield") is False
+            and readiness.get("can_claim_trust_gate") is False
+            and readiness.get("can_claim_biological_binder_success") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3d native-diagnostic invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": readiness["status"],
+        "audit_ok": True,
+        "design_type": manifest["design_type"],
+        "fully_prospective_four_cell_claim_allowed": False,
+        "target_ids": _W3C_TARGET_IDS,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "representation_ids": manifest["representation_ids"],
+        "factorial_cells": 32,
+        "completed_locked_baseline_cells": 8,
+        "completed_locked_baseline_successes": 2,
+        "prospective_cells": 24,
+        "prospective_boltz_cells": 8,
+        "prospective_af2_cells": 16,
+        "all_predecessor_targets_retained": True,
+        "posthoc_disclosure_complete": True,
+        "decision_rules_locked": True,
+        "complete_case_adjudication_required": True,
+        "outcome_adjudicator_implemented": True,
+        "cpu_only_preparation_complete": True,
+        "input_producer_implemented": False,
+        "new_runtime_wrappers_implemented": False,
+        "no_prediction_runtime_validation_complete": False,
+        "approval_packet_prepared": False,
+        "execution_ready": False,
+        "predictor_evaluations_authorized": 0,
+        "h100_gpu_hours_authorized": 0.0,
+        "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+        "proteinmpnn_designs": 0,
+        "api_calls": 0,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "protocol_sha256": protocol_binding["sha256"],
+        "manifest_sha256": manifest_binding["sha256"],
+        "claim_boundary": readiness["claim_boundary"],
+        "next_action": readiness["next_action"],
+        "checks": checks,
+    }
+
+
 def _apply_w3b_fit_ready_state(
     bundle: Dict[str, Dict[str, Any]],
     w3_completion: Dict[str, Any],
@@ -5207,6 +5419,223 @@ def _apply_w3c_b2_terminal_stop_state(
             updated.append(path)
 
 
+def _apply_w3d_native_diagnostic_state(
+    bundle: Dict[str, Dict[str, Any]],
+    w3d: Dict[str, Any],
+) -> None:
+    requirement = "W3d_CPU_input_and_runtime_no_prediction_validation"
+    next_action = w3d["next_action"]
+    ranked_actions = [
+        "Preserve W3c-B2 as terminal and reuse all eight locked Boltz target-MSA outcomes without rerun.",
+        "Implement the CPU-only W3d input producer for both frozen evolutionary-information representations.",
+        "Implement corrected predictor wrappers with absolute container-visible AF2 paths and an explicit container working directory.",
+        "Validate both exact runtimes and all 24 prospective input cells without model inference or scheduler submission.",
+        "Only after that validation, prepare a separate hash-bound approval packet for exactly 24 H100 evaluations.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["objective"] = (
+        "Diagnose the post-W3c-B2 native-recovery bottleneck with the locked W3d "
+        "representation-by-predictor factorial while preserving the terminal predecessor, "
+        "preventing post-hoc target selection, and keeping all new compute and generator "
+        "authority closed until separate validation and approval."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3d"] = (
+        "protocol_and_immutable_baseline_only_no_new_prediction_native_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3d_native_diagnostic_protocol": (
+            "configs/m6d_w3d_native_diagnostic_protocol.json"
+        ),
+        "w3d_native_diagnostic_manifest": (
+            "configs/m6d_w3d_native_diagnostic_manifest.json"
+        ),
+        "w3d_native_diagnostic_readiness": (
+            "results/m6d_w3d_native_diagnostic_readiness.json"
+        ),
+        "w3d_native_diagnostic_document": (
+            "docs/M6D_W3D_NATIVE_DIAGNOSTIC.md"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3d_protocol_locked_input_runtime_validation_required_no_submit",
+        "goal_progress": w3d["status"],
+        "remaining_requirements": [requirement],
+        "w3d": w3d["status"],
+        "w3d_factorial_cells": 32,
+        "w3d_completed_locked_baseline_cells": 8,
+        "w3d_completed_locked_baseline_successes": 2,
+        "w3d_prospective_cells": 24,
+        "w3d_input_producer_implemented": False,
+        "w3d_no_prediction_runtime_validation_complete": False,
+        "w3d_approval_packet_prepared": False,
+        "w3d_predictor_evaluations_authorized": 0,
+        "w3d_h100_gpu_hours_authorized": 0.0,
+        "w3d_cayuga_submission_allowed": False,
+        "w3d_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3d_native_diagnostic"] = w3d
+    anchor["next_resume_steps"] = [
+        "read docs/M6D_W3D_NATIVE_DIAGNOSTIC.md and preserve the W3c-B2 terminal stop",
+        "replay the W3d protocol, manifest, and readiness hashes with zero scheduler calls",
+        "implement query-only and target-MSA-plus-binder-query inputs for all frozen prospective cells",
+        "validate absolute-path AF2 and Boltz wrappers without prediction",
+        "stop before any approval packet or H100 submission",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "w3d_status": w3d["status"],
+        "w3d_factorial_cells": 32,
+        "w3d_completed_locked_baseline_cells": 8,
+        "w3d_prospective_cells": 24,
+        "w3d_predictor_evaluations_authorized": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3d_protocol_locked_input_runtime_validation_required",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3d_native_diagnostic": w3d,
+    })
+    completion.setdefault("claim_boundary", {})["w3d"] = (
+        "locked_diagnostic_design_and_reused_baseline_only_no_new_scientific_outcome"
+    )
+    completion.setdefault("workstream_status", {})["W3d_native_diagnostic"] = {
+        "complete": False,
+        "scientific_success": False,
+        "status": w3d["status"],
+        "protocol_locked": True,
+        "cpu_only_preparation_complete": True,
+        "execution_ready": False,
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3d_factorial_successor_locked",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3d"] = (
+        "retrospective_baseline_prospective_completion_disclosed_no_compute_or_outcome_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3d_retrospective_baseline",
+            "status": "bounded",
+            "control": "the successor question was formulated after the Boltz baseline; all eight targets are retained and a fully prospective four-cell claim is prohibited",
+        },
+        {
+            "id": "w3d_representation_encoding_nonidentity",
+            "status": "managed",
+            "control": "the factor is defined by evolutionary-information content, with predictor-native file encodings declared before future outcomes",
+        },
+        {
+            "id": "w3d_af2_path_regression",
+            "status": "active_operational_risk",
+            "control": "new wrappers must use absolute container-visible paths and pass no-prediction validation before approval preparation",
+        },
+        {
+            "id": "w3d_partial_panel_or_adaptive_rescue",
+            "status": "managed",
+            "control": "all 24 prospective cells are required for adjudication with zero retry, target dropping, threshold tuning, or adaptive top-up",
+        },
+        {
+            "id": "w3d_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "candidate generation remains blocked unless both predictors qualify under the same representation in a complete future panel",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_distinct_w3d_factorial_preregistered_after_terminal_w3c_b2",
+        "claims": "no_drift_retrospective_baseline_and_zero_new_outcome_disclosed",
+        "execution": "cpu_only_protocol_manifest_and_readiness_zero_new_predictions",
+        "operational_status": "w3d_input_and_runtime_no_prediction_validation_required",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {})["W3d_native_diagnostic"] = w3d
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3d_protocol_locked_cpu_input_runtime_validation_required",
+        "w3d_native_diagnostic": w3d,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "w3d_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3d"] = (
+        "protocol_preparation_only_zero_new_prediction_or_downstream_authority"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3d_input_runtime_validation"
+            if anchor.get("goal_mode") == "active"
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3d native representation-by-predictor failure localization",
+        "w3d_native_diagnostic": w3d,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3d_source_hashes": "8_of_8_verified",
+        "w3d_factorial_scope": "32_cells_8_locked_baseline_24_prospective",
+        "w3d_baseline_replay": "8_of_8_strict_qc_2_native_successes",
+        "w3d_authority": "zero_prediction_zero_h100_zero_proteinmpnn_zero_api",
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "jobs_unresolved": 0,
+        "w3d_stage": "W3d_protocol_locked_input_runtime_validation_required",
+        "w3d_factorial_cells": 32,
+        "w3d_completed_locked_baseline_cells": 8,
+        "w3d_prospective_cells": 24,
+        "w3d_predictor_evaluations_authorized": 0,
+        "w3d_h100_gpu_hours_authorized": 0.0,
+        "w3d_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3d"] = (
+        "no_submit_protocol_state_only"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3d_protocol_locked_no_submit",
+        "audit_ok": True,
+        "w3d_native_diagnostic": w3d,
+        "w3d_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "configs/m6d_w3d_native_diagnostic_protocol.json",
+        "configs/m6d_w3d_native_diagnostic_manifest.json",
+        "results/m6d_w3d_native_diagnostic_readiness.json",
+        "results/m6d_w3d_native_diagnostic_readiness.md",
+        "docs/M6D_W3D_NATIVE_DIAGNOSTIC.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -5244,6 +5673,8 @@ def refresh_bundle(
     w3c_b2_cayuga_no_submit_validation: Optional[Dict[str, Any]] = None,
     w3c_b2_submission_receipt_summary: Optional[Dict[str, Any]] = None,
     w3c_b2_terminal_stop: Optional[Dict[str, Any]] = None,
+    w3d_native_diagnostic_manifest: Optional[Dict[str, Any]] = None,
+    w3d_native_diagnostic_readiness: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -5385,6 +5816,27 @@ def refresh_bundle(
         )
         else None
     )
+    w3d_inputs = (
+        w3d_native_diagnostic_manifest,
+        w3d_native_diagnostic_readiness,
+    )
+    if any(value is not None for value in w3d_inputs) and not all(
+        isinstance(value, dict) for value in w3d_inputs
+    ):
+        raise ValueError("W3d state requires both manifest and readiness artifacts")
+    w3d = (
+        _w3d_native_diagnostic_summary(
+            w3d_native_diagnostic_manifest,
+            w3d_native_diagnostic_readiness,
+            w3c_b2_terminal,
+        )
+        if (
+            isinstance(w3d_native_diagnostic_manifest, dict)
+            and isinstance(w3d_native_diagnostic_readiness, dict)
+            and isinstance(w3c_b2_terminal, dict)
+        )
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -5417,6 +5869,8 @@ def refresh_bundle(
         raise ValueError("W3c-B2 submission requires the validated approval packet")
     if w3c_b2_terminal_stop is not None and w3c_b2_submission is None:
         raise ValueError("W3c-B2 terminal stop requires the validated submission chain")
+    if any(value is not None for value in w3d_inputs) and w3c_b2_terminal is None:
+        raise ValueError("W3d state requires the validated terminal W3c-B2 evidence chain")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -6416,6 +6870,8 @@ def refresh_bundle(
             _apply_w3c_b2_submission_state(bundle, w3c_b2_submission)
             if w3c_b2_terminal is not None:
                 _apply_w3c_b2_terminal_stop_state(bundle, w3c_b2_terminal)
+                if w3d is not None:
+                    _apply_w3d_native_diagnostic_state(bundle, w3d)
     return bundle
 
 
@@ -6464,6 +6920,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
+    w3d = report.get("w3d_native_diagnostic") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -6529,6 +6986,11 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`.",
         f"W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`.",
         f"W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`.",
+        f"W3d diagnostic: `{w3d.get('status', 'not_preregistered')}`.",
+        f"W3d factorial cells: `{w3d.get('factorial_cells', 0)}`.",
+        f"W3d locked baseline / prospective cells: `{w3d.get('completed_locked_baseline_cells', 0)}` / `{w3d.get('prospective_cells', 0)}`.",
+        f"W3d predictor evaluations authorized: `{w3d.get('predictor_evaluations_authorized', 0)}`.",
+        f"W3d execution ready: `{w3d.get('execution_ready', False)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -6558,6 +7020,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
+    w3d = report.get("w3d_native_diagnostic") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -6627,6 +7090,11 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`",
         f"- W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`",
         f"- W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`",
+        f"- W3d diagnostic: `{w3d.get('status', 'not_preregistered')}`",
+        f"- W3d factorial cells: `{w3d.get('factorial_cells', 0)}`",
+        f"- W3d locked baseline / prospective cells: `{w3d.get('completed_locked_baseline_cells', 0)}` / `{w3d.get('prospective_cells', 0)}`",
+        f"- W3d predictor evaluations authorized: `{w3d.get('predictor_evaluations_authorized', 0)}`",
+        f"- W3d execution ready: `{w3d.get('execution_ready', False)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -6681,6 +7149,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
+    w3d = report.get("w3d_native_diagnostic") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -6725,6 +7194,10 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`.",
         f"W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`.",
         f"W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`.",
+        f"W3d diagnostic: `{w3d.get('status', 'not_preregistered')}`.",
+        f"W3d locked baseline / prospective cells: `{w3d.get('completed_locked_baseline_cells', 0)}` / `{w3d.get('prospective_cells', 0)}`.",
+        f"W3d predictor evaluations authorized: `{w3d.get('predictor_evaluations_authorized', 0)}`.",
+        f"W3d execution ready: `{w3d.get('execution_ready', False)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -6749,6 +7222,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
+    w3d = report.get("w3d_native_diagnostic") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -6813,6 +7287,11 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`",
         f"- W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`",
         f"- W3c-B2 H100 GPU-hours: `{hpc.get('w3c_h100_gpu_hours', 0.0)}`",
+        f"- W3d diagnostic: `{w3d.get('status', 'not_preregistered')}`",
+        f"- W3d factorial cells: `{hpc.get('w3d_factorial_cells', 0)}`",
+        f"- W3d locked baseline / prospective cells: `{hpc.get('w3d_completed_locked_baseline_cells', 0)}` / `{hpc.get('w3d_prospective_cells', 0)}`",
+        f"- W3d predictor evaluations authorized: `{hpc.get('w3d_predictor_evaluations_authorized', 0)}`",
+        f"- W3d H100 GPU-hours authorized: `{hpc.get('w3d_h100_gpu_hours_authorized', 0.0)}`",
         "",
         "## Next Action",
         "",
@@ -6983,6 +7462,14 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3c-b2-terminal-stop",
         default="results/m6d_w3c_b2_terminal_stop.json",
+    )
+    parser.add_argument(
+        "--w3d-native-diagnostic-manifest",
+        default="configs/m6d_w3d_native_diagnostic_manifest.json",
+    )
+    parser.add_argument(
+        "--w3d-native-diagnostic-readiness",
+        default="results/m6d_w3d_native_diagnostic_readiness.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -7179,6 +7666,22 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3c_b2_terminal_stop)
             if os.path.exists(args.w3c_b2_terminal_stop)
+            else None
+        ),
+        (
+            _load_json(args.w3d_native_diagnostic_manifest)
+            if (
+                os.path.exists(args.w3d_native_diagnostic_manifest)
+                and os.path.exists(args.w3c_b2_terminal_stop)
+            )
+            else None
+        ),
+        (
+            _load_json(args.w3d_native_diagnostic_readiness)
+            if (
+                os.path.exists(args.w3d_native_diagnostic_readiness)
+                and os.path.exists(args.w3c_b2_terminal_stop)
+            )
             else None
         ),
         updated_at=args.updated_at,

@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3c_b2_terminal_validity_stop_successor_selection`.
+Status: `goal_active_w3d_protocol_locked_input_runtime_validation_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -52,10 +52,15 @@ Can mark goal complete: `False`.
 - W3c-B2 Boltz successes: `2` / `8`
 - W3c-B2 maximum dual-predictor passes: `2` / `8`
 - W3c-B2 frozen stage pass: `False`
-- remaining requirement: `W3c_successor_representation_predictor_protocol_selection`
+- W3d diagnostic: `w3d_native_representation_predictor_protocol_locked_no_submit`
+- W3d factorial cells: `32`
+- W3d locked baseline / prospective cells: `8` / `24`
+- W3d predictor evaluations authorized: `0`
+- W3d execution ready: `False`
+- remaining requirement: `W3d_CPU_input_and_runtime_no_prediction_validation`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.
+Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.

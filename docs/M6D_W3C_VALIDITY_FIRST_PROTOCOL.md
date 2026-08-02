@@ -171,3 +171,13 @@ outcomes can raise the stage above `2/8`, below the frozen `6/8` requirement. Th
 impossibility; full dual-predictor native recoverability remains unevaluable. See
 [M6D_W3C_B2_NATIVE_SCREEN.md](M6D_W3C_B2_NATIVE_SCREEN.md) and
 `results/m6d_w3c_b2_terminal_stop.json`.
+
+## Successor update: W3d diagnostic locked
+
+The separate W3d protocol now crosses both frozen predictors with target-MSA-plus-binder-query and
+query-only representations over all eight unchanged targets. It reuses the complete W3c-B2 Boltz cell as
+an immutable retrospective baseline and freezes the other 24 cells prospectively. The mixed timing is
+explicitly disclosed; a fully prospective four-cell claim is prohibited. No W3d predictor evaluation,
+H100 hour, ProteinMPNN design, MSA query, or API call is authorized. See
+[M6D_W3D_NATIVE_DIAGNOSTIC.md](M6D_W3D_NATIVE_DIAGNOSTIC.md) and
+`results/m6d_w3d_native_diagnostic_readiness.json`.

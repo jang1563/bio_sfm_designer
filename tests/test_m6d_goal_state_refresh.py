@@ -1114,6 +1114,8 @@ def _refresh_current_w3b(
     b2_cayuga_validation=None,
     b2_submission=None,
     b2_terminal=None,
+    w3d_manifest=None,
+    w3d_readiness=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1150,6 +1152,8 @@ def _refresh_current_w3b(
         w3c_b2_cayuga_no_submit_validation=b2_cayuga_validation,
         w3c_b2_submission_receipt_summary=b2_submission,
         w3c_b2_terminal_stop=b2_terminal,
+        w3d_native_diagnostic_manifest=w3d_manifest,
+        w3d_native_diagnostic_readiness=w3d_readiness,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1175,6 +1179,14 @@ def _current_w3c_b2_submission_artifact():
 
 def _current_w3c_b2_terminal_stop_artifact():
     return json.loads(Path("results/m6d_w3c_b2_terminal_stop.json").read_text())
+
+
+def _current_w3d_artifacts():
+    paths = (
+        "configs/m6d_w3d_native_diagnostic_manifest.json",
+        "results/m6d_w3d_native_diagnostic_readiness.json",
+    )
+    return [json.loads(Path(path).read_text()) for path in paths]
 
 
 def _ready_w3c_b1_packet_artifact():
@@ -2125,6 +2137,96 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     b2_submission=_current_w3c_b2_submission_artifact(),
                     b2_terminal=terminal,
                 )
+
+    def test_w3d_protocol_promotes_no_submit_input_validation_state(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=_ready_w3c_b1_packet_artifact(),
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            b2_native_manifest=native,
+            b2_runtime=runtime,
+            b2_approval=approval,
+            b2_cayuga_validation=validation,
+            b2_submission=_current_w3c_b2_submission_artifact(),
+            b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+            w3d_manifest=w3d_manifest,
+            w3d_readiness=w3d_readiness,
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3d_protocol_locked_no_submit",
+        )
+        current = bundle["anchor"]["current_status"]
+        self.assertEqual(current["w3d_factorial_cells"], 32)
+        self.assertEqual(current["w3d_completed_locked_baseline_cells"], 8)
+        self.assertEqual(current["w3d_prospective_cells"], 24)
+        self.assertEqual(current["w3d_predictor_evaluations_authorized"], 0)
+        self.assertEqual(current["w3d_h100_gpu_hours_authorized"], 0.0)
+        self.assertFalse(current["w3d_cayuga_submission_allowed"])
+        self.assertEqual(
+            current["remaining_requirements"],
+            ["W3d_CPU_input_and_runtime_no_prediction_validation"],
+        )
+        self.assertFalse(bundle["actions"]["w3d_submission_performed"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertFalse(bundle["drift"]["major_direction_drift"])
+
+    def test_w3d_protocol_rejects_scope_or_authority_drift(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        for artifact_name, field, value in (
+            ("manifest", "prospective_cells", 23),
+            ("readiness", "predictor_evaluations_authorized", 24),
+        ):
+            w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+            artifact = (
+                w3d_manifest if artifact_name == "manifest" else w3d_readiness
+            )
+            artifact[field] = value
+            with self.subTest(field=field), self.assertRaisesRegex(
+                ValueError, "W3d native-diagnostic invariants failed"
+            ):
+                _refresh_current_w3b(
+                    recovery=_w3b_recovery_artifacts(),
+                    fit_completion=_w3b_fit_terminal_artifact(),
+                    target_validity=_w3c_target_validity_artifact(),
+                    fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                    b1_packet=_ready_w3c_b1_packet_artifact(),
+                    b1_completion=_w3c_b1_target_msa_completion_artifact(),
+                    b2_native_manifest=native,
+                    b2_runtime=runtime,
+                    b2_approval=approval,
+                    b2_cayuga_validation=validation,
+                    b2_submission=_current_w3c_b2_submission_artifact(),
+                    b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+                    w3d_manifest=w3d_manifest,
+                    w3d_readiness=w3d_readiness,
+                )
+
+    def test_w3d_requires_manifest_and_readiness_together(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, _ = _current_w3d_artifacts()
+        with self.assertRaisesRegex(ValueError, "requires both manifest and readiness"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b1_packet=_ready_w3c_b1_packet_artifact(),
+                b1_completion=_w3c_b1_target_msa_completion_artifact(),
+                b2_native_manifest=native,
+                b2_runtime=runtime,
+                b2_approval=approval,
+                b2_cayuga_validation=validation,
+                b2_submission=_current_w3c_b2_submission_artifact(),
+                b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+                w3d_manifest=w3d_manifest,
+            )
 
     def test_w3c_b2_packet_requires_complete_four_artifact_chain(self):
         native, _, _, _ = _current_w3c_b2_artifacts()
