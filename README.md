@@ -168,10 +168,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (designer: `1290` pytest tests and `1146` unittest tests;
-trust-core: `88` pytest tests and `88` unittest tests on 2026-08-02).
-The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
-fallback until the coordinated trust-core release is published:
+**Current local source verified** (designer: `1301` pytest tests plus `80` subtests and `1146` unittest
+tests; trust-core: `88` pytest tests and `88` unittest tests on 2026-08-03).
+The public install now pins `bio-sfm-trust-core` v0.2.0, the coordinated release whose exact split-LTT
+implementation produced the frozen downstream campaign artifacts; the tested v0.1.0 fallback remains
+available for older environments:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).
 - Fail-closed LLM orchestration now has a strict hypothesis-only contract, default `shadow` authority,
   provider/audit adapters, and a one-call synthetic smoke. The first authorized Anthropic
