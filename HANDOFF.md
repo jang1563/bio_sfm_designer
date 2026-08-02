@@ -4,10 +4,10 @@ Self-contained context to continue this project in a fresh session (Codex or oth
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
 > **2026-08-02 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
-> `1.151111` A40 GPU-hours. The W3c-B2 hash-bound native-screen packet is ready after fresh no-prediction
-> runtime observation and successful local/Cayuga dry-runs. It authorizes zero work now. Native dual-
-> predictor H100 compute remains separately approval-gated by the exact phrase
-> `approve W3c-B2 native dual-predictor screen on H100`. Start with
+> `1.151111` A40 GPU-hours. The exact W3c-B2 approval was consumed once on 2026-08-02. The guarded bridge
+> submitted jobs `3171272`-`3171287`, exactly 8 Boltz plus 8 AF2 native evaluations, with a complete 16/16
+> receipt, zero retries, and zero adaptive top-ups. All jobs are waiting in Cayuga's shared H100 queue;
+> native recoverability remains unknown and no additional job or ProteinMPNN work is authorized. Start with
 > `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and `results/m6d_goal_state_refresh_report.json`.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
@@ -134,8 +134,10 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > identities were freshly reobserved without prediction. Local and Cayuga dry-runs confirmed all 77 bound
 > output paths absent, enumerated exactly 16 evaluations, and created zero scheduler jobs or receipts.
 > Read `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and
-> `results/m6d_w3c_b2_prediction_packet_readiness.json`. Current authority is zero; execution requires the
-> exact new approval `approve W3c-B2 native dual-predictor screen on H100`.
+> `results/m6d_w3c_b2_prediction_packet_readiness.json`. The exact approval was consumed once and jobs
+> `3171272`-`3171287` are receipt-bound at 16/16 with zero retries or top-ups. They are awaiting H100
+> execution; additional submissions remain unauthorized. After terminal accounting, sync only the frozen
+> outputs and apply the both-predictors, at-least-6-of-8 rule before any generator work.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 

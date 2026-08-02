@@ -88,11 +88,12 @@
 > to 8,845 records with no post-hoc target removal. The helper recovered each MSA after Boltz's downstream
 > target-only inference returned nonzero. Zero structure outputs were consumed, and ProteinMPNN designs
 > and candidate-level predictor evaluations remain zero. W3c-B1 is input-preparation success, not native-
-> prediction evidence. The separate hash-bound W3c-B2 native dual-predictor packet is now ready. Both
+> prediction evidence. The separate hash-bound W3c-B2 native dual-predictor packet was then approved once. Both
 > frozen H100 runtime identities were freshly reobserved without prediction, and local plus Cayuga dry-
-> runs enumerated all 16 evaluations while confirming 77/77 output paths absent, zero scheduler jobs,
-> and no receipt. Current execution authority remains zero; the exact approval phrase is
-> `approve W3c-B2 native dual-predictor screen on H100`. See
+> runs enumerated all 16 evaluations while confirming 77/77 output paths absent before execution. The
+> guarded bridge then submitted jobs `3171272`-`3171287`, exactly 16/16 receipt-bound evaluations with zero
+> retries and zero adaptive top-ups. They are awaiting Cayuga H100 execution. Native recoverability remains
+> unknown; no additional prediction or ProteinMPNN work is authorized. See
 > [docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md](docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md) and
 > [docs/M6D_W3C_A_TARGET_LOCK.md](docs/M6D_W3C_A_TARGET_LOCK.md),
 > [docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md](docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md), plus
@@ -100,6 +101,7 @@
 > [docs/M6D_W3C_B2_NATIVE_SCREEN.md](docs/M6D_W3C_B2_NATIVE_SCREEN.md),
 > [results/m6d_w3c_b2_prediction_packet_readiness.json](results/m6d_w3c_b2_prediction_packet_readiness.json),
 > [results/m6d_w3c_b2_cayuga_no_submit_validation.json](results/m6d_w3c_b2_cayuga_no_submit_validation.json),
+> [results/m6d_w3c_b2_submit_receipt_summary.json](results/m6d_w3c_b2_submit_receipt_summary.json),
 > [results/m6d_w3c_b1_cayuga_no_submit_validation.json](results/m6d_w3c_b1_cayuga_no_submit_validation.json)
 > and [results/m6d_w3c_target_validity_audit.json](results/m6d_w3c_target_validity_audit.json). The tracked
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit

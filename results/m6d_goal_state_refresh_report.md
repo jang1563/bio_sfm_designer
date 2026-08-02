@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3c_b2_packet_ready_exact_approval_required`.
+Status: `goal_state_refreshed_w3c_b2_jobs_submitted_awaiting_results`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -39,11 +39,11 @@ W3c-B1 queries authorized: `8`.
 W3c-B1 completion: `target_msa_precompute_complete_8_of_8`.
 W3c-B1 target MSAs complete: `8`.
 W3c-B1 A40 GPU-hours: `1.1511111111111112`.
-W3c-B2: `w3c_b2_native_prediction_approval_packet_ready_no_submit`.
+W3c-B2: `w3c_b2_all_sixteen_prediction_jobs_submitted`.
 W3c-B2 runtime ready: `True`.
 W3c-B2 Cayuga no-submit validation: `True`.
-W3c-B2 approval recorded: `False`.
-W3c-B2 predictor jobs submitted: `0`.
+W3c-B2 approval recorded: `True`.
+W3c-B2 predictor jobs submitted: `16`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -85,7 +85,9 @@ Cayuga submission allowed: `False`.
 - `results/m6d_w3c_b2_prediction_approval_packet.json`
 - `results/m6d_w3c_b2_cayuga_no_submit_validation.json`
 - `docs/M6D_W3C_B2_NATIVE_SCREEN.md`
+- `results/m6d_w3c_b2_submit_receipt.jsonl`
+- `results/m6d_w3c_b2_submit_receipt_summary.json`
 
 ## Next Action
 
-Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.
+Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.

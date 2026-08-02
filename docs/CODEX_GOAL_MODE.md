@@ -14,9 +14,10 @@
 > W3c-A has representation-locked eight fresh strict target-binder dimers. The exact hash-bound W3c-B1
 > approval was consumed once; eight target-MSA jobs completed 8/8 at `1.151111` A40 GPU-hours and all
 > A3M/report integrity checks pass. Boltz's downstream target-only inference failed after each MSA was
-> retrieved, so zero structure outputs were consumed. Resume from
-> `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md`. The current action is W3c-B2 native dual-predictor no-submit
-> packet preparation. No H100 prediction, ProteinMPNN design, or downstream claim is authorized.
+> retrieved, so zero structure outputs were consumed. The exact W3c-B2 approval was consumed once and jobs
+> `3171272`-`3171287` are submitted with a complete 16/16 receipt, zero retries, and zero adaptive top-ups.
+> They are awaiting Cayuga H100 execution. No additional predictor job, ProteinMPNN design, or downstream
+> claim is authorized.
 
 This is the operating contract for running `bio_sfm_designer` as a long-lived
 Codex goal. It is intentionally not a publication plan. The job is to keep
@@ -34,8 +35,8 @@ post-hoc rescue; preserve the completed 58-case W3 AF2-Multimer mechanism result
 input, runtime, approval, and adjudication locks; preserve the terminal W3b fit result without
 threshold rescue, target substitution, certification, or held-out testing; execute the preregistered W3c
 validity-first successor in order; preserve the completed eight-target representation lock and completed
-W3c-B1 target-MSA evidence; prepare W3c-B2 as a hash-bound no-submit packet and require a separate exact
-approval for native dual-predictor recovery before any generator work; preserve W1 as
+W3c-B1 target-MSA evidence; complete only the receipt-bound W3c-B2 native dual-predictor jobs and apply the
+frozen 6/8 adjudication before any separately approved generator work; preserve W1 as
 target-specific certified evidence and W4 as closed-loop plumbing evidence; and keep all status artifacts
 honest and reproducible.
 ```
@@ -124,9 +125,9 @@ dimers without predictor or generated-design labels. The representation lock is
 Its exact approval was consumed once. Jobs `3118725`-`3118732` completed 8/8 at `1.151111` A40 GPU-hours,
 and all eight MSA/report pairs pass sequence, depth, hash, sanitization, and no-truncation checks. See
 `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
-`results/m6d_w3c_b1_target_msa_completion.{json,md}`. The current boundary is a separate hash-bound,
-no-submit W3c-B2 native dual-predictor packet. W3c-B2 H100 compute and all downstream stages remain
-unapproved.
+`results/m6d_w3c_b1_target_msa_completion.{json,md}`. The exact W3c-B2 approval was consumed once. Jobs
+`3171272`-`3171287` are receipt-bound at 16/16 and await H100 execution; retries, top-ups, additional
+prediction jobs, and all downstream stages remain unauthorized.
 
 Current goal-state refresh audit:
 `results/m6d_goal_state_refresh_report.{json,md}`.
@@ -733,9 +734,9 @@ Use this order unless the user gives a newer instruction:
    retune, substitute targets, or spend on stages made unreachable by their protocols.
 4. W3c-A/W3c-B1 - Preserve the completed eight-target representation lock, consumed B1 approval, and
    8/8 target-MSA completion evidence. Do not reuse the B1 approval.
-5. W3c-B2 - Prepare the hash-bound native dual-predictor packet without prediction. All eight target MSAs
-   pass frozen-sequence, depth, hash, and no-truncation checks. The 16-evaluation native screen requires a
-   separate preregistered H100 approval and authorizes no generator work.
+5. W3c-B2 - Preserve the consumed one-shot approval and monitor only receipt-bound jobs
+   `3171272`-`3171287`. After terminal accounting, sync the frozen outputs and apply the exact both-predictors,
+   at-least-6-of-8 rule. No retry, top-up, target replacement, or generator work is authorized.
 6. W4 - Preserve closed-loop DBTL plumbing evidence. Do not describe it as productive
    build-selection evidence until the screen head/verdict quality changes.
 7. W5/W6 - De-novo binders and live orchestration only after the trust-gate, safety, provenance,

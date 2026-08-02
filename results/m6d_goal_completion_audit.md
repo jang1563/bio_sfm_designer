@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3c_b2_packet_ready_exact_approval_wait`.
+Status: `goal_active_w3c_b2_jobs_submitted_awaiting_adjudication`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -43,15 +43,15 @@ Can mark goal complete: `False`.
 - W3c-B1 completion: `target_msa_precompute_complete_8_of_8`
 - W3c-B1 target MSAs complete: `8`
 - W3c-B1 A40 GPU-hours: `1.1511111111111112`
-- W3c-B2: `w3c_b2_native_prediction_approval_packet_ready_no_submit`
+- W3c-B2: `w3c_b2_all_sixteen_prediction_jobs_submitted`
 - W3c-B2 runtime ready: `True`
 - W3c-B2 Cayuga no-submit validation: `True`
-- W3c-B2 approval recorded: `False`
-- W3c-B2 predictor jobs submitted: `0`
-- remaining requirement: `W3c_B2_exact_native_dual_predictor_H100_approval`
+- W3c-B2 approval recorded: `True`
+- W3c-B2 predictor jobs submitted: `16`
+- remaining requirement: `W3c_B2_terminal_outputs_and_frozen_adjudication`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.
+Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.

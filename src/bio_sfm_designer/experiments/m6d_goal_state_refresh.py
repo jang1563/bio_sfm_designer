@@ -124,6 +124,11 @@ def _file_sha256(path: str) -> str:
     return digest.hexdigest()
 
 
+def _rendered_json_sha256(value: Dict[str, Any]) -> str:
+    rendered = json.dumps(value, indent=2, sort_keys=True) + "\n"
+    return hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+
+
 def _terminal_summary(report: Dict[str, Any]) -> Dict[str, Any]:
     gate = report.get("panel_certification_gate", {})
     checks = {
@@ -2182,6 +2187,7 @@ def _w3c_b2_approval_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         ],
         "runtime_readiness_sha256": bindings["runtime_readiness"]["sha256"],
         "runtime_lock_sha256": bindings["runtime_lock"]["sha256"],
+        "approval_packet_sha256": _rendered_json_sha256(packet),
         "packet_digest_sha256": packet["packet_digest_sha256"],
         "no_submit": True,
         "cayuga_submission_allowed": False,
@@ -2325,6 +2331,73 @@ def _w3c_b2_cayuga_validation_summary(
         "receipt_created": False,
         "no_submit": True,
         "can_claim": False,
+        "checks": checks,
+    }
+
+
+def _w3c_b2_submission_summary(
+    summary: Dict[str, Any],
+    approval: Dict[str, Any],
+) -> Dict[str, Any]:
+    checks = {
+        "identity_exact": (
+            summary.get("artifact")
+            == "m6d_w3c_b2_submission_receipt_summary"
+            and summary.get("version") == 1
+            and summary.get("status")
+            == "w3c_b2_all_sixteen_prediction_jobs_submitted"
+            and summary.get("audit_ok") is True
+            and summary.get("submission_complete") is True
+        ),
+        "approval_packet_bound": (
+            _is_sha256(summary.get("approval_packet_sha256"))
+            and summary.get("approval_packet_sha256")
+            == approval.get("approval_packet_sha256")
+        ),
+        "scope_exact": (
+            summary.get("jobs_expected") == 16
+            and summary.get("jobs_recorded") == 16
+            and summary.get("target_ids") == _W3C_TARGET_IDS
+            and summary.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and _is_sha256(summary.get("receipt_sha256"))
+        ),
+        "no_extension": (
+            summary.get("retry_jobs") == 0
+            and summary.get("adaptive_top_up_jobs") == 0
+        ),
+        "claims_closed": (
+            summary.get("can_claim_native_recoverability") is False
+            and "Scientific adjudication requires all sixteen strict prediction records"
+            in str(summary.get("claim_boundary") or "")
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B2 submission invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": summary["status"],
+        "submission_complete": True,
+        "approval_recorded": True,
+        "jobs_expected": 16,
+        "jobs_recorded": 16,
+        "jobs_unresolved": 16,
+        "target_ids": _W3C_TARGET_IDS,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "approval_packet_sha256": summary["approval_packet_sha256"],
+        "receipt_sha256": summary["receipt_sha256"],
+        "retry_jobs": 0,
+        "adaptive_top_up_jobs": 0,
+        "predictor_evaluations_complete": 0,
+        "proteinmpnn_designs": 0,
+        "h100_gpu_hours_accounted": 0.0,
+        "scientific_adjudication_complete": False,
+        "can_submit_additional_jobs": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
         "checks": checks,
     }
 
@@ -4465,6 +4538,230 @@ def _apply_w3c_b2_approval_state(
             updated.append(path)
 
 
+def _apply_w3c_b2_submission_state(
+    bundle: Dict[str, Dict[str, Any]],
+    submission: Dict[str, Any],
+) -> None:
+    requirement = "W3c_B2_terminal_outputs_and_frozen_adjudication"
+    next_action = (
+        "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, "
+        "without retry or adaptive top-up. Then preserve Slurm accounting, sync the "
+        "exact bound outputs, assemble all sixteen strict-QC records, and apply the "
+        "frozen both-predictors and at-least-6-of-8 rule."
+    )
+    ranked_actions = [
+        "Preserve the immutable 16/16 submission receipt and its approval-packet binding.",
+        "Monitor only the receipt-bound jobs; do not retry, top up, or change predictor resources.",
+        "After all jobs are terminal, capture Slurm accounting and sync only the frozen output paths.",
+        "Assemble exactly sixteen strict-QC records and apply the preregistered 6-of-8 rule.",
+        "Keep ProteinMPNN and all generator work blocked until a passing adjudication and separate approval.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["objective"] = (
+        "Complete the preregistered W3c-B2 native dual-predictor recoverability "
+        "screen from its receipt-bound sixteen-job execution, then use the frozen "
+        "6/8 rule to decide whether generator-yield work is scientifically reachable."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3c"] = (
+        "b2_jobs_submitted_no_adjudication_no_native_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_b2_submission_receipt": (
+            "results/m6d_w3c_b2_submit_receipt.jsonl"
+        ),
+        "w3c_b2_submission_summary": (
+            "results/m6d_w3c_b2_submit_receipt_summary.json"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_b2_sixteen_jobs_submitted_awaiting_terminal_outputs",
+        "goal_progress": submission["status"],
+        "remaining_requirements": [requirement],
+        "w3c": submission["status"],
+        "w3c_b2_compute_approval_recorded": True,
+        "w3c_b2_submission_complete": True,
+        "w3c_b2_submission_receipt_audit_ok": True,
+        "w3c_predictor_jobs_submitted": 16,
+        "w3c_predictor_jobs_completed": 0,
+        "w3c_b2_jobs_unresolved": 16,
+        "w3c_predictor_evaluations": 0,
+        "w3c_h100_gpu_hours": 0.0,
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "next_action": next_action,
+    })
+    successor = anchor["w3c_b2_successor"]
+    successor.update({
+        "status": submission["status"],
+        "approval_recorded": True,
+        "predictor_jobs_submitted": 16,
+        "predictor_evaluations_complete": 0,
+        "jobs_unresolved": 16,
+        "submission_receipt_sha256": submission["receipt_sha256"],
+        "no_submit": False,
+        "cayuga_submission_allowed": False,
+        "next_action": next_action,
+    })
+    anchor["next_resume_steps"] = [
+        "read the W3c-B2 submission receipt and preserve its exact 16-job scope",
+        "query only the receipt-bound Slurm job IDs and never retry or top up this panel",
+        "after terminal accounting, sync only packet-bound outputs and logs",
+        "assemble all sixteen strict-QC records without target removal or threshold change",
+        "apply the frozen both-predictors and 6-of-8 rule before any generator proposal",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "w3c_status": submission["status"],
+        "w3c_b2_compute_approval_recorded": True,
+        "w3c_predictor_jobs_submitted": 16,
+        "w3c_predictor_jobs_completed": 0,
+        "w3c_b2_jobs_unresolved": 16,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_b2_jobs_submitted_awaiting_adjudication",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_b2_submission": submission,
+        "w3c_b2_successor": successor,
+    })
+    completion.setdefault("claim_boundary", {})["w3c"] = (
+        "sixteen native predictor jobs are receipt-bound and submitted; no strict "
+        "adjudication, native-recoverability result, or downstream claim exists yet"
+    )
+    completion.setdefault("workstream_status", {})["W3c_validity_first"].update({
+        "complete": False,
+        "scientific_success": None,
+        "status": submission["status"],
+        "w3c_b2_approval_recorded": True,
+        "w3c_b2_predictor_jobs_submitted": 16,
+        "w3c_b2_predictor_jobs_completed": 0,
+        "remaining_requirement": requirement,
+    })
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_b2_submitted_awaiting_results",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3c"] = (
+        "submission_evidence_only_no_native_recoverability_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3c_b2_approval_replay_or_scope_extension",
+            "status": "managed",
+            "control": "the one-shot receipt is complete at 16/16 and no further submission is allowed",
+        },
+        {
+            "id": "w3c_b2_runtime_drift",
+            "status": "managed",
+            "control": "each receipt-bound job reobserves and checks its frozen predictor runtime identity",
+        },
+        {
+            "id": "w3c_b2_scheduler_completion",
+            "status": "external_wait",
+            "control": "monitor only receipt-bound jobs and preserve terminal Slurm accounting",
+        },
+        {
+            "id": "w3c_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN and all generator, gate, and biological claims remain closed",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_w3c_b2_native_screen_preregistered_and_hash_bound",
+        "claims": "no_drift_submission_is_not_scientific_evidence",
+        "execution": "sixteen_receipt_bound_jobs_submitted_zero_retry_zero_top_up",
+        "operational_status": "w3c_b2_awaiting_terminal_scheduler_outputs",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).setdefault(
+        "W3c_validity_first", {}
+    ).update({
+        "b2_submission": submission,
+        "b2_successor": successor,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_b2_jobs_submitted_awaiting_terminal_outputs",
+        "w3c_b2_submission": submission,
+        "w3c_b2_successor": successor,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": True,
+        "w3c_b2_submission_performed": True,
+        "no_submit": False,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "b2_submission_complete_no_adjudication_no_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_b2_jobs_submitted_awaiting_results"
+            if anchor.get("goal_mode") == "active"
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3c-B2 receipt-bound native predictor execution and adjudication",
+        "w3c_b2_submission": submission,
+        "w3c_b2_successor": successor,
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "W3c-B2",
+        "jobs_running": 0,
+        "jobs_unresolved": 16,
+        "w3c_stage": "W3c-B2_sixteen_jobs_submitted_awaiting_terminal_outputs",
+        "w3c_b2_compute_approval_recorded": True,
+        "w3c_predictor_jobs_submitted": 16,
+        "w3c_predictor_jobs_completed": 0,
+        "w3c_b2_jobs_unresolved": 16,
+        "w3c_h100_gpu_hours": 0.0,
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "b2_jobs_submitted_no_adjudication_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_b2_jobs_submitted_awaiting_results",
+        "audit_ok": True,
+        "w3c_b2_submission": submission,
+        "w3c_b2_successor": successor,
+        "submission_performed": True,
+        "w3c_b2_submission_performed": True,
+        "no_submit": False,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "results/m6d_w3c_b2_submit_receipt.jsonl",
+        "results/m6d_w3c_b2_submit_receipt_summary.json",
+        "docs/M6D_W3C_B2_NATIVE_SCREEN.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -4500,6 +4797,7 @@ def refresh_bundle(
     w3c_b2_runtime_readiness: Optional[Dict[str, Any]] = None,
     w3c_b2_prediction_approval_packet: Optional[Dict[str, Any]] = None,
     w3c_b2_cayuga_no_submit_validation: Optional[Dict[str, Any]] = None,
+    w3c_b2_submission_receipt_summary: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -4617,6 +4915,17 @@ def refresh_bundle(
         if isinstance(w3c_b2_cayuga_no_submit_validation, dict)
         else None
     )
+    w3c_b2_submission = (
+        _w3c_b2_submission_summary(
+            w3c_b2_submission_receipt_summary,
+            w3c_b2_approval,
+        )
+        if (
+            isinstance(w3c_b2_submission_receipt_summary, dict)
+            and isinstance(w3c_b2_approval, dict)
+        )
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -4645,6 +4954,8 @@ def refresh_bundle(
         raise ValueError("W3c-B1 target-MSA completion requires the validated B1 packet")
     if w3c_b2_native is not None and w3c_b1_completion is None:
         raise ValueError("W3c-B2 packet state requires completed W3c-B1 target MSAs")
+    if w3c_b2_submission_receipt_summary is not None and w3c_b2_approval is None:
+        raise ValueError("W3c-B2 submission requires the validated approval packet")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -5640,6 +5951,8 @@ def refresh_bundle(
             w3c_b2_cayuga_validation,
             runtime_goal_active=runtime_goal_active,
         )
+        if w3c_b2_submission is not None:
+            _apply_w3c_b2_submission_state(bundle, w3c_b2_submission)
     return bundle
 
 
@@ -6184,6 +6497,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w3c-b2-cayuga-no-submit-validation",
         default="results/m6d_w3c_b2_cayuga_no_submit_validation.json",
     )
+    parser.add_argument(
+        "--w3c-b2-submission-receipt-summary",
+        default="results/m6d_w3c_b2_submit_receipt_summary.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -6369,6 +6686,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3c_b2_cayuga_no_submit_validation)
             if os.path.exists(args.w3c_b2_cayuga_no_submit_validation)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b2_submission_receipt_summary)
+            if os.path.exists(args.w3c_b2_submission_receipt_summary)
             else None
         ),
         updated_at=args.updated_at,

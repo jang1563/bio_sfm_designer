@@ -30,19 +30,11 @@ def _readiness():
     )
 
 
-def test_current_packet_is_ready_but_grants_zero_authority(monkeypatch):
+def test_committed_packet_is_frozen_and_grants_zero_authority(monkeypatch):
     monkeypatch.chdir(ROOT)
 
-    readiness = _readiness()
-    packet = mod.build_approval_packet(readiness)
+    packet = json.loads(Path(PACKET).read_text())
 
-    assert readiness["audit_ok"] is True
-    assert readiness["prediction_packet_ready"] is True
-    assert readiness["runtime_identity_ready"] is True
-    assert readiness["submitted_jobs"] == 0
-    assert readiness["predictor_evaluations_executed"] == 0
-    assert readiness["h100_gpu_hours_consumed"] == 0.0
-    assert readiness["can_submit_now"] is False
     assert packet["approval_recorded"] is False
     assert packet["no_submit"] is True
     assert packet["approval_contract"]["maximum_predictor_evaluations"] == 16
@@ -50,16 +42,27 @@ def test_current_packet_is_ready_but_grants_zero_authority(monkeypatch):
     assert packet["approval_contract"]["proteinmpnn_designs"] == 0
     assert len(packet["execution_targets"]) == 8
     assert len(packet["initial_output_paths"]) == 77
+    assert mod.verify_packet_integrity(PACKET) == []
 
 
-def test_committed_packet_matches_current_sources(monkeypatch):
+def test_post_submission_outputs_block_packet_regeneration(monkeypatch):
     monkeypatch.chdir(ROOT)
 
-    actual = json.loads(Path(PACKET).read_text())
-    expected = mod.build_approval_packet(_readiness())
+    readiness = _readiness()
 
-    assert actual == expected
-    assert mod.verify_packet_integrity(PACKET) == []
+    assert readiness["audit_ok"] is False
+    assert readiness["prediction_packet_ready"] is False
+    assert readiness["can_submit_now"] is False
+    assert readiness["submitted_jobs"] == 0
+    assert readiness["predictor_evaluations_executed"] == 0
+    assert readiness["h100_gpu_hours_consumed"] == 0.0
+    assert readiness["failures"] == [{
+        "kind": "initial_output_already_exists",
+        "paths": [
+            "results/m6d_w3c_b2_submit_receipt.jsonl",
+            "results/m6d_w3c_b2_submit_receipt_summary.json",
+        ],
+    }]
 
 
 def test_cayuga_no_submit_evidence_is_public_safe_and_source_bound(monkeypatch):

@@ -47,8 +47,9 @@
 > `3118725`-`3118732` completed 8/8 at `1.151111` A40 GPU-hours. All A3M/report integrity checks pass;
 > observed depths range from 96 to 8,845 records without post-hoc target filtering. Boltz downstream target-
 > only inference failed after each MSA was retrieved, so zero structure outputs were consumed. W3c-B1 is
-> complete input preparation. W3c-B2 no-submit packet preparation is next, but no native H100 prediction is
-> currently authorized.
+> complete input preparation. The exact W3c-B2 approval was consumed once; jobs `3171272`-`3171287` are
+> submitted at 16/16 with zero retries or top-ups and are awaiting H100 execution. No additional prediction
+> or generator work is authorized.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -178,9 +179,10 @@ passed with exact 13-artifact hash parity, the same eight dry-run IDs, exit `0`,
 submissions, and absent receipt/summary/preflight/A3M outputs. The later exact approval was consumed once.
 Jobs `3118725`-`3118732` completed 8/8 at `1.151111` A40 GPU-hours, and every A3M/report pair passes strict
 sequence, depth, hash, sanitization, and no-truncation replay. Boltz's downstream target-only inference
-returned nonzero after MSA retrieval, and zero structure output was consumed. W3c-B2 remains a separate
-no-submit packet-preparation boundary with no H100 authority. See
-`docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md`.
+returned nonzero after MSA retrieval, and zero structure output was consumed. The later exact W3c-B2
+approval was consumed once. Its receipt binds jobs `3171272`-`3171287`, exactly 16 evaluations with zero
+retries or adaptive top-ups; terminal H100 outputs and adjudication remain pending. See
+`docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and `docs/M6D_W3C_B2_NATIVE_SCREEN.md`.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -719,10 +721,10 @@ Allowed decisions:
    only 3 are strict target-binder systems; do not turn those post-outcome annotations into subgroup claims.
 5. Preserve the completed W3c-A eight-target representation lock; do not replace a target after predictor
    output or reinterpret exact hash exclusion as sequence-family disjointness.
-6. Preserve the completed W3c-B1 evidence: 8/8 target MSAs, exact packet bindings, `1.151111` A40 GPU-hours,
-   and the post-MSA Boltz failure observation. Prepare the W3c-B2 eight-native-by-two-predictor packet with
-   no submission, reobserve the H100 runtime without prediction, then stop for separate exact approval.
-   ProteinMPNN, native prediction, generator, gate, and certification work remain at zero until authorized.
+6. Preserve the completed W3c-B1 evidence and the consumed W3c-B2 approval. Monitor only receipt-bound jobs
+   `3171272`-`3171287`; do not retry, top up, change resources, or substitute targets. After terminal
+   accounting, sync the frozen outputs and apply the preregistered both-predictors, at-least-6-of-8 rule.
+   ProteinMPNN, generator, gate, and certification work remain unauthorized.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

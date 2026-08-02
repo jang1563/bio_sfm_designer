@@ -2,7 +2,7 @@
 
 Date: 2026-08-02
 
-Status: `packet_ready_awaiting_exact_approval`
+Status: `sixteen_jobs_submitted_awaiting_terminal_outputs`
 
 ## Purpose
 
@@ -36,8 +36,10 @@ binds freshly reobserved Cayuga identities for both predictors without executing
 
 - Runtime lock SHA-256: `d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d`
 - Approval packet SHA-256: `8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd`
-- Current jobs authorized: `0`
-- Current H100 GPU-hours authorized: `0`
+- Exact one-shot approval consumed: `true`
+- Predictor jobs submitted: `16/16`
+- Additional jobs authorized: `0`
+- Terminal H100 accounting: pending
 
 ## No-submit validation
 
@@ -47,18 +49,27 @@ output paths absent, and created no scheduler job, submission receipt, or result
 same staged bytes as the local packet. No API call, ProteinMPNN generation, structure prediction, or GPU
 allocation occurred.
 
+## Submission state
+
+The exact approval phrase was received and consumed once on 2026-08-02. The guarded bridge reverified the
+packet and all 77 output paths immediately before submission, then recorded exactly 16 jobs: `3171272`
+through `3171287`, one Boltz and one AF2 evaluation for each frozen target. The append-only summary passes
+at `16/16`, with retry jobs `0` and adaptive top-up jobs `0`. The jobs are waiting in Cayuga's shared H100
+queue; terminal outputs and Slurm accounting do not yet exist. Submission is operational evidence only and
+does not establish native recoverability.
+
 ## Approval boundary
 
-Readiness does not authorize execution. The guarded submitter rejects a missing or inexact approval token,
-preexisting outputs, packet drift, runtime drift, scope drift, and any attempt to exceed the frozen budget.
-The only accepted authorization phrase is:
+Readiness alone did not authorize execution. The guarded submitter rejected a missing or inexact approval
+token, preexisting outputs, packet drift, runtime drift, scope drift, and any attempt to exceed the frozen
+budget. The accepted one-shot authorization phrase was:
 
 `approve W3c-B2 native dual-predictor screen on H100`
 
-After exact approval, the guarded path may submit only the frozen 16-job native screen. The resulting
-records must then be assembled and adjudicated by the preregistered rule. A pass permits preparation of a
-new, separately approved generator-yield protocol; it does not authorize ProteinMPNN itself. A fail stops
-the branch before generation. At the present boundary, native recoverability remains unknown.
+That approval is now consumed and cannot authorize a retry, top-up, or replacement job. The resulting
+records must be assembled and adjudicated by the preregistered rule. A pass permits preparation of a new,
+separately approved generator-yield protocol; it does not authorize ProteinMPNN itself. A fail stops the
+branch before generation. At the present boundary, native recoverability remains unknown.
 
 ## Key artifacts
 
@@ -68,6 +79,8 @@ the branch before generation. At the present boundary, native recoverability rem
 - Approval readiness: `results/m6d_w3c_b2_prediction_packet_readiness.{json,md}`
 - Approval packet: `results/m6d_w3c_b2_prediction_approval_packet.json`
 - Cayuga no-submit evidence: `results/m6d_w3c_b2_cayuga_no_submit_validation.json`
+- Submission receipt: `results/m6d_w3c_b2_submit_receipt.jsonl`
+- Submission summary: `results/m6d_w3c_b2_submit_receipt_summary.json`
 - Guarded submitter: `hpc/m6d_w3c_b2_submit_with_receipt.sh`
 - Producer: `bio_sfm_designer.experiments.m6d_w3c_b2_producer`
 - Adjudicator: `bio_sfm_designer.experiments.m6d_w3c_b2_native_screen`

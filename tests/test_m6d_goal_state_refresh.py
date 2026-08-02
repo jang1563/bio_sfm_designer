@@ -1112,6 +1112,7 @@ def _refresh_current_w3b(
     b2_runtime=None,
     b2_approval=None,
     b2_cayuga_validation=None,
+    b2_submission=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1146,6 +1147,7 @@ def _refresh_current_w3b(
         w3c_b2_runtime_readiness=b2_runtime,
         w3c_b2_prediction_approval_packet=b2_approval,
         w3c_b2_cayuga_no_submit_validation=b2_cayuga_validation,
+        w3c_b2_submission_receipt_summary=b2_submission,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1161,6 +1163,12 @@ def _current_w3c_b2_artifacts():
         "results/m6d_w3c_b2_cayuga_no_submit_validation.json",
     )
     return [json.loads(Path(path).read_text()) for path in paths]
+
+
+def _current_w3c_b2_submission_artifact():
+    return json.loads(
+        Path("results/m6d_w3c_b2_submit_receipt_summary.json").read_text()
+    )
 
 
 class M6DGoalStateRefreshTests(unittest.TestCase):
@@ -1950,6 +1958,82 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
             completion_markdown,
         )
 
+    def test_w3c_b2_submission_promotes_receipt_bound_execution_wait(self):
+        packet = _w3c_b1_target_msa_packet_artifact()
+        packet.update({
+            "status": "w3c_b1_packet_cayuga_validated_ready_for_exact_approval",
+            "cayuga_no_submit_validation_status": "pass",
+            "cayuga_no_submit_validation_evidence": {
+                "path": "results/m6d_w3c_b1_cayuga_no_submit_validation.json",
+                "sha256": "e" * 64,
+            },
+            "ready_to_request_exact_approval": True,
+        })
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=packet,
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            b2_native_manifest=native,
+            b2_runtime=runtime,
+            b2_approval=approval,
+            b2_cayuga_validation=validation,
+            b2_submission=_current_w3c_b2_submission_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_b2_jobs_submitted_awaiting_results",
+        )
+        current = bundle["anchor"]["current_status"]
+        self.assertTrue(current["w3c_b2_compute_approval_recorded"])
+        self.assertEqual(current["w3c_predictor_jobs_submitted"], 16)
+        self.assertEqual(current["w3c_b2_jobs_unresolved"], 16)
+        self.assertFalse(current["w3c_can_claim"])
+        self.assertEqual(
+            current["remaining_requirements"],
+            ["W3c_B2_terminal_outputs_and_frozen_adjudication"],
+        )
+        self.assertTrue(bundle["actions"]["submission_performed"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertEqual(
+            bundle["drift"]["drift_assessment"]["execution"],
+            "sixteen_receipt_bound_jobs_submitted_zero_retry_zero_top_up",
+        )
+        self.assertFalse(
+            bundle["report"]["w3c_b2_successor"][
+                "can_claim_native_recoverability"
+            ]
+        )
+
+    def test_w3c_b2_submission_rejects_retry_or_packet_drift(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        for field, value in (
+            ("retry_jobs", 1),
+            ("approval_packet_sha256", "f" * 64),
+        ):
+            submission = _current_w3c_b2_submission_artifact()
+            submission[field] = value
+            with self.subTest(field=field), self.assertRaisesRegex(
+                ValueError, "W3c-B2 submission invariants failed"
+            ):
+                _refresh_current_w3b(
+                    recovery=_w3b_recovery_artifacts(),
+                    fit_completion=_w3b_fit_terminal_artifact(),
+                    target_validity=_w3c_target_validity_artifact(),
+                    fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                    b1_packet=_w3c_b1_target_msa_packet_artifact(),
+                    b1_completion=_w3c_b1_target_msa_completion_artifact(),
+                    b2_native_manifest=native,
+                    b2_runtime=runtime,
+                    b2_approval=approval,
+                    b2_cayuga_validation=validation,
+                    b2_submission=submission,
+                )
+
     def test_w3c_b2_packet_requires_complete_four_artifact_chain(self):
         native, _, _, _ = _current_w3c_b2_artifacts()
         with self.assertRaisesRegex(ValueError, "requires manifest, runtime"):
@@ -2121,6 +2205,9 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3c_b2_cayuga_no_submit_validation": os.path.join(
                     root, "missing-w3c-b2-cayuga-no-submit-validation.json"
                 ),
+                "w3c_b2_submission_receipt_summary": os.path.join(
+                    root, "missing-w3c-b2-submission-receipt-summary.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -2164,6 +2251,8 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 paths["w3c_b2_prediction_approval_packet"],
                 "--w3c-b2-cayuga-no-submit-validation",
                 paths["w3c_b2_cayuga_no_submit_validation"],
+                "--w3c-b2-submission-receipt-summary",
+                paths["w3c_b2_submission_receipt_summary"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -2200,6 +2289,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3c_b2_runtime_readiness",
                     "w3c_b2_prediction_approval_packet",
                     "w3c_b2_cayuga_no_submit_validation",
+                    "w3c_b2_submission_receipt_summary",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)

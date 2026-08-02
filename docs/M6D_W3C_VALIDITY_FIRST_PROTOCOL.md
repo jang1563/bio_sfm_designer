@@ -1,6 +1,6 @@
 # M6d W3c validity-first failure-localization protocol
 
-Status: `w3c_b2_prediction_packet_ready_exact_approval_required`.
+Status: `w3c_b2_sixteen_jobs_submitted_awaiting_terminal_outputs`.
 
 Date: 2026-08-02.
 
@@ -117,9 +117,10 @@ and cannot transfer.
 
 ## Current action
 
-Preserve the completed hash-bound, no-submit W3c-B2 packet for exactly eight native complexes and two
-frozen predictors. Do not submit predictor or ProteinMPNN work without the exact separate native-screen
-approval. Packet readiness and runtime observation are not native-recoverability evidence.
+Preserve the completed hash-bound W3c-B2 packet and its consumed one-shot approval. Monitor only jobs
+`3171272`-`3171287`; do not retry, top up, replace targets, or submit ProteinMPNN work. Submission and runtime
+observation are not native-recoverability evidence. Apply the frozen 6/8 rule only after all terminal
+outputs and accounting are preserved.
 
 ## Execution update: W3c-A complete
 
@@ -151,7 +152,7 @@ inference returned nonzero. No structure-prediction output was consumed, and can
 evaluations and ProteinMPNN designs remain zero. See
 [M6D_W3C_B1_TARGET_MSA_COMPLETION.md](M6D_W3C_B1_TARGET_MSA_COMPLETION.md).
 
-## No-submit update: W3c-B2 packet ready
+## Submission update: W3c-B2 jobs queued
 
 The W3c-B2 manifest, dual-predictor runtime lock, producer, adjudicator, approval packet, and append-only
 submission journal are implemented. The frozen scope is eight native complexes evaluated once by Boltz 2
@@ -160,6 +161,7 @@ prediction-time network access, retries, and adaptive top-up remain disabled.
 
 Both exact runtime identities were freshly reobserved on Cayuga without prediction. Local and Cayuga dry-
 runs verified the hash-bound packet, enumerated all 16 evaluations, confirmed 77/77 output paths absent,
-and created zero scheduler jobs or receipts. Therefore current execution authority and scientific output
-remain zero. See [M6D_W3C_B2_NATIVE_SCREEN.md](M6D_W3C_B2_NATIVE_SCREEN.md). The only phrase that can open
-this packet is `approve W3c-B2 native dual-predictor screen on H100`.
+and created zero scheduler jobs or receipts. The exact phrase
+`approve W3c-B2 native dual-predictor screen on H100` was subsequently consumed once. The guarded bridge
+submitted jobs `3171272`-`3171287` with a complete 16/16 receipt, retry jobs `0`, and adaptive top-ups `0`.
+They are awaiting shared H100 execution. See [M6D_W3C_B2_NATIVE_SCREEN.md](M6D_W3C_B2_NATIVE_SCREEN.md).

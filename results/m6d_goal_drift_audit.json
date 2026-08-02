@@ -1,19 +1,19 @@
 {
   "active_risks": [
     {
-      "control": "only the exact W3c-B2 phrase can authorize the 16 jobs",
-      "id": "w3c_b2_generic_approval_transfer",
+      "control": "the one-shot receipt is complete at 16/16 and no further submission is allowed",
+      "id": "w3c_b2_approval_replay_or_scope_extension",
       "status": "managed"
     },
     {
-      "control": "both predictor identities were freshly reobserved and every job rechecks them",
+      "control": "each receipt-bound job reobserves and checks its frozen predictor runtime identity",
       "id": "w3c_b2_runtime_drift",
       "status": "managed"
     },
     {
-      "control": "the packet caps 16 one-hour H100 jobs and forbids retry or adaptive top-up",
-      "id": "w3c_b2_budget_or_retry_drift",
-      "status": "managed"
+      "control": "monitor only receipt-bound jobs and preserve terminal Slurm accounting",
+      "id": "w3c_b2_scheduler_completion",
+      "status": "external_wait"
     },
     {
       "control": "ProteinMPNN and all generator, gate, and biological claims remain closed",
@@ -33,7 +33,7 @@
     "w2c": "threshold_learning_terminal_no_viability_claim",
     "w3": "completed_context_dependent_or_unresolved_no_population_claim",
     "w3b": "fit_terminal_negative_certification_unreachable_no_claim",
-    "w3c": "b2_approval_packet_only_no_prediction_or_scientific_claim",
+    "w3c": "submission_evidence_only_no_native_recoverability_or_downstream_claim",
     "w4": "closed_loop_plumbing_only"
   },
   "claim_scope_corrected": true,
@@ -1456,6 +1456,7 @@
       },
       "b2_approval": {
         "approval_packet_ready": true,
+        "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
         "approval_recorded": false,
         "can_claim": false,
         "cayuga_submission_allowed": false,
@@ -1656,32 +1657,76 @@
         "status": "w3c_b2_runtime_reobservation_complete_no_prediction",
         "submitted_jobs": 0
       },
+      "b2_submission": {
+        "adaptive_top_up_jobs": 0,
+        "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
+        "approval_recorded": true,
+        "can_claim_biological_binder_success": false,
+        "can_claim_generator_yield": false,
+        "can_claim_native_recoverability": false,
+        "can_claim_trust_gate": false,
+        "can_submit_additional_jobs": false,
+        "checks": {
+          "approval_packet_bound": true,
+          "claims_closed": true,
+          "identity_exact": true,
+          "no_extension": true,
+          "scope_exact": true
+        },
+        "h100_gpu_hours_accounted": 0.0,
+        "jobs_expected": 16,
+        "jobs_recorded": 16,
+        "jobs_unresolved": 16,
+        "predictor_evaluations_complete": 0,
+        "predictor_ids": [
+          "boltz2_complex",
+          "af2_multimer_colabfold_v1"
+        ],
+        "proteinmpnn_designs": 0,
+        "receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc",
+        "retry_jobs": 0,
+        "scientific_adjudication_complete": false,
+        "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
+        "submission_complete": true,
+        "target_ids": [
+          "1TE1_BA",
+          "3QB4_AB",
+          "5E5M_AB",
+          "5JSB_AB",
+          "6KBR_AC",
+          "6KMQ_AB",
+          "6SGE_AB",
+          "7B5G_AB"
+        ]
+      },
       "b2_successor": {
         "approval_packet_ready": true,
-        "approval_recorded": false,
+        "approval_recorded": true,
         "can_claim_biological_binder_success": false,
         "can_claim_generator_yield": false,
         "can_claim_native_recoverability": false,
         "can_claim_trust_gate": false,
         "cayuga_no_submit_validation_passed": true,
         "cayuga_submission_allowed": false,
+        "jobs_unresolved": 16,
         "lrmsd_threshold_angstrom": 4.0,
         "maximum_h100_gpu_hours": 16.0,
         "minimum_targets_passing": 6,
-        "next_action": "Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.",
-        "no_submit": true,
+        "next_action": "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.",
+        "no_submit": false,
         "predictor_evaluations_complete": 0,
         "predictor_evaluations_if_approved": 16,
         "predictor_ids": [
           "boltz2_complex",
           "af2_multimer_colabfold_v1"
         ],
-        "predictor_jobs_submitted": 0,
+        "predictor_jobs_submitted": 16,
         "proteinmpnn_designs": 0,
         "required_user_phrase": "approve W3c-B2 native dual-predictor screen on H100",
         "runtime_identity_ready": true,
         "runtime_observations_complete": 2,
-        "status": "w3c_b2_native_prediction_approval_packet_ready_no_submit",
+        "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
+        "submission_receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc",
         "target_count": 8,
         "target_ids": [
           "1TE1_BA",
@@ -1821,11 +1866,11 @@
     "remaining": 1
   },
   "drift_assessment": {
-    "claims": "no_drift_no_prediction_no_native_or_downstream_claim",
-    "execution": "packet_ready_exact_approval_required_zero_h100_jobs",
+    "claims": "no_drift_submission_is_not_scientific_evidence",
+    "execution": "sixteen_receipt_bound_jobs_submitted_zero_retry_zero_top_up",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-    "operational_status": "w3c_b2_cayuga_dry_run_passed_approval_wait",
+    "operational_status": "w3c_b2_awaiting_terminal_scheduler_outputs",
     "protocol": "no_drift_w3c_b2_native_screen_preregistered_and_hash_bound"
   },
   "failures": [],
@@ -1842,10 +1887,10 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.",
+  "next_action": "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.",
   "representation_lock_complete": true,
   "representation_validity_issue_detected": true,
-  "status": "no_major_direction_drift_w3c_b2_packet_ready_approval_wait",
+  "status": "no_major_direction_drift_w3c_b2_submitted_awaiting_results",
   "w3c_b1_packet_prepared": true,
   "w3c_b1_target_msa_complete": true,
   "w3c_b2_cayuga_no_submit_validation_passed": true,

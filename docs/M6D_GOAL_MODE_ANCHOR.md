@@ -13,11 +13,11 @@
 > now W3c validity-first failure localization. W3c-A has representation-locked eight fresh strict target-
 > binder dimers. The exact W3c-B1 approval was consumed once; jobs `3118725`-`3118732` completed 8/8 at
 > `1.151111` A40 GPU-hours and all target-MSA integrity checks pass. Each MSA was recovered after Boltz's
-> downstream target-only inference failed, and zero structure outputs were consumed. The W3c-B2 hash-
-> bound native-screen packet is now ready after fresh no-prediction runtime observation and successful
-> local/Cayuga dry-runs. It authorizes zero work. Resume from `docs/M6D_W3C_B2_NATIVE_SCREEN.md`; native
-> dual-predictor H100 compute requires the exact separate approval
-> `approve W3c-B2 native dual-predictor screen on H100`.
+> downstream target-only inference failed, and zero structure outputs were consumed. The exact W3c-B2
+> approval was consumed once; jobs `3171272`-`3171287` are submitted with a complete 16/16 receipt, zero
+> retries, and zero adaptive top-ups. They are awaiting Cayuga H100 execution. Resume from
+> `docs/M6D_W3C_B2_NATIVE_SCREEN.md`; monitor only those receipt-bound jobs, then apply the frozen 6/8
+> rule. Native recoverability remains unknown and no additional prediction or generator work is authorized.
 
 Date: 2026-08-02
 
@@ -215,12 +215,14 @@ from Chai records alone.
 - W3c-B1 completion:
   `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
   `results/m6d_w3c_b1_target_msa_completion.{json,md}`
-- W3c-B2 native-screen no-submit boundary:
+- W3c-B2 native-screen submission boundary:
   `docs/M6D_W3C_B2_NATIVE_SCREEN.md`, `configs/m6d_w3c_b2_native_screen_manifest.json`,
   `configs/m6d_w3c_b2_runtime_lock.json`, `results/m6d_w3c_b2_runtime_readiness.{json,md}`, and
   `results/m6d_w3c_b2_prediction_packet_readiness.{json,md}`, plus public-safe Cayuga evidence at
   `results/m6d_w3c_b2_cayuga_no_submit_validation.json`; guarded execution is implemented by
-  `hpc/m6d_w3c_b2_submit_with_receipt.sh`
+  `hpc/m6d_w3c_b2_submit_with_receipt.sh`, with the consumed 16/16 receipt at
+  `results/m6d_w3c_b2_submit_receipt.jsonl` and
+  `results/m6d_w3c_b2_submit_receipt_summary.json`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and

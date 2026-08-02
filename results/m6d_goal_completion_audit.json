@@ -12,18 +12,18 @@
     "w2c": "threshold learning terminally retained zero eligible targets; no later-stage compute",
     "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
     "w3b": "terminal negative fit; no qualifying rule, certification, held-out test, or claim",
-    "w3c": "native inputs and runtimes are locked and the approval packet is ready; zero prediction records exist and no native-recoverability or downstream claim is supported",
+    "w3c": "sixteen native predictor jobs are receipt-bound and submitted; no strict adjudication, native-recoverability result, or downstream claim exists yet",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.",
+  "next_action": "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3c_B2_exact_native_dual_predictor_H100_approval"
+    "W3c_B2_terminal_outputs_and_frozen_adjudication"
   ],
-  "status": "goal_active_w3c_b2_packet_ready_exact_approval_wait",
+  "status": "goal_active_w3c_b2_jobs_submitted_awaiting_adjudication",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -1698,6 +1698,7 @@
   },
   "w3c_b2_approval": {
     "approval_packet_ready": true,
+    "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
     "approval_recorded": false,
     "can_claim": false,
     "cayuga_submission_allowed": false,
@@ -1898,32 +1899,76 @@
     "status": "w3c_b2_runtime_reobservation_complete_no_prediction",
     "submitted_jobs": 0
   },
+  "w3c_b2_submission": {
+    "adaptive_top_up_jobs": 0,
+    "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
+    "approval_recorded": true,
+    "can_claim_biological_binder_success": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "can_submit_additional_jobs": false,
+    "checks": {
+      "approval_packet_bound": true,
+      "claims_closed": true,
+      "identity_exact": true,
+      "no_extension": true,
+      "scope_exact": true
+    },
+    "h100_gpu_hours_accounted": 0.0,
+    "jobs_expected": 16,
+    "jobs_recorded": 16,
+    "jobs_unresolved": 16,
+    "predictor_evaluations_complete": 0,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "proteinmpnn_designs": 0,
+    "receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc",
+    "retry_jobs": 0,
+    "scientific_adjudication_complete": false,
+    "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
+    "submission_complete": true,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
   "w3c_b2_successor": {
     "approval_packet_ready": true,
-    "approval_recorded": false,
+    "approval_recorded": true,
     "can_claim_biological_binder_success": false,
     "can_claim_generator_yield": false,
     "can_claim_native_recoverability": false,
     "can_claim_trust_gate": false,
     "cayuga_no_submit_validation_passed": true,
     "cayuga_submission_allowed": false,
+    "jobs_unresolved": 16,
     "lrmsd_threshold_angstrom": 4.0,
     "maximum_h100_gpu_hours": 16.0,
     "minimum_targets_passing": 6,
-    "next_action": "Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.",
-    "no_submit": true,
+    "next_action": "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.",
+    "no_submit": false,
     "predictor_evaluations_complete": 0,
     "predictor_evaluations_if_approved": 16,
     "predictor_ids": [
       "boltz2_complex",
       "af2_multimer_colabfold_v1"
     ],
-    "predictor_jobs_submitted": 0,
+    "predictor_jobs_submitted": 16,
     "proteinmpnn_designs": 0,
     "required_user_phrase": "approve W3c-B2 native dual-predictor screen on H100",
     "runtime_identity_ready": true,
     "runtime_observations_complete": 2,
-    "status": "w3c_b2_native_prediction_approval_packet_ready_no_submit",
+    "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
+    "submission_receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc",
     "target_count": 8,
     "target_ids": [
       "1TE1_BA",
@@ -2076,15 +2121,16 @@
     },
     "W3c_validity_first": {
       "complete": false,
-      "remaining_requirement": "W3c_B2_exact_native_dual_predictor_H100_approval",
+      "remaining_requirement": "W3c_B2_terminal_outputs_and_frozen_adjudication",
       "scientific_success": null,
-      "status": "w3c_b2_native_prediction_approval_packet_ready_no_submit",
+      "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
       "w3c_a_complete": true,
       "w3c_b1_target_msas_complete": 8,
-      "w3c_b2_approval_recorded": false,
+      "w3c_b2_approval_recorded": true,
       "w3c_b2_cayuga_no_submit_validation_passed": true,
       "w3c_b2_packet_prepared": true,
-      "w3c_b2_predictor_jobs_submitted": 0,
+      "w3c_b2_predictor_jobs_completed": 0,
+      "w3c_b2_predictor_jobs_submitted": 16,
       "w3c_b2_runtime_identity_ready": true
     },
     "W4_closed_loop_DBTL": {

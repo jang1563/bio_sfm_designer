@@ -1,0 +1,29 @@
+{
+  "adaptive_top_up_jobs": 0,
+  "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
+  "artifact": "m6d_w3c_b2_submission_receipt_summary",
+  "audit_ok": true,
+  "can_claim_native_recoverability": false,
+  "claim_boundary": "Scheduler submission evidence only. Scientific adjudication requires all sixteen strict prediction records and the frozen 6/8 rule.",
+  "jobs_expected": 16,
+  "jobs_recorded": 16,
+  "predictor_ids": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc",
+  "retry_jobs": 0,
+  "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
+  "submission_complete": true,
+  "target_ids": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "version": 1
+}
