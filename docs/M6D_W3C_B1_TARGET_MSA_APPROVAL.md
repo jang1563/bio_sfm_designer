@@ -1,6 +1,8 @@
 # M6d W3c-B1 target-MSA approval packet
 
-Status: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`.
+Status: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval` (immutable pre-execution packet).
+
+Lifecycle: historical and consumed once; see the completion update below.
 
 ## Purpose
 
@@ -50,8 +52,8 @@ values. The guarded wrapper exited `0`, printed the same eight target IDs, repor
 submissions, and left receipt, summary, input-preflight, and A3M outputs absent. The checksum-mode rsync
 replay reported zero differences.
 
-The machine-readable evidence passes the packet validator. Exact target-MSA-only approval is now
-request-ready, but approval is not recorded and no query is authorized yet.
+The machine-readable evidence passed the packet validator. This paragraph describes the immutable
+pre-execution boundary; the exact approval was later consumed once as recorded below.
 
 ## Next exact-approval action
 
@@ -65,3 +67,14 @@ The matching machine guard is:
 
 Even after exact approval, the scope remains target-MSA input preparation only. ProteinMPNN, Boltz/AF2
 structure prediction, W3c-B2, and all scientific claims remain separately blocked.
+
+## Completion update
+
+On 2026-08-02, the exact approval was consumed once through the guarded wrapper. Jobs
+`3118725`-`3118732` completed 8/8 with top-level state `COMPLETED` and exit `0:0`, consuming
+`1.151111` A40 GPU-hours. All eight A3M/report pairs pass the frozen sequence, query identity, depth,
+hash, sanitization, and no-truncation checks. See
+[M6D_W3C_B1_TARGET_MSA_COMPLETION.md](M6D_W3C_B1_TARGET_MSA_COMPLETION.md).
+
+The packet remains historical and cannot be reused. W3c-B1 completion permits preparation of a separate
+W3c-B2 no-submit packet only; it does not authorize native prediction or ProteinMPNN work.

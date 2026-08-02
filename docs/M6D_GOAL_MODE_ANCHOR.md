@@ -1,6 +1,6 @@
 # M6d Goal-Mode Current Anchor
 
-> **2026-07-15 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
+> **2026-08-02 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
 > AF2-Multimer mechanism panel is complete. Corrected job `3084977` completed 58/58 after job `3084976`
 > was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
 > finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
@@ -10,19 +10,19 @@
 > The evaluator returned `w3b_fit_rule_not_found_stop`. `1FSK_LJ` was wrong for all 60 candidates under
 > both endpoints, so the required 15 target accepts imply `15/180 = 0.08333`, above the 0.08 risk cap.
 > Certification and held-out test are unreachable and have zero submissions. The distinct successor is
-> now W3c validity-first failure localization. W3c-A has representation-locked eight fresh strict
-> target-binder dimers with zero compute. Its hash-bound W3c-B1 target-MSA-only packet is prepared, and
-> Cayuga no-submit mirror validation passes with exact hash parity, eight dry-run targets, exit `0`, zero
-> submissions, and absent output artifacts. Resume from `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`;
-> exact target-MSA-only approval is request-ready but not recorded. Do not rescue W3b or infer broader
-> compute approval.
+> now W3c validity-first failure localization. W3c-A has representation-locked eight fresh strict target-
+> binder dimers. The exact W3c-B1 approval was consumed once; jobs `3118725`-`3118732` completed 8/8 at
+> `1.151111` A40 GPU-hours and all target-MSA integrity checks pass. Each MSA was recovered after Boltz's
+> downstream target-only inference failed, and zero structure outputs were consumed. Resume from
+> `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md`. The current boundary is W3c-B2 hash-bound no-submit packet
+> preparation; native dual-predictor H100 compute remains separately approval-gated.
 
-Date: 2026-07-15
+Date: 2026-08-02
 
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
 
-Latest local harness refresh: 2026-07-15.
+Latest local harness refresh: 2026-08-02.
 
 Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. W2b
 certification completed on five fit-eligible targets with 300 fresh H100 records and strict QC failures=0.
@@ -49,17 +49,18 @@ chronological ledger are historical even where their original labels say `curren
 assembly produced 180/180 matched fit rows, and the frozen evaluator found no qualifying primary or
 comparator rule. Certification and held-out test remain unsubmitted and unreachable under this protocol.
 
-Latest successor override: 2026-07-15. A deterministic CPU audit of all 24 historical W2b/W2c/W3b
+Latest successor override: 2026-08-02. A deterministic CPU audit of all 24 historical W2b/W2c/W3b
 representatives found 5 complete author-determined two-chain assemblies and 3 strict target-binder systems.
 Strict branch counts are W2b `0/8`, W2c `2/8`, and W3b `1/8`. This is a post-outcome diagnostic design
 reset, not a subgroup claim: historical experiments remain valid only for their exact prepared structural-
 proxy inputs. W3c freezes the failure order as representation validity, native dual-predictor recovery,
 generator yield, then trust-signal calibration. W3c-A has locked eight fresh, source-disjoint complete
-target-binder dimers. The separate W3c-B1 target-MSA packet and Cayuga no-submit mirror evidence are
-audit-clean. The remote dry run preserved exact hash parity, printed all eight targets, exited `0`,
-submitted zero jobs, and created no receipt, summary, preflight, or target-MSA output. Exact approval,
-submission, receipt, and target-MSA outputs remain absent. ProteinMPNN, predictor, gate, and certification
-work remain unauthorized.
+target-binder dimers. The separate W3c-B1 target-MSA packet and Cayuga no-submit mirror evidence passed.
+Its exact approval was consumed once and eight A40 jobs completed 8/8. The 4,144 GPU-seconds
+(`1.151111` hours) remain within the 8-hour ceiling, and all eight A3M/report pairs pass integrity replay.
+Observed A3M depth is 96-8,845 records without post-hoc target removal. Boltz's downstream target-only
+inference returned nonzero after each MSA was retrieved; zero structure output was consumed. ProteinMPNN,
+native dual-predictor, gate, and certification work remain unauthorized.
 
 ## Active Objective
 
@@ -69,8 +70,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - preserve the completed frozen 58-case W3 result without changing its inputs, thresholds, or adjudication;
 - preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
   certification and held-out-test roles;
-- preserve the completed W3c-A representation lock and passing W3c-B1 Cayuga no-submit mirror evidence;
-  request exact target-MSA approval next but submit nothing before that phrase is recorded;
+- preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
+  prepare only the hash-bound W3c-B2 no-submit packet next;
 - require a separate preregistered approval for native dual-predictor recovery before any generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
@@ -109,10 +110,11 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   supports no gate or biological-success claim.
 - W3c: the historical-pool validity audit passes its deterministic checks but finds only 5/24 complete
   two-chain assemblies and 3/24 strict target-binder systems. W3c-A has representation-locked exactly
-  eight fresh strict target-binder dimers without predictor labels or generated designs. W3c-B1 is locally
-  packet-ready but has zero authorized queries, zero submissions, zero receipts, and zero outputs pending
-  Cayuga no-submit validation. Native recoverability and strict target-binder generalization remain
-  unsupported.
+  eight fresh strict target-binder dimers without predictor labels or generated designs. W3c-B1 completed
+  8/8 target MSAs at `1.151111` A40 GPU-hours. All integrity checks pass, but zero structure outputs were
+  consumed and zero candidate-level predictions or ProteinMPNN designs were run. Native recoverability and
+  strict target-binder generalization remain unsupported. W3c-B2 packet preparation is allowed; H100
+  prediction is not.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -205,6 +207,9 @@ from Chai records alone.
   `results/m6d_w3c_b1_target_msa_approval_packet.{json,md}`, and
   `results/m6d_w3c_b1_cayuga_no_submit_validation.json`, plus
   `hpc/run_w3c_b1_target_msa_guarded.sh`
+- W3c-B1 completion:
+  `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
+  `results/m6d_w3c_b1_target_msa_completion.{json,md}`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and

@@ -1,8 +1,8 @@
 # M6d W3c validity-first failure-localization protocol
 
-Status: `w3c_b1_cayuga_validated_exact_approval_required`.
+Status: `w3c_b1_complete_b2_packet_preparation_required`.
 
-Date: 2026-07-15.
+Date: 2026-08-02.
 
 ## Why W3c is needed
 
@@ -92,8 +92,8 @@ After a target manifest and representation lock pass exactly, a separate approva
 most eight target-MSA queries on A40. It authorizes no ProteinMPNN or structure-predictor work. All eight
 MSAs must pass frozen-sequence, depth, hash, and no-truncation checks before W3c-B2 can be prepared.
 
-The hash-bound approval packet is now prepared locally. It authorizes zero queries until Cayuga mirror
-validation passes and the exact stage-specific approval is recorded.
+The hash-bound approval packet passed Cayuga mirror validation and its exact approval was consumed once.
+All eight target MSAs now pass completion checks. The B1 packet cannot be reused.
 
 ## W3c-B2: native recoverability
 
@@ -117,9 +117,9 @@ and cannot transfer.
 
 ## Current action
 
-Mirror the packet-bound W3c-B1 artifacts to Cayuga and run the guarded wrapper in dry-run mode. Confirm
-local/remote hash parity, exit `0`, zero submissions, and absent receipt/output artifacts before requesting
-the exact W3c-B1 approval. Do not prepare W3c-B2, ProteinMPNN, or predictor work.
+Prepare a separate hash-bound, no-submit W3c-B2 packet for exactly eight native complexes and two frozen
+predictors. Reobserve and bind the H100 runtime without prediction. Stop after packet validation and request
+a separate exact native-screen approval. Do not submit predictor or ProteinMPNN work from the B1 approval.
 
 ## Execution update: W3c-A complete
 
@@ -129,12 +129,24 @@ The completed CPU-only audit is documented in [M6D_W3C_A_TARGET_LOCK.md](M6D_W3C
 
 No target-MSA query, ProteinMPNN design, or predictor evaluation was run.
 
-## Execution update: W3c-B1 packet validated on Cayuga without submission
+## Historical pre-execution update: W3c-B1 packet validated without submission
 
-The separate hash-bound W3c-B1 packet is now locally prepared and documented in
+The separate hash-bound W3c-B1 packet was prepared and documented in
 [M6D_W3C_B1_TARGET_MSA_APPROVAL.md](M6D_W3C_B1_TARGET_MSA_APPROVAL.md). It locks exactly eight one-hour
 A40 target-MSA queries and zero downstream work. Local dry-run and refusal checks pass. Cayuga no-submit
-mirror validation also passes with exact 13-artifact hash parity, all eight target IDs, exit `0`, zero
-scheduler submissions, and absent receipt/summary/preflight/A3M outputs. Exact target-MSA-only approval is
-request-ready but not recorded. No W3c-B1 submission, receipt, MSA, ProteinMPNN design, or predictor
-evaluation exists.
+mirror validation passed with exact 13-artifact hash parity, all eight target IDs, exit `0`, zero scheduler
+submissions, and absent receipt/summary/preflight/A3M outputs. At that immutable snapshot, exact approval
+was request-ready but not recorded and no W3c-B1 output existed. The completion update below supersedes
+that operational state without rewriting the packet.
+
+## Execution update: W3c-B1 complete
+
+The exact B1 approval was consumed once on 2026-08-02. Jobs `3118725`-`3118732` completed 8/8 at
+`1.151111` A40 GPU-hours, and all eight A3M/report pairs pass frozen-sequence, query, depth, hash,
+sanitization, and no-truncation checks. Observed A3M depth ranges from 96 to 8,845 records; the full frozen
+panel is retained without post-hoc filtering.
+
+Boltz was invoked as the packet-bound MSA transport. Each A3M was recovered after downstream target-only
+inference returned nonzero. No structure-prediction output was consumed, and candidate-level predictor
+evaluations and ProteinMPNN designs remain zero. See
+[M6D_W3C_B1_TARGET_MSA_COMPLETION.md](M6D_W3C_B1_TARGET_MSA_COMPLETION.md).

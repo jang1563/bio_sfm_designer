@@ -1648,6 +1648,7 @@ def _w3c_b1_target_msa_packet_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         "fixture_sha256": bindings["structure_fixture"]["sha256"],
         "overlap_registry_sha256": bindings["historical_overlap_registry"]["sha256"],
         "execution_manifest_sha256": bindings["execution_manifest"]["sha256"],
+        "precompute_sbatch_sha256": bindings["precompute_sbatch"]["sha256"],
         "plan_sha256": bindings["plan"]["sha256"],
         "wrapper_sha256": packet["wrapper"]["sha256"],
         "proteinmpnn_allowed": False,
@@ -1657,6 +1658,186 @@ def _w3c_b1_target_msa_packet_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         "cayuga_submission_allowed": False,
         "can_claim": False,
         "next_action": packet["next_action"],
+        "checks": checks,
+    }
+
+
+def _w3c_b1_target_msa_completion_summary(
+    report: Dict[str, Any],
+) -> Dict[str, Any]:
+    expected_ids = [
+        "1TE1_BA",
+        "3QB4_AB",
+        "5E5M_AB",
+        "5JSB_AB",
+        "6KBR_AC",
+        "6KMQ_AB",
+        "6SGE_AB",
+        "7B5G_AB",
+    ]
+    job_states = (
+        report.get("job_states") if isinstance(report.get("job_states"), list) else []
+    )
+    target_artifacts = (
+        report.get("target_artifacts")
+        if isinstance(report.get("target_artifacts"), list)
+        else []
+    )
+    transport = (
+        report.get("transport_observation")
+        if isinstance(report.get("transport_observation"), dict)
+        else {}
+    )
+    bindings = (
+        report.get("input_bindings")
+        if isinstance(report.get("input_bindings"), dict)
+        else {}
+    )
+    expected_binding_paths = {
+        "execution_manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "approval_packet": "results/m6d_w3c_b1_target_msa_approval_packet.json",
+        "receipt": "results/m6d_w3c_b1_target_msa_receipt.jsonl",
+        "receipt_summary": "results/m6d_w3c_b1_target_msa_receipt_summary.json",
+        "input_preflight": "results/m6d_w3c_b1_target_msa_input_preflight.json",
+        "sacct": "results/m6d_w3c_b1_target_msa_sacct.tsv",
+        "precompute_sbatch": "hpc/run_precompute_boltz_target_msa.sbatch",
+    }
+    gpu_hours = float(report.get("gpu_allocation_hours_total") or 0.0)
+    checks = {
+        "identity_exact": (
+            report.get("artifact") == "m6d_w3c_b1_target_msa_completion"
+            and report.get("version") == 1
+            and report.get("status") == "target_msa_precompute_complete_8_of_8"
+            and report.get("audit_ok") is True
+            and report.get("completion_ok") is True
+        ),
+        "approval_and_submission_exact": (
+            report.get("approval_recorded") is True
+            and report.get("exact_approval_guard_satisfied") is True
+            and report.get("required_user_phrase")
+            == "approve W3c-B1 target-MSA precompute"
+            and report.get("submission_performed") is True
+            and report.get("submitted_jobs_total") == 8
+        ),
+        "target_counts_exact": (
+            report.get("n_targets") == 8
+            and report.get("n_target_msas") == 8
+            and report.get("n_target_msa_reports") == 8
+            and report.get("strict_manifest_ready_targets") == 8
+            and report.get("target_ids") == expected_ids
+        ),
+        "job_states_exact": (
+            len(job_states) == 8
+            and [row.get("target_id") for row in job_states] == expected_ids
+            and len({str(row.get("job_id")) for row in job_states}) == 8
+            and all(
+                isinstance(row, dict)
+                and str(row.get("job_id") or "").isdigit()
+                and row.get("state") == "COMPLETED"
+                and row.get("exit_code") == "0:0"
+                and isinstance(row.get("elapsed_seconds"), int)
+                and 0 < row["elapsed_seconds"] <= 3600
+                and row.get("gpus") == 1
+                for row in job_states
+            )
+            and report.get("jobs_terminal_success") is True
+        ),
+        "gpu_budget_valid": (
+            report.get("gpu_resource_requested") == "a40:1"
+            and isinstance(report.get("gpu_allocation_seconds_total"), int)
+            and report.get("gpu_allocation_seconds_total") > 0
+            and 0.0 < gpu_hours <= 8.0
+            and float(report.get("approved_gpu_hour_ceiling") or 0.0) == 8.0
+            and report.get("within_approved_gpu_hour_ceiling") is True
+        ),
+        "target_artifacts_exact": (
+            len(target_artifacts) == 8
+            and [row.get("target_id") for row in target_artifacts] == expected_ids
+            and all(
+                isinstance(row, dict)
+                and isinstance(row.get("a3m_records"), int)
+                and row["a3m_records"] >= 2
+                and row.get("query_sequence_match") is True
+                and row.get("query_not_truncated") is True
+                and row.get("depth_check_passed") is True
+                and row.get("nul_bytes_after_sanitization") == 0
+                and row.get("report_ok") is True
+                and _is_sha256(row.get("target_sequence_sha256"))
+                and _is_sha256(row.get("target_fasta_sha256"))
+                and _is_sha256(row.get("target_msa_sha256"))
+                and _is_sha256(row.get("target_msa_report_sha256"))
+                and isinstance(row.get("checks"), dict)
+                and all(row["checks"].values())
+                for row in target_artifacts
+            )
+        ),
+        "transport_observation_exact": (
+            transport.get("boltz_msa_transport_invocations") == 8
+            and transport.get("post_msa_inference_failures_recovered") == 8
+            and transport.get("structure_prediction_outputs_consumed") == 0
+            and transport.get("candidate_level_predictor_evaluations") == 0
+            and transport.get("proteinmpnn_designs") == 0
+        ),
+        "input_bindings_valid": (
+            set(bindings) == set(expected_binding_paths)
+            and all(
+                isinstance(bindings.get(name), dict)
+                and bindings[name].get("path") == path
+                and isinstance(bindings[name].get("bytes"), int)
+                and bindings[name]["bytes"] > 0
+                and _is_sha256(bindings[name].get("sha256"))
+                for name, path in expected_binding_paths.items()
+            )
+        ),
+        "downstream_closed": (
+            report.get("can_prepare_w3c_b2_packet") is True
+            and report.get("can_submit_w3c_b2") is False
+            and report.get("can_submit_proteinmpnn") is False
+            and report.get("can_claim_native_recoverability") is False
+            and report.get("can_claim_generator_yield") is False
+            and report.get("can_claim_trust_gate") is False
+            and report.get("can_claim_biological_binder_success") is False
+        ),
+        "failure_free_no_submit": (
+            report.get("n_failures") == 0
+            and report.get("failures") == []
+            and report.get("no_submit") is True
+            and report.get("cayuga_submission_allowed") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B1 target-MSA completion invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": report["status"],
+        "completion_ok": True,
+        "approval_recorded": True,
+        "submission_performed": True,
+        "target_count": 8,
+        "target_ids": expected_ids,
+        "target_msas_complete": 8,
+        "target_msa_reports_complete": 8,
+        "strict_manifest_ready_targets": 8,
+        "job_states": job_states,
+        "gpu_allocation_seconds_total": report["gpu_allocation_seconds_total"],
+        "gpu_allocation_hours_total": gpu_hours,
+        "approved_gpu_hour_ceiling": 8.0,
+        "target_artifacts": target_artifacts,
+        "a3m_record_counts": {
+            row["target_id"]: row["a3m_records"] for row in target_artifacts
+        },
+        "transport_observation": transport,
+        "execution_manifest_sha256": bindings["execution_manifest"]["sha256"],
+        "precompute_sbatch_sha256": bindings["precompute_sbatch"]["sha256"],
+        "can_prepare_w3c_b2_packet": True,
+        "can_submit_w3c_b2": False,
+        "can_submit_proteinmpnn": False,
+        "can_claim": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_action": report["next_action"],
         "checks": checks,
     }
 
@@ -3209,6 +3390,277 @@ def _apply_w3c_b1_target_msa_packet_state(
             updated.append(validation_path)
 
 
+def _apply_w3c_b1_target_msa_completion_state(
+    bundle: Dict[str, Dict[str, Any]],
+    fresh_lock: Dict[str, Any],
+    packet: Dict[str, Any],
+    completion_evidence: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3c_B2_hash_bound_no_submit_packet_preparation"
+    next_action = completion_evidence["next_action"]
+    record_counts = completion_evidence["a3m_record_counts"]
+    min_depth = min(record_counts.values())
+    max_depth = max(record_counts.values())
+    ranked_actions = [
+        "Preserve the exact W3c-B1 hashes, eight completed MSA artifacts, and transport observation.",
+        "Prepare a hash-bound no-submit W3c-B2 packet for eight native complexes and two predictors.",
+        "Reobserve and bind the H100 runtime without running prediction before requesting compute approval.",
+        "Stop at the packet boundary for a separate exact H100 native dual-predictor approval.",
+        "Keep ProteinMPNN, generator yield, trust-gate, and biological-success claims closed.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor["objective"] = (
+        "Advance the validity-first W3c panel from completed target representations into a "
+        "preregistered native dual-predictor recoverability screen, while keeping generator "
+        "and trust-gate evidence downstream and separately authorized."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3c"] = (
+        "b1_target_msa_complete_no_native_recoverability_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_b1_target_msa_manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "w3c_b1_target_msa_approval_packet": (
+            "results/m6d_w3c_b1_target_msa_approval_packet.json"
+        ),
+        "w3c_b1_target_msa_completion": (
+            "results/m6d_w3c_b1_target_msa_completion.json"
+        ),
+        "w3c_b1_target_msa_completion_markdown": (
+            "results/m6d_w3c_b1_target_msa_completion.md"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_b1_complete_b2_packet_preparation_required_no_submit",
+        "goal_progress": completion_evidence["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3c": completion_evidence["status"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_ids": completion_evidence["target_ids"],
+        "w3c_target_msa_packet_prepared": True,
+        "w3c_target_msa_approval_recorded": True,
+        "w3c_target_msa_queries_authorized": 8,
+        "w3c_target_msa_jobs_submitted": 8,
+        "w3c_target_msa_jobs_completed": 8,
+        "w3c_target_msas_complete": 8,
+        "w3c_target_msa_gpu_hours": completion_evidence[
+            "gpu_allocation_hours_total"
+        ],
+        "w3c_b2_packet_prepared": False,
+        "w3c_b2_compute_approval_recorded": False,
+        "w3c_native_screen_packet_prepared": False,
+        "w3c_proteinmpnn_designs": 0,
+        "w3c_predictor_evaluations": 0,
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3c_b1_target_msa_approval"] = packet
+    anchor["w3c_b1_target_msa_completion"] = completion_evidence
+    anchor["next_resume_steps"] = [
+        "read the W3c-B1 completion and preserve its exact execution-manifest and sbatch hashes",
+        "prepare the W3c-B2 eight-native-by-two-predictor no-submit packet",
+        "validate candidate-free predictor commands and record contracts without prediction",
+        "bind a fresh H100 runtime observation to the packet",
+        "request separate exact W3c-B2 compute approval only after no-submit validation passes",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_status": completion_evidence["status"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msas_complete": 8,
+        "w3c_target_msa_jobs_completed": 8,
+        "w3c_target_msa_gpu_hours": completion_evidence[
+            "gpu_allocation_hours_total"
+        ],
+        "w3c_b2_packet_prepared": False,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_b1_complete_b2_packet_preparation_required",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+        "w3c_b1_target_msa_completion": completion_evidence,
+    })
+    completion.setdefault("claim_boundary", {})["w3c"] = (
+        "all eight target MSAs are complete; native recoverability, generator yield, "
+        "trust-gate performance, and biological success remain untested"
+    )
+    completion.setdefault("workstream_status", {})["W3c_validity_first"] = {
+        "complete": False,
+        "scientific_success": None,
+        "status": completion_evidence["status"],
+        "w3c_a_complete": True,
+        "w3c_b1_packet_prepared": True,
+        "w3c_b1_approval_recorded": True,
+        "w3c_b1_target_msas_complete": 8,
+        "w3c_b2_packet_prepared": False,
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_b1_complete_b2_packet_preparation_next",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "representation_validity_issue_detected": True,
+        "representation_lock_complete": True,
+        "w3c_b1_packet_prepared": True,
+        "w3c_b1_target_msa_complete": True,
+        "claim_scope_corrected": True,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3c"] = (
+        "b1_target_msa_only_no_native_recovery_generator_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3c_b1_msa_depth_variability",
+            "status": "observed_not_filtered",
+            "control": (
+                f"retain all preregistered targets despite observed A3M depth range "
+                f"{min_depth}-{max_depth}; do not subset post hoc"
+            ),
+        },
+        {
+            "id": "w3c_b1_transport_inference_failure",
+            "status": "bounded",
+            "control": (
+                "all eight MSAs were recovered after Boltz downstream target-only inference "
+                "returned nonzero; zero structure outputs were consumed"
+            ),
+        },
+        {
+            "id": "w3c_b2_authority_leak",
+            "status": "managed",
+            "control": "B1 completion authorizes packet preparation only and zero H100 predictor jobs",
+        },
+        {
+            "id": "w3c_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN, generator-yield, trust-gate, and biological claims remain blocked",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_w3c_b1_completed_with_all_eight_locked_targets",
+        "claims": "no_drift_input_preparation_only_no_native_generator_or_gate_claim",
+        "execution": "eight_a40_msa_jobs_complete_zero_predictor_zero_proteinmpnn",
+        "operational_status": "w3c_b1_complete_b2_no_submit_packet_preparation_required",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).setdefault("W3c_validity_first", {}).update({
+        "fresh_target_lock": fresh_lock,
+        "b1_target_msa_approval": packet,
+        "b1_target_msa_completion": completion_evidence,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_b1_complete_b2_packet_preparation_required",
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+        "w3c_b1_target_msa_completion": completion_evidence,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3c_b1_submission_performed": True,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "w3c_b1_msa_complete_no_native_generator_gate_or_success_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_b1_complete_b2_packet_preparation_required"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3c-B2 native dual-predictor no-submit packet preparation",
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+        "w3c_b1_target_msa_completion": completion_evidence,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3c_b1_completion": "eight_of_eight_msa_integrity_and_budget_checks_passed",
+        "w3c_b1_execution_manifest_binding": completion_evidence[
+            "execution_manifest_sha256"
+        ],
+        "w3c_b1_precompute_sbatch_binding": completion_evidence[
+            "precompute_sbatch_sha256"
+        ],
+        "w3c_b1_transport_observation": (
+            "eight_msa_artifacts_recovered_zero_structure_outputs_consumed"
+        ),
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "w3c_stage": "W3c-B1_complete_W3c-B2_packet_preparation_required",
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msa_packet_prepared": True,
+        "w3c_target_msa_approval_recorded": True,
+        "w3c_msa_queries_authorized": 8,
+        "w3c_msa_jobs_submitted": 8,
+        "w3c_msa_jobs_completed": 8,
+        "w3c_target_msas_complete": 8,
+        "w3c_b2_packet_prepared": False,
+        "w3c_b2_compute_approval_recorded": False,
+        "w3c_predictor_jobs_submitted": 0,
+        "w3c_proteinmpnn_jobs_submitted": 0,
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "b1_target_msa_complete_b2_packet_preparation_only_no_compute_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_b1_complete_b2_packet_preparation_required",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": packet,
+        "w3c_b1_target_msa_completion": completion_evidence,
+        "submission_performed": False,
+        "w3c_b1_submission_performed": True,
+        "w3c_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "results/m6d_w3c_b1_target_msa_completion.json",
+        "results/m6d_w3c_b1_target_msa_completion.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -3239,6 +3691,7 @@ def refresh_bundle(
     w3c_target_validity_audit: Optional[Dict[str, Any]] = None,
     w3c_fresh_target_lock: Optional[Dict[str, Any]] = None,
     w3c_b1_target_msa_packet: Optional[Dict[str, Any]] = None,
+    w3c_b1_target_msa_completion: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -3317,6 +3770,11 @@ def refresh_bundle(
         if isinstance(w3c_b1_target_msa_packet, dict)
         else None
     )
+    w3c_b1_completion = (
+        _w3c_b1_target_msa_completion_summary(w3c_b1_target_msa_completion)
+        if isinstance(w3c_b1_target_msa_completion, dict)
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -3341,6 +3799,8 @@ def refresh_bundle(
         raise ValueError("W3c-A fresh target lock requires the W3c target-validity reset")
     if w3c_b1_packet is not None and w3c_fresh_lock is None:
         raise ValueError("W3c-B1 target-MSA packet requires the W3c-A fresh target lock")
+    if w3c_b1_completion is not None and w3c_b1_packet is None:
+        raise ValueError("W3c-B1 target-MSA completion requires the validated B1 packet")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -3359,6 +3819,18 @@ def refresh_bundle(
             for packet_key, lock_key in binding_pairs
         ):
             raise ValueError("W3c-B1 packet bindings do not match the W3c-A lock")
+    if w3c_b1_completion is not None and w3c_b1_packet is not None:
+        if (
+            w3c_b1_packet["cayuga_no_submit_validation_status"] != "pass"
+            or w3c_b1_packet["ready_to_request_exact_approval"] is not True
+            or
+            w3c_b1_completion["target_ids"] != w3c_b1_packet["target_ids"]
+            or w3c_b1_completion["execution_manifest_sha256"]
+            != w3c_b1_packet["execution_manifest_sha256"]
+            or w3c_b1_completion["precompute_sbatch_sha256"]
+            != w3c_b1_packet["precompute_sbatch_sha256"]
+        ):
+            raise ValueError("W3c-B1 completion bindings do not match the approval packet")
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -4258,6 +4730,18 @@ def refresh_bundle(
             w3c_b1_packet,
             runtime_goal_active=runtime_goal_active,
         )
+    if (
+        w3c_b1_completion is not None
+        and w3c_b1_packet is not None
+        and w3c_fresh_lock is not None
+    ):
+        _apply_w3c_b1_target_msa_completion_state(
+            bundle,
+            w3c_fresh_lock,
+            w3c_b1_packet,
+            w3c_b1_completion,
+            runtime_goal_active=runtime_goal_active,
+        )
     return bundle
 
 
@@ -4289,6 +4773,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3c = report.get("w3c_target_validity") or {}
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
+    w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -4337,6 +4822,9 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`.",
         f"W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`.",
         f"W3c-B1 queries authorized: `{w3c_b1.get('target_msa_queries_authorized', 0)}`.",
+        f"W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`.",
+        f"W3c-B1 target MSAs complete: `{w3c_b1_completion.get('target_msas_complete', 0)}`.",
+        f"W3c-B1 A40 GPU-hours: `{w3c_b1_completion.get('gpu_allocation_hours_total', 0.0)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -4364,6 +4852,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3c = report.get("w3c_target_validity") or {}
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
+    w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -4416,6 +4905,9 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`",
         f"- W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`",
         f"- W3c-B1 queries authorized: `{w3c_b1.get('target_msa_queries_authorized', 0)}`",
+        f"- W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`",
+        f"- W3c-B1 target MSAs complete: `{w3c_b1_completion.get('target_msas_complete', 0)}`",
+        f"- W3c-B1 A40 GPU-hours: `{w3c_b1_completion.get('gpu_allocation_hours_total', 0.0)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -4468,6 +4960,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3c = report.get("w3c_target_validity") or {}
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
+    w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -4496,6 +4989,8 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3c fresh targets locked: `{w3c_lock.get('n_targets', 0)}`.",
         f"W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`.",
         f"W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`.",
+        f"W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`.",
+        f"W3c-B1 target MSAs complete: `{w3c_b1_completion.get('target_msas_complete', 0)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -4518,6 +5013,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3c = report.get("w3c_target_validity") or {}
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
+    w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -4565,6 +5061,9 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B1 approval recorded: `{hpc.get('w3c_target_msa_approval_recorded', False)}`",
         f"- W3c-B1 queries authorized: `{hpc.get('w3c_msa_queries_authorized', 0)}`",
         f"- W3c MSA jobs submitted: `{hpc.get('w3c_msa_jobs_submitted', 0)}`",
+        f"- W3c MSA jobs completed: `{hpc.get('w3c_msa_jobs_completed', 0)}`",
+        f"- W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`",
+        f"- W3c-B1 A40 GPU-hours: `{w3c_b1_completion.get('gpu_allocation_hours_total', 0.0)}`",
         f"- W3c predictor jobs submitted: `{hpc.get('w3c_predictor_jobs_submitted', 0)}`",
         "",
         "## Next Action",
@@ -4708,6 +5207,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3c-b1-target-msa-packet",
         default="results/m6d_w3c_b1_target_msa_approval_packet.json",
+    )
+    parser.add_argument(
+        "--w3c-b1-target-msa-completion",
+        default="results/m6d_w3c_b1_target_msa_completion.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -4869,6 +5372,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3c_b1_target_msa_packet)
             if os.path.exists(args.w3c_b1_target_msa_packet)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b1_target_msa_completion)
+            if os.path.exists(args.w3c_b1_target_msa_completion)
             else None
         ),
         updated_at=args.updated_at,

@@ -935,6 +935,127 @@ def _w3c_b1_target_msa_packet_artifact():
     }
 
 
+def _w3c_b1_target_msa_completion_artifact():
+    packet = _w3c_b1_target_msa_packet_artifact()
+    target_ids = packet["target_ids"]
+    record_counts = [2442, 1909, 96, 287, 7447, 3195, 8845, 7594]
+    job_states = [
+        {
+            "target_id": target_id,
+            "job_id": str(3118725 + index),
+            "state": "COMPLETED",
+            "exit_code": "0:0",
+            "elapsed_seconds": [682, 851, 677, 655, 610, 429, 174, 66][index],
+            "gpus": 1,
+            "gpu_type_provenance": "hash_bound_sbatch_a40_directive",
+        }
+        for index, target_id in enumerate(target_ids)
+    ]
+    target_artifacts = []
+    for index, (target_id, records) in enumerate(zip(target_ids, record_counts)):
+        target_artifacts.append({
+            "target_id": target_id,
+            "sequence_length": 100 + index,
+            "target_sequence_sha256": "1" * 64,
+            "target_fasta": f"hpc_outputs/m6d_w3c_b1_targets/{target_id}/target.fasta",
+            "target_fasta_sha256": "2" * 64,
+            "target_msa": f"hpc_outputs/m6d_w3c_b1_targets/{target_id}/target.a3m",
+            "target_msa_bytes": 1000 + index,
+            "target_msa_sha256": "3" * 64,
+            "target_msa_report": (
+                f"hpc_outputs/m6d_w3c_b1_targets/{target_id}/target.a3m.report.json"
+            ),
+            "target_msa_report_sha256": "4" * 64,
+            "a3m_records": records,
+            "minimum_a3m_records": 2,
+            "query_sequence_match": True,
+            "query_not_truncated": True,
+            "depth_check_passed": True,
+            "nul_bytes_after_sanitization": 0,
+            "report_ok": True,
+            "out_sanitized_nul_bytes": 1,
+            "recovered_after_boltz_failure": True,
+            "boltz_returncode": 1,
+            "checks": {
+                "frozen_sequence_hash": True,
+                "query_sequence_match": True,
+                "query_not_truncated": True,
+                "depth_nontrivial": True,
+                "nul_free_after_sanitization": True,
+                "report_ok": True,
+                "report_paths_match": True,
+                "report_hashes_match": True,
+                "report_length_matches": True,
+            },
+        })
+    binding_paths = {
+        "execution_manifest": "configs/m6d_w3c_b1_target_msa_manifest.json",
+        "approval_packet": "results/m6d_w3c_b1_target_msa_approval_packet.json",
+        "receipt": "results/m6d_w3c_b1_target_msa_receipt.jsonl",
+        "receipt_summary": "results/m6d_w3c_b1_target_msa_receipt_summary.json",
+        "input_preflight": "results/m6d_w3c_b1_target_msa_input_preflight.json",
+        "sacct": "results/m6d_w3c_b1_target_msa_sacct.tsv",
+        "precompute_sbatch": "hpc/run_precompute_boltz_target_msa.sbatch",
+    }
+    input_bindings = {
+        name: {"path": path, "bytes": 10, "sha256": "5" * 64}
+        for name, path in binding_paths.items()
+    }
+    input_bindings["execution_manifest"]["sha256"] = packet["bound_artifacts"][
+        "execution_manifest"
+    ]["sha256"]
+    input_bindings["precompute_sbatch"]["sha256"] = packet["bound_artifacts"][
+        "precompute_sbatch"
+    ]["sha256"]
+    return {
+        "artifact": "m6d_w3c_b1_target_msa_completion",
+        "version": 1,
+        "status": "target_msa_precompute_complete_8_of_8",
+        "audit_ok": True,
+        "completion_ok": True,
+        "approval_recorded": True,
+        "exact_approval_guard_satisfied": True,
+        "required_user_phrase": "approve W3c-B1 target-MSA precompute",
+        "submission_performed": True,
+        "submitted_jobs_total": 8,
+        "n_targets": 8,
+        "n_target_msas": 8,
+        "n_target_msa_reports": 8,
+        "strict_manifest_ready_targets": 8,
+        "target_ids": target_ids,
+        "job_states": job_states,
+        "jobs_terminal_success": True,
+        "gpu_resource_requested": "a40:1",
+        "gpu_allocation_seconds_total": 4144,
+        "gpu_allocation_hours_total": 4144 / 3600,
+        "approved_gpu_hour_ceiling": 8.0,
+        "within_approved_gpu_hour_ceiling": True,
+        "target_artifacts": target_artifacts,
+        "transport_observation": {
+            "boltz_msa_transport_invocations": 8,
+            "post_msa_inference_failures_recovered": 8,
+            "structure_prediction_outputs_consumed": 0,
+            "candidate_level_predictor_evaluations": 0,
+            "proteinmpnn_designs": 0,
+        },
+        "input_bindings": input_bindings,
+        "can_prepare_w3c_b2_packet": True,
+        "can_submit_w3c_b2": False,
+        "can_submit_proteinmpnn": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "n_failures": 0,
+        "failures": [],
+        "next_action": (
+            "Prepare a separate hash-bound, no-submit W3c-B2 native dual-predictor packet."
+        ),
+    }
+
+
 def _legacy_bundle():
     anchor = {
         "artifact": "m6d_goal_mode_current_anchor",
@@ -985,6 +1106,7 @@ def _refresh_current_w3b(
     target_validity=None,
     fresh_target_lock=None,
     b1_packet=None,
+    b1_completion=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1014,6 +1136,7 @@ def _refresh_current_w3b(
         w3c_target_validity_audit=target_validity,
         w3c_fresh_target_lock=fresh_target_lock,
         w3c_b1_target_msa_packet=b1_packet,
+        w3c_b1_target_msa_completion=b1_completion,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1655,6 +1778,83 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 b1_packet=packet,
             )
 
+    def test_w3c_b1_completion_promotes_b2_packet_preparation_boundary(self):
+        packet = _w3c_b1_target_msa_packet_artifact()
+        packet.update({
+            "status": "w3c_b1_packet_cayuga_validated_ready_for_exact_approval",
+            "cayuga_no_submit_validation_status": "pass",
+            "cayuga_no_submit_validation_evidence": {
+                "path": "results/m6d_w3c_b1_cayuga_no_submit_validation.json",
+                "sha256": "e" * 64,
+            },
+            "ready_to_request_exact_approval": True,
+        })
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=packet,
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_b1_complete_b2_packet_preparation_required",
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["remaining_requirements"],
+            ["W3c_B2_hash_bound_no_submit_packet_preparation"],
+        )
+        self.assertTrue(
+            bundle["anchor"]["current_status"]["w3c_target_msa_approval_recorded"]
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["w3c_target_msa_jobs_completed"],
+            8,
+        )
+        self.assertAlmostEqual(
+            bundle["anchor"]["current_status"]["w3c_target_msa_gpu_hours"],
+            4144 / 3600,
+        )
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_msa_jobs_completed"], 8)
+        self.assertEqual(bundle["harness"]["hpc_status"]["w3c_predictor_jobs_submitted"], 0)
+        self.assertFalse(bundle["completion"]["can_mark_goal_complete"])
+
+    def test_w3c_b1_completion_requires_validated_packet(self):
+        with self.assertRaisesRegex(ValueError, "requires the validated B1 packet"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            )
+
+    def test_w3c_b1_completion_fails_closed_on_packet_binding_drift(self):
+        packet = _w3c_b1_target_msa_packet_artifact()
+        packet.update({
+            "status": "w3c_b1_packet_cayuga_validated_ready_for_exact_approval",
+            "cayuga_no_submit_validation_status": "pass",
+            "cayuga_no_submit_validation_evidence": {
+                "path": "results/m6d_w3c_b1_cayuga_no_submit_validation.json",
+                "sha256": "e" * 64,
+            },
+            "ready_to_request_exact_approval": True,
+        })
+        completion = _w3c_b1_target_msa_completion_artifact()
+        completion["input_bindings"]["execution_manifest"]["sha256"] = "f" * 64
+        with self.assertRaisesRegex(ValueError, "bindings do not match"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b1_packet=packet,
+                b1_completion=completion,
+            )
+
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
         packet["rows"].pop()
@@ -1770,6 +1970,9 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3c_b1_target_msa_packet": os.path.join(
                     root, "missing-w3c-b1-target-msa-packet.json"
                 ),
+                "w3c_b1_target_msa_completion": os.path.join(
+                    root, "missing-w3c-b1-target-msa-completion.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -1805,6 +2008,8 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w3c-target-validity-audit", paths["w3c_target_validity"],
                 "--w3c-fresh-target-lock", paths["w3c_fresh_target_lock"],
                 "--w3c-b1-target-msa-packet", paths["w3c_b1_target_msa_packet"],
+                "--w3c-b1-target-msa-completion",
+                paths["w3c_b1_target_msa_completion"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -1836,6 +2041,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3c_target_validity",
                     "w3c_fresh_target_lock",
                     "w3c_b1_target_msa_packet",
+                    "w3c_b1_target_msa_completion",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)

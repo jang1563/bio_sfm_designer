@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3c_b1_cayuga_validated_exact_approval_required`.
+Status: `goal_active_w3c_b1_complete_b2_packet_preparation_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -40,10 +40,13 @@ Can mark goal complete: `False`.
 - W3c-B1 target-MSA packet: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`
 - W3c-B1 approval recorded: `False`
 - W3c-B1 queries authorized: `0`
-- remaining requirement: `W3c_B1_exact_target_MSA_only_approval`
+- W3c-B1 completion: `target_msa_precompute_complete_8_of_8`
+- W3c-B1 target MSAs complete: `8`
+- W3c-B1 A40 GPU-hours: `1.1511111111111112`
+- remaining requirement: `W3c_B2_hash_bound_no_submit_packet_preparation`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Request the exact phrase 'approve W3c-B1 target-MSA precompute'. After that phrase is recorded, submit only the eight locked target-MSA input-prep jobs through the guarded wrapper.
+Prepare a separate hash-bound, no-submit W3c-B2 native dual-predictor packet.

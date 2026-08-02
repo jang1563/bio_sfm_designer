@@ -3,6 +3,11 @@
 Self-contained context to continue this project in a fresh session (Codex or otherwise) with **no prior
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
+> **2026-08-02 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
+> `1.151111` A40 GPU-hours. The current allowed work is W3c-B2 hash-bound no-submit packet preparation;
+> native dual-predictor H100 compute remains separately approval-gated. Start with
+> `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and `results/m6d_goal_state_refresh_report.json`.
+
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
 > (`AUROC=0.938`) but refuses alpha=0.3 (`certification UCB=0.510`, `tau=null`). All older positive
@@ -113,11 +118,17 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `docs/M6D_W3C_A_TARGET_LOCK.md`, `results/m6d_w3c_fresh_target_lock.json`, and
 > `configs/m6d_w3c_fresh_targets.json`. The hash-bound W3c-B1 packet is prepared at
 > `results/m6d_w3c_b1_target_msa_approval_packet.json`; read
-> `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`. It locks exactly eight one-hour A40 target-MSA queries and
-> zero ProteinMPNN, structure-predictor, or W3c-B2 authority. Local dry-run and refusal checks pass. Cayuga
-> no-submit mirror validation also passes with 13/13 artifact hash parity, exact eight-target dry-run output,
-> exit `0`, zero scheduler submissions, and no receipt, summary, preflight, or A3M output. The packet is now
-> ready to request exact target-MSA-only approval; approval is not recorded and no W3c job or receipt exists.
+> `docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md`. It locked exactly eight one-hour A40 target-MSA queries and
+> zero ProteinMPNN, structure-predictor, or W3c-B2 authority. After no-submit validation, its exact approval
+> was consumed once. Jobs `3118725`-`3118732` completed 8/8 with exit `0:0`, consuming 4,144 A40 GPU-
+> seconds (`1.151111` hours). All eight A3M/report pairs pass frozen-sequence, query-identity, depth, hash,
+> sanitization, and no-truncation checks. Depth ranges from 96 to 8,845 A3M records, and all preregistered
+> targets remain in the panel. Boltz was the bound MSA transport; every MSA was recovered after its later
+> target-only inference returned nonzero. No structure output was consumed. Read
+> `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
+> `results/m6d_w3c_b1_target_msa_completion.json`. The current action is preparation of a separate hash-
+> bound, no-submit W3c-B2 native dual-predictor packet. It authorizes zero H100 predictions and zero
+> ProteinMPNN designs; W3c-B2 requires a new exact approval.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 

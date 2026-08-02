@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3c_b1_cayuga_validated_exact_approval_required`.
+Status: `goal_state_refreshed_w3c_b1_complete_b2_packet_preparation_required`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -36,6 +36,9 @@ W3c-A fresh targets locked: `8`.
 W3c-B1 target-MSA packet: `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`.
 W3c-B1 approval recorded: `False`.
 W3c-B1 queries authorized: `0`.
+W3c-B1 completion: `target_msa_precompute_complete_8_of_8`.
+W3c-B1 target MSAs complete: `8`.
+W3c-B1 A40 GPU-hours: `1.1511111111111112`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -68,7 +71,9 @@ Cayuga submission allowed: `False`.
 - `results/m6d_w3c_b1_target_msa_approval_packet.json`
 - `results/m6d_w3c_b1_target_msa_approval_packet.md`
 - `results/m6d_w3c_b1_cayuga_no_submit_validation.json`
+- `results/m6d_w3c_b1_target_msa_completion.json`
+- `results/m6d_w3c_b1_target_msa_completion.md`
 
 ## Next Action
 
-Request the exact phrase 'approve W3c-B1 target-MSA precompute'. After that phrase is recorded, submit only the eight locked target-MSA input-prep jobs through the guarded wrapper.
+Prepare a separate hash-bound, no-submit W3c-B2 native dual-predictor packet.

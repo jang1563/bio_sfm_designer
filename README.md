@@ -71,7 +71,7 @@
 > [results/m6d_w3b_fit_gate_report.json](results/m6d_w3b_fit_gate_report.json), and
 > [results/m6d_w3b_fit_diagnostics.json](results/m6d_w3b_fit_diagnostics.json).
 
-> **Current W3c status (2026-07-26):** a deterministic CPU audit of the 24 historical W2b/W2c/W3b
+> **Current W3c status (2026-08-02):** a deterministic CPU audit of the 24 historical W2b/W2c/W3b
 > representatives found that only 5/24 selected pairs are complete author-determined two-chain protein
 > assemblies and only 3/24 are strict target-binder systems. Branch-level strict counts are W2b `0/8`,
 > W2c `2/8`, and W3b `1/8`. Therefore those experiments remain valid for their exact prepared two-chain
@@ -80,16 +80,20 @@
 > recoverability, generator yield, then trust-signal calibration. W3c-A is now complete: eight fresh RCSB
 > sources passed the author-dimer, complete-two-protein, distinct-entity, semantic, chain-length, numbering,
 > interface, and exact historical-overlap gates. The minimum selected interface has 25 CA contacts; zero
-> MSA queries, ProteinMPNN designs, or predictor evaluations were run. Exact hash exclusion is not a
-> sequence-family-disjointness claim. The hash-bound W3c-B1 target-MSA-only packet is prepared:
-> it locks exactly eight one-hour A40 queries, every W3c-A source/sequence binding, and zero ProteinMPNN or
-> predictor authority. Local dry-run and refusal checks pass. Cayuga no-submit mirror validation now also
-> passes with exact 13-artifact hash parity, the same eight dry-run IDs, exit `0`, zero scheduler
-> submissions, and no receipt, preflight, summary, or A3M output. The packet is
-> `w3c_b1_packet_cayuga_validated_ready_for_exact_approval`; no approval or submission exists yet. See
+> MSA queries, ProteinMPNN designs, or predictor evaluations were run during W3c-A. Exact hash exclusion
+> is not a sequence-family-disjointness claim. The separate hash-bound W3c-B1 approval was then consumed
+> once. Jobs `3118725`-`3118732` completed 8/8 with top-level state `COMPLETED`, exit `0:0`, and total
+> allocation `1.151111` A40 GPU-hours under the 8-hour ceiling. All eight A3M/report pairs pass frozen-
+> sequence, query, depth, hash, sanitization, and no-truncation checks; observed A3M depths range from 96
+> to 8,845 records with no post-hoc target removal. The helper recovered each MSA after Boltz's downstream
+> target-only inference returned nonzero. Zero structure outputs were consumed, and ProteinMPNN designs
+> and candidate-level predictor evaluations remain zero. W3c-B1 is input-preparation success, not native-
+> prediction evidence. The current boundary is a separate hash-bound, no-submit W3c-B2 native dual-
+> predictor packet; no W3c-B2 compute is approved. See
 > [docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md](docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md) and
 > [docs/M6D_W3C_A_TARGET_LOCK.md](docs/M6D_W3C_A_TARGET_LOCK.md),
 > [docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md](docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md), plus
+> [docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md](docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md),
 > [results/m6d_w3c_b1_cayuga_no_submit_validation.json](results/m6d_w3c_b1_cayuga_no_submit_validation.json)
 > and [results/m6d_w3c_target_validity_audit.json](results/m6d_w3c_target_validity_audit.json). The tracked
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit
@@ -126,12 +130,12 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-07-26)
+## Status (2026-08-02)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1216` designer tests plus `88` trust-core tests and
-`120` trust-core subtests on 2026-07-26).
+**Current local source verified** (`1222` designer tests plus `74` designer subtests, and
+`88` trust-core tests plus `120` trust-core subtests on 2026-08-02).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).
