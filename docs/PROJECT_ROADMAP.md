@@ -723,7 +723,8 @@ Allowed decisions:
    output or reinterpret exact hash exclusion as sequence-family disjointness.
 6. Preserve the completed W3c-B1 evidence and the consumed W3c-B2 approval. Monitor only receipt-bound jobs
    `3171272`-`3171287`; do not retry, top up, change resources, or substitute targets. After terminal
-   accounting, sync the frozen outputs and apply the preregistered both-predictors, at-least-6-of-8 rule.
+   accounting, use `hpc/m6d_w3c_b2_complete_and_sync.sh` to sync only the packet-derived outputs, replay
+   their hashes and structural metrics, and apply the preregistered both-predictors, at-least-6-of-8 rule.
    ProteinMPNN, generator, gate, and certification work remain unauthorized.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.

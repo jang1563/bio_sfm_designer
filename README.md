@@ -93,7 +93,9 @@
 > runs enumerated all 16 evaluations while confirming 77/77 output paths absent before execution. The
 > guarded bridge then submitted jobs `3171272`-`3171287`, exactly 16/16 receipt-bound evaluations with zero
 > retries and zero adaptive top-ups. They are awaiting Cayuga H100 execution. Native recoverability remains
-> unknown; no additional prediction or ProteinMPNN work is authorized. See
+> unknown; no additional prediction or ProteinMPNN work is authorized. The fail-closed completion bridge
+> at `hpc/m6d_w3c_b2_complete_and_sync.sh` permits exact output retrieval only after 16/16 terminal success,
+> then replays output hashes, interface pAE, L-RMSD, and the frozen 6/8 decision on CPU. See
 > [docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md](docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md) and
 > [docs/M6D_W3C_A_TARGET_LOCK.md](docs/M6D_W3C_A_TARGET_LOCK.md),
 > [docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md](docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md), plus

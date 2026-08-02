@@ -7,7 +7,9 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `1.151111` A40 GPU-hours. The exact W3c-B2 approval was consumed once on 2026-08-02. The guarded bridge
 > submitted jobs `3171272`-`3171287`, exactly 8 Boltz plus 8 AF2 native evaluations, with a complete 16/16
 > receipt, zero retries, and zero adaptive top-ups. All jobs are waiting in Cayuga's shared H100 queue;
-> native recoverability remains unknown and no additional job or ProteinMPNN work is authorized. Start with
+> native recoverability remains unknown and no additional job or ProteinMPNN work is authorized. The next
+> execution path is the no-submit `hpc/m6d_w3c_b2_complete_and_sync.sh`: it keeps sync locked before 16/16
+> terminal success and then replays hashes, interface pAE, L-RMSD, and the frozen 6/8 rule locally. Start with
 > `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and `results/m6d_goal_state_refresh_report.json`.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
@@ -137,7 +139,8 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `results/m6d_w3c_b2_prediction_packet_readiness.json`. The exact approval was consumed once and jobs
 > `3171272`-`3171287` are receipt-bound at 16/16 with zero retries or top-ups. They are awaiting H100
 > execution; additional submissions remain unauthorized. After terminal accounting, sync only the frozen
-> outputs and apply the both-predictors, at-least-6-of-8 rule before any generator work.
+> outputs through `hpc/m6d_w3c_b2_complete_and_sync.sh`; it independently replays output hashes and both
+> structural metrics before applying the both-predictors, at-least-6-of-8 rule before any generator work.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 

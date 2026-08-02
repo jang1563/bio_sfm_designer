@@ -58,6 +58,20 @@ at `16/16`, with retry jobs `0` and adaptive top-up jobs `0`. The jobs are waiti
 queue; terminal outputs and Slurm accounting do not yet exist. Submission is operational evidence only and
 does not establish native recoverability.
 
+## Terminal completion bridge
+
+`hpc/m6d_w3c_b2_complete_and_sync.sh` is the only prepared completion path. It reconstructs the exact 16
+job IDs from the packet-bound receipt, queries top-level Slurm accounting, and keeps retrieval locked until
+all jobs are `COMPLETED/0:0`, each allocation is within one hour, and the aggregate remains within 16 H100
+GPU-hours. A pending job is a healthy wait state; a terminal failure is a stop and authorizes no replacement.
+The script can neither submit nor retry work.
+
+After the accounting lock opens, the bridge syncs only the eight packet-derived target output roots. The
+completion module verifies runtime observations, record identities, output paths, and SHA-256 bindings, then
+recomputes interface pAE and L-RMSD from every bound predictor output on CPU. Only 16/16 numerically replayed
+records reach the frozen both-predictors, at-least-6-of-8 adjudicator. A clean result below 6/8 is a valid
+scientific stop, not an audit failure.
+
 ## Approval boundary
 
 Readiness alone did not authorize execution. The guarded submitter rejected a missing or inexact approval
@@ -82,5 +96,7 @@ branch before generation. At the present boundary, native recoverability remains
 - Submission receipt: `results/m6d_w3c_b2_submit_receipt.jsonl`
 - Submission summary: `results/m6d_w3c_b2_submit_receipt_summary.json`
 - Guarded submitter: `hpc/m6d_w3c_b2_submit_with_receipt.sh`
+- Fail-closed completion bridge: `hpc/m6d_w3c_b2_complete_and_sync.sh`
 - Producer: `bio_sfm_designer.experiments.m6d_w3c_b2_producer`
 - Adjudicator: `bio_sfm_designer.experiments.m6d_w3c_b2_native_screen`
+- Accounting and completion: `bio_sfm_designer.experiments.m6d_w3c_b2_completion`

@@ -222,7 +222,9 @@ from Chai records alone.
   `results/m6d_w3c_b2_cayuga_no_submit_validation.json`; guarded execution is implemented by
   `hpc/m6d_w3c_b2_submit_with_receipt.sh`, with the consumed 16/16 receipt at
   `results/m6d_w3c_b2_submit_receipt.jsonl` and
-  `results/m6d_w3c_b2_submit_receipt_summary.json`
+  `results/m6d_w3c_b2_submit_receipt_summary.json`; terminal accounting, exact sync, metric replay, and
+  frozen adjudication are implemented by `hpc/m6d_w3c_b2_complete_and_sync.sh` and
+  `src/bio_sfm_designer/experiments/m6d_w3c_b2_completion.py`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
