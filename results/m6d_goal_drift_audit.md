@@ -1,24 +1,24 @@
 # M6d Goal Drift Audit
 
-Status: `no_major_direction_drift_w3c_b1_complete_b2_packet_preparation_next`.
+Status: `no_major_direction_drift_w3c_b2_packet_ready_approval_wait`.
 Audit ok: `True`.
 Major direction drift: `False`.
 
 ## Assessment
 
 - mission: `no_drift_external_calibrated_trust_gate_north_star_preserved`
-- protocol: `no_drift_w3c_b1_completed_with_all_eight_locked_targets`
-- claims: `no_drift_input_preparation_only_no_native_generator_or_gate_claim`
-- execution: `eight_a40_msa_jobs_complete_zero_predictor_zero_proteinmpnn`
-- operational status: `w3c_b1_complete_b2_no_submit_packet_preparation_required`
+- protocol: `no_drift_w3c_b2_native_screen_preregistered_and_hash_bound`
+- claims: `no_drift_no_prediction_no_native_or_downstream_claim`
+- execution: `packet_ready_exact_approval_required_zero_h100_jobs`
+- operational status: `w3c_b2_cayuga_dry_run_passed_approval_wait`
 
 ## Active Risks
 
-- `w3c_b1_msa_depth_variability` (observed_not_filtered): retain all preregistered targets despite observed A3M depth range 96-8845; do not subset post hoc
-- `w3c_b1_transport_inference_failure` (bounded): all eight MSAs were recovered after Boltz downstream target-only inference returned nonzero; zero structure outputs were consumed
-- `w3c_b2_authority_leak` (managed): B1 completion authorizes packet preparation only and zero H100 predictor jobs
-- `w3c_generator_or_gate_prematurity` (managed): ProteinMPNN, generator-yield, trust-gate, and biological claims remain blocked
+- `w3c_b2_generic_approval_transfer` (managed): only the exact W3c-B2 phrase can authorize the 16 jobs
+- `w3c_b2_runtime_drift` (managed): both predictor identities were freshly reobserved and every job rechecks them
+- `w3c_b2_budget_or_retry_drift` (managed): the packet caps 16 one-hour H100 jobs and forbids retry or adaptive top-up
+- `w3c_generator_or_gate_prematurity` (managed): ProteinMPNN and all generator, gate, and biological claims remain closed
 
 ## Next Action
 
-Prepare a separate hash-bound, no-submit W3c-B2 native dual-predictor packet.
+Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.

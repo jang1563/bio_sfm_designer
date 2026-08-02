@@ -13,9 +13,11 @@
 > now W3c validity-first failure localization. W3c-A has representation-locked eight fresh strict target-
 > binder dimers. The exact W3c-B1 approval was consumed once; jobs `3118725`-`3118732` completed 8/8 at
 > `1.151111` A40 GPU-hours and all target-MSA integrity checks pass. Each MSA was recovered after Boltz's
-> downstream target-only inference failed, and zero structure outputs were consumed. Resume from
-> `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md`. The current boundary is W3c-B2 hash-bound no-submit packet
-> preparation; native dual-predictor H100 compute remains separately approval-gated.
+> downstream target-only inference failed, and zero structure outputs were consumed. The W3c-B2 hash-
+> bound native-screen packet is now ready after fresh no-prediction runtime observation and successful
+> local/Cayuga dry-runs. It authorizes zero work. Resume from `docs/M6D_W3C_B2_NATIVE_SCREEN.md`; native
+> dual-predictor H100 compute requires the exact separate approval
+> `approve W3c-B2 native dual-predictor screen on H100`.
 
 Date: 2026-08-02
 
@@ -71,7 +73,7 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
   certification and held-out-test roles;
 - preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
-  prepare only the hash-bound W3c-B2 no-submit packet next;
+  preserve the ready, hash-bound W3c-B2 packet without treating readiness as scientific evidence;
 - require a separate preregistered approval for native dual-predictor recovery before any generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
@@ -113,8 +115,11 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   eight fresh strict target-binder dimers without predictor labels or generated designs. W3c-B1 completed
   8/8 target MSAs at `1.151111` A40 GPU-hours. All integrity checks pass, but zero structure outputs were
   consumed and zero candidate-level predictions or ProteinMPNN designs were run. Native recoverability and
-  strict target-binder generalization remain unsupported. W3c-B2 packet preparation is allowed; H100
-  prediction is not.
+  strict target-binder generalization remain unsupported. The W3c-B2 packet freezes 8 targets by 2
+  predictors, at most 16 H100 GPU-hours, and zero ProteinMPNN designs. Its two runtime identities were
+  reobserved without prediction; local and Cayuga dry-runs passed with 77/77 output paths absent and zero
+  scheduler jobs or receipts. Packet readiness is operational evidence only. H100 prediction is not
+  approved.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -210,6 +215,12 @@ from Chai records alone.
 - W3c-B1 completion:
   `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
   `results/m6d_w3c_b1_target_msa_completion.{json,md}`
+- W3c-B2 native-screen no-submit boundary:
+  `docs/M6D_W3C_B2_NATIVE_SCREEN.md`, `configs/m6d_w3c_b2_native_screen_manifest.json`,
+  `configs/m6d_w3c_b2_runtime_lock.json`, `results/m6d_w3c_b2_runtime_readiness.{json,md}`, and
+  `results/m6d_w3c_b2_prediction_packet_readiness.{json,md}`, plus public-safe Cayuga evidence at
+  `results/m6d_w3c_b2_cayuga_no_submit_validation.json`; guarded execution is implemented by
+  `hpc/m6d_w3c_b2_submit_with_receipt.sh`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and

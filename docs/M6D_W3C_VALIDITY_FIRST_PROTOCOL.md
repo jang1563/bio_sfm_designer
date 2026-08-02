@@ -1,6 +1,6 @@
 # M6d W3c validity-first failure-localization protocol
 
-Status: `w3c_b1_complete_b2_packet_preparation_required`.
+Status: `w3c_b2_prediction_packet_ready_exact_approval_required`.
 
 Date: 2026-08-02.
 
@@ -117,9 +117,9 @@ and cannot transfer.
 
 ## Current action
 
-Prepare a separate hash-bound, no-submit W3c-B2 packet for exactly eight native complexes and two frozen
-predictors. Reobserve and bind the H100 runtime without prediction. Stop after packet validation and request
-a separate exact native-screen approval. Do not submit predictor or ProteinMPNN work from the B1 approval.
+Preserve the completed hash-bound, no-submit W3c-B2 packet for exactly eight native complexes and two
+frozen predictors. Do not submit predictor or ProteinMPNN work without the exact separate native-screen
+approval. Packet readiness and runtime observation are not native-recoverability evidence.
 
 ## Execution update: W3c-A complete
 
@@ -150,3 +150,16 @@ Boltz was invoked as the packet-bound MSA transport. Each A3M was recovered afte
 inference returned nonzero. No structure-prediction output was consumed, and candidate-level predictor
 evaluations and ProteinMPNN designs remain zero. See
 [M6D_W3C_B1_TARGET_MSA_COMPLETION.md](M6D_W3C_B1_TARGET_MSA_COMPLETION.md).
+
+## No-submit update: W3c-B2 packet ready
+
+The W3c-B2 manifest, dual-predictor runtime lock, producer, adjudicator, approval packet, and append-only
+submission journal are implemented. The frozen scope is eight native complexes evaluated once by Boltz 2
+and once by AF2-Multimer, for 16 maximum one-hour H100 jobs and zero ProteinMPNN designs. Templates,
+prediction-time network access, retries, and adaptive top-up remain disabled.
+
+Both exact runtime identities were freshly reobserved on Cayuga without prediction. Local and Cayuga dry-
+runs verified the hash-bound packet, enumerated all 16 evaluations, confirmed 77/77 output paths absent,
+and created zero scheduler jobs or receipts. Therefore current execution authority and scientific output
+remain zero. See [M6D_W3C_B2_NATIVE_SCREEN.md](M6D_W3C_B2_NATIVE_SCREEN.md). The only phrase that can open
+this packet is `approve W3c-B2 native dual-predictor screen on H100`.

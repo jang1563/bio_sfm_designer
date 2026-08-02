@@ -1,0 +1,103 @@
+{
+  "artifact": "m6d_w3c_b2_cayuga_no_submit_validation",
+  "version": 1,
+  "status": "w3c_b2_cayuga_no_submit_validation_pass",
+  "validation_passed": true,
+  "validation_date": "2026-08-02",
+  "remote": {
+    "platform": "Cayuga HPC",
+    "host": "redacted",
+    "root": "$HOME/bio_sfm_smoke",
+    "public_redaction_applied": true
+  },
+  "mirror": {
+    "method": "exact_rsync_then_remote_packet_integrity_verification",
+    "remote_packet_integrity_verified": true,
+    "runtime_lock_local_remote_sha256_equal": true,
+    "packet_internal_digest_sha256": "7694b231b7b3457a478a2be5d2a82fde2d9d5ca5ef4caf85606b52569ce1844d",
+    "runtime_lock_internal_digest_sha256": "7ed1094e34ee945a555eefb5a827673e916705b7d6f57bba5f1bfa545a9e19f5",
+    "artifacts": [
+      {
+        "path": "results/m6d_w3c_b2_prediction_approval_packet.json",
+        "sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd"
+      },
+      {
+        "path": "configs/m6d_w3c_b2_runtime_lock.json",
+        "sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d"
+      },
+      {
+        "path": "results/m6d_w3c_b2_boltz_runtime_observation.json",
+        "sha256": "1f94485de23a63140b68972cb4f7ce78fad5d17dc47b22dc7b72af72ef19c64c"
+      },
+      {
+        "path": "results/m6d_w3c_b2_af2_runtime_observation.json",
+        "sha256": "2283c83237ba36c3442a4e7896f879e3bcc106bbac9bc39830e2db02978175e6"
+      },
+      {
+        "path": "results/m6d_w3c_b2_runtime_readiness.json",
+        "sha256": "76a938aff07e3df98080c239e3a28cdc90aa091546d9ddc75c755b21921b0dd4"
+      },
+      {
+        "path": "results/m6d_w3c_b2_prediction_packet_readiness.json",
+        "sha256": "93fcbfa8bdf486d79446b8440df5d983509349fa8cc4c33d9288f281ce8bbce9"
+      },
+      {
+        "path": "hpc/m6d_w3c_b2_submit_with_receipt.sh",
+        "sha256": "0b51562a796d1f1cb1cb991609ed275a499d4b092e46c88beb3485bfb3e57cb5"
+      }
+    ]
+  },
+  "runtime_reobservation": {
+    "expected_predictors": 2,
+    "observed_predictors": 2,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "prediction_executed": false,
+    "gpu_compute_executed": false,
+    "network_fetch_executed": false,
+    "scheduler_command_executed": false
+  },
+  "execution": {
+    "mode": "dry_run",
+    "entrypoint": "BIO_SFM_SUBMIT_DRY_RUN=1 bash hpc/m6d_w3c_b2_submit_with_receipt.sh",
+    "local_exit_code": 0,
+    "remote_exit_code": 0,
+    "packet_integrity_verified": true,
+    "target_count": 8,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ],
+    "initial_output_paths_expected": 77,
+    "initial_output_paths_absent": 77,
+    "predictor_evaluations_enumerated": 16,
+    "scheduler_jobs_submitted": 0,
+    "submission_command_executed": false,
+    "approval_env_present": false,
+    "receipt_created": false,
+    "summary_created": false,
+    "remote_receipt_absent_after_validation": true,
+    "stdout_summary": [
+      "prediction approval packet verified",
+      "initial output absence check clear: 77/77 paths absent",
+      "dry-run complete: 8 targets, 16 evaluations, zero scheduler jobs"
+    ]
+  },
+  "approval_boundary": {
+    "approval_recorded": false,
+    "predictor_evaluations_authorized": 0,
+    "h100_gpu_hours_authorized": 0.0,
+    "proteinmpnn_designs_authorized": 0,
+    "native_recoverability_claim_authorized": false,
+    "generator_work_authorized": false
+  },
+  "claim_boundary": "This artifact records local and Cayuga no-submit validation only. It authorizes no structure prediction, ProteinMPNN design, generator work, trust-gate claim, native-recoverability claim, or other scientific claim."
+}

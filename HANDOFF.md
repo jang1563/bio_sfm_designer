@@ -4,9 +4,11 @@ Self-contained context to continue this project in a fresh session (Codex or oth
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
 > **2026-08-02 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
-> `1.151111` A40 GPU-hours. The current allowed work is W3c-B2 hash-bound no-submit packet preparation;
-> native dual-predictor H100 compute remains separately approval-gated. Start with
-> `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and `results/m6d_goal_state_refresh_report.json`.
+> `1.151111` A40 GPU-hours. The W3c-B2 hash-bound native-screen packet is ready after fresh no-prediction
+> runtime observation and successful local/Cayuga dry-runs. It authorizes zero work now. Native dual-
+> predictor H100 compute remains separately approval-gated by the exact phrase
+> `approve W3c-B2 native dual-predictor screen on H100`. Start with
+> `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and `results/m6d_goal_state_refresh_report.json`.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
@@ -126,9 +128,14 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > targets remain in the panel. Boltz was the bound MSA transport; every MSA was recovered after its later
 > target-only inference returned nonzero. No structure output was consumed. Read
 > `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
-> `results/m6d_w3c_b1_target_msa_completion.json`. The current action is preparation of a separate hash-
-> bound, no-submit W3c-B2 native dual-predictor packet. It authorizes zero H100 predictions and zero
-> ProteinMPNN designs; W3c-B2 requires a new exact approval.
+> `results/m6d_w3c_b1_target_msa_completion.json`. The separate hash-bound W3c-B2 native dual-predictor
+> packet is now ready. It freezes 8 native complexes by 2 predictors, at most 16 one-hour H100 jobs, seed
+> `0`, no templates, no prediction-time network, no retries, and zero ProteinMPNN designs. Both runtime
+> identities were freshly reobserved without prediction. Local and Cayuga dry-runs confirmed all 77 bound
+> output paths absent, enumerated exactly 16 evaluations, and created zero scheduler jobs or receipts.
+> Read `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and
+> `results/m6d_w3c_b2_prediction_packet_readiness.json`. Current authority is zero; execution requires the
+> exact new approval `approve W3c-B2 native dual-predictor screen on H100`.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 

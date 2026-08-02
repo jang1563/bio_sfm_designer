@@ -88,12 +88,18 @@
 > to 8,845 records with no post-hoc target removal. The helper recovered each MSA after Boltz's downstream
 > target-only inference returned nonzero. Zero structure outputs were consumed, and ProteinMPNN designs
 > and candidate-level predictor evaluations remain zero. W3c-B1 is input-preparation success, not native-
-> prediction evidence. The current boundary is a separate hash-bound, no-submit W3c-B2 native dual-
-> predictor packet; no W3c-B2 compute is approved. See
+> prediction evidence. The separate hash-bound W3c-B2 native dual-predictor packet is now ready. Both
+> frozen H100 runtime identities were freshly reobserved without prediction, and local plus Cayuga dry-
+> runs enumerated all 16 evaluations while confirming 77/77 output paths absent, zero scheduler jobs,
+> and no receipt. Current execution authority remains zero; the exact approval phrase is
+> `approve W3c-B2 native dual-predictor screen on H100`. See
 > [docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md](docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md) and
 > [docs/M6D_W3C_A_TARGET_LOCK.md](docs/M6D_W3C_A_TARGET_LOCK.md),
 > [docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md](docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md), plus
 > [docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md](docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md),
+> [docs/M6D_W3C_B2_NATIVE_SCREEN.md](docs/M6D_W3C_B2_NATIVE_SCREEN.md),
+> [results/m6d_w3c_b2_prediction_packet_readiness.json](results/m6d_w3c_b2_prediction_packet_readiness.json),
+> [results/m6d_w3c_b2_cayuga_no_submit_validation.json](results/m6d_w3c_b2_cayuga_no_submit_validation.json),
 > [results/m6d_w3c_b1_cayuga_no_submit_validation.json](results/m6d_w3c_b1_cayuga_no_submit_validation.json)
 > and [results/m6d_w3c_target_validity_audit.json](results/m6d_w3c_target_validity_audit.json). The tracked
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit
@@ -134,8 +140,8 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (`1222` designer tests plus `74` designer subtests, and
-`88` trust-core tests plus `120` trust-core subtests on 2026-08-02).
+**Current local source verified** (designer: `1254` pytest tests and `1139` unittest tests;
+trust-core: `88` pytest tests and `88` unittest tests on 2026-08-02).
 The pinned public `bio-sfm-trust-core` v0.1.0 tag remains install-compatible through a tested split-LTT
 fallback until the coordinated trust-core release is published:
 - DBTL loop closed on CPU (heritable feedback, pluggable acquisition, deterministic control).

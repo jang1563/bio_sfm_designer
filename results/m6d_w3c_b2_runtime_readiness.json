@@ -1,0 +1,76 @@
+{
+  "artifact": "m6d_w3c_b2_runtime_readiness",
+  "audit_ok": true,
+  "bound_artifacts": {
+    "native_screen_manifest": {
+      "bytes": 23108,
+      "path": "configs/m6d_w3c_b2_native_screen_manifest.json",
+      "sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3"
+    },
+    "protocol": {
+      "bytes": 4903,
+      "path": "configs/m6d_w3c_validity_first_protocol.json",
+      "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+    },
+    "runtime_module": {
+      "bytes": 32651,
+      "path": "src/bio_sfm_designer/experiments/m6d_w3c_b2_runtime.py",
+      "sha256": "b90cdd94570cc3a648f5e84b8572c7ea1f4070fd0cf4c242df54de42b4a828be"
+    },
+    "validation_script": {
+      "bytes": 3932,
+      "path": "hpc/validate_w3c_b2_runtime_no_prediction.sh",
+      "sha256": "d4fd6829cb402f8f42758c755df36321a4c1727f24c275faf7731eade53eab6d"
+    },
+    "w3b_runtime_transfer_source": {
+      "bytes": 5433,
+      "path": "configs/m6d_w3b_runtime_lock.json",
+      "sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28"
+    },
+    "w3c_b1_completion": {
+      "bytes": 17064,
+      "path": "results/m6d_w3c_b1_target_msa_completion.json",
+      "sha256": "afe91e4aefeec28d485d22a68e1886bf15ad8596637151ba752e63203cbd5644"
+    }
+  },
+  "can_claim_native_recoverability": false,
+  "can_prepare_prediction_approval_packet": true,
+  "can_run_predictors": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "Runtime reobservation readiness only. The script executes no prediction, GPU compute, network fetch, scheduler command, or scientific adjudication.",
+  "expected_predictor_runtime_identity_sha256": {
+    "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+    "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+  },
+  "failures": [],
+  "gpu_compute_executed": false,
+  "n_failures": 0,
+  "network_fetch_executed": false,
+  "next_action": "Prepare the hash-bound W3c-B2 prediction approval packet without submission.",
+  "no_submit": true,
+  "prediction_executed": false,
+  "predictor_ids": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "runtime_identity_ready": true,
+  "runtime_observation_bindings": {
+    "af2_multimer_colabfold_v1": {
+      "bytes": 3642,
+      "path": "results/m6d_w3c_b2_af2_runtime_observation.json",
+      "sha256": "2283c83237ba36c3442a4e7896f879e3bcc106bbac9bc39830e2db02978175e6"
+    },
+    "boltz2_complex": {
+      "bytes": 3167,
+      "path": "results/m6d_w3c_b2_boltz_runtime_observation.json",
+      "sha256": "1f94485de23a63140b68972cb4f7ce78fad5d17dc47b22dc7b72af72ef19c64c"
+    }
+  },
+  "runtime_observations_complete": 2,
+  "runtime_observations_expected": 2,
+  "scheduler_command_executed": false,
+  "status": "w3c_b2_runtime_reobservation_complete_no_prediction",
+  "submitted_jobs": 0,
+  "validation_command": "bash hpc/validate_w3c_b2_runtime_no_prediction.sh",
+  "version": 1
+}

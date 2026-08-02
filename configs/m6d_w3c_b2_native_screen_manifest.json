@@ -1,0 +1,456 @@
+{
+  "approval_recorded": false,
+  "artifact": "m6d_w3c_b2_native_screen_manifest",
+  "bound_artifacts": {
+    "protocol": {
+      "bytes": 4903,
+      "path": "configs/m6d_w3c_validity_first_protocol.json",
+      "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+    },
+    "w3b_runtime_source_protocol": {
+      "bytes": 8672,
+      "path": "configs/m6d_w3b_disagreement_gate_protocol.json",
+      "sha256": "8dae842c4ec2573e46df6bbd17dfc0a8600e0579289483e98cc551d67cfd5b96"
+    },
+    "w3b_runtime_transfer_source": {
+      "bytes": 5433,
+      "path": "configs/m6d_w3b_runtime_lock.json",
+      "sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28"
+    },
+    "w3c_b1_completion": {
+      "bytes": 17064,
+      "path": "results/m6d_w3c_b1_target_msa_completion.json",
+      "sha256": "afe91e4aefeec28d485d22a68e1886bf15ad8596637151ba752e63203cbd5644"
+    },
+    "w3c_b1_execution_manifest": {
+      "bytes": 10951,
+      "path": "configs/m6d_w3c_b1_target_msa_manifest.json",
+      "sha256": "d03711fbf576690a9347c2aa948af683495423c0775c60d39bf33fb52d80deda"
+    }
+  },
+  "can_claim_biological_binder_success": false,
+  "can_claim_generator_yield": false,
+  "can_claim_native_recoverability": false,
+  "can_claim_trust_gate": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "Preregistered native-recoverability input and decision lock only. This manifest authorizes zero prediction, zero ProteinMPNN work, and no scientific claim.",
+  "compute_budget": {
+    "maximum_af2_evaluations": 8,
+    "maximum_boltz_evaluations": 8,
+    "maximum_h100_gpu_hours": 16.0,
+    "maximum_total_evaluations": 16,
+    "maximum_walltime_per_evaluation": "01:00:00",
+    "no_retry_or_adaptive_top_up": true,
+    "post_execution_slurm_accounting_required": true,
+    "resource_per_evaluation": "h100:1"
+  },
+  "lrmsd_success_threshold_angstrom": 4.0,
+  "maximum_predictor_evaluations": 16,
+  "minimum_targets_passing": 6,
+  "native_sequences_per_target": 1,
+  "next_action": "Reobserve both exact predictor runtimes without prediction, then prepare a separately guarded W3c-B2 H100 approval packet.",
+  "no_submit": true,
+  "prediction_executed": false,
+  "predictor_evaluations_authorized": 0,
+  "predictor_ids": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "preexisting_output_paths": [],
+  "proteinmpnn_designs": 0,
+  "runtime_contract": {
+    "exact_hash_match_required": true,
+    "expected_predictor_runtime_identity_sha256": {
+      "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+      "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+    },
+    "new_runtime_observation_required": true,
+    "prediction_time_network_allowed": false,
+    "runtime_reobservation_complete": false,
+    "seed": 0,
+    "templates_allowed": false,
+    "transfer_source": "configs/m6d_w3b_runtime_lock.json",
+    "transfer_source_digest_sha256": "89ef3ccd7f7c361b186170c14ec21e715633fc6e94b48126bef6879058eb27c0",
+    "transfer_source_sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28"
+  },
+  "scientific_question": "After restricting the benchmark to complete biological target-binder dimers, can both frozen predictors recover native complexes before generated designs or a trust gate are evaluated?",
+  "stage_pass_rule": "At least six of eight targets must pass.",
+  "status": "w3c_b2_native_screen_manifest_locked_no_submit",
+  "submission_performed": false,
+  "submitted_jobs": 0,
+  "target_count": 8,
+  "target_ids": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "target_pass_rule": "Both frozen predictors must produce strict-QC records with finite interface pAE and L-RMSD below 4.0 A against the native complex.",
+  "targets": [
+    {
+      "a3m_records": 2442,
+      "binder_chain": "A",
+      "binder_sequence_length": 274,
+      "binder_sequence_sha256": "66b9034c5bbef879f433a80692f409ed7877d40ad4287985269ce8f1ea3b5d31",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-1TE1_BA",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/prepared_1TE1_BA.pdb",
+      "prepared_pdb_sha256": "8ebe6747b6f1d1c3999cea5a84791a2a5b562a785b8d9b7a664df00432c755be",
+      "rcsb_id": "1TE1",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_1TE1.pdb",
+      "source_pdb_sha256": "72daa3f8779e2d4f7a15d4dcdf4cbbffd2b183d519a68354c1ae003be26ce699",
+      "target_chain": "B",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.fasta",
+      "target_fasta_sha256": "7a90515fb6a1676ad029637c95fd39749f2df1b89ce58a5bfedeb0b388f903a1",
+      "target_id": "1TE1_BA",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/1TE1_BA/1TE1_BA_B.a3m.report.json",
+      "target_msa_report_sha256": "c4171c5be66d64e0e9ff5657894d64ac839618099027eb587a9c52d3ca78591d",
+      "target_msa_sha256": "5c6a775dbf5fb22d585cc3eb43916e865150412a63b9a3674adbf1042012a57b",
+      "target_sequence_length": 190,
+      "target_sequence_sha256": "0791623fe0756f683d3c5e547f7a4c725bca84a145a0b389136c0c6c297906c0"
+    },
+    {
+      "a3m_records": 1909,
+      "binder_chain": "B",
+      "binder_sequence_length": 88,
+      "binder_sequence_sha256": "4820e8aac16e1c0ba8e948648408486970653843eaed71769cc72ad868d292e4",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-3QB4_AB",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/prepared_3QB4_AB.pdb",
+      "prepared_pdb_sha256": "8a15c3aff74646854d9b1eab647dc73822542b19bd2dc49e2fe91a5afcd84b57",
+      "rcsb_id": "3QB4",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_3QB4.pdb",
+      "source_pdb_sha256": "6769de57cf8f396723d868fe76091efc4810581dc0b12dba8ce9f8e7eeaa507a",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.fasta",
+      "target_fasta_sha256": "9f378352a5791c6c0a0c5876ca37047476cedd003c2164b81268ff4d9b2fbe2f",
+      "target_id": "3QB4_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/3QB4_AB/3QB4_AB_A.a3m.report.json",
+      "target_msa_report_sha256": "750ecc5ecc83d227395b5a3a493cafc77a24835a3f1e23fbeac4225f60091bc2",
+      "target_msa_sha256": "2865592c3f8f5c3e7b7269a0ac560ff29808e9ac6c6763c64e6c105c946dd7fa",
+      "target_sequence_length": 105,
+      "target_sequence_sha256": "862c960bfcb0e1d2939202ed29b33e197275c21d8f49cdd9336491b05778cdfd"
+    },
+    {
+      "a3m_records": 96,
+      "binder_chain": "B",
+      "binder_sequence_length": 112,
+      "binder_sequence_sha256": "6d0fc9cf7e99b3e8d0b2dac00310c679bd605d642e7666c51239c93dfbefc755",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-5E5M_AB",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/prepared_5E5M_AB.pdb",
+      "prepared_pdb_sha256": "488d3ebd1487b347999c55a7f8ea4a8b6f67d1250fe70272c15468832dfcf71f",
+      "rcsb_id": "5E5M",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_5E5M.pdb",
+      "source_pdb_sha256": "5f231dbbd19cbc5216aaebdaf9461292c9bf0b1c1e3cef453ba19c05de495ee0",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.fasta",
+      "target_fasta_sha256": "e6e6c39e182bcba086c345b7b10138eee6d165ec3dd8709a43fa8bfe37557dc1",
+      "target_id": "5E5M_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/5E5M_AB/5E5M_AB_A.a3m.report.json",
+      "target_msa_report_sha256": "a4c7e7965a3f50e3b83143b51d6314a62d0d9d23bc1dbde7fc5848009be80098",
+      "target_msa_sha256": "3648230ee78da3fa857f036d14302fe8de022bf4d6bd1f66d2b49c8aa2dfc8a8",
+      "target_sequence_length": 115,
+      "target_sequence_sha256": "7a2450c6429f805e6ca72013e1a0b6a579c65143c898615a7d7cb4ba681654ac"
+    },
+    {
+      "a3m_records": 287,
+      "binder_chain": "B",
+      "binder_sequence_length": 116,
+      "binder_sequence_sha256": "f86f8464b78f50ef01c7db2db993920e48262f06735e43219d80dea1bb57a7d7",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-5JSB_AB",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/prepared_5JSB_AB.pdb",
+      "prepared_pdb_sha256": "92058e28e4d1ceb899103e4ed494d5b35237aab2dd768ab07f23408bc87e933b",
+      "rcsb_id": "5JSB",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_5JSB.pdb",
+      "source_pdb_sha256": "82b0419b5d0bd8a0a99d15c5b1c781c3945b77d1f7e77ab645ddcf843b35b64a",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.fasta",
+      "target_fasta_sha256": "02b70912cce26102c6899587ec854e7763fd9e59f28925c5c3b450946f00cbb5",
+      "target_id": "5JSB_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/5JSB_AB/5JSB_AB_A.a3m.report.json",
+      "target_msa_report_sha256": "d77fbde60c7cd71c1c2cfe173b4df24f6e6d330a51c3bf3393154192bb92b7df",
+      "target_msa_sha256": "60b17028ec6900c62d07bba72856c653432b625c229ceffb9ca715456efd05f0",
+      "target_sequence_length": 151,
+      "target_sequence_sha256": "9451a288bdeb55eeba38601282b94f4abe2078aecf940364d87eead2338b637b"
+    },
+    {
+      "a3m_records": 7447,
+      "binder_chain": "C",
+      "binder_sequence_length": 55,
+      "binder_sequence_sha256": "83bcec87ae0cbe3c1d95a86ce3233eaf0884765c065e9a9977d06b07018ec1af",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-6KBR_AC",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/prepared_6KBR_AC.pdb",
+      "prepared_pdb_sha256": "702f3fc80562ab22a7a995d4189e0fadb8f947cacd70a0e21d7be2083b9bb0ac",
+      "rcsb_id": "6KBR",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_6KBR.pdb",
+      "source_pdb_sha256": "b2eba90003c5556288bb3ec0af6d856e9fd0552b6b09c8098eec32359c88a117",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.fasta",
+      "target_fasta_sha256": "8d3cc2cb3b4eb930eb13336905eb6711bc9b0c5497c532d7e6117c9207dd950e",
+      "target_id": "6KBR_AC",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/6KBR_AC/6KBR_AC_A.a3m.report.json",
+      "target_msa_report_sha256": "ebab4e32395903f434a2b8e669eee9082bcf230be5bbe503f82d2d1de931a497",
+      "target_msa_sha256": "27dafcd3ee0844e21410a327d44b200090165e33aeae8b3dd4f74d39f73f9418",
+      "target_sequence_length": 223,
+      "target_sequence_sha256": "cb4fdec8f8f393c62bc486e863ea61cdadbbbe22a1e46352ddf843d8cd05bb36"
+    },
+    {
+      "a3m_records": 3195,
+      "binder_chain": "B",
+      "binder_sequence_length": 116,
+      "binder_sequence_sha256": "6972391c12f17e78bbca7c8bd5e27f9ae9c1c5a4b8adf13f3a9cd2435a1ee79d",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-6KMQ_AB",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/prepared_6KMQ_AB.pdb",
+      "prepared_pdb_sha256": "1029afab9240b81690a34db52403891bf5d4023c6a2a97db7939dbe8ac5466d8",
+      "rcsb_id": "6KMQ",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_6KMQ.pdb",
+      "source_pdb_sha256": "7e45049b88c983fccdfc909e50360de175cc440b765059aaf95873b27dc2fa86",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.fasta",
+      "target_fasta_sha256": "aeff348e85a968139a6954824f3c120bcb24b05bf7f6ca9a56692cad964ac317",
+      "target_id": "6KMQ_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/6KMQ_AB/6KMQ_AB_A.a3m.report.json",
+      "target_msa_report_sha256": "0bfacd7b039b8770b030c2a2cd06b5f3d67d8273019da772c1cb52eccbb8c9ed",
+      "target_msa_sha256": "31cd86524d3bafbf8d884d9560f2dbc4956780179341a58bc9b6ae9be376989c",
+      "target_sequence_length": 91,
+      "target_sequence_sha256": "3a660ea3c18597311af4cc4bb6fe3ed6bc9fa5e1bc4678cf37ed8ab6ef900609"
+    },
+    {
+      "a3m_records": 8845,
+      "binder_chain": "B",
+      "binder_sequence_length": 126,
+      "binder_sequence_sha256": "3ff8f177477089e4a5a015781cd59dcab9979c8477a76e9ec884205ffab85c87",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-6SGE_AB",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/prepared_6SGE_AB.pdb",
+      "prepared_pdb_sha256": "0f3146b07aa523817b5dae0a86cc45b00ab690bcc527b1f18420c076e210f358",
+      "rcsb_id": "6SGE",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_6SGE.pdb",
+      "source_pdb_sha256": "60a8ccac3d18576735323e9c3b44a74da0633d373b7d2fef1edfe1b21f5f4eba",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.fasta",
+      "target_fasta_sha256": "36e3fb2002ec9c4861c3149414e8a2292c7563aff981bbfddc0bebf32f4c931a",
+      "target_id": "6SGE_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/6SGE_AB/6SGE_AB_A.a3m.report.json",
+      "target_msa_report_sha256": "f21bee869f119a4681eb5f5ee96824ad33e9fd789748a384986e37716ea0f0d6",
+      "target_msa_sha256": "29fdacd0a323f125eff135bccf1730205a982332ce76bece49bbbd78b9538fb0",
+      "target_sequence_length": 178,
+      "target_sequence_sha256": "0e322c532bef4a6f8371a9ecfb0225ff1ffce7b438a96054a39f80ec63a56568"
+    },
+    {
+      "a3m_records": 7594,
+      "binder_chain": "B",
+      "binder_sequence_length": 123,
+      "binder_sequence_sha256": "ad0d87b87b69525fb503d00c2ab8a7615df8b9abdd9c40cc1e231b257a4e033e",
+      "checks": {
+        "binder_sequence_hash": true,
+        "completion_checks": true,
+        "fasta_sequence": true,
+        "minimum_chain_lengths": true,
+        "msa_hash": true,
+        "msa_query": true,
+        "msa_report_hash": true,
+        "target_sequence_hash": true
+      },
+      "native_candidate_id": "w3c-b2-native-7B5G_AB",
+      "outputs": {
+        "af2_input_dir": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_inputs",
+        "af2_input_manifest": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_input_manifest.json",
+        "af2_output_dir": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_predictions",
+        "af2_record": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_multimer_native_record.json",
+        "boltz_output_dir": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/boltz_predictions",
+        "boltz_record": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/boltz2_native_record.json",
+        "matched_record": "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/matched_native_record.json"
+      },
+      "predictors": [
+        "boltz2_complex",
+        "af2_multimer_colabfold_v1"
+      ],
+      "prepared_pdb": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/prepared_7B5G_AB.pdb",
+      "prepared_pdb_sha256": "6263ab34ca9e8600d7fb00fd810d93a760ff183851f128fede071feaa7c80903",
+      "rcsb_id": "7B5G",
+      "source_pdb": "hpc_outputs/m6d_w3c_sources/source_7B5G.pdb",
+      "source_pdb_sha256": "5480a02aa18f9b08bdfae99d86438fd497c0fe07deb9febe6ac28e27fb4725dc",
+      "target_chain": "A",
+      "target_fasta": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.fasta",
+      "target_fasta_sha256": "02789579752be08f44e7957cf3775bfcd4d0ab93638955fc1b84ebb5e621db85",
+      "target_id": "7B5G_AB",
+      "target_msa": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m",
+      "target_msa_report": "hpc_outputs/m6d_w3c_b1_targets/7B5G_AB/7B5G_AB_A.a3m.report.json",
+      "target_msa_report_sha256": "a8b8fae765625f70d88456a2746015ece8292d222c13bb1fb957db8730f6f6bf",
+      "target_msa_sha256": "63a03a07a936f84cfc3df263d1c5a5a51f0903308b6158673bc7ae09dce74c09",
+      "target_sequence_length": 132,
+      "target_sequence_sha256": "8d45888e3817f216e9cd4ac6d7fe88fd78e7693d889af8d33a324e8b3ad448ea"
+    }
+  ],
+  "version": 1
+}

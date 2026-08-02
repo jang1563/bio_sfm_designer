@@ -88,6 +88,20 @@ _W3C_TARGET_VALIDITY_STATUS = (
 _W3C_FRESH_TARGET_LOCK_STATUS = (
     "w3c_a_fresh_target_representation_lock_complete_no_submit"
 )
+_W3C_TARGET_IDS = [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB",
+]
+_W3C_B2_PREDICTORS = ["boltz2_complex", "af2_multimer_colabfold_v1"]
+_W3C_B2_APPROVAL_PHRASE = (
+    "approve W3c-B2 native dual-predictor screen on H100"
+)
 _FIT_SCREEN_PACKET_NEXT_ACTION = (
     "Prepare a separate hash-bound, no-submit independent-screen packet for only the frozen W2c target "
     "candidates. Require a new explicit approval before compute and do not retune any learned threshold."
@@ -1838,6 +1852,479 @@ def _w3c_b1_target_msa_completion_summary(
         "no_submit": True,
         "cayuga_submission_allowed": False,
         "next_action": report["next_action"],
+        "checks": checks,
+    }
+
+
+def _w3c_b2_native_manifest_summary(
+    manifest: Dict[str, Any],
+) -> Dict[str, Any]:
+    targets = (
+        manifest.get("targets")
+        if isinstance(manifest.get("targets"), list)
+        else []
+    )
+    outputs = [
+        path
+        for row in targets
+        if isinstance(row, dict) and isinstance(row.get("outputs"), dict)
+        for path in row["outputs"].values()
+    ]
+    checks = {
+        "identity_exact": (
+            manifest.get("artifact") == "m6d_w3c_b2_native_screen_manifest"
+            and manifest.get("version") == 1
+            and manifest.get("status")
+            == "w3c_b2_native_screen_manifest_locked_no_submit"
+        ),
+        "panel_exact": (
+            manifest.get("target_count") == 8
+            and manifest.get("target_ids") == _W3C_TARGET_IDS
+            and manifest.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and len(targets) == 8
+            and [row.get("target_id") for row in targets] == _W3C_TARGET_IDS
+        ),
+        "decision_rule_exact": (
+            manifest.get("native_sequences_per_target") == 1
+            and manifest.get("maximum_predictor_evaluations") == 16
+            and manifest.get("proteinmpnn_designs") == 0
+            and float(manifest.get("lrmsd_success_threshold_angstrom") or 0.0)
+            == 4.0
+            and manifest.get("minimum_targets_passing") == 6
+        ),
+        "target_bindings_valid": (
+            all(
+                isinstance(row, dict)
+                and isinstance(row.get("checks"), dict)
+                and bool(row["checks"])
+                and all(row["checks"].values())
+                and _is_sha256(row.get("target_sequence_sha256"))
+                and _is_sha256(row.get("binder_sequence_sha256"))
+                and _is_sha256(row.get("target_msa_sha256"))
+                and _is_sha256(row.get("prepared_pdb_sha256"))
+                for row in targets
+            )
+            and len(outputs) == 56
+            and len(set(outputs)) == 56
+            and manifest.get("preexisting_output_paths") == []
+        ),
+        "runtime_transfer_locked": (
+            isinstance(manifest.get("runtime_contract"), dict)
+            and manifest["runtime_contract"].get(
+                "expected_predictor_runtime_identity_sha256"
+            )
+            and set(
+                manifest["runtime_contract"][
+                    "expected_predictor_runtime_identity_sha256"
+                ]
+            )
+            == set(_W3C_B2_PREDICTORS)
+            and manifest["runtime_contract"].get(
+                "new_runtime_observation_required"
+            )
+            is True
+            and manifest["runtime_contract"].get(
+                "runtime_reobservation_complete"
+            )
+            is False
+        ),
+        "budget_exact": (
+            isinstance(manifest.get("compute_budget"), dict)
+            and manifest["compute_budget"].get("maximum_h100_gpu_hours")
+            == 16.0
+            and manifest["compute_budget"].get("maximum_boltz_evaluations")
+            == 8
+            and manifest["compute_budget"].get("maximum_af2_evaluations")
+            == 8
+            and manifest["compute_budget"].get("maximum_total_evaluations")
+            == 16
+            and manifest["compute_budget"].get(
+                "no_retry_or_adaptive_top_up"
+            )
+            is True
+        ),
+        "zero_authority": (
+            manifest.get("approval_recorded") is False
+            and manifest.get("predictor_evaluations_authorized") == 0
+            and manifest.get("submission_performed") is False
+            and manifest.get("submitted_jobs") == 0
+            and manifest.get("prediction_executed") is False
+            and manifest.get("no_submit") is True
+            and manifest.get("cayuga_submission_allowed") is False
+        ),
+        "claims_closed": (
+            manifest.get("can_claim_native_recoverability") is False
+            and manifest.get("can_claim_generator_yield") is False
+            and manifest.get("can_claim_trust_gate") is False
+            and manifest.get("can_claim_biological_binder_success") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B2 native manifest invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": manifest["status"],
+        "target_count": 8,
+        "target_ids": _W3C_TARGET_IDS,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "predictor_evaluations": 16,
+        "maximum_h100_gpu_hours": 16.0,
+        "minimum_targets_passing": 6,
+        "lrmsd_threshold_angstrom": 4.0,
+        "proteinmpnn_designs": 0,
+        "runtime_identity_sha256": manifest["runtime_contract"][
+            "expected_predictor_runtime_identity_sha256"
+        ],
+        "output_paths": outputs,
+        "no_submit": True,
+        "can_claim": False,
+        "checks": checks,
+    }
+
+
+def _w3c_b2_runtime_summary(readiness: Dict[str, Any]) -> Dict[str, Any]:
+    bindings = (
+        readiness.get("bound_artifacts")
+        if isinstance(readiness.get("bound_artifacts"), dict)
+        else {}
+    )
+    observation_bindings = (
+        readiness.get("runtime_observation_bindings")
+        if isinstance(readiness.get("runtime_observation_bindings"), dict)
+        else {}
+    )
+    checks = {
+        "identity_exact": (
+            readiness.get("artifact") == "m6d_w3c_b2_runtime_readiness"
+            and readiness.get("version") == 1
+            and readiness.get("status")
+            == "w3c_b2_runtime_reobservation_complete_no_prediction"
+            and readiness.get("audit_ok") is True
+        ),
+        "observations_exact": (
+            readiness.get("runtime_identity_ready") is True
+            and readiness.get("runtime_observations_expected") == 2
+            and readiness.get("runtime_observations_complete") == 2
+            and readiness.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and set(observation_bindings) == set(_W3C_B2_PREDICTORS)
+            and all(
+                isinstance(observation_bindings[predictor_id], dict)
+                and _is_sha256(
+                    observation_bindings[predictor_id].get("sha256")
+                )
+                for predictor_id in _W3C_B2_PREDICTORS
+            )
+        ),
+        "manifest_bound": (
+            isinstance(bindings.get("native_screen_manifest"), dict)
+            and bindings["native_screen_manifest"].get("path")
+            == "configs/m6d_w3c_b2_native_screen_manifest.json"
+            and _is_sha256(
+                bindings["native_screen_manifest"].get("sha256")
+            )
+        ),
+        "zero_execution": (
+            readiness.get("prediction_executed") is False
+            and readiness.get("gpu_compute_executed") is False
+            and readiness.get("network_fetch_executed") is False
+            and readiness.get("scheduler_command_executed") is False
+            and readiness.get("submitted_jobs") == 0
+        ),
+        "zero_authority": (
+            readiness.get("no_submit") is True
+            and readiness.get("cayuga_submission_allowed") is False
+            and readiness.get("can_prepare_prediction_approval_packet") is True
+            and readiness.get("can_run_predictors") is False
+            and readiness.get("can_claim_native_recoverability") is False
+            and readiness.get("failures") == []
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B2 runtime invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": readiness["status"],
+        "runtime_identity_ready": True,
+        "runtime_observations_complete": 2,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "runtime_identity_sha256": readiness[
+            "expected_predictor_runtime_identity_sha256"
+        ],
+        "native_manifest_sha256": bindings["native_screen_manifest"][
+            "sha256"
+        ],
+        "prediction_executed": False,
+        "gpu_compute_executed": False,
+        "submitted_jobs": 0,
+        "no_submit": True,
+        "can_claim": False,
+        "checks": checks,
+    }
+
+
+def _w3c_b2_approval_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
+    contract = (
+        packet.get("approval_contract")
+        if isinstance(packet.get("approval_contract"), dict)
+        else {}
+    )
+    targets = (
+        packet.get("execution_targets")
+        if isinstance(packet.get("execution_targets"), list)
+        else []
+    )
+    bindings = (
+        packet.get("bound_artifacts")
+        if isinstance(packet.get("bound_artifacts"), dict)
+        else {}
+    )
+    checks = {
+        "identity_exact": (
+            packet.get("artifact")
+            == "m6d_w3c_b2_native_prediction_approval_packet"
+            and packet.get("version") == 1
+            and packet.get("status")
+            == "w3c_b2_native_prediction_approval_packet_ready_no_submit"
+            and packet.get("audit_ok") is True
+        ),
+        "approval_identity_exact": (
+            contract.get("user_phrase") == _W3C_B2_APPROVAL_PHRASE
+            and contract.get("environment_variable")
+            == "BIO_SFM_APPROVE_W3C_B2_NATIVE"
+            and contract.get("environment_value")
+            == "approve-w3c-b2-native-16-h100"
+        ),
+        "scope_exact": (
+            contract.get("stage") == "W3c-B2"
+            and contract.get("target_ids") == _W3C_TARGET_IDS
+            and contract.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and contract.get("maximum_predictor_evaluations") == 16
+            and contract.get("maximum_scheduler_jobs") == 16
+            and contract.get("maximum_h100_gpu_hours") == 16.0
+            and contract.get("maximum_walltime_per_evaluation") == "01:00:00"
+            and contract.get("proteinmpnn_designs") == 0
+            and contract.get("retry_or_adaptive_top_up_allowed") is False
+        ),
+        "targets_exact": (
+            len(targets) == 8
+            and [row.get("target_id") for row in targets] == _W3C_TARGET_IDS
+            and all(row.get("predictor_evaluations") == 2 for row in targets)
+            and len(packet.get("initial_output_paths", [])) == 77
+            and len(set(packet.get("initial_output_paths", []))) == 77
+        ),
+        "bindings_present": (
+            all(
+                isinstance(bindings.get(name), dict)
+                and _is_sha256(bindings[name].get("sha256"))
+                for name in (
+                    "native_screen_manifest",
+                    "runtime_readiness",
+                    "runtime_lock",
+                    "boltz_runtime_observation",
+                    "af2_runtime_observation",
+                    "producer_module",
+                    "boltz_wrapper",
+                    "af2_wrapper",
+                    "submit_wrapper",
+                )
+            )
+            and _is_sha256(packet.get("runtime_lock_digest_sha256"))
+            and _is_sha256(packet.get("packet_digest_sha256"))
+        ),
+        "zero_authority": (
+            packet.get("approval_recorded") is False
+            and packet.get("no_submit") is True
+            and packet.get("submitted_jobs") == 0
+            and packet.get("predictor_evaluations_executed") == 0
+            and packet.get("h100_gpu_hours_consumed") == 0.0
+            and packet.get("can_submit_now") is False
+            and packet.get("can_run_predictors_now") is False
+        ),
+        "claims_closed": (
+            packet.get("can_claim_native_recoverability") is False
+            and contract.get("authorizes_generator_claim") is False
+            and contract.get("authorizes_trust_gate_claim") is False
+            and contract.get("authorizes_biological_binder_success_claim")
+            is False
+            and contract.get(
+                "authorizes_native_recoverability_claim_before_adjudication"
+            )
+            is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B2 approval packet invariants failed: "
+            + ", ".join(failed)
+        )
+    return {
+        "status": packet["status"],
+        "approval_packet_ready": True,
+        "approval_recorded": False,
+        "required_user_phrase": _W3C_B2_APPROVAL_PHRASE,
+        "target_count": 8,
+        "target_ids": _W3C_TARGET_IDS,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "predictor_evaluations_if_approved": 16,
+        "maximum_h100_gpu_hours": 16.0,
+        "predictor_jobs_submitted": 0,
+        "proteinmpnn_designs": 0,
+        "runtime_lock_digest_sha256": packet[
+            "runtime_lock_digest_sha256"
+        ],
+        "native_manifest_sha256": bindings["native_screen_manifest"][
+            "sha256"
+        ],
+        "runtime_readiness_sha256": bindings["runtime_readiness"]["sha256"],
+        "runtime_lock_sha256": bindings["runtime_lock"]["sha256"],
+        "packet_digest_sha256": packet["packet_digest_sha256"],
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim": False,
+        "checks": checks,
+    }
+
+
+def _w3c_b2_cayuga_validation_summary(
+    evidence: Dict[str, Any],
+) -> Dict[str, Any]:
+    mirror = (
+        evidence.get("mirror")
+        if isinstance(evidence.get("mirror"), dict)
+        else {}
+    )
+    runtime = (
+        evidence.get("runtime_reobservation")
+        if isinstance(evidence.get("runtime_reobservation"), dict)
+        else {}
+    )
+    execution = (
+        evidence.get("execution")
+        if isinstance(evidence.get("execution"), dict)
+        else {}
+    )
+    approval = (
+        evidence.get("approval_boundary")
+        if isinstance(evidence.get("approval_boundary"), dict)
+        else {}
+    )
+    remote = (
+        evidence.get("remote")
+        if isinstance(evidence.get("remote"), dict)
+        else {}
+    )
+    artifact_rows = (
+        mirror.get("artifacts")
+        if isinstance(mirror.get("artifacts"), list)
+        else []
+    )
+    artifact_bindings = {
+        row.get("path"): row.get("sha256")
+        for row in artifact_rows
+        if isinstance(row, dict) and isinstance(row.get("path"), str)
+    }
+    required_paths = {
+        "results/m6d_w3c_b2_prediction_approval_packet.json",
+        "configs/m6d_w3c_b2_runtime_lock.json",
+        "results/m6d_w3c_b2_runtime_readiness.json",
+        "results/m6d_w3c_b2_boltz_runtime_observation.json",
+        "results/m6d_w3c_b2_af2_runtime_observation.json",
+        "hpc/m6d_w3c_b2_submit_with_receipt.sh",
+    }
+    checks = {
+        "identity_exact": (
+            evidence.get("artifact")
+            == "m6d_w3c_b2_cayuga_no_submit_validation"
+            and evidence.get("version") == 1
+            and evidence.get("status")
+            == "w3c_b2_cayuga_no_submit_validation_pass"
+            and evidence.get("validation_passed") is True
+        ),
+        "public_remote_exact": (
+            remote.get("platform") == "Cayuga HPC"
+            and remote.get("host") == "redacted"
+            and remote.get("public_redaction_applied") is True
+        ),
+        "mirror_exact": (
+            mirror.get("method")
+            == "exact_rsync_then_remote_packet_integrity_verification"
+            and mirror.get("remote_packet_integrity_verified") is True
+            and mirror.get("runtime_lock_local_remote_sha256_equal") is True
+            and _is_sha256(mirror.get("packet_internal_digest_sha256"))
+            and _is_sha256(mirror.get("runtime_lock_internal_digest_sha256"))
+            and len(artifact_bindings) == len(artifact_rows)
+            and required_paths.issubset(artifact_bindings)
+            and all(_is_sha256(value) for value in artifact_bindings.values())
+        ),
+        "runtime_no_prediction": (
+            runtime.get("expected_predictors") == 2
+            and runtime.get("observed_predictors") == 2
+            and runtime.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and runtime.get("prediction_executed") is False
+            and runtime.get("gpu_compute_executed") is False
+            and runtime.get("network_fetch_executed") is False
+            and runtime.get("scheduler_command_executed") is False
+        ),
+        "dry_run_exact": (
+            execution.get("mode") == "dry_run"
+            and execution.get("local_exit_code") == 0
+            and execution.get("remote_exit_code") == 0
+            and execution.get("packet_integrity_verified") is True
+            and execution.get("target_count") == 8
+            and execution.get("target_ids") == _W3C_TARGET_IDS
+            and execution.get("initial_output_paths_expected") == 77
+            and execution.get("initial_output_paths_absent") == 77
+            and execution.get("predictor_evaluations_enumerated") == 16
+            and execution.get("scheduler_jobs_submitted") == 0
+            and execution.get("submission_command_executed") is False
+            and execution.get("receipt_created") is False
+            and execution.get("summary_created") is False
+            and execution.get("remote_receipt_absent_after_validation") is True
+        ),
+        "zero_authority": (
+            approval.get("approval_recorded") is False
+            and approval.get("predictor_evaluations_authorized") == 0
+            and approval.get("h100_gpu_hours_authorized") == 0.0
+            and approval.get("proteinmpnn_designs_authorized") == 0
+            and approval.get("native_recoverability_claim_authorized") is False
+            and approval.get("generator_work_authorized") is False
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B2 Cayuga validation invariants failed: "
+            + ", ".join(failed)
+        )
+    return {
+        "status": evidence["status"],
+        "validation_passed": True,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "target_ids": _W3C_TARGET_IDS,
+        "packet_digest_sha256": mirror["packet_internal_digest_sha256"],
+        "runtime_lock_digest_sha256": mirror[
+            "runtime_lock_internal_digest_sha256"
+        ],
+        "approval_packet_sha256": artifact_bindings[
+            "results/m6d_w3c_b2_prediction_approval_packet.json"
+        ],
+        "runtime_lock_sha256": artifact_bindings[
+            "configs/m6d_w3c_b2_runtime_lock.json"
+        ],
+        "runtime_readiness_sha256": artifact_bindings[
+            "results/m6d_w3c_b2_runtime_readiness.json"
+        ],
+        "initial_output_paths_absent": 77,
+        "predictor_evaluations_enumerated": 16,
+        "scheduler_jobs_submitted": 0,
+        "receipt_created": False,
+        "no_submit": True,
+        "can_claim": False,
         "checks": checks,
     }
 
@@ -3661,6 +4148,323 @@ def _apply_w3c_b1_target_msa_completion_state(
             updated.append(path)
 
 
+def _apply_w3c_b2_approval_state(
+    bundle: Dict[str, Dict[str, Any]],
+    fresh_lock: Dict[str, Any],
+    b1_packet: Dict[str, Any],
+    b1_completion: Dict[str, Any],
+    native_manifest: Dict[str, Any],
+    runtime: Dict[str, Any],
+    approval: Dict[str, Any],
+    cayuga_validation: Dict[str, Any],
+    *,
+    runtime_goal_active: bool,
+) -> None:
+    requirement = "W3c_B2_exact_native_dual_predictor_H100_approval"
+    next_action = (
+        "Wait for the exact phrase 'approve W3c-B2 native dual-predictor "
+        "screen on H100'. Generic continuation and earlier approvals do not "
+        "authorize the 16 predictor jobs."
+    )
+    ranked_actions = [
+        "Preserve the eight locked native complexes, target MSAs, decision rule, and two fresh runtime observations.",
+        "Wait for the exact W3c-B2 H100 approval; generic continuation authorizes zero jobs.",
+        "After approval, submit exactly eight Boltz and eight AF2 jobs under the 16 H100-hour cap.",
+        "Collect all sixteen strict-QC records and apply the frozen both-predictors, at-least-6-of-8 rule.",
+        "Stop before ProteinMPNN if native recovery fails; prepare a separate generator experiment only if it passes.",
+    ]
+    successor = {
+        "status": approval["status"],
+        "target_count": 8,
+        "target_ids": approval["target_ids"],
+        "predictor_ids": approval["predictor_ids"],
+        "runtime_identity_ready": True,
+        "runtime_observations_complete": 2,
+        "approval_packet_ready": True,
+        "cayuga_no_submit_validation_passed": True,
+        "approval_recorded": False,
+        "predictor_evaluations_if_approved": 16,
+        "maximum_h100_gpu_hours": 16.0,
+        "predictor_jobs_submitted": 0,
+        "predictor_evaluations_complete": 0,
+        "proteinmpnn_designs": 0,
+        "required_user_phrase": approval["required_user_phrase"],
+        "minimum_targets_passing": native_manifest[
+            "minimum_targets_passing"
+        ],
+        "lrmsd_threshold_angstrom": native_manifest[
+            "lrmsd_threshold_angstrom"
+        ],
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "next_action": next_action,
+    }
+
+    anchor = bundle["anchor"]
+    anchor["goal_mode"] = (
+        "active" if runtime_goal_active else "contract_ready_runtime_goal_inactive"
+    )
+    anchor["objective"] = (
+        "Run the preregistered W3c-B2 native dual-predictor recoverability "
+        "screen only after exact approval, then use its frozen 6/8 decision "
+        "rule to decide whether generator-yield work is scientifically reachable."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3c"] = (
+        "b2_packet_ready_no_predictions_no_native_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_b2_native_manifest": (
+            "configs/m6d_w3c_b2_native_screen_manifest.json"
+        ),
+        "w3c_b2_runtime_readiness": (
+            "results/m6d_w3c_b2_runtime_readiness.json"
+        ),
+        "w3c_b2_runtime_lock": "configs/m6d_w3c_b2_runtime_lock.json",
+        "w3c_b2_prediction_packet_readiness": (
+            "results/m6d_w3c_b2_prediction_packet_readiness.json"
+        ),
+        "w3c_b2_prediction_approval_packet": (
+            "results/m6d_w3c_b2_prediction_approval_packet.json"
+        ),
+        "w3c_b2_cayuga_no_submit_validation": (
+            "results/m6d_w3c_b2_cayuga_no_submit_validation.json"
+        ),
+        "w3c_b2_execution_wrapper": (
+            "hpc/m6d_w3c_b2_submit_with_receipt.sh"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_b2_packet_ready_exact_h100_approval_required",
+        "goal_progress": approval["status"],
+        "runtime_goal_active": runtime_goal_active,
+        "remaining_requirements": [requirement],
+        "w3c": approval["status"],
+        "w3c_fresh_targets_locked": 8,
+        "w3c_target_msa_jobs_completed": 8,
+        "w3c_target_msas_complete": 8,
+        "w3c_b2_native_manifest_locked": True,
+        "w3c_b2_runtime_identity_ready": True,
+        "w3c_b2_runtime_observations_complete": 2,
+        "w3c_b2_packet_prepared": True,
+        "w3c_b2_cayuga_no_submit_validation_passed": True,
+        "w3c_b2_compute_approval_recorded": False,
+        "w3c_b2_predictor_evaluations_if_approved": 16,
+        "w3c_b2_maximum_h100_gpu_hours": 16.0,
+        "w3c_proteinmpnn_designs": 0,
+        "w3c_predictor_jobs_submitted": 0,
+        "w3c_predictor_evaluations": 0,
+        "w3c_h100_gpu_hours": 0.0,
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3c_b2_successor"] = successor
+    anchor["next_resume_steps"] = [
+        "read the W3c-B2 native manifest, runtime readiness, and approval packet",
+        "preserve the 8-target by 2-predictor scope and the 16 H100-hour ceiling",
+        "do not infer approval from continue, go ahead, or any earlier W3c approval",
+        "after the exact phrase, submit only the packet-bound 16 predictor jobs",
+        "adjudicate all records under the frozen both-predictors and 6-of-8 rule",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_status": approval["status"],
+        "w3c_b2_packet_prepared": True,
+        "w3c_b2_runtime_identity_ready": True,
+        "w3c_b2_cayuga_no_submit_validation_passed": True,
+        "w3c_b2_compute_approval_recorded": False,
+        "w3c_predictor_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_b2_packet_ready_exact_approval_wait",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": b1_packet,
+        "w3c_b1_target_msa_completion": b1_completion,
+        "w3c_b2_native_manifest": native_manifest,
+        "w3c_b2_runtime": runtime,
+        "w3c_b2_approval": approval,
+        "w3c_b2_cayuga_no_submit_validation": cayuga_validation,
+        "w3c_b2_successor": successor,
+    })
+    completion.setdefault("claim_boundary", {})["w3c"] = (
+        "native inputs and runtimes are locked and the approval packet is ready; "
+        "zero prediction records exist and no native-recoverability or downstream claim is supported"
+    )
+    completion.setdefault("workstream_status", {})["W3c_validity_first"] = {
+        "complete": False,
+        "scientific_success": None,
+        "status": approval["status"],
+        "w3c_a_complete": True,
+        "w3c_b1_target_msas_complete": 8,
+        "w3c_b2_packet_prepared": True,
+        "w3c_b2_runtime_identity_ready": True,
+        "w3c_b2_cayuga_no_submit_validation_passed": True,
+        "w3c_b2_approval_recorded": False,
+        "w3c_b2_predictor_jobs_submitted": 0,
+        "remaining_requirement": requirement,
+    }
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_b2_packet_ready_approval_wait",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "representation_validity_issue_detected": True,
+        "representation_lock_complete": True,
+        "w3c_b1_target_msa_complete": True,
+        "w3c_b2_packet_prepared": True,
+        "w3c_b2_cayuga_no_submit_validation_passed": True,
+        "claim_scope_corrected": True,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3c"] = (
+        "b2_approval_packet_only_no_prediction_or_scientific_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3c_b2_generic_approval_transfer",
+            "status": "managed",
+            "control": "only the exact W3c-B2 phrase can authorize the 16 jobs",
+        },
+        {
+            "id": "w3c_b2_runtime_drift",
+            "status": "managed",
+            "control": "both predictor identities were freshly reobserved and every job rechecks them",
+        },
+        {
+            "id": "w3c_b2_budget_or_retry_drift",
+            "status": "managed",
+            "control": "the packet caps 16 one-hour H100 jobs and forbids retry or adaptive top-up",
+        },
+        {
+            "id": "w3c_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN and all generator, gate, and biological claims remain closed",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_w3c_b2_native_screen_preregistered_and_hash_bound",
+        "claims": "no_drift_no_prediction_no_native_or_downstream_claim",
+        "execution": "packet_ready_exact_approval_required_zero_h100_jobs",
+        "operational_status": "w3c_b2_cayuga_dry_run_passed_approval_wait",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).setdefault(
+        "W3c_validity_first", {}
+    ).update({
+        "b2_native_manifest": native_manifest,
+        "b2_runtime": runtime,
+        "b2_approval": approval,
+        "b2_cayuga_no_submit_validation": cayuga_validation,
+        "b2_successor": successor,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_b2_packet_ready_awaiting_exact_h100_approval",
+        "w3c_b2_successor": successor,
+        "w3c_b2_cayuga_no_submit_validation": cayuga_validation,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": False,
+        "w3c_b1_submission_performed": True,
+        "w3c_b2_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "b2_packet_ready_no_prediction_no_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_b2_exact_approval_wait"
+            if runtime_goal_active
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "W3c-B2 native dual-predictor exact H100 approval boundary",
+        "w3c_b2_successor": successor,
+        "w3c_b2_cayuga_no_submit_validation": cayuga_validation,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3c_b2_native_manifest": "eight_targets_sixteen_evaluations_locked",
+        "w3c_b2_runtime": "two_of_two_exact_identities_reobserved_no_prediction",
+        "w3c_b2_cayuga_dry_run": "77_outputs_absent_zero_scheduler_jobs",
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "w3c_stage": "W3c-B2_packet_ready_exact_approval_required",
+        "w3c_b2_packet_prepared": True,
+        "w3c_b2_runtime_identity_ready": True,
+        "w3c_b2_runtime_observations_complete": 2,
+        "w3c_b2_compute_approval_recorded": False,
+        "w3c_b2_predictor_evaluations_if_approved": 16,
+        "w3c_b2_maximum_h100_gpu_hours": 16.0,
+        "w3c_predictor_jobs_submitted": 0,
+        "w3c_predictor_jobs_completed": 0,
+        "w3c_proteinmpnn_jobs_submitted": 0,
+        "w3c_h100_gpu_hours": 0.0,
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "b2_packet_ready_no_compute_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_b2_packet_ready_exact_approval_required",
+        "audit_ok": True,
+        "runtime_goal_active": runtime_goal_active,
+        "w3c_fresh_target_lock": fresh_lock,
+        "w3c_b1_target_msa_approval": b1_packet,
+        "w3c_b1_target_msa_completion": b1_completion,
+        "w3c_b2_native_manifest": native_manifest,
+        "w3c_b2_runtime": runtime,
+        "w3c_b2_approval": approval,
+        "w3c_b2_cayuga_no_submit_validation": cayuga_validation,
+        "w3c_b2_successor": successor,
+        "submission_performed": False,
+        "w3c_b1_submission_performed": True,
+        "w3c_b2_submission_performed": False,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "configs/m6d_w3c_b2_native_screen_manifest.json",
+        "configs/m6d_w3c_b2_runtime_lock.json",
+        "results/m6d_w3c_b2_runtime_readiness.json",
+        "results/m6d_w3c_b2_prediction_packet_readiness.json",
+        "results/m6d_w3c_b2_prediction_approval_packet.json",
+        "results/m6d_w3c_b2_cayuga_no_submit_validation.json",
+        "docs/M6D_W3C_B2_NATIVE_SCREEN.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -3692,6 +4496,10 @@ def refresh_bundle(
     w3c_fresh_target_lock: Optional[Dict[str, Any]] = None,
     w3c_b1_target_msa_packet: Optional[Dict[str, Any]] = None,
     w3c_b1_target_msa_completion: Optional[Dict[str, Any]] = None,
+    w3c_b2_native_manifest: Optional[Dict[str, Any]] = None,
+    w3c_b2_runtime_readiness: Optional[Dict[str, Any]] = None,
+    w3c_b2_prediction_approval_packet: Optional[Dict[str, Any]] = None,
+    w3c_b2_cayuga_no_submit_validation: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -3775,6 +4583,40 @@ def refresh_bundle(
         if isinstance(w3c_b1_target_msa_completion, dict)
         else None
     )
+    w3c_b2_inputs = (
+        w3c_b2_native_manifest,
+        w3c_b2_runtime_readiness,
+        w3c_b2_prediction_approval_packet,
+        w3c_b2_cayuga_no_submit_validation,
+    )
+    if any(value is not None for value in w3c_b2_inputs) and not all(
+        isinstance(value, dict) for value in w3c_b2_inputs
+    ):
+        raise ValueError(
+            "W3c-B2 packet state requires manifest, runtime, approval, and Cayuga validation artifacts"
+        )
+    w3c_b2_native = (
+        _w3c_b2_native_manifest_summary(w3c_b2_native_manifest)
+        if isinstance(w3c_b2_native_manifest, dict)
+        else None
+    )
+    w3c_b2_runtime = (
+        _w3c_b2_runtime_summary(w3c_b2_runtime_readiness)
+        if isinstance(w3c_b2_runtime_readiness, dict)
+        else None
+    )
+    w3c_b2_approval = (
+        _w3c_b2_approval_summary(w3c_b2_prediction_approval_packet)
+        if isinstance(w3c_b2_prediction_approval_packet, dict)
+        else None
+    )
+    w3c_b2_cayuga_validation = (
+        _w3c_b2_cayuga_validation_summary(
+            w3c_b2_cayuga_no_submit_validation
+        )
+        if isinstance(w3c_b2_cayuga_no_submit_validation, dict)
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -3801,6 +4643,8 @@ def refresh_bundle(
         raise ValueError("W3c-B1 target-MSA packet requires the W3c-A fresh target lock")
     if w3c_b1_completion is not None and w3c_b1_packet is None:
         raise ValueError("W3c-B1 target-MSA completion requires the validated B1 packet")
+    if w3c_b2_native is not None and w3c_b1_completion is None:
+        raise ValueError("W3c-B2 packet state requires completed W3c-B1 target MSAs")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -3831,6 +4675,40 @@ def refresh_bundle(
             != w3c_b1_packet["precompute_sbatch_sha256"]
         ):
             raise ValueError("W3c-B1 completion bindings do not match the approval packet")
+    if (
+        w3c_b2_native is not None
+        and w3c_b2_runtime is not None
+        and w3c_b2_approval is not None
+        and w3c_b2_cayuga_validation is not None
+    ):
+        if not (
+            w3c_b2_native["target_ids"] == w3c_b2_approval["target_ids"]
+            and w3c_b2_native["predictor_ids"]
+            == w3c_b2_runtime["predictor_ids"]
+            == w3c_b2_approval["predictor_ids"]
+            and w3c_b2_native["runtime_identity_sha256"]
+            == w3c_b2_runtime["runtime_identity_sha256"]
+            and w3c_b2_runtime["native_manifest_sha256"]
+            == w3c_b2_approval["native_manifest_sha256"]
+        ):
+            raise ValueError("W3c-B2 manifest, runtime, and approval bindings disagree")
+        if not (
+            w3c_b2_cayuga_validation["target_ids"]
+            == w3c_b2_approval["target_ids"]
+            and w3c_b2_cayuga_validation["predictor_ids"]
+            == w3c_b2_approval["predictor_ids"]
+            and w3c_b2_cayuga_validation["packet_digest_sha256"]
+            == w3c_b2_approval["packet_digest_sha256"]
+            and w3c_b2_cayuga_validation["runtime_lock_digest_sha256"]
+            == w3c_b2_approval["runtime_lock_digest_sha256"]
+            and w3c_b2_cayuga_validation["runtime_lock_sha256"]
+            == w3c_b2_approval["runtime_lock_sha256"]
+            and w3c_b2_cayuga_validation["runtime_readiness_sha256"]
+            == w3c_b2_approval["runtime_readiness_sha256"]
+        ):
+            raise ValueError(
+                "W3c-B2 Cayuga validation bindings disagree with the approval packet"
+            )
     if w2c_target_msa_complete is not None:
         expected_ids = sorted(w2c.get("target_manifest_ids", []))
         if w2c_target_msa_complete["target_ids"] != expected_ids:
@@ -4742,6 +5620,26 @@ def refresh_bundle(
             w3c_b1_completion,
             runtime_goal_active=runtime_goal_active,
         )
+    if (
+        w3c_b2_native is not None
+        and w3c_b2_runtime is not None
+        and w3c_b2_approval is not None
+        and w3c_b2_cayuga_validation is not None
+        and w3c_b1_completion is not None
+        and w3c_b1_packet is not None
+        and w3c_fresh_lock is not None
+    ):
+        _apply_w3c_b2_approval_state(
+            bundle,
+            w3c_fresh_lock,
+            w3c_b1_packet,
+            w3c_b1_completion,
+            w3c_b2_native,
+            w3c_b2_runtime,
+            w3c_b2_approval,
+            w3c_b2_cayuga_validation,
+            runtime_goal_active=runtime_goal_active,
+        )
     return bundle
 
 
@@ -4759,6 +5657,21 @@ def _w3_packet_status_label(status: Any, completed: bool) -> str:
     return label
 
 
+def _w3c_b1_execution_labels(
+    packet: Dict[str, Any],
+    completion: Dict[str, Any],
+) -> tuple[str, bool, int]:
+    completed = completion.get("target_msas_complete") == 8
+    packet_status = str(packet.get("status") or "not_prepared")
+    if completed:
+        packet_status += " (historical; approval consumed; superseded by completion)"
+    approval_recorded = completed or packet.get("approval_recorded") is True
+    queries_authorized = (
+        8 if completed else int(packet.get("target_msa_queries_authorized", 0))
+    )
+    return packet_status, approval_recorded, queries_authorized
+
+
 def render_markdown(report: Dict[str, Any]) -> str:
     target_msa = report.get("w2c_target_msa_approval") or {}
     target_msa_completion = report.get("w2c_target_msa_completion") or {}
@@ -4774,6 +5687,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
+    w3c_b2 = report.get("w3c_b2_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -4783,6 +5697,11 @@ def render_markdown(report: Dict[str, Any]) -> str:
         w3_mechanism.get("status"),
         bool(w3_completion),
     )
+    (
+        w3c_b1_packet_status,
+        w3c_b1_approval_recorded,
+        w3c_b1_queries_authorized,
+    ) = _w3c_b1_execution_labels(w3c_b1, w3c_b1_completion)
     return "\n".join([
         "# M6d Goal-State Refresh",
         "",
@@ -4819,12 +5738,17 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3c historical strict target-binders: `{w3c.get('n_strict_target_binder_eligible', 'not_audited')}`.",
         f"W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`.",
         f"W3c-A fresh targets locked: `{w3c_lock.get('n_targets', 0)}`.",
-        f"W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`.",
-        f"W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`.",
-        f"W3c-B1 queries authorized: `{w3c_b1.get('target_msa_queries_authorized', 0)}`.",
+        f"W3c-B1 target-MSA packet: `{w3c_b1_packet_status}`.",
+        f"W3c-B1 approval recorded: `{w3c_b1_approval_recorded}`.",
+        f"W3c-B1 queries authorized: `{w3c_b1_queries_authorized}`.",
         f"W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`.",
         f"W3c-B1 target MSAs complete: `{w3c_b1_completion.get('target_msas_complete', 0)}`.",
         f"W3c-B1 A40 GPU-hours: `{w3c_b1_completion.get('gpu_allocation_hours_total', 0.0)}`.",
+        f"W3c-B2: `{w3c_b2.get('status', 'not_prepared')}`.",
+        f"W3c-B2 runtime ready: `{w3c_b2.get('runtime_identity_ready', False)}`.",
+        f"W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`.",
+        f"W3c-B2 approval recorded: `{w3c_b2.get('approval_recorded', False)}`.",
+        f"W3c-B2 predictor jobs submitted: `{w3c_b2.get('predictor_jobs_submitted', 0)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -4853,6 +5777,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
+    w3c_b2 = report.get("w3c_b2_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -4862,6 +5787,11 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         w3_mechanism.get("status"),
         bool(w3_completion),
     )
+    (
+        w3c_b1_packet_status,
+        w3c_b1_approval_recorded,
+        w3c_b1_queries_authorized,
+    ) = _w3c_b1_execution_labels(w3c_b1, w3c_b1_completion)
     return "\n".join([
         "# M6d Goal Completion Audit",
         "",
@@ -4902,12 +5832,17 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3c historical strict target-binders: `{w3c.get('n_strict_target_binder_eligible', 'not_audited')}`",
         f"- W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`",
         f"- W3c-A fresh targets locked: `{w3c_lock.get('n_targets', 0)}`",
-        f"- W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`",
-        f"- W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`",
-        f"- W3c-B1 queries authorized: `{w3c_b1.get('target_msa_queries_authorized', 0)}`",
+        f"- W3c-B1 target-MSA packet: `{w3c_b1_packet_status}`",
+        f"- W3c-B1 approval recorded: `{w3c_b1_approval_recorded}`",
+        f"- W3c-B1 queries authorized: `{w3c_b1_queries_authorized}`",
         f"- W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`",
         f"- W3c-B1 target MSAs complete: `{w3c_b1_completion.get('target_msas_complete', 0)}`",
         f"- W3c-B1 A40 GPU-hours: `{w3c_b1_completion.get('gpu_allocation_hours_total', 0.0)}`",
+        f"- W3c-B2: `{w3c_b2.get('status', 'not_prepared')}`",
+        f"- W3c-B2 runtime ready: `{w3c_b2.get('runtime_identity_ready', False)}`",
+        f"- W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`",
+        f"- W3c-B2 approval recorded: `{w3c_b2.get('approval_recorded', False)}`",
+        f"- W3c-B2 predictor jobs submitted: `{w3c_b2.get('predictor_jobs_submitted', 0)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -4961,10 +5896,16 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
+    w3c_b2 = report.get("w3c_b2_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
     )
+    (
+        w3c_b1_packet_status,
+        w3c_b1_approval_recorded,
+        _,
+    ) = _w3c_b1_execution_labels(w3c_b1, w3c_b1_completion)
     lines = [
         "# M6d Next Science Actions",
         "",
@@ -4987,10 +5928,15 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3c target validity: `{w3c.get('status', 'not_audited')}`.",
         f"W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`.",
         f"W3c fresh targets locked: `{w3c_lock.get('n_targets', 0)}`.",
-        f"W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`.",
-        f"W3c-B1 approval recorded: `{w3c_b1.get('approval_recorded', False)}`.",
+        f"W3c-B1 target-MSA packet: `{w3c_b1_packet_status}`.",
+        f"W3c-B1 approval recorded: `{w3c_b1_approval_recorded}`.",
         f"W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`.",
         f"W3c-B1 target MSAs complete: `{w3c_b1_completion.get('target_msas_complete', 0)}`.",
+        f"W3c-B2: `{w3c_b2.get('status', 'not_prepared')}`.",
+        f"W3c-B2 runtime ready: `{w3c_b2.get('runtime_identity_ready', False)}`.",
+        f"W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`.",
+        f"W3c-B2 approval recorded: `{w3c_b2.get('approval_recorded', False)}`.",
+        f"W3c-B2 predictor jobs submitted: `{w3c_b2.get('predictor_jobs_submitted', 0)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -5014,9 +5960,14 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3c_lock = report.get("w3c_fresh_target_lock") or {}
     w3c_b1 = report.get("w3c_b1_target_msa_approval") or {}
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
+    w3c_b2 = report.get("w3c_b2_successor") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
+    )
+    w3c_b1_packet_status, _, _ = _w3c_b1_execution_labels(
+        w3c_b1,
+        w3c_b1_completion,
     )
     return "\n".join([
         "# M6d Goal-Mode Local Harness Status",
@@ -5057,7 +6008,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3c target validity: `{w3c.get('status', 'not_audited')}`",
         f"- W3c-A fresh target lock: `{w3c_lock.get('status', 'not_locked')}`",
         f"- W3c fresh targets locked: `{hpc.get('w3c_fresh_targets_locked', 'not_started')}`",
-        f"- W3c-B1 target-MSA packet: `{w3c_b1.get('status', 'not_prepared')}`",
+        f"- W3c-B1 target-MSA packet: `{w3c_b1_packet_status}`",
         f"- W3c-B1 approval recorded: `{hpc.get('w3c_target_msa_approval_recorded', False)}`",
         f"- W3c-B1 queries authorized: `{hpc.get('w3c_msa_queries_authorized', 0)}`",
         f"- W3c MSA jobs submitted: `{hpc.get('w3c_msa_jobs_submitted', 0)}`",
@@ -5065,6 +6016,11 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B1 completion: `{w3c_b1_completion.get('status', 'not_complete')}`",
         f"- W3c-B1 A40 GPU-hours: `{w3c_b1_completion.get('gpu_allocation_hours_total', 0.0)}`",
         f"- W3c predictor jobs submitted: `{hpc.get('w3c_predictor_jobs_submitted', 0)}`",
+        f"- W3c-B2: `{w3c_b2.get('status', 'not_prepared')}`",
+        f"- W3c-B2 runtime ready: `{hpc.get('w3c_b2_runtime_identity_ready', False)}`",
+        f"- W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`",
+        f"- W3c-B2 approval recorded: `{hpc.get('w3c_b2_compute_approval_recorded', False)}`",
+        f"- W3c-B2 H100 GPU-hours: `{hpc.get('w3c_h100_gpu_hours', 0.0)}`",
         "",
         "## Next Action",
         "",
@@ -5211,6 +6167,22 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3c-b1-target-msa-completion",
         default="results/m6d_w3c_b1_target_msa_completion.json",
+    )
+    parser.add_argument(
+        "--w3c-b2-native-manifest",
+        default="configs/m6d_w3c_b2_native_screen_manifest.json",
+    )
+    parser.add_argument(
+        "--w3c-b2-runtime-readiness",
+        default="results/m6d_w3c_b2_runtime_readiness.json",
+    )
+    parser.add_argument(
+        "--w3c-b2-prediction-approval-packet",
+        default="results/m6d_w3c_b2_prediction_approval_packet.json",
+    )
+    parser.add_argument(
+        "--w3c-b2-cayuga-no-submit-validation",
+        default="results/m6d_w3c_b2_cayuga_no_submit_validation.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -5377,6 +6349,26 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3c_b1_target_msa_completion)
             if os.path.exists(args.w3c_b1_target_msa_completion)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b2_native_manifest)
+            if os.path.exists(args.w3c_b2_native_manifest)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b2_runtime_readiness)
+            if os.path.exists(args.w3c_b2_runtime_readiness)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b2_prediction_approval_packet)
+            if os.path.exists(args.w3c_b2_prediction_approval_packet)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b2_cayuga_no_submit_validation)
+            if os.path.exists(args.w3c_b2_cayuga_no_submit_validation)
             else None
         ),
         updated_at=args.updated_at,

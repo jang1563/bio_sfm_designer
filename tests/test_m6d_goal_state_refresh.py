@@ -5,6 +5,7 @@ import json
 import os
 import tempfile
 import unittest
+from pathlib import Path
 
 from bio_sfm_designer.experiments.m6d_goal_state_refresh import (
     main,
@@ -1107,6 +1108,10 @@ def _refresh_current_w3b(
     fresh_target_lock=None,
     b1_packet=None,
     b1_completion=None,
+    b2_native_manifest=None,
+    b2_runtime=None,
+    b2_approval=None,
+    b2_cayuga_validation=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1137,11 +1142,25 @@ def _refresh_current_w3b(
         w3c_fresh_target_lock=fresh_target_lock,
         w3c_b1_target_msa_packet=b1_packet,
         w3c_b1_target_msa_completion=b1_completion,
+        w3c_b2_native_manifest=b2_native_manifest,
+        w3c_b2_runtime_readiness=b2_runtime,
+        w3c_b2_prediction_approval_packet=b2_approval,
+        w3c_b2_cayuga_no_submit_validation=b2_cayuga_validation,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
         runtime_goal_active=True,
     )
+
+
+def _current_w3c_b2_artifacts():
+    paths = (
+        "configs/m6d_w3c_b2_native_screen_manifest.json",
+        "results/m6d_w3c_b2_runtime_readiness.json",
+        "results/m6d_w3c_b2_prediction_approval_packet.json",
+        "results/m6d_w3c_b2_cayuga_no_submit_validation.json",
+    )
+    return [json.loads(Path(path).read_text()) for path in paths]
 
 
 class M6DGoalStateRefreshTests(unittest.TestCase):
@@ -1855,6 +1874,123 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 b1_completion=completion,
             )
 
+    def test_w3c_b2_packet_promotes_exact_h100_approval_boundary(self):
+        packet = _w3c_b1_target_msa_packet_artifact()
+        packet.update({
+            "status": "w3c_b1_packet_cayuga_validated_ready_for_exact_approval",
+            "cayuga_no_submit_validation_status": "pass",
+            "cayuga_no_submit_validation_evidence": {
+                "path": "results/m6d_w3c_b1_cayuga_no_submit_validation.json",
+                "sha256": "e" * 64,
+            },
+            "ready_to_request_exact_approval": True,
+        })
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=packet,
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            b2_native_manifest=native,
+            b2_runtime=runtime,
+            b2_approval=approval,
+            b2_cayuga_validation=validation,
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3c_b2_packet_ready_exact_approval_required",
+        )
+        self.assertEqual(
+            bundle["anchor"]["current_status"]["remaining_requirements"],
+            ["W3c_B2_exact_native_dual_predictor_H100_approval"],
+        )
+        self.assertTrue(
+            bundle["anchor"]["current_status"][
+                "w3c_b2_runtime_identity_ready"
+            ]
+        )
+        self.assertFalse(
+            bundle["anchor"]["current_status"][
+                "w3c_b2_compute_approval_recorded"
+            ]
+        )
+        self.assertEqual(
+            bundle["harness"]["hpc_status"]["w3c_predictor_jobs_submitted"],
+            0,
+        )
+        self.assertEqual(
+            bundle["harness"]["hpc_status"]["w3c_h100_gpu_hours"],
+            0.0,
+        )
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertTrue(
+            bundle["report"]["w3c_b2_cayuga_no_submit_validation"][
+                "validation_passed"
+            ]
+        )
+        self.assertFalse(
+            bundle["report"]["w3c_b2_successor"][
+                "can_claim_native_recoverability"
+            ]
+        )
+        self.assertIn(
+            "approve W3c-B2 native dual-predictor screen on H100",
+            bundle["report"]["next_action"],
+        )
+        completion_markdown = render_completion_markdown(bundle["completion"])
+        self.assertIn(
+            "W3c-B1 approval recorded: `True`",
+            completion_markdown,
+        )
+        self.assertIn(
+            "historical; approval consumed; superseded by completion",
+            completion_markdown,
+        )
+
+    def test_w3c_b2_packet_requires_complete_four_artifact_chain(self):
+        native, _, _, _ = _current_w3c_b2_artifacts()
+        with self.assertRaisesRegex(ValueError, "requires manifest, runtime"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b2_native_manifest=native,
+            )
+
+    def test_w3c_b2_packet_fails_closed_on_budget_drift(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        approval["approval_contract"]["maximum_h100_gpu_hours"] = 17.0
+        with self.assertRaisesRegex(ValueError, "approval packet invariants"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b2_native_manifest=native,
+                b2_runtime=runtime,
+                b2_approval=approval,
+                b2_cayuga_validation=validation,
+            )
+
+    def test_w3c_b2_packet_fails_closed_on_cayuga_receipt_drift(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        validation["execution"]["scheduler_jobs_submitted"] = 1
+        with self.assertRaisesRegex(ValueError, "Cayuga validation invariants"):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b2_native_manifest=native,
+                b2_runtime=runtime,
+                b2_approval=approval,
+                b2_cayuga_validation=validation,
+            )
+
     def test_w3_mechanism_packet_fails_closed_on_case_count_drift(self):
         packet = _w3_mechanism_packet()
         packet["rows"].pop()
@@ -1973,6 +2109,18 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "w3c_b1_target_msa_completion": os.path.join(
                     root, "missing-w3c-b1-target-msa-completion.json"
                 ),
+                "w3c_b2_native_manifest": os.path.join(
+                    root, "missing-w3c-b2-native-manifest.json"
+                ),
+                "w3c_b2_runtime_readiness": os.path.join(
+                    root, "missing-w3c-b2-runtime-readiness.json"
+                ),
+                "w3c_b2_prediction_approval_packet": os.path.join(
+                    root, "missing-w3c-b2-prediction-approval-packet.json"
+                ),
+                "w3c_b2_cayuga_no_submit_validation": os.path.join(
+                    root, "missing-w3c-b2-cayuga-no-submit-validation.json"
+                ),
             }
             argv = [
                 "--anchor", paths["anchor"],
@@ -2010,6 +2158,12 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                 "--w3c-b1-target-msa-packet", paths["w3c_b1_target_msa_packet"],
                 "--w3c-b1-target-msa-completion",
                 paths["w3c_b1_target_msa_completion"],
+                "--w3c-b2-native-manifest", paths["w3c_b2_native_manifest"],
+                "--w3c-b2-runtime-readiness", paths["w3c_b2_runtime_readiness"],
+                "--w3c-b2-prediction-approval-packet",
+                paths["w3c_b2_prediction_approval_packet"],
+                "--w3c-b2-cayuga-no-submit-validation",
+                paths["w3c_b2_cayuga_no_submit_validation"],
                 "--updated-at", "2026-07-12T12:00:00+09:00",
                 "--test-command", "pytest",
                 "--test-result", "passed",
@@ -2042,6 +2196,10 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     "w3c_fresh_target_lock",
                     "w3c_b1_target_msa_packet",
                     "w3c_b1_target_msa_completion",
+                    "w3c_b2_native_manifest",
+                    "w3c_b2_runtime_readiness",
+                    "w3c_b2_prediction_approval_packet",
+                    "w3c_b2_cayuga_no_submit_validation",
                 }:
                     continue
                 self.assertTrue(os.path.exists(path), path)

@@ -1,0 +1,86 @@
+{
+  "artifact": "m6d_w3c_b2_runtime_observation",
+  "audit_ok": true,
+  "bindings": {
+    "native_screen_manifest": {
+      "bytes": 23108,
+      "path": "configs/m6d_w3c_b2_native_screen_manifest.json",
+      "sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3"
+    },
+    "protocol": {
+      "bytes": 4903,
+      "path": "configs/m6d_w3c_validity_first_protocol.json",
+      "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+    },
+    "w3b_runtime_transfer_source": {
+      "bytes": 5433,
+      "path": "configs/m6d_w3b_runtime_lock.json",
+      "sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28"
+    },
+    "w3c_b1_completion": {
+      "bytes": 17064,
+      "path": "results/m6d_w3c_b1_target_msa_completion.json",
+      "sha256": "afe91e4aefeec28d485d22a68e1886bf15ad8596637151ba752e63203cbd5644"
+    }
+  },
+  "can_claim_native_recoverability": false,
+  "can_run_predictors": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "Read-only runtime identity reobservation only. This artifact records no prediction, scheduler action, compute approval, or scientific result.",
+  "exact_hash_match": true,
+  "gpu_compute_executed": false,
+  "network_fetch_executed": false,
+  "no_submit": true,
+  "observation_mode": "read_only_hash_and_metadata",
+  "prediction_executed": false,
+  "predictor_id": "boltz2_complex",
+  "raw_cayuga_paths_published": false,
+  "runtime_identity": {
+    "boltz_version": "2.2.1",
+    "cache_checkpoints": [
+      {
+        "active_for_structure_prediction": true,
+        "bytes": 2286561469,
+        "name": "boltz2_conf.ckpt",
+        "role": "structure_confidence_model",
+        "sha256": "090e82ac8c92f5e943fa1b39e7410a44027bea7243c0bbb3caa67a77fc1428e1"
+      },
+      {
+        "active_for_structure_prediction": false,
+        "bytes": 2062139170,
+        "name": "boltz2_aff.ckpt",
+        "role": "required_local_cache_affinity_model",
+        "sha256": "dcc5cd3722b1c9eaa34267e4ae32f55cbbf1963f4c19319381ccfa30fdd2ca9e"
+      }
+    ],
+    "distribution_file_count": 116,
+    "distribution_manifest_sha256": "8e101bde6e7faaff1b143efdd15f29362eef2fd9e099093906ade6fe83dd034a",
+    "execution_parameters": {
+      "accelerator": "gpu",
+      "binder_msa": "single_sequence",
+      "devices": 1,
+      "diffusion_samples": 1,
+      "model": "boltz2",
+      "no_kernels": true,
+      "output_format": "pdb",
+      "prediction_time_network_used": false,
+      "python_no_user_site": true,
+      "recycling_steps": 3,
+      "sampling_steps": 100,
+      "seed": 0,
+      "target_msa": "reuse_hash_locked_target_msa",
+      "templates": false,
+      "use_msa_server": false,
+      "write_full_pae": true
+    },
+    "model": "boltz2",
+    "predictor_id": "boltz2_complex",
+    "runtime_family": "boltz"
+  },
+  "runtime_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+  "scheduler_command_executed": false,
+  "status": "w3c_b2_runtime_reobserved_read_only_no_prediction",
+  "submitted_jobs": 0,
+  "transfer_identity_sha256": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c",
+  "version": 1
+}

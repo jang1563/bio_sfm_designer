@@ -12,18 +12,18 @@
     "w2c": "threshold learning terminally retained zero eligible targets; no later-stage compute",
     "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
     "w3b": "terminal negative fit; no qualifying rule, certification, held-out test, or claim",
-    "w3c": "all eight target MSAs are complete; native recoverability, generator yield, trust-gate performance, and biological success remain untested",
+    "w3c": "native inputs and runtimes are locked and the approval packet is ready; zero prediction records exist and no native-recoverability or downstream claim is supported",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Prepare a separate hash-bound, no-submit W3c-B2 native dual-predictor packet.",
+  "next_action": "Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3c_B2_hash_bound_no_submit_packet_preparation"
+    "W3c_B2_exact_native_dual_predictor_H100_approval"
   ],
-  "status": "goal_active_w3c_b1_complete_b2_packet_preparation_required",
+  "status": "goal_active_w3c_b2_packet_ready_exact_approval_wait",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -1696,6 +1696,246 @@
       "structure_prediction_outputs_consumed": 0
     }
   },
+  "w3c_b2_approval": {
+    "approval_packet_ready": true,
+    "approval_recorded": false,
+    "can_claim": false,
+    "cayuga_submission_allowed": false,
+    "checks": {
+      "approval_identity_exact": true,
+      "bindings_present": true,
+      "claims_closed": true,
+      "identity_exact": true,
+      "scope_exact": true,
+      "targets_exact": true,
+      "zero_authority": true
+    },
+    "maximum_h100_gpu_hours": 16.0,
+    "native_manifest_sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3",
+    "no_submit": true,
+    "packet_digest_sha256": "7694b231b7b3457a478a2be5d2a82fde2d9d5ca5ef4caf85606b52569ce1844d",
+    "predictor_evaluations_if_approved": 16,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "predictor_jobs_submitted": 0,
+    "proteinmpnn_designs": 0,
+    "required_user_phrase": "approve W3c-B2 native dual-predictor screen on H100",
+    "runtime_lock_digest_sha256": "7ed1094e34ee945a555eefb5a827673e916705b7d6f57bba5f1bfa545a9e19f5",
+    "runtime_lock_sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d",
+    "runtime_readiness_sha256": "76a938aff07e3df98080c239e3a28cdc90aa091546d9ddc75c755b21921b0dd4",
+    "status": "w3c_b2_native_prediction_approval_packet_ready_no_submit",
+    "target_count": 8,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
+  "w3c_b2_cayuga_no_submit_validation": {
+    "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
+    "can_claim": false,
+    "checks": {
+      "dry_run_exact": true,
+      "identity_exact": true,
+      "mirror_exact": true,
+      "public_remote_exact": true,
+      "runtime_no_prediction": true,
+      "zero_authority": true
+    },
+    "initial_output_paths_absent": 77,
+    "no_submit": true,
+    "packet_digest_sha256": "7694b231b7b3457a478a2be5d2a82fde2d9d5ca5ef4caf85606b52569ce1844d",
+    "predictor_evaluations_enumerated": 16,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "receipt_created": false,
+    "runtime_lock_digest_sha256": "7ed1094e34ee945a555eefb5a827673e916705b7d6f57bba5f1bfa545a9e19f5",
+    "runtime_lock_sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d",
+    "runtime_readiness_sha256": "76a938aff07e3df98080c239e3a28cdc90aa091546d9ddc75c755b21921b0dd4",
+    "scheduler_jobs_submitted": 0,
+    "status": "w3c_b2_cayuga_no_submit_validation_pass",
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ],
+    "validation_passed": true
+  },
+  "w3c_b2_native_manifest": {
+    "can_claim": false,
+    "checks": {
+      "budget_exact": true,
+      "claims_closed": true,
+      "decision_rule_exact": true,
+      "identity_exact": true,
+      "panel_exact": true,
+      "runtime_transfer_locked": true,
+      "target_bindings_valid": true,
+      "zero_authority": true
+    },
+    "lrmsd_threshold_angstrom": 4.0,
+    "maximum_h100_gpu_hours": 16.0,
+    "minimum_targets_passing": 6,
+    "no_submit": true,
+    "output_paths": [
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/1TE1_BA/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/3QB4_AB/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/5E5M_AB/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/5JSB_AB/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KBR_AC/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6KMQ_AB/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/6SGE_AB/matched_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_inputs",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_input_manifest.json",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/af2_multimer_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/boltz_predictions",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/boltz2_native_record.json",
+      "hpc_outputs/m6d_w3c_b2_native/7B5G_AB/matched_native_record.json"
+    ],
+    "predictor_evaluations": 16,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "proteinmpnn_designs": 0,
+    "runtime_identity_sha256": {
+      "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+      "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+    },
+    "status": "w3c_b2_native_screen_manifest_locked_no_submit",
+    "target_count": 8,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
+  "w3c_b2_runtime": {
+    "can_claim": false,
+    "checks": {
+      "identity_exact": true,
+      "manifest_bound": true,
+      "observations_exact": true,
+      "zero_authority": true,
+      "zero_execution": true
+    },
+    "gpu_compute_executed": false,
+    "native_manifest_sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3",
+    "no_submit": true,
+    "prediction_executed": false,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "runtime_identity_ready": true,
+    "runtime_identity_sha256": {
+      "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+      "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+    },
+    "runtime_observations_complete": 2,
+    "status": "w3c_b2_runtime_reobservation_complete_no_prediction",
+    "submitted_jobs": 0
+  },
+  "w3c_b2_successor": {
+    "approval_packet_ready": true,
+    "approval_recorded": false,
+    "can_claim_biological_binder_success": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "cayuga_no_submit_validation_passed": true,
+    "cayuga_submission_allowed": false,
+    "lrmsd_threshold_angstrom": 4.0,
+    "maximum_h100_gpu_hours": 16.0,
+    "minimum_targets_passing": 6,
+    "next_action": "Wait for the exact phrase 'approve W3c-B2 native dual-predictor screen on H100'. Generic continuation and earlier approvals do not authorize the 16 predictor jobs.",
+    "no_submit": true,
+    "predictor_evaluations_complete": 0,
+    "predictor_evaluations_if_approved": 16,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "predictor_jobs_submitted": 0,
+    "proteinmpnn_designs": 0,
+    "required_user_phrase": "approve W3c-B2 native dual-predictor screen on H100",
+    "runtime_identity_ready": true,
+    "runtime_observations_complete": 2,
+    "status": "w3c_b2_native_prediction_approval_packet_ready_no_submit",
+    "target_count": 8,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
   "w3c_fresh_target_lock": {
     "audit_ok": true,
     "can_claim": false,
@@ -1836,14 +2076,16 @@
     },
     "W3c_validity_first": {
       "complete": false,
-      "remaining_requirement": "W3c_B2_hash_bound_no_submit_packet_preparation",
+      "remaining_requirement": "W3c_B2_exact_native_dual_predictor_H100_approval",
       "scientific_success": null,
-      "status": "target_msa_precompute_complete_8_of_8",
+      "status": "w3c_b2_native_prediction_approval_packet_ready_no_submit",
       "w3c_a_complete": true,
-      "w3c_b1_approval_recorded": true,
-      "w3c_b1_packet_prepared": true,
       "w3c_b1_target_msas_complete": 8,
-      "w3c_b2_packet_prepared": false
+      "w3c_b2_approval_recorded": false,
+      "w3c_b2_cayuga_no_submit_validation_passed": true,
+      "w3c_b2_packet_prepared": true,
+      "w3c_b2_predictor_jobs_submitted": 0,
+      "w3c_b2_runtime_identity_ready": true
     },
     "W4_closed_loop_DBTL": {
       "complete": true,

@@ -1,0 +1,93 @@
+{
+  "artifact": "m6d_w3c_b2_runtime_observation",
+  "audit_ok": true,
+  "bindings": {
+    "native_screen_manifest": {
+      "bytes": 23108,
+      "path": "configs/m6d_w3c_b2_native_screen_manifest.json",
+      "sha256": "ee7eb58398d1fa7484c8790b439c5c61ea5ed3ddc5a5ab8356696384730e15a3"
+    },
+    "protocol": {
+      "bytes": 4903,
+      "path": "configs/m6d_w3c_validity_first_protocol.json",
+      "sha256": "ca4c9984a1fb8fa16d71e01a536417fc320857356af5f9ad721b5a11dda06be3"
+    },
+    "w3b_runtime_transfer_source": {
+      "bytes": 5433,
+      "path": "configs/m6d_w3b_runtime_lock.json",
+      "sha256": "168304e02fcb1373799a49b06bab93e287be505dd4ecac0ecdce91b2e86dee28"
+    },
+    "w3c_b1_completion": {
+      "bytes": 17064,
+      "path": "results/m6d_w3c_b1_target_msa_completion.json",
+      "sha256": "afe91e4aefeec28d485d22a68e1886bf15ad8596637151ba752e63203cbd5644"
+    }
+  },
+  "can_claim_native_recoverability": false,
+  "can_run_predictors": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "Read-only runtime identity reobservation only. This artifact records no prediction, scheduler action, compute approval, or scientific result.",
+  "exact_hash_match": true,
+  "gpu_compute_executed": false,
+  "network_fetch_executed": false,
+  "no_submit": true,
+  "observation_mode": "read_only_hash_and_metadata",
+  "prediction_executed": false,
+  "predictor_id": "af2_multimer_colabfold_v1",
+  "raw_cayuga_paths_published": false,
+  "runtime_identity": {
+    "colabfold_version": "1.6.1",
+    "container_image_uri": "docker://ghcr.io/sokrypton/colabfold:1.6.1-cuda12",
+    "container_sha256": "e26689bc357e8aaf5210ed43499e565d2a440ea6efde5a8a42cbdc4f6a83e566",
+    "execution_parameters": {
+      "binder_msa": "single_sequence",
+      "models": 5,
+      "num_seeds": 1,
+      "prediction_time_network_used": false,
+      "random_seed": 0,
+      "rank_by": "multimer",
+      "recycles": 20,
+      "relax_models": 0,
+      "target_msa": "reuse_same_hash_locked_target_msa",
+      "templates": false
+    },
+    "model_type": "alphafold2_multimer_v3",
+    "predictor_id": "af2_multimer_colabfold_v1",
+    "runtime_family": "colabfold_af2_multimer",
+    "weights": [
+      {
+        "name": "params_model_1_multimer_v3.npz",
+        "sha256": "611da8fc7478928f68de12e8b226260ef1f4ce62bcc29b008572e52f4f212959",
+        "size_bytes": 373043148
+      },
+      {
+        "name": "params_model_2_multimer_v3.npz",
+        "sha256": "51362b0844382ae0f5720c59b81dd13a43eea40fbf9995dd2573bdab88865378",
+        "size_bytes": 373043148
+      },
+      {
+        "name": "params_model_3_multimer_v3.npz",
+        "sha256": "46d9bcad288edc7ad5a6362ee8e5f84307a69712e00e6c36b1ef9daf96ebc9ce",
+        "size_bytes": 373043148
+      },
+      {
+        "name": "params_model_4_multimer_v3.npz",
+        "sha256": "59bdabd2d69c07fe26b37882d544acbd1b9f89f196828f4220da49e0610b572c",
+        "size_bytes": 373043148
+      },
+      {
+        "name": "params_model_5_multimer_v3.npz",
+        "sha256": "917742be5a105d6b80f13f1f13f20459f27ec3fdcd34ea088b359f4502d6177f",
+        "size_bytes": 373043148
+      }
+    ],
+    "weights_manifest_sha256": "2e0fb58c94a04975715d3a97f459224ff37a966d5672b3aeceec4f652935eb64",
+    "weights_verified_from_runtime_receipt": "m6d_w3_mechanism_runtime_receipt"
+  },
+  "runtime_identity_sha256": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+  "scheduler_command_executed": false,
+  "status": "w3c_b2_runtime_reobserved_read_only_no_prediction",
+  "submitted_jobs": 0,
+  "transfer_identity_sha256": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+  "version": 1
+}
