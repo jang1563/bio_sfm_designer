@@ -56,13 +56,18 @@ def test_post_submission_outputs_block_packet_regeneration(monkeypatch):
     assert readiness["submitted_jobs"] == 0
     assert readiness["predictor_evaluations_executed"] == 0
     assert readiness["h100_gpu_hours_consumed"] == 0.0
-    assert readiness["failures"] == [{
-        "kind": "initial_output_already_exists",
-        "paths": [
-            "results/m6d_w3c_b2_submit_receipt.jsonl",
-            "results/m6d_w3c_b2_submit_receipt_summary.json",
-        ],
-    }]
+    assert len(readiness["failures"]) == 1
+    failure = readiness["failures"][0]
+    assert failure["kind"] == "initial_output_already_exists"
+    packet = json.loads(Path(PACKET).read_text())
+    expected_existing = {
+        path for path in packet["initial_output_paths"] if Path(path).exists()
+    }
+    assert set(failure["paths"]) == expected_existing
+    assert {
+        "results/m6d_w3c_b2_submit_receipt.jsonl",
+        "results/m6d_w3c_b2_submit_receipt_summary.json",
+    }.issubset(expected_existing)
 
 
 def test_cayuga_no_submit_evidence_is_public_safe_and_source_bound(monkeypatch):

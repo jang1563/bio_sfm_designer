@@ -2402,6 +2402,187 @@ def _w3c_b2_submission_summary(
     }
 
 
+def _w3c_b2_terminal_stop_summary(
+    report: Dict[str, Any],
+    approval: Dict[str, Any],
+    submission: Dict[str, Any],
+) -> Dict[str, Any]:
+    input_bindings = (
+        report.get("input_bindings")
+        if isinstance(report.get("input_bindings"), dict)
+        else {}
+    )
+    evidence_bindings = (
+        report.get("evidence_bindings")
+        if isinstance(report.get("evidence_bindings"), dict)
+        else {}
+    )
+    boltz_results = (
+        report.get("boltz_results")
+        if isinstance(report.get("boltz_results"), list)
+        else []
+    )
+    observed_success_ids = [
+        row.get("target_id")
+        for row in boltz_results
+        if isinstance(row, dict) and row.get("success") is True
+    ]
+    boltz_bindings_valid = len(boltz_results) == 8 and all(
+        isinstance(row, dict)
+        and row.get("target_id") == target_id
+        and row.get("predictor_id") == "boltz2_complex"
+        and row.get("strict_qc_passed") is True
+        and isinstance(row.get("success"), bool)
+        and isinstance(row.get("interface_pae"), (int, float))
+        and not isinstance(row.get("interface_pae"), bool)
+        and isinstance(row.get("lrmsd_angstrom"), (int, float))
+        and not isinstance(row.get("lrmsd_angstrom"), bool)
+        and isinstance(row.get("record"), dict)
+        and _is_sha256(row["record"].get("sha256"))
+        and isinstance(row.get("runtime_observation"), dict)
+        and _is_sha256(row["runtime_observation"].get("sha256"))
+        and isinstance(row.get("verified_outputs"), dict)
+        and set(row["verified_outputs"]) == {"model", "confidence", "pae"}
+        and all(
+            isinstance(binding, dict) and _is_sha256(binding.get("sha256"))
+            for binding in row["verified_outputs"].values()
+        )
+        for row, target_id in zip(boltz_results, _W3C_TARGET_IDS)
+    )
+    checks = {
+        "identity_exact": (
+            report.get("artifact") == "m6d_w3c_b2_terminal_stop"
+            and report.get("version") == 1
+            and report.get("status")
+            == "w3c_b2_terminal_partial_result_impossibility_stop"
+            and report.get("audit_ok") is True
+        ),
+        "terminal_execution_exact": (
+            report.get("execution_complete") is False
+            and report.get("stage_decision_complete") is True
+            and report.get("scientific_stop_complete") is True
+            and report.get("scheduler_jobs_expected") == 16
+            and report.get("scheduler_jobs_terminal") == 16
+            and report.get("predictor_records_expected") == 16
+            and report.get("predictor_records_observed") == 8
+            and report.get("source_accounting_status")
+            == "w3c_b2_terminal_failure_stop_no_retry"
+            and report.get("source_accounting_audit_ok") is False
+            and report.get("source_accounting_failures_expected") == 8
+        ),
+        "boltz_replay_exact": (
+            boltz_bindings_valid
+            and report.get("boltz_records_replayed") == 8
+            and report.get("boltz_strict_qc_records") == 8
+            and report.get("boltz_successes") == 2
+            and report.get("boltz_success_target_ids")
+            == ["5E5M_AB", "5JSB_AB"]
+            and observed_success_ids == ["5E5M_AB", "5JSB_AB"]
+            and report.get("boltz_failures") == 6
+        ),
+        "af2_failure_exact": (
+            report.get("af2_terminal_failures") == 8
+            and report.get("af2_failures_before_model_inference") == 8
+        ),
+        "frozen_decision_exact": (
+            report.get("stage_pass") is False
+            and report.get("native_recoverability_fully_evaluable") is False
+            and report.get("maximum_possible_dual_predictor_target_passes") == 2
+            and report.get("minimum_targets_passing") == 6
+            and report.get("frozen_pass_mathematically_impossible") is True
+        ),
+        "accounting_exact": (
+            report.get("observed_h100_gpu_seconds") == 1357
+            and report.get("observed_h100_gpu_hours") == 1357 / 3600.0
+            and report.get("within_approved_h100_budget") is True
+        ),
+        "approval_and_receipt_bound": (
+            isinstance(input_bindings.get("approval_packet"), dict)
+            and input_bindings["approval_packet"].get("sha256")
+            == approval.get("approval_packet_sha256")
+            and isinstance(input_bindings.get("submission_receipt"), dict)
+            and input_bindings["submission_receipt"].get("sha256")
+            == submission.get("receipt_sha256")
+            and all(
+                isinstance(input_bindings.get(name), dict)
+                and _is_sha256(input_bindings[name].get("sha256"))
+                for name in (
+                    "submission_summary",
+                    "sacct_snapshot",
+                    "native_screen_manifest",
+                    "runtime_lock",
+                )
+            )
+        ),
+        "evidence_bound": (
+            set(evidence_bindings) == {
+                "boltz_native_records",
+                "af2_failure_evidence",
+            }
+            and all(
+                isinstance(binding, dict) and _is_sha256(binding.get("sha256"))
+                for binding in evidence_bindings.values()
+            )
+        ),
+        "authority_closed": (
+            report.get("af2_recovery_scientifically_required_for_frozen_decision")
+            is False
+            and report.get("af2_recovery_authorized") is False
+            and report.get("retry_or_adaptive_top_up_allowed") is False
+            and report.get("additional_jobs_authorized") == 0
+            and report.get("proteinmpnn_designs") == 0
+            and report.get("no_submit") is True
+        ),
+        "claims_bounded": (
+            report.get("can_claim_native_recoverability_on_locked_panel") is False
+            and report.get("can_claim_generator_yield") is False
+            and report.get("can_claim_trust_gate") is False
+            and report.get("can_claim_biological_binder_success") is False
+            and "not a complete dual-predictor native-recoverability estimate"
+            in str(report.get("claim_boundary") or "")
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3c-B2 terminal-stop invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": report["status"],
+        "audit_ok": True,
+        "execution_complete": False,
+        "stage_decision_complete": True,
+        "scientific_stop_complete": True,
+        "stage_pass": False,
+        "native_recoverability_fully_evaluable": False,
+        "scheduler_jobs_terminal": 16,
+        "predictor_records_observed": 8,
+        "boltz_successes": 2,
+        "boltz_success_target_ids": ["5E5M_AB", "5JSB_AB"],
+        "af2_terminal_failures": 8,
+        "maximum_possible_dual_predictor_target_passes": 2,
+        "minimum_targets_passing": 6,
+        "frozen_pass_mathematically_impossible": True,
+        "observed_h100_gpu_seconds": 1357,
+        "observed_h100_gpu_hours": 1357 / 3600.0,
+        "approval_packet_sha256": approval["approval_packet_sha256"],
+        "submission_receipt_sha256": submission["receipt_sha256"],
+        "boltz_records_sha256": evidence_bindings["boltz_native_records"]["sha256"],
+        "af2_failure_evidence_sha256": evidence_bindings[
+            "af2_failure_evidence"
+        ]["sha256"],
+        "additional_jobs_authorized": 0,
+        "proteinmpnn_designs": 0,
+        "no_submit": True,
+        "can_claim_frozen_stage_pass_impossible": True,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "checks": checks,
+    }
+
+
 def _apply_w3b_fit_ready_state(
     bundle: Dict[str, Dict[str, Any]],
     w3_completion: Dict[str, Any],
@@ -4762,6 +4943,270 @@ def _apply_w3c_b2_submission_state(
             updated.append(path)
 
 
+def _apply_w3c_b2_terminal_stop_state(
+    bundle: Dict[str, Dict[str, Any]],
+    terminal: Dict[str, Any],
+) -> None:
+    requirement = "W3c_successor_representation_predictor_protocol_selection"
+    next_action = (
+        "Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely "
+        "to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction "
+        "unreachable. Preregister a separate successor question that tests representation "
+        "or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work."
+    )
+    ranked_actions = [
+        "Preserve the eight replayed Boltz records, eight AF2 pre-inference failure records, and exact Slurm accounting.",
+        "Close the one-shot W3c-B2 execution with zero retry, adaptive top-up, or AF2 recovery authority.",
+        "Interpret the result only as a frozen-stage impossibility and native-validity warning, not a complete recoverability estimate.",
+        "Preregister a distinct representation/predictor validity successor with its own scope, controls, and stop rule.",
+        "Keep ProteinMPNN, generator-yield, trust-gate, and biological claims blocked until a successor establishes native recovery.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["objective"] = (
+        "Advance the calibrated protein-design project from the terminal W3c-B2 "
+        "validity result: preserve the frozen negative decision, diagnose the "
+        "representation/predictor bottleneck in a separately preregistered successor, "
+        "and keep generator and trust-gate work blocked until native recovery is credible."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3c"] = (
+        "frozen_b2_stage_pass_impossible_only_no_complete_native_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3c_b2_terminal_stop": "results/m6d_w3c_b2_terminal_stop.json",
+        "w3c_b2_boltz_native_records": (
+            "results/m6d_w3c_b2_boltz_native_records.jsonl"
+        ),
+        "w3c_b2_af2_failure_evidence": (
+            "results/m6d_w3c_b2_af2_failure_evidence.jsonl"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3c_b2_terminal_validity_stop_successor_required",
+        "goal_progress": terminal["status"],
+        "remaining_requirements": [requirement],
+        "w3c": terminal["status"],
+        "w3c_b2_compute_approval_recorded": True,
+        "w3c_b2_submission_complete": True,
+        "w3c_b2_scheduler_jobs_terminal": 16,
+        "w3c_predictor_jobs_submitted": 16,
+        "w3c_predictor_jobs_completed": 8,
+        "w3c_b2_jobs_unresolved": 0,
+        "w3c_predictor_evaluations": 8,
+        "w3c_b2_stage_decision_complete": True,
+        "w3c_b2_scientific_stop_complete": True,
+        "w3c_b2_stage_pass": False,
+        "w3c_b2_boltz_successes": 2,
+        "w3c_b2_maximum_dual_predictor_passes": 2,
+        "w3c_b2_minimum_target_passes": 6,
+        "w3c_b2_native_recoverability_fully_evaluable": False,
+        "w3c_h100_gpu_hours": terminal["observed_h100_gpu_hours"],
+        "w3c_cayuga_submission_allowed": False,
+        "w3c_can_claim": False,
+        "w3c_can_claim_frozen_stage_pass_impossible": True,
+        "next_action": next_action,
+    })
+    successor = anchor["w3c_b2_successor"]
+    successor.update({
+        "status": terminal["status"],
+        "approval_recorded": True,
+        "approval_consumed": True,
+        "predictor_jobs_submitted": 16,
+        "scheduler_jobs_terminal": 16,
+        "predictor_evaluations_complete": 8,
+        "jobs_unresolved": 0,
+        "boltz_successes": 2,
+        "af2_terminal_failures": 8,
+        "maximum_possible_dual_predictor_target_passes": 2,
+        "minimum_targets_passing": 6,
+        "stage_pass": False,
+        "native_recoverability_fully_evaluable": False,
+        "scientific_stop_complete": True,
+        "frozen_pass_mathematically_impossible": True,
+        "observed_h100_gpu_hours": terminal["observed_h100_gpu_hours"],
+        "additional_jobs_authorized": 0,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "can_claim_frozen_stage_pass_impossible": True,
+        "can_claim_native_recoverability": False,
+        "next_action": next_action,
+    })
+    anchor["next_resume_steps"] = [
+        "read results/m6d_w3c_b2_terminal_stop.json and preserve its narrow claim boundary",
+        "treat all sixteen receipt-bound jobs as terminal and authorize zero retries or top-ups",
+        "preserve Boltz 2/8 as the mathematical upper bound on dual-predictor target passes",
+        "preregister a distinct representation/predictor validity successor rather than rescuing W3c-B2",
+        "keep ProteinMPNN, generator-yield, trust-gate, and biological claims closed",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "w3c_status": terminal["status"],
+        "w3c_predictor_jobs_submitted": 16,
+        "w3c_scheduler_jobs_terminal": 16,
+        "w3c_predictor_records_completed": 8,
+        "w3c_b2_jobs_unresolved": 0,
+        "w3c_b2_boltz_successes": 2,
+        "w3c_b2_maximum_dual_predictor_passes": 2,
+        "w3c_b2_stage_pass": False,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3c_b2_terminal_validity_stop_successor_selection",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3c_b2_terminal_stop": terminal,
+        "w3c_b2_successor": successor,
+    })
+    completion.setdefault("claim_boundary", {})["w3c"] = (
+        "the frozen W3c-B2 pass is impossible from Boltz 2/8; full dual-predictor "
+        "native recoverability, generator yield, trust-gate performance, and "
+        "biological binder success remain unclaimed"
+    )
+    completion.setdefault("workstream_status", {})["W3c_validity_first"].update({
+        "complete": True,
+        "scientific_success": False,
+        "status": terminal["status"],
+        "w3c_b2_predictor_jobs_submitted": 16,
+        "w3c_b2_scheduler_jobs_terminal": 16,
+        "w3c_b2_predictor_records_completed": 8,
+        "w3c_b2_stage_decision_complete": True,
+        "w3c_b2_stage_pass": False,
+        "w3c_b2_frozen_pass_mathematically_impossible": True,
+        "remaining_requirement": None,
+    })
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3c_b2_terminal_validity_stop",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3c"] = (
+        "terminal_stage_impossibility_only_no_complete_native_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3c_b2_incomplete_af2_panel",
+            "status": "bounded",
+            "control": "AF2 is not fully evaluable, but no possible AF2 outcomes can raise dual-predictor passes above Boltz 2/8",
+        },
+        {
+            "id": "w3c_b2_posthoc_rescue",
+            "status": "managed",
+            "control": "the one-shot panel is closed with zero retry or recovery authority; any successor requires a new protocol",
+        },
+        {
+            "id": "w3c_native_representation_or_predictor_failure",
+            "status": "active_scientific_risk",
+            "control": "select a distinct validity successor before candidate generation",
+        },
+        {
+            "id": "w3c_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN, generator, gate, and biological claims remain blocked",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_frozen_w3c_b2_rule_applied_without_retry_or_threshold_change",
+        "claims": "no_drift_partial_result_claim_narrowly_bounded",
+        "execution": "sixteen_terminal_jobs_eight_boltz_records_eight_preinference_af2_failures",
+        "operational_status": "w3c_b2_terminal_validity_stop_successor_required",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {}).setdefault(
+        "W3c_validity_first", {}
+    ).update({
+        "b2_terminal_stop": terminal,
+        "b2_successor": successor,
+    })
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3c_b2_terminal_validity_stop_successor_protocol_required",
+        "w3c_b2_terminal_stop": terminal,
+        "w3c_b2_successor": successor,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "submission_performed": True,
+        "w3c_b2_submission_performed": True,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3c_validity_first"] = (
+        "b2_frozen_stage_impossible_no_retry_no_downstream_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3c_b2_terminal_successor_selection"
+            if anchor.get("goal_mode") == "active"
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": "post-W3c-B2 representation and predictor validity successor selection",
+        "w3c_b2_terminal_stop": terminal,
+        "w3c_b2_successor": successor,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3c_b2_terminal_accounting": "16_terminal_8_completed_boltz_8_failed_af2",
+        "w3c_b2_boltz_replay": "8_of_8_strict_qc_2_native_successes",
+        "w3c_b2_af2_failure_replay": "8_of_8_preinference_path_resolution_failures",
+        "w3c_b2_frozen_decision": "maximum_2_of_8_below_required_6_of_8",
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "none",
+        "jobs_running": 0,
+        "jobs_unresolved": 0,
+        "w3c_stage": "W3c-B2_terminal_validity_stop_successor_required",
+        "w3c_b2_compute_approval_recorded": True,
+        "w3c_predictor_jobs_submitted": 16,
+        "w3c_scheduler_jobs_terminal": 16,
+        "w3c_predictor_jobs_completed": 8,
+        "w3c_b2_jobs_unresolved": 0,
+        "w3c_h100_gpu_hours": terminal["observed_h100_gpu_hours"],
+        "w3c_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3c"] = (
+        "b2_frozen_stage_impossibility_only_no_complete_native_or_downstream_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3c_b2_terminal_frozen_pass_impossible",
+        "audit_ok": True,
+        "w3c_b2_terminal_stop": terminal,
+        "w3c_b2_successor": successor,
+        "submission_performed": True,
+        "w3c_b2_submission_performed": True,
+        "no_submit": True,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "results/m6d_w3c_b2_sacct.tsv",
+        "results/m6d_w3c_b2_completion_accounting.json",
+        "results/m6d_w3c_b2_boltz_native_records.jsonl",
+        "results/m6d_w3c_b2_af2_failure_evidence.jsonl",
+        "results/m6d_w3c_b2_terminal_stop.json",
+        "docs/M6D_W3C_B2_NATIVE_SCREEN.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -4798,6 +5243,7 @@ def refresh_bundle(
     w3c_b2_prediction_approval_packet: Optional[Dict[str, Any]] = None,
     w3c_b2_cayuga_no_submit_validation: Optional[Dict[str, Any]] = None,
     w3c_b2_submission_receipt_summary: Optional[Dict[str, Any]] = None,
+    w3c_b2_terminal_stop: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -4926,6 +5372,19 @@ def refresh_bundle(
         )
         else None
     )
+    w3c_b2_terminal = (
+        _w3c_b2_terminal_stop_summary(
+            w3c_b2_terminal_stop,
+            w3c_b2_approval,
+            w3c_b2_submission,
+        )
+        if (
+            isinstance(w3c_b2_terminal_stop, dict)
+            and isinstance(w3c_b2_approval, dict)
+            and isinstance(w3c_b2_submission, dict)
+        )
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -4956,6 +5415,8 @@ def refresh_bundle(
         raise ValueError("W3c-B2 packet state requires completed W3c-B1 target MSAs")
     if w3c_b2_submission_receipt_summary is not None and w3c_b2_approval is None:
         raise ValueError("W3c-B2 submission requires the validated approval packet")
+    if w3c_b2_terminal_stop is not None and w3c_b2_submission is None:
+        raise ValueError("W3c-B2 terminal stop requires the validated submission chain")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -5953,6 +6414,8 @@ def refresh_bundle(
         )
         if w3c_b2_submission is not None:
             _apply_w3c_b2_submission_state(bundle, w3c_b2_submission)
+            if w3c_b2_terminal is not None:
+                _apply_w3c_b2_terminal_stop_state(bundle, w3c_b2_terminal)
     return bundle
 
 
@@ -6062,6 +6525,10 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`.",
         f"W3c-B2 approval recorded: `{w3c_b2.get('approval_recorded', False)}`.",
         f"W3c-B2 predictor jobs submitted: `{w3c_b2.get('predictor_jobs_submitted', 0)}`.",
+        f"W3c-B2 scheduler jobs terminal: `{w3c_b2.get('scheduler_jobs_terminal', 0)}`.",
+        f"W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`.",
+        f"W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`.",
+        f"W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -6156,6 +6623,10 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`",
         f"- W3c-B2 approval recorded: `{w3c_b2.get('approval_recorded', False)}`",
         f"- W3c-B2 predictor jobs submitted: `{w3c_b2.get('predictor_jobs_submitted', 0)}`",
+        f"- W3c-B2 scheduler jobs terminal: `{w3c_b2.get('scheduler_jobs_terminal', 0)}`",
+        f"- W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`",
+        f"- W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`",
+        f"- W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -6250,6 +6721,10 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`.",
         f"W3c-B2 approval recorded: `{w3c_b2.get('approval_recorded', False)}`.",
         f"W3c-B2 predictor jobs submitted: `{w3c_b2.get('predictor_jobs_submitted', 0)}`.",
+        f"W3c-B2 scheduler jobs terminal: `{w3c_b2.get('scheduler_jobs_terminal', 0)}`.",
+        f"W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`.",
+        f"W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`.",
+        f"W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`.",
         "",
         "## Ranked Actions",
         "",
@@ -6333,6 +6808,10 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3c-B2 runtime ready: `{hpc.get('w3c_b2_runtime_identity_ready', False)}`",
         f"- W3c-B2 Cayuga no-submit validation: `{w3c_b2.get('cayuga_no_submit_validation_passed', False)}`",
         f"- W3c-B2 approval recorded: `{hpc.get('w3c_b2_compute_approval_recorded', False)}`",
+        f"- W3c-B2 scheduler jobs terminal: `{hpc.get('w3c_scheduler_jobs_terminal', 0)}`",
+        f"- W3c-B2 Boltz successes: `{w3c_b2.get('boltz_successes', 0)}` / `8`",
+        f"- W3c-B2 maximum dual-predictor passes: `{w3c_b2.get('maximum_possible_dual_predictor_target_passes', 'not_adjudicated')}` / `8`",
+        f"- W3c-B2 frozen stage pass: `{w3c_b2.get('stage_pass', 'not_adjudicated')}`",
         f"- W3c-B2 H100 GPU-hours: `{hpc.get('w3c_h100_gpu_hours', 0.0)}`",
         "",
         "## Next Action",
@@ -6500,6 +6979,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3c-b2-submission-receipt-summary",
         default="results/m6d_w3c_b2_submit_receipt_summary.json",
+    )
+    parser.add_argument(
+        "--w3c-b2-terminal-stop",
+        default="results/m6d_w3c_b2_terminal_stop.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -6691,6 +7174,11 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         (
             _load_json(args.w3c_b2_submission_receipt_summary)
             if os.path.exists(args.w3c_b2_submission_receipt_summary)
+            else None
+        ),
+        (
+            _load_json(args.w3c_b2_terminal_stop)
+            if os.path.exists(args.w3c_b2_terminal_stop)
             else None
         ),
         updated_at=args.updated_at,

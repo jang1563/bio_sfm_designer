@@ -15,9 +15,13 @@
 > `1.151111` A40 GPU-hours and all target-MSA integrity checks pass. Each MSA was recovered after Boltz's
 > downstream target-only inference failed, and zero structure outputs were consumed. The exact W3c-B2
 > approval was consumed once; jobs `3171272`-`3171287` are submitted with a complete 16/16 receipt, zero
-> retries, and zero adaptive top-ups. They are awaiting Cayuga H100 execution. Resume from
-> `docs/M6D_W3C_B2_NATIVE_SCREEN.md`; monitor only those receipt-bound jobs, then apply the frozen 6/8
-> rule. Native recoverability remains unknown and no additional prediction or generator work is authorized.
+> retries, and zero adaptive top-ups. All 16 jobs are now terminal: Boltz completed 8/8, while AF2 failed
+> before inference 8/8 on a container-relative input path. CPU replay verifies the eight Boltz records and
+> finds only `2/8` native L-RMSD successes. The both-predictors rule therefore cannot exceed `2/8`, below
+> the frozen `6/8` threshold even under best-case missing AF2 outcomes. Resume from
+> `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and `results/m6d_w3c_b2_terminal_stop.json`. W3c-B2 is closed with
+> no retry or recovery authority; full native recoverability remains unevaluable, and generator work is
+> still blocked pending a separately preregistered representation/predictor successor.
 
 Date: 2026-08-02
 
@@ -62,7 +66,11 @@ Its exact approval was consumed once and eight A40 jobs completed 8/8. The 4,144
 (`1.151111` hours) remain within the 8-hour ceiling, and all eight A3M/report pairs pass integrity replay.
 Observed A3M depth is 96-8,845 records without post-hoc target removal. Boltz's downstream target-only
 inference returned nonzero after each MSA was retrieved; zero structure output was consumed. ProteinMPNN,
-native dual-predictor, gate, and certification work remain unauthorized.
+gate, and certification work remain unauthorized. The later one-shot W3c-B2 panel is terminal: all eight
+Boltz jobs completed and replayed, only two passed native L-RMSD, and all eight AF2 jobs failed before model
+inference on the same container-relative input path. The frozen dual-predictor stage can therefore pass at
+most 2/8 against a required 6/8. This supports a stage-impossibility stop, not a complete native-
+recoverability estimate. No retry or AF2 recovery is authorized under the consumed approval.
 
 ## Active Objective
 
@@ -73,8 +81,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
 - preserve the terminal W3b fit result without threshold rescue, target substitution, or access to its
   certification and held-out-test roles;
 - preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
-  preserve the ready, hash-bound W3c-B2 packet without treating readiness as scientific evidence;
-- require a separate preregistered approval for native dual-predictor recovery before any generator work;
+  preserve the terminal W3c-B2 partial-result stop without retry or post-hoc rescue;
+- preregister a distinct representation/predictor validity successor before any generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -115,11 +123,12 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   eight fresh strict target-binder dimers without predictor labels or generated designs. W3c-B1 completed
   8/8 target MSAs at `1.151111` A40 GPU-hours. All integrity checks pass, but zero structure outputs were
   consumed and zero candidate-level predictions or ProteinMPNN designs were run. Native recoverability and
-  strict target-binder generalization remain unsupported. The W3c-B2 packet freezes 8 targets by 2
-  predictors, at most 16 H100 GPU-hours, and zero ProteinMPNN designs. Its two runtime identities were
-  reobserved without prediction; local and Cayuga dry-runs passed with 77/77 output paths absent and zero
-  scheduler jobs or receipts. Packet readiness is operational evidence only. H100 prediction is not
-  approved.
+  strict target-binder generalization remain unsupported. W3c-B2 executed its frozen 8-target by 2-
+  predictor panel once. All eight Boltz jobs completed and their bound metrics replay; only `5E5M_AB` and
+  `5JSB_AB` pass. All eight AF2 jobs failed before model inference on the same path-resolution defect. Thus
+  complete dual-predictor native recoverability is unavailable, but the frozen stage pass is impossible:
+  conjunction caps the result at `2/8 < 6/8`. The consumed approval authorizes zero retries, recovery jobs,
+  ProteinMPNN designs, or downstream claims.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -215,16 +224,20 @@ from Chai records alone.
 - W3c-B1 completion:
   `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
   `results/m6d_w3c_b1_target_msa_completion.{json,md}`
-- W3c-B2 native-screen submission boundary:
+- W3c-B2 native-screen execution and terminal stop:
   `docs/M6D_W3C_B2_NATIVE_SCREEN.md`, `configs/m6d_w3c_b2_native_screen_manifest.json`,
   `configs/m6d_w3c_b2_runtime_lock.json`, `results/m6d_w3c_b2_runtime_readiness.{json,md}`, and
   `results/m6d_w3c_b2_prediction_packet_readiness.{json,md}`, plus public-safe Cayuga evidence at
   `results/m6d_w3c_b2_cayuga_no_submit_validation.json`; guarded execution is implemented by
   `hpc/m6d_w3c_b2_submit_with_receipt.sh`, with the consumed 16/16 receipt at
   `results/m6d_w3c_b2_submit_receipt.jsonl` and
-  `results/m6d_w3c_b2_submit_receipt_summary.json`; terminal accounting, exact sync, metric replay, and
-  frozen adjudication are implemented by `hpc/m6d_w3c_b2_complete_and_sync.sh` and
-  `src/bio_sfm_designer/experiments/m6d_w3c_b2_completion.py`
+  `results/m6d_w3c_b2_submit_receipt_summary.json`; terminal accounting is in
+  `results/m6d_w3c_b2_completion_accounting.{json,md}` and `results/m6d_w3c_b2_sacct.tsv`. The bounded
+  partial-result evidence is `results/m6d_w3c_b2_boltz_native_records.jsonl`,
+  `results/m6d_w3c_b2_af2_failure_evidence.jsonl`, and
+  `results/m6d_w3c_b2_terminal_stop.{json,md}`. Full completion remains fail-closed in
+  `src/bio_sfm_designer/experiments/m6d_w3c_b2_completion.py`; the no-compute impossibility adjudicator is
+  `src/bio_sfm_designer/experiments/m6d_w3c_b2_terminal_stop.py`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -1339,19 +1352,16 @@ Do not submit new Cayuga jobs from stale readiness or status commands.
 Start with a no-spend status/decision refresh:
 
 ```sh
-jq '{status, audit_ok, runtime_goal_active, w3: .w3_mechanism_completion.status, w3_outcome: .w3_mechanism_completion.joint_outcome, w3b: .w3b_successor.status, recovery: .w3b_fit_recovery.recovery_packet_status, initial_jobs: .w3b_fit_recovery.initial_fit_jobs_submitted, recovery_approval: .w3b_fit_recovery.recovery_approval_recorded, recovery_jobs: .w3b_fit_recovery.recovery_jobs_submitted, no_submit, cayuga_submission_allowed, next_action}' \
+jq '{status, audit_ok, w3c_b2: .w3c_b2_terminal_stop.status, jobs_terminal: .w3c_b2_terminal_stop.scheduler_jobs_terminal, boltz_successes: .w3c_b2_terminal_stop.boltz_successes, maximum_dual_passes: .w3c_b2_terminal_stop.maximum_possible_dual_predictor_target_passes, minimum_required: .w3c_b2_terminal_stop.minimum_targets_passing, stage_pass: .w3c_b2_terminal_stop.stage_pass, no_submit, cayuga_submission_allowed, next_action}' \
   results/m6d_goal_state_refresh_report.json
 
-jq '{status, audit_ok, n_matched_records, fit_status: .fit_outcome.status, primary_rules: .fit_outcome.primary_qualifying_rules, comparator_rules: .fit_outcome.comparator_qualifying_rules, mathematically_impossible: .fit_outcome.mathematically_impossible_under_frozen_constraints, impossibility_target: .fit_outcome.impossibility_target, corrected_worst_case_seconds: .h100_accounting.corrected_worst_case_seconds, observed_h100_allocation_hours, certification_reachable, held_out_test_reachable, certification_jobs_submitted, held_out_test_jobs_submitted, can_claim_w3b}' \
-  results/m6d_w3b_fit_completion.json
-
-jq '{status, audit_ok, n_records, fit_rule_status, rules_frozen, frozen_fit_mathematically_impossible, impossibility_proofs, exhaustive_threshold_diagnostics, certification_reachable, held_out_test_reachable, certification_submission_authorized, can_claim_w3b}' \
-  results/m6d_w3b_fit_diagnostics.json
+jq '{status, audit_ok, execution_complete, stage_decision_complete, scientific_stop_complete, boltz_successes, boltz_success_target_ids, af2_failures_before_model_inference, maximum_possible_dual_predictor_target_passes, minimum_targets_passing, frozen_pass_mathematically_impossible, observed_h100_gpu_hours, additional_jobs_authorized, claim_boundary, next_action}' \
+  results/m6d_w3c_b2_terminal_stop.json
 
 git status --short --branch
 ```
 
-The current science branch is fixed: preserve W3b at its terminal fit stop. Do not retune thresholds,
-substitute targets, use certification or held-out-test roles, or reuse either consumed approval. The next
-research action is a no-submit design decision and preregistration for a scientifically distinct successor;
-any later compute requires a new experiment-specific approval.
+The current science branch is fixed: preserve W3c-B2 at its terminal validity stop. Do not retry AF2,
+substitute targets, change the 6/8 rule, or reuse the consumed approval. The next research action is a
+no-submit design decision and preregistration for a scientifically distinct representation/predictor
+successor; any later compute requires a new experiment-specific approval.

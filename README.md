@@ -92,10 +92,16 @@
 > frozen H100 runtime identities were freshly reobserved without prediction, and local plus Cayuga dry-
 > runs enumerated all 16 evaluations while confirming 77/77 output paths absent before execution. The
 > guarded bridge then submitted jobs `3171272`-`3171287`, exactly 16/16 receipt-bound evaluations with zero
-> retries and zero adaptive top-ups. They are awaiting Cayuga H100 execution. Native recoverability remains
-> unknown; no additional prediction or ProteinMPNN work is authorized. The fail-closed completion bridge
-> at `hpc/m6d_w3c_b2_complete_and_sync.sh` permits exact output retrieval only after 16/16 terminal success,
-> then replays output hashes, interface pAE, L-RMSD, and the frozen 6/8 decision on CPU. See
+> retries and zero adaptive top-ups. All 16 jobs are now terminal: all eight Boltz jobs completed `0:0`,
+> while all eight AF2 jobs failed `1:0` before model inference because ColabFold inside the container could
+> not resolve the packet-relative input directory. Exact accounting consumed 1,357 H100 GPU-seconds
+> (`0.376944` hours). CPU replay verified all eight Boltz records and recomputed their output-bound metrics;
+> only `5E5M_AB` and `5JSB_AB` pass the `L-RMSD < 4.0 A` endpoint. Because every target requires both
+> predictors, the maximum possible dual-predictor result is therefore `2/8`, below the frozen `6/8` pass
+> threshold regardless of the missing AF2 outcomes. W3c-B2 closes at
+> `w3c_b2_terminal_partial_result_impossibility_stop`: full native recoverability is not estimable, but the
+> frozen stage pass is mathematically impossible. No retry, AF2 recovery, additional prediction, or
+> ProteinMPNN work is authorized; any representation/predictor successor requires a new protocol. See
 > [docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md](docs/M6D_W3C_VALIDITY_FIRST_PROTOCOL.md) and
 > [docs/M6D_W3C_A_TARGET_LOCK.md](docs/M6D_W3C_A_TARGET_LOCK.md),
 > [docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md](docs/M6D_W3C_B1_TARGET_MSA_APPROVAL.md), plus
@@ -104,6 +110,7 @@
 > [results/m6d_w3c_b2_prediction_packet_readiness.json](results/m6d_w3c_b2_prediction_packet_readiness.json),
 > [results/m6d_w3c_b2_cayuga_no_submit_validation.json](results/m6d_w3c_b2_cayuga_no_submit_validation.json),
 > [results/m6d_w3c_b2_submit_receipt_summary.json](results/m6d_w3c_b2_submit_receipt_summary.json),
+> [results/m6d_w3c_b2_terminal_stop.json](results/m6d_w3c_b2_terminal_stop.json),
 > [results/m6d_w3c_b1_cayuga_no_submit_validation.json](results/m6d_w3c_b1_cayuga_no_submit_validation.json)
 > and [results/m6d_w3c_target_validity_audit.json](results/m6d_w3c_target_validity_audit.json). The tracked
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit

@@ -1,6 +1,6 @@
 # M6d W3c validity-first failure-localization protocol
 
-Status: `w3c_b2_sixteen_jobs_submitted_awaiting_terminal_outputs`.
+Status: `w3c_b2_terminal_partial_result_impossibility_stop`.
 
 Date: 2026-08-02.
 
@@ -111,16 +111,15 @@ settings, support a binder-success claim, or transfer approval to later compute.
 
 ## Later boundary
 
-No generator-yield, trust-gate, certification, or held-out-test protocol is currently authorized. If W3c-B2
-passes, the next experiment must be separately preregistered and approved. The W3b approvals are consumed
-and cannot transfer.
+No generator-yield, trust-gate, certification, or held-out-test protocol is currently authorized. W3c-B2
+did not pass its frozen rule. Any representation/predictor successor must be separately preregistered and
+approved; the W3b and W3c-B2 approvals are consumed and cannot transfer.
 
 ## Current action
 
-Preserve the completed hash-bound W3c-B2 packet and its consumed one-shot approval. Monitor only jobs
-`3171272`-`3171287`; do not retry, top up, replace targets, or submit ProteinMPNN work. Submission and runtime
-observation are not native-recoverability evidence. Apply the frozen 6/8 rule only after all terminal
-outputs and accounting are preserved.
+Preserve W3c-B2 at its terminal partial-result stop. Do not retry AF2, top up, replace targets, reuse the
+consumed approval, or submit ProteinMPNN work. The next action is a no-submit decision and preregistration
+for a distinct representation/predictor validity successor.
 
 ## Execution update: W3c-A complete
 
@@ -152,7 +151,7 @@ inference returned nonzero. No structure-prediction output was consumed, and can
 evaluations and ProteinMPNN designs remain zero. See
 [M6D_W3C_B1_TARGET_MSA_COMPLETION.md](M6D_W3C_B1_TARGET_MSA_COMPLETION.md).
 
-## Submission update: W3c-B2 jobs queued
+## Terminal update: W3c-B2 frozen pass impossible
 
 The W3c-B2 manifest, dual-predictor runtime lock, producer, adjudicator, approval packet, and append-only
 submission journal are implemented. The frozen scope is eight native complexes evaluated once by Boltz 2
@@ -164,4 +163,11 @@ runs verified the hash-bound packet, enumerated all 16 evaluations, confirmed 77
 and created zero scheduler jobs or receipts. The exact phrase
 `approve W3c-B2 native dual-predictor screen on H100` was subsequently consumed once. The guarded bridge
 submitted jobs `3171272`-`3171287` with a complete 16/16 receipt, retry jobs `0`, and adaptive top-ups `0`.
-They are awaiting shared H100 execution. See [M6D_W3C_B2_NATIVE_SCREEN.md](M6D_W3C_B2_NATIVE_SCREEN.md).
+All eight Boltz jobs completed `0:0`; all eight AF2 jobs failed `1:0` before inference because ColabFold
+could not resolve the packet-relative input directory inside the container. Exact accounting consumed
+1,357 H100 GPU-seconds. CPU replay verifies all eight Boltz records and finds native L-RMSD success only
+for `5E5M_AB` and `5JSB_AB`. Because each target must pass both predictors, no possible missing AF2
+outcomes can raise the stage above `2/8`, below the frozen `6/8` requirement. This proves only frozen-stage
+impossibility; full dual-predictor native recoverability remains unevaluable. See
+[M6D_W3C_B2_NATIVE_SCREEN.md](M6D_W3C_B2_NATIVE_SCREEN.md) and
+`results/m6d_w3c_b2_terminal_stop.json`.

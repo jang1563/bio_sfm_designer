@@ -47,9 +47,14 @@
 > `3118725`-`3118732` completed 8/8 at `1.151111` A40 GPU-hours. All A3M/report integrity checks pass;
 > observed depths range from 96 to 8,845 records without post-hoc target filtering. Boltz downstream target-
 > only inference failed after each MSA was retrieved, so zero structure outputs were consumed. W3c-B1 is
-> complete input preparation. The exact W3c-B2 approval was consumed once; jobs `3171272`-`3171287` are
-> submitted at 16/16 with zero retries or top-ups and are awaiting H100 execution. No additional prediction
-> or generator work is authorized.
+> complete input preparation. The exact W3c-B2 approval was consumed once for jobs `3171272`-`3171287`.
+> All eight Boltz jobs completed; all eight AF2 jobs failed before inference on the same container-relative
+> input-path resolution defect. Exact accounting is 1,357 H100 GPU-seconds. CPU replay verifies all eight
+> Boltz records, but only `5E5M_AB` and `5JSB_AB` pass native L-RMSD. Because the target rule is conjunctive,
+> the maximum possible dual-predictor result is `2/8`, below the frozen `6/8` requirement regardless of AF2.
+> W3c-B2 is a terminal partial negative decision: full native recoverability remains unevaluable, the stage
+> pass is mathematically impossible, and no retry, recovery, additional prediction, or generator work is
+> authorized. The next milestone is a separately preregistered representation/predictor validity successor.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -181,7 +186,9 @@ Jobs `3118725`-`3118732` completed 8/8 at `1.151111` A40 GPU-hours, and every A3
 sequence, depth, hash, sanitization, and no-truncation replay. Boltz's downstream target-only inference
 returned nonzero after MSA retrieval, and zero structure output was consumed. The later exact W3c-B2
 approval was consumed once. Its receipt binds jobs `3171272`-`3171287`, exactly 16 evaluations with zero
-retries or adaptive top-ups; terminal H100 outputs and adjudication remain pending. See
+retries or adaptive top-ups. All jobs are terminal: Boltz completed 8/8 and AF2 failed before inference 8/8.
+The terminal CPU adjudicator replayed every available hash and metric, found Boltz native success at 2/8,
+and proved the frozen dual-predictor 6/8 pass unreachable. See
 `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and `docs/M6D_W3C_B2_NATIVE_SCREEN.md`.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
@@ -721,11 +728,11 @@ Allowed decisions:
    only 3 are strict target-binder systems; do not turn those post-outcome annotations into subgroup claims.
 5. Preserve the completed W3c-A eight-target representation lock; do not replace a target after predictor
    output or reinterpret exact hash exclusion as sequence-family disjointness.
-6. Preserve the completed W3c-B1 evidence and the consumed W3c-B2 approval. Monitor only receipt-bound jobs
-   `3171272`-`3171287`; do not retry, top up, change resources, or substitute targets. After terminal
-   accounting, use `hpc/m6d_w3c_b2_complete_and_sync.sh` to sync only the packet-derived outputs, replay
-   their hashes and structural metrics, and apply the preregistered both-predictors, at-least-6-of-8 rule.
-   ProteinMPNN, generator, gate, and certification work remain unauthorized.
+6. Preserve W3c-B2 at `w3c_b2_terminal_partial_result_impossibility_stop`: 16/16 scheduler jobs are
+   terminal, all eight Boltz records replay, Boltz succeeds 2/8, and all eight AF2 jobs failed before model
+   inference. Do not retry or recover the consumed one-shot panel; AF2 cannot change the `2/8 < 6/8`
+   conjunction bound. Prepare only a no-submit, separately preregistered representation/predictor validity
+   successor. ProteinMPNN, generator, gate, and certification work remain unauthorized.
 7. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

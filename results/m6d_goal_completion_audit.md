@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3c_b2_jobs_submitted_awaiting_adjudication`.
+Status: `goal_active_w3c_b2_terminal_validity_stop_successor_selection`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -43,15 +43,19 @@ Can mark goal complete: `False`.
 - W3c-B1 completion: `target_msa_precompute_complete_8_of_8`
 - W3c-B1 target MSAs complete: `8`
 - W3c-B1 A40 GPU-hours: `1.1511111111111112`
-- W3c-B2: `w3c_b2_all_sixteen_prediction_jobs_submitted`
+- W3c-B2: `w3c_b2_terminal_partial_result_impossibility_stop`
 - W3c-B2 runtime ready: `True`
 - W3c-B2 Cayuga no-submit validation: `True`
 - W3c-B2 approval recorded: `True`
 - W3c-B2 predictor jobs submitted: `16`
-- remaining requirement: `W3c_B2_terminal_outputs_and_frozen_adjudication`
+- W3c-B2 scheduler jobs terminal: `16`
+- W3c-B2 Boltz successes: `2` / `8`
+- W3c-B2 maximum dual-predictor passes: `2` / `8`
+- W3c-B2 frozen stage pass: `False`
+- remaining requirement: `W3c_successor_representation_predictor_protocol_selection`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.
+Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.

@@ -1,22 +1,22 @@
 {
   "active_risks": [
     {
-      "control": "the one-shot receipt is complete at 16/16 and no further submission is allowed",
-      "id": "w3c_b2_approval_replay_or_scope_extension",
+      "control": "AF2 is not fully evaluable, but no possible AF2 outcomes can raise dual-predictor passes above Boltz 2/8",
+      "id": "w3c_b2_incomplete_af2_panel",
+      "status": "bounded"
+    },
+    {
+      "control": "the one-shot panel is closed with zero retry or recovery authority; any successor requires a new protocol",
+      "id": "w3c_b2_posthoc_rescue",
       "status": "managed"
     },
     {
-      "control": "each receipt-bound job reobserves and checks its frozen predictor runtime identity",
-      "id": "w3c_b2_runtime_drift",
-      "status": "managed"
+      "control": "select a distinct validity successor before candidate generation",
+      "id": "w3c_native_representation_or_predictor_failure",
+      "status": "active_scientific_risk"
     },
     {
-      "control": "monitor only receipt-bound jobs and preserve terminal Slurm accounting",
-      "id": "w3c_b2_scheduler_completion",
-      "status": "external_wait"
-    },
-    {
-      "control": "ProteinMPNN and all generator, gate, and biological claims remain closed",
+      "control": "ProteinMPNN, generator, gate, and biological claims remain blocked",
       "id": "w3c_generator_or_gate_prematurity",
       "status": "managed"
     }
@@ -33,7 +33,7 @@
     "w2c": "threshold_learning_terminal_no_viability_claim",
     "w3": "completed_context_dependent_or_unresolved_no_population_claim",
     "w3b": "fit_terminal_negative_certification_unreachable_no_claim",
-    "w3c": "submission_evidence_only_no_native_recoverability_or_downstream_claim",
+    "w3c": "terminal_stage_impossibility_only_no_complete_native_or_downstream_claim",
     "w4": "closed_loop_plumbing_only"
   },
   "claim_scope_corrected": true,
@@ -1700,21 +1700,30 @@
         ]
       },
       "b2_successor": {
+        "additional_jobs_authorized": 0,
+        "af2_terminal_failures": 8,
+        "approval_consumed": true,
         "approval_packet_ready": true,
         "approval_recorded": true,
+        "boltz_successes": 2,
         "can_claim_biological_binder_success": false,
+        "can_claim_frozen_stage_pass_impossible": true,
         "can_claim_generator_yield": false,
         "can_claim_native_recoverability": false,
         "can_claim_trust_gate": false,
         "cayuga_no_submit_validation_passed": true,
         "cayuga_submission_allowed": false,
-        "jobs_unresolved": 16,
+        "frozen_pass_mathematically_impossible": true,
+        "jobs_unresolved": 0,
         "lrmsd_threshold_angstrom": 4.0,
         "maximum_h100_gpu_hours": 16.0,
+        "maximum_possible_dual_predictor_target_passes": 2,
         "minimum_targets_passing": 6,
-        "next_action": "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.",
-        "no_submit": false,
-        "predictor_evaluations_complete": 0,
+        "native_recoverability_fully_evaluable": false,
+        "next_action": "Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.",
+        "no_submit": true,
+        "observed_h100_gpu_hours": 0.37694444444444447,
+        "predictor_evaluations_complete": 8,
         "predictor_evaluations_if_approved": 16,
         "predictor_ids": [
           "boltz2_complex",
@@ -1725,7 +1734,10 @@
         "required_user_phrase": "approve W3c-B2 native dual-predictor screen on H100",
         "runtime_identity_ready": true,
         "runtime_observations_complete": 2,
-        "status": "w3c_b2_all_sixteen_prediction_jobs_submitted",
+        "scheduler_jobs_terminal": 16,
+        "scientific_stop_complete": true,
+        "stage_pass": false,
+        "status": "w3c_b2_terminal_partial_result_impossibility_stop",
         "submission_receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc",
         "target_count": 8,
         "target_ids": [
@@ -1738,6 +1750,52 @@
           "6SGE_AB",
           "7B5G_AB"
         ]
+      },
+      "b2_terminal_stop": {
+        "additional_jobs_authorized": 0,
+        "af2_failure_evidence_sha256": "af498504c156525848bb427c8dd173bd11d0a58e99085c8b6576c8e797fcb4fa",
+        "af2_terminal_failures": 8,
+        "approval_packet_sha256": "8ab2beb9145ab0fed44e172b127ba8cb137a8ef31a99725b33da02fa26c157dd",
+        "audit_ok": true,
+        "boltz_records_sha256": "c94b914a41be1179d69558cab82711f696057149a838ff4344f62332485194c9",
+        "boltz_success_target_ids": [
+          "5E5M_AB",
+          "5JSB_AB"
+        ],
+        "boltz_successes": 2,
+        "can_claim_biological_binder_success": false,
+        "can_claim_frozen_stage_pass_impossible": true,
+        "can_claim_generator_yield": false,
+        "can_claim_native_recoverability": false,
+        "can_claim_trust_gate": false,
+        "checks": {
+          "accounting_exact": true,
+          "af2_failure_exact": true,
+          "approval_and_receipt_bound": true,
+          "authority_closed": true,
+          "boltz_replay_exact": true,
+          "claims_bounded": true,
+          "evidence_bound": true,
+          "frozen_decision_exact": true,
+          "identity_exact": true,
+          "terminal_execution_exact": true
+        },
+        "execution_complete": false,
+        "frozen_pass_mathematically_impossible": true,
+        "maximum_possible_dual_predictor_target_passes": 2,
+        "minimum_targets_passing": 6,
+        "native_recoverability_fully_evaluable": false,
+        "no_submit": true,
+        "observed_h100_gpu_hours": 0.37694444444444447,
+        "observed_h100_gpu_seconds": 1357,
+        "predictor_records_observed": 8,
+        "proteinmpnn_designs": 0,
+        "scheduler_jobs_terminal": 16,
+        "scientific_stop_complete": true,
+        "stage_decision_complete": true,
+        "stage_pass": false,
+        "status": "w3c_b2_terminal_partial_result_impossibility_stop",
+        "submission_receipt_sha256": "8be56fa8f7f5adf308326490568a5de687ea3536a71e807270a5c81694f4d2bc"
       },
       "fresh_target_lock": {
         "audit_ok": true,
@@ -1866,12 +1924,12 @@
     "remaining": 1
   },
   "drift_assessment": {
-    "claims": "no_drift_submission_is_not_scientific_evidence",
-    "execution": "sixteen_receipt_bound_jobs_submitted_zero_retry_zero_top_up",
+    "claims": "no_drift_partial_result_claim_narrowly_bounded",
+    "execution": "sixteen_terminal_jobs_eight_boltz_records_eight_preinference_af2_failures",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-    "operational_status": "w3c_b2_awaiting_terminal_scheduler_outputs",
-    "protocol": "no_drift_w3c_b2_native_screen_preregistered_and_hash_bound"
+    "operational_status": "w3c_b2_terminal_validity_stop_successor_required",
+    "protocol": "no_drift_frozen_w3c_b2_rule_applied_without_retry_or_threshold_change"
   },
   "failures": [],
   "inputs": {
@@ -1887,10 +1945,10 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.",
+  "next_action": "Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.",
   "representation_lock_complete": true,
   "representation_validity_issue_detected": true,
-  "status": "no_major_direction_drift_w3c_b2_submitted_awaiting_results",
+  "status": "no_major_direction_drift_w3c_b2_terminal_validity_stop",
   "w3c_b1_packet_prepared": true,
   "w3c_b1_target_msa_complete": true,
   "w3c_b2_cayuga_no_submit_validation_passed": true,

@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3c_b2_jobs_submitted_awaiting_results`.
+Status: `goal_state_refreshed_w3c_b2_terminal_frozen_pass_impossible`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -39,11 +39,15 @@ W3c-B1 queries authorized: `8`.
 W3c-B1 completion: `target_msa_precompute_complete_8_of_8`.
 W3c-B1 target MSAs complete: `8`.
 W3c-B1 A40 GPU-hours: `1.1511111111111112`.
-W3c-B2: `w3c_b2_all_sixteen_prediction_jobs_submitted`.
+W3c-B2: `w3c_b2_terminal_partial_result_impossibility_stop`.
 W3c-B2 runtime ready: `True`.
 W3c-B2 Cayuga no-submit validation: `True`.
 W3c-B2 approval recorded: `True`.
 W3c-B2 predictor jobs submitted: `16`.
+W3c-B2 scheduler jobs terminal: `16`.
+W3c-B2 Boltz successes: `2` / `8`.
+W3c-B2 maximum dual-predictor passes: `2` / `8`.
+W3c-B2 frozen stage pass: `False`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -87,7 +91,12 @@ Cayuga submission allowed: `False`.
 - `docs/M6D_W3C_B2_NATIVE_SCREEN.md`
 - `results/m6d_w3c_b2_submit_receipt.jsonl`
 - `results/m6d_w3c_b2_submit_receipt_summary.json`
+- `results/m6d_w3c_b2_sacct.tsv`
+- `results/m6d_w3c_b2_completion_accounting.json`
+- `results/m6d_w3c_b2_boltz_native_records.jsonl`
+- `results/m6d_w3c_b2_af2_failure_evidence.jsonl`
+- `results/m6d_w3c_b2_terminal_stop.json`
 
 ## Next Action
 
-Wait for only the sixteen receipt-bound Slurm jobs to reach terminal states, without retry or adaptive top-up. Then preserve Slurm accounting, sync the exact bound outputs, assemble all sixteen strict-QC records, and apply the frozen both-predictors and at-least-6-of-8 rule.
+Preserve W3c-B2 as a terminal validity-first stop and do not rerun AF2 merely to complete the panel: Boltz 2/8 already makes the frozen 6/8 conjunction unreachable. Preregister a separate successor question that tests representation or predictor validity before any ProteinMPNN, generator-yield, or trust-gate work.

@@ -4,13 +4,16 @@ Self-contained context to continue this project in a fresh session (Codex or oth
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
 > **2026-08-02 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
-> `1.151111` A40 GPU-hours. The exact W3c-B2 approval was consumed once on 2026-08-02. The guarded bridge
-> submitted jobs `3171272`-`3171287`, exactly 8 Boltz plus 8 AF2 native evaluations, with a complete 16/16
-> receipt, zero retries, and zero adaptive top-ups. All jobs are waiting in Cayuga's shared H100 queue;
-> native recoverability remains unknown and no additional job or ProteinMPNN work is authorized. The next
-> execution path is the no-submit `hpc/m6d_w3c_b2_complete_and_sync.sh`: it keeps sync locked before 16/16
-> terminal success and then replays hashes, interface pAE, L-RMSD, and the frozen 6/8 rule locally. Start with
-> `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and `results/m6d_goal_state_refresh_report.json`.
+> `1.151111` A40 GPU-hours. The one-shot W3c-B2 panel is now terminal. All eight Boltz jobs completed and
+> all eight AF2 jobs failed before model inference on the same container-relative input-path resolution
+> defect; total observed allocation was 1,357 H100 GPU-seconds (`0.376944` hours). CPU replay verified all
+> eight Boltz output hashes and metrics. Only `5E5M_AB` and `5JSB_AB` pass native L-RMSD, so the frozen
+> conjunction can pass at most `2/8`, below its required `6/8`, regardless of the unavailable AF2 outcomes.
+> W3c-B2 is therefore `w3c_b2_terminal_partial_result_impossibility_stop`. This is not a complete native-
+> recoverability estimate. No retry, AF2 recovery, additional predictor job, ProteinMPNN, generator, or
+> gate work is authorized. Start with `docs/M6D_W3C_B2_NATIVE_SCREEN.md`,
+> `results/m6d_w3c_b2_terminal_stop.json`, and `results/m6d_goal_state_refresh_report.json`. The next work
+> is a no-submit, separately preregistered representation/predictor successor decision.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
@@ -130,17 +133,15 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > targets remain in the panel. Boltz was the bound MSA transport; every MSA was recovered after its later
 > target-only inference returned nonzero. No structure output was consumed. Read
 > `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and
-> `results/m6d_w3c_b1_target_msa_completion.json`. The separate hash-bound W3c-B2 native dual-predictor
-> packet is now ready. It freezes 8 native complexes by 2 predictors, at most 16 one-hour H100 jobs, seed
-> `0`, no templates, no prediction-time network, no retries, and zero ProteinMPNN designs. Both runtime
-> identities were freshly reobserved without prediction. Local and Cayuga dry-runs confirmed all 77 bound
-> output paths absent, enumerated exactly 16 evaluations, and created zero scheduler jobs or receipts.
-> Read `docs/M6D_W3C_B2_NATIVE_SCREEN.md` and
-> `results/m6d_w3c_b2_prediction_packet_readiness.json`. The exact approval was consumed once and jobs
-> `3171272`-`3171287` are receipt-bound at 16/16 with zero retries or top-ups. They are awaiting H100
-> execution; additional submissions remain unauthorized. After terminal accounting, sync only the frozen
-> outputs through `hpc/m6d_w3c_b2_complete_and_sync.sh`; it independently replays output hashes and both
-> structural metrics before applying the both-predictors, at-least-6-of-8 rule before any generator work.
+> `results/m6d_w3c_b1_target_msa_completion.json`. The separate hash-bound W3c-B2 packet froze 8 native
+> complexes by 2 predictors, at most 16 one-hour H100 jobs, seed `0`, no templates, no prediction-time
+> network, no retries, and zero ProteinMPNN designs. Its exact approval was consumed once for jobs
+> `3171272`-`3171287`. All eight Boltz jobs completed; all eight AF2 jobs failed before inference because
+> ColabFold could not resolve the relative input path inside the container. The terminal adjudicator replayed
+> every available output hash and metric and validated all eight AF2 input/runtime/log chains. Boltz passes
+> only `2/8`, which upper-bounds the conjunctive dual-predictor result at `2/8 < 6/8`. Preserve
+> `results/m6d_w3c_b2_terminal_stop.json` as the narrow terminal result. Do not repair or rerun this one-shot
+> panel; any representation/predictor successor needs a separate preregistration and approval.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
@@ -881,7 +882,9 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6d / W2-W2c | complete negative result | multi-target and target-adaptive panels completed; universal and selective-pAE viability claims are not supported |
 | M6e / W3 | complete unresolved result | the frozen 58-case AF2 mechanism panel completed; the joint outcome is `context_dependent_or_unresolved` |
 | M6e successor / W3b | terminal negative at fit | 180 matched Boltz/AF2 rows passed QC, but no frozen rule qualified; `1FSK_LJ` makes the 0.08 risk cap mathematically impossible, so certification/test remain unsubmitted |
-| M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates; no MSA or predictor compute has run |
+| M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates |
+| M6e successor / W3c-B1 | complete input preparation | 8/8 target MSAs pass frozen integrity replay at 1.151111 A40 GPU-hours; no structure output was consumed |
+| M6e successor / W3c-B2 | terminal partial negative decision | 8/8 Boltz records replay, but only 2/8 pass; 8/8 AF2 jobs failed before inference, so the conjunctive stage can reach at most 2/8 against a frozen 6/8 requirement |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
 | M7 | bounded complete | W6-v4 executed one exactly approved Anthropic shadow call inside the actual 50-design W4 complex batch. Transport, schema, independent qualitative review, and no-effect invariants passed; campaign bytes and deterministic control were identical, and no recommendation was applied. This completes only bounded shadow participation in a fail-closed/all-defer campaign. It grants no control authority, does not establish productive routing, and does not restore the rejected historical alpha=0.3 certificate |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |
@@ -972,6 +975,14 @@ via the disagreement route on protein design. This is a coherent, defensible, ho
   `results/m6c_w4_fail_closed_campaign_status.{json,md}`.
 
 ## 8. Next steps (concrete, prioritized)
+
+> **Current 2026-08-02 override:** W3c-B2 has reached its frozen terminal stop. Do not monitor, retry,
+> recover, or complete the AF2 jobs under the consumed approval. First preserve and replay
+> `results/m6d_w3c_b2_terminal_stop.json`; then prepare a no-submit successor decision that asks whether
+> the `2/8` Boltz native recovery is driven by representation/MSA construction or predictor scope. Freeze
+> fresh controls, endpoints, and a stop rule before requesting compute. ProteinMPNN, generator-yield, and
+> trust-gate stages remain downstream and unauthorized. The older numbered execution history below is
+> retained for provenance, not as the current queue.
 
 1. **Freeze the t0.3 protocol branch, then broaden.** The strongest W1 result is now the scoped
    t0.3-only alpha=0.2 certificate. Do not launch another balanced W1 round only by inertia; run more
