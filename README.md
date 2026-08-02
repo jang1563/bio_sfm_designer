@@ -116,16 +116,20 @@
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit
 > reproducible without the ignored local PDB cache.
 
-> **Current W3d status (2026-08-02):** the distinct no-submit successor is now preregistered as an
+> **Current W3d status (2026-08-03):** the distinct no-submit successor is preregistered as an
 > eight-target `2 x 2` native representation-by-predictor diagnostic. It crosses Boltz 2.2.1 and
 > AF2-Multimer v3 with `target_msa_binder_query` and `query_only_both_chains`. All eight W3c-B2 Boltz
 > outcomes are retained as an immutable retrospective baseline; the other 24 cells are frozen
 > prospectively, with no target filtering or baseline rerun. Strong target-paired contrast rules separate
 > representation-specific, predictor-specific, interaction, partial, and unresolved outcomes. Candidate
 > generation remains blocked unless both predictors qualify at `>=6/8` under the same representation.
-> Current authority is zero predictor evaluations, zero H100 GPU-hours, zero ProteinMPNN designs, and zero
-> API calls. The next no-spend step is CPU input production plus corrected absolute-path no-prediction
-> runtime validation. See [docs/M6D_W3D_NATIVE_DIAGNOSTIC.md](docs/M6D_W3D_NATIVE_DIAGNOSTIC.md),
+> CPU production and semantic validation now pass for all 24 prospective predictor-native inputs: eight
+> Boltz query-only YAMLs and sixteen AF2 annotated multimer A3Ms. New no-prediction wrappers bind absolute
+> AF2 input/output paths, the project root, an explicit container working directory, and offline runtime
+> reobservation. Exact Cayuga validation passes for both locked runtime hashes and all 24 path probes, with
+> zero model, GPU, scheduler, or network-fetch execution. Current authority remains zero predictor
+> evaluations, zero H100 GPU-hours, zero ProteinMPNN designs, and zero API calls; no approval packet exists.
+> See [docs/M6D_W3D_NATIVE_DIAGNOSTIC.md](docs/M6D_W3D_NATIVE_DIAGNOSTIC.md),
 > [configs/m6d_w3d_native_diagnostic_protocol.json](configs/m6d_w3d_native_diagnostic_protocol.json), and
 > [results/m6d_w3d_native_diagnostic_readiness.json](results/m6d_w3d_native_diagnostic_readiness.json).
 

@@ -4,7 +4,7 @@
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
   "historical_w2c_submission_performed": true,
-  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
+  "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
   "next_actions_ranked": [
     "Preserve W3c-B2 as terminal and reuse all eight locked Boltz target-MSA outcomes without rerun.",
     "Implement the CPU-only W3d input producer for both frozen evolutionary-information representations.",
@@ -19,18 +19,18 @@
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "4c7d4e675da28c0b9906841185b739c57c449eee1888d9bc1531a73e89a42394",
-    "results/m6d_followup_next_science_actions.md": "52dd0c591086c45735590967dc47d56aed2762bc40c4b2d1d1d3701d2aeb0e47",
-    "results/m6d_goal_completion_audit.json": "c4828d206d9cd575ce6f050a9f6a6856ca61660195304b53548ca89d60d8eaf1",
-    "results/m6d_goal_completion_audit.md": "d0bd9c7fb8219e08a60308c8c17171d6489fe44f1fbcbbdc6895fc25758ac551",
-    "results/m6d_goal_drift_audit.json": "534e12d5bf9cb96b504068b17cd9cddc22c69755ef0acab6cd275ced077acd96",
-    "results/m6d_goal_drift_audit.md": "d7a7a89bf35a764714654bcc27806245b43be366fd5ee30ea5a2940afc91ded5",
-    "results/m6d_goal_mode_current_anchor.json": "bf77e7364a6e973c2f6cf86eed5263acbb97ddea69d86a0dddfdc8577aacd1e0",
-    "results/m6d_goal_mode_local_harness_status.json": "944bbc4c3a75a06ceda210addf209c35c7a1c9a66a15da2ba191280f293ac7be",
-    "results/m6d_goal_mode_local_harness_status.md": "0ece7e721645005bd0ffd72db41f9c671559aec078a6597ccf6b67ff7cdcd026"
+    "results/m6d_followup_next_science_actions.json": "49af0930e0bcd061a811ca0d2f200dace04a6bff04cd246ce89fb3cb8db2dcb7",
+    "results/m6d_followup_next_science_actions.md": "81b21c43e6888473f945713b4ab3884a53623e5695c2f9199cbcd5efebac1ca9",
+    "results/m6d_goal_completion_audit.json": "c6e97d3e3ab8d69201a82717783d54fcd024719f84ffa9095f4f338f73282f9d",
+    "results/m6d_goal_completion_audit.md": "1608d9982c2fcda67f1a403c1768f52653ebd27b75a0dd473bea026d0d66c9ad",
+    "results/m6d_goal_drift_audit.json": "85d4b670e4a3bd3b4016830f19ec996d9781280024c06647ad42766c7d4e5a31",
+    "results/m6d_goal_drift_audit.md": "7c4a9cfeca862b39fc3847cf32e5d0380b69dfd08f5bb5be6d99ec25f0b81a62",
+    "results/m6d_goal_mode_current_anchor.json": "9a0a6b6c6c428c3324ef35dbb86649d606a11e021206e56d760b0befad9d1b58",
+    "results/m6d_goal_mode_local_harness_status.json": "b1b8b882ebdf66ad13a850b3ed3da5c3779b3b362b736f55a67d84b4b37b1d8a",
+    "results/m6d_goal_mode_local_harness_status.md": "4d619f54def93937ba338aac7a229f313480824f90213762cd1e4d5dee9444c2"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w3d_protocol_locked_no_submit",
+  "status": "goal_state_refreshed_w3d_runtime_validated_no_submit",
   "submission_performed": true,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
@@ -79,11 +79,19 @@
     "results/m6d_w3c_b2_terminal_stop.json",
     "configs/m6d_w3d_native_diagnostic_protocol.json",
     "configs/m6d_w3d_native_diagnostic_manifest.json",
+    "configs/m6d_w3d_prospective_input_manifest.json",
     "results/m6d_w3d_native_diagnostic_readiness.json",
     "results/m6d_w3d_native_diagnostic_readiness.md",
+    "results/m6d_w3d_input_runtime_readiness.json",
+    "results/m6d_w3d_input_runtime_readiness.md",
+    "results/m6d_w3d_runtime_validation_receipt.json",
+    "src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py",
+    "hpc/validate_w3d_runtime_no_prediction.sh",
+    "hpc/validate_w3d_boltz_runtime_no_prediction.sh",
+    "hpc/validate_w3d_af2_runtime_no_prediction.sh",
     "docs/M6D_W3D_NATIVE_DIAGNOSTIC.md"
   ],
-  "updated_at": "2026-08-03T00:06:03+02:00",
+  "updated_at": "2026-08-03T00:59:56+02:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -1798,12 +1806,14 @@
     "factorial_cells": 32,
     "fully_prospective_four_cell_claim_allowed": false,
     "h100_gpu_hours_authorized": 0.0,
-    "input_producer_implemented": false,
+    "input_producer_implemented": true,
     "manifest_sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
+    "materialized_input_files": 24,
+    "materialized_input_hashes_verified": 24,
     "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
-    "new_runtime_wrappers_implemented": false,
-    "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
-    "no_prediction_runtime_validation_complete": false,
+    "new_runtime_wrappers_implemented": true,
+    "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
+    "no_prediction_runtime_validation_complete": true,
     "no_submit": true,
     "outcome_adjudicator_implemented": true,
     "posthoc_disclosure_complete": true,
@@ -1821,6 +1831,7 @@
       "target_msa_binder_query",
       "query_only_both_chains"
     ],
+    "representation_semantics_verified": 24,
     "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
     "target_ids": [
       "1TE1_BA",
@@ -1831,7 +1842,8 @@
       "6KMQ_AB",
       "6SGE_AB",
       "7B5G_AB"
-    ]
+    ],
+    "wrapper_static_no_prediction_validation_complete": true
   },
   "w3d_submission_performed": false
 }

@@ -16,6 +16,8 @@ PROTOCOL_PATH = "configs/m6d_w3d_native_diagnostic_protocol.json"
 MANIFEST_PATH = "configs/m6d_w3d_native_diagnostic_manifest.json"
 READINESS_PATH = "results/m6d_w3d_native_diagnostic_readiness.json"
 READINESS_MD_PATH = "results/m6d_w3d_native_diagnostic_readiness.md"
+INPUT_MANIFEST_PATH = "configs/m6d_w3d_prospective_input_manifest.json"
+INPUT_RUNTIME_READINESS_PATH = "results/m6d_w3d_input_runtime_readiness.json"
 
 TARGET_IDS = [
     "1TE1_BA",
@@ -1016,6 +1018,22 @@ def build_readiness(
         all(row.get("prediction_authorized") is False for row in cells),
         "W3d manifest unexpectedly authorizes prediction",
     )
+    from bio_sfm_designer.experiments import m6d_w3d_input_runtime
+
+    input_manifest = _load_object(INPUT_MANIFEST_PATH)
+    input_runtime_readiness = _load_object(INPUT_RUNTIME_READINESS_PATH)
+    m6d_w3d_input_runtime.validate_input_manifest(
+        input_manifest,
+        input_manifest_path=INPUT_MANIFEST_PATH,
+        require_files=False,
+    )
+    m6d_w3d_input_runtime.validate_public_readiness(
+        input_runtime_readiness,
+        input_manifest_path=INPUT_MANIFEST_PATH,
+    )
+    runtime_validation_complete = input_runtime_readiness[
+        "no_prediction_runtime_validation_complete"
+    ]
     return {
         "artifact": "m6d_w3d_native_diagnostic_readiness",
         "version": 1,
@@ -1039,9 +1057,20 @@ def build_readiness(
         "complete_case_adjudication_required": True,
         "outcome_adjudicator_implemented": True,
         "cpu_only_preparation_complete": True,
-        "input_producer_implemented": False,
-        "new_runtime_wrappers_implemented": False,
-        "no_prediction_runtime_validation_complete": False,
+        "input_producer_implemented": True,
+        "materialized_input_files": 24,
+        "materialized_input_hashes_verified": 24,
+        "representation_semantics_verified": 24,
+        "new_runtime_wrappers_implemented": True,
+        "wrapper_static_no_prediction_validation_complete": True,
+        "af2_absolute_path_contract_implemented": True,
+        "af2_explicit_container_working_directory_implemented": True,
+        "no_prediction_runtime_validation_complete": runtime_validation_complete,
+        "input_manifest_binding": _binding(INPUT_MANIFEST_PATH),
+        "input_runtime_readiness_binding": _binding(
+            INPUT_RUNTIME_READINESS_PATH
+        ),
+        "input_runtime_preparation_status": input_runtime_readiness["status"],
         "approval_packet_prepared": False,
         "execution_ready": False,
         "prediction_executed": False,
@@ -1066,7 +1095,8 @@ def build_readiness(
         "manifest_binding": _binding(manifest_path),
         "source_bindings": manifest["source_bindings"],
         "claim_boundary": protocol["claim_boundary"]["maximum_current_claim"],
-        "next_action": protocol["next_action"],
+        "protocol_next_action": protocol["next_action"],
+        "next_action": input_runtime_readiness["next_action"],
     }
 
 
@@ -1089,6 +1119,10 @@ def render_markdown(readiness: Mapping[str, Any], manifest: Mapping[str, Any]) -
         f"- total factorial cells: `{readiness['factorial_cells']}`",
         f"- immutable baseline cells: `{readiness['completed_locked_baseline_cells']}`",
         f"- prospective cells: `{readiness['prospective_cells']}`",
+        f"- materialized inputs verified: `{readiness['materialized_input_hashes_verified']}` / `24`",
+        f"- representation semantics verified: `{readiness['representation_semantics_verified']}` / `24`",
+        f"- no-prediction wrappers implemented: `{readiness['new_runtime_wrappers_implemented']}`",
+        f"- exact Cayuga runtime validation complete: `{readiness['no_prediction_runtime_validation_complete']}`",
         f"- currently authorized predictor evaluations: `{readiness['predictor_evaluations_authorized']}`",
         f"- currently authorized H100 GPU-hours: `{readiness['h100_gpu_hours_authorized']}`",
         "",

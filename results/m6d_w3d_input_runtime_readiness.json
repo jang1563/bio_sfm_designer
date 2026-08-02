@@ -1,0 +1,61 @@
+{
+  "af2_absolute_path_contract_implemented": true,
+  "af2_explicit_container_working_directory_implemented": true,
+  "api_calls": 0,
+  "approval_packet_prepared": false,
+  "artifact": "m6d_w3d_input_runtime_readiness",
+  "audit_ok": true,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "All 24 prospective inputs and exact no-prediction runtime/path contracts are validated. No structure prediction, compute approval, or scientific outcome is recorded.",
+  "exact_cayuga_runtime_validation_complete": true,
+  "execution_ready": false,
+  "gpu_compute_executed": false,
+  "h100_gpu_hours_authorized": 0.0,
+  "input_manifest_binding": {
+    "bytes": 52582,
+    "path": "configs/m6d_w3d_prospective_input_manifest.json",
+    "sha256": "da6553e2ccfe5ddc508e73bed7f86d3a68e4247870d1a59590a458443082af40"
+  },
+  "input_producer_implemented": true,
+  "materialized_input_files": 24,
+  "materialized_input_hashes_verified": 24,
+  "network_fetch_executed": false,
+  "new_runtime_wrappers_implemented": true,
+  "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
+  "no_prediction_runtime_validation_complete": true,
+  "no_submit": true,
+  "prediction_executed": false,
+  "predictor_evaluations_authorized": 0,
+  "prospective_af2_cells": 16,
+  "prospective_boltz_cells": 8,
+  "proteinmpnn_designs": 0,
+  "repo_only_replay": "Tracked manifests, wrapper hashes, and readiness replay without ignored raw inputs. Re-running semantic file validation requires the materialized input bundle.",
+  "representation_semantics_verified": 24,
+  "runtime_receipt_binding": {
+    "bytes": 14089,
+    "path": "results/m6d_w3d_runtime_validation_receipt.json",
+    "sha256": "bd66769ab1729732953e3e598be5f25b20111146d58000742de99b8b76fd48a9"
+  },
+  "scheduler_command_executed": false,
+  "status": "w3d_input_and_runtime_validation_complete_no_submit",
+  "target_msa_queries_authorized": 0,
+  "version": 1,
+  "wrapper_bindings": {
+    "af2_multimer_colabfold_v1": {
+      "bytes": 4420,
+      "path": "hpc/validate_w3d_af2_runtime_no_prediction.sh",
+      "sha256": "f667a2b0c340de5706ce3a6a64343207d483c381180dcb2d1879ae2cfd2d4bca"
+    },
+    "boltz2_complex": {
+      "bytes": 2822,
+      "path": "hpc/validate_w3d_boltz_runtime_no_prediction.sh",
+      "sha256": "6419d0ecc43f731100504086607f6f80f3617ade6069060bc7dbb663e387a2a5"
+    },
+    "orchestrator": {
+      "bytes": 2441,
+      "path": "hpc/validate_w3d_runtime_no_prediction.sh",
+      "sha256": "c2775ee4450c9d562d345a67d11fc760ca8e976b5d90da4246f6a572e1006a71"
+    }
+  },
+  "wrapper_static_no_prediction_validation_complete": true
+}

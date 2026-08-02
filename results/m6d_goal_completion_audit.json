@@ -18,13 +18,13 @@
   },
   "complete": false,
   "failures": [],
-  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
+  "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3d_CPU_input_and_runtime_no_prediction_validation"
+    "W3d_hash_bound_compute_approval_packet"
   ],
-  "status": "goal_active_w3d_protocol_locked_input_runtime_validation_required",
+  "status": "goal_active_w3d_runtime_validated_approval_packet_required",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -2182,12 +2182,14 @@
     "factorial_cells": 32,
     "fully_prospective_four_cell_claim_allowed": false,
     "h100_gpu_hours_authorized": 0.0,
-    "input_producer_implemented": false,
+    "input_producer_implemented": true,
     "manifest_sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
+    "materialized_input_files": 24,
+    "materialized_input_hashes_verified": 24,
     "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
-    "new_runtime_wrappers_implemented": false,
-    "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
-    "no_prediction_runtime_validation_complete": false,
+    "new_runtime_wrappers_implemented": true,
+    "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
+    "no_prediction_runtime_validation_complete": true,
     "no_submit": true,
     "outcome_adjudicator_implemented": true,
     "posthoc_disclosure_complete": true,
@@ -2205,6 +2207,7 @@
       "target_msa_binder_query",
       "query_only_both_chains"
     ],
+    "representation_semantics_verified": 24,
     "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
     "target_ids": [
       "1TE1_BA",
@@ -2215,7 +2218,8 @@
       "6KMQ_AB",
       "6SGE_AB",
       "7B5G_AB"
-    ]
+    ],
+    "wrapper_static_no_prediction_validation_complete": true
   },
   "workstream_status": {
     "W1_M6c_scale_up": {
@@ -2267,8 +2271,10 @@
       "complete": false,
       "cpu_only_preparation_complete": true,
       "execution_ready": false,
+      "input_producer_implemented": true,
+      "no_prediction_runtime_validation_complete": true,
       "protocol_locked": true,
-      "remaining_requirement": "W3d_CPU_input_and_runtime_no_prediction_validation",
+      "remaining_requirement": "W3d_hash_bound_compute_approval_packet",
       "scientific_success": false,
       "status": "w3d_native_representation_predictor_protocol_locked_no_submit"
     },

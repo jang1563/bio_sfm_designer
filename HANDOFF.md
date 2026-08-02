@@ -3,7 +3,7 @@
 Self-contained context to continue this project in a fresh session (Codex or otherwise) with **no prior
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
-> **2026-08-02 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
+> **2026-08-03 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
 > `1.151111` A40 GPU-hours. The one-shot W3c-B2 panel is now terminal. All eight Boltz jobs completed and
 > all eight AF2 jobs failed before model inference on the same container-relative input-path resolution
 > defect; total observed allocation was 1,357 H100 GPU-seconds (`0.376944` hours). CPU replay verified all
@@ -15,9 +15,14 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `results/m6d_w3c_b2_terminal_stop.json`, and `results/m6d_goal_state_refresh_report.json`. The distinct
 > W3d successor is now locked as a no-submit 2 x 2 representation-by-predictor diagnostic. It retains all
 > eight Boltz outcomes as an immutable retrospective baseline and freezes 24 prospective cells across
-> Boltz/AF2 and target-MSA/query-only representations. No prediction is authorized. Resume from
-> `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and `results/m6d_w3d_native_diagnostic_readiness.json`; next build the
-> CPU input producer and corrected no-prediction runtime wrappers, then stop before an approval packet.
+> Boltz/AF2 and target-MSA/query-only representations. The deterministic CPU producer has now materialized
+> and semantically verified all 24 prospective inputs. Corrected Boltz/AF2 no-prediction wrappers are
+> implemented and validated on Cayuga, including exact runtime-hash replay, 24/24 absolute path probes,
+> absolute container-visible AF2 paths, and an explicit project-root working directory. The redacted
+> receipt records zero model, GPU, scheduler, and network-fetch execution. No prediction is authorized. Resume from
+> `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`, `configs/m6d_w3d_prospective_input_manifest.json`, and
+> `results/m6d_w3d_input_runtime_readiness.json`; next prepare a separate hash-bound, no-submit approval
+> packet for review, but do not submit predictor work without a new explicit approval.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
@@ -148,8 +153,10 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > panel. The separate W3d successor is preregistered in
 > `configs/m6d_w3d_native_diagnostic_protocol.json`: a 32-cell factorial with 8 immutable baseline cells
 > and 24 prospective cells. Current predictor, H100, ProteinMPNN, MSA-query, and API authority is zero.
-> Read `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; implement only its CPU inputs and no-prediction runtime
-> validation next.
+> Its CPU producer has materialized and verified 24/24 prospective inputs; the new offline wrappers pass
+> exact Cayuga runtime-hash and absolute-path validation with zero model/GPU/scheduler/network execution.
+> Read `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; prepare only a separate hash-bound no-submit approval packet
+> next. Predictor submission still requires a new explicit approval.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 

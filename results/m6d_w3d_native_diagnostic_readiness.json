@@ -1,5 +1,7 @@
 {
   "adaptive_top_ups_authorized": 0,
+  "af2_absolute_path_contract_implemented": true,
+  "af2_explicit_container_working_directory_implemented": true,
   "all_predecessor_targets_retained": true,
   "api_calls": 0,
   "approval_packet_prepared": false,
@@ -20,16 +22,29 @@
   "execution_ready": false,
   "factorial_cells": 32,
   "h100_gpu_hours_authorized": 0.0,
-  "input_producer_implemented": false,
+  "input_manifest_binding": {
+    "bytes": 52582,
+    "path": "configs/m6d_w3d_prospective_input_manifest.json",
+    "sha256": "da6553e2ccfe5ddc508e73bed7f86d3a68e4247870d1a59590a458443082af40"
+  },
+  "input_producer_implemented": true,
+  "input_runtime_preparation_status": "w3d_input_and_runtime_validation_complete_no_submit",
+  "input_runtime_readiness_binding": {
+    "bytes": 2679,
+    "path": "results/m6d_w3d_input_runtime_readiness.json",
+    "sha256": "76e5770307aa410cca285fc5fc8ce7206eb3f376149a3ff4f12a3af80bfec1c5"
+  },
   "manifest_binding": {
     "bytes": 37401,
     "path": "configs/m6d_w3d_native_diagnostic_manifest.json",
     "sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719"
   },
+  "materialized_input_files": 24,
+  "materialized_input_hashes_verified": 24,
   "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
-  "new_runtime_wrappers_implemented": false,
-  "next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
-  "no_prediction_runtime_validation_complete": false,
+  "new_runtime_wrappers_implemented": true,
+  "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
+  "no_prediction_runtime_validation_complete": true,
   "no_submit": true,
   "old_w3c_b2_job_recovery_authorized": false,
   "outcome_adjudicator_implemented": true,
@@ -50,10 +65,12 @@
     "sha256": "7034378adbd71388accab3c5c6771a5cd7ae939eb2dc66245c86a287cf7f66d9"
   },
   "protocol_locked": true,
+  "protocol_next_action": "Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.",
   "representation_ids": [
     "target_msa_binder_query",
     "query_only_both_chains"
   ],
+  "representation_semantics_verified": 24,
   "retries_authorized": 0,
   "source_bindings": {
     "w3c_b2_af2_failure_evidence": {
@@ -112,5 +129,6 @@
     "7B5G_AB"
   ],
   "target_msa_queries_authorized": 0,
-  "version": 1
+  "version": 1,
+  "wrapper_static_no_prediction_validation_complete": true
 }

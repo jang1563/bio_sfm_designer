@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3d_protocol_locked_input_runtime_validation_required`.
+Status: `goal_active_w3d_runtime_validated_approval_packet_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -57,10 +57,10 @@ Can mark goal complete: `False`.
 - W3d locked baseline / prospective cells: `8` / `24`
 - W3d predictor evaluations authorized: `0`
 - W3d execution ready: `False`
-- remaining requirement: `W3d_CPU_input_and_runtime_no_prediction_validation`
+- remaining requirement: `W3d_hash_bound_compute_approval_packet`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.
+Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.

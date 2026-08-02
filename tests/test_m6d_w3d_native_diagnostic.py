@@ -53,6 +53,12 @@ def test_run_locks_exact_factorial_scope_without_authority(tmp_path):
     assert readiness["source_hashes_verified"] == len(mod.SOURCE_PATHS)
     assert readiness["posthoc_disclosure_complete"] is True
     assert readiness["decision_rules_locked"] is True
+    assert readiness["input_producer_implemented"] is True
+    assert readiness["materialized_input_hashes_verified"] == 24
+    assert readiness["representation_semantics_verified"] == 24
+    assert readiness["new_runtime_wrappers_implemented"] is True
+    assert readiness["wrapper_static_no_prediction_validation_complete"] is True
+    assert readiness["no_prediction_runtime_validation_complete"] is True
     assert readiness["execution_ready"] is False
     assert readiness["predictor_evaluations_authorized"] == 0
     assert readiness["h100_gpu_hours_authorized"] == 0.0

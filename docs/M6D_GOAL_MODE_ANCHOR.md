@@ -24,9 +24,10 @@
 > still blocked. The separate W3d successor is now preregistered as a 32-cell
 > representation-by-predictor diagnostic: eight immutable W3c-B2 Boltz baseline cells plus 24 prospective
 > cells. Current predictor and H100 authority is zero. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`;
-> next implement CPU inputs and corrected no-prediction runtime validation only.
+> CPU inputs and exact Cayuga no-prediction runtime/path validation are complete. Next prepare only a
+> hash-bound no-submit approval packet; predictor submission requires a new explicit approval.
 
-Date: 2026-08-02
+Date: 2026-08-03
 
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
@@ -254,8 +255,13 @@ from Chai records alone.
 - W3d native representation-by-predictor diagnostic:
   `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`, `configs/m6d_w3d_native_diagnostic_protocol.json`,
   `configs/m6d_w3d_native_diagnostic_manifest.json`,
+  `configs/m6d_w3d_prospective_input_manifest.json`,
   `results/m6d_w3d_native_diagnostic_readiness.{json,md}`, and
-  `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`
+  `results/m6d_w3d_input_runtime_readiness.{json,md}`,
+  `results/m6d_w3d_runtime_validation_receipt.json`, plus
+  `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`,
+  `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`, and the three
+  `hpc/validate_w3d_*_runtime_no_prediction.sh` wrappers
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -1376,7 +1382,7 @@ jq '{status, audit_ok, w3c_b2: .w3c_b2_terminal_stop.status, jobs_terminal: .w3c
 jq '{status, audit_ok, execution_complete, stage_decision_complete, scientific_stop_complete, boltz_successes, boltz_success_target_ids, af2_failures_before_model_inference, maximum_possible_dual_predictor_target_passes, minimum_targets_passing, frozen_pass_mathematically_impossible, observed_h100_gpu_hours, additional_jobs_authorized, claim_boundary, next_action}' \
   results/m6d_w3c_b2_terminal_stop.json
 
-jq '{status, audit_ok, execution_ready, factorial_cells, completed_locked_baseline_cells, prospective_cells, posthoc_disclosure_complete, decision_rules_locked, predictor_evaluations_authorized, h100_gpu_hours_authorized, no_submit, next_action}' \
+jq '{status, audit_ok, execution_ready, factorial_cells, completed_locked_baseline_cells, prospective_cells, input_producer_implemented, materialized_input_hashes_verified, representation_semantics_verified, new_runtime_wrappers_implemented, no_prediction_runtime_validation_complete, predictor_evaluations_authorized, h100_gpu_hours_authorized, no_submit, next_action}' \
   results/m6d_w3d_native_diagnostic_readiness.json
 
 git status --short --branch
@@ -1384,5 +1390,6 @@ git status --short --branch
 
 The current science branch is fixed: preserve W3c-B2 at its terminal validity stop and continue only the
 locked W3d no-submit successor. Do not retry AF2, substitute targets, change the 6/8 rule, rerun the
-baseline, or reuse the consumed approval. Implement CPU inputs and corrected no-prediction runtime
-validation next; any later compute requires a new experiment-specific approval.
+baseline, or reuse the consumed approval. CPU inputs and exact Cayuga no-prediction runtime/path validation
+are now complete. Prepare only a separate hash-bound no-submit approval packet next; any later compute
+requires a new experiment-specific approval.

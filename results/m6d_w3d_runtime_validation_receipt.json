@@ -1,0 +1,337 @@
+{
+  "absolute_path_probes_complete": 24,
+  "af2_container_path_probes_complete": 16,
+  "af2_explicit_container_working_directory_probes": 16,
+  "approval_packet_prepared": false,
+  "artifact": "m6d_w3d_runtime_validation_receipt",
+  "audit_ok": true,
+  "boltz_host_path_probes_complete": 8,
+  "can_run_predictors": false,
+  "cayuga_submission_allowed": false,
+  "claim_boundary": "Exact runtime identity and absolute-path resolution were validated without model inference, accelerator use, scheduler action, network fetch, or compute authority.",
+  "gpu_compute_executed": false,
+  "h100_gpu_hours_authorized": 0.0,
+  "input_manifest_binding": {
+    "bytes": 52582,
+    "path": "configs/m6d_w3d_prospective_input_manifest.json",
+    "sha256": "da6553e2ccfe5ddc508e73bed7f86d3a68e4247870d1a59590a458443082af40"
+  },
+  "network_fetch_executed": false,
+  "no_submit": true,
+  "path_probe_evidence": {
+    "af2_multimer_colabfold_v1": [
+      {
+        "cell_id": "w3d-1TE1_BA-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "4c8f3ecd1be7d36a52e125ad31260c2dcb6c105a2508f877e7ded0552d9bc2b1",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-1TE1_BA-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "ea8bce167f5657276d566b961d9ae5a7cdf21baa95bd87b07e3975257b6c9db8",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-3QB4_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "cd033ec540b6b5dc349b84ba3fdce4fbc9d9ddad239e3e9f2d08db1b6d04ad7a",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-3QB4_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "99d106830d7300586fc8a2dc47ae46f4911abb986ae8ef540ca1c20614d36615",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-5E5M_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "c2ecfbe86a70bf0b3c12184a7db3c7cc81a18043e973c91c8915a25704bde95d",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-5E5M_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "6c8142251d99abdb5b3cbab8cdaec5f6cf661c24d3c7c4f8288abfc34f7347d9",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-5JSB_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "1c9df9df27181eb3c0d99f58a96425d9c1f6a3f6e07e23451580f70270da02c5",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-5JSB_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "349b694e04f1041146353b938c12ca298b3434162b545e8d68d8a7d3e299e63a",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-6KBR_AC-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "8b873e0ab09c1e5cfb56aa020f69307e3d5d3b11cd0c60cded184b22299bdc24",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-6KBR_AC-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "92bf724a7dac8e9725ab53dcbdbc489d3c9b8b73a3b099e39928b432c886c5ce",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-6KMQ_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "3aec954f4be1a554f62a277f01615e4fecd6f49cedc4a671c4b451d5df620e55",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-6KMQ_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "3014fae92f17f9b6bd9f1565a18baa15e2ba70aa946dbf8b7a8192b796c50a3b",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-6SGE_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "9054145c372128b5dd7b707dff66d67bb4b1454a723eef2253040d7c372a5cbd",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-6SGE_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "9d6f8bb2be4b2837415fa38511c8ba6249d990e291d4012822fd265d6afa58e3",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-7B5G_AB-target_msa_binder_query-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "a0670add3996241191008c7a360ca72ec35b4cb1fa7a2b2908d8e874a3f8c633",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      },
+      {
+        "cell_id": "w3d-7B5G_AB-query_only_both_chains-af2_multimer_colabfold_v1",
+        "container_working_directory_explicit": true,
+        "input_absolute": true,
+        "input_sha256": "d1ca5a5dc67e76f3ee99c72f2d78642e2289dc81f1f27690ad86cc1104f15c5b",
+        "output_absolute": true,
+        "predictor_id": "af2_multimer_colabfold_v1",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "af2_container"
+      }
+    ],
+    "boltz2_complex": [
+      {
+        "cell_id": "w3d-1TE1_BA-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "d88fd0ff0e08fd80940a34b83fb239d71519d04bdce55d1337464d6d10a96b09",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-3QB4_AB-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "892488827b5b66a0a7a50645d3d9dffd676dd3797b62321f4558fa090c3d5532",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-5E5M_AB-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "91c110d95bad7b6e939b7fe151ec13dd9a9459d055ce8a8c5ed6a9e6d12624d1",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-5JSB_AB-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "19ba94c9e5346894a478a526e7e7e7bade786187de4dde381770ac12c7d235e2",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-6KBR_AC-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "473ef45fb7fc0ee8400a8fd2458d4207c74870535323e79390005de8999e87ec",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-6KMQ_AB-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "fc81afa9b3a5259e5c723779a6f99e9595f7dbb5128278002b7f84a75f5dc43d",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-6SGE_AB-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "69b1b777ddd4c2e85461aec67cb46702cb0635a8b3d059506f413fabbfa10e2e",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      },
+      {
+        "cell_id": "w3d-7B5G_AB-query_only_both_chains-boltz2_complex",
+        "container_working_directory_explicit": false,
+        "input_absolute": true,
+        "input_sha256": "ef66d2037f7781bc977875c662af0edec5cce70fb9115960937f4d4c87843917",
+        "output_absolute": true,
+        "predictor_id": "boltz2_complex",
+        "project_root_bound": true,
+        "raw_paths_published": false,
+        "runtime_surface": "host_boltz"
+      }
+    ]
+  },
+  "prediction_executed": false,
+  "predictor_evaluations_authorized": 0,
+  "predictor_runtime_identity_sha256": {
+    "af2_multimer_colabfold_v1": "bc3343c084bab2a91f28e078ef2cd9fdd62a0f7331ed2343d1e53d3ca71c99ab",
+    "boltz2_complex": "2560759178b082aec261b2019eecdf59458af0394d2518b53fa92a19ba1c422c"
+  },
+  "prospective_input_hashes_verified": 24,
+  "raw_host_paths_published": false,
+  "runtime_lock_binding": {
+    "bytes": 5309,
+    "path": "configs/m6d_w3c_b2_runtime_lock.json",
+    "sha256": "d25f609473c03137283f3cd5f293a090ffb71b8fc7a81a81ba954fd7dc13198d"
+  },
+  "runtime_observation_bindings": {
+    "af2_multimer_colabfold_v1": {
+      "bytes": 3642,
+      "path_published": false,
+      "sha256": "2283c83237ba36c3442a4e7896f879e3bcc106bbac9bc39830e2db02978175e6"
+    },
+    "boltz2_complex": {
+      "bytes": 3167,
+      "path_published": false,
+      "sha256": "1f94485de23a63140b68972cb4f7ce78fad5d17dc47b22dc7b72af72ef19c64c"
+    }
+  },
+  "runtime_observations_complete": 2,
+  "scheduler_command_executed": false,
+  "status": "w3d_exact_runtime_and_path_validation_complete_no_prediction",
+  "version": 1,
+  "wrapper_bindings": {
+    "af2_multimer_colabfold_v1": {
+      "bytes": 4420,
+      "path": "hpc/validate_w3d_af2_runtime_no_prediction.sh",
+      "sha256": "f667a2b0c340de5706ce3a6a64343207d483c381180dcb2d1879ae2cfd2d4bca"
+    },
+    "boltz2_complex": {
+      "bytes": 2822,
+      "path": "hpc/validate_w3d_boltz_runtime_no_prediction.sh",
+      "sha256": "6419d0ecc43f731100504086607f6f80f3617ade6069060bc7dbb663e387a2a5"
+    },
+    "orchestrator": {
+      "bytes": 2441,
+      "path": "hpc/validate_w3d_runtime_no_prediction.sh",
+      "sha256": "c2775ee4450c9d562d345a67d11fc760ca8e976b5d90da4246f6a572e1006a71"
+    }
+  }
+}

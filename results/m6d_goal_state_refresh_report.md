@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3d_protocol_locked_no_submit`.
+Status: `goal_state_refreshed_w3d_runtime_validated_no_submit`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -103,10 +103,18 @@ Cayuga submission allowed: `False`.
 - `results/m6d_w3c_b2_terminal_stop.json`
 - `configs/m6d_w3d_native_diagnostic_protocol.json`
 - `configs/m6d_w3d_native_diagnostic_manifest.json`
+- `configs/m6d_w3d_prospective_input_manifest.json`
 - `results/m6d_w3d_native_diagnostic_readiness.json`
 - `results/m6d_w3d_native_diagnostic_readiness.md`
+- `results/m6d_w3d_input_runtime_readiness.json`
+- `results/m6d_w3d_input_runtime_readiness.md`
+- `results/m6d_w3d_runtime_validation_receipt.json`
+- `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`
+- `hpc/validate_w3d_runtime_no_prediction.sh`
+- `hpc/validate_w3d_boltz_runtime_no_prediction.sh`
+- `hpc/validate_w3d_af2_runtime_no_prediction.sh`
 - `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`
 
 ## Next Action
 
-Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.
+Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.

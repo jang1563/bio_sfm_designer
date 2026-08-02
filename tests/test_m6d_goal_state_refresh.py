@@ -2160,7 +2160,7 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
 
         self.assertEqual(
             bundle["report"]["status"],
-            "goal_state_refreshed_w3d_protocol_locked_no_submit",
+            "goal_state_refreshed_w3d_runtime_validated_no_submit",
         )
         current = bundle["anchor"]["current_status"]
         self.assertEqual(current["w3d_factorial_cells"], 32)
@@ -2169,9 +2169,14 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertEqual(current["w3d_predictor_evaluations_authorized"], 0)
         self.assertEqual(current["w3d_h100_gpu_hours_authorized"], 0.0)
         self.assertFalse(current["w3d_cayuga_submission_allowed"])
+        self.assertTrue(current["w3d_input_producer_implemented"])
+        self.assertEqual(current["w3d_materialized_input_hashes_verified"], 24)
+        self.assertEqual(current["w3d_representation_semantics_verified"], 24)
+        self.assertTrue(current["w3d_runtime_wrappers_implemented"])
+        self.assertTrue(current["w3d_no_prediction_runtime_validation_complete"])
         self.assertEqual(
             current["remaining_requirements"],
-            ["W3d_CPU_input_and_runtime_no_prediction_validation"],
+            ["W3d_hash_bound_compute_approval_packet"],
         )
         self.assertFalse(bundle["actions"]["w3d_submission_performed"])
         self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])

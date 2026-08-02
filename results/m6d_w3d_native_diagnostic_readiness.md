@@ -15,6 +15,10 @@ Execution ready: `False`.
 - total factorial cells: `32`
 - immutable baseline cells: `8`
 - prospective cells: `24`
+- materialized inputs verified: `24` / `24`
+- representation semantics verified: `24` / `24`
+- no-prediction wrappers implemented: `True`
+- exact Cayuga runtime validation complete: `True`
 - currently authorized predictor evaluations: `0`
 - currently authorized H100 GPU-hours: `0.0`
 
@@ -37,4 +41,4 @@ This is a retrospective-baseline/prospective-completion diagnostic, not a fully 
 
 A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run.
 
-Next action: Build and validate the W3d CPU-only input producer and corrected no-prediction runtime wrappers for the 24 prospective cells, then stop before any compute approval packet.
+Next action: Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.

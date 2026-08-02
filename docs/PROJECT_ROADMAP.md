@@ -195,16 +195,21 @@ The terminal CPU adjudicator replayed every available hash and metric, found Bol
 and proved the frozen dual-predictor 6/8 pass unreachable. See
 `docs/M6D_W3C_B1_TARGET_MSA_COMPLETION.md` and `docs/M6D_W3C_B2_NATIVE_SCREEN.md`.
 
-2026-08-02 W3d preregistration: `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
+2026-08-03 W3d preparation: `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
 `configs/m6d_w3d_native_diagnostic_protocol.json` define a distinct 2 x 2 factorial over the same eight
 targets. Predictor identity (Boltz 2.2.1 versus AF2-Multimer v3) is crossed with evolutionary-information
 representation (`target_msa_binder_query` versus `query_only_both_chains`). All eight completed Boltz
 target-MSA outcomes remain fixed; the remaining 24 cells and paired localization rules are prospective
 after this lock. A representation can clear native validity only when both predictors reach at least 6/8
-under that same representation. `results/m6d_w3d_native_diagnostic_readiness.{json,md}` is audit-clean but
-`execution_ready=false`: zero predictor evaluations and zero H100 GPU-hours are authorized. The next step
-is to implement CPU input production and absolute-path, no-prediction runtime validation before any
-approval packet.
+under that same representation. The deterministic CPU producer now materializes and validates all 24
+prospective predictor-native inputs: 8 query-only Boltz YAMLs, 8 target-MSA AF2 A3Ms, and 8 query-only AF2
+A3Ms. Every input hash and representation semantic contract passes. Separate Boltz and AF2 runtime probes
+plus an orchestrator contain no accelerator, scheduler, network-fetch, or prediction route; the AF2 probe
+uses absolute project-bound paths and an explicit container working directory. Exact Cayuga validation now
+passes for both runtime identities, 8/8 Boltz host paths, and 16/16 AF2 container paths. Its public receipt
+contains no host path and records zero model, GPU, scheduler, or network-fetch execution. Even so,
+`execution_ready=false`: zero predictor evaluations and zero H100 GPU-hours are authorized, and no approval
+packet exists. The next step is a separate hash-bound no-submit approval packet, not execution.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

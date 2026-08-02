@@ -4,6 +4,9 @@ Status: `w3d_native_representation_predictor_protocol_locked_no_submit`.
 
 Date locked: 2026-08-02.
 
+Operational preparation status (2026-08-03):
+`w3d_input_and_runtime_validation_complete_no_submit`.
+
 ## Purpose
 
 W3c-B2 is terminal. Boltz recovered only 2/8 native complexes, which makes the frozen dual-predictor
@@ -131,6 +134,49 @@ The failed W3c-B2 AF2 jobs are not recoverable under W3d. A new AF2 wrapper must
 Boltz must retain the exact 2.2.1 runtime identity and the same model/sampling settings. Both predictors
 require new wrapper/input validation because W3d adds the query-only representation.
 
+## CPU Input and Wrapper Completion
+
+The deterministic producer in `m6d_w3d_input_runtime.py` now materializes all and only the 24 prospective
+cells under the ignored `hpc_outputs/m6d_w3d_native_diagnostic/` tree:
+
+| Predictor-native input | Representation | Files |
+|---|---|---:|
+| Boltz YAML | query-only both chains | 8 |
+| AF2 annotated multimer A3M | target MSA + binder query | 8 |
+| AF2 annotated multimer A3M | query-only both chains | 8 |
+
+Validation passes for 24/24 file hashes and 24/24 representation semantics. In particular:
+
+- every query-only AF2 file contains exactly one paired native query and no homolog row;
+- every target-MSA AF2 file round-trips the exact frozen target A3M hash, has no non-query paired row,
+  and adds only the unpaired native binder query;
+- every prospective Boltz YAML uses `msa: empty` for both chains and `templates: []`;
+- every cell retains its frozen sequence hashes, seed, model settings, output path, record path, and
+  runtime-identity digest;
+- the producer cannot rebuild the eight retrospective Boltz baseline cells.
+
+The tracked `configs/m6d_w3d_prospective_input_manifest.json` contains portable relative paths and hashes,
+not local absolute paths. The raw 11.2 MB input bundle remains ignored. A public clone can replay the
+tracked manifest, wrapper hashes, and tests; full file-semantic revalidation requires materializing the
+hash-locked inputs from the local W3c source cache.
+
+Three execution-incapable validation wrappers are now present:
+
+- `hpc/validate_w3d_boltz_runtime_no_prediction.sh`;
+- `hpc/validate_w3d_af2_runtime_no_prediction.sh`;
+- `hpc/validate_w3d_runtime_no_prediction.sh`.
+
+They contain no predictor invocation, accelerator exposure, scheduler command, or download path. The AF2
+probe resolves all 16 input/output pairs to absolute project-bound paths inside the container, binds the
+same absolute project root, sets `--pwd` to that root, and disables container networking. The Boltz probe
+does the corresponding host-path checks for eight cells. Both reobserve the exact locked runtime identity.
+
+Static validation and exact execution of these no-prediction probes on Cayuga are complete. Both locked
+runtime identities match, 8/8 Boltz host paths and 16/16 AF2 container paths pass, and all 16 AF2 probes
+confirm the explicit container working directory. The redacted receipt contains no Cayuga path and records
+zero prediction, GPU, scheduler, or network-fetch execution. `execution_ready=false` and no approval packet
+exists because runtime validation grants no compute authority.
+
 ## Authority and Budget
 
 Current authority is exactly zero:
@@ -153,15 +199,24 @@ PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
   bio_sfm_designer.experiments.m6d_w3d_native_diagnostic
 
 PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m pytest -q \
-  tests/test_m6d_w3d_native_diagnostic.py
+  tests/test_m6d_w3d_native_diagnostic.py \
+  tests/test_m6d_w3d_input_runtime.py
+
+# Requires the local hash-locked W3c source cache; performs CPU input work only.
+PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
+  bio_sfm_designer.experiments.m6d_w3d_input_runtime prepare
 ```
 
 Authoritative artifacts:
 
 - `configs/m6d_w3d_native_diagnostic_protocol.json`
 - `configs/m6d_w3d_native_diagnostic_manifest.json`
+- `configs/m6d_w3d_prospective_input_manifest.json`
 - `results/m6d_w3d_native_diagnostic_readiness.{json,md}`
+- `results/m6d_w3d_input_runtime_readiness.{json,md}`
+- `results/m6d_w3d_runtime_validation_receipt.json`
 - `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`
 
-Next action: implement and validate the CPU-only input producer and corrected no-prediction runtime
-wrappers for all 24 prospective cells, then stop before any compute approval packet.
+Next action: prepare a separate hash-bound, no-submit W3d approval packet for exactly 24 prospective
+evaluations. Do not submit predictor work without a new explicit approval after that packet is reviewed.
