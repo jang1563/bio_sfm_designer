@@ -1,27 +1,27 @@
 {
   "active_risks": [
     {
-      "control": "the successor question was formulated after the Boltz baseline; all eight targets are retained and a fully prospective four-cell claim is prohibited",
-      "id": "w3d_retrospective_baseline",
-      "status": "bounded"
-    },
-    {
-      "control": "the factor is defined by evolutionary-information content, with predictor-native file encodings declared before future outcomes",
-      "id": "w3d_representation_encoding_nonidentity",
+      "control": "the one-shot receipt is complete at 24/24 and no additional submission is allowed",
+      "id": "w3d_approval_replay_or_scope_extension",
       "status": "managed"
     },
     {
-      "control": "absolute container-visible paths and an explicit AF2 working directory are hash-bound in the approval packet",
-      "id": "w3d_af2_path_regression",
+      "control": "each job revalidates its packet-bound input and reobserves the frozen predictor runtime",
+      "id": "w3d_runtime_or_input_drift",
       "status": "managed"
     },
     {
-      "control": "all 24 prospective cells are required for adjudication with zero retry, target dropping, threshold tuning, or adaptive top-up",
+      "control": "monitor only receipt-bound jobs and preserve terminal Slurm accounting",
+      "id": "w3d_scheduler_completion",
+      "status": "external_wait"
+    },
+    {
+      "control": "all 24 prospective records are required with zero retry, top-up, target dropping, or partial adjudication",
       "id": "w3d_partial_panel_or_adaptive_rescue",
       "status": "managed"
     },
     {
-      "control": "candidate generation remains blocked unless both predictors qualify under the same representation in a complete future panel",
+      "control": "ProteinMPNN and generator, gate, and biological claims remain closed",
       "id": "w3d_generator_or_gate_prematurity",
       "status": "managed"
     }
@@ -39,7 +39,7 @@
     "w3": "completed_context_dependent_or_unresolved_no_population_claim",
     "w3b": "fit_terminal_negative_certification_unreachable_no_claim",
     "w3c": "terminal_stage_impossibility_only_no_complete_native_or_downstream_claim",
-    "w3d": "retrospective_baseline_prospective_completion_disclosed_no_compute_or_outcome_claim",
+    "w3d": "submission_evidence_only_no_complete_case_native_or_downstream_claim",
     "w4": "closed_loop_plumbing_only"
   },
   "claim_scope_corrected": true,
@@ -1916,77 +1916,59 @@
       }
     },
     "W3d_native_diagnostic": {
-      "all_predecessor_targets_retained": true,
-      "api_calls": 0,
-      "approval_packet_prepared": false,
-      "audit_ok": true,
-      "can_claim_biological_binder_success": false,
-      "can_claim_generator_yield": false,
-      "can_claim_native_recoverability": false,
-      "can_claim_trust_gate": false,
-      "cayuga_submission_allowed": false,
-      "checks": {
-        "authority_closed": true,
-        "baseline_exact": true,
-        "claims_bounded": true,
-        "factorial_scope_exact": true,
-        "hash_bindings_present": true,
-        "manifest_identity_exact": true,
-        "prospective_scope_exact": true,
-        "readiness_exact": true
-      },
-      "claim_boundary": "A post-W3c-B2 representation-by-predictor diagnostic has been preregistered with an immutable eight-record baseline and 24 prospective cells; no new prediction has been run.",
-      "complete_case_adjudication_required": true,
-      "completed_locked_baseline_cells": 8,
-      "completed_locked_baseline_successes": 2,
-      "cpu_only_preparation_complete": true,
-      "decision_rules_locked": true,
-      "design_type": "retrospective_baseline_prospective_factorial_completion",
-      "execution_ready": false,
-      "factorial_cells": 32,
-      "fully_prospective_four_cell_claim_allowed": false,
-      "h100_gpu_hours_authorized": 0.0,
-      "input_manifest_sha256": "da6553e2ccfe5ddc508e73bed7f86d3a68e4247870d1a59590a458443082af40",
-      "input_producer_implemented": true,
-      "input_runtime_readiness_sha256": "76e5770307aa410cca285fc5fc8ce7206eb3f376149a3ff4f12a3af80bfec1c5",
-      "manifest_sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
-      "materialized_input_files": 24,
-      "materialized_input_hashes_verified": 24,
-      "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
-      "native_readiness_sha256": "55d69203a6694a79ad1938333def83447207cee6425396ec8f96e8e9f17318e9",
-      "new_runtime_wrappers_implemented": true,
-      "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
-      "no_prediction_runtime_validation_complete": true,
-      "no_submit": true,
-      "outcome_adjudicator_implemented": true,
-      "posthoc_disclosure_complete": true,
-      "predictor_evaluations_authorized": 0,
-      "predictor_ids": [
-        "boltz2_complex",
-        "af2_multimer_colabfold_v1"
-      ],
-      "prospective_af2_cells": 16,
-      "prospective_boltz_cells": 8,
-      "prospective_cells": 24,
-      "proteinmpnn_designs": 0,
-      "protocol_sha256": "7034378adbd71388accab3c5c6771a5cd7ae939eb2dc66245c86a287cf7f66d9",
-      "representation_ids": [
-        "target_msa_binder_query",
-        "query_only_both_chains"
-      ],
-      "representation_semantics_verified": 24,
-      "status": "w3d_native_representation_predictor_protocol_locked_no_submit",
-      "target_ids": [
-        "1TE1_BA",
-        "3QB4_AB",
-        "5E5M_AB",
-        "5JSB_AB",
-        "6KBR_AC",
-        "6KMQ_AB",
-        "6SGE_AB",
-        "7B5G_AB"
-      ],
-      "wrapper_static_no_prediction_validation_complete": true
+      "scientific_adjudication_complete": false,
+      "submission": {
+        "adaptive_top_up_jobs": 0,
+        "approval_packet_digest_sha256": "6a2cde2d90fc054298bef33e7ccf0c6c984a939de0f9cd1a5a543c44a855c36a",
+        "approval_packet_sha256": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
+        "approval_recorded": true,
+        "audit_ok": true,
+        "can_claim_biological_binder_success": false,
+        "can_claim_generator_yield": false,
+        "can_claim_native_recoverability": false,
+        "can_claim_trust_gate": false,
+        "can_submit_additional_jobs": false,
+        "checks": {
+          "approval_packet_bound": true,
+          "claims_closed": true,
+          "identity_exact": true,
+          "no_extension": true,
+          "scope_exact": true
+        },
+        "h100_gpu_hours_accounted": 0.0,
+        "jobs_expected": 24,
+        "jobs_recorded": 24,
+        "jobs_unresolved": 24,
+        "predictor_evaluations_complete": 0,
+        "predictor_ids": [
+          "boltz2_complex",
+          "af2_multimer_colabfold_v1"
+        ],
+        "predictor_job_counts": {
+          "af2_multimer_colabfold_v1": 16,
+          "boltz2_complex": 8
+        },
+        "proteinmpnn_designs": 0,
+        "receipt_sha256": "48085cbbe98e60718d258ed1b2c624f1a3e9b7e87af74e6a1826e801bcfdab93",
+        "representation_ids": [
+          "target_msa_binder_query",
+          "query_only_both_chains"
+        ],
+        "retry_jobs": 0,
+        "scientific_adjudication_complete": false,
+        "status": "w3d_all_twenty_four_prediction_jobs_submitted",
+        "submission_complete": true,
+        "target_ids": [
+          "1TE1_BA",
+          "3QB4_AB",
+          "5E5M_AB",
+          "5JSB_AB",
+          "6KBR_AC",
+          "6KMQ_AB",
+          "6SGE_AB",
+          "7B5G_AB"
+        ]
+      }
     },
     "W4_closed_loop_DBTL": {
       "complete": true,
@@ -2003,12 +1985,12 @@
     "remaining": 1
   },
   "drift_assessment": {
-    "claims": "no_drift_retrospective_baseline_and_zero_new_outcome_disclosed",
-    "execution": "twenty_four_cpu_inputs_and_wrappers_validated_zero_new_predictions",
+    "claims": "no_drift_submission_is_not_scientific_evidence",
+    "execution": "twenty_four_receipt_bound_jobs_submitted_zero_retry_zero_top_up",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-    "operational_status": "w3d_explicit_compute_approval_required",
-    "protocol": "no_drift_distinct_w3d_factorial_preregistered_after_terminal_w3c_b2"
+    "operational_status": "w3d_awaiting_terminal_scheduler_outputs",
+    "protocol": "no_drift_w3d_factorial_hash_bound_and_receipt_bound"
   },
   "failures": [],
   "inputs": {
@@ -2024,10 +2006,10 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100",
+  "next_action": "Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.",
   "representation_lock_complete": true,
   "representation_validity_issue_detected": true,
-  "status": "no_major_direction_drift_w3d_factorial_successor_locked",
+  "status": "no_major_direction_drift_w3d_submitted_awaiting_results",
   "w3c_b1_packet_prepared": true,
   "w3c_b1_target_msa_complete": true,
   "w3c_b2_cayuga_no_submit_validation_passed": true,

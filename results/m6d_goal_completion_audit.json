@@ -13,18 +13,18 @@
     "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
     "w3b": "terminal negative fit; no qualifying rule, certification, held-out test, or claim",
     "w3c": "the frozen W3c-B2 pass is impossible from Boltz 2/8; full dual-predictor native recoverability, generator yield, trust-gate performance, and biological binder success remain unclaimed",
-    "w3d": "locked_diagnostic_design_and_reused_baseline_only_no_new_scientific_outcome",
+    "w3d": "twenty_four_prediction_jobs_are_receipt_bound_and_submitted_no_scientific_result_yet",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100",
+  "next_action": "Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3d_explicit_compute_approval"
+    "W3d_terminal_accounting_records_and_complete_case_adjudication"
   ],
-  "status": "goal_active_w3d_packet_ready_explicit_approval_required",
+  "status": "goal_active_w3d_jobs_submitted_awaiting_adjudication",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -2225,6 +2225,7 @@
     "wrapper_static_no_prediction_validation_complete": true
   },
   "w3d_prediction_approval_packet": {
+    "approval_packet_file_sha256": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
     "approval_packet_prepared": true,
     "approval_phrase": "approve W3d representation-by-predictor 24-evaluation panel on H100",
     "approval_recorded": false,
@@ -2295,6 +2296,58 @@
       "7B5G_AB"
     ]
   },
+  "w3d_submission": {
+    "adaptive_top_up_jobs": 0,
+    "approval_packet_digest_sha256": "6a2cde2d90fc054298bef33e7ccf0c6c984a939de0f9cd1a5a543c44a855c36a",
+    "approval_packet_sha256": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
+    "approval_recorded": true,
+    "audit_ok": true,
+    "can_claim_biological_binder_success": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "can_submit_additional_jobs": false,
+    "checks": {
+      "approval_packet_bound": true,
+      "claims_closed": true,
+      "identity_exact": true,
+      "no_extension": true,
+      "scope_exact": true
+    },
+    "h100_gpu_hours_accounted": 0.0,
+    "jobs_expected": 24,
+    "jobs_recorded": 24,
+    "jobs_unresolved": 24,
+    "predictor_evaluations_complete": 0,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "predictor_job_counts": {
+      "af2_multimer_colabfold_v1": 16,
+      "boltz2_complex": 8
+    },
+    "proteinmpnn_designs": 0,
+    "receipt_sha256": "48085cbbe98e60718d258ed1b2c624f1a3e9b7e87af74e6a1826e801bcfdab93",
+    "representation_ids": [
+      "target_msa_binder_query",
+      "query_only_both_chains"
+    ],
+    "retry_jobs": 0,
+    "scientific_adjudication_complete": false,
+    "status": "w3d_all_twenty_four_prediction_jobs_submitted",
+    "submission_complete": true,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
   "workstream_status": {
     "W1_M6c_scale_up": {
       "complete": true,
@@ -2343,16 +2396,19 @@
     },
     "W3d_native_diagnostic": {
       "approval_packet_prepared": true,
-      "approval_recorded": false,
+      "approval_recorded": true,
       "complete": false,
       "cpu_only_preparation_complete": true,
       "execution_ready": false,
       "input_producer_implemented": true,
       "no_prediction_runtime_validation_complete": true,
+      "predictor_jobs_completed": 0,
+      "predictor_jobs_submitted": 24,
       "protocol_locked": true,
-      "remaining_requirement": "W3d_explicit_compute_approval",
-      "scientific_success": false,
-      "status": "w3d_native_representation_predictor_protocol_locked_no_submit"
+      "remaining_requirement": "W3d_terminal_accounting_records_and_complete_case_adjudication",
+      "scientific_success": null,
+      "status": "w3d_all_twenty_four_prediction_jobs_submitted",
+      "submission_complete": true
     },
     "W4_closed_loop_DBTL": {
       "complete": true,

@@ -1119,6 +1119,7 @@ def _refresh_current_w3b(
     w3d_manifest=None,
     w3d_readiness=None,
     w3d_approval=None,
+    w3d_submission=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1158,6 +1159,7 @@ def _refresh_current_w3b(
         w3d_native_diagnostic_manifest=w3d_manifest,
         w3d_native_diagnostic_readiness=w3d_readiness,
         w3d_prediction_approval_packet=w3d_approval,
+        w3d_submission_receipt_summary=w3d_submission,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1196,6 +1198,12 @@ def _current_w3d_artifacts():
 def _current_w3d_approval_packet_artifact():
     return json.loads(
         Path("results/m6d_w3d_prediction_approval_packet.json").read_text()
+    )
+
+
+def _current_w3d_submission_artifact():
+    return json.loads(
+        Path("results/m6d_w3d_submit_receipt_summary.json").read_text()
     )
 
 
@@ -2280,6 +2288,89 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
                     w3d_readiness=w3d_readiness,
                     w3d_approval=w3d_approval,
                 )
+
+    def test_w3d_submission_promotes_terminal_wait_state(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+        w3d_approval = _current_w3d_approval_packet_artifact()
+        w3d_submission = _current_w3d_submission_artifact()
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=_ready_w3c_b1_packet_artifact(),
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            b2_native_manifest=native,
+            b2_runtime=runtime,
+            b2_approval=approval,
+            b2_cayuga_validation=validation,
+            b2_submission=_current_w3c_b2_submission_artifact(),
+            b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+            w3d_manifest=w3d_manifest,
+            w3d_readiness=w3d_readiness,
+            w3d_approval=w3d_approval,
+            w3d_submission=w3d_submission,
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3d_jobs_submitted_awaiting_results",
+        )
+        current = bundle["anchor"]["current_status"]
+        self.assertTrue(current["w3d_approval_recorded"])
+        self.assertTrue(current["w3d_submission_complete"])
+        self.assertEqual(current["w3d_approved_predictor_evaluations"], 24)
+        self.assertEqual(current["w3d_approved_h100_gpu_hours_ceiling"], 24.0)
+        self.assertEqual(current["w3d_predictor_jobs_submitted"], 24)
+        self.assertEqual(current["w3d_predictor_jobs_completed"], 0)
+        self.assertEqual(current["w3d_jobs_unresolved"], 24)
+        self.assertEqual(current["w3d_additional_jobs_authorized"], 0)
+        self.assertFalse(current["w3d_cayuga_submission_allowed"])
+        self.assertEqual(
+            current["remaining_requirements"],
+            [
+                "W3d_terminal_accounting_records_and_complete_case_adjudication"
+            ],
+        )
+        self.assertTrue(bundle["actions"]["w3d_submission_performed"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertEqual(
+            bundle["harness"]["local_verification"]["w3d_authority"],
+            "approved_envelope_fully_submitted_additional_authority_zero",
+        )
+        self.assertEqual(
+            bundle["drift"]["drift_assessment"]["operational_status"],
+            "w3d_awaiting_terminal_scheduler_outputs",
+        )
+        self.assertFalse(bundle["drift"]["major_direction_drift"])
+
+    def test_w3d_submission_rejects_scope_extension(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+        w3d_submission = _current_w3d_submission_artifact()
+        w3d_submission["jobs_recorded"] = 25
+        with self.assertRaisesRegex(
+            ValueError, "W3d submission invariants failed"
+        ):
+            _refresh_current_w3b(
+                recovery=_w3b_recovery_artifacts(),
+                fit_completion=_w3b_fit_terminal_artifact(),
+                target_validity=_w3c_target_validity_artifact(),
+                fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                b1_packet=_ready_w3c_b1_packet_artifact(),
+                b1_completion=_w3c_b1_target_msa_completion_artifact(),
+                b2_native_manifest=native,
+                b2_runtime=runtime,
+                b2_approval=approval,
+                b2_cayuga_validation=validation,
+                b2_submission=_current_w3c_b2_submission_artifact(),
+                b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+                w3d_manifest=w3d_manifest,
+                w3d_readiness=w3d_readiness,
+                w3d_approval=_current_w3d_approval_packet_artifact(),
+                w3d_submission=w3d_submission,
+            )
 
     def test_w3d_protocol_rejects_scope_or_authority_drift(self):
         native, runtime, approval, validation = _current_w3c_b2_artifacts()

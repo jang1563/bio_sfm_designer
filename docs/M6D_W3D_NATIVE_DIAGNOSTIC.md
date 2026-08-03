@@ -178,15 +178,16 @@ Static validation and exact execution of these no-prediction probes on Cayuga ar
 runtime identities match, 8/8 Boltz host paths and 16/16 AF2 container paths pass, and all 16 AF2 probes
 confirm the explicit container working directory. The redacted receipt contains no Cayuga path and records
 zero prediction, GPU, scheduler, or network-fetch execution. Runtime validation itself granted no compute
-authority; the later approval packet remains `approval_recorded=false`, `can_submit_now=false`, and
-`execution_ready=false` in the integrated goal state.
+authority. The immutable packet still records its creation-time `approval_recorded=false` state, while the
+later one-shot approval and scheduler submission are recorded separately in the append-only receipt and
+the integrated goal state.
 
 ## Hash-Bound Approval Packet
 
 The no-submit packet now binds the complete prospective execution surface:
 
 - 24 prospective cells: 8 Boltz query-only and 16 AF2 cells;
-- exactly 24 scheduler jobs if separately approved, each `h100:1` for at most one hour;
+- exactly 24 scheduler jobs, each `h100:1` for at most one hour, under one separately recorded approval;
 - a total ceiling of 24 H100 GPU-hours;
 - all protocol, factorial, input, runtime, producer, converter, journal, wrapper, and submit-bridge hashes;
 - 53 paths that must all be absent before first submission;
@@ -199,23 +200,27 @@ only the exact 8-Boltz plus 16-AF2 set. The local submit dry run enumerates all 
 scheduler jobs. Packet digest:
 `6a2cde2d90fc054298bef33e7ccf0c6c984a939de0f9cd1a5a543c44a855c36a`.
 
-Packet preparation is not execution approval. It records `approval_recorded=false`, zero submitted jobs,
-zero predictor evaluations, and zero consumed H100 GPU-hours.
+Packet preparation was not execution approval. After the exact approval was recorded on 2026-08-03, the
+guarded bridge consumed it once and submitted jobs `3171691`-`3171714`: 8 Boltz and 16 AF2 cells, with
+24/24 unique packet cells and scheduler IDs. The receipt records zero retries and zero adaptive top-ups.
+Submission is execution provenance, not scientific evidence; no prospective outcome is claimable until
+all terminal records are reconciled and the frozen complete-case adjudicator runs.
 
 ## Authority and Budget
 
-Current authority is exactly zero:
+The approved envelope was fully consumed by the 24 receipt-bound submissions. Current *additional*
+authority is exactly zero:
 
-- predictor evaluations authorized: 0;
-- H100 GPU-hours authorized: 0;
+- additional predictor evaluations authorized: 0;
+- additional H100 GPU-hours authorized: 0;
 - target-MSA queries authorized: 0;
 - ProteinMPNN designs authorized: 0;
 - API calls authorized: 0;
 - retries and adaptive top-ups authorized: 0.
 
-If explicitly approved, the frozen packet contains 24 new one-hour H100 evaluation
-slots: eight Boltz and sixteen AF2, with a maximum 24 H100 GPU-hour allocation. This is a proposed ceiling,
-not current authority.
+The consumed envelope contains 24 one-hour H100 evaluation slots: eight Boltz and sixteen AF2, with a
+maximum 24 H100 GPU-hour allocation. Actual GPU use remains pending terminal scheduler accounting and may
+not be replaced or topped up if a cell fails.
 
 ## Reproduce the No-Submit Lock
 
@@ -250,6 +255,8 @@ Authoritative artifacts:
 - `results/m6d_w3d_runtime_validation_receipt.json`
 - `results/m6d_w3d_prediction_packet_readiness.{json,md}`
 - `results/m6d_w3d_prediction_approval_packet.json`
+- `results/m6d_w3d_submit_receipt.jsonl`
+- `results/m6d_w3d_submit_receipt_summary.json`
 - `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_approval.py`
@@ -259,6 +266,7 @@ Authoritative artifacts:
 - `hpc/run_predict_af2_w3d_native.sbatch`
 - `hpc/m6d_w3d_submit_with_receipt.sh`
 
-Next action: require the exact approval phrase
-`approve W3d representation-by-predictor 24-evaluation panel on H100`. Generic continuation does not
-authorize submission.
+Next action: monitor only receipt-bound jobs `3171691`-`3171714`, capture exact terminal scheduler
+accounting, synchronize all packet-bound strict-QC records, and run the frozen complete-case adjudication
+only if all 24 prospective records validate. Do not submit retries, replacements, adaptive top-ups, or any
+additional jobs.

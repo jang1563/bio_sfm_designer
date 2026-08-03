@@ -23,10 +23,11 @@
 > no retry or recovery authority; full native recoverability remains unevaluable, and generator work is
 > still blocked. The separate W3d successor is now preregistered as a 32-cell
 > representation-by-predictor diagnostic: eight immutable W3c-B2 Boltz baseline cells plus 24 prospective
-> cells. Current predictor and H100 authority is zero. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`;
-> CPU inputs and exact Cayuga no-prediction runtime/path validation are complete. The hash-bound no-submit
-> packet is also ready for exactly 24 evaluations, but approval is not recorded and submission remains
-> blocked. Predictor submission requires the exact W3d 24-evaluation H100 approval phrase.
+> cells. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; CPU inputs and exact Cayuga no-prediction
+> runtime/path validation are complete. The exact W3d approval was consumed once on 2026-08-03, and the
+> guarded bridge submitted jobs `3171691`-`3171714`: all 24 packet cells, split as 8 Boltz and 16 AF2,
+> with zero retries and zero adaptive top-ups. They are awaiting terminal outputs. Submission is not a
+> scientific result, and current authority for additional jobs is zero.
 
 Date: 2026-08-03
 
@@ -78,8 +79,9 @@ most 2/8 against a required 6/8. This supports a stage-impossibility stop, not a
 recoverability estimate. No retry or AF2 recovery is authorized under the consumed approval. W3d now
 freezes the distinct diagnostic successor across Boltz/AF2 and target-MSA/query-only representations. It
 retains all targets and all baseline outcomes, discloses that the baseline is retrospective, and freezes
-the remaining 24 cells before their outcomes. Its 24-evaluation hash-bound packet is ready, but no W3d
-prediction or submission has occurred and approval remains unrecorded.
+the remaining 24 cells before their outcomes. Its exact approval was consumed once on 2026-08-03. The
+hash-bound bridge submitted all 24 prospective cells as jobs `3171691`-`3171714`, with zero retries or
+top-ups; terminal output reconciliation and frozen complete-case adjudication remain pending.
 
 ## Active Objective
 
@@ -91,8 +93,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   certification and held-out-test roles;
 - preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
   preserve the terminal W3c-B2 partial-result stop without retry or post-hoc rescue;
-- preserve the verified W3d inputs, runtime receipt, and hash-bound 24-evaluation packet while requiring
-  exact stage-specific approval before any compute or generator work;
+- preserve the verified W3d inputs, runtime receipt, hash-bound 24-evaluation packet, and append-only
+  24/24 submission receipt while monitoring only the already submitted jobs and forbidding any retry,
+  replacement, top-up, or generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -143,9 +146,11 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   Eight W3c-B2 Boltz target-MSA outcomes are immutable retrospective baseline cells; 24 remaining cells
   are prospective after the lock. Frozen paired rules distinguish representation-specific,
   predictor-specific, interaction, partial, and unresolved outcomes. Native validity can be recovered only
-  if both predictors qualify at 6/8 under the same representation. The no-submit packet freezes 8 Boltz
-  plus 16 AF2 evaluations and a 24-H100-hour ceiling. Approval is not recorded; predictor, H100,
-  ProteinMPNN, MSA-query, API, retry, and adaptive-top-up authority is zero.
+  if both predictors qualify at 6/8 under the same representation. The packet freezes 8 Boltz plus 16 AF2
+  evaluations and a 24-H100-hour ceiling. The exact approval was consumed once and jobs
+  `3171691`-`3171714` represent all 24 prospective cells. The append-only receipt verifies 24 unique
+  scheduler IDs, zero retries, and zero adaptive top-ups. No outcome is yet claimable; additional
+  predictor, H100, ProteinMPNN, MSA-query, API, retry, and adaptive-top-up authority is zero.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -1397,9 +1402,9 @@ jq '{status, audit_ok, execution_ready, factorial_cells, completed_locked_baseli
 git status --short --branch
 ```
 
-The current science branch is fixed: preserve W3c-B2 at its terminal validity stop and continue only the
-locked W3d no-submit successor. Do not retry AF2, substitute targets, change the 6/8 rule, rerun the
-baseline, or reuse the consumed approval. CPU inputs and exact Cayuga no-prediction runtime/path validation
-are now complete, and the separate hash-bound no-submit packet freezes exactly 24 prospective evaluations.
-Approval is not recorded. Any compute requires the exact phrase
-`approve W3d representation-by-predictor 24-evaluation panel on H100`.
+The current science branch is fixed: preserve W3c-B2 at its terminal validity stop and complete only the
+locked W3d successor. Do not retry AF2, substitute targets, change the 6/8 rule, rerun the baseline, reuse
+the consumed approval, or submit additional jobs. CPU inputs and exact Cayuga no-prediction runtime/path
+validation are complete. The exact approval was consumed once, and all 24 prospective evaluations are
+receipt-bound to jobs `3171691`-`3171714`. Monitor those jobs, reconcile exact terminal accounting and all
+strict-QC records, then run the frozen complete-case adjudication only if all 24 records validate.

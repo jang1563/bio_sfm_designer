@@ -129,10 +129,11 @@
 > reobservation. Exact Cayuga validation passes for both locked runtime hashes and all 24 path probes, with
 > zero model, GPU, scheduler, or network-fetch execution. A hash-bound no-submit approval packet now freezes
 > exactly 8 Boltz and 16 AF2 evaluations, 53 initially absent output paths, and a maximum 24 H100 GPU-hour
-> ceiling; its dry run enumerates all 24 cells with zero scheduler jobs. Approval is not recorded and current
-> authority remains zero predictor evaluations, zero H100 GPU-hours, zero ProteinMPNN designs, and zero API
-> calls. Execution requires the exact phrase
-> `approve W3d representation-by-predictor 24-evaluation panel on H100`.
+> ceiling; its dry run enumerated all 24 cells with zero scheduler jobs. The exact approval was consumed once
+> on 2026-08-03, and receipt-bound jobs `3171691`-`3171714` were submitted 24/24: 8 Boltz and 16 AF2,
+> with zero retries or adaptive top-ups. Submission is not scientific evidence; terminal accounting and all
+> 24 strict-QC records are required before complete-case adjudication. Additional predictor, ProteinMPNN,
+> and API authority is zero.
 > See [docs/M6D_W3D_NATIVE_DIAGNOSTIC.md](docs/M6D_W3D_NATIVE_DIAGNOSTIC.md),
 > [configs/m6d_w3d_native_diagnostic_protocol.json](configs/m6d_w3d_native_diagnostic_protocol.json), and
 > [results/m6d_w3d_prediction_approval_packet.json](results/m6d_w3d_prediction_approval_packet.json).

@@ -1,25 +1,25 @@
 # M6d Goal Drift Audit
 
-Status: `no_major_direction_drift_w3d_factorial_successor_locked`.
+Status: `no_major_direction_drift_w3d_submitted_awaiting_results`.
 Audit ok: `True`.
 Major direction drift: `False`.
 
 ## Assessment
 
 - mission: `no_drift_external_calibrated_trust_gate_north_star_preserved`
-- protocol: `no_drift_distinct_w3d_factorial_preregistered_after_terminal_w3c_b2`
-- claims: `no_drift_retrospective_baseline_and_zero_new_outcome_disclosed`
-- execution: `twenty_four_cpu_inputs_and_wrappers_validated_zero_new_predictions`
-- operational status: `w3d_explicit_compute_approval_required`
+- protocol: `no_drift_w3d_factorial_hash_bound_and_receipt_bound`
+- claims: `no_drift_submission_is_not_scientific_evidence`
+- execution: `twenty_four_receipt_bound_jobs_submitted_zero_retry_zero_top_up`
+- operational status: `w3d_awaiting_terminal_scheduler_outputs`
 
 ## Active Risks
 
-- `w3d_retrospective_baseline` (bounded): the successor question was formulated after the Boltz baseline; all eight targets are retained and a fully prospective four-cell claim is prohibited
-- `w3d_representation_encoding_nonidentity` (managed): the factor is defined by evolutionary-information content, with predictor-native file encodings declared before future outcomes
-- `w3d_af2_path_regression` (managed): absolute container-visible paths and an explicit AF2 working directory are hash-bound in the approval packet
-- `w3d_partial_panel_or_adaptive_rescue` (managed): all 24 prospective cells are required for adjudication with zero retry, target dropping, threshold tuning, or adaptive top-up
-- `w3d_generator_or_gate_prematurity` (managed): candidate generation remains blocked unless both predictors qualify under the same representation in a complete future panel
+- `w3d_approval_replay_or_scope_extension` (managed): the one-shot receipt is complete at 24/24 and no additional submission is allowed
+- `w3d_runtime_or_input_drift` (managed): each job revalidates its packet-bound input and reobserves the frozen predictor runtime
+- `w3d_scheduler_completion` (external_wait): monitor only receipt-bound jobs and preserve terminal Slurm accounting
+- `w3d_partial_panel_or_adaptive_rescue` (managed): all 24 prospective records are required with zero retry, top-up, target dropping, or partial adjudication
+- `w3d_generator_or_gate_prematurity` (managed): ProteinMPNN and generator, gate, and biological claims remain closed
 
 ## Next Action
 
-Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100
+Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.

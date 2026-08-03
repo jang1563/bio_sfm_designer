@@ -3039,6 +3039,7 @@ def _w3d_approval_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         "cayuga_submission_allowed": False,
         "can_claim_native_recoverability": False,
         "approval_phrase": m6d_w3d_approval.APPROVAL_PHRASE,
+        "approval_packet_file_sha256": _rendered_json_sha256(packet),
         "packet_digest_sha256": packet["packet_digest_sha256"],
         "readiness_packet_digest_sha256": packet[
             "readiness_packet_digest_sha256"
@@ -3048,6 +3049,86 @@ def _w3d_approval_summary(packet: Dict[str, Any]) -> Dict[str, Any]:
         },
         "claim_boundary": packet["claim_boundary"],
         "next_action": packet["next_action"],
+        "checks": checks,
+    }
+
+
+def _w3d_submission_summary(
+    summary: Dict[str, Any],
+    approval: Dict[str, Any],
+) -> Dict[str, Any]:
+    checks = {
+        "identity_exact": (
+            summary.get("artifact") == "m6d_w3d_submission_receipt_summary"
+            and summary.get("version") == 1
+            and summary.get("status")
+            == "w3d_all_twenty_four_prediction_jobs_submitted"
+            and summary.get("audit_ok") is True
+            and summary.get("submission_complete") is True
+        ),
+        "approval_packet_bound": (
+            _is_sha256(summary.get("approval_packet_sha256"))
+            and summary.get("approval_packet_sha256")
+            == approval.get("approval_packet_file_sha256")
+        ),
+        "scope_exact": (
+            summary.get("jobs_expected") == 24
+            and summary.get("jobs_recorded") == 24
+            and summary.get("target_ids") == _W3C_TARGET_IDS
+            and summary.get("predictor_ids") == _W3C_B2_PREDICTORS
+            and summary.get("representation_ids")
+            == ["target_msa_binder_query", "query_only_both_chains"]
+            and summary.get("predictor_job_counts")
+            == {"boltz2_complex": 8, "af2_multimer_colabfold_v1": 16}
+            and _is_sha256(summary.get("receipt_sha256"))
+        ),
+        "no_extension": (
+            summary.get("retry_jobs") == 0
+            and summary.get("adaptive_top_up_jobs") == 0
+        ),
+        "claims_closed": (
+            summary.get("can_claim_native_recoverability") is False
+            and "Scientific adjudication requires all 24 strict-QC records"
+            in str(summary.get("claim_boundary") or "")
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError(
+            "W3d submission invariants failed: " + ", ".join(failed)
+        )
+    return {
+        "status": summary["status"],
+        "audit_ok": True,
+        "submission_complete": True,
+        "approval_recorded": True,
+        "jobs_expected": 24,
+        "jobs_recorded": 24,
+        "jobs_unresolved": 24,
+        "target_ids": _W3C_TARGET_IDS,
+        "predictor_ids": _W3C_B2_PREDICTORS,
+        "representation_ids": [
+            "target_msa_binder_query",
+            "query_only_both_chains",
+        ],
+        "predictor_job_counts": {
+            "boltz2_complex": 8,
+            "af2_multimer_colabfold_v1": 16,
+        },
+        "approval_packet_sha256": summary["approval_packet_sha256"],
+        "approval_packet_digest_sha256": approval["packet_digest_sha256"],
+        "receipt_sha256": summary["receipt_sha256"],
+        "retry_jobs": 0,
+        "adaptive_top_up_jobs": 0,
+        "predictor_evaluations_complete": 0,
+        "h100_gpu_hours_accounted": 0.0,
+        "proteinmpnn_designs": 0,
+        "scientific_adjudication_complete": False,
+        "can_submit_additional_jobs": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
         "checks": checks,
     }
 
@@ -6098,6 +6179,234 @@ def _apply_w3d_native_diagnostic_state(
                 updated.append(path)
 
 
+def _apply_w3d_submission_state(
+    bundle: Dict[str, Dict[str, Any]],
+    submission: Dict[str, Any],
+) -> None:
+    requirement = "W3d_terminal_accounting_records_and_complete_case_adjudication"
+    next_action = (
+        "Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry "
+        "or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC "
+        "records and bound outputs, and apply the frozen complete-case 2 x 2 "
+        "representation-by-predictor adjudication."
+    )
+    ranked_actions = [
+        "Preserve the immutable 24/24 submission receipt and its approval-packet binding.",
+        "Monitor only the receipt-bound jobs; do not retry, top up, or substitute targets.",
+        "After all jobs are terminal, capture exact Slurm accounting and sync only packet-bound evidence.",
+        "Assemble all 24 prospective strict-QC records and reject partial-panel adjudication.",
+        "Apply the frozen W3d localization and dual-predictor native-validity rules before any generator proposal.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["objective"] = (
+        "Complete the receipt-bound W3d representation-by-predictor diagnostic, "
+        "localize the native-recovery bottleneck with its frozen complete-case rules, "
+        "and keep generator and trust-gate work blocked until adjudication."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3d"] = (
+        "twenty_four_jobs_submitted_no_complete_case_native_generator_gate_or_biological_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update({
+        "w3d_submission_receipt": "results/m6d_w3d_submit_receipt.jsonl",
+        "w3d_submission_summary": (
+            "results/m6d_w3d_submit_receipt_summary.json"
+        ),
+    })
+    current = anchor.setdefault("current_status", {})
+    current.update({
+        "status": "m6_complex_w3d_twenty_four_jobs_submitted_awaiting_terminal_outputs",
+        "goal_progress": submission["status"],
+        "remaining_requirements": [requirement],
+        "w3d": submission["status"],
+        "w3d_approval_packet_prepared": True,
+        "w3d_approval_recorded": True,
+        "w3d_submission_complete": True,
+        "w3d_submission_receipt_audit_ok": True,
+        "w3d_approved_predictor_evaluations": 24,
+        "w3d_approved_h100_gpu_hours_ceiling": 24.0,
+        "w3d_predictor_jobs_submitted": 24,
+        "w3d_predictor_jobs_completed": 0,
+        "w3d_jobs_unresolved": 24,
+        "w3d_predictor_evaluations_complete": 0,
+        "w3d_h100_gpu_hours_accounted": 0.0,
+        "w3d_additional_jobs_authorized": 0,
+        "w3d_cayuga_submission_allowed": False,
+        "w3d_can_claim": False,
+        "next_action": next_action,
+    })
+    anchor["w3d_submission"] = submission
+    anchor["next_resume_steps"] = [
+        "read the W3d submission receipt and preserve its exact 24-job scope",
+        "query only receipt-bound Slurm IDs with zero retry or adaptive top-up",
+        "after terminal accounting, sync only packet-bound records, outputs, and logs",
+        "require all 24 prospective strict-QC records before adjudication",
+        "apply the frozen W3d rules before any ProteinMPNN or trust-gate proposal",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update({
+        "w3d_status": submission["status"],
+        "w3d_approval_packet_prepared": True,
+        "w3d_approval_recorded": True,
+        "w3d_predictor_jobs_submitted": 24,
+        "w3d_predictor_jobs_completed": 0,
+        "w3d_jobs_unresolved": 24,
+        "remaining_requirement": requirement,
+    })
+
+    completion = bundle["completion"]
+    completion.update({
+        "status": "goal_active_w3d_jobs_submitted_awaiting_adjudication",
+        "audit_ok": True,
+        "complete": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "remaining_requirements": [requirement],
+        "next_action": next_action,
+        "w3d_submission": submission,
+    })
+    completion.setdefault("claim_boundary", {})["w3d"] = (
+        "twenty_four_prediction_jobs_are_receipt_bound_and_submitted_no_scientific_result_yet"
+    )
+    completion.setdefault("workstream_status", {})[
+        "W3d_native_diagnostic"
+    ].update({
+        "complete": False,
+        "scientific_success": None,
+        "status": submission["status"],
+        "approval_packet_prepared": True,
+        "approval_recorded": True,
+        "submission_complete": True,
+        "predictor_jobs_submitted": 24,
+        "predictor_jobs_completed": 0,
+        "execution_ready": False,
+        "remaining_requirement": requirement,
+    })
+
+    drift = bundle["drift"]
+    drift.update({
+        "status": "no_major_direction_drift_w3d_submitted_awaiting_results",
+        "audit_ok": True,
+        "major_direction_drift": False,
+        "can_mark_goal_complete": False,
+        "failures": [],
+        "next_action": next_action,
+    })
+    drift.setdefault("claim_boundary", {})["w3d"] = (
+        "submission_evidence_only_no_complete_case_native_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3d_approval_replay_or_scope_extension",
+            "status": "managed",
+            "control": "the one-shot receipt is complete at 24/24 and no additional submission is allowed",
+        },
+        {
+            "id": "w3d_runtime_or_input_drift",
+            "status": "managed",
+            "control": "each job revalidates its packet-bound input and reobserves the frozen predictor runtime",
+        },
+        {
+            "id": "w3d_scheduler_completion",
+            "status": "external_wait",
+            "control": "monitor only receipt-bound jobs and preserve terminal Slurm accounting",
+        },
+        {
+            "id": "w3d_partial_panel_or_adaptive_rescue",
+            "status": "managed",
+            "control": "all 24 prospective records are required with zero retry, top-up, target dropping, or partial adjudication",
+        },
+        {
+            "id": "w3d_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN and generator, gate, and biological claims remain closed",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update({
+        "protocol": "no_drift_w3d_factorial_hash_bound_and_receipt_bound",
+        "claims": "no_drift_submission_is_not_scientific_evidence",
+        "execution": "twenty_four_receipt_bound_jobs_submitted_zero_retry_zero_top_up",
+        "operational_status": "w3d_awaiting_terminal_scheduler_outputs",
+        "major_direction_drift": False,
+    })
+    drift.setdefault("current_state", {})["W3d_native_diagnostic"] = {
+        "submission": submission,
+        "scientific_adjudication_complete": False,
+    }
+
+    actions = bundle["actions"]
+    actions.update({
+        "status": "w3d_jobs_submitted_awaiting_terminal_outputs",
+        "w3d_submission": submission,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+        "w3d_submission_performed": True,
+        "no_submit": False,
+        "cayuga_submission_allowed": False,
+    })
+    actions.setdefault("claim_boundary", {})["w3d"] = (
+        "submission_complete_no_adjudication_no_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update({
+        "goal_mode_status": (
+            "active_w3d_jobs_submitted_awaiting_results"
+            if anchor.get("goal_mode") == "active"
+            else "contract_ready_runtime_goal_inactive"
+        ),
+        "science_focus": (
+            "W3d receipt-bound representation-by-predictor execution and adjudication"
+        ),
+        "w3d_submission": submission,
+    })
+    harness.setdefault("local_verification", {}).update({
+        "w3d_submission_receipt": (
+            "24_of_24_packet_cells_and_scheduler_ids_zero_retry_zero_top_up"
+        ),
+        "w3d_authority": (
+            "approved_envelope_fully_submitted_additional_authority_zero"
+        ),
+    })
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update({
+        "active_branch": "W3d",
+        "jobs_running": 0,
+        "jobs_unresolved": 24,
+        "w3d_stage": "W3d_twenty_four_jobs_submitted_awaiting_terminal_outputs",
+        "w3d_approval_packet_prepared": True,
+        "w3d_approval_recorded": True,
+        "w3d_predictor_jobs_submitted": 24,
+        "w3d_predictor_jobs_completed": 0,
+        "w3d_jobs_unresolved": 24,
+        "w3d_h100_gpu_hours_accounted": 0.0,
+        "w3d_submission_allowed": False,
+        "next_action": next_action,
+    })
+    harness.setdefault("claim_boundary", {})["w3d"] = (
+        "twenty_four_jobs_submitted_no_adjudication_no_claim"
+    )
+
+    report = bundle["report"]
+    report.update({
+        "status": "goal_state_refreshed_w3d_jobs_submitted_awaiting_results",
+        "audit_ok": True,
+        "w3d_submission": submission,
+        "w3d_submission_performed": True,
+        "no_submit": False,
+        "cayuga_submission_allowed": False,
+        "next_actions_ranked": ranked_actions,
+        "next_action": next_action,
+    })
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "results/m6d_w3d_submit_receipt.jsonl",
+        "results/m6d_w3d_submit_receipt_summary.json",
+        "docs/M6D_W3D_NATIVE_DIAGNOSTIC.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -6138,6 +6447,7 @@ def refresh_bundle(
     w3d_native_diagnostic_manifest: Optional[Dict[str, Any]] = None,
     w3d_native_diagnostic_readiness: Optional[Dict[str, Any]] = None,
     w3d_prediction_approval_packet: Optional[Dict[str, Any]] = None,
+    w3d_submission_receipt_summary: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -6305,6 +6615,17 @@ def refresh_bundle(
         if isinstance(w3d_prediction_approval_packet, dict)
         else None
     )
+    w3d_submission = (
+        _w3d_submission_summary(
+            w3d_submission_receipt_summary,
+            w3d_approval,
+        )
+        if (
+            isinstance(w3d_submission_receipt_summary, dict)
+            and isinstance(w3d_approval, dict)
+        )
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -6359,6 +6680,8 @@ def refresh_bundle(
             raise ValueError(
                 "W3d approval packet does not bind the validated W3d evidence chain"
             )
+    if w3d_submission_receipt_summary is not None and w3d_approval is None:
+        raise ValueError("W3d submission requires the validated approval packet")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -7364,6 +7687,8 @@ def refresh_bundle(
                         w3d,
                         w3d_approval,
                     )
+                    if w3d_submission is not None:
+                        _apply_w3d_submission_state(bundle, w3d_submission)
     return bundle
 
 
@@ -7967,6 +8292,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         "--w3d-prediction-approval-packet",
         default="results/m6d_w3d_prediction_approval_packet.json",
     )
+    parser.add_argument(
+        "--w3d-submission-receipt-summary",
+        default="results/m6d_w3d_submit_receipt_summary.json",
+    )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
     parser.add_argument("--test-result", required=True)
@@ -8184,6 +8513,17 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
             _load_json(args.w3d_prediction_approval_packet)
             if (
                 os.path.exists(args.w3d_prediction_approval_packet)
+                and os.path.exists(args.w3d_native_diagnostic_manifest)
+                and os.path.exists(args.w3d_native_diagnostic_readiness)
+                and os.path.exists(args.w3c_b2_terminal_stop)
+            )
+            else None
+        ),
+        (
+            _load_json(args.w3d_submission_receipt_summary)
+            if (
+                os.path.exists(args.w3d_submission_receipt_summary)
+                and os.path.exists(args.w3d_prediction_approval_packet)
                 and os.path.exists(args.w3d_native_diagnostic_manifest)
                 and os.path.exists(args.w3d_native_diagnostic_readiness)
                 and os.path.exists(args.w3c_b2_terminal_stop)

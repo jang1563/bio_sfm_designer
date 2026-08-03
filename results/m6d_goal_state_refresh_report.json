@@ -4,33 +4,33 @@
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
   "historical_w2c_submission_performed": true,
-  "next_action": "Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100",
+  "next_action": "Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.",
   "next_actions_ranked": [
-    "Preserve W3c-B2 as terminal and reuse all eight locked Boltz target-MSA outcomes without rerun.",
-    "Preserve the verified W3d packet digest and its exact 24-cell, 24-H100-hour ceiling.",
-    "Require the exact W3d approval phrase; generic continuation does not authorize compute.",
-    "After exact approval, submit only the guarded 8-Boltz plus 16-AF2 panel with zero retries or adaptive top-up.",
-    "Adjudicate only the complete 24-cell prospective panel and retain all preregistered claim boundaries."
+    "Preserve the immutable 24/24 submission receipt and its approval-packet binding.",
+    "Monitor only the receipt-bound jobs; do not retry, top up, or substitute targets.",
+    "After all jobs are terminal, capture exact Slurm accounting and sync only packet-bound evidence.",
+    "Assemble all 24 prospective strict-QC records and reject partial-panel adjudication.",
+    "Apply the frozen W3d localization and dual-predictor native-validity rules before any generator proposal."
   ],
-  "no_submit": true,
+  "no_submit": false,
   "obsolete_current_routes_removed": [
     "v9/v11 panel approval wait",
     "W2b test submission",
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "96c1aa6bc81eae34aa362ac6a28b4957941ea1cc36071a1756e00532292be40e",
-    "results/m6d_followup_next_science_actions.md": "9bac0605554f22e420fda5df784e0c9dbbcc70d4bc986a6a036ff19663aa2519",
-    "results/m6d_goal_completion_audit.json": "bc2726ae4d89778de93448f944824db6a093d8535726cdbdf0a42dd1e5ac9a4f",
-    "results/m6d_goal_completion_audit.md": "e4ec096c2d7ed3360c8016a269fdd177cb4adcca15b46903d8b8160f75bb200b",
-    "results/m6d_goal_drift_audit.json": "6b466a798703f440837d2681bb4f6dce2abee2bc60487be52b44d2cb53fe14b1",
-    "results/m6d_goal_drift_audit.md": "f660194a19d4bfc0221f1e06a4b4d4402d23284d62be24210ca830f7fc8adc02",
-    "results/m6d_goal_mode_current_anchor.json": "fbdb08556a1cd98e08264810551c6a32dac778a00251a026b0ffe6e984c696ec",
-    "results/m6d_goal_mode_local_harness_status.json": "a01089f58bb1df99b599608e36a9607b6496678730a2f4ac4c5ce917382c08b2",
-    "results/m6d_goal_mode_local_harness_status.md": "4530f8ce08d90fae2dae4b21609c3386296ac4a14d1d6d8cb670a243740581d1"
+    "results/m6d_followup_next_science_actions.json": "72c005ed6c1c028cbae19e37aa7fa45b21a292e38c31f635fbc89f727f1cef5c",
+    "results/m6d_followup_next_science_actions.md": "e7d329dca052697b06665638bc7c2b607348f1b4b84d457603b34c04d1c07460",
+    "results/m6d_goal_completion_audit.json": "efbdd40783096cb847caa275d88499d626f884a3619de4f05bc6db8f41680216",
+    "results/m6d_goal_completion_audit.md": "49b76872f8c44121de55d3cf468f0619413f31fc9cc4e1dfdd69401678b2cc40",
+    "results/m6d_goal_drift_audit.json": "2a89c6d319ce8050dd2a06acbf7b1447281d50f9dd5c2c656912d1b442263739",
+    "results/m6d_goal_drift_audit.md": "24219d23220c48961ae7fc16a59179636543591455c1c7ed7d1893f3839ee333",
+    "results/m6d_goal_mode_current_anchor.json": "6b0084afc6feefb8859bb43ad91615c904a1b65b1af4e2027329ca16c44a1fc2",
+    "results/m6d_goal_mode_local_harness_status.json": "a9d8a84977272a792afc93856e7094731c32f551c581e3182a500391eff4f359",
+    "results/m6d_goal_mode_local_harness_status.md": "f1c1b0f5d712314ecca89b69a6b36d481a35be01201cc8f776b66e0e17fcffe3"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w3d_packet_ready_no_submit",
+  "status": "goal_state_refreshed_w3d_jobs_submitted_awaiting_results",
   "submission_performed": true,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
@@ -98,9 +98,11 @@
     "src/bio_sfm_designer/experiments/m6d_w3d_submit_journal.py",
     "hpc/run_predict_boltz_w3d_native.sbatch",
     "hpc/run_predict_af2_w3d_native.sbatch",
-    "hpc/m6d_w3d_submit_with_receipt.sh"
+    "hpc/m6d_w3d_submit_with_receipt.sh",
+    "results/m6d_w3d_submit_receipt.jsonl",
+    "results/m6d_w3d_submit_receipt_summary.json"
   ],
-  "updated_at": "2026-08-03T13:47:26+02:00",
+  "updated_at": "2026-08-03T12:29:08Z",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -1858,6 +1860,7 @@
     "wrapper_static_no_prediction_validation_complete": true
   },
   "w3d_prediction_approval_packet": {
+    "approval_packet_file_sha256": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
     "approval_packet_prepared": true,
     "approval_phrase": "approve W3d representation-by-predictor 24-evaluation panel on H100",
     "approval_recorded": false,
@@ -1928,5 +1931,57 @@
       "7B5G_AB"
     ]
   },
-  "w3d_submission_performed": false
+  "w3d_submission": {
+    "adaptive_top_up_jobs": 0,
+    "approval_packet_digest_sha256": "6a2cde2d90fc054298bef33e7ccf0c6c984a939de0f9cd1a5a543c44a855c36a",
+    "approval_packet_sha256": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
+    "approval_recorded": true,
+    "audit_ok": true,
+    "can_claim_biological_binder_success": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "can_submit_additional_jobs": false,
+    "checks": {
+      "approval_packet_bound": true,
+      "claims_closed": true,
+      "identity_exact": true,
+      "no_extension": true,
+      "scope_exact": true
+    },
+    "h100_gpu_hours_accounted": 0.0,
+    "jobs_expected": 24,
+    "jobs_recorded": 24,
+    "jobs_unresolved": 24,
+    "predictor_evaluations_complete": 0,
+    "predictor_ids": [
+      "boltz2_complex",
+      "af2_multimer_colabfold_v1"
+    ],
+    "predictor_job_counts": {
+      "af2_multimer_colabfold_v1": 16,
+      "boltz2_complex": 8
+    },
+    "proteinmpnn_designs": 0,
+    "receipt_sha256": "48085cbbe98e60718d258ed1b2c624f1a3e9b7e87af74e6a1826e801bcfdab93",
+    "representation_ids": [
+      "target_msa_binder_query",
+      "query_only_both_chains"
+    ],
+    "retry_jobs": 0,
+    "scientific_adjudication_complete": false,
+    "status": "w3d_all_twenty_four_prediction_jobs_submitted",
+    "submission_complete": true,
+    "target_ids": [
+      "1TE1_BA",
+      "3QB4_AB",
+      "5E5M_AB",
+      "5JSB_AB",
+      "6KBR_AC",
+      "6KMQ_AB",
+      "6SGE_AB",
+      "7B5G_AB"
+    ]
+  },
+  "w3d_submission_performed": true
 }

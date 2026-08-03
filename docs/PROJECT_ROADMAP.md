@@ -58,8 +58,10 @@
 > diagnostic. The complete W3c-B2 Boltz cell is retained as an immutable retrospective baseline, while 24
 > remaining cells are frozen prospectively. The design discloses that mixed timing, forbids target filtering
 > and baseline reruns. CPU input production and exact Cayuga no-prediction runtime validation are complete.
-> A hash-bound no-submit packet now freezes 8 Boltz plus 16 AF2 evaluations and a 24-H100-hour ceiling, but
-> approval is unrecorded and all current compute authority remains zero.
+> A hash-bound packet freezes 8 Boltz plus 16 AF2 evaluations and a 24-H100-hour ceiling. Its exact approval
+> was consumed once on 2026-08-03, and jobs `3171691`-`3171714` cover all 24 packet cells with zero retries
+> and zero adaptive top-ups. Terminal outputs and complete-case adjudication remain pending; authority for
+> additional compute is zero.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -208,11 +210,14 @@ A3Ms. Every input hash and representation semantic contract passes. Separate Bol
 plus an orchestrator contain no accelerator, scheduler, network-fetch, or prediction route; the AF2 probe
 uses absolute project-bound paths and an explicit container working directory. Exact Cayuga validation now
 passes for both runtime identities, 8/8 Boltz host paths, and 16/16 AF2 container paths. Its public receipt
-contains no host path and records zero model, GPU, scheduler, or network-fetch execution. Even so,
-`execution_ready=false`: zero predictor evaluations and zero H100 GPU-hours are authorized. The separate
+contains no host path and records zero model, GPU, scheduler, or network-fetch execution. The separate
 hash-bound packet now binds exactly 24 evaluations, 53 initially absent output paths, the corrected
 wrappers, runtime identities, and a maximum 24 H100 GPU-hour ceiling. Its dry run creates zero scheduler
-jobs; `approval_recorded=false`. The next step is exact stage-specific approval, not generic continuation.
+jobs. The exact approval was later consumed once, and the guarded bridge submitted jobs
+`3171691`-`3171714`: 24/24 unique cells and scheduler IDs, split as 8 Boltz and 16 AF2, with zero retries
+and zero adaptive top-ups. Submission establishes provenance but no scientific outcome. The next step is
+terminal accounting, strict-QC synchronization for all 24 cells, and the frozen complete-case adjudication;
+no additional compute is authorized.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:

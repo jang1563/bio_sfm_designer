@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3d_packet_ready_no_submit`.
+Status: `goal_state_refreshed_w3d_jobs_submitted_awaiting_results`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -123,7 +123,9 @@ Cayuga submission allowed: `False`.
 - `hpc/run_predict_boltz_w3d_native.sbatch`
 - `hpc/run_predict_af2_w3d_native.sbatch`
 - `hpc/m6d_w3d_submit_with_receipt.sh`
+- `results/m6d_w3d_submit_receipt.jsonl`
+- `results/m6d_w3d_submit_receipt_summary.json`
 
 ## Next Action
 
-Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100
+Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.

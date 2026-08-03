@@ -16,14 +16,41 @@ from bio_sfm_designer.experiments.m6d_w3b_runtime_lock import canonical_sha256
 ROOT = Path(__file__).resolve().parents[1]
 PACKET = ROOT / "results/m6d_w3d_prediction_approval_packet.json"
 READINESS = ROOT / "results/m6d_w3d_prediction_packet_readiness.json"
+SUBMIT_RECEIPT = ROOT / "results/m6d_w3d_submit_receipt.jsonl"
+SUBMIT_SUMMARY = ROOT / "results/m6d_w3d_submit_receipt_summary.json"
 
 
-def test_committed_packet_is_reproducible_and_grants_zero_authority(monkeypatch):
-    monkeypatch.chdir(ROOT)
-    readiness = mod.build_readiness(require_input_files=False)
+def _make_pre_submission_sandbox(tmp_path: Path) -> Path:
+    sandbox = tmp_path / "repo"
+    sandbox.mkdir()
+    for directory in ("configs", "hpc", "src"):
+        (sandbox / directory).symlink_to(ROOT / directory, target_is_directory=True)
     packet = json.loads(PACKET.read_text())
+    result_paths = {PACKET, READINESS}
+    result_paths.update(
+        ROOT / binding["path"]
+        for binding in packet["bound_artifacts"].values()
+        if binding["path"].startswith("results/")
+    )
+    for source in result_paths:
+        destination = sandbox / source.relative_to(ROOT)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.symlink_to(source)
+    return sandbox
 
-    assert readiness == json.loads(READINESS.read_text())
+
+def test_committed_packet_is_reproducible_in_pre_submission_state(
+    monkeypatch,
+    tmp_path,
+):
+    sandbox = _make_pre_submission_sandbox(tmp_path)
+    monkeypatch.chdir(sandbox)
+    readiness = mod.build_readiness(require_input_files=False)
+    packet = json.loads((sandbox / PACKET.relative_to(ROOT)).read_text())
+
+    assert readiness == json.loads(
+        (sandbox / READINESS.relative_to(ROOT)).read_text()
+    )
     assert packet == mod.build_approval_packet(readiness)
     assert packet["approval_recorded"] is False
     assert packet["no_submit"] is True
@@ -34,6 +61,25 @@ def test_committed_packet_is_reproducible_and_grants_zero_authority(monkeypatch)
     assert len(packet["execution_cells"]) == 24
     assert len(packet["initial_output_paths"]) == 53
     assert mod.verify_packet_integrity(str(PACKET.relative_to(ROOT))) == []
+
+
+def test_submission_receipts_close_initial_readiness(monkeypatch):
+    monkeypatch.chdir(ROOT)
+
+    readiness = mod.build_readiness(require_input_files=False)
+
+    assert SUBMIT_RECEIPT.is_file()
+    assert SUBMIT_SUMMARY.is_file()
+    assert readiness["prediction_packet_ready"] is False
+    assert readiness["can_submit_now"] is False
+    existing = next(
+        row for row in readiness["failures"]
+        if row["kind"] == "initial_output_already_exists"
+    )
+    assert {
+        str(SUBMIT_RECEIPT.relative_to(ROOT)),
+        str(SUBMIT_SUMMARY.relative_to(ROOT)),
+    }.issubset(existing["paths"])
 
 
 def test_packet_has_exact_prospective_predictor_counts(monkeypatch):
@@ -88,13 +134,15 @@ def test_producer_token_drift_blocks_readiness(monkeypatch, tmp_path):
 
 
 def test_submit_bridge_dry_run_never_calls_scheduler(monkeypatch, tmp_path):
-    monkeypatch.chdir(ROOT)
+    sandbox = _make_pre_submission_sandbox(tmp_path)
+    monkeypatch.chdir(sandbox)
     marker = tmp_path / "scheduler-called"
     fake_sbatch = tmp_path / "sbatch"
     fake_sbatch.write_text(f"#!/bin/sh\ntouch {marker}\nexit 99\n")
     fake_sbatch.chmod(0o755)
     env = os.environ.copy()
     env.update({
+        "BIO_SFM_REPO_ROOT": str(sandbox),
         "BIO_SFM_SUBMIT_DRY_RUN": "1",
         "BIO_SFM_PYTHON": sys.executable,
         "SBATCH_BIN": str(fake_sbatch),
@@ -105,7 +153,7 @@ def test_submit_bridge_dry_run_never_calls_scheduler(monkeypatch, tmp_path):
     })
 
     completed = subprocess.run(
-        ["bash", "hpc/m6d_w3d_submit_with_receipt.sh"],
+        ["bash", str(ROOT / "hpc/m6d_w3d_submit_with_receipt.sh")],
         check=True,
         capture_output=True,
         text=True,

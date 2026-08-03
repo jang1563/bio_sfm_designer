@@ -1,0 +1,37 @@
+{
+  "adaptive_top_up_jobs": 0,
+  "approval_packet_sha256": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
+  "artifact": "m6d_w3d_submission_receipt_summary",
+  "audit_ok": true,
+  "can_claim_native_recoverability": false,
+  "claim_boundary": "Scheduler submission evidence only. Scientific adjudication requires all 24 strict-QC records and the frozen complete-case W3d rules.",
+  "jobs_expected": 24,
+  "jobs_recorded": 24,
+  "predictor_ids": [
+    "boltz2_complex",
+    "af2_multimer_colabfold_v1"
+  ],
+  "predictor_job_counts": {
+    "af2_multimer_colabfold_v1": 16,
+    "boltz2_complex": 8
+  },
+  "receipt_sha256": "48085cbbe98e60718d258ed1b2c624f1a3e9b7e87af74e6a1826e801bcfdab93",
+  "representation_ids": [
+    "target_msa_binder_query",
+    "query_only_both_chains"
+  ],
+  "retry_jobs": 0,
+  "status": "w3d_all_twenty_four_prediction_jobs_submitted",
+  "submission_complete": true,
+  "target_ids": [
+    "1TE1_BA",
+    "3QB4_AB",
+    "5E5M_AB",
+    "5JSB_AB",
+    "6KBR_AC",
+    "6KMQ_AB",
+    "6SGE_AB",
+    "7B5G_AB"
+  ],
+  "version": 1
+}

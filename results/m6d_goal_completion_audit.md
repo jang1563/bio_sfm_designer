@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3d_packet_ready_explicit_approval_required`.
+Status: `goal_active_w3d_jobs_submitted_awaiting_adjudication`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -57,10 +57,10 @@ Can mark goal complete: `False`.
 - W3d locked baseline / prospective cells: `8` / `24`
 - W3d predictor evaluations authorized: `0`
 - W3d execution ready: `False`
-- remaining requirement: `W3d_explicit_compute_approval`
+- remaining requirement: `W3d_terminal_accounting_records_and_complete_case_adjudication`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100
+Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.

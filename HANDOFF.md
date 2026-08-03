@@ -21,10 +21,11 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > absolute container-visible AF2 paths, and an explicit project-root working directory. The redacted
 > receipt records zero model, GPU, scheduler, and network-fetch execution. The separate hash-bound no-submit
 > packet now freezes exactly 24 evaluations, 53 initially absent output paths, and at most 24 H100 GPU-hours;
-> its local dry run creates zero scheduler jobs. Approval remains unrecorded and no prediction is authorized.
-> Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
-> `results/m6d_w3d_prediction_approval_packet.json`. Predictor submission requires the exact phrase
-> `approve W3d representation-by-predictor 24-evaluation panel on H100`.
+> its local and Cayuga dry runs created zero scheduler jobs. The exact approval was consumed once on
+> 2026-08-03; jobs `3171691`-`3171714` are receipt-bound 24/24, with 8 Boltz, 16 AF2, zero retries, and zero
+> adaptive top-ups. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
+> `results/m6d_w3d_submit_receipt_summary.json`. Monitor only these jobs and require all 24 strict-QC
+> records before frozen complete-case adjudication; no additional submission is authorized.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
@@ -154,12 +155,13 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > `results/m6d_w3c_b2_terminal_stop.json` as the narrow terminal result. Do not repair or rerun this one-shot
 > panel. The separate W3d successor is preregistered in
 > `configs/m6d_w3d_native_diagnostic_protocol.json`: a 32-cell factorial with 8 immutable baseline cells
-> and 24 prospective cells. Current predictor, H100, ProteinMPNN, MSA-query, and API authority is zero.
+> and 24 prospective cells. Current additional predictor, H100, ProteinMPNN, MSA-query, and API authority
+> is zero.
 > Its CPU producer has materialized and verified 24/24 prospective inputs; the new offline wrappers pass
 > exact Cayuga runtime-hash and absolute-path validation with zero model/GPU/scheduler/network execution.
-> Its hash-bound no-submit packet is now ready for exactly 8 Boltz plus 16 AF2 evaluations, but records no
-> approval and grants zero current compute authority. Read `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; predictor
-> submission requires the exact W3d 24-evaluation H100 approval phrase recorded there.
+> Its hash-bound packet was approved once and jobs `3171691`-`3171714` were submitted exactly 24/24.
+> Read `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; preserve zero retry/top-up authority and wait for terminal
+> accounting plus all 24 prospective strict-QC records before adjudication.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
