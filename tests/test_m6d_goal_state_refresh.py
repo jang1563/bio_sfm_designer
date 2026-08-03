@@ -7,11 +7,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from bio_sfm_designer.experiments import m6d_w3d_approval
 from bio_sfm_designer.experiments.m6d_goal_state_refresh import (
     main,
     refresh_bundle,
     render_completion_markdown,
 )
+from bio_sfm_designer.experiments.m6d_w3b_runtime_lock import canonical_sha256
 
 
 def _w2b():
@@ -1116,6 +1118,7 @@ def _refresh_current_w3b(
     b2_terminal=None,
     w3d_manifest=None,
     w3d_readiness=None,
+    w3d_approval=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1154,6 +1157,7 @@ def _refresh_current_w3b(
         w3c_b2_terminal_stop=b2_terminal,
         w3d_native_diagnostic_manifest=w3d_manifest,
         w3d_native_diagnostic_readiness=w3d_readiness,
+        w3d_prediction_approval_packet=w3d_approval,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1187,6 +1191,12 @@ def _current_w3d_artifacts():
         "results/m6d_w3d_native_diagnostic_readiness.json",
     )
     return [json.loads(Path(path).read_text()) for path in paths]
+
+
+def _current_w3d_approval_packet_artifact():
+    return json.loads(
+        Path("results/m6d_w3d_prediction_approval_packet.json").read_text()
+    )
 
 
 def _ready_w3c_b1_packet_artifact():
@@ -2181,6 +2191,95 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
         self.assertFalse(bundle["actions"]["w3d_submission_performed"])
         self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
         self.assertFalse(bundle["drift"]["major_direction_drift"])
+
+    def test_w3d_approval_packet_promotes_exact_approval_required_state(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+        w3d_approval = _current_w3d_approval_packet_artifact()
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=_ready_w3c_b1_packet_artifact(),
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            b2_native_manifest=native,
+            b2_runtime=runtime,
+            b2_approval=approval,
+            b2_cayuga_validation=validation,
+            b2_submission=_current_w3c_b2_submission_artifact(),
+            b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+            w3d_manifest=w3d_manifest,
+            w3d_readiness=w3d_readiness,
+            w3d_approval=w3d_approval,
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3d_packet_ready_no_submit",
+        )
+        current = bundle["anchor"]["current_status"]
+        self.assertTrue(current["w3d_approval_packet_prepared"])
+        self.assertFalse(current["w3d_approval_recorded"])
+        self.assertEqual(
+            current["remaining_requirements"],
+            ["W3d_explicit_compute_approval"],
+        )
+        self.assertEqual(
+            current["w3d_approval_packet_sha256"],
+            w3d_approval["packet_digest_sha256"],
+        )
+        self.assertEqual(
+            current["w3d_exact_approval_phrase"],
+            "approve W3d representation-by-predictor 24-evaluation panel on H100",
+        )
+        self.assertEqual(current["w3d_predictor_evaluations_authorized"], 0)
+        self.assertEqual(current["w3d_h100_gpu_hours_authorized"], 0.0)
+        self.assertFalse(current["w3d_cayuga_submission_allowed"])
+        self.assertFalse(bundle["actions"]["w3d_submission_performed"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertEqual(
+            bundle["drift"]["drift_assessment"]["operational_status"],
+            "w3d_explicit_compute_approval_required",
+        )
+        self.assertFalse(bundle["drift"]["major_direction_drift"])
+
+    def test_w3d_approval_packet_rejects_authority_or_binding_drift(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        for drift_kind in ("authority", "binding"):
+            w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+            w3d_approval = _current_w3d_approval_packet_artifact()
+            if drift_kind == "authority":
+                w3d_approval["approval_recorded"] = True
+                expected_error = "W3d approval-packet invariants failed"
+            else:
+                w3d_approval["bound_artifacts"]["native_readiness"][
+                    "sha256"
+                ] = "0" * 64
+                w3d_approval["packet_digest_sha256"] = canonical_sha256(
+                    m6d_w3d_approval._packet_digest_input(w3d_approval)
+                )
+                expected_error = "does not bind the validated W3d evidence chain"
+            with self.subTest(drift_kind=drift_kind), self.assertRaisesRegex(
+                ValueError, expected_error
+            ):
+                _refresh_current_w3b(
+                    recovery=_w3b_recovery_artifacts(),
+                    fit_completion=_w3b_fit_terminal_artifact(),
+                    target_validity=_w3c_target_validity_artifact(),
+                    fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                    b1_packet=_ready_w3c_b1_packet_artifact(),
+                    b1_completion=_w3c_b1_target_msa_completion_artifact(),
+                    b2_native_manifest=native,
+                    b2_runtime=runtime,
+                    b2_approval=approval,
+                    b2_cayuga_validation=validation,
+                    b2_submission=_current_w3c_b2_submission_artifact(),
+                    b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+                    w3d_manifest=w3d_manifest,
+                    w3d_readiness=w3d_readiness,
+                    w3d_approval=w3d_approval,
+                )
 
     def test_w3d_protocol_rejects_scope_or_authority_drift(self):
         native, runtime, approval, validation = _current_w3c_b2_artifacts()

@@ -127,11 +127,15 @@
 > Boltz query-only YAMLs and sixteen AF2 annotated multimer A3Ms. New no-prediction wrappers bind absolute
 > AF2 input/output paths, the project root, an explicit container working directory, and offline runtime
 > reobservation. Exact Cayuga validation passes for both locked runtime hashes and all 24 path probes, with
-> zero model, GPU, scheduler, or network-fetch execution. Current authority remains zero predictor
-> evaluations, zero H100 GPU-hours, zero ProteinMPNN designs, and zero API calls; no approval packet exists.
+> zero model, GPU, scheduler, or network-fetch execution. A hash-bound no-submit approval packet now freezes
+> exactly 8 Boltz and 16 AF2 evaluations, 53 initially absent output paths, and a maximum 24 H100 GPU-hour
+> ceiling; its dry run enumerates all 24 cells with zero scheduler jobs. Approval is not recorded and current
+> authority remains zero predictor evaluations, zero H100 GPU-hours, zero ProteinMPNN designs, and zero API
+> calls. Execution requires the exact phrase
+> `approve W3d representation-by-predictor 24-evaluation panel on H100`.
 > See [docs/M6D_W3D_NATIVE_DIAGNOSTIC.md](docs/M6D_W3D_NATIVE_DIAGNOSTIC.md),
 > [configs/m6d_w3d_native_diagnostic_protocol.json](configs/m6d_w3d_native_diagnostic_protocol.json), and
-> [results/m6d_w3d_native_diagnostic_readiness.json](results/m6d_w3d_native_diagnostic_readiness.json).
+> [results/m6d_w3d_prediction_approval_packet.json](results/m6d_w3d_prediction_approval_packet.json).
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. An optional LLM proposes bounded hypotheses over specialist scientific
@@ -168,7 +172,7 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (designer: `1301` pytest tests plus `80` subtests and `1146` unittest
+**Current local source verified** (designer: `1315` pytest tests plus `82` subtests and `1148` unittest
 tests; trust-core: `88` pytest tests and `88` unittest tests on 2026-08-03).
 The public install now pins `bio-sfm-trust-core` v0.2.0, the coordinated release whose exact split-LTT
 implementation produced the frozen downstream campaign artifacts; the tested v0.1.0 fallback remains

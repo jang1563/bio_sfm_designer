@@ -11,7 +11,7 @@
       "status": "managed"
     },
     {
-      "control": "absolute container-visible paths and an explicit AF2 working directory are statically locked; exact Cayuga no-prediction confirmation remains required before approval preparation",
+      "control": "absolute container-visible paths and an explicit AF2 working directory are hash-bound in the approval packet",
       "id": "w3d_af2_path_regression",
       "status": "managed"
     },
@@ -1946,11 +1946,14 @@
       "factorial_cells": 32,
       "fully_prospective_four_cell_claim_allowed": false,
       "h100_gpu_hours_authorized": 0.0,
+      "input_manifest_sha256": "da6553e2ccfe5ddc508e73bed7f86d3a68e4247870d1a59590a458443082af40",
       "input_producer_implemented": true,
+      "input_runtime_readiness_sha256": "76e5770307aa410cca285fc5fc8ce7206eb3f376149a3ff4f12a3af80bfec1c5",
       "manifest_sha256": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
       "materialized_input_files": 24,
       "materialized_input_hashes_verified": 24,
       "maximum_future_h100_gpu_hours_if_separately_approved": 24.0,
+      "native_readiness_sha256": "55d69203a6694a79ad1938333def83447207cee6425396ec8f96e8e9f17318e9",
       "new_runtime_wrappers_implemented": true,
       "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
       "no_prediction_runtime_validation_complete": true,
@@ -2004,7 +2007,7 @@
     "execution": "twenty_four_cpu_inputs_and_wrappers_validated_zero_new_predictions",
     "major_direction_drift": false,
     "mission": "no_drift_external_calibrated_trust_gate_north_star_preserved",
-    "operational_status": "w3d_hash_bound_compute_approval_packet_required",
+    "operational_status": "w3d_explicit_compute_approval_required",
     "protocol": "no_drift_distinct_w3d_factorial_preregistered_after_terminal_w3c_b2"
   },
   "failures": [],
@@ -2021,7 +2024,7 @@
     "w3_adjudication_audit": "<repo-root>/results/m6d_w3_adjudication_audit.json"
   },
   "major_direction_drift": false,
-  "next_action": "Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.",
+  "next_action": "Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100",
   "representation_lock_complete": true,
   "representation_validity_issue_detected": true,
   "status": "no_major_direction_drift_w3d_factorial_successor_locked",

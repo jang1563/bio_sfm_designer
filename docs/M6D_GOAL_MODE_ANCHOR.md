@@ -24,15 +24,16 @@
 > still blocked. The separate W3d successor is now preregistered as a 32-cell
 > representation-by-predictor diagnostic: eight immutable W3c-B2 Boltz baseline cells plus 24 prospective
 > cells. Current predictor and H100 authority is zero. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`;
-> CPU inputs and exact Cayuga no-prediction runtime/path validation are complete. Next prepare only a
-> hash-bound no-submit approval packet; predictor submission requires a new explicit approval.
+> CPU inputs and exact Cayuga no-prediction runtime/path validation are complete. The hash-bound no-submit
+> packet is also ready for exactly 24 evaluations, but approval is not recorded and submission remains
+> blocked. Predictor submission requires the exact W3d 24-evaluation H100 approval phrase.
 
 Date: 2026-08-03
 
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
 
-Latest local harness refresh: 2026-08-02.
+Latest local harness refresh: 2026-08-03.
 
 Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. W2b
 certification completed on five fit-eligible targets with 300 fresh H100 records and strict QC failures=0.
@@ -77,7 +78,8 @@ most 2/8 against a required 6/8. This supports a stage-impossibility stop, not a
 recoverability estimate. No retry or AF2 recovery is authorized under the consumed approval. W3d now
 freezes the distinct diagnostic successor across Boltz/AF2 and target-MSA/query-only representations. It
 retains all targets and all baseline outcomes, discloses that the baseline is retrospective, and freezes
-the remaining 24 cells before their outcomes. No W3d prediction or submission has occurred.
+the remaining 24 cells before their outcomes. Its 24-evaluation hash-bound packet is ready, but no W3d
+prediction or submission has occurred and approval remains unrecorded.
 
 ## Active Objective
 
@@ -89,8 +91,8 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   certification and held-out-test roles;
 - preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
   preserve the terminal W3c-B2 partial-result stop without retry or post-hoc rescue;
-- implement the locked W3d CPU input producer and no-prediction runtime validation before any compute
-  approval or generator work;
+- preserve the verified W3d inputs, runtime receipt, and hash-bound 24-evaluation packet while requiring
+  exact stage-specific approval before any compute or generator work;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -141,8 +143,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   Eight W3c-B2 Boltz target-MSA outcomes are immutable retrospective baseline cells; 24 remaining cells
   are prospective after the lock. Frozen paired rules distinguish representation-specific,
   predictor-specific, interaction, partial, and unresolved outcomes. Native validity can be recovered only
-  if both predictors qualify at 6/8 under the same representation. Execution is not ready; predictor,
-  H100, ProteinMPNN, MSA-query, API, retry, and adaptive-top-up authority is zero.
+  if both predictors qualify at 6/8 under the same representation. The no-submit packet freezes 8 Boltz
+  plus 16 AF2 evaluations and a 24-H100-hour ceiling. Approval is not recorded; predictor, H100,
+  ProteinMPNN, MSA-query, API, retry, and adaptive-top-up authority is zero.
 - W4: closed-loop plumbing is complete, but it is fail-closed/all-defer evidence rather than
   productive build-selection evidence.
 
@@ -259,9 +262,15 @@ from Chai records alone.
   `results/m6d_w3d_native_diagnostic_readiness.{json,md}`, and
   `results/m6d_w3d_input_runtime_readiness.{json,md}`,
   `results/m6d_w3d_runtime_validation_receipt.json`, plus
+  `results/m6d_w3d_prediction_packet_readiness.{json,md}`,
+  `results/m6d_w3d_prediction_approval_packet.json`,
   `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`,
-  `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`, and the three
-  `hpc/validate_w3d_*_runtime_no_prediction.sh` wrappers
+  `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`,
+  `src/bio_sfm_designer/experiments/m6d_w3d_approval.py`,
+  `src/bio_sfm_designer/experiments/m6d_w3d_execution.py`,
+  `src/bio_sfm_designer/experiments/m6d_w3d_submit_journal.py`, the three
+  `hpc/validate_w3d_*_runtime_no_prediction.sh` wrappers, the two
+  `hpc/run_predict_*_w3d_native.sbatch` wrappers, and `hpc/m6d_w3d_submit_with_receipt.sh`
 - W3 guarded execution, runtime receipt, conversion, and adjudication code:
   `hpc/run_w3_mechanism_panel_guarded.sh`, `hpc/validate_w3_mechanism_runtime.sh`,
   `hpc/convert_colabfold_mechanism_panel.py`, and
@@ -1391,5 +1400,6 @@ git status --short --branch
 The current science branch is fixed: preserve W3c-B2 at its terminal validity stop and continue only the
 locked W3d no-submit successor. Do not retry AF2, substitute targets, change the 6/8 rule, rerun the
 baseline, or reuse the consumed approval. CPU inputs and exact Cayuga no-prediction runtime/path validation
-are now complete. Prepare only a separate hash-bound no-submit approval packet next; any later compute
-requires a new experiment-specific approval.
+are now complete, and the separate hash-bound no-submit packet freezes exactly 24 prospective evaluations.
+Approval is not recorded. Any compute requires the exact phrase
+`approve W3d representation-by-predictor 24-evaluation panel on H100`.

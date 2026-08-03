@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3d_runtime_validated_approval_packet_required`.
+Status: `goal_active_w3d_packet_ready_explicit_approval_required`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -57,10 +57,10 @@ Can mark goal complete: `False`.
 - W3d locked baseline / prospective cells: `8` / `24`
 - W3d predictor evaluations authorized: `0`
 - W3d execution ready: `False`
-- remaining requirement: `W3d_hash_bound_compute_approval_packet`
+- remaining requirement: `W3d_explicit_compute_approval`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.
+Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100

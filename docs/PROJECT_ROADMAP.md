@@ -57,8 +57,9 @@
 > authorized. W3d now locks that distinct successor as an eight-target 2 x 2 representation-by-predictor
 > diagnostic. The complete W3c-B2 Boltz cell is retained as an immutable retrospective baseline, while 24
 > remaining cells are frozen prospectively. The design discloses that mixed timing, forbids target filtering
-> and baseline reruns, and keeps all compute authority at zero. The next milestone is CPU input production
-> and corrected no-prediction runtime validation, not H100 execution.
+> and baseline reruns. CPU input production and exact Cayuga no-prediction runtime validation are complete.
+> A hash-bound no-submit packet now freezes 8 Boltz plus 16 AF2 evaluations and a 24-H100-hour ceiling, but
+> approval is unrecorded and all current compute authority remains zero.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -208,8 +209,10 @@ plus an orchestrator contain no accelerator, scheduler, network-fetch, or predic
 uses absolute project-bound paths and an explicit container working directory. Exact Cayuga validation now
 passes for both runtime identities, 8/8 Boltz host paths, and 16/16 AF2 container paths. Its public receipt
 contains no host path and records zero model, GPU, scheduler, or network-fetch execution. Even so,
-`execution_ready=false`: zero predictor evaluations and zero H100 GPU-hours are authorized, and no approval
-packet exists. The next step is a separate hash-bound no-submit approval packet, not execution.
+`execution_ready=false`: zero predictor evaluations and zero H100 GPU-hours are authorized. The separate
+hash-bound packet now binds exactly 24 evaluations, 53 initially absent output paths, the corrected
+wrappers, runtime identities, and a maximum 24 H100 GPU-hour ceiling. Its dry run creates zero scheduler
+jobs; `approval_recorded=false`. The next step is exact stage-specific approval, not generic continuation.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -753,9 +756,9 @@ Allowed decisions:
    inference. Do not retry or recover the consumed one-shot panel; AF2 cannot change the `2/8 < 6/8`
    conjunction bound.
 7. Continue only the locked W3d no-submit successor. Preserve all eight baseline outcomes and all eight
-   targets; implement the two representation encodings and corrected absolute-path wrappers, then validate
-   all 24 prospective cells without prediction or submission. ProteinMPNN, generator, gate, and
-   certification work remain unauthorized.
+   targets; preserve the validated representation inputs, corrected absolute-path wrappers, runtime receipt,
+   and 24-evaluation approval packet. Require the exact W3d H100 approval phrase before submission.
+   ProteinMPNN, generator, gate, and certification work remain unauthorized.
 8. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

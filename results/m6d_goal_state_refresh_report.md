@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3d_runtime_validated_no_submit`.
+Status: `goal_state_refreshed_w3d_packet_ready_no_submit`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -114,7 +114,16 @@ Cayuga submission allowed: `False`.
 - `hpc/validate_w3d_boltz_runtime_no_prediction.sh`
 - `hpc/validate_w3d_af2_runtime_no_prediction.sh`
 - `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`
+- `results/m6d_w3d_prediction_packet_readiness.json`
+- `results/m6d_w3d_prediction_packet_readiness.md`
+- `results/m6d_w3d_prediction_approval_packet.json`
+- `src/bio_sfm_designer/experiments/m6d_w3d_approval.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_execution.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_submit_journal.py`
+- `hpc/run_predict_boltz_w3d_native.sbatch`
+- `hpc/run_predict_af2_w3d_native.sbatch`
+- `hpc/m6d_w3d_submit_with_receipt.sh`
 
 ## Next Action
 
-Prepare a separate hash-bound W3d compute approval packet for exactly 24 prospective evaluations; do not submit prediction work yet.
+Request the exact approval phrase: approve W3d representation-by-predictor 24-evaluation panel on H100

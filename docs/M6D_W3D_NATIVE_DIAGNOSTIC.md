@@ -7,6 +7,9 @@ Date locked: 2026-08-02.
 Operational preparation status (2026-08-03):
 `w3d_input_and_runtime_validation_complete_no_submit`.
 
+Approval-packet status (2026-08-03):
+`w3d_prediction_approval_packet_ready_no_submit`.
+
 ## Purpose
 
 W3c-B2 is terminal. Boltz recovered only 2/8 native complexes, which makes the frozen dual-predictor
@@ -129,7 +132,7 @@ The failed W3c-B2 AF2 jobs are not recoverable under W3d. A new AF2 wrapper must
 - set an explicit container working directory;
 - preserve ColabFold 1.6.1, AF2-Multimer v3, all five weight hashes, seed 0, 20 recycles, no templates,
   no relaxation, and no prediction-time network;
-- pass a new no-prediction runtime and input-resolution validation before an approval packet exists.
+- pass a new no-prediction runtime and input-resolution validation before inclusion in any approval packet.
 
 Boltz must retain the exact 2.2.1 runtime identity and the same model/sampling settings. Both predictors
 require new wrapper/input validation because W3d adds the query-only representation.
@@ -174,8 +177,30 @@ does the corresponding host-path checks for eight cells. Both reobserve the exac
 Static validation and exact execution of these no-prediction probes on Cayuga are complete. Both locked
 runtime identities match, 8/8 Boltz host paths and 16/16 AF2 container paths pass, and all 16 AF2 probes
 confirm the explicit container working directory. The redacted receipt contains no Cayuga path and records
-zero prediction, GPU, scheduler, or network-fetch execution. `execution_ready=false` and no approval packet
-exists because runtime validation grants no compute authority.
+zero prediction, GPU, scheduler, or network-fetch execution. Runtime validation itself granted no compute
+authority; the later approval packet remains `approval_recorded=false`, `can_submit_now=false`, and
+`execution_ready=false` in the integrated goal state.
+
+## Hash-Bound Approval Packet
+
+The no-submit packet now binds the complete prospective execution surface:
+
+- 24 prospective cells: 8 Boltz query-only and 16 AF2 cells;
+- exactly 24 scheduler jobs if separately approved, each `h100:1` for at most one hour;
+- a total ceiling of 24 H100 GPU-hours;
+- all protocol, factorial, input, runtime, producer, converter, journal, wrapper, and submit-bridge hashes;
+- 53 paths that must all be absent before first submission;
+- seed 0, templates off, prediction-time network off, zero target-MSA queries, and zero ProteinMPNN designs;
+- zero retries, adaptive top-ups, target dropping, partial-panel adjudication, or predecessor reruns.
+
+The guarded wrappers revalidate the packet, cell input, runtime observation, and output absence before
+prediction. The append-only scheduler journal rejects duplicate or out-of-scope cells and can summarize
+only the exact 8-Boltz plus 16-AF2 set. The local submit dry run enumerates all 24 cells and creates zero
+scheduler jobs. Packet digest:
+`6a2cde2d90fc054298bef33e7ccf0c6c984a939de0f9cd1a5a543c44a855c36a`.
+
+Packet preparation is not execution approval. It records `approval_recorded=false`, zero submitted jobs,
+zero predictor evaluations, and zero consumed H100 GPU-hours.
 
 ## Authority and Budget
 
@@ -188,7 +213,7 @@ Current authority is exactly zero:
 - API calls authorized: 0;
 - retries and adaptive top-ups authorized: 0.
 
-If separately validated and approved later, the frozen proposal contains 24 new one-hour H100 evaluation
+If explicitly approved, the frozen packet contains 24 new one-hour H100 evaluation
 slots: eight Boltz and sixteen AF2, with a maximum 24 H100 GPU-hour allocation. This is a proposed ceiling,
 not current authority.
 
@@ -205,6 +230,14 @@ PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m pytest -q \
 # Requires the local hash-locked W3c source cache; performs CPU input work only.
 PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
   bio_sfm_designer.experiments.m6d_w3d_input_runtime prepare
+
+# Rebuild and verify the no-submit packet; neither command submits work.
+PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
+  bio_sfm_designer.experiments.m6d_w3d_approval prepare
+PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
+  bio_sfm_designer.experiments.m6d_w3d_approval verify
+
+BIO_SFM_SUBMIT_DRY_RUN=1 bash hpc/m6d_w3d_submit_with_receipt.sh
 ```
 
 Authoritative artifacts:
@@ -215,8 +248,17 @@ Authoritative artifacts:
 - `results/m6d_w3d_native_diagnostic_readiness.{json,md}`
 - `results/m6d_w3d_input_runtime_readiness.{json,md}`
 - `results/m6d_w3d_runtime_validation_receipt.json`
+- `results/m6d_w3d_prediction_packet_readiness.{json,md}`
+- `results/m6d_w3d_prediction_approval_packet.json`
 - `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_approval.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_execution.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_submit_journal.py`
+- `hpc/run_predict_boltz_w3d_native.sbatch`
+- `hpc/run_predict_af2_w3d_native.sbatch`
+- `hpc/m6d_w3d_submit_with_receipt.sh`
 
-Next action: prepare a separate hash-bound, no-submit W3d approval packet for exactly 24 prospective
-evaluations. Do not submit predictor work without a new explicit approval after that packet is reviewed.
+Next action: require the exact approval phrase
+`approve W3d representation-by-predictor 24-evaluation panel on H100`. Generic continuation does not
+authorize submission.
