@@ -1,6 +1,6 @@
 # M6d Goal-State Refresh
 
-Status: `goal_state_refreshed_w3d_jobs_submitted_awaiting_results`.
+Status: `goal_state_refreshed_w3d_terminal_native_validity_impossibility_stop`.
 Audit ok: `True`.
 Runtime goal active: `False`.
 W2b: `w2b_certification_terminal_not_supported`.
@@ -53,6 +53,11 @@ W3d factorial cells: `32`.
 W3d locked baseline / prospective cells: `8` / `24`.
 W3d predictor evaluations authorized: `0`.
 W3d execution ready: `False`.
+W3d terminal result: `w3d_terminal_partial_result_native_validity_impossibility_stop`.
+W3d terminal/completed/failed jobs: `24` / `16` / `8`.
+W3d strict-QC/missing records: `16` / `8`.
+W3d complete matrix localization evaluable: `False`.
+W3d native-validity recovery impossible: `True`.
 Cayuga submission allowed: `False`.
 
 ## Updated Artifacts
@@ -125,7 +130,17 @@ Cayuga submission allowed: `False`.
 - `hpc/m6d_w3d_submit_with_receipt.sh`
 - `results/m6d_w3d_submit_receipt.jsonl`
 - `results/m6d_w3d_submit_receipt_summary.json`
+- `results/m6d_w3d_sacct.tsv`
+- `results/m6d_w3d_h100_node_snapshot.txt`
+- `results/m6d_w3d_terminal_accounting.json`
+- `results/m6d_w3d_terminal_accounting.md`
+- `results/m6d_w3d_available_records.jsonl`
+- `results/m6d_w3d_query_only_af2_failure_evidence.jsonl`
+- `results/m6d_w3d_terminal_stop.json`
+- `results/m6d_w3d_terminal_stop.md`
+- `src/bio_sfm_designer/experiments/m6d_w3d_terminal_stop.py`
+- `tests/test_m6d_w3d_terminal_stop.py`
 
 ## Next Action
 
-Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.
+Close W3d without retry or adaptive rescue. If complete representation-by-predictor localization remains scientifically useful, preregister a separate successor with a runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and biological claims blocked.

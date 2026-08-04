@@ -3118,6 +3118,7 @@ def _w3d_submission_summary(
         "approval_packet_sha256": summary["approval_packet_sha256"],
         "approval_packet_digest_sha256": approval["packet_digest_sha256"],
         "receipt_sha256": summary["receipt_sha256"],
+        "submission_summary_file_sha256": _rendered_json_sha256(summary),
         "retry_jobs": 0,
         "adaptive_top_up_jobs": 0,
         "predictor_evaluations_complete": 0,
@@ -3129,6 +3130,319 @@ def _w3d_submission_summary(
         "can_claim_generator_yield": False,
         "can_claim_trust_gate": False,
         "can_claim_biological_binder_success": False,
+        "checks": checks,
+    }
+
+
+def _w3d_terminal_stop_summary(
+    report: Dict[str, Any],
+    approval: Dict[str, Any],
+    submission: Dict[str, Any],
+) -> Dict[str, Any]:
+    expected_source_paths = {
+        "approval_packet": "results/m6d_w3d_prediction_approval_packet.json",
+        "factorial_manifest": "configs/m6d_w3d_native_diagnostic_manifest.json",
+        "h100_node_snapshot": "results/m6d_w3d_h100_node_snapshot.txt",
+        "sacct_snapshot": "results/m6d_w3d_sacct.tsv",
+        "submission_receipt": "results/m6d_w3d_submit_receipt.jsonl",
+        "submission_summary": "results/m6d_w3d_submit_receipt_summary.json",
+    }
+    expected_public_paths = {
+        "available_records": "results/m6d_w3d_available_records.jsonl",
+        "query_only_af2_failures": (
+            "results/m6d_w3d_query_only_af2_failure_evidence.jsonl"
+        ),
+        "terminal_accounting": "results/m6d_w3d_terminal_accounting.json",
+    }
+    source_bindings = (
+        report.get("source_bindings")
+        if isinstance(report.get("source_bindings"), dict)
+        else {}
+    )
+    public_bindings = (
+        report.get("public_evidence_bindings")
+        if isinstance(report.get("public_evidence_bindings"), dict)
+        else {}
+    )
+
+    def binding_set_valid(
+        bindings: Dict[str, Any], expected_paths: Dict[str, str]
+    ) -> bool:
+        return set(bindings) == set(expected_paths) and all(
+            isinstance(bindings.get(name), dict)
+            and bindings[name].get("path") == path
+            and isinstance(bindings[name].get("bytes"), int)
+            and not isinstance(bindings[name].get("bytes"), bool)
+            and bindings[name].get("bytes", 0) > 0
+            and _is_sha256(bindings[name].get("sha256"))
+            and os.path.isfile(path)
+            and os.path.getsize(path) == bindings[name].get("bytes")
+            and _file_sha256(path) == bindings[name].get("sha256")
+            for name, path in expected_paths.items()
+        )
+
+    expected_partial_matrix = {
+        "cell_summaries": [
+            {
+                "maximum_successes": 2,
+                "minimum_successes": 2,
+                "missing_outcomes": 0,
+                "predictor_id": "boltz2_complex",
+                "qualification_still_possible": False,
+                "qualified_observed": False,
+                "representation_id": "target_msa_binder_query",
+                "successes_observed": 2,
+                "targets_expected": 8,
+                "targets_observed": 8,
+            },
+            {
+                "maximum_successes": 2,
+                "minimum_successes": 2,
+                "missing_outcomes": 0,
+                "predictor_id": "af2_multimer_colabfold_v1",
+                "qualification_still_possible": False,
+                "qualified_observed": False,
+                "representation_id": "target_msa_binder_query",
+                "successes_observed": 2,
+                "targets_expected": 8,
+                "targets_observed": 8,
+            },
+            {
+                "maximum_successes": 1,
+                "minimum_successes": 1,
+                "missing_outcomes": 0,
+                "predictor_id": "boltz2_complex",
+                "qualification_still_possible": False,
+                "qualified_observed": False,
+                "representation_id": "query_only_both_chains",
+                "successes_observed": 1,
+                "targets_expected": 8,
+                "targets_observed": 8,
+            },
+            {
+                "maximum_successes": 8,
+                "minimum_successes": 0,
+                "missing_outcomes": 8,
+                "predictor_id": "af2_multimer_colabfold_v1",
+                "qualification_still_possible": True,
+                "qualified_observed": False,
+                "representation_id": "query_only_both_chains",
+                "successes_observed": 0,
+                "targets_expected": 8,
+                "targets_observed": 0,
+            },
+        ],
+        "complete_case_adjudication_performed": False,
+        "complete_case_localization_evaluable": False,
+        "maximum_possible_recovered_representations": 0,
+        "native_validity_recovery_mathematically_impossible": True,
+        "representation_bounds": [
+            {
+                "blocking_predictor_ids": [
+                    "boltz2_complex",
+                    "af2_multimer_colabfold_v1",
+                ],
+                "both_predictors_can_still_qualify": False,
+                "representation_id": "target_msa_binder_query",
+            },
+            {
+                "blocking_predictor_ids": ["boltz2_complex"],
+                "both_predictors_can_still_qualify": False,
+                "representation_id": "query_only_both_chains",
+            },
+        ],
+    }
+    expected_success_counts = {
+        "query_only_both_chains|af2_multimer_colabfold_v1": 0,
+        "query_only_both_chains|boltz2_complex": 1,
+        "target_msa_binder_query|af2_multimer_colabfold_v1": 2,
+        "target_msa_binder_query|boltz2_complex": 2,
+    }
+    records = (
+        report.get("record_evidence")
+        if isinstance(report.get("record_evidence"), list)
+        else []
+    )
+    observed_cells = {
+        (
+            row.get("target_id"),
+            row.get("representation_id"),
+            row.get("predictor_id"),
+        )
+        for row in records
+        if isinstance(row, dict)
+    }
+    expected_cells = {
+        (target_id, representation_id, predictor_id)
+        for target_id in _W3C_TARGET_IDS
+        for representation_id, predictor_id in (
+            ("target_msa_binder_query", "af2_multimer_colabfold_v1"),
+            ("query_only_both_chains", "boltz2_complex"),
+        )
+    }
+    records_valid = (
+        len(records) == 16
+        and observed_cells == expected_cells
+        and all(
+            isinstance(row, dict)
+            and row.get("strict_qc_replayed") is True
+            and isinstance(row.get("success"), bool)
+            and isinstance(row.get("record"), dict)
+            and _is_sha256(row["record"].get("sha256"))
+            and isinstance(row.get("input"), dict)
+            and _is_sha256(row["input"].get("sha256"))
+            and isinstance(row.get("outputs"), dict)
+            and set(row["outputs"]) == {"model", "confidence"}
+            and all(
+                isinstance(binding, dict) and _is_sha256(binding.get("sha256"))
+                for binding in row["outputs"].values()
+            )
+            and isinstance(row.get("interface_pae"), (int, float))
+            and not isinstance(row.get("interface_pae"), bool)
+            and isinstance(row.get("lrmsd_angstrom"), (int, float))
+            and not isinstance(row.get("lrmsd_angstrom"), bool)
+            for row in records
+        )
+        and sum(
+            row.get("success") is True
+            and row.get("representation_id") == "target_msa_binder_query"
+            and row.get("predictor_id") == "af2_multimer_colabfold_v1"
+            for row in records
+            if isinstance(row, dict)
+        )
+        == 2
+        and sum(
+            row.get("success") is True
+            and row.get("representation_id") == "query_only_both_chains"
+            and row.get("predictor_id") == "boltz2_complex"
+            for row in records
+            if isinstance(row, dict)
+        )
+        == 1
+    )
+    checks = {
+        "identity_exact": (
+            report.get("artifact") == "m6d_w3d_terminal_stop"
+            and report.get("version") == 1
+            and report.get("status")
+            == "w3d_terminal_partial_result_native_validity_impossibility_stop"
+            and report.get("audit_ok") is True
+        ),
+        "terminal_execution_exact": (
+            report.get("execution_terminal") is True
+            and report.get("scientific_stop_complete") is True
+            and report.get("jobs_terminal") == 24
+            and report.get("jobs_completed") == 16
+            and report.get("jobs_failed") == 8
+            and report.get("prospective_records_expected") == 24
+            and report.get("prospective_records_strict_qc") == 16
+            and report.get("prospective_records_missing") == 8
+        ),
+        "failure_class_exact": (
+            report.get("failed_representation_id") == "query_only_both_chains"
+            and report.get("failed_predictor_id") == "af2_multimer_colabfold_v1"
+            and report.get("failure_class")
+            == "pre_model_feature_generation_query_only_a3m_encoding"
+            and report.get("failure_is_scientific_negative") is False
+            and report.get("failure_is_input_representation_implementation_defect")
+            is True
+        ),
+        "available_records_exact": (
+            report.get("available_cell_success_counts") == expected_success_counts
+            and records_valid
+        ),
+        "partial_decision_exact": (
+            report.get("complete_case_adjudication_required") is True
+            and report.get("complete_case_adjudication_performed") is False
+            and report.get("complete_matrix_localization_evaluable") is False
+            and report.get("partial_matrix") == expected_partial_matrix
+            and report.get("native_validity_recovered") is False
+            and report.get("native_validity_recovery_mathematically_impossible") is True
+            and report.get("stage_pass") is False
+        ),
+        "accounting_exact": (
+            report.get("observed_h100_gpu_seconds") == 6206
+            and report.get("observed_h100_gpu_hours") == 6206 / 3600.0
+        ),
+        "source_bindings_exact": (
+            binding_set_valid(source_bindings, expected_source_paths)
+            and source_bindings["approval_packet"].get("sha256")
+            == approval.get("approval_packet_file_sha256")
+            and source_bindings["factorial_manifest"].get("sha256")
+            == approval.get("bound_artifact_sha256", {}).get("factorial_manifest")
+            and source_bindings["submission_receipt"].get("sha256")
+            == submission.get("receipt_sha256")
+            and source_bindings["submission_summary"].get("sha256")
+            == submission.get("submission_summary_file_sha256")
+        ),
+        "public_evidence_bound": binding_set_valid(
+            public_bindings, expected_public_paths
+        ),
+        "authority_closed": (
+            report.get("approval_consumed") is True
+            and report.get("retry_or_adaptive_top_up_allowed") is False
+            and report.get("target_substitution_allowed") is False
+            and report.get("additional_predictor_evaluations_authorized") == 0
+            and report.get("proteinmpnn_designs_authorized") == 0
+            and report.get("candidate_generation_authorized") is False
+            and report.get("candidate_generation_scientifically_reachable") is False
+        ),
+        "claims_bounded": (
+            report.get("can_claim_complete_matrix_localization") is False
+            and report.get("can_claim_native_recoverability_estimate") is False
+            and report.get("can_claim_generator_yield") is False
+            and report.get("can_claim_trust_gate") is False
+            and report.get("can_claim_biological_binder_success") is False
+            and "missing query-only AF2 cell" in str(report.get("claim_boundary") or "")
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        raise ValueError("W3d terminal-stop invariants failed: " + ", ".join(failed))
+    return {
+        "status": report["status"],
+        "audit_ok": True,
+        "execution_terminal": True,
+        "scientific_stop_complete": True,
+        "stage_pass": False,
+        "jobs_terminal": 24,
+        "jobs_completed": 16,
+        "jobs_failed": 8,
+        "jobs_unresolved": 0,
+        "prospective_records_expected": 24,
+        "prospective_records_strict_qc": 16,
+        "prospective_records_missing": 8,
+        "failed_representation_id": "query_only_both_chains",
+        "failed_predictor_id": "af2_multimer_colabfold_v1",
+        "failure_class": "pre_model_feature_generation_query_only_a3m_encoding",
+        "failure_is_scientific_negative": False,
+        "failure_is_input_representation_implementation_defect": True,
+        "available_cell_success_counts": expected_success_counts,
+        "complete_case_adjudication_required": True,
+        "complete_case_adjudication_performed": False,
+        "complete_matrix_localization_evaluable": False,
+        "maximum_possible_recovered_representations": 0,
+        "native_validity_recovery_mathematically_impossible": True,
+        "candidate_generation_scientifically_reachable": False,
+        "observed_h100_gpu_seconds": 6206,
+        "observed_h100_gpu_hours": 6206 / 3600.0,
+        "approved_h100_gpu_hours_ceiling": 24.0,
+        "additional_predictor_evaluations_authorized": 0,
+        "proteinmpnn_designs_authorized": 0,
+        "no_submit": True,
+        "can_claim_complete_matrix_localization": False,
+        "can_claim_native_recoverability": False,
+        "can_claim_generator_yield": False,
+        "can_claim_trust_gate": False,
+        "can_claim_biological_binder_success": False,
+        "source_binding_sha256": {
+            name: binding["sha256"] for name, binding in source_bindings.items()
+        },
+        "public_evidence_sha256": {
+            name: binding["sha256"] for name, binding in public_bindings.items()
+        },
+        "claim_boundary": report["claim_boundary"],
+        "next_action": report["next_action"],
         "checks": checks,
     }
 
@@ -6407,6 +6721,302 @@ def _apply_w3d_submission_state(
             updated.append(path)
 
 
+def _apply_w3d_terminal_stop_state(
+    bundle: Dict[str, Dict[str, Any]],
+    terminal: Dict[str, Any],
+) -> None:
+    requirement = "W3d_successor_corrected_query_only_af2_protocol_selection"
+    next_action = (
+        "Close W3d without retry or adaptive rescue. If complete representation-by-predictor "
+        "localization remains scientifically useful, preregister a separate successor with a "
+        "runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and "
+        "biological claims blocked."
+    )
+    ranked_actions = [
+        "Preserve the exact 24-job accounting, 16 replayed strict-QC records, and eight pre-model query-only AF2 failure records.",
+        "Close W3d at the frozen native-validity impossibility result with zero retry, replacement, or adaptive top-up.",
+        "Do not count the eight query-only AF2 encoding failures as scientific negatives or claim complete 2 x 2 localization.",
+        "Preregister any corrected query-only AF2 run as a separate diagnostic successor with a new immutable input contract.",
+        "Keep candidate generation and all generator-yield, trust-gate, and biological-success claims blocked.",
+    ]
+
+    anchor = bundle["anchor"]
+    anchor["objective"] = (
+        "Advance the calibrated protein-design project from the terminal W3d native-validity "
+        "result: preserve the frozen impossibility decision, correct the query-only AF2 "
+        "representation only in a separately preregistered diagnostic successor, and keep "
+        "generation and trust-gate work blocked until native recovery is credible."
+    )
+    anchor.setdefault("claim_boundaries", {})["w3d"] = (
+        "native_validity_pass_impossible_from_partial_matrix_no_complete_localization_or_downstream_claim"
+    )
+    anchor.setdefault("current_artifacts", {}).update(
+        {
+            "w3d_terminal_accounting": "results/m6d_w3d_terminal_accounting.json",
+            "w3d_available_records": "results/m6d_w3d_available_records.jsonl",
+            "w3d_query_only_af2_failure_evidence": (
+                "results/m6d_w3d_query_only_af2_failure_evidence.jsonl"
+            ),
+            "w3d_terminal_stop": "results/m6d_w3d_terminal_stop.json",
+        }
+    )
+    current = anchor.setdefault("current_status", {})
+    current.update(
+        {
+            "status": "m6_complex_w3d_terminal_native_validity_stop_successor_required",
+            "goal_progress": terminal["status"],
+            "remaining_requirements": [requirement],
+            "w3d": terminal["status"],
+            "w3d_approval_recorded": True,
+            "w3d_approval_consumed": True,
+            "w3d_submission_complete": True,
+            "w3d_predictor_jobs_submitted": 24,
+            "w3d_scheduler_jobs_terminal": 24,
+            "w3d_predictor_jobs_completed": 16,
+            "w3d_predictor_jobs_failed": 8,
+            "w3d_jobs_unresolved": 0,
+            "w3d_prospective_records_strict_qc": 16,
+            "w3d_prospective_records_missing": 8,
+            "w3d_stage_decision_complete": True,
+            "w3d_scientific_stop_complete": True,
+            "w3d_stage_pass": False,
+            "w3d_complete_matrix_localization_evaluable": False,
+            "w3d_native_validity_recovery_mathematically_impossible": True,
+            "w3d_maximum_possible_recovered_representations": 0,
+            "w3d_candidate_generation_scientifically_reachable": False,
+            "w3d_h100_gpu_seconds": terminal["observed_h100_gpu_seconds"],
+            "w3d_h100_gpu_hours": terminal["observed_h100_gpu_hours"],
+            "w3d_additional_jobs_authorized": 0,
+            "w3d_cayuga_submission_allowed": False,
+            "w3d_can_claim": False,
+            "w3d_can_claim_native_validity_pass_impossible": True,
+            "next_action": next_action,
+        }
+    )
+    successor = {
+        "status": "separate_protocol_required_no_submit",
+        "purpose": "complete_representation_by_predictor_localization_only",
+        "required_correction": "runtime_valid_query_only_af2_a3m_encoding",
+        "w3d_retry": False,
+        "approval_transfers": False,
+        "predictor_evaluations_authorized": 0,
+        "proteinmpnn_designs_authorized": 0,
+        "candidate_generation_authorized": False,
+        "no_submit": True,
+        "next_action": next_action,
+    }
+    anchor["w3d_terminal_stop"] = terminal
+    anchor["w3d_successor"] = successor
+    anchor["next_resume_steps"] = [
+        "read results/m6d_w3d_terminal_stop.json and preserve its partial-matrix claim boundary",
+        "treat all 24 receipt-bound jobs as terminal with zero retry, replacement, or top-up authority",
+        "preserve 2/8 target-MSA Boltz, 2/8 target-MSA AF2, and 1/8 query-only Boltz as observed outcomes",
+        "treat the eight query-only AF2 jobs as an input-encoding defect, not scientific negatives",
+        "preregister a separate corrected diagnostic successor before any new predictor compute",
+    ]
+    anchor.setdefault("latest_goal_mode_refresh", {}).update(
+        {
+            "w3d_status": terminal["status"],
+            "w3d_predictor_jobs_submitted": 24,
+            "w3d_scheduler_jobs_terminal": 24,
+            "w3d_predictor_records_completed": 16,
+            "w3d_predictor_jobs_failed": 8,
+            "w3d_jobs_unresolved": 0,
+            "w3d_stage_pass": False,
+            "w3d_complete_matrix_localization_evaluable": False,
+            "w3d_native_validity_recovery_mathematically_impossible": True,
+            "remaining_requirement": requirement,
+        }
+    )
+
+    completion = bundle["completion"]
+    completion.update(
+        {
+            "status": "goal_active_w3d_terminal_native_validity_stop_successor_selection",
+            "audit_ok": True,
+            "complete": False,
+            "can_mark_goal_complete": False,
+            "failures": [],
+            "remaining_requirements": [requirement],
+            "next_action": next_action,
+            "w3d_terminal_stop": terminal,
+            "w3d_successor": successor,
+        }
+    )
+    completion.setdefault("claim_boundary", {})["w3d"] = (
+        "the frozen W3d native-validity pass is impossible, but complete matrix "
+        "localization, native-recoverability estimation, generator yield, trust-gate "
+        "performance, and biological binder success remain unclaimed"
+    )
+    completion.setdefault("workstream_status", {}).setdefault(
+        "W3d_native_diagnostic", {}
+    ).update(
+        {
+            "complete": True,
+            "scientific_success": False,
+            "status": terminal["status"],
+            "predictor_jobs_submitted": 24,
+            "scheduler_jobs_terminal": 24,
+            "predictor_records_completed": 16,
+            "predictor_jobs_failed": 8,
+            "jobs_unresolved": 0,
+            "stage_decision_complete": True,
+            "stage_pass": False,
+            "complete_matrix_localization_evaluable": False,
+            "native_validity_recovery_mathematically_impossible": True,
+            "remaining_requirement": None,
+        }
+    )
+
+    drift = bundle["drift"]
+    drift.update(
+        {
+            "status": "no_major_direction_drift_w3d_terminal_native_validity_stop",
+            "audit_ok": True,
+            "major_direction_drift": False,
+            "can_mark_goal_complete": False,
+            "failures": [],
+            "next_action": next_action,
+        }
+    )
+    drift.setdefault("claim_boundary", {})["w3d"] = (
+        "partial_matrix_native_validity_impossibility_only_no_complete_localization_or_downstream_claim"
+    )
+    drift["active_risks"] = [
+        {
+            "id": "w3d_query_only_af2_encoding",
+            "status": "active_scientific_risk",
+            "control": "any correction is a separately preregistered successor and cannot be labeled a W3d retry",
+        },
+        {
+            "id": "w3d_incomplete_matrix_localization",
+            "status": "bounded",
+            "control": "claim only frozen native-validity impossibility; do not estimate the missing AF2 cell or claim a localized cause",
+        },
+        {
+            "id": "w3d_low_native_recovery",
+            "status": "active_scientific_risk",
+            "control": "both representations already contain a fully observed predictor below 6/8, so generation remains blocked",
+        },
+        {
+            "id": "w3d_posthoc_rescue",
+            "status": "managed",
+            "control": "the one-shot panel is closed with zero retry, replacement, target drop, or adaptive top-up authority",
+        },
+        {
+            "id": "w3d_generator_or_gate_prematurity",
+            "status": "managed",
+            "control": "ProteinMPNN, generator, gate, and biological claims remain blocked",
+        },
+    ]
+    drift.setdefault("drift_assessment", {}).update(
+        {
+            "protocol": "no_drift_frozen_w3d_partial_matrix_rule_applied_without_rescue",
+            "claims": "no_drift_encoding_failures_excluded_from_scientific_negative_counts",
+            "execution": "twenty_four_terminal_jobs_sixteen_strict_qc_records_eight_pre_model_encoding_failures",
+            "operational_status": "w3d_terminal_native_validity_stop_successor_required",
+            "major_direction_drift": False,
+        }
+    )
+    drift.setdefault("current_state", {})["W3d_native_diagnostic"] = {
+        "terminal_stop": terminal,
+        "successor": successor,
+    }
+
+    actions = bundle["actions"]
+    actions.update(
+        {
+            "status": "w3d_terminal_native_validity_stop_successor_protocol_required",
+            "w3d_terminal_stop": terminal,
+            "w3d_successor": successor,
+            "next_actions_ranked": ranked_actions,
+            "next_action": next_action,
+            "w3d_submission_performed": True,
+            "no_submit": True,
+            "cayuga_submission_allowed": False,
+        }
+    )
+    actions.setdefault("claim_boundary", {})["w3d"] = (
+        "terminal_native_validity_impossibility_no_retry_no_downstream_claim"
+    )
+
+    harness = bundle["harness"]
+    harness.update(
+        {
+            "goal_mode_status": (
+                "active_w3d_terminal_successor_selection"
+                if anchor.get("goal_mode") == "active"
+                else "contract_ready_runtime_goal_inactive"
+            ),
+            "science_focus": "post-W3d corrected representation/predictor diagnostic successor selection",
+            "w3d_terminal_stop": terminal,
+            "w3d_successor": successor,
+        }
+    )
+    harness.setdefault("local_verification", {}).update(
+        {
+            "w3d_terminal_accounting": "24_terminal_16_completed_8_failed_6206_h100_gpu_seconds",
+            "w3d_available_record_replay": "16_of_16_strict_qc_records_replayed",
+            "w3d_query_only_af2_failure_replay": "8_of_8_pre_model_feature_generation_encoding_failures",
+            "w3d_partial_matrix_decision": "maximum_0_recovered_representations_below_required_1",
+            "w3d_authority": "approval_consumed_additional_compute_zero",
+        }
+    )
+    hpc = harness.setdefault("hpc_status", {})
+    hpc.update(
+        {
+            "active_branch": "none",
+            "jobs_running": 0,
+            "jobs_unresolved": 0,
+            "w3d_stage": "W3d_terminal_native_validity_stop_successor_required",
+            "w3d_approval_recorded": True,
+            "w3d_predictor_jobs_submitted": 24,
+            "w3d_scheduler_jobs_terminal": 24,
+            "w3d_predictor_jobs_completed": 16,
+            "w3d_predictor_jobs_failed": 8,
+            "w3d_jobs_unresolved": 0,
+            "w3d_h100_gpu_seconds": terminal["observed_h100_gpu_seconds"],
+            "w3d_h100_gpu_hours_accounted": terminal["observed_h100_gpu_hours"],
+            "w3d_submission_allowed": False,
+            "next_action": next_action,
+        }
+    )
+    harness.setdefault("claim_boundary", {})["w3d"] = (
+        "frozen_native_validity_impossibility_only_no_complete_localization_or_downstream_claim"
+    )
+
+    report = bundle["report"]
+    report.update(
+        {
+            "status": "goal_state_refreshed_w3d_terminal_native_validity_impossibility_stop",
+            "audit_ok": True,
+            "w3d_terminal_stop": terminal,
+            "w3d_successor": successor,
+            "w3d_submission_performed": True,
+            "no_submit": True,
+            "cayuga_submission_allowed": False,
+            "next_actions_ranked": ranked_actions,
+            "next_action": next_action,
+        }
+    )
+    updated = report.setdefault("updated_artifacts", [])
+    for path in (
+        "results/m6d_w3d_sacct.tsv",
+        "results/m6d_w3d_h100_node_snapshot.txt",
+        "results/m6d_w3d_terminal_accounting.json",
+        "results/m6d_w3d_terminal_accounting.md",
+        "results/m6d_w3d_available_records.jsonl",
+        "results/m6d_w3d_query_only_af2_failure_evidence.jsonl",
+        "results/m6d_w3d_terminal_stop.json",
+        "results/m6d_w3d_terminal_stop.md",
+        "src/bio_sfm_designer/experiments/m6d_w3d_terminal_stop.py",
+        "tests/test_m6d_w3d_terminal_stop.py",
+        "docs/M6D_W3D_NATIVE_DIAGNOSTIC.md",
+    ):
+        if path not in updated:
+            updated.append(path)
+
+
 def refresh_bundle(
     anchor: Dict[str, Any],
     completion: Dict[str, Any],
@@ -6448,6 +7058,7 @@ def refresh_bundle(
     w3d_native_diagnostic_readiness: Optional[Dict[str, Any]] = None,
     w3d_prediction_approval_packet: Optional[Dict[str, Any]] = None,
     w3d_submission_receipt_summary: Optional[Dict[str, Any]] = None,
+    w3d_terminal_stop: Optional[Dict[str, Any]] = None,
     *,
     updated_at: str,
     test_command: str,
@@ -6626,6 +7237,19 @@ def refresh_bundle(
         )
         else None
     )
+    w3d_terminal = (
+        _w3d_terminal_stop_summary(
+            w3d_terminal_stop,
+            w3d_approval,
+            w3d_submission,
+        )
+        if (
+            isinstance(w3d_terminal_stop, dict)
+            and isinstance(w3d_approval, dict)
+            and isinstance(w3d_submission, dict)
+        )
+        else None
+    )
     if w2c_fit_learn is not None and w2c_target_msa_complete is None:
         raise ValueError("W2c fit-learn packet requires completed target-MSA evidence")
     if w2c_fit_submitted is not None and w2c_fit_learn is None:
@@ -6682,6 +7306,8 @@ def refresh_bundle(
             )
     if w3d_submission_receipt_summary is not None and w3d_approval is None:
         raise ValueError("W3d submission requires the validated approval packet")
+    if w3d_terminal_stop is not None and w3d_submission is None:
+        raise ValueError("W3d terminal stop requires the validated submission chain")
     if (
         w3c_fresh_lock is not None
         and w3c_target_validity is not None
@@ -7689,6 +8315,8 @@ def refresh_bundle(
                     )
                     if w3d_submission is not None:
                         _apply_w3d_submission_state(bundle, w3d_submission)
+                        if w3d_terminal is not None:
+                            _apply_w3d_terminal_stop_state(bundle, w3d_terminal)
     return bundle
 
 
@@ -7738,6 +8366,7 @@ def render_markdown(report: Dict[str, Any]) -> str:
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
     w3d = report.get("w3d_native_diagnostic") or {}
+    w3d_terminal = report.get("w3d_terminal_stop") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -7808,6 +8437,11 @@ def render_markdown(report: Dict[str, Any]) -> str:
         f"W3d locked baseline / prospective cells: `{w3d.get('completed_locked_baseline_cells', 0)}` / `{w3d.get('prospective_cells', 0)}`.",
         f"W3d predictor evaluations authorized: `{w3d.get('predictor_evaluations_authorized', 0)}`.",
         f"W3d execution ready: `{w3d.get('execution_ready', False)}`.",
+        f"W3d terminal result: `{w3d_terminal.get('status', 'not_terminal')}`.",
+        f"W3d terminal/completed/failed jobs: `{w3d_terminal.get('jobs_terminal', 0)}` / `{w3d_terminal.get('jobs_completed', 0)}` / `{w3d_terminal.get('jobs_failed', 0)}`.",
+        f"W3d strict-QC/missing records: `{w3d_terminal.get('prospective_records_strict_qc', 0)}` / `{w3d_terminal.get('prospective_records_missing', 0)}`.",
+        f"W3d complete matrix localization evaluable: `{w3d_terminal.get('complete_matrix_localization_evaluable', False)}`.",
+        f"W3d native-validity recovery impossible: `{w3d_terminal.get('native_validity_recovery_mathematically_impossible', False)}`.",
         f"Cayuga submission allowed: `{report['cayuga_submission_allowed']}`.",
         "",
         "## Updated Artifacts",
@@ -7838,6 +8472,7 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
     w3d = report.get("w3d_native_diagnostic") or {}
+    w3d_terminal = report.get("w3d_terminal_stop") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -7912,6 +8547,11 @@ def render_completion_markdown(report: Dict[str, Any]) -> str:
         f"- W3d locked baseline / prospective cells: `{w3d.get('completed_locked_baseline_cells', 0)}` / `{w3d.get('prospective_cells', 0)}`",
         f"- W3d predictor evaluations authorized: `{w3d.get('predictor_evaluations_authorized', 0)}`",
         f"- W3d execution ready: `{w3d.get('execution_ready', False)}`",
+        f"- W3d terminal result: `{w3d_terminal.get('status', 'not_terminal')}`",
+        f"- W3d terminal/completed/failed jobs: `{w3d_terminal.get('jobs_terminal', 0)}` / `{w3d_terminal.get('jobs_completed', 0)}` / `{w3d_terminal.get('jobs_failed', 0)}`",
+        f"- W3d strict-QC/missing records: `{w3d_terminal.get('prospective_records_strict_qc', 0)}` / `{w3d_terminal.get('prospective_records_missing', 0)}`",
+        f"- W3d complete matrix localization evaluable: `{w3d_terminal.get('complete_matrix_localization_evaluable', False)}`",
+        f"- W3d native-validity recovery impossible: `{w3d_terminal.get('native_validity_recovery_mathematically_impossible', False)}`",
         f"- remaining requirement: `{', '.join(report['remaining_requirements'])}`",
         "",
         "Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.",
@@ -7967,6 +8607,7 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
     w3d = report.get("w3d_native_diagnostic") or {}
+    w3d_terminal = report.get("w3d_terminal_stop") or {}
     target_msa_status = _target_msa_packet_status_label(
         target_msa.get("status"),
         bool(target_msa.get("historical_after_completion")),
@@ -8015,6 +8656,10 @@ def render_actions_markdown(report: Dict[str, Any]) -> str:
         f"W3d locked baseline / prospective cells: `{w3d.get('completed_locked_baseline_cells', 0)}` / `{w3d.get('prospective_cells', 0)}`.",
         f"W3d predictor evaluations authorized: `{w3d.get('predictor_evaluations_authorized', 0)}`.",
         f"W3d execution ready: `{w3d.get('execution_ready', False)}`.",
+        f"W3d terminal result: `{w3d_terminal.get('status', 'not_terminal')}`.",
+        f"W3d terminal/completed/failed jobs: `{w3d_terminal.get('jobs_terminal', 0)}` / `{w3d_terminal.get('jobs_completed', 0)}` / `{w3d_terminal.get('jobs_failed', 0)}`.",
+        f"W3d complete matrix localization evaluable: `{w3d_terminal.get('complete_matrix_localization_evaluable', False)}`.",
+        f"W3d native-validity recovery impossible: `{w3d_terminal.get('native_validity_recovery_mathematically_impossible', False)}`.",
         "",
         "## Ranked Actions",
         "",
@@ -8040,6 +8685,7 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
     w3c_b1_completion = report.get("w3c_b1_target_msa_completion") or {}
     w3c_b2 = report.get("w3c_b2_successor") or {}
     w3d = report.get("w3d_native_diagnostic") or {}
+    w3d_terminal = report.get("w3d_terminal_stop") or {}
     target_msa_status = _target_msa_packet_status_label(
         hpc.get("w2c_target_msa_packet_status"),
         bool(hpc.get("w2c_target_msa_packet_historical")),
@@ -8109,6 +8755,11 @@ def render_harness_markdown(report: Dict[str, Any]) -> str:
         f"- W3d locked baseline / prospective cells: `{hpc.get('w3d_completed_locked_baseline_cells', 0)}` / `{hpc.get('w3d_prospective_cells', 0)}`",
         f"- W3d predictor evaluations authorized: `{hpc.get('w3d_predictor_evaluations_authorized', 0)}`",
         f"- W3d H100 GPU-hours authorized: `{hpc.get('w3d_h100_gpu_hours_authorized', 0.0)}`",
+        f"- W3d terminal result: `{w3d_terminal.get('status', 'not_terminal')}`",
+        f"- W3d scheduler jobs terminal: `{hpc.get('w3d_scheduler_jobs_terminal', 0)}`",
+        f"- W3d predictor jobs completed/failed: `{hpc.get('w3d_predictor_jobs_completed', 0)}` / `{hpc.get('w3d_predictor_jobs_failed', 0)}`",
+        f"- W3d H100 GPU-hours accounted: `{hpc.get('w3d_h100_gpu_hours_accounted', 0.0)}`",
+        f"- W3d native-validity recovery impossible: `{w3d_terminal.get('native_validity_recovery_mathematically_impossible', False)}`",
         "",
         "## Next Action",
         "",
@@ -8295,6 +8946,10 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument(
         "--w3d-submission-receipt-summary",
         default="results/m6d_w3d_submit_receipt_summary.json",
+    )
+    parser.add_argument(
+        "--w3d-terminal-stop",
+        default="results/m6d_w3d_terminal_stop.json",
     )
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--test-command", required=True)
@@ -8523,6 +9178,18 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
             _load_json(args.w3d_submission_receipt_summary)
             if (
                 os.path.exists(args.w3d_submission_receipt_summary)
+                and os.path.exists(args.w3d_prediction_approval_packet)
+                and os.path.exists(args.w3d_native_diagnostic_manifest)
+                and os.path.exists(args.w3d_native_diagnostic_readiness)
+                and os.path.exists(args.w3c_b2_terminal_stop)
+            )
+            else None
+        ),
+        (
+            _load_json(args.w3d_terminal_stop)
+            if (
+                os.path.exists(args.w3d_terminal_stop)
+                and os.path.exists(args.w3d_submission_receipt_summary)
                 and os.path.exists(args.w3d_prediction_approval_packet)
                 and os.path.exists(args.w3d_native_diagnostic_manifest)
                 and os.path.exists(args.w3d_native_diagnostic_readiness)

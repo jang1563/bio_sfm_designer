@@ -1,6 +1,8 @@
 # M6d W3d Native Representation-by-Predictor Diagnostic
 
-Status: `w3d_native_representation_predictor_protocol_locked_no_submit`.
+Terminal status: `w3d_terminal_partial_result_native_validity_impossibility_stop`.
+
+Historical protocol status: `w3d_native_representation_predictor_protocol_locked_no_submit`.
 
 Date locked: 2026-08-02.
 
@@ -9,6 +11,8 @@ Operational preparation status (2026-08-03):
 
 Approval-packet status (2026-08-03):
 `w3d_prediction_approval_packet_ready_no_submit`.
+
+Terminal adjudication date: 2026-08-04.
 
 ## Purpose
 
@@ -56,7 +60,9 @@ because each predictor has a native input grammar:
   `msa: empty` for the binder. AF2 encodes the same information content as an annotated multimer A3M
   with the paired native query, unpaired target rows, and one unpaired binder query row.
 - `query_only_both_chains`: neither chain receives homolog rows. Boltz uses `msa: empty` for both chains;
-  AF2 receives an annotated paired native query with no homolog rows.
+  the intended AF2 representation contains the paired native query plus only the runtime-required unpaired
+  native query rows, with no homolog rows. The packet-bound producer omitted those unpaired rows; that
+  implementation defect is part of the terminal result below.
 
 Predictor chain A is always the target and chain B is always the native binder. Seed 0, templates off,
 prediction-time network off, model identity, sampling settings, and endpoint code are held constant.
@@ -148,9 +154,12 @@ cells under the ignored `hpc_outputs/m6d_w3d_native_diagnostic/` tree:
 | AF2 annotated multimer A3M | target MSA + binder query | 8 |
 | AF2 annotated multimer A3M | query-only both chains | 8 |
 
-Validation passes for 24/24 file hashes and 24/24 representation semantics. In particular:
+Pre-execution validation passed for 24/24 file hashes and its then-declared representation semantics. In
+particular:
 
-- every query-only AF2 file contains exactly one paired native query and no homolog row;
+- every query-only AF2 file contains exactly one paired native query and no homolog row, but the validator
+  failed to require ColabFold's unpaired monomer query rows; all eight such files later failed during
+  feature generation;
 - every target-MSA AF2 file round-trips the exact frozen target A3M hash, has no non-query paired row,
   and adds only the unpaired native binder query;
 - every prospective Boltz YAML uses `msa: empty` for both chains and `templates: []`;
@@ -206,6 +215,40 @@ guarded bridge consumed it once and submitted jobs `3171691`-`3171714`: 8 Boltz 
 Submission is execution provenance, not scientific evidence; no prospective outcome is claimable until
 all terminal records are reconciled and the frozen complete-case adjudicator runs.
 
+## Terminal Execution and Bounded Result
+
+All receipt-bound jobs are terminal. Exact Slurm replay gives:
+
+| Outcome class | Jobs | Scientific interpretation |
+|---|---:|---|
+| completed with replayed strict-QC record | 16 | observed predictor outcomes |
+| failed query-only AF2 before model inference | 8 | input-encoding defect, not scientific negatives |
+| unresolved | 0 | none |
+
+The eight failures are jobs `3171693`, `3171696`, `3171699`, `3171702`, `3171705`, `3171708`,
+`3171711`, and `3171714`. ColabFold reached feature generation and rejected MSA 0 because the packet-bound
+query-only A3M had one paired query but zero unpaired monomer query rows. No recycle, model inference,
+ranking, PDB, confidence, or strict-QC record was produced for those cells. The packet-bound producer and
+approved inputs remain immutable; a corrected encoding is successor work, not a W3d retry.
+
+Available frozen cell counts are:
+
+| Representation | Boltz 2.2.1 | AF2-Multimer v3 |
+|---|---:|---:|
+| `target_msa_binder_query` | 2/8 success | 2/8 success |
+| `query_only_both_chains` | 1/8 success | unavailable, 0/8 observed |
+
+The missing cell prevents complete-case `2 x 2` localization. No representation-specific,
+predictor-specific, or interaction label is assigned. It also prevents a complete native-recoverability
+estimate. This incompleteness does not leave the frozen downstream decision open: target-MSA has both
+predictors fully observed at 2/8, and query-only has Boltz fully observed at 1/8. Thus neither
+representation can have both predictors reach 6/8, even if every missing query-only AF2 outcome were a
+success. The maximum possible number of recovered representations is zero.
+
+W3d therefore closes at `w3d_terminal_partial_result_native_validity_impossibility_stop` with
+`stage_pass=false`. Candidate generation is scientifically unreachable. There is no retry, replacement,
+adaptive top-up, target drop, ProteinMPNN, generator, or gate authority.
+
 ## Authority and Budget
 
 The approved envelope was fully consumed by the 24 receipt-bound submissions. Current *additional*
@@ -218,9 +261,9 @@ authority is exactly zero:
 - API calls authorized: 0;
 - retries and adaptive top-ups authorized: 0.
 
-The consumed envelope contains 24 one-hour H100 evaluation slots: eight Boltz and sixteen AF2, with a
-maximum 24 H100 GPU-hour allocation. Actual GPU use remains pending terminal scheduler accounting and may
-not be replaced or topped up if a cell fails.
+The consumed envelope contained 24 one-hour H100 evaluation slots: eight Boltz and sixteen AF2, with a
+maximum 24 H100 GPU-hour allocation. Terminal accounting records 6,206 one-H100 GPU-seconds
+(`1.723889` hours). Failed cells may not be replaced or topped up.
 
 ## Reproduce the No-Submit Lock
 
@@ -243,6 +286,13 @@ PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
   bio_sfm_designer.experiments.m6d_w3d_approval verify
 
 BIO_SFM_SUBMIT_DRY_RUN=1 bash hpc/m6d_w3d_submit_with_receipt.sh
+
+# Requires the exact synced packet-bound outputs and logs; performs CPU replay only.
+PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m \
+  bio_sfm_designer.experiments.m6d_w3d_terminal_stop
+
+PYTHONPATH=src:../bio-sfm-trust-core/src python3 -m pytest -q \
+  tests/test_m6d_w3d_terminal_stop.py
 ```
 
 Authoritative artifacts:
@@ -257,16 +307,23 @@ Authoritative artifacts:
 - `results/m6d_w3d_prediction_approval_packet.json`
 - `results/m6d_w3d_submit_receipt.jsonl`
 - `results/m6d_w3d_submit_receipt_summary.json`
+- `results/m6d_w3d_sacct.tsv`
+- `results/m6d_w3d_h100_node_snapshot.txt`
+- `results/m6d_w3d_terminal_accounting.{json,md}`
+- `results/m6d_w3d_available_records.jsonl`
+- `results/m6d_w3d_query_only_af2_failure_evidence.jsonl`
+- `results/m6d_w3d_terminal_stop.{json,md}`
 - `src/bio_sfm_designer/experiments/m6d_w3d_native_diagnostic.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_input_runtime.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_approval.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_execution.py`
 - `src/bio_sfm_designer/experiments/m6d_w3d_submit_journal.py`
+- `src/bio_sfm_designer/experiments/m6d_w3d_terminal_stop.py`
 - `hpc/run_predict_boltz_w3d_native.sbatch`
 - `hpc/run_predict_af2_w3d_native.sbatch`
 - `hpc/m6d_w3d_submit_with_receipt.sh`
 
-Next action: monitor only receipt-bound jobs `3171691`-`3171714`, capture exact terminal scheduler
-accounting, synchronize all packet-bound strict-QC records, and run the frozen complete-case adjudication
-only if all 24 prospective records validate. Do not submit retries, replacements, adaptive top-ups, or any
-additional jobs.
+Next action: preserve W3d as closed. If the missing localization is worth resolving, preregister a separate
+successor whose query-only AF2 A3M includes runtime-required unpaired native query rows and validate that
+grammar before requesting any new compute. Do not retry W3d or begin ProteinMPNN, generator, gate, or
+biological-claim work.

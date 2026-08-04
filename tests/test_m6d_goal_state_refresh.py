@@ -1120,6 +1120,7 @@ def _refresh_current_w3b(
     w3d_readiness=None,
     w3d_approval=None,
     w3d_submission=None,
+    w3d_terminal=None,
 ):
     gate = _w2c()
     gate["execution_readiness"] = {
@@ -1160,6 +1161,7 @@ def _refresh_current_w3b(
         w3d_native_diagnostic_readiness=w3d_readiness,
         w3d_prediction_approval_packet=w3d_approval,
         w3d_submission_receipt_summary=w3d_submission,
+        w3d_terminal_stop=w3d_terminal,
         updated_at="2026-07-15T18:00:00+09:00",
         test_command="pytest -q",
         test_result="passed",
@@ -1205,6 +1207,10 @@ def _current_w3d_submission_artifact():
     return json.loads(
         Path("results/m6d_w3d_submit_receipt_summary.json").read_text()
     )
+
+
+def _current_w3d_terminal_stop_artifact():
+    return json.loads(Path("results/m6d_w3d_terminal_stop.json").read_text())
 
 
 def _ready_w3c_b1_packet_artifact():
@@ -2344,6 +2350,95 @@ class M6DGoalStateRefreshTests(unittest.TestCase):
             "w3d_awaiting_terminal_scheduler_outputs",
         )
         self.assertFalse(bundle["drift"]["major_direction_drift"])
+
+    def test_w3d_terminal_stop_promotes_native_validity_impossibility_state(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+        bundle = _refresh_current_w3b(
+            recovery=_w3b_recovery_artifacts(),
+            fit_completion=_w3b_fit_terminal_artifact(),
+            target_validity=_w3c_target_validity_artifact(),
+            fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+            b1_packet=_ready_w3c_b1_packet_artifact(),
+            b1_completion=_w3c_b1_target_msa_completion_artifact(),
+            b2_native_manifest=native,
+            b2_runtime=runtime,
+            b2_approval=approval,
+            b2_cayuga_validation=validation,
+            b2_submission=_current_w3c_b2_submission_artifact(),
+            b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+            w3d_manifest=w3d_manifest,
+            w3d_readiness=w3d_readiness,
+            w3d_approval=_current_w3d_approval_packet_artifact(),
+            w3d_submission=_current_w3d_submission_artifact(),
+            w3d_terminal=_current_w3d_terminal_stop_artifact(),
+        )
+
+        self.assertEqual(
+            bundle["report"]["status"],
+            "goal_state_refreshed_w3d_terminal_native_validity_impossibility_stop",
+        )
+        current = bundle["anchor"]["current_status"]
+        self.assertEqual(current["w3d_scheduler_jobs_terminal"], 24)
+        self.assertEqual(current["w3d_predictor_jobs_completed"], 16)
+        self.assertEqual(current["w3d_predictor_jobs_failed"], 8)
+        self.assertEqual(current["w3d_jobs_unresolved"], 0)
+        self.assertEqual(current["w3d_prospective_records_strict_qc"], 16)
+        self.assertEqual(current["w3d_prospective_records_missing"], 8)
+        self.assertFalse(current["w3d_stage_pass"])
+        self.assertFalse(current["w3d_complete_matrix_localization_evaluable"])
+        self.assertTrue(
+            current["w3d_native_validity_recovery_mathematically_impossible"]
+        )
+        self.assertFalse(current["w3d_candidate_generation_scientifically_reachable"])
+        self.assertEqual(current["w3d_h100_gpu_seconds"], 6206)
+        self.assertAlmostEqual(current["w3d_h100_gpu_hours"], 6206 / 3600.0)
+        self.assertEqual(
+            current["remaining_requirements"],
+            ["W3d_successor_corrected_query_only_af2_protocol_selection"],
+        )
+        workstream = bundle["completion"]["workstream_status"]["W3d_native_diagnostic"]
+        self.assertTrue(workstream["complete"])
+        self.assertFalse(workstream["scientific_success"])
+        self.assertTrue(bundle["actions"]["no_submit"])
+        self.assertFalse(bundle["actions"]["cayuga_submission_allowed"])
+        self.assertFalse(bundle["drift"]["major_direction_drift"])
+
+    def test_w3d_terminal_stop_rejects_claim_or_scope_drift(self):
+        native, runtime, approval, validation = _current_w3c_b2_artifacts()
+        w3d_manifest, w3d_readiness = _current_w3d_artifacts()
+        for field, value in (
+            ("native_validity_recovery_mathematically_impossible", False),
+            ("failure_is_scientific_negative", True),
+            ("additional_predictor_evaluations_authorized", 1),
+        ):
+            terminal = _current_w3d_terminal_stop_artifact()
+            terminal[field] = value
+            with (
+                self.subTest(field=field),
+                self.assertRaisesRegex(
+                    ValueError, "W3d terminal-stop invariants failed"
+                ),
+            ):
+                _refresh_current_w3b(
+                    recovery=_w3b_recovery_artifacts(),
+                    fit_completion=_w3b_fit_terminal_artifact(),
+                    target_validity=_w3c_target_validity_artifact(),
+                    fresh_target_lock=_w3c_fresh_target_lock_artifact(),
+                    b1_packet=_ready_w3c_b1_packet_artifact(),
+                    b1_completion=_w3c_b1_target_msa_completion_artifact(),
+                    b2_native_manifest=native,
+                    b2_runtime=runtime,
+                    b2_approval=approval,
+                    b2_cayuga_validation=validation,
+                    b2_submission=_current_w3c_b2_submission_artifact(),
+                    b2_terminal=_current_w3c_b2_terminal_stop_artifact(),
+                    w3d_manifest=w3d_manifest,
+                    w3d_readiness=w3d_readiness,
+                    w3d_approval=_current_w3d_approval_packet_artifact(),
+                    w3d_submission=_current_w3d_submission_artifact(),
+                    w3d_terminal=terminal,
+                )
 
     def test_w3d_submission_rejects_scope_extension(self):
         native, runtime, approval, validation = _current_w3c_b2_artifacts()

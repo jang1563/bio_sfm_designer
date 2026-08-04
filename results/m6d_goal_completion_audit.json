@@ -13,18 +13,18 @@
     "w3": "58-case mechanism panel completed with context-dependent or unresolved outcome",
     "w3b": "terminal negative fit; no qualifying rule, certification, held-out test, or claim",
     "w3c": "the frozen W3c-B2 pass is impossible from Boltz 2/8; full dual-predictor native recoverability, generator yield, trust-gate performance, and biological binder success remain unclaimed",
-    "w3d": "twenty_four_prediction_jobs_are_receipt_bound_and_submitted_no_scientific_result_yet",
+    "w3d": "the frozen W3d native-validity pass is impossible, but complete matrix localization, native-recoverability estimation, generator yield, trust-gate performance, and biological binder success remain unclaimed",
     "w4": "closed-loop plumbing evidence preserved as fail-closed only"
   },
   "complete": false,
   "failures": [],
-  "next_action": "Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.",
+  "next_action": "Close W3d without retry or adaptive rescue. If complete representation-by-predictor localization remains scientifically useful, preregister a separate successor with a runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and biological claims blocked.",
   "panel_approval_packet": "<repo-root>/results/m6d_w2_target_family_redesign_v11_panel_approval_packet.json",
   "project_status": "<repo-root>/results/m6c_project_status_w2_followup.json",
   "remaining_requirements": [
-    "W3d_terminal_accounting_records_and_complete_case_adjudication"
+    "W3d_successor_corrected_query_only_af2_protocol_selection"
   ],
-  "status": "goal_active_w3d_jobs_submitted_awaiting_adjudication",
+  "status": "goal_active_w3d_terminal_native_validity_stop_successor_selection",
   "v9_receipt": {
     "exists": true,
     "path": "results/m6d_w2_target_family_redesign_v9_target_msa_precompute_receipt.jsonl"
@@ -2337,6 +2337,7 @@
     "scientific_adjudication_complete": false,
     "status": "w3d_all_twenty_four_prediction_jobs_submitted",
     "submission_complete": true,
+    "submission_summary_file_sha256": "7c4cb205e182aef591c04ad9a363080f8aaddd5f6038c202c39108ae7b2df2ca",
     "target_ids": [
       "1TE1_BA",
       "3QB4_AB",
@@ -2347,6 +2348,87 @@
       "6SGE_AB",
       "7B5G_AB"
     ]
+  },
+  "w3d_successor": {
+    "approval_transfers": false,
+    "candidate_generation_authorized": false,
+    "next_action": "Close W3d without retry or adaptive rescue. If complete representation-by-predictor localization remains scientifically useful, preregister a separate successor with a runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and biological claims blocked.",
+    "no_submit": true,
+    "predictor_evaluations_authorized": 0,
+    "proteinmpnn_designs_authorized": 0,
+    "purpose": "complete_representation_by_predictor_localization_only",
+    "required_correction": "runtime_valid_query_only_af2_a3m_encoding",
+    "status": "separate_protocol_required_no_submit",
+    "w3d_retry": false
+  },
+  "w3d_terminal_stop": {
+    "additional_predictor_evaluations_authorized": 0,
+    "approved_h100_gpu_hours_ceiling": 24.0,
+    "audit_ok": true,
+    "available_cell_success_counts": {
+      "query_only_both_chains|af2_multimer_colabfold_v1": 0,
+      "query_only_both_chains|boltz2_complex": 1,
+      "target_msa_binder_query|af2_multimer_colabfold_v1": 2,
+      "target_msa_binder_query|boltz2_complex": 2
+    },
+    "can_claim_biological_binder_success": false,
+    "can_claim_complete_matrix_localization": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "candidate_generation_scientifically_reachable": false,
+    "checks": {
+      "accounting_exact": true,
+      "authority_closed": true,
+      "available_records_exact": true,
+      "claims_bounded": true,
+      "failure_class_exact": true,
+      "identity_exact": true,
+      "partial_decision_exact": true,
+      "public_evidence_bound": true,
+      "source_bindings_exact": true,
+      "terminal_execution_exact": true
+    },
+    "claim_boundary": "The frozen native-validity pass is impossible because at least one fully observed predictor is below 6/8 under each representation. The missing query-only AF2 cell prevents complete-matrix bottleneck localization and is an input-encoding failure, not a scientific negative.",
+    "complete_case_adjudication_performed": false,
+    "complete_case_adjudication_required": true,
+    "complete_matrix_localization_evaluable": false,
+    "execution_terminal": true,
+    "failed_predictor_id": "af2_multimer_colabfold_v1",
+    "failed_representation_id": "query_only_both_chains",
+    "failure_class": "pre_model_feature_generation_query_only_a3m_encoding",
+    "failure_is_input_representation_implementation_defect": true,
+    "failure_is_scientific_negative": false,
+    "jobs_completed": 16,
+    "jobs_failed": 8,
+    "jobs_terminal": 24,
+    "jobs_unresolved": 0,
+    "maximum_possible_recovered_representations": 0,
+    "native_validity_recovery_mathematically_impossible": true,
+    "next_action": "Close W3d without retry. Any corrected query-only AF2 encoding must be a separately preregistered successor; generator and gate work remain blocked.",
+    "no_submit": true,
+    "observed_h100_gpu_hours": 1.7238888888888888,
+    "observed_h100_gpu_seconds": 6206,
+    "prospective_records_expected": 24,
+    "prospective_records_missing": 8,
+    "prospective_records_strict_qc": 16,
+    "proteinmpnn_designs_authorized": 0,
+    "public_evidence_sha256": {
+      "available_records": "c8ef0cfd4c0e4f541c1e2c88f2e7128332b632d9f243d1fc0c10c4983b7b5f1c",
+      "query_only_af2_failures": "88c3a3b90364fc23fd91e9847e77331958e48ab2accc58cfd49d47cb1511f8f4",
+      "terminal_accounting": "f1efe75e0344748727f4c4dc5c1a8aaf482ff327136d0f4410350638c219d824"
+    },
+    "scientific_stop_complete": true,
+    "source_binding_sha256": {
+      "approval_packet": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
+      "factorial_manifest": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
+      "h100_node_snapshot": "e66ecce2d24fba84b4362fca189b78640cadb4a1e0edd9c039724ac72fcb4e81",
+      "sacct_snapshot": "1f06d1c58bbf237e5a942e71e648e2da4b680f259215887a3f81f4b385f6fd69",
+      "submission_receipt": "48085cbbe98e60718d258ed1b2c624f1a3e9b7e87af74e6a1826e801bcfdab93",
+      "submission_summary": "7c4cb205e182aef591c04ad9a363080f8aaddd5f6038c202c39108ae7b2df2ca"
+    },
+    "stage_pass": false,
+    "status": "w3d_terminal_partial_result_native_validity_impossibility_stop"
   },
   "workstream_status": {
     "W1_M6c_scale_up": {
@@ -2397,17 +2479,25 @@
     "W3d_native_diagnostic": {
       "approval_packet_prepared": true,
       "approval_recorded": true,
-      "complete": false,
+      "complete": true,
+      "complete_matrix_localization_evaluable": false,
       "cpu_only_preparation_complete": true,
       "execution_ready": false,
       "input_producer_implemented": true,
+      "jobs_unresolved": 0,
+      "native_validity_recovery_mathematically_impossible": true,
       "no_prediction_runtime_validation_complete": true,
       "predictor_jobs_completed": 0,
+      "predictor_jobs_failed": 8,
       "predictor_jobs_submitted": 24,
+      "predictor_records_completed": 16,
       "protocol_locked": true,
-      "remaining_requirement": "W3d_terminal_accounting_records_and_complete_case_adjudication",
-      "scientific_success": null,
-      "status": "w3d_all_twenty_four_prediction_jobs_submitted",
+      "remaining_requirement": null,
+      "scheduler_jobs_terminal": 24,
+      "scientific_success": false,
+      "stage_decision_complete": true,
+      "stage_pass": false,
+      "status": "w3d_terminal_partial_result_native_validity_impossibility_stop",
       "submission_complete": true
     },
     "W4_closed_loop_DBTL": {

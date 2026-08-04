@@ -3,7 +3,7 @@
 Self-contained context to continue this project in a fresh session (Codex or otherwise) with **no prior
 conversation history**. Read this top to bottom once; it links to the code that matters.
 
-> **2026-08-03 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
+> **2026-08-04 current execution boundary:** W3c-B1 target-MSA preparation is complete 8/8 at
 > `1.151111` A40 GPU-hours. The one-shot W3c-B2 panel is now terminal. All eight Boltz jobs completed and
 > all eight AF2 jobs failed before model inference on the same container-relative input-path resolution
 > defect; total observed allocation was 1,357 H100 GPU-seconds (`0.376944` hours). CPU replay verified all
@@ -13,7 +13,7 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > recoverability estimate. No retry, AF2 recovery, additional predictor job, ProteinMPNN, generator, or
 > gate work is authorized. Start with `docs/M6D_W3C_B2_NATIVE_SCREEN.md`,
 > `results/m6d_w3c_b2_terminal_stop.json`, and `results/m6d_goal_state_refresh_report.json`. The distinct
-> W3d successor is now locked as a no-submit 2 x 2 representation-by-predictor diagnostic. It retains all
+> W3d successor was then locked as a one-shot 2 x 2 representation-by-predictor diagnostic. It retained all
 > eight Boltz outcomes as an immutable retrospective baseline and freezes 24 prospective cells across
 > Boltz/AF2 and target-MSA/query-only representations. The deterministic CPU producer has now materialized
 > and semantically verified all 24 prospective inputs. Corrected Boltz/AF2 no-prediction wrappers are
@@ -23,9 +23,17 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > packet now freezes exactly 24 evaluations, 53 initially absent output paths, and at most 24 H100 GPU-hours;
 > its local and Cayuga dry runs created zero scheduler jobs. The exact approval was consumed once on
 > 2026-08-03; jobs `3171691`-`3171714` are receipt-bound 24/24, with 8 Boltz, 16 AF2, zero retries, and zero
-> adaptive top-ups. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and
-> `results/m6d_w3d_submit_receipt_summary.json`. Monitor only these jobs and require all 24 strict-QC
-> records before frozen complete-case adjudication; no additional submission is authorized.
+> adaptive top-ups. All 24 jobs are terminal at 6,206 H100 GPU-seconds (`1.723889` hours): 16 completed
+> with strict-QC records, while all eight query-only AF2 jobs failed before model inference because their
+> annotated A3Ms omitted runtime-required unpaired monomer query rows. This is an input-encoding defect,
+> not eight scientific negatives. Observed success counts are target-MSA Boltz `2/8`, target-MSA AF2
+> `2/8`, and query-only Boltz `1/8`; query-only AF2 is unavailable, so complete 2 x 2 localization is not
+> estimable. Native-validity recovery is nevertheless mathematically impossible because each representation
+> has a fully observed predictor below the frozen `6/8` threshold. W3d closes at
+> `w3d_terminal_partial_result_native_validity_impossibility_stop`; candidate generation is unreachable.
+> Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`, `results/m6d_w3d_terminal_stop.json`, and the refreshed
+> goal-state artifacts. No retry, replacement, top-up, ProteinMPNN, API, or other predictor compute is
+> authorized. A corrected query-only AF2 diagnostic requires a separately preregistered successor.
 
 > **2026-07-14 current validity state overrides older certificate and no-submit language below.** The same-sample RCPS path was
 > replaced by fit/certification/test split learn-then-test. Reanalysis keeps the pAE signal
@@ -160,8 +168,12 @@ conversation history**. Read this top to bottom once; it links to the code that 
 > Its CPU producer has materialized and verified 24/24 prospective inputs; the new offline wrappers pass
 > exact Cayuga runtime-hash and absolute-path validation with zero model/GPU/scheduler/network execution.
 > Its hash-bound packet was approved once and jobs `3171691`-`3171714` were submitted exactly 24/24.
-> Read `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; preserve zero retry/top-up authority and wait for terminal
-> accounting plus all 24 prospective strict-QC records before adjudication.
+> All jobs are terminal: 16 strict-QC records replay, and eight query-only AF2 jobs failed during feature
+> generation because the A3M encoding omitted unpaired monomer query rows. Exact accounting is 6,206 H100
+> GPU-seconds. The available 2/8, 2/8, and 1/8 success counts make recovery under either representation
+> impossible, but the missing AF2 cell prevents complete matrix localization. Read
+> `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md` and `results/m6d_w3d_terminal_stop.json`; preserve zero retry/top-up
+> authority and preregister any corrected diagnostic as a separate successor.
 > Exact sequence-hash exclusion is not a sequence-family-disjointness claim.
 > All W2 v1-v11 execution routes later in this handoff are historical.
 
@@ -905,6 +917,7 @@ applies the same guard before writing a runnable saved plan, and diagnostic unch
 | M6e successor / W3c-A | complete representation lock | 8/8 fresh targets pass complete-dimer, semantic, geometry, and exact-overlap gates |
 | M6e successor / W3c-B1 | complete input preparation | 8/8 target MSAs pass frozen integrity replay at 1.151111 A40 GPU-hours; no structure output was consumed |
 | M6e successor / W3c-B2 | terminal partial negative decision | 8/8 Boltz records replay, but only 2/8 pass; 8/8 AF2 jobs failed before inference, so the conjunctive stage can reach at most 2/8 against a frozen 6/8 requirement |
+| M6e successor / W3d | terminal native-validity stop | 24/24 jobs are terminal; 16 records replay and 8 query-only AF2 inputs fail before inference. The missing cell blocks complete localization, but observed 2/8, 2/8, and 1/8 cells make recovery under either representation impossible |
 | M6f / W4 | plumbing only | closed-loop behavior is fail-closed/all-defer evidence, not productive build-selection evidence |
 | M7 | bounded complete | W6-v4 executed one exactly approved Anthropic shadow call inside the actual 50-design W4 complex batch. Transport, schema, independent qualitative review, and no-effect invariants passed; campaign bytes and deterministic control were identical, and no recommendation was applied. This completes only bounded shadow participation in a fail-closed/all-defer campaign. It grants no control authority, does not establish productive routing, and does not restore the rejected historical alpha=0.3 certificate |
 | M8 | future | a new de-novo generator remains downstream of the current evidence boundary |

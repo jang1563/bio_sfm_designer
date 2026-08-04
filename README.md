@@ -116,7 +116,7 @@
 > [public structure fixture](tests/fixtures/m6d_w3c_historical_structure_fixture.json) makes the CPU audit
 > reproducible without the ignored local PDB cache.
 
-> **Current W3d status (2026-08-03):** the distinct no-submit successor is preregistered as an
+> **Current W3d result (2026-08-04):** the distinct one-shot successor was preregistered as an
 > eight-target `2 x 2` native representation-by-predictor diagnostic. It crosses Boltz 2.2.1 and
 > AF2-Multimer v3 with `target_msa_binder_query` and `query_only_both_chains`. All eight W3c-B2 Boltz
 > outcomes are retained as an immutable retrospective baseline; the other 24 cells are frozen
@@ -131,12 +131,21 @@
 > exactly 8 Boltz and 16 AF2 evaluations, 53 initially absent output paths, and a maximum 24 H100 GPU-hour
 > ceiling; its dry run enumerated all 24 cells with zero scheduler jobs. The exact approval was consumed once
 > on 2026-08-03, and receipt-bound jobs `3171691`-`3171714` were submitted 24/24: 8 Boltz and 16 AF2,
-> with zero retries or adaptive top-ups. Submission is not scientific evidence; terminal accounting and all
-> 24 strict-QC records are required before complete-case adjudication. Additional predictor, ProteinMPNN,
-> and API authority is zero.
+> with zero retries or adaptive top-ups. All 24 jobs are now terminal. Sixteen completed and produced
+> strict-QC records; all eight query-only AF2 jobs failed before model inference because the annotated A3M
+> supplied a paired query but no runtime-required unpaired monomer query rows. This is an input-encoding
+> implementation defect, not eight scientific AF2 negatives. Exact accounting consumed 6,206 one-H100
+> GPU-seconds (`1.723889` hours), below the 24-hour ceiling. The observed success counts are target-MSA
+> Boltz `2/8`, target-MSA AF2 `2/8`, and query-only Boltz `1/8`; query-only AF2 is unavailable. Complete
+> `2 x 2` bottleneck localization is therefore not estimable. Nevertheless, each representation already
+> has a fully observed predictor below the frozen `6/8` requirement, so at most zero representations can
+> qualify and native-validity recovery is mathematically impossible. W3d closes without retry at
+> `w3d_terminal_partial_result_native_validity_impossibility_stop`. Candidate generation is scientifically
+> unreachable, and additional predictor, ProteinMPNN, H100, and API authority is zero. Any corrected
+> query-only AF2 diagnostic must be a separately preregistered successor.
 > See [docs/M6D_W3D_NATIVE_DIAGNOSTIC.md](docs/M6D_W3D_NATIVE_DIAGNOSTIC.md),
 > [configs/m6d_w3d_native_diagnostic_protocol.json](configs/m6d_w3d_native_diagnostic_protocol.json), and
-> [results/m6d_w3d_prediction_approval_packet.json](results/m6d_w3d_prediction_approval_packet.json).
+> [results/m6d_w3d_terminal_stop.json](results/m6d_w3d_terminal_stop.json).
 
 A **calibrated, cost-aware, safety-screened** Design–Build–Test–Learn (DBTL) designer
 for biology. An optional LLM proposes bounded hypotheses over specialist scientific
@@ -169,11 +178,11 @@ Three constraints are baked into the gate ([`trust/gate.py`](src/bio_sfm_designe
    else it verifies/defers (complexes, whose raw pLDDT is uncalibrated, are never blindly trusted);
 3. confidence is consumed as a **scalar calibrated risk**, never a raw latent.
 
-## Status (2026-08-02)
+## Status (2026-08-04)
 
 Past the stub milestone — the loop is closed on CPU and runs on a real, license-clean backend.
 
-**Current local source verified** (designer: `1315` pytest tests plus `82` subtests and `1148` unittest
+**Current local source verified** (designer: `1327` pytest tests plus `85` subtests and `1152` unittest
 tests; trust-core: `88` pytest tests and `88` unittest tests on 2026-08-03).
 The public install now pins `bio-sfm-trust-core` v0.2.0, the coordinated release whose exact split-LTT
 implementation produced the frozen downstream campaign artifacts; the tested v0.1.0 fallback remains

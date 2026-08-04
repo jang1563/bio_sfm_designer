@@ -60,8 +60,13 @@
 > and baseline reruns. CPU input production and exact Cayuga no-prediction runtime validation are complete.
 > A hash-bound packet freezes 8 Boltz plus 16 AF2 evaluations and a 24-H100-hour ceiling. Its exact approval
 > was consumed once on 2026-08-03, and jobs `3171691`-`3171714` cover all 24 packet cells with zero retries
-> and zero adaptive top-ups. Terminal outputs and complete-case adjudication remain pending; authority for
-> additional compute is zero.
+> and zero adaptive top-ups. All 24 jobs are terminal at 6,206 H100 GPU-seconds: 16 strict-QC records replay,
+> while all eight query-only AF2 jobs failed before model inference because the annotated A3M omitted
+> runtime-required unpaired monomer query rows. The failure is an input-encoding defect, not a scientific
+> negative. Observed success counts are 2/8 target-MSA Boltz, 2/8 target-MSA AF2, and 1/8 query-only Boltz.
+> The missing AF2 cell blocks complete localization, but both representations already contain a fully
+> observed predictor below 6/8, so zero representations can recover native validity. W3d is terminal,
+> candidate generation is unreachable, and authority for additional compute is zero.
 
 This is the operating plan for developing `bio_sfm_designer` as a research engine.
 It is intentionally not a publication plan. External writing can come later; the
@@ -215,9 +220,14 @@ hash-bound packet now binds exactly 24 evaluations, 53 initially absent output p
 wrappers, runtime identities, and a maximum 24 H100 GPU-hour ceiling. Its dry run creates zero scheduler
 jobs. The exact approval was later consumed once, and the guarded bridge submitted jobs
 `3171691`-`3171714`: 24/24 unique cells and scheduler IDs, split as 8 Boltz and 16 AF2, with zero retries
-and zero adaptive top-ups. Submission establishes provenance but no scientific outcome. The next step is
-terminal accounting, strict-QC synchronization for all 24 cells, and the frozen complete-case adjudication;
-no additional compute is authorized.
+and zero adaptive top-ups. All jobs are now terminal. Sixteen completed records pass strict-QC replay;
+all eight query-only AF2 jobs failed during pre-model feature generation because their A3Ms supplied no
+unpaired monomer query row. Exact accounting is 6,206 H100 GPU-seconds (`1.723889` hours). The available
+cell counts are 2/8 target-MSA Boltz, 2/8 target-MSA AF2, and 1/8 query-only Boltz. Query-only AF2 remains
+unobserved, so complete matrix localization is not evaluable. Native-validity recovery is nevertheless
+mathematically impossible under either representation, making candidate generation unreachable. W3d is
+closed without retry; no additional compute is authorized, and any corrected encoding requires a distinct
+preregistered successor.
 
 M6c remains the foundational positive anchor. The complex/binder regime has the first positive
 trust-gate result:
@@ -760,10 +770,11 @@ Allowed decisions:
    terminal, all eight Boltz records replay, Boltz succeeds 2/8, and all eight AF2 jobs failed before model
    inference. Do not retry or recover the consumed one-shot panel; AF2 cannot change the `2/8 < 6/8`
    conjunction bound.
-7. Continue only the locked W3d no-submit successor. Preserve all eight baseline outcomes and all eight
-   targets; preserve the validated representation inputs, corrected absolute-path wrappers, runtime receipt,
-   and 24-evaluation approval packet. Require the exact W3d H100 approval phrase before submission.
-   ProteinMPNN, generator, gate, and certification work remain unauthorized.
+7. Preserve W3d at `w3d_terminal_partial_result_native_validity_impossibility_stop`: all 24 jobs are
+   terminal, 16 records replay, and eight query-only AF2 jobs are unavailable because of a pre-model A3M
+   encoding defect. Do not call those eight jobs scientific failures or claim complete matrix localization.
+   Do not retry the consumed panel. Preregister any corrected query-only AF2 diagnostic as a separate
+   successor; ProteinMPNN, generator, gate, and certification work remain unauthorized.
 8. Keep W1 as bounded target-specific evidence and W4 as fail-closed/all-defer plumbing evidence. Do not
    claim productive DBTL or universal robustness from the current negative sequence.
 

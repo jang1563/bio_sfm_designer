@@ -1,6 +1,6 @@
 # M6d Goal-Mode Current Anchor
 
-> **2026-08-02 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
+> **2026-08-04 active boundary:** W2c ended with 0/8 threshold candidates, and its distinct 58-case W3
 > AF2-Multimer mechanism panel is complete. Corrected job `3084977` completed 58/58 after job `3084976`
 > was cancelled and invalidated for target-MSA truncation. Frozen adjudication supports Chai on 3PC8,
 > finds mixed W2c agreement with Boltz, and returns `context_dependent_or_unresolved`. Resume from
@@ -26,15 +26,20 @@
 > cells. Resume from `docs/M6D_W3D_NATIVE_DIAGNOSTIC.md`; CPU inputs and exact Cayuga no-prediction
 > runtime/path validation are complete. The exact W3d approval was consumed once on 2026-08-03, and the
 > guarded bridge submitted jobs `3171691`-`3171714`: all 24 packet cells, split as 8 Boltz and 16 AF2,
-> with zero retries and zero adaptive top-ups. They are awaiting terminal outputs. Submission is not a
-> scientific result, and current authority for additional jobs is zero.
+> with zero retries and zero adaptive top-ups. All 24 jobs are terminal at 6,206 H100 GPU-seconds. Sixteen
+> strict-QC records replay; eight query-only AF2 jobs failed before model inference because their A3Ms
+> omitted runtime-required unpaired monomer query rows. This is an input-encoding defect, not eight
+> scientific negatives. Observed success counts are target-MSA Boltz `2/8`, target-MSA AF2 `2/8`, and
+> query-only Boltz `1/8`. Complete matrix localization is unavailable, but neither representation can
+> meet the frozen both-predictors `6/8` rule. W3d is closed without retry, candidate generation is
+> unreachable, and current authority for additional jobs is zero.
 
-Date: 2026-08-03
+Date: 2026-08-04
 
 This is the current long-running Codex goal-mode anchor for `bio_sfm_designer`.
 It is a project-development anchor, not a publication plan.
 
-Latest local harness refresh: 2026-08-03.
+Latest local harness refresh: 2026-08-04.
 
 Latest scientific override: 2026-07-11. W2 remains negative as a universal/generalized gate. W2b
 certification completed on five fit-eligible targets with 300 fresh H100 records and strict QC failures=0.
@@ -81,7 +86,10 @@ freezes the distinct diagnostic successor across Boltz/AF2 and target-MSA/query-
 retains all targets and all baseline outcomes, discloses that the baseline is retrospective, and freezes
 the remaining 24 cells before their outcomes. Its exact approval was consumed once on 2026-08-03. The
 hash-bound bridge submitted all 24 prospective cells as jobs `3171691`-`3171714`, with zero retries or
-top-ups; terminal output reconciliation and frozen complete-case adjudication remain pending.
+top-ups. All jobs are terminal: 16 strict-QC records are available and eight query-only AF2 inputs failed
+before model inference. Exact accounting is 6,206 H100 GPU-seconds. The available cells make recovery
+under either representation impossible, while the missing AF2 cell prevents complete localization. W3d
+is terminal; a corrected encoding requires a separately preregistered successor.
 
 ## Active Objective
 
@@ -93,9 +101,9 @@ Continue the M6d science-result program in Cayuga-first goal mode:
   certification and held-out-test roles;
 - preserve the completed W3c-A representation lock and completed W3c-B1 target-MSA evidence;
   preserve the terminal W3c-B2 partial-result stop without retry or post-hoc rescue;
-- preserve the verified W3d inputs, runtime receipt, hash-bound 24-evaluation packet, and append-only
-  24/24 submission receipt while monitoring only the already submitted jobs and forbidding any retry,
-  replacement, top-up, or generator work;
+- preserve the terminal W3d accounting, 16 replayed records, eight query-only AF2 encoding-failure records,
+  and native-validity impossibility decision; forbid retry, replacement, top-up, or generator work and
+  require a separate protocol for any corrected diagnostic;
 - preserve W1 as target-specific certified evidence;
 - preserve W4 as closed-loop plumbing evidence;
 - keep all status artifacts, tests, and local/Cayuga handoff anchors honest and reproducible.
@@ -1390,21 +1398,19 @@ Do not submit new Cayuga jobs from stale readiness or status commands.
 Start with a no-spend status/decision refresh:
 
 ```sh
-jq '{status, audit_ok, w3c_b2: .w3c_b2_terminal_stop.status, jobs_terminal: .w3c_b2_terminal_stop.scheduler_jobs_terminal, boltz_successes: .w3c_b2_terminal_stop.boltz_successes, maximum_dual_passes: .w3c_b2_terminal_stop.maximum_possible_dual_predictor_target_passes, minimum_required: .w3c_b2_terminal_stop.minimum_targets_passing, stage_pass: .w3c_b2_terminal_stop.stage_pass, no_submit, cayuga_submission_allowed, next_action}' \
+jq '{status, audit_ok, w3d: .w3d_terminal_stop.status, jobs_terminal: .w3d_terminal_stop.jobs_terminal, records: .w3d_terminal_stop.prospective_records_strict_qc, missing: .w3d_terminal_stop.prospective_records_missing, success_counts: .w3d_terminal_stop.available_cell_success_counts, complete_localization: .w3d_terminal_stop.complete_matrix_localization_evaluable, recovery_impossible: .w3d_terminal_stop.native_validity_recovery_mathematically_impossible, stage_pass: .w3d_terminal_stop.stage_pass, no_submit, cayuga_submission_allowed, next_action}' \
   results/m6d_goal_state_refresh_report.json
 
-jq '{status, audit_ok, execution_complete, stage_decision_complete, scientific_stop_complete, boltz_successes, boltz_success_target_ids, af2_failures_before_model_inference, maximum_possible_dual_predictor_target_passes, minimum_targets_passing, frozen_pass_mathematically_impossible, observed_h100_gpu_hours, additional_jobs_authorized, claim_boundary, next_action}' \
-  results/m6d_w3c_b2_terminal_stop.json
-
-jq '{status, audit_ok, execution_ready, factorial_cells, completed_locked_baseline_cells, prospective_cells, input_producer_implemented, materialized_input_hashes_verified, representation_semantics_verified, new_runtime_wrappers_implemented, no_prediction_runtime_validation_complete, predictor_evaluations_authorized, h100_gpu_hours_authorized, no_submit, next_action}' \
-  results/m6d_w3d_native_diagnostic_readiness.json
+jq '{status, audit_ok, execution_terminal, jobs_terminal, jobs_completed, jobs_failed, prospective_records_strict_qc, prospective_records_missing, failure_class, failure_is_scientific_negative, available_cell_success_counts, complete_matrix_localization_evaluable, native_validity_recovery_mathematically_impossible, observed_h100_gpu_hours, additional_predictor_evaluations_authorized, claim_boundary, next_action}' \
+  results/m6d_w3d_terminal_stop.json
 
 git status --short --branch
 ```
 
-The current science branch is fixed: preserve W3c-B2 at its terminal validity stop and complete only the
-locked W3d successor. Do not retry AF2, substitute targets, change the 6/8 rule, rerun the baseline, reuse
-the consumed approval, or submit additional jobs. CPU inputs and exact Cayuga no-prediction runtime/path
-validation are complete. The exact approval was consumed once, and all 24 prospective evaluations are
-receipt-bound to jobs `3171691`-`3171714`. Monitor those jobs, reconcile exact terminal accounting and all
-strict-QC records, then run the frozen complete-case adjudication only if all 24 records validate.
+The current science branch is fixed: preserve W3c-B2 and W3d at their terminal validity stops. All 24 W3d
+jobs are terminal; 16 strict-QC records replay and eight query-only AF2 jobs failed before model inference
+because of the packet-bound A3M encoding. Do not retry AF2, substitute targets, change the 6/8 rule, rerun
+the baseline, reuse the consumed approval, or submit additional jobs. Claim only that native-validity
+recovery is mathematically impossible under both representations; complete 2 x 2 localization remains
+unevaluable. Any corrected query-only AF2 diagnostic must be separately preregistered, and ProteinMPNN,
+generator, trust-gate, and biological-claim work remains blocked.

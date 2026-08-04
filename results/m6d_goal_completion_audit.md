@@ -1,6 +1,6 @@
 # M6d Goal Completion Audit
 
-Status: `goal_active_w3d_jobs_submitted_awaiting_adjudication`.
+Status: `goal_active_w3d_terminal_native_validity_stop_successor_selection`.
 Audit ok: `True`.
 Can mark goal complete: `False`.
 
@@ -57,10 +57,15 @@ Can mark goal complete: `False`.
 - W3d locked baseline / prospective cells: `8` / `24`
 - W3d predictor evaluations authorized: `0`
 - W3d execution ready: `False`
-- remaining requirement: `W3d_terminal_accounting_records_and_complete_case_adjudication`
+- W3d terminal result: `w3d_terminal_partial_result_native_validity_impossibility_stop`
+- W3d terminal/completed/failed jobs: `24` / `16` / `8`
+- W3d strict-QC/missing records: `16` / `8`
+- W3d complete matrix localization evaluable: `False`
+- W3d native-validity recovery impossible: `True`
+- remaining requirement: `W3d_successor_corrected_query_only_af2_protocol_selection`
 
 Historical W2 v9/v11 panel fields retained in the JSON are superseded and are not current routes.
 
 ## Next Action
 
-Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.
+Close W3d without retry or adaptive rescue. If complete representation-by-predictor localization remains scientifically useful, preregister a separate successor with a runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and biological claims blocked.

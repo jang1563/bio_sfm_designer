@@ -4,33 +4,33 @@
   "cayuga_submission_allowed": false,
   "historical_detail_retained": true,
   "historical_w2c_submission_performed": true,
-  "next_action": "Monitor only the 24 receipt-bound W3d jobs until terminal, with no retry or adaptive top-up. Then capture Slurm accounting, sync the exact strict-QC records and bound outputs, and apply the frozen complete-case 2 x 2 representation-by-predictor adjudication.",
+  "next_action": "Close W3d without retry or adaptive rescue. If complete representation-by-predictor localization remains scientifically useful, preregister a separate successor with a runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and biological claims blocked.",
   "next_actions_ranked": [
-    "Preserve the immutable 24/24 submission receipt and its approval-packet binding.",
-    "Monitor only the receipt-bound jobs; do not retry, top up, or substitute targets.",
-    "After all jobs are terminal, capture exact Slurm accounting and sync only packet-bound evidence.",
-    "Assemble all 24 prospective strict-QC records and reject partial-panel adjudication.",
-    "Apply the frozen W3d localization and dual-predictor native-validity rules before any generator proposal."
+    "Preserve the exact 24-job accounting, 16 replayed strict-QC records, and eight pre-model query-only AF2 failure records.",
+    "Close W3d at the frozen native-validity impossibility result with zero retry, replacement, or adaptive top-up.",
+    "Do not count the eight query-only AF2 encoding failures as scientific negatives or claim complete 2 x 2 localization.",
+    "Preregister any corrected query-only AF2 run as a separate diagnostic successor with a new immutable input contract.",
+    "Keep candidate generation and all generator-yield, trust-gate, and biological-success claims blocked."
   ],
-  "no_submit": false,
+  "no_submit": true,
   "obsolete_current_routes_removed": [
     "v9/v11 panel approval wait",
     "W2b test submission",
     "W2b recertification or row extension"
   ],
   "output_sha256": {
-    "results/m6d_followup_next_science_actions.json": "72c005ed6c1c028cbae19e37aa7fa45b21a292e38c31f635fbc89f727f1cef5c",
-    "results/m6d_followup_next_science_actions.md": "e7d329dca052697b06665638bc7c2b607348f1b4b84d457603b34c04d1c07460",
-    "results/m6d_goal_completion_audit.json": "efbdd40783096cb847caa275d88499d626f884a3619de4f05bc6db8f41680216",
-    "results/m6d_goal_completion_audit.md": "49b76872f8c44121de55d3cf468f0619413f31fc9cc4e1dfdd69401678b2cc40",
-    "results/m6d_goal_drift_audit.json": "2a89c6d319ce8050dd2a06acbf7b1447281d50f9dd5c2c656912d1b442263739",
-    "results/m6d_goal_drift_audit.md": "24219d23220c48961ae7fc16a59179636543591455c1c7ed7d1893f3839ee333",
-    "results/m6d_goal_mode_current_anchor.json": "6b0084afc6feefb8859bb43ad91615c904a1b65b1af4e2027329ca16c44a1fc2",
-    "results/m6d_goal_mode_local_harness_status.json": "a9d8a84977272a792afc93856e7094731c32f551c581e3182a500391eff4f359",
-    "results/m6d_goal_mode_local_harness_status.md": "f1c1b0f5d712314ecca89b69a6b36d481a35be01201cc8f776b66e0e17fcffe3"
+    "results/m6d_followup_next_science_actions.json": "1e21e0f3c3bace101cd7a51c69e280bfe34cd0b12517d2d96dc0d736ea2f5aec",
+    "results/m6d_followup_next_science_actions.md": "64eb7a935ccc87208e8d94dab31cbc56abfdd8af099980053d81508bab9cc28b",
+    "results/m6d_goal_completion_audit.json": "f87716a5ea93bdc81e29f199ffc80314b7bf9c2b914bfc282932d7abd9b705a7",
+    "results/m6d_goal_completion_audit.md": "8c6d85946e40534c3d1b7e937cb0edcda52bc69be7690c9434f33c1e2f695e99",
+    "results/m6d_goal_drift_audit.json": "845a6a9984d0ff67eabd7df34cd61c305e1e8c9863593813c1ff2ebea0be9eda",
+    "results/m6d_goal_drift_audit.md": "b541bec3dffc2d5511e12ea54f3fa263edf9b436bd2d1cb801efaf584a58025d",
+    "results/m6d_goal_mode_current_anchor.json": "b6cca236644b05c8321656baa8b99a437bcbc0d697eb514018f8c6774aecce39",
+    "results/m6d_goal_mode_local_harness_status.json": "0079f8727c3791fa1229835f168ddf1470e56dbc3c40ffede32f61c9cb23e436",
+    "results/m6d_goal_mode_local_harness_status.md": "c142683789a8cb6840d041c252fbec3cae734cb4db607a6404f9b507a0d0da8e"
   },
   "runtime_goal_active": false,
-  "status": "goal_state_refreshed_w3d_jobs_submitted_awaiting_results",
+  "status": "goal_state_refreshed_w3d_terminal_native_validity_impossibility_stop",
   "submission_performed": true,
   "updated_artifacts": [
     "results/m6d_goal_mode_current_anchor.json",
@@ -100,9 +100,19 @@
     "hpc/run_predict_af2_w3d_native.sbatch",
     "hpc/m6d_w3d_submit_with_receipt.sh",
     "results/m6d_w3d_submit_receipt.jsonl",
-    "results/m6d_w3d_submit_receipt_summary.json"
+    "results/m6d_w3d_submit_receipt_summary.json",
+    "results/m6d_w3d_sacct.tsv",
+    "results/m6d_w3d_h100_node_snapshot.txt",
+    "results/m6d_w3d_terminal_accounting.json",
+    "results/m6d_w3d_terminal_accounting.md",
+    "results/m6d_w3d_available_records.jsonl",
+    "results/m6d_w3d_query_only_af2_failure_evidence.jsonl",
+    "results/m6d_w3d_terminal_stop.json",
+    "results/m6d_w3d_terminal_stop.md",
+    "src/bio_sfm_designer/experiments/m6d_w3d_terminal_stop.py",
+    "tests/test_m6d_w3d_terminal_stop.py"
   ],
-  "updated_at": "2026-08-03T12:29:08Z",
+  "updated_at": "2026-08-04T17:16:50+02:00",
   "w2b": {
     "audit_ok": true,
     "can_claim_w2b_target_adaptive_viability": false,
@@ -1972,6 +1982,7 @@
     "scientific_adjudication_complete": false,
     "status": "w3d_all_twenty_four_prediction_jobs_submitted",
     "submission_complete": true,
+    "submission_summary_file_sha256": "7c4cb205e182aef591c04ad9a363080f8aaddd5f6038c202c39108ae7b2df2ca",
     "target_ids": [
       "1TE1_BA",
       "3QB4_AB",
@@ -1983,5 +1994,86 @@
       "7B5G_AB"
     ]
   },
-  "w3d_submission_performed": true
+  "w3d_submission_performed": true,
+  "w3d_successor": {
+    "approval_transfers": false,
+    "candidate_generation_authorized": false,
+    "next_action": "Close W3d without retry or adaptive rescue. If complete representation-by-predictor localization remains scientifically useful, preregister a separate successor with a runtime-valid query-only AF2 encoding; keep ProteinMPNN, generator, trust-gate, and biological claims blocked.",
+    "no_submit": true,
+    "predictor_evaluations_authorized": 0,
+    "proteinmpnn_designs_authorized": 0,
+    "purpose": "complete_representation_by_predictor_localization_only",
+    "required_correction": "runtime_valid_query_only_af2_a3m_encoding",
+    "status": "separate_protocol_required_no_submit",
+    "w3d_retry": false
+  },
+  "w3d_terminal_stop": {
+    "additional_predictor_evaluations_authorized": 0,
+    "approved_h100_gpu_hours_ceiling": 24.0,
+    "audit_ok": true,
+    "available_cell_success_counts": {
+      "query_only_both_chains|af2_multimer_colabfold_v1": 0,
+      "query_only_both_chains|boltz2_complex": 1,
+      "target_msa_binder_query|af2_multimer_colabfold_v1": 2,
+      "target_msa_binder_query|boltz2_complex": 2
+    },
+    "can_claim_biological_binder_success": false,
+    "can_claim_complete_matrix_localization": false,
+    "can_claim_generator_yield": false,
+    "can_claim_native_recoverability": false,
+    "can_claim_trust_gate": false,
+    "candidate_generation_scientifically_reachable": false,
+    "checks": {
+      "accounting_exact": true,
+      "authority_closed": true,
+      "available_records_exact": true,
+      "claims_bounded": true,
+      "failure_class_exact": true,
+      "identity_exact": true,
+      "partial_decision_exact": true,
+      "public_evidence_bound": true,
+      "source_bindings_exact": true,
+      "terminal_execution_exact": true
+    },
+    "claim_boundary": "The frozen native-validity pass is impossible because at least one fully observed predictor is below 6/8 under each representation. The missing query-only AF2 cell prevents complete-matrix bottleneck localization and is an input-encoding failure, not a scientific negative.",
+    "complete_case_adjudication_performed": false,
+    "complete_case_adjudication_required": true,
+    "complete_matrix_localization_evaluable": false,
+    "execution_terminal": true,
+    "failed_predictor_id": "af2_multimer_colabfold_v1",
+    "failed_representation_id": "query_only_both_chains",
+    "failure_class": "pre_model_feature_generation_query_only_a3m_encoding",
+    "failure_is_input_representation_implementation_defect": true,
+    "failure_is_scientific_negative": false,
+    "jobs_completed": 16,
+    "jobs_failed": 8,
+    "jobs_terminal": 24,
+    "jobs_unresolved": 0,
+    "maximum_possible_recovered_representations": 0,
+    "native_validity_recovery_mathematically_impossible": true,
+    "next_action": "Close W3d without retry. Any corrected query-only AF2 encoding must be a separately preregistered successor; generator and gate work remain blocked.",
+    "no_submit": true,
+    "observed_h100_gpu_hours": 1.7238888888888888,
+    "observed_h100_gpu_seconds": 6206,
+    "prospective_records_expected": 24,
+    "prospective_records_missing": 8,
+    "prospective_records_strict_qc": 16,
+    "proteinmpnn_designs_authorized": 0,
+    "public_evidence_sha256": {
+      "available_records": "c8ef0cfd4c0e4f541c1e2c88f2e7128332b632d9f243d1fc0c10c4983b7b5f1c",
+      "query_only_af2_failures": "88c3a3b90364fc23fd91e9847e77331958e48ab2accc58cfd49d47cb1511f8f4",
+      "terminal_accounting": "f1efe75e0344748727f4c4dc5c1a8aaf482ff327136d0f4410350638c219d824"
+    },
+    "scientific_stop_complete": true,
+    "source_binding_sha256": {
+      "approval_packet": "80720f0396cee366c6709e986535f6340cfaa2b3470997e65cd93230b0767d0a",
+      "factorial_manifest": "c8257dceeb06a037557075c3a414a6469aeba969dcd3daca5a735803b1686719",
+      "h100_node_snapshot": "e66ecce2d24fba84b4362fca189b78640cadb4a1e0edd9c039724ac72fcb4e81",
+      "sacct_snapshot": "1f06d1c58bbf237e5a942e71e648e2da4b680f259215887a3f81f4b385f6fd69",
+      "submission_receipt": "48085cbbe98e60718d258ed1b2c624f1a3e9b7e87af74e6a1826e801bcfdab93",
+      "submission_summary": "7c4cb205e182aef591c04ad9a363080f8aaddd5f6038c202c39108ae7b2df2ca"
+    },
+    "stage_pass": false,
+    "status": "w3d_terminal_partial_result_native_validity_impossibility_stop"
+  }
 }
